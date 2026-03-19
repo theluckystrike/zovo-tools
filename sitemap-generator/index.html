@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XML Sitemap Generator - Create Sitemaps Online | Free Tool</title>
+<meta name="description" content="Generate valid XML sitemaps online for free. Add URLs manually or in bulk, set lastmod dates, change frequency, and priority. Preview, validate, and download your sitemap.xml. Runs entirely in your browser.">
+<meta name="keywords" content="XML sitemap generator, sitemap.xml, create sitemap, sitemap builder, SEO sitemap, website sitemap, Google sitemap, sitemap validator, free sitemap tool">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/sitemap-generator">
+
+<meta property="og:title" content="XML Sitemap Generator - Create Sitemaps Online | Zovo Tools">
+<meta property="og:description" content="Generate valid XML sitemaps with per-URL settings for lastmod, changefreq, and priority. Free, private, no tracking.">
+<meta property="og:url" content="https://tools.zovo.one/sitemap-generator">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XML Sitemap Generator - Create Sitemaps Online | Zovo Tools">
+<meta name="twitter:description" content="Generate valid XML sitemaps with per-URL settings. Free, private, runs entirely in your browser.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "XML Sitemap Generator",
+  "description": "Generate valid XML sitemaps online with per-URL lastmod, changefreq, and priority settings. Preview, validate, and download sitemap.xml.",
+  "url": "https://tools.zovo.one/sitemap-generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern web browser with JavaScript enabled"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is an XML sitemap?", "acceptedAnswer": {"@type": "Answer", "text": "An XML sitemap is a file that lists the URLs of a website along with optional metadata such as last modification date, change frequency, and priority. Search engines like Google, Bing, and Yahoo use sitemaps to discover and crawl pages more efficiently."}},
+    {"@type": "Question", "name": "How many URLs can a sitemap contain?", "acceptedAnswer": {"@type": "Answer", "text": "According to the Sitemaps protocol, a single XML sitemap file can contain a maximum of 50,000 URLs and must not exceed 50MB in uncompressed size. For larger sites, you should use a sitemap index file that references multiple sitemap files."}},
+    {"@type": "Question", "name": "What is the changefreq tag?", "acceptedAnswer": {"@type": "Answer", "text": "The changefreq tag provides a hint to search engines about how frequently a page is likely to change. Valid values are: always, hourly, daily, weekly, monthly, yearly, and never. Note that search engines treat this as a suggestion, not a directive."}},
+    {"@type": "Question", "name": "What does the priority tag mean?", "acceptedAnswer": {"@type": "Answer", "text": "The priority tag indicates the relative importance of a URL compared to other URLs on the same site. Values range from 0.0 to 1.0, with 0.5 as the default. This does not affect how your pages rank against pages on other sites; it only helps search engines prioritize crawling within your own site."}},
+    {"@type": "Question", "name": "Is my data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. This tool runs entirely in your web browser. All sitemap generation, validation, and XML formatting happens client-side using JavaScript. No URLs or sitemap data are ever transmitted to any server."}},
+    {"@type": "Question", "name": "Where should I place my sitemap.xml file?", "acceptedAnswer": {"@type": "Answer", "text": "The sitemap should typically be placed in the root directory of your website (e.g., https://example.com/sitemap.xml). You should also reference it in your robots.txt file by adding a line: Sitemap: https://example.com/sitemap.xml"}},
+    {"@type": "Question", "name": "Do I need to submit my sitemap to Google?", "acceptedAnswer": {"@type": "Answer", "text": "While Google can discover your sitemap through robots.txt, you can also submit it directly through Google Search Console for faster indexing. Go to the Sitemaps section in Search Console and enter the URL of your sitemap file."}},
+    {"@type": "Question", "name": "Can I import an existing sitemap to edit it?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. This tool supports importing existing XML sitemaps. You can paste the XML content or upload a sitemap.xml file, and the tool will parse all URLs along with their metadata, allowing you to edit, add, or remove entries before generating an updated sitemap."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --yellow: #ffd644;
+  --blue: #44aaff;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"], input[type="url"], input[type="date"], input[type="number"], select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus, input[type="url"]:focus, input[type="date"]:focus, input[type="number"]:focus, select:focus {
+  border-color: var(--accent);
+}
+textarea { resize: vertical; min-height: 100px; }
+select { cursor: pointer; }
+select option { background: var(--surface); color: var(--text); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger {
+  background: rgba(255,68,102,0.15);
+  color: var(--red);
+  border: 1px solid transparent;
+}
+.btn-danger:hover { border-color: var(--red); }
+.btn-sm { padding: 8px 16px; font-size: 0.85rem; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* URL count badge */
+.url-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(0,255,136,0.3);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.url-count.warning {
+  background: rgba(255,214,68,0.15);
+  border-color: rgba(255,214,68,0.3);
+  color: var(--yellow);
+}
+
+/* URL List Table */
+.url-table-wrap {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+.url-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.url-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.url-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.url-table tr:hover td { background: var(--surface2); }
+.url-table .url-cell {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--accent);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+}
+.url-table .actions-cell { white-space: nowrap; }
+.url-table .actions-cell button {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 4px;
+}
+.url-table .actions-cell button:hover { border-color: var(--accent); color: var(--accent); }
+.url-table .actions-cell button.del-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* Add URL form grid */
+.add-url-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.add-url-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 140px 100px;
+  gap: 12px;
+  align-items: end;
+}
+@media (max-width: 700px) {
+  .add-url-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 500px) {
+  .add-url-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* XML Preview */
+.xml-preview {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  max-height: 500px;
+  overflow-y: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  white-space: pre;
+  tab-size: 2;
+}
+.xml-tag { color: var(--red); }
+.xml-attr { color: var(--yellow); }
+.xml-value { color: var(--green); }
+.xml-text { color: var(--text); }
+.xml-comment { color: var(--text-muted); font-style: italic; }
+
+/* Validation results */
+.validation-list {
+  list-style: none;
+  padding: 0;
+}
+.validation-list li {
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.validation-list li.valid {
+  background: rgba(0,255,136,0.08);
+  color: var(--green);
+}
+.validation-list li.invalid {
+  background: rgba(255,68,102,0.08);
+  color: var(--red);
+}
+.validation-list li.warn {
+  background: rgba(255,214,68,0.08);
+  color: var(--yellow);
+}
+
+/* Drop zone for import */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone-icon { font-size: 2rem; margin-bottom: 8px; }
+.drop-zone-text { color: var(--text-muted); font-size: 0.95rem; }
+.drop-zone-text span { color: var(--accent); font-weight: 500; }
+.file-input { display: none; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 20px;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.5; }
+.empty-state p { font-size: 0.95rem; }
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .tabs { flex-wrap: wrap; }
+  .tab-btn { font-size: 0.82rem; padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>XML <span>Sitemap</span> Generator</h1>
+    <p>Create valid XML sitemaps with per-URL settings for last modified date, change frequency, and priority. Preview, validate, and download your sitemap.xml &mdash; all running privately in your browser.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="add-urls">Add URLs</button>
+    <button class="tab-btn" data-tab="bulk-add">Bulk Add</button>
+    <button class="tab-btn" data-tab="import">Import</button>
+    <button class="tab-btn" data-tab="preview">Preview &amp; Export</button>
+  </div>
+
+  <!-- Add URLs Tab -->
+  <div id="add-urls" class="tab-panel active">
+    <div class="card">
+      <h3>Add URL</h3>
+      <div class="add-url-grid">
+        <div class="add-url-row">
+          <div>
+            <label for="urlInput">URL</label>
+            <input type="url" id="urlInput" placeholder="https://example.com/page">
+          </div>
+          <div>
+            <label for="lastmodInput">Last Modified</label>
+            <input type="date" id="lastmodInput">
+          </div>
+          <div>
+            <label for="changefreqInput">Change Frequency</label>
+            <select id="changefreqInput">
+              <option value="">-- optional --</option>
+              <option value="always">Always</option>
+              <option value="hourly">Hourly</option>
+              <option value="daily">Daily</option>
+              <option value="weekly" selected>Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+              <option value="never">Never</option>
+            </select>
+          </div>
+          <div>
+            <label for="priorityInput">Priority</label>
+            <input type="number" id="priorityInput" min="0" max="1" step="0.1" value="0.5" placeholder="0.0 - 1.0">
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="addUrlBtn">Add URL</button>
+        <button class="btn btn-secondary" id="clearFormBtn">Clear Form</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+        <h3 style="margin-bottom:0;">URL List</h3>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <div class="url-count" id="urlCount">0 URLs</div>
+          <button class="btn btn-danger btn-sm" id="clearAllBtn">Clear All</button>
+        </div>
+      </div>
+      <div id="urlListContainer">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-state-icon">&#128466;</div>
+          <p>No URLs added yet. Add URLs above or use the Bulk Add tab.</p>
+        </div>
+        <div class="url-table-wrap" id="tableWrap" style="display:none;">
+          <table class="url-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>URL</th>
+                <th>Last Modified</th>
+                <th>Frequency</th>
+                <th>Priority</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="urlTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Add Tab -->
+  <div id="bulk-add" class="tab-panel">
+    <div class="card">
+      <h3>Bulk Add URLs</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Paste one URL per line. All URLs will use the default settings below.</p>
+      <label for="bulkUrls">URLs (one per line)</label>
+      <textarea id="bulkUrls" rows="10" placeholder="https://example.com/&#10;https://example.com/about&#10;https://example.com/contact&#10;https://example.com/blog"></textarea>
+
+      <div class="add-url-row" style="margin-top:16px;">
+        <div>
+          <label for="bulkLastmod">Default Last Modified</label>
+          <input type="date" id="bulkLastmod">
+        </div>
+        <div>
+          <label for="bulkChangefreq">Default Frequency</label>
+          <select id="bulkChangefreq">
+            <option value="">-- none --</option>
+            <option value="always">Always</option>
+            <option value="hourly">Hourly</option>
+            <option value="daily">Daily</option>
+            <option value="weekly" selected>Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+            <option value="never">Never</option>
+          </select>
+        </div>
+        <div>
+          <label for="bulkPriority">Default Priority</label>
+          <input type="number" id="bulkPriority" min="0" max="1" step="0.1" value="0.5">
+        </div>
+        <div></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="bulkAddBtn">Add All URLs</button>
+        <button class="btn btn-secondary" id="clearBulkBtn">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Tab -->
+  <div id="import" class="tab-panel">
+    <div class="card">
+      <h3>Import Existing Sitemap</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Upload a sitemap.xml file or paste XML content to import and edit existing URLs.</p>
+
+      <div class="drop-zone" id="importDropZone">
+        <div class="drop-zone-icon">&#128196;</div>
+        <div class="drop-zone-text">Drag &amp; drop a sitemap.xml file or <span>click to browse</span></div>
+        <input type="file" class="file-input" id="importFileInput" accept=".xml,text/xml,application/xml">
+      </div>
+
+      <label for="importXml">Or paste XML content</label>
+      <textarea id="importXml" rows="10" placeholder='<?xml version="1.0" encoding="UTF-8"?>&#10;<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">&#10;  <url>&#10;    <loc>https://example.com/</loc>&#10;  </url>&#10;</urlset>'></textarea>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="importBtn">Import Sitemap</button>
+        <button class="btn btn-secondary" id="clearImportBtn">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview & Export Tab -->
+  <div id="preview" class="tab-panel">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+        <h3 style="margin-bottom:0;">Generated XML Sitemap</h3>
+        <div class="url-count" id="urlCountPreview">0 URLs</div>
+      </div>
+
+      <div class="btn-row" style="margin-top:0; margin-bottom:16px;">
+        <button class="btn btn-primary" id="generateBtn">Generate Sitemap</button>
+        <button class="btn btn-secondary" id="validateBtn">Validate</button>
+        <button class="btn btn-secondary" id="copyXmlBtn">Copy XML</button>
+        <button class="btn btn-secondary" id="downloadBtn">Download .xml</button>
+      </div>
+
+      <div id="validationResults" style="margin-bottom:16px; display:none;"></div>
+
+      <div class="xml-preview" id="xmlPreview">
+        <span class="xml-comment">&lt;!-- Click "Generate Sitemap" to see the XML output --&gt;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2>Understanding XML Sitemaps</h2>
+    <p>An XML sitemap is a structured file that provides search engines with a roadmap of your website's content. By listing URLs along with metadata such as last modification dates, change frequencies, and priority levels, sitemaps help search engine crawlers discover and index your pages more efficiently. The Sitemaps protocol, originally created by Google in 2005 and later adopted by Bing, Yahoo, and other search engines, has become a fundamental component of technical SEO.</p>
+    <p>This tool generates sitemaps that comply with the Sitemaps 0.9 protocol specification. All processing happens entirely in your browser using JavaScript &mdash; no data is ever transmitted to any server. You can add URLs individually with custom metadata, bulk-add large lists of URLs, or import an existing sitemap for editing.</p>
+
+    <h3>Why Sitemaps Matter for SEO</h3>
+    <p>While search engines can discover pages by following links from your homepage and navigation, sitemaps ensure that every important page is known to crawlers. This is especially important for large websites with thousands of pages, sites with orphaned content that has few internal links, newly launched websites with limited external backlinks, and sites with dynamic content that changes frequently. Without a sitemap, search engines may miss pages that are buried deep in your site's architecture or have limited incoming links.</p>
+
+    <h3>Sitemap Structure and Tags</h3>
+    <p>Every XML sitemap begins with an XML declaration and a <code>&lt;urlset&gt;</code> root element that references the Sitemaps protocol namespace. Within the urlset, each page is represented by a <code>&lt;url&gt;</code> element containing up to four child elements: <code>&lt;loc&gt;</code> (required, the full URL), <code>&lt;lastmod&gt;</code> (optional, the last modification date in W3C Datetime format), <code>&lt;changefreq&gt;</code> (optional, a hint about how often the page changes), and <code>&lt;priority&gt;</code> (optional, the relative importance from 0.0 to 1.0).</p>
+
+    <h3>Last Modified Date</h3>
+    <p>The <code>&lt;lastmod&gt;</code> tag tells search engines when a page was last updated. This helps crawlers decide which pages to re-crawl and which to skip. Accurate lastmod dates can improve crawl efficiency significantly for large sites. Use the W3C Datetime format: <code>YYYY-MM-DD</code> for date-only or <code>YYYY-MM-DDThh:mm:ssTZD</code> for full datetime precision. Always update this date when you make meaningful content changes to a page.</p>
+
+    <h3>Change Frequency</h3>
+    <p>The <code>&lt;changefreq&gt;</code> tag provides a general hint about how frequently a page is likely to change. Valid values range from "always" (for pages that change on every access, like stock tickers) to "never" (for archived content). While search engines are not obligated to follow this guidance, it can influence how often they re-crawl specific pages. Be honest with your frequency estimates &mdash; setting every page to "always" or "hourly" when content rarely changes may decrease trust in your sitemap signals.</p>
+
+    <h3>Priority</h3>
+    <p>The <code>&lt;priority&gt;</code> tag indicates the relative importance of a URL compared to other URLs on your site, with values from 0.0 (least important) to 1.0 (most important). The default value is 0.5. This tag does not affect your ranking versus other websites; it only helps search engines prioritize which of your own pages to crawl first. A common strategy is to give your homepage a priority of 1.0, major category pages 0.8, regular content pages 0.5, and archive or tag pages 0.3.</p>
+
+    <h3>Sitemap Limits and Best Practices</h3>
+    <p>A single sitemap file can contain a maximum of 50,000 URLs and must not exceed 50MB when uncompressed. For larger sites, use a sitemap index file that references multiple sitemap files. Always include only canonical URLs in your sitemap &mdash; avoid adding pages that redirect, return error codes, or are blocked by robots.txt. Submit your sitemap through Google Search Console and reference it in your robots.txt file with a <code>Sitemap:</code> directive for best results.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What is an XML sitemap?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>An XML sitemap is a file that lists the URLs of a website along with optional metadata such as last modification date, change frequency, and priority. Search engines like Google, Bing, and Yahoo use sitemaps to discover and crawl pages more efficiently. The file follows the Sitemaps 0.9 protocol specification and is typically named sitemap.xml and placed in the root directory of your website.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How many URLs can a sitemap contain?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>According to the Sitemaps protocol, a single XML sitemap file can contain a maximum of 50,000 URLs and must not exceed 50MB in uncompressed size. For websites with more URLs, you should create multiple sitemap files and reference them from a sitemap index file. This tool warns you when you approach or exceed the 50,000 URL limit.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the changefreq tag?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The changefreq tag provides a hint to search engines about how frequently a page is likely to change. Valid values are: always, hourly, daily, weekly, monthly, yearly, and never. Note that search engines treat this as a suggestion, not a directive. Setting all pages to "always" will not make them crawl more often; use honest estimates based on how frequently you actually update each page's content.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What does the priority tag mean?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The priority tag indicates the relative importance of a URL compared to other URLs on the same site. Values range from 0.0 to 1.0, with 0.5 as the default. This does not affect how your pages rank against pages on other sites; it only helps search engines prioritize crawling within your own site. Give your most important pages higher values and less important pages lower values.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my data sent to a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. This tool runs entirely in your web browser. All sitemap generation, XML formatting, validation, and file operations happen client-side using JavaScript. No URLs, sitemap data, or any other information are ever transmitted to any server. You can verify this by disconnecting from the internet and confirming the tool continues to work perfectly.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Where should I place my sitemap.xml file?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The sitemap should typically be placed in the root directory of your website (e.g., https://example.com/sitemap.xml). You should also reference it in your robots.txt file by adding a line like: Sitemap: https://example.com/sitemap.xml. This ensures that all search engine crawlers can find your sitemap automatically when they check your robots.txt file.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need to submit my sitemap to Google?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>While Google can discover your sitemap through your robots.txt file, you can also submit it directly through Google Search Console for faster indexing. Navigate to the Sitemaps section in Search Console, enter the URL of your sitemap file, and click Submit. Google will then process your sitemap and report any errors or warnings it encounters.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I import an existing sitemap to edit it?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. This tool supports importing existing XML sitemaps. You can upload a sitemap.xml file using the Import tab or paste the raw XML content directly. The tool parses all URL entries along with their lastmod, changefreq, and priority metadata, allowing you to edit existing entries, add new URLs, or remove outdated entries before generating an updated sitemap.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== State ==========
+let urls = [];
+let generatedXml = '';
+
+// ========== DOM Helpers ==========
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
+
+function showToast(msg) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function escapeXml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function isValidUrl(str) {
+  try {
+    const u = new URL(str);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+// ========== Tabs ==========
+$$('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('.tab-btn').forEach(b => b.classList.remove('active'));
+    $$('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    $(`#${btn.dataset.tab}`).classList.add('active');
+  });
+});
+
+// ========== FAQ ==========
+$$('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    q.parentElement.classList.toggle('open');
+  });
+});
+
+// ========== URL Count ==========
+function updateUrlCount() {
+  const count = urls.length;
+  const text = `${count.toLocaleString()} URL${count !== 1 ? 's' : ''}`;
+  const countEl = $('#urlCount');
+  const countPreviewEl = $('#urlCountPreview');
+  countEl.textContent = text;
+  countPreviewEl.textContent = text;
+
+  if (count >= 50000) {
+    countEl.classList.add('warning');
+    countPreviewEl.classList.add('warning');
+  } else {
+    countEl.classList.remove('warning');
+    countPreviewEl.classList.remove('warning');
+  }
+}
+
+// ========== Render URL Table ==========
+function renderTable() {
+  const tbody = $('#urlTableBody');
+  const emptyState = $('#emptyState');
+  const tableWrap = $('#tableWrap');
+
+  if (urls.length === 0) {
+    emptyState.style.display = '';
+    tableWrap.style.display = 'none';
+    updateUrlCount();
+    return;
+  }
+
+  emptyState.style.display = 'none';
+  tableWrap.style.display = '';
+
+  tbody.innerHTML = urls.map((u, i) => `
+    <tr>
+      <td style="color:var(--text-muted);">${i + 1}</td>
+      <td class="url-cell" title="${escapeHtml(u.loc)}">${escapeHtml(u.loc)}</td>
+      <td style="white-space:nowrap;">${u.lastmod || '<span style="color:var(--text-muted);">--</span>'}</td>
+      <td>${u.changefreq || '<span style="color:var(--text-muted);">--</span>'}</td>
+      <td>${u.priority !== '' ? u.priority : '<span style="color:var(--text-muted);">--</span>'}</td>
+      <td class="actions-cell">
+        <button onclick="editUrl(${i})" title="Edit">Edit</button>
+        <button class="del-btn" onclick="deleteUrl(${i})" title="Delete">Del</button>
+      </td>
+    </tr>
+  `).join('');
+
+  updateUrlCount();
+}
+
+// ========== Add Single URL ==========
+$('#addUrlBtn').addEventListener('click', () => {
+  const loc = $('#urlInput').value.trim();
+  if (!loc) {
+    showToast('Please enter a URL');
+    return;
+  }
+  if (!isValidUrl(loc)) {
+    showToast('Please enter a valid URL (http:// or https://)');
+    return;
+  }
+  if (urls.length >= 50000) {
+    showToast('Maximum 50,000 URLs reached!');
+    return;
+  }
+
+  const entry = {
+    loc: loc,
+    lastmod: $('#lastmodInput').value || '',
+    changefreq: $('#changefreqInput').value || '',
+    priority: $('#priorityInput').value !== '' ? parseFloat($('#priorityInput').value) : ''
+  };
+
+  if (entry.priority !== '' && (entry.priority < 0 || entry.priority > 1)) {
+    showToast('Priority must be between 0.0 and 1.0');
+    return;
+  }
+
+  urls.push(entry);
+  renderTable();
+  showToast('URL added');
+
+  // Reset URL input but keep other defaults
+  $('#urlInput').value = '';
+  $('#urlInput').focus();
+});
+
+// Enter key on URL input
+$('#urlInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    $('#addUrlBtn').click();
+  }
+});
+
+// Clear form
+$('#clearFormBtn').addEventListener('click', () => {
+  $('#urlInput').value = '';
+  $('#lastmodInput').value = '';
+  $('#changefreqInput').value = 'weekly';
+  $('#priorityInput').value = '0.5';
+});
+
+// ========== Edit/Delete URL ==========
+window.editUrl = function(index) {
+  const u = urls[index];
+  $('#urlInput').value = u.loc;
+  $('#lastmodInput').value = u.lastmod || '';
+  $('#changefreqInput').value = u.changefreq || '';
+  $('#priorityInput').value = u.priority !== '' ? u.priority : '0.5';
+
+  urls.splice(index, 1);
+  renderTable();
+
+  // Switch to add tab
+  $$('.tab-btn').forEach(b => b.classList.remove('active'));
+  $$('.tab-panel').forEach(p => p.classList.remove('active'));
+  $$('.tab-btn')[0].classList.add('active');
+  $('#add-urls').classList.add('active');
+  $('#urlInput').focus();
+  showToast('Editing URL - click Add URL to save');
+};
+
+window.deleteUrl = function(index) {
+  urls.splice(index, 1);
+  renderTable();
+  showToast('URL removed');
+};
+
+// Clear all
+$('#clearAllBtn').addEventListener('click', () => {
+  if (urls.length === 0) return;
+  if (confirm(`Remove all ${urls.length} URLs?`)) {
+    urls = [];
+    renderTable();
+    showToast('All URLs cleared');
+  }
+});
+
+// ========== Bulk Add ==========
+$('#bulkAddBtn').addEventListener('click', () => {
+  const text = $('#bulkUrls').value.trim();
+  if (!text) {
+    showToast('Please enter URLs');
+    return;
+  }
+
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+  const lastmod = $('#bulkLastmod').value || '';
+  const changefreq = $('#bulkChangefreq').value || '';
+  const priority = $('#bulkPriority').value !== '' ? parseFloat($('#bulkPriority').value) : '';
+
+  let added = 0;
+  let invalid = 0;
+
+  for (const line of lines) {
+    if (urls.length >= 50000) {
+      showToast(`Reached 50,000 URL limit. Added ${added}, skipped remaining.`);
+      break;
+    }
+    if (isValidUrl(line)) {
+      urls.push({ loc: line, lastmod, changefreq, priority });
+      added++;
+    } else {
+      invalid++;
+    }
+  }
+
+  renderTable();
+  if (invalid > 0) {
+    showToast(`Added ${added} URLs. ${invalid} invalid URLs skipped.`);
+  } else {
+    showToast(`Added ${added} URLs`);
+  }
+});
+
+$('#clearBulkBtn').addEventListener('click', () => {
+  $('#bulkUrls').value = '';
+});
+
+// ========== Import ==========
+function parseSitemap(xmlString) {
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlString, 'text/xml');
+
+    const parseError = doc.querySelector('parsererror');
+    if (parseError) {
+      showToast('Invalid XML. Please check the format.');
+      return [];
+    }
+
+    const urlElements = doc.querySelectorAll('url');
+    if (urlElements.length === 0) {
+      showToast('No <url> elements found in the XML.');
+      return [];
+    }
+
+    const entries = [];
+    urlElements.forEach(urlEl => {
+      const locEl = urlEl.querySelector('loc');
+      if (!locEl) return;
+      const loc = locEl.textContent.trim();
+      if (!loc) return;
+
+      const lastmodEl = urlEl.querySelector('lastmod');
+      const changefreqEl = urlEl.querySelector('changefreq');
+      const priorityEl = urlEl.querySelector('priority');
+
+      entries.push({
+        loc: loc,
+        lastmod: lastmodEl ? lastmodEl.textContent.trim().substring(0, 10) : '',
+        changefreq: changefreqEl ? changefreqEl.textContent.trim().toLowerCase() : '',
+        priority: priorityEl ? parseFloat(priorityEl.textContent.trim()) : ''
+      });
+    });
+
+    return entries;
+  } catch (err) {
+    showToast('Error parsing XML: ' + err.message);
+    return [];
+  }
+}
+
+$('#importBtn').addEventListener('click', () => {
+  const xml = $('#importXml').value.trim();
+  if (!xml) {
+    showToast('Please paste XML or upload a file');
+    return;
+  }
+
+  const entries = parseSitemap(xml);
+  if (entries.length > 0) {
+    const remaining = 50000 - urls.length;
+    const toAdd = entries.slice(0, remaining);
+    urls.push(...toAdd);
+    renderTable();
+
+    if (entries.length > remaining) {
+      showToast(`Imported ${toAdd.length} URLs. ${entries.length - remaining} skipped (50k limit).`);
+    } else {
+      showToast(`Imported ${toAdd.length} URLs`);
+    }
+
+    // Switch to Add URLs tab to show results
+    $$('.tab-btn').forEach(b => b.classList.remove('active'));
+    $$('.tab-panel').forEach(p => p.classList.remove('active'));
+    $$('.tab-btn')[0].classList.add('active');
+    $('#add-urls').classList.add('active');
+  }
+});
+
+$('#clearImportBtn').addEventListener('click', () => {
+  $('#importXml').value = '';
+});
+
+// File import
+const importDropZone = $('#importDropZone');
+const importFileInput = $('#importFileInput');
+
+importDropZone.addEventListener('click', () => importFileInput.click());
+importDropZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  importDropZone.classList.add('dragover');
+});
+importDropZone.addEventListener('dragleave', () => importDropZone.classList.remove('dragover'));
+importDropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  importDropZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length > 0) handleImportFile(e.dataTransfer.files[0]);
+});
+importFileInput.addEventListener('change', (e) => {
+  if (e.target.files.length > 0) handleImportFile(e.target.files[0]);
+});
+
+function handleImportFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    $('#importXml').value = e.target.result;
+    showToast('File loaded. Click Import to process.');
+  };
+  reader.readAsText(file);
+}
+
+// ========== Generate XML ==========
+function generateXml() {
+  if (urls.length === 0) {
+    showToast('No URLs to generate sitemap from');
+    return '';
+  }
+
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+  for (const u of urls) {
+    xml += '  <url>\n';
+    xml += `    <loc>${escapeXml(u.loc)}</loc>\n`;
+    if (u.lastmod) xml += `    <lastmod>${escapeXml(u.lastmod)}</lastmod>\n`;
+    if (u.changefreq) xml += `    <changefreq>${escapeXml(u.changefreq)}</changefreq>\n`;
+    if (u.priority !== '' && u.priority !== undefined) xml += `    <priority>${u.priority}</priority>\n`;
+    xml += '  </url>\n';
+  }
+
+  xml += '</urlset>';
+  return xml;
+}
+
+function highlightXml(xml) {
+  // Escape HTML first
+  let safe = escapeHtml(xml);
+
+  // Highlight XML declaration
+  safe = safe.replace(/(&lt;\?xml.*?\?&gt;)/g, '<span class="xml-comment">$1</span>');
+
+  // Highlight tags
+  safe = safe.replace(/(&lt;\/?)([\w:-]+)(&gt;)/g, '<span class="xml-tag">$1$2$3</span>');
+  safe = safe.replace(/(&lt;)([\w:-]+)(\s)/g, '<span class="xml-tag">$1$2</span>$3');
+
+  // Highlight attribute names and values
+  safe = safe.replace(/(xmlns)(=)(&quot;)(.*?)(&quot;)/g, '<span class="xml-attr">$1</span>$2<span class="xml-value">$3$4$5</span>');
+
+  // Highlight text content between tags
+  safe = safe.replace(/(<\/span>)([^<\n]+)(<span class="xml-tag">)/g, '$1<span class="xml-text">$2</span>$3');
+
+  return safe;
+}
+
+$('#generateBtn').addEventListener('click', () => {
+  generatedXml = generateXml();
+  if (!generatedXml) return;
+
+  $('#xmlPreview').innerHTML = highlightXml(generatedXml);
+  updateUrlCount();
+  showToast('Sitemap generated');
+});
+
+// ========== Validate ==========
+$('#validateBtn').addEventListener('click', () => {
+  const results = [];
+
+  if (urls.length === 0) {
+    results.push({ type: 'invalid', text: 'No URLs in the sitemap. Add at least one URL.' });
+  } else {
+    results.push({ type: 'valid', text: `Sitemap contains ${urls.length.toLocaleString()} URL${urls.length !== 1 ? 's' : ''}.` });
+  }
+
+  if (urls.length > 50000) {
+    results.push({ type: 'invalid', text: `Exceeds maximum of 50,000 URLs per sitemap (${urls.length.toLocaleString()} URLs). Split into multiple sitemaps.` });
+  } else if (urls.length > 45000) {
+    results.push({ type: 'warn', text: `Approaching 50,000 URL limit (${urls.length.toLocaleString()} URLs). Consider splitting soon.` });
+  }
+
+  const validFreqs = ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never', ''];
+  let invalidUrls = 0;
+  let invalidFreqs = 0;
+  let invalidPriorities = 0;
+  let duplicates = 0;
+  const seen = new Set();
+
+  for (const u of urls) {
+    if (!isValidUrl(u.loc)) invalidUrls++;
+    if (u.changefreq && !validFreqs.includes(u.changefreq)) invalidFreqs++;
+    if (u.priority !== '' && (u.priority < 0 || u.priority > 1)) invalidPriorities++;
+    if (seen.has(u.loc)) {
+      duplicates++;
+    } else {
+      seen.add(u.loc);
+    }
+  }
+
+  if (invalidUrls > 0) {
+    results.push({ type: 'invalid', text: `${invalidUrls} URL${invalidUrls !== 1 ? 's have' : ' has'} invalid format. URLs must start with http:// or https://.` });
+  } else if (urls.length > 0) {
+    results.push({ type: 'valid', text: 'All URLs have valid format.' });
+  }
+
+  if (invalidFreqs > 0) {
+    results.push({ type: 'invalid', text: `${invalidFreqs} URL${invalidFreqs !== 1 ? 's have' : ' has'} invalid changefreq value.` });
+  }
+
+  if (invalidPriorities > 0) {
+    results.push({ type: 'invalid', text: `${invalidPriorities} URL${invalidPriorities !== 1 ? 's have' : ' has'} priority outside 0.0-1.0 range.` });
+  }
+
+  if (duplicates > 0) {
+    results.push({ type: 'warn', text: `${duplicates} duplicate URL${duplicates !== 1 ? 's' : ''} detected. Consider removing duplicates.` });
+  } else if (urls.length > 0) {
+    results.push({ type: 'valid', text: 'No duplicate URLs found.' });
+  }
+
+  // Check file size estimate
+  const xmlEstimate = generateXml();
+  const sizeBytes = new Blob([xmlEstimate]).size;
+  const sizeMB = (sizeBytes / (1024 * 1024)).toFixed(2);
+  if (sizeBytes > 50 * 1024 * 1024) {
+    results.push({ type: 'invalid', text: `Estimated file size ${sizeMB}MB exceeds 50MB limit.` });
+  } else {
+    results.push({ type: 'valid', text: `Estimated file size: ${sizeMB}MB (limit: 50MB).` });
+  }
+
+  const container = $('#validationResults');
+  container.style.display = '';
+  container.innerHTML = `
+    <ul class="validation-list">
+      ${results.map(r => `<li class="${r.type}"><span>${r.type === 'valid' ? '&#10003;' : r.type === 'warn' ? '&#9888;' : '&#10007;'}</span> ${r.text}</li>`).join('')}
+    </ul>
+  `;
+});
+
+// ========== Copy XML ==========
+$('#copyXmlBtn').addEventListener('click', () => {
+  if (!generatedXml) {
+    generatedXml = generateXml();
+    if (!generatedXml) return;
+    $('#xmlPreview').innerHTML = highlightXml(generatedXml);
+  }
+  navigator.clipboard.writeText(generatedXml).then(() => showToast('XML copied to clipboard'));
+});
+
+// ========== Download ==========
+$('#downloadBtn').addEventListener('click', () => {
+  if (!generatedXml) {
+    generatedXml = generateXml();
+    if (!generatedXml) return;
+    $('#xmlPreview').innerHTML = highlightXml(generatedXml);
+  }
+  const blob = new Blob([generatedXml], { type: 'application/xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'sitemap.xml';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Downloading sitemap.xml');
+});
+
+// ========== Set default lastmod to today ==========
+const today = new Date().toISOString().split('T')[0];
+$('#lastmodInput').value = today;
+$('#bulkLastmod').value = today;
+
+// ========== Init ==========
+renderTable();
+</script>
+</body>
+</html>
