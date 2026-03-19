@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Art Editor - Create Pixel Art Online | Free Tool</title>
+<meta name="description" content="Create pixel art online with this free browser-based editor. Configurable canvas sizes, pencil, eraser, fill bucket, eyedropper, line tools, mirror mode, animation frames, and export to PNG or GIF. No signup required.">
+<meta name="keywords" content="pixel art editor, pixel art maker, create pixel art, pixel art online, sprite editor, pixel drawing tool, retro art, 8-bit art, pixel animation, GIF maker">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/pixel-art-editor">
+
+<meta property="og:title" content="Pixel Art Editor - Create Pixel Art Online | Zovo Tools">
+<meta property="og:description" content="Create pixel art online for free. Pencil, fill, eyedropper, mirror mode, animation frames, PNG and GIF export. Runs entirely in your browser.">
+<meta property="og:url" content="https://tools.zovo.one/pixel-art-editor">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pixel Art Editor - Create Pixel Art Online | Zovo Tools">
+<meta name="twitter:description" content="Create pixel art online for free. Draw, animate, and export sprites. No signup, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Pixel Art Editor",
+  "description": "Create pixel art online with configurable canvas sizes, drawing tools, mirror mode, animation frames, and export to PNG or GIF.",
+  "url": "https://tools.zovo.one/pixel-art-editor",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Canvas API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What canvas sizes are available?", "acceptedAnswer": {"@type": "Answer", "text": "The editor offers preset sizes of 8x8, 16x16, 32x32, and 64x64 pixels. You can also enter a custom width and height up to 128x128 pixels for larger sprite sheets or detailed artwork."}},
+    {"@type": "Question", "name": "Can I create pixel art animations?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The editor supports multiple frames for basic animation. You can add, duplicate, and delete frames, reorder them, and preview the animation with adjustable playback speed. Export your animation as an animated GIF."}},
+    {"@type": "Question", "name": "What export formats are supported?", "acceptedAnswer": {"@type": "Answer", "text": "You can export individual frames as PNG images scaled up to a visible size (so pixels remain crisp). You can also export animations as GIF files. The PNG export multiplies pixel size so your art looks sharp at any display size."}},
+    {"@type": "Question", "name": "What is mirror mode?", "acceptedAnswer": {"@type": "Answer", "text": "Mirror mode automatically duplicates your drawing on the opposite side of the canvas. You can enable horizontal symmetry, vertical symmetry, or both. This is perfect for creating symmetrical characters, icons, and patterns without manually drawing both sides."}},
+    {"@type": "Question", "name": "Is my pixel art stored on a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All drawing and processing happens entirely in your browser. Nothing is uploaded to any server. Make sure to export your work before closing the page, as there is no cloud save feature."}},
+    {"@type": "Question", "name": "What drawing tools are included?", "acceptedAnswer": {"@type": "Answer", "text": "The editor includes a pencil for placing individual pixels, an eraser for removing pixels, a fill bucket for flood-filling connected areas, an eyedropper/color picker for sampling colors from the canvas, and a line tool for drawing straight pixel lines."}},
+    {"@type": "Question", "name": "Can I undo and redo changes?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Press Ctrl+Z to undo and Ctrl+Y or Ctrl+Shift+Z to redo. You can also use the undo and redo buttons in the toolbar. The history is maintained per frame with up to 50 undo steps."}},
+    {"@type": "Question", "name": "How does the color palette work?", "acceptedAnswer": {"@type": "Answer", "text": "Pick any color using the color picker input. The editor automatically tracks your recently used colors in a palette below the picker, making it easy to switch between colors you have been using. You can click any swatch in the palette to reselect that color."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 36px 0 24px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Editor Layout */
+.editor-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .editor-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.panel-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+/* Tools */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.tool-btn:hover { color: var(--text); background: var(--surface2); }
+.tool-btn.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: rgba(0,255,136,0.3);
+}
+.tool-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tool-btn[title]::after {
+  content: attr(title);
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 200;
+}
+.tool-btn:hover[title]::after { opacity: 1; }
+
+/* Color */
+.color-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.color-input-wrap {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+.color-input-wrap input[type="color"] {
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  -webkit-appearance: none;
+}
+.color-input-wrap input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+.color-input-wrap input[type="color"]::-webkit-color-swatch { border: none; border-radius: 3px; }
+
+.color-hex {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 6px 10px;
+  width: 90px;
+  outline: none;
+}
+.color-hex:focus { border-color: var(--accent); }
+
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.palette-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+.palette-swatch:hover { transform: scale(1.15); border-color: var(--accent); }
+.palette-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-dim); }
+
+/* Canvas Size */
+.size-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.size-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.size-btn:hover { border-color: var(--text-muted); color: var(--text); }
+.size-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+.custom-size {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.custom-size input {
+  width: 50px;
+  padding: 5px 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.8rem;
+  text-align: center;
+  outline: none;
+}
+.custom-size input:focus { border-color: var(--accent); }
+.custom-size span { color: var(--text-muted); font-size: 0.8rem; }
+.custom-size button {
+  padding: 5px 10px;
+  border: 1px solid var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.custom-size button:hover { background: var(--accent); color: #0a0a0f; }
+
+/* Mirror */
+.mirror-toggles {
+  display: flex;
+  gap: 6px;
+}
+.mirror-btn {
+  flex: 1;
+  padding: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.mirror-btn:hover { border-color: var(--text-muted); }
+.mirror-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+/* Options */
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.option-row:last-child { margin-bottom: 0; }
+.option-label { font-size: 0.82rem; color: var(--text-muted); }
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle input:checked + .toggle-slider { background: var(--accent); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+/* Canvas Container */
+.canvas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.canvas-wrap {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 400px;
+  width: 100%;
+}
+
+#pixelCanvas {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  cursor: crosshair;
+  display: block;
+}
+
+/* Zoom controls */
+.canvas-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ctrl-btn.primary { background: var(--accent); border-color: var(--accent); color: #0a0a0f; font-weight: 600; }
+.ctrl-btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.ctrl-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+.zoom-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Frames Panel */
+.frames-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  width: 100%;
+}
+.frames-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.frames-header .panel-title { margin-bottom: 0; }
+.frames-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.frames-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+}
+.frames-strip::-webkit-scrollbar { height: 4px; }
+.frames-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.frame-thumb {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(45deg, #1a1a26 25%, transparent 25%),
+    linear-gradient(-45deg, #1a1a26 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #1a1a26 75%),
+    linear-gradient(-45deg, transparent 75%, #1a1a26 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+  background-color: #12121a;
+  transition: border-color 0.15s;
+}
+.frame-thumb:hover { border-color: var(--text-muted); }
+.frame-thumb.active { border-color: var(--accent); }
+.frame-thumb canvas {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.frame-thumb .frame-num {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  background: rgba(10,10,15,0.8);
+  padding: 0 4px;
+  border-radius: 3px;
+}
+.frame-thumb .frame-delete {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: rgba(255,68,102,0.8);
+  color: #fff;
+  font-size: 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.frame-thumb:hover .frame-delete { display: flex; }
+
+.playback-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.playback-controls label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.playback-controls input[type="range"] {
+  width: 80px;
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+.playback-controls input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+.fps-val {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  min-width: 35px;
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.6rem; }
+  .panel { padding: 10px; }
+  .canvas-wrap { padding: 10px; min-height: 300px; }
+  .frame-thumb { width: 48px; height: 48px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>Pixel Art</span> Editor</h1>
+    <p>Create pixel art, sprites, and animations directly in your browser. Draw, fill, mirror, animate, and export &mdash; all free and private.</p>
+  </header>
+
+  <div class="editor-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Tools -->
+      <div class="panel">
+        <div class="panel-title">Tools</div>
+        <div class="tool-grid">
+          <button class="tool-btn active" data-tool="pencil" title="Pencil (B)">
+            <svg viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+          </button>
+          <button class="tool-btn" data-tool="eraser" title="Eraser (E)">
+            <svg viewBox="0 0 24 24"><path d="M20 20H7L3 16l10-10 8 8-4 4"/><path d="M6.5 13.5l5 5"/></svg>
+          </button>
+          <button class="tool-btn" data-tool="fill" title="Fill (G)">
+            <svg viewBox="0 0 24 24"><path d="M19 11H5a4 4 0 0 0 0 8h14a4 4 0 0 0 0-8z"/><path d="M12 3v8"/></svg>
+          </button>
+          <button class="tool-btn" data-tool="eyedropper" title="Eyedropper (I)">
+            <svg viewBox="0 0 24 24"><path d="M2 22l1-1h3l9-9"/><path d="M3 21l9-9"/><circle cx="17" cy="7" r="4"/></svg>
+          </button>
+          <button class="tool-btn" data-tool="line" title="Line (L)">
+            <svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="19" y2="5"/></svg>
+          </button>
+        </div>
+        <div style="display:flex;gap:4px;margin-top:8px;">
+          <button class="tool-btn" id="undoBtn" title="Undo (Ctrl+Z)" style="flex:1;">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          </button>
+          <button class="tool-btn" id="redoBtn" title="Redo (Ctrl+Y)" style="flex:1;">
+            <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.13-9.36L23 10"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Color -->
+      <div class="panel">
+        <div class="panel-title">Color</div>
+        <div class="color-main">
+          <div class="color-input-wrap">
+            <input type="color" id="colorPicker" value="#ffffff">
+          </div>
+          <input type="text" class="color-hex" id="colorHex" value="#ffffff" maxlength="7">
+        </div>
+        <div class="palette" id="palette"></div>
+      </div>
+
+      <!-- Canvas Size -->
+      <div class="panel">
+        <div class="panel-title">Canvas Size</div>
+        <div class="size-presets">
+          <button class="size-btn" data-size="8">8x8</button>
+          <button class="size-btn active" data-size="16">16x16</button>
+          <button class="size-btn" data-size="32">32x32</button>
+          <button class="size-btn" data-size="64">64x64</button>
+        </div>
+        <div class="custom-size">
+          <input type="number" id="customW" value="16" min="1" max="128">
+          <span>&times;</span>
+          <input type="number" id="customH" value="16" min="1" max="128">
+          <button id="applySize">Set</button>
+        </div>
+      </div>
+
+      <!-- Mirror -->
+      <div class="panel">
+        <div class="panel-title">Mirror Mode</div>
+        <div class="mirror-toggles">
+          <button class="mirror-btn" id="mirrorH">&#8596; Horizontal</button>
+          <button class="mirror-btn" id="mirrorV">&#8597; Vertical</button>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="panel">
+        <div class="panel-title">Options</div>
+        <div class="option-row">
+          <span class="option-label">Grid overlay</span>
+          <label class="toggle">
+            <input type="checkbox" id="gridToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Canvas Area -->
+    <div class="canvas-container">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="pixelCanvas"></canvas>
+      </div>
+
+      <div class="canvas-controls">
+        <button class="ctrl-btn" id="zoomOut">&#8722; Zoom</button>
+        <span class="zoom-label" id="zoomLabel">x10</span>
+        <button class="ctrl-btn" id="zoomIn">&#43; Zoom</button>
+        <button class="ctrl-btn danger" id="clearCanvas">&#128465; Clear</button>
+        <button class="ctrl-btn primary" id="exportPNG">&#128190; PNG</button>
+        <button class="ctrl-btn" id="exportGIF">&#127916; GIF</button>
+      </div>
+
+      <!-- Frames -->
+      <div class="frames-panel">
+        <div class="frames-header">
+          <div class="panel-title">Frames</div>
+          <div class="frames-actions">
+            <button class="ctrl-btn" id="addFrame">&#43; Add</button>
+            <button class="ctrl-btn" id="dupFrame">&#10697; Dup</button>
+          </div>
+        </div>
+        <div class="frames-strip" id="framesStrip"></div>
+        <div class="playback-controls">
+          <button class="ctrl-btn" id="playBtn">&#9654; Play</button>
+          <label>Speed:</label>
+          <input type="range" id="fpsSlider" min="1" max="24" value="6">
+          <span class="fps-val" id="fpsVal">6 fps</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2>Create Pixel Art Online</h2>
+    <p>Pixel art is a digital art form where images are created and edited at the pixel level. Originating from early computer graphics and video games, pixel art has become a beloved art style in its own right. From retro-inspired indie games to modern icons and avatars, pixel art continues to thrive as both a practical skill and an expressive medium. This free online editor gives you everything you need to create pixel art directly in your browser, without installing any software.</p>
+
+    <h3>Getting Started</h3>
+    <p>Choose a canvas size from the presets (8x8, 16x16, 32x32, or 64x64) or enter a custom dimension up to 128x128 pixels. Smaller canvases like 8x8 and 16x16 are ideal for icons, small sprites, and simple characters. Larger canvases give you room for detailed scenes and bigger character sprites. The canvas automatically scales to fit your screen, and you can zoom in and out for precise pixel placement.</p>
+
+    <h3>Drawing Tools</h3>
+    <p>The pencil tool places individual pixels with your chosen color. The eraser removes pixels, making them transparent. The fill bucket uses a flood-fill algorithm to fill connected areas of the same color. The eyedropper lets you click any pixel on the canvas to pick its color, which is especially useful when working with complex palettes. The line tool draws straight pixel-perfect lines using Bresenham's algorithm.</p>
+
+    <h3>Mirror Mode for Symmetry</h3>
+    <p>Enable horizontal or vertical mirror mode (or both) to automatically duplicate your drawing on the opposite side of the canvas. This is invaluable for creating symmetrical characters, faces, vehicles, and decorative patterns. When both axes are enabled, every pixel you place is reflected in all four quadrants of the canvas.</p>
+
+    <h3>Animation and Frames</h3>
+    <p>The frame system lets you create basic pixel art animations. Add new blank frames, duplicate existing frames as starting points, and switch between frames to build your animation sequence. Use the play button to preview the animation at adjustable speeds from 1 to 24 frames per second. Delete unwanted frames by hovering over a thumbnail and clicking the X button. When satisfied, export the entire animation as a GIF file.</p>
+
+    <h3>Export Options</h3>
+    <p>Export individual frames as PNG images with transparent backgrounds. The PNG export scales your pixel art up so each pixel becomes clearly visible (for example, a 16x16 canvas exports as a crisp 512x512 image). For animations, export as an animated GIF that preserves your frame timing. Both formats maintain the sharp pixel edges that define the pixel art aesthetic.</p>
+
+    <h3>Tips for Better Pixel Art</h3>
+    <ul>
+      <li>Start with a limited color palette &mdash; constraints breed creativity</li>
+      <li>Use the grid overlay to keep track of individual pixels</li>
+      <li>Begin with silhouettes and shapes before adding detail</li>
+      <li>Use mirror mode for characters and symmetrical objects</li>
+      <li>Zoom in for detail work, zoom out to check the overall composition</li>
+      <li>Study classic pixel art from retro games for inspiration and technique</li>
+      <li>Save your work often by exporting &mdash; the editor does not persist data between sessions</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What canvas sizes are available?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The editor offers preset sizes of 8x8, 16x16, 32x32, and 64x64 pixels. You can also enter a custom width and height up to 128x128 pixels for larger sprite sheets or more detailed artwork. Changing the canvas size will start a new blank canvas.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I create pixel art animations?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. The editor supports multiple frames for basic animation. You can add new blank frames, duplicate existing frames as starting points, delete unwanted frames, and preview the animation with adjustable playback speed from 1 to 24 frames per second. Export your animation as an animated GIF file.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What export formats are supported?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>You can export individual frames as PNG images scaled up to a visible size so pixels remain crisp and sharp. The scaling factor ensures your art looks great at any display size. You can also export all frames as an animated GIF with your configured frame rate.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is mirror mode?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Mirror mode automatically duplicates your drawing on the opposite side of the canvas. You can enable horizontal symmetry (left-right), vertical symmetry (top-bottom), or both at the same time. This is perfect for creating symmetrical characters, icons, vehicles, and decorative patterns without manually drawing both sides.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my pixel art stored on a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. All drawing and processing happens entirely in your browser. Nothing is uploaded to any server and no tracking scripts are included. Make sure to export your work before closing the page, as there is no cloud save or auto-save feature.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What drawing tools are included?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The editor includes a pencil for placing individual pixels, an eraser for removing pixels (making them transparent), a fill bucket for flood-filling connected areas of the same color, an eyedropper for sampling colors from the canvas, and a line tool for drawing straight pixel-perfect lines using Bresenham's line algorithm.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I undo and redo changes?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. Press Ctrl+Z (or Cmd+Z on Mac) to undo and Ctrl+Y (or Cmd+Y on Mac) to redo. You can also use the undo and redo buttons in the toolbar. The history is maintained per frame with up to 50 undo steps, so you can freely experiment without worrying about losing your work.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does the color palette work?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Pick any color using the color picker or type a hex code directly. The editor automatically tracks your recently used colors in a palette, making it easy to switch between colors you have been working with. Click any swatch in the palette to reselect that color. The palette stores up to 24 recent colors.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </footer>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // --- State ---
+  let gridW = 16, gridH = 16;
+  let pixelSize = 10; // display size of each pixel
+  let currentTool = 'pencil';
+  let currentColor = '#ffffff';
+  let mirrorH = false, mirrorV = false;
+  let showGrid = true;
+  let isDrawing = false;
+  let lineStart = null;
+
+  // Frames
+  let frames = [];
+  let currentFrame = 0;
+  let isPlaying = false;
+  let playInterval = null;
+  let fps = 6;
+
+  // History per frame
+  let histories = [];
+  let historyIdxs = [];
+  const MAX_HISTORY = 50;
+
+  // Palette
+  let recentColors = ['#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800', '#8800ff', '#00ff88', '#ff4466'];
+
+  // Canvas
+  const canvas = document.getElementById('pixelCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // --- Init ---
+  function init() {
+    frames = [createEmptyGrid()];
+    histories = [[copyGrid(frames[0])]];
+    historyIdxs = [0];
+    currentFrame = 0;
+    render();
+    renderFrameStrip();
+    renderPalette();
+  }
+
+  function createEmptyGrid() {
+    const grid = [];
+    for (let y = 0; y < gridH; y++) {
+      grid[y] = [];
+      for (let x = 0; x < gridW; x++) {
+        grid[y][x] = null; // null = transparent
+      }
+    }
+    return grid;
+  }
+
+  function copyGrid(g) {
+    return g.map(row => [...row]);
+  }
+
+  // --- Render ---
+  function render() {
+    canvas.width = gridW * pixelSize;
+    canvas.height = gridH * pixelSize;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw checkerboard for transparency
+    for (let y = 0; y < gridH; y++) {
+      for (let x = 0; x < gridW; x++) {
+        const isLight = (x + y) % 2 === 0;
+        ctx.fillStyle = isLight ? '#1e1e2a' : '#16161f';
+        ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+      }
+    }
+
+    // Draw pixels
+    const grid = frames[currentFrame];
+    if (!grid) return;
+    for (let y = 0; y < gridH; y++) {
+      for (let x = 0; x < gridW; x++) {
+        if (grid[y] && grid[y][x]) {
+          ctx.fillStyle = grid[y][x];
+          ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+        }
+      }
+    }
+
+    // Draw grid
+    if (showGrid && pixelSize >= 4) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x <= gridW; x++) {
+        ctx.beginPath();
+        ctx.moveTo(x * pixelSize + 0.5, 0);
+        ctx.lineTo(x * pixelSize + 0.5, gridH * pixelSize);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= gridH; y++) {
+        ctx.beginPath();
+        ctx.moveTo(0, y * pixelSize + 0.5);
+        ctx.lineTo(gridW * pixelSize, y * pixelSize + 0.5);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // --- Pixel Operations ---
+  function getPixelCoords(e) {
+    const rect = canvas.getBoundingClientRect();
+    let clientX, clientY;
+    if (e.touches && e.touches.length > 0) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    const x = Math.floor((clientX - rect.left) / (rect.width / gridW));
+    const y = Math.floor((clientY - rect.top) / (rect.height / gridH));
+    return { x: Math.max(0, Math.min(gridW - 1, x)), y: Math.max(0, Math.min(gridH - 1, y)) };
+  }
+
+  function setPixel(x, y, color) {
+    const grid = frames[currentFrame];
+    if (x < 0 || x >= gridW || y < 0 || y >= gridH) return;
+    grid[y][x] = color;
+
+    if (mirrorH) {
+      const mx = gridW - 1 - x;
+      if (mx >= 0 && mx < gridW) grid[y][mx] = color;
+    }
+    if (mirrorV) {
+      const my = gridH - 1 - y;
+      if (my >= 0 && my < gridH) grid[my][x] = color;
+    }
+    if (mirrorH && mirrorV) {
+      const mx = gridW - 1 - x;
+      const my = gridH - 1 - y;
+      if (mx >= 0 && mx < gridW && my >= 0 && my < gridH) grid[my][mx] = color;
+    }
+  }
+
+  function floodFill(startX, startY, newColor) {
+    const grid = frames[currentFrame];
+    const targetColor = grid[startY][startX];
+    if (targetColor === newColor) return;
+
+    const stack = [[startX, startY]];
+    const visited = new Set();
+
+    while (stack.length > 0) {
+      const [x, y] = stack.pop();
+      const key = x + ',' + y;
+      if (visited.has(key)) continue;
+      if (x < 0 || x >= gridW || y < 0 || y >= gridH) continue;
+      if (grid[y][x] !== targetColor) continue;
+
+      visited.add(key);
+      grid[y][x] = newColor;
+
+      stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+    }
+  }
+
+  // Bresenham's line
+  function getLinePixels(x0, y0, x1, y1) {
+    const pixels = [];
+    const dx = Math.abs(x1 - x0);
+    const dy = Math.abs(y1 - y0);
+    const sx = x0 < x1 ? 1 : -1;
+    const sy = y0 < y1 ? 1 : -1;
+    let err = dx - dy;
+
+    while (true) {
+      pixels.push({ x: x0, y: y0 });
+      if (x0 === x1 && y0 === y1) break;
+      const e2 = 2 * err;
+      if (e2 > -dy) { err -= dy; x0 += sx; }
+      if (e2 < dx) { err += dx; y0 += sy; }
+    }
+    return pixels;
+  }
+
+  // --- History ---
+  function saveHistory() {
+    const h = histories[currentFrame];
+    let idx = historyIdxs[currentFrame];
+    h.splice(idx + 1);
+    h.push(copyGrid(frames[currentFrame]));
+    if (h.length > MAX_HISTORY) h.shift();
+    historyIdxs[currentFrame] = h.length - 1;
+  }
+
+  function undo() {
+    let idx = historyIdxs[currentFrame];
+    if (idx <= 0) return;
+    historyIdxs[currentFrame] = idx - 1;
+    frames[currentFrame] = copyGrid(histories[currentFrame][historyIdxs[currentFrame]]);
+    render();
+    updateFrameThumb(currentFrame);
+  }
+
+  function redo() {
+    const h = histories[currentFrame];
+    let idx = historyIdxs[currentFrame];
+    if (idx >= h.length - 1) return;
+    historyIdxs[currentFrame] = idx + 1;
+    frames[currentFrame] = copyGrid(h[historyIdxs[currentFrame]]);
+    render();
+    updateFrameThumb(currentFrame);
+  }
+
+  // --- Mouse/Touch Events ---
+  let lastDrawnPixel = null;
+
+  function onPointerDown(e) {
+    e.preventDefault();
+    const pos = getPixelCoords(e);
+    isDrawing = true;
+    lastDrawnPixel = null;
+
+    if (currentTool === 'eyedropper') {
+      const grid = frames[currentFrame];
+      const color = grid[pos.y][pos.x];
+      if (color) {
+        currentColor = color;
+        document.getElementById('colorPicker').value = color;
+        document.getElementById('colorHex').value = color;
+        addRecentColor(color);
+      }
+      isDrawing = false;
+      return;
+    }
+
+    if (currentTool === 'fill') {
+      floodFill(pos.x, pos.y, currentColor);
+      saveHistory();
+      render();
+      updateFrameThumb(currentFrame);
+      isDrawing = false;
+      return;
+    }
+
+    if (currentTool === 'line') {
+      lineStart = pos;
+      return;
+    }
+
+    // Pencil or eraser
+    const color = currentTool === 'eraser' ? null : currentColor;
+    setPixel(pos.x, pos.y, color);
+    lastDrawnPixel = pos;
+    render();
+  }
+
+  function onPointerMove(e) {
+    if (!isDrawing) return;
+    e.preventDefault();
+    const pos = getPixelCoords(e);
+
+    if (currentTool === 'line') {
+      // Preview line
+      render();
+      if (lineStart) {
+        const pixels = getLinePixels(lineStart.x, lineStart.y, pos.x, pos.y);
+        ctx.fillStyle = currentColor;
+        pixels.forEach(p => {
+          ctx.fillRect(p.x * pixelSize, p.y * pixelSize, pixelSize, pixelSize);
+        });
+      }
+      return;
+    }
+
+    const color = currentTool === 'eraser' ? null : currentColor;
+
+    // Draw line between last and current to avoid skipping pixels
+    if (lastDrawnPixel) {
+      const pixels = getLinePixels(lastDrawnPixel.x, lastDrawnPixel.y, pos.x, pos.y);
+      pixels.forEach(p => setPixel(p.x, p.y, color));
+    } else {
+      setPixel(pos.x, pos.y, color);
+    }
+    lastDrawnPixel = pos;
+    render();
+  }
+
+  function onPointerUp(e) {
+    if (!isDrawing) return;
+    isDrawing = false;
+
+    if (currentTool === 'line' && lineStart) {
+      const pos = getPixelCoords(e);
+      const pixels = getLinePixels(lineStart.x, lineStart.y, pos.x, pos.y);
+      pixels.forEach(p => setPixel(p.x, p.y, currentColor));
+      lineStart = null;
+      render();
+    }
+
+    saveHistory();
+    updateFrameThumb(currentFrame);
+    lastDrawnPixel = null;
+  }
+
+  canvas.addEventListener('mousedown', onPointerDown);
+  canvas.addEventListener('mousemove', onPointerMove);
+  canvas.addEventListener('mouseup', onPointerUp);
+  canvas.addEventListener('mouseleave', () => {
+    if (isDrawing && currentTool !== 'line') {
+      isDrawing = false;
+      saveHistory();
+      updateFrameThumb(currentFrame);
+    }
+  });
+
+  canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+  canvas.addEventListener('touchmove', onPointerMove, { passive: false });
+  canvas.addEventListener('touchend', onPointerUp, { passive: false });
+  canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+  // --- Tool Selection ---
+  function selectTool(tool) {
+    currentTool = tool;
+    document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tool === tool);
+    });
+    canvas.style.cursor = tool === 'eyedropper' ? 'copy' : 'crosshair';
+  }
+
+  document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+    btn.addEventListener('click', () => selectTool(btn.dataset.tool));
+  });
+
+  // --- Color ---
+  const colorPicker = document.getElementById('colorPicker');
+  const colorHex = document.getElementById('colorHex');
+
+  colorPicker.addEventListener('input', (e) => {
+    currentColor = e.target.value;
+    colorHex.value = currentColor;
+    addRecentColor(currentColor);
+  });
+
+  colorHex.addEventListener('change', (e) => {
+    let val = e.target.value.trim();
+    if (!val.startsWith('#')) val = '#' + val;
+    if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+      currentColor = val;
+      colorPicker.value = val;
+      addRecentColor(val);
+    }
+  });
+
+  function addRecentColor(color) {
+    const idx = recentColors.indexOf(color);
+    if (idx !== -1) recentColors.splice(idx, 1);
+    recentColors.unshift(color);
+    if (recentColors.length > 24) recentColors.pop();
+    renderPalette();
+  }
+
+  function renderPalette() {
+    const pal = document.getElementById('palette');
+    pal.innerHTML = '';
+    recentColors.forEach(c => {
+      const swatch = document.createElement('div');
+      swatch.className = 'palette-swatch' + (c === currentColor ? ' active' : '');
+      swatch.style.backgroundColor = c;
+      swatch.addEventListener('click', () => {
+        currentColor = c;
+        colorPicker.value = c;
+        colorHex.value = c;
+        renderPalette();
+      });
+      pal.appendChild(swatch);
+    });
+  }
+
+  // --- Canvas Size ---
+  function setCanvasSize(w, h) {
+    if (w < 1 || h < 1 || w > 128 || h > 128) return;
+    gridW = w;
+    gridH = h;
+    document.getElementById('customW').value = w;
+    document.getElementById('customH').value = h;
+
+    // Calculate pixel size to fit container
+    calculatePixelSize();
+
+    frames = [createEmptyGrid()];
+    histories = [[copyGrid(frames[0])]];
+    historyIdxs = [0];
+    currentFrame = 0;
+    render();
+    renderFrameStrip();
+
+    // Update preset buttons
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.size) === w && w === h);
+    });
+  }
+
+  function calculatePixelSize() {
+    const wrap = document.getElementById('canvasWrap');
+    const maxW = wrap.clientWidth - 32;
+    const maxH = wrap.clientHeight - 32;
+    pixelSize = Math.max(2, Math.min(Math.floor(maxW / gridW), Math.floor(maxH / gridH)));
+    document.getElementById('zoomLabel').textContent = 'x' + pixelSize;
+  }
+
+  document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const s = parseInt(btn.dataset.size);
+      setCanvasSize(s, s);
+    });
+  });
+
+  document.getElementById('applySize').addEventListener('click', () => {
+    const w = parseInt(document.getElementById('customW').value) || 16;
+    const h = parseInt(document.getElementById('customH').value) || 16;
+    setCanvasSize(Math.min(128, Math.max(1, w)), Math.min(128, Math.max(1, h)));
+  });
+
+  // --- Zoom ---
+  document.getElementById('zoomIn').addEventListener('click', () => {
+    pixelSize = Math.min(40, pixelSize + 2);
+    document.getElementById('zoomLabel').textContent = 'x' + pixelSize;
+    render();
+  });
+
+  document.getElementById('zoomOut').addEventListener('click', () => {
+    pixelSize = Math.max(2, pixelSize - 2);
+    document.getElementById('zoomLabel').textContent = 'x' + pixelSize;
+    render();
+  });
+
+  // --- Mirror ---
+  document.getElementById('mirrorH').addEventListener('click', function() {
+    mirrorH = !mirrorH;
+    this.classList.toggle('active', mirrorH);
+  });
+  document.getElementById('mirrorV').addEventListener('click', function() {
+    mirrorV = !mirrorV;
+    this.classList.toggle('active', mirrorV);
+  });
+
+  // --- Grid Toggle ---
+  document.getElementById('gridToggle').addEventListener('change', (e) => {
+    showGrid = e.target.checked;
+    render();
+  });
+
+  // --- Clear ---
+  document.getElementById('clearCanvas').addEventListener('click', () => {
+    if (confirm('Clear the current frame?')) {
+      frames[currentFrame] = createEmptyGrid();
+      saveHistory();
+      render();
+      updateFrameThumb(currentFrame);
+    }
+  });
+
+  // --- Undo/Redo ---
+  document.getElementById('undoBtn').addEventListener('click', undo);
+  document.getElementById('redoBtn').addEventListener('click', redo);
+
+  // --- Keyboard ---
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+      e.preventDefault();
+      if (e.shiftKey) redo(); else undo();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+      e.preventDefault();
+      redo();
+    }
+
+    if (!e.ctrlKey && !e.metaKey) {
+      switch(e.key.toLowerCase()) {
+        case 'b': selectTool('pencil'); break;
+        case 'e': selectTool('eraser'); break;
+        case 'g': selectTool('fill'); break;
+        case 'i': selectTool('eyedropper'); break;
+        case 'l': selectTool('line'); break;
+      }
+    }
+  });
+
+  // --- Frames ---
+  function renderFrameStrip() {
+    const strip = document.getElementById('framesStrip');
+    strip.innerHTML = '';
+    frames.forEach((grid, i) => {
+      const thumb = document.createElement('div');
+      thumb.className = 'frame-thumb' + (i === currentFrame ? ' active' : '');
+      thumb.addEventListener('click', (e) => {
+        if (e.target.classList.contains('frame-delete')) return;
+        switchFrame(i);
+      });
+
+      const tc = document.createElement('canvas');
+      tc.width = gridW;
+      tc.height = gridH;
+      drawGridToCanvas(tc, grid);
+      thumb.appendChild(tc);
+
+      const num = document.createElement('span');
+      num.className = 'frame-num';
+      num.textContent = i + 1;
+      thumb.appendChild(num);
+
+      if (frames.length > 1) {
+        const del = document.createElement('button');
+        del.className = 'frame-delete';
+        del.textContent = '\u00D7';
+        del.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteFrame(i);
+        });
+        thumb.appendChild(del);
+      }
+
+      strip.appendChild(thumb);
+    });
+  }
+
+  function drawGridToCanvas(c, grid) {
+    const tctx = c.getContext('2d');
+    tctx.clearRect(0, 0, c.width, c.height);
+    for (let y = 0; y < gridH; y++) {
+      for (let x = 0; x < gridW; x++) {
+        if (grid[y] && grid[y][x]) {
+          tctx.fillStyle = grid[y][x];
+          tctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+  }
+
+  function updateFrameThumb(idx) {
+    const strip = document.getElementById('framesStrip');
+    const thumb = strip.children[idx];
+    if (!thumb) return;
+    const tc = thumb.querySelector('canvas');
+    if (tc) drawGridToCanvas(tc, frames[idx]);
+  }
+
+  function switchFrame(idx) {
+    currentFrame = idx;
+    render();
+    document.querySelectorAll('.frame-thumb').forEach((t, i) => {
+      t.classList.toggle('active', i === idx);
+    });
+  }
+
+  document.getElementById('addFrame').addEventListener('click', () => {
+    frames.push(createEmptyGrid());
+    histories.push([copyGrid(frames[frames.length - 1])]);
+    historyIdxs.push(0);
+    currentFrame = frames.length - 1;
+    render();
+    renderFrameStrip();
+  });
+
+  document.getElementById('dupFrame').addEventListener('click', () => {
+    frames.push(copyGrid(frames[currentFrame]));
+    histories.push([copyGrid(frames[frames.length - 1])]);
+    historyIdxs.push(0);
+    currentFrame = frames.length - 1;
+    render();
+    renderFrameStrip();
+  });
+
+  function deleteFrame(idx) {
+    if (frames.length <= 1) return;
+    frames.splice(idx, 1);
+    histories.splice(idx, 1);
+    historyIdxs.splice(idx, 1);
+    if (currentFrame >= frames.length) currentFrame = frames.length - 1;
+    render();
+    renderFrameStrip();
+  }
+
+  // --- Playback ---
+  document.getElementById('playBtn').addEventListener('click', function() {
+    if (isPlaying) {
+      stopPlayback();
+    } else {
+      startPlayback();
+    }
+  });
+
+  function startPlayback() {
+    if (frames.length < 2) return;
+    isPlaying = true;
+    document.getElementById('playBtn').innerHTML = '&#9646;&#9646; Pause';
+    let frameIdx = 0;
+    playInterval = setInterval(() => {
+      frameIdx = (frameIdx + 1) % frames.length;
+      switchFrame(frameIdx);
+    }, 1000 / fps);
+  }
+
+  function stopPlayback() {
+    isPlaying = false;
+    document.getElementById('playBtn').innerHTML = '&#9654; Play';
+    clearInterval(playInterval);
+  }
+
+  const fpsSlider = document.getElementById('fpsSlider');
+  const fpsVal = document.getElementById('fpsVal');
+  fpsSlider.addEventListener('input', (e) => {
+    fps = parseInt(e.target.value);
+    fpsVal.textContent = fps + ' fps';
+    if (isPlaying) {
+      stopPlayback();
+      startPlayback();
+    }
+  });
+
+  // --- Export PNG ---
+  document.getElementById('exportPNG').addEventListener('click', () => {
+    const scale = Math.max(1, Math.floor(512 / Math.max(gridW, gridH)));
+    const ec = document.createElement('canvas');
+    ec.width = gridW * scale;
+    ec.height = gridH * scale;
+    const ectx = ec.getContext('2d');
+    ectx.imageSmoothingEnabled = false;
+
+    const grid = frames[currentFrame];
+    for (let y = 0; y < gridH; y++) {
+      for (let x = 0; x < gridW; x++) {
+        if (grid[y][x]) {
+          ectx.fillStyle = grid[y][x];
+          ectx.fillRect(x * scale, y * scale, scale, scale);
+        }
+      }
+    }
+
+    ec.toBlob((blob) => {
+      const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+      downloadBlob(blob, `pixel-art-${ts}.png`);
+    }, 'image/png');
+  });
+
+  // --- Export GIF ---
+  document.getElementById('exportGIF').addEventListener('click', () => {
+    if (frames.length < 2) {
+      alert('Add at least 2 frames to export a GIF animation.');
+      return;
+    }
+    // Simple GIF encoder (uncompressed)
+    const scale = Math.max(1, Math.floor(256 / Math.max(gridW, gridH)));
+    const w = gridW * scale;
+    const h = gridH * scale;
+    const delay = Math.round(100 / fps); // in centiseconds
+
+    // Build GIF using canvas frames
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = w;
+    tempCanvas.height = h;
+    const tctx = tempCanvas.getContext('2d');
+    tctx.imageSmoothingEnabled = false;
+
+    // Use a simple approach: collect all frame data, build GIF manually
+    // We'll use a minimal GIF89a encoder
+    const gif = new GIFEncoder(w, h);
+    gif.setRepeat(0);
+    gif.setDelay(delay * 10);
+    gif.start();
+
+    frames.forEach((grid) => {
+      tctx.clearRect(0, 0, w, h);
+      // White background for GIF (no transparency in simple encoder)
+      tctx.fillStyle = '#ffffff';
+      tctx.fillRect(0, 0, w, h);
+      for (let y = 0; y < gridH; y++) {
+        for (let x = 0; x < gridW; x++) {
+          if (grid[y][x]) {
+            tctx.fillStyle = grid[y][x];
+            tctx.fillRect(x * scale, y * scale, scale, scale);
+          }
+        }
+      }
+      gif.addFrame(tctx);
+    });
+
+    gif.finish();
+    const blob = new Blob([gif.output()], { type: 'image/gif' });
+    const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    downloadBlob(blob, `pixel-art-${ts}.gif`);
+  });
+
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // --- FAQ ---
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+  });
+
+  // --- Resize ---
+  window.addEventListener('resize', () => {
+    calculatePixelSize();
+    render();
+  });
+
+  // Init
+  calculatePixelSize();
+  init();
+
+  // =========================================================
+  // Minimal GIF89a Encoder (LZW compressed)
+  // =========================================================
+  function GIFEncoder(width, height) {
+    let out = [];
+    let delay = 100;
+    let repeat = -1;
+    let frameCount = 0;
+    let imageData = [];
+
+    this.setDelay = function(ms) { delay = ms; };
+    this.setRepeat = function(r) { repeat = r; };
+
+    this.start = function() {
+      out = [];
+      writeString('GIF89a');
+      writeLSD();
+      if (repeat >= 0) {
+        writeNetscapeExt();
+      }
+    };
+
+    this.addFrame = function(context) {
+      const imgData = context.getImageData(0, 0, width, height);
+      const { palette, indexedPixels } = quantize(imgData.data);
+      writeGraphicCtrlExt(delay);
+      writeImageDesc(palette.length);
+      writePalette(palette);
+      writeLZW(indexedPixels, Math.max(2, Math.ceil(Math.log2(palette.length))));
+      frameCount++;
+    };
+
+    this.finish = function() {
+      out.push(0x3B); // GIF trailer
+    };
+
+    this.output = function() {
+      return new Uint8Array(out);
+    };
+
+    function writeByte(b) { out.push(b & 0xFF); }
+    function writeShort(v) { writeByte(v & 0xFF); writeByte((v >> 8) & 0xFF); }
+    function writeString(s) { for (let i = 0; i < s.length; i++) writeByte(s.charCodeAt(i)); }
+
+    function writeLSD() {
+      writeShort(width);
+      writeShort(height);
+      writeByte(0x70); // GCT flag = 0, color res = 7, sort = 0, size = 0
+      writeByte(0);    // bg color index
+      writeByte(0);    // pixel aspect ratio
+    }
+
+    function writeNetscapeExt() {
+      writeByte(0x21); // extension
+      writeByte(0xFF); // app extension
+      writeByte(11);   // block size
+      writeString('NETSCAPE2.0');
+      writeByte(3);    // sub-block size
+      writeByte(1);    // loop sub-block id
+      writeShort(repeat); // loop count
+      writeByte(0);    // block terminator
+    }
+
+    function writeGraphicCtrlExt(delay) {
+      writeByte(0x21); // extension
+      writeByte(0xF9); // GCE label
+      writeByte(4);    // block size
+      writeByte(0);    // packed: no transparency, no disposal
+      writeShort(Math.round(delay / 10)); // delay in centiseconds
+      writeByte(0);    // transparent color index
+      writeByte(0);    // block terminator
+    }
+
+    function writeImageDesc(paletteSize) {
+      writeByte(0x2C); // image separator
+      writeShort(0);   // left
+      writeShort(0);   // top
+      writeShort(width);
+      writeShort(height);
+      // Local color table flag = 1, interlace = 0, sort = 0, size
+      const sizeBits = Math.max(0, Math.ceil(Math.log2(paletteSize)) - 1);
+      writeByte(0x80 | sizeBits);
+    }
+
+    function writePalette(palette) {
+      for (let i = 0; i < palette.length; i++) {
+        writeByte(palette[i][0]);
+        writeByte(palette[i][1]);
+        writeByte(palette[i][2]);
+      }
+      // Pad to power of 2
+      const targetSize = 1 << Math.max(1, Math.ceil(Math.log2(palette.length)));
+      for (let i = palette.length; i < targetSize; i++) {
+        writeByte(0); writeByte(0); writeByte(0);
+      }
+    }
+
+    // Simple color quantization - collect unique colors (up to 256)
+    function quantize(pixels) {
+      const colorMap = new Map();
+      const colors = [];
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        const r = pixels[i], g = pixels[i+1], b = pixels[i+2];
+        const key = (r << 16) | (g << 8) | b;
+        if (!colorMap.has(key)) {
+          if (colors.length < 256) {
+            colorMap.set(key, colors.length);
+            colors.push([r, g, b]);
+          }
+        }
+      }
+
+      // Ensure power of 2 palette size (min 4)
+      while (colors.length < 4) colors.push([0, 0, 0]);
+      const targetSize = 1 << Math.ceil(Math.log2(colors.length));
+      while (colors.length < targetSize) colors.push([0, 0, 0]);
+
+      // Build indexed pixels
+      const indexed = new Uint8Array(pixels.length / 4);
+      for (let i = 0; i < pixels.length; i += 4) {
+        const r = pixels[i], g = pixels[i+1], b = pixels[i+2];
+        const key = (r << 16) | (g << 8) | b;
+        indexed[i / 4] = colorMap.has(key) ? colorMap.get(key) : findClosest(colors, r, g, b);
+      }
+
+      return { palette: colors.slice(0, targetSize), indexedPixels: indexed };
+    }
+
+    function findClosest(palette, r, g, b) {
+      let best = 0, bestDist = Infinity;
+      for (let i = 0; i < palette.length; i++) {
+        const dr = r - palette[i][0], dg = g - palette[i][1], db = b - palette[i][2];
+        const d = dr*dr + dg*dg + db*db;
+        if (d < bestDist) { bestDist = d; best = i; }
+      }
+      return best;
+    }
+
+    // LZW Compression
+    function writeLZW(indexedPixels, minCodeSize) {
+      minCodeSize = Math.max(2, minCodeSize);
+      writeByte(minCodeSize);
+
+      const clearCode = 1 << minCodeSize;
+      const eoiCode = clearCode + 1;
+      let codeSize = minCodeSize + 1;
+      let nextCode = eoiCode + 1;
+      const maxCode = 4096;
+
+      let table = {};
+      function resetTable() {
+        table = {};
+        for (let i = 0; i < clearCode; i++) {
+          table[String(i)] = i;
+        }
+        codeSize = minCodeSize + 1;
+        nextCode = eoiCode + 1;
+      }
+
+      resetTable();
+
+      let buffer = 0;
+      let bufferBits = 0;
+      let subBlock = [];
+      let allSubBlocks = [];
+
+      function writeCode(code) {
+        buffer |= (code << bufferBits);
+        bufferBits += codeSize;
+        while (bufferBits >= 8) {
+          subBlock.push(buffer & 0xFF);
+          buffer >>= 8;
+          bufferBits -= 8;
+          if (subBlock.length === 255) {
+            allSubBlocks.push(subBlock.length);
+            allSubBlocks.push(...subBlock);
+            subBlock = [];
+          }
+        }
+      }
+
+      writeCode(clearCode);
+
+      if (indexedPixels.length === 0) {
+        writeCode(eoiCode);
+      } else {
+        let current = String(indexedPixels[0]);
+        for (let i = 1; i < indexedPixels.length; i++) {
+          const pixel = String(indexedPixels[i]);
+          const combined = current + ',' + pixel;
+          if (table[combined] !== undefined) {
+            current = combined;
+          } else {
+            writeCode(table[current]);
+            if (nextCode < maxCode) {
+              table[combined] = nextCode++;
+              if (nextCode > (1 << codeSize) && codeSize < 12) {
+                codeSize++;
+              }
+            } else {
+              writeCode(clearCode);
+              resetTable();
+            }
+            current = pixel;
+          }
+        }
+        writeCode(table[current]);
+        writeCode(eoiCode);
+      }
+
+      // Flush remaining bits
+      if (bufferBits > 0) {
+        subBlock.push(buffer & 0xFF);
+      }
+      if (subBlock.length > 0) {
+        allSubBlocks.push(subBlock.length);
+        allSubBlocks.push(...subBlock);
+      }
+
+      for (let i = 0; i < allSubBlocks.length; i++) {
+        writeByte(allSubBlocks[i]);
+      }
+      writeByte(0); // block terminator
+    }
+  }
+
+})();
+</script>
+</body>
+</html>
