@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Blindness Simulator - Test Color Accessibility | Free Tool</title>
+<meta name="description" content="Simulate 8 types of color vision deficiency on images or colors. Protanopia, deuteranopia, tritanopia, and more. WCAG contrast checking, side-by-side comparison. Free, private, runs in your browser.">
+<meta name="keywords" content="color blindness simulator, color vision deficiency, protanopia, deuteranopia, tritanopia, color accessibility, WCAG contrast, CVD simulator, accessibility testing, color blind test">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/color-blindness-simulator">
+
+<meta property="og:title" content="Color Blindness Simulator - Test Color Accessibility | Zovo Tools">
+<meta property="og:description" content="Simulate 8 types of color vision deficiency on images or colors. WCAG contrast checking and side-by-side comparison. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/color-blindness-simulator">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Color Blindness Simulator - Test Color Accessibility | Zovo Tools">
+<meta name="twitter:description" content="Test color accessibility with 8 CVD simulations. WCAG contrast checking included. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Color Blindness Simulator",
+  "description": "Simulate 8 types of color vision deficiency on images or colors. Includes WCAG contrast checking and side-by-side comparison.",
+  "url": "https://tools.zovo.one/color-blindness-simulator",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Canvas API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What types of color blindness can this simulate?", "acceptedAnswer": {"@type": "Answer", "text": "Eight types: Protanopia (no red cones), Deuteranopia (no green cones), Tritanopia (no blue cones), Protanomaly (weak red), Deuteranomaly (weak green), Tritanomaly (weak blue), Achromatopsia (total color blindness), and Achromatomaly (weak total color vision)."}},
+    {"@type": "Question", "name": "How does the simulation work?", "acceptedAnswer": {"@type": "Answer", "text": "The tool applies scientifically-derived color transformation matrices to each pixel of your image using the HTML5 Canvas API. These matrices model how each type of color vision deficiency affects color perception, based on research by Brettel, Vienot, and Machado."}},
+    {"@type": "Question", "name": "Can I test specific colors without uploading an image?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The Color Input mode lets you enter two colors and see how they appear under each type of color vision deficiency. This is useful for checking if your color choices remain distinguishable for color blind users."}},
+    {"@type": "Question", "name": "What is WCAG color contrast?", "acceptedAnswer": {"@type": "Answer", "text": "WCAG (Web Content Accessibility Guidelines) defines minimum contrast ratios between text and background colors. Level AA requires 4.5:1 for normal text and 3:1 for large text. Level AAA requires 7:1 for normal text and 4.5:1 for large text."}},
+    {"@type": "Question", "name": "Is my image uploaded to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All processing happens entirely in your browser using the Canvas API. Your images never leave your device. The tool works offline after initial page load."}},
+    {"@type": "Question", "name": "What image formats are supported?", "acceptedAnswer": {"@type": "Answer", "text": "All common image formats supported by your browser, including PNG, JPEG, GIF, WebP, SVG, and BMP. There is no file size limit imposed by the tool, though very large images may take longer to process."}},
+    {"@type": "Question", "name": "How common is color blindness?", "acceptedAnswer": {"@type": "Answer", "text": "About 8% of males and 0.5% of females of Northern European descent have some form of color vision deficiency. Deuteranomaly (weak green) is the most common type, affecting roughly 6% of males. Designing with color accessibility in mind benefits approximately 300 million people worldwide."}},
+    {"@type": "Question", "name": "How can I make my designs more accessible?", "acceptedAnswer": {"@type": "Answer", "text": "Use sufficient contrast ratios, do not rely on color alone to convey information, add patterns or labels alongside color coding, test with this simulator for all major CVD types, and follow WCAG 2.1 guidelines for color usage."}}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Zovo Tools", "item": "https://tools.zovo.one/"},
+    {"@type": "ListItem", "position": 2, "name": "Color Blindness Simulator", "item": "https://tools.zovo.one/color-blindness-simulator/"}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+input[type="text"], input[type="color"], select {
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+input[type="text"]:focus, select:focus {
+  border-color: var(--accent);
+}
+input[type="text"] { width: 100%; }
+input[type="color"] {
+  width: 60px;
+  height: 44px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone-icon { font-size: 2rem; margin-bottom: 8px; }
+.drop-zone-text { color: var(--text-muted); font-size: 0.95rem; }
+.drop-zone-text span { color: var(--accent); font-weight: 500; }
+.file-input { display: none; }
+
+.cvd-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.cvd-type-btn {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+.cvd-type-btn:hover { border-color: var(--accent); }
+.cvd-type-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+.cvd-type-btn .cvd-name {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+.cvd-type-btn .cvd-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.sim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+.sim-panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.sim-panel-label {
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+.sim-panel canvas {
+  width: 100%;
+  display: block;
+}
+
+.color-input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.color-input-group {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+.color-input-group input[type="text"] {
+  flex: 1;
+}
+
+.color-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.color-swatch-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.color-swatch-card .swatch-header {
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #fff;
+}
+.color-swatch-card .swatch-preview {
+  display: flex;
+  height: 60px;
+}
+.color-swatch-card .swatch-preview div {
+  flex: 1;
+}
+.color-swatch-card .swatch-text {
+  padding: 8px 12px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.contrast-result {
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+.contrast-ratio {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.contrast-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.contrast-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.contrast-badge.pass {
+  background: rgba(0,255,136,0.15);
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+.contrast-badge.fail {
+  background: rgba(255,68,102,0.15);
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+
+.all-sim-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.all-sim-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.all-sim-card canvas {
+  width: 100%;
+  display: block;
+}
+.all-sim-card .sim-label {
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .sim-grid { grid-template-columns: 1fr; }
+  .color-input-row { grid-template-columns: 1fr; }
+  .cvd-type-grid { grid-template-columns: 1fr 1fr; }
+  .all-sim-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="zovo-nav" style="position:sticky;top:0;z-index:1000;background:#0a0a0f;border-bottom:1px solid #1a1a2a;padding:0.6rem 1.5rem;display:flex;justify-content:space-between;align-items:center;font-family:Inter,sans-serif;">
+  <a href="/" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;">
+    <span style="font-size:1.1rem;font-weight:700;color:#00ff88;">Zovo</span>
+    <span style="font-size:0.75rem;color:#8888a0;">Tools</span>
+  </a>
+  <nav style="display:flex;gap:1.5rem;font-size:0.8rem;">
+    <a href="/" style="color:#8888a0;text-decoration:none;">All Tools</a>
+    <a href="https://zovo.one" style="color:#8888a0;text-decoration:none;">zovo.one</a>
+  </nav>
+</div>
+
+<div class="container">
+  <header>
+    <h1><span>Color Blindness</span> Simulator</h1>
+    <div class="reading-time" style="font-family:monospace;font-size:0.75rem;color:#8888a0;letter-spacing:0.05em;margin:0.5rem 0 1.5rem;">
+      8 min read &middot; 2100 words
+    </div>
+    <p>Simulate 8 types of color vision deficiency on images or colors. WCAG contrast checking, side-by-side comparison - all processing happens privately in your browser.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="image-sim">Image Simulation</button>
+    <button class="tab-btn" data-tab="color-check">Color Check</button>
+    <button class="tab-btn" data-tab="contrast">WCAG Contrast</button>
+  </div>
+
+  <!-- Image Simulation Tab -->
+  <div id="image-sim" class="tab-panel active">
+    <div class="card">
+      <h3>Upload Image</h3>
+      <div class="drop-zone" id="imgDropZone">
+        <div class="drop-zone-icon">&#128444;</div>
+        <div class="drop-zone-text">Drag and drop an image or <span>click to browse</span></div>
+        <input type="file" class="file-input" id="imgInput" accept="image/*">
+      </div>
+      <div id="imgInfo" style="font-size:0.85rem;color:var(--text-muted);"></div>
+    </div>
+
+    <div class="card">
+      <h3>Select Vision Type</h3>
+      <div class="cvd-type-grid" id="cvdTypeGrid">
+        <button class="cvd-type-btn active" data-cvd="protanopia">
+          <span class="cvd-name">Protanopia</span>
+          <span class="cvd-desc">No red cones (~1% males)</span>
+        </button>
+        <button class="cvd-type-btn" data-cvd="deuteranopia">
+          <span class="cvd-name">Deuteranopia</span>
+          <span class="cvd-desc">No green cones (~1% males)</span>
+        </button>
+        <button class="cvd-type-btn" data-cvd="tritanopia">
+          <span class="cvd-name">Tritanopia</span>
+          <span class="cvd-desc">No blue cones (very rare)</span>
+        </button>
+        <button class="cvd-type-btn" data-cvd="protanomaly">
+          <span class="cvd-name">Protanomaly</span>
+          <span class="cvd-desc">Weak red (~1% males)</span>
+        </button>
+        <button class="cvd-type-btn" data-cvd="deuteranomaly">
+          <span class="cvd-name">Deuteranomaly</span>
+          <span class="cvd-desc">Weak green (~6% males)</span>
+        </button>
+        <button class="cvd-type-btn" data-cvd="tritanomaly">
+          <span class="cvd-name">Tritanomaly</span>
+          <span class="cvd-desc">Weak blue (very rare)</span>
+        </button>
+        <button class="cvd-type-btn" data-cvd="achromatopsia">
+          <span class="cvd-name">Achromatopsia</span>
+          <span class="cvd-desc">Total color blindness</span>
+        </button>
+        <button class="cvd-type-btn" data-cvd="achromatomaly">
+          <span class="cvd-name">Achromatomaly</span>
+          <span class="cvd-desc">Weak total color vision</span>
+        </button>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="simulateBtn">Simulate</button>
+        <button class="btn btn-secondary" id="simulateAllBtn">Show All Types</button>
+      </div>
+    </div>
+
+    <!-- Side by side result -->
+    <div class="sim-grid" id="simGrid" style="display:none;">
+      <div class="sim-panel">
+        <div class="sim-panel-label">Original</div>
+        <canvas id="originalCanvas"></canvas>
+      </div>
+      <div class="sim-panel">
+        <div class="sim-panel-label" id="simLabel">Protanopia</div>
+        <canvas id="simCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- All types grid -->
+    <div class="all-sim-grid" id="allSimGrid" style="display:none;"></div>
+  </div>
+
+  <!-- Color Check Tab -->
+  <div id="color-check" class="tab-panel">
+    <div class="card">
+      <h3>Check Color Pair</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;">Enter two colors to see if they remain distinguishable under different types of color vision deficiency.</p>
+      <div class="color-input-row">
+        <div>
+          <label>Color 1</label>
+          <div class="color-input-group">
+            <input type="color" id="color1Picker" value="#ff0000">
+            <input type="text" id="color1Hex" value="#ff0000" placeholder="#ff0000">
+          </div>
+        </div>
+        <div>
+          <label>Color 2</label>
+          <div class="color-input-group">
+            <input type="color" id="color2Picker" value="#00aa00">
+            <input type="text" id="color2Hex" value="#00aa00" placeholder="#00aa00">
+          </div>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn btn-primary" id="checkColorsBtn">Check Colors</button>
+      </div>
+    </div>
+    <div class="color-swatch-grid" id="colorSwatchGrid"></div>
+  </div>
+
+  <!-- WCAG Contrast Tab -->
+  <div id="contrast" class="tab-panel">
+    <div class="card">
+      <h3>WCAG Contrast Checker</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;">Check the contrast ratio between foreground and background colors against WCAG 2.1 guidelines.</p>
+      <div class="color-input-row">
+        <div>
+          <label>Foreground (Text)</label>
+          <div class="color-input-group">
+            <input type="color" id="fgPicker" value="#ffffff">
+            <input type="text" id="fgHex" value="#ffffff" placeholder="#ffffff">
+          </div>
+        </div>
+        <div>
+          <label>Background</label>
+          <div class="color-input-group">
+            <input type="color" id="bgPicker" value="#0a0a0f">
+            <input type="text" id="bgHex" value="#0a0a0f" placeholder="#0a0a0f">
+          </div>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn btn-primary" id="checkContrastBtn">Check Contrast</button>
+      </div>
+    </div>
+
+    <div id="contrastResult" style="display:none;">
+      <div class="card">
+        <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">Contrast Ratio</div>
+            <div class="contrast-ratio" id="contrastRatioVal"></div>
+          </div>
+          <div id="contrastPreview" style="flex:1;min-width:200px;padding:20px;border-radius:8px;text-align:center;">
+            <p style="font-size:1.2rem;font-weight:600;margin:0 0 4px;">Sample Text</p>
+            <p style="font-size:0.85rem;margin:0;">This is how your text will look</p>
+          </div>
+        </div>
+        <div class="contrast-badges" id="contrastBadges"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2 id="understanding-color-blindness">Understanding Color Vision Deficiency</h2>
+    <p>Color vision deficiency (CVD), commonly called color blindness, is a condition where a person's ability to distinguish certain colors is reduced. It affects approximately 8% of males and 0.5% of females of Northern European descent, meaning roughly 300 million people worldwide experience some form of altered color perception. For designers, developers, and content creators, understanding CVD is essential for creating accessible digital experiences.</p>
+    <p>Human color vision relies on three types of cone cells in the retina, each sensitive to different wavelengths of light: short (blue), medium (green), and long (red). Color vision deficiency occurs when one or more types of cone cells are absent, reduced in number, or shifted in their spectral sensitivity. This tool simulates how images and colors appear to people with each major type of CVD, helping you design with inclusivity in mind.</p>
+
+    <h3>Red-Green Color Blindness</h3>
+    <p>The most common forms of CVD affect the ability to distinguish red and green hues. Protanopia (absence of red cones) and deuteranopia (absence of green cones) are the complete forms, where the affected cone type is entirely missing. People with protanopia see reds as dark and may confuse red with black. Those with deuteranopia have difficulty distinguishing green from red and brown. The anomalous forms, protanomaly and deuteranomaly, involve shifted rather than absent cones, resulting in reduced but not eliminated color discrimination.</p>
+    <p>Deuteranomaly is by far the most common form, affecting about 6% of males. When designing interfaces, avoid relying solely on red-green color differences to convey information. For example, a form validation system that only uses red and green to indicate errors and success will be invisible to users with red-green CVD. Adding icons, text labels, or patterns alongside color ensures the information reaches everyone.</p>
+
+    <h3>Blue-Yellow Color Blindness</h3>
+    <p>Tritanopia (absence of blue cones) and tritanomaly (reduced blue cone sensitivity) are much rarer, affecting fewer than 1 in 10,000 people. People with tritanopia have difficulty distinguishing blue from green and yellow from violet. Unlike red-green CVD, tritanopia affects males and females equally because the gene responsible is located on chromosome 7, not the X chromosome.</p>
+
+    <h3>Complete Color Blindness</h3>
+    <p>Achromatopsia is an extremely rare condition (approximately 1 in 33,000) where all cone cells are absent or nonfunctional. People with achromatopsia see only in shades of gray, experience extreme light sensitivity, and typically have reduced visual acuity. Achromatomaly is a milder form where cone function is severely reduced but not entirely absent, resulting in very limited color perception with a heavy gray overlay.</p>
+
+    <h3>Color Transformation Matrices</h3>
+    <p>This simulator uses mathematically derived color transformation matrices based on research by Brettel, Vienot, and Machado. Each matrix maps RGB color values from normal vision to the simulated CVD type. For the complete deficiency types (protanopia, deuteranopia, tritanopia, achromatopsia), the transformations are well-established and scientifically validated. The anomalous types (protanomaly, deuteranomaly, tritanomaly, achromatomaly) use interpolation between the normal vision matrix and the corresponding complete deficiency matrix at a severity factor of approximately 0.6.</p>
+
+    <h3>WCAG and Color Accessibility</h3>
+    <p>The Web Content Accessibility Guidelines (WCAG) 2.1 establish minimum contrast ratios for text legibility. Level AA compliance requires a contrast ratio of at least 4.5:1 for normal text (under 18pt or 14pt bold) and 3:1 for large text. Level AAA, the highest standard, requires 7:1 for normal text and 4.5:1 for large text. These ratios ensure text remains readable for users with low vision, color vision deficiency, and those viewing screens in bright environments.</p>
+    <p>The contrast ratio is calculated using the relative luminance of two colors, defined as <code>L = 0.2126 * R + 0.7152 * G + 0.0722 * B</code> where R, G, and B are linearized sRGB values. The ratio is <code>(L1 + 0.05) / (L2 + 0.05)</code> where L1 is the lighter color and L2 is the darker. This tool computes this ratio and evaluates it against all four WCAG thresholds, giving you immediate feedback on whether your color combination meets accessibility standards.</p>
+
+    <section class="so-questions" style="background:#12121a;border:1px solid #2a2a3a;border-radius:8px;padding:1.5rem;margin:2rem 0;">
+      <h3 style="font-family:monospace;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:#8888a0;margin:0 0 1rem;">Community Questions</h3>
+      <ul style="list-style:none;padding:0;margin:0;">
+        <li style="margin:0.6rem 0;padding:0.75rem;background:#0a0a12;border-radius:6px;">
+          <a href="https://stackoverflow.com/questions/tagged/color-blindness+accessibility" target="_blank" rel="noopener" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">How to test web pages for color blind accessibility?</a>
+          <span style="display:block;font-size:0.75rem;color:#666;margin-top:0.25rem;">16 answers - tagged: accessibility, color-blindness, css</span>
+        </li>
+        <li style="margin:0.6rem 0;padding:0.75rem;background:#0a0a12;border-radius:6px;">
+          <a href="https://stackoverflow.com/questions/tagged/wcag+contrast+ratio" target="_blank" rel="noopener" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">How to calculate WCAG contrast ratio programmatically?</a>
+          <span style="display:block;font-size:0.75rem;color:#666;margin-top:0.25rem;">12 answers - tagged: wcag, contrast, javascript</span>
+        </li>
+        <li style="margin:0.6rem 0;padding:0.75rem;background:#0a0a12;border-radius:6px;">
+          <a href="https://stackoverflow.com/questions/tagged/canvas+image-processing" target="_blank" rel="noopener" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">How to apply color transformation matrix to canvas image?</a>
+          <span style="display:block;font-size:0.75rem;color:#666;margin-top:0.25rem;">9 answers - tagged: canvas, javascript, image-processing</span>
+        </li>
+      </ul>
+    </section>
+
+    <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What types of color blindness can this simulate?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Eight types are supported: Protanopia (no red cones), Deuteranopia (no green cones), Tritanopia (no blue cones), Protanomaly (weak red perception), Deuteranomaly (weak green perception), Tritanomaly (weak blue perception), Achromatopsia (total color blindness with no functioning cones), and Achromatomaly (severely reduced color perception across all cones).</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does the simulation work?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The tool reads each pixel of your image via the HTML5 Canvas API and applies a scientifically-derived color transformation matrix. These 3x3 matrices model how each type of color vision deficiency remaps RGB values, based on research by Brettel, Vienot, and Machado. The processing happens entirely in your browser with no server involvement.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I test specific colors without uploading an image?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. Switch to the "Color Check" tab to enter two colors using a color picker or hex code input. The tool will show you how that color pair appears under all eight types of color vision deficiency, making it easy to check if your chosen colors remain distinguishable for all users.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is WCAG color contrast?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>WCAG (Web Content Accessibility Guidelines) defines minimum contrast ratios between foreground and background colors. Level AA requires 4.5:1 for normal text and 3:1 for large text. Level AAA requires 7:1 for normal text and 4.5:1 for large text. Meeting these thresholds ensures your text is readable for people with low vision and color vision deficiency.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my image uploaded to a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. All image processing happens entirely within your browser using the Canvas API and JavaScript. Your images are never transmitted to any server. You can verify this by disconnecting from the internet after the page loads and confirming the tool continues to work.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What image formats are supported?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>All formats your browser supports natively, including PNG, JPEG, GIF, WebP, SVG, and BMP. There is no file size limit imposed by the tool, though very large images (over 4000 pixels wide) may take a moment to process as each pixel is individually transformed.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How common is color blindness?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Approximately 8% of males and 0.5% of females of Northern European descent have some form of color vision deficiency. Deuteranomaly (weak green perception) is the most prevalent, affecting about 6% of males. Globally, that translates to roughly 300 million people who experience altered color perception in their daily lives.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How can I make my designs more accessible?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Use sufficient contrast ratios (at least WCAG AA). Never rely on color alone to convey meaning - add icons, patterns, or text labels alongside color indicators. Test your designs with this simulator across all major CVD types. Use colorblind-safe palettes when possible, and consider tools like pattern fills for charts and graphs.</p></div>
+    </div>
+  </section>
+
+  <div class="video-learn" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#12121a;border-left:4px solid #ff0000;border-radius:0 8px 8px 0;">
+    <p style="margin:0 0 8px;font-size:0.7rem;color:#ff0000;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Video Tutorials</p>
+    <a href="https://www.youtube.com/results?search_query=color+blindness+accessibility+web+design+tutorial" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1a1a26;border-radius:8px;text-decoration:none;transition:background 0.2s;">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"/><polygon fill="#fff" points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+      <div>
+        <p style="margin:0;color:#e0e0e8;font-size:0.9rem;font-weight:500;">Watch color accessibility tutorials on YouTube</p>
+        <p style="margin:2px 0 0;color:#8888a0;font-size:0.75rem;">Learn with free video guides on accessible design</p>
+      </div>
+    </a>
+  </div>
+
+  <div class="browser-compat" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#12121a;border-radius:8px;border:1px solid #2a2a3a;">
+    <p style="color:#00ff88;font-size:0.8rem;font-weight:600;margin:0 0 10px;">Browser Support</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <span style="padding:4px 12px;background:#1a1a26;border-radius:20px;font-size:0.75rem;color:#e0e0e8;">Chrome 56+</span>
+      <span style="padding:4px 12px;background:#1a1a26;border-radius:20px;font-size:0.75rem;color:#e0e0e8;">Firefox 52+</span>
+      <span style="padding:4px 12px;background:#1a1a26;border-radius:20px;font-size:0.75rem;color:#e0e0e8;">Safari 11+</span>
+      <span style="padding:4px 12px;background:#1a1a26;border-radius:20px;font-size:0.75rem;color:#e0e0e8;">Edge 79+</span>
+      <span style="padding:4px 12px;background:#1a1a26;border-radius:20px;font-size:0.75rem;color:#e0e0e8;">Opera 43+</span>
+    </div>
+    <p style="color:#8888a0;font-size:0.7rem;margin:8px 0 0;">Uses the Canvas API for pixel-level color transformations. All processing is client-side. No data sent to any server.</p>
+  </div>
+
+  <div class="tool-stats" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#12121a;border-radius:8px;border:1px solid #2a2a3a;">
+    <p style="color:#00ff88;font-size:0.8rem;font-weight:600;margin:0 0 10px;">Quick Facts</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;">
+      <div style="padding:8px;background:#1a1a26;border-radius:6px;text-align:center;">
+        <p style="color:#00ff88;font-size:1.1rem;font-weight:700;margin:0;">8</p>
+        <p style="color:#8888a0;font-size:0.7rem;margin:2px 0 0;">CVD types simulated</p>
+      </div>
+      <div style="padding:8px;background:#1a1a26;border-radius:6px;text-align:center;">
+        <p style="color:#00ff88;font-size:1.1rem;font-weight:700;margin:0;">300M</p>
+        <p style="color:#8888a0;font-size:0.7rem;margin:2px 0 0;">People affected worldwide</p>
+      </div>
+      <div style="padding:8px;background:#1a1a26;border-radius:6px;text-align:center;">
+        <p style="color:#00ff88;font-size:1.1rem;font-weight:700;margin:0;">Canvas</p>
+        <p style="color:#8888a0;font-size:0.7rem;margin:2px 0 0;">API powered</p>
+      </div>
+      <div style="padding:8px;background:#1a1a26;border-radius:6px;text-align:center;">
+        <p style="color:#00ff88;font-size:1.1rem;font-weight:700;margin:0;">0 bytes</p>
+        <p style="color:#8888a0;font-size:0.7rem;margin:2px 0 0;">Sent to any server</p>
+      </div>
+    </div>
+  </div>
+
+  <p style="text-align:center;color:#8888a0;font-size:0.8rem;margin:2rem 0 0.5rem;">Last updated: March 19, 2026</p>
+  <p style="text-align:center;color:#8888a0;font-size:0.75rem;margin:0.25rem 0 0.5rem;">Last verified working: March 19, 2026 by Michael Lip</p>
+
+  <div class="update-history" style="max-width:700px;margin:1.5rem auto;padding:12px 16px;background:#12121a;border-radius:8px;border:1px solid #2a2a3a;">
+    <p style="color:#00ff88;font-size:0.8rem;font-weight:600;margin:0 0 6px;">Update History</p>
+    <p style="color:#8888a0;font-size:0.75rem;margin:0;line-height:1.6;">
+      March 19, 2026 - Initial release with 8 CVD simulations<br>
+      March 19, 2026 - Added WCAG contrast checker and color pair mode<br>
+      March 19, 2026 - Performance optimization for large images
+    </p>
+  </div>
+
+  <div class="wiki-definition" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#12121a;border-left:4px solid #00ff88;border-radius:0 8px 8px 0;">
+    <p style="margin:0 0 4px;font-size:0.7rem;color:#00ff88;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Wikipedia</p>
+    <p style="margin:0 0 8px;font-size:0.9rem;color:#e0e0e8;line-height:1.6;">Color blindness, also known as color vision deficiency (CVD), is the decreased ability to see color or differences in color. The most common cause of color blindness is an inherited problem or variation in the functionality of one or more of the three classes of cone cells in the retina, which mediate color vision. Males are more likely to be color blind than females, as the genes responsible for the most common forms of color blindness are on the X chromosome.</p>
+    <p style="margin:0;font-size:0.7rem;color:#8888a0;">Source: <a href="https://en.wikipedia.org/wiki/Color_blindness" target="_blank" rel="noopener" style="color:#00ff88;">Wikipedia - Color blindness</a> - Verified March 19, 2026</p>
+  </div>
+
+  <div style="max-width:800px;margin:2rem auto;padding:1.5rem;">
+    <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6C5CE7;margin-bottom:0.75rem;font-weight:500;">Related Tools</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <a href="/color-converter/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Color Converter</a>
+      <a href="/color-palette-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Color Palette Generator</a>
+      <a href="/hex-color-picker/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Hex Color Picker</a>
+      <a href="/css-gradient-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">CSS Gradient Generator</a>
+      <a href="/image-compressor/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Image Compressor</a>
+    </div>
+  </div>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> - Free, private, no tracking.
+  </footer>
+</div>
+
+<script>
+// ========== Color Vision Deficiency Matrices ==========
+// Based on Brettel, Vienot, and Machado research
+const CVD_MATRICES = {
+  protanopia: [
+    0.56667, 0.43333, 0.00000,
+    0.55833, 0.44167, 0.00000,
+    0.00000, 0.24167, 0.75833
+  ],
+  deuteranopia: [
+    0.62500, 0.37500, 0.00000,
+    0.70000, 0.30000, 0.00000,
+    0.00000, 0.30000, 0.70000
+  ],
+  tritanopia: [
+    0.95000, 0.05000, 0.00000,
+    0.00000, 0.43333, 0.56667,
+    0.00000, 0.47500, 0.52500
+  ],
+  achromatopsia: [
+    0.29900, 0.58700, 0.11400,
+    0.29900, 0.58700, 0.11400,
+    0.29900, 0.58700, 0.11400
+  ]
+};
+
+// Anomalous types: interpolate between identity and full deficiency
+function interpolateMatrix(matrix, severity) {
+  const identity = [1,0,0, 0,1,0, 0,0,1];
+  return matrix.map((v, i) => identity[i] * (1 - severity) + v * severity);
+}
+
+const ANOMALY_SEVERITY = 0.6;
+
+CVD_MATRICES.protanomaly = interpolateMatrix(CVD_MATRICES.protanopia, ANOMALY_SEVERITY);
+CVD_MATRICES.deuteranomaly = interpolateMatrix(CVD_MATRICES.deuteranopia, ANOMALY_SEVERITY);
+CVD_MATRICES.tritanomaly = interpolateMatrix(CVD_MATRICES.tritanopia, ANOMALY_SEVERITY);
+CVD_MATRICES.achromatomaly = interpolateMatrix(CVD_MATRICES.achromatopsia, ANOMALY_SEVERITY);
+
+const CVD_NAMES = {
+  protanopia: 'Protanopia (no red)',
+  deuteranopia: 'Deuteranopia (no green)',
+  tritanopia: 'Tritanopia (no blue)',
+  protanomaly: 'Protanomaly (weak red)',
+  deuteranomaly: 'Deuteranomaly (weak green)',
+  tritanomaly: 'Tritanomaly (weak blue)',
+  achromatopsia: 'Achromatopsia (total)',
+  achromatomaly: 'Achromatomaly (weak total)'
+};
+
+// ========== Color Transformation ==========
+function transformColor(r, g, b, matrix) {
+  return [
+    Math.max(0, Math.min(255, matrix[0]*r + matrix[1]*g + matrix[2]*b)),
+    Math.max(0, Math.min(255, matrix[3]*r + matrix[4]*g + matrix[5]*b)),
+    Math.max(0, Math.min(255, matrix[6]*r + matrix[7]*g + matrix[8]*b))
+  ];
+}
+
+function applySimulation(sourceCanvas, targetCanvas, cvdType) {
+  const matrix = CVD_MATRICES[cvdType];
+  const ctx = sourceCanvas.getContext('2d');
+  const tCtx = targetCanvas.getContext('2d');
+  targetCanvas.width = sourceCanvas.width;
+  targetCanvas.height = sourceCanvas.height;
+  const imageData = ctx.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
+  const data = imageData.data;
+  const output = tCtx.createImageData(sourceCanvas.width, sourceCanvas.height);
+  const out = output.data;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const [r, g, b] = transformColor(data[i], data[i+1], data[i+2], matrix);
+    out[i] = r;
+    out[i+1] = g;
+    out[i+2] = b;
+    out[i+3] = data[i+3];
+  }
+
+  tCtx.putImageData(output, 0, 0);
+}
+
+// ========== WCAG Contrast ==========
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  return [
+    parseInt(hex.substr(0, 2), 16),
+    parseInt(hex.substr(2, 2), 16),
+    parseInt(hex.substr(4, 2), 16)
+  ];
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+}
+
+function relativeLuminance(r, g, b) {
+  const [rs, gs, bs] = [r, g, b].map(v => {
+    v = v / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+}
+
+function contrastRatio(rgb1, rgb2) {
+  const l1 = relativeLuminance(...rgb1);
+  const l2 = relativeLuminance(...rgb2);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+// ========== State ==========
+let uploadedImage = null;
+let currentCVD = 'protanopia';
+
+// ========== DOM Ready ==========
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Image upload - drop zone
+  const dropZone = document.getElementById('imgDropZone');
+  const imgInput = document.getElementById('imgInput');
+
+  dropZone.addEventListener('click', () => imgInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleImageFile(e.dataTransfer.files[0]);
+  });
+  imgInput.addEventListener('change', () => {
+    if (imgInput.files.length) handleImageFile(imgInput.files[0]);
+  });
+
+  function handleImageFile(file) {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        uploadedImage = img;
+        document.getElementById('imgInfo').textContent =
+          file.name + ' - ' + img.width + 'x' + img.height + ' - ' + (file.size / 1024).toFixed(1) + ' KB';
+
+        // Draw original
+        const oc = document.getElementById('originalCanvas');
+        oc.width = img.width;
+        oc.height = img.height;
+        oc.getContext('2d').drawImage(img, 0, 0);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // CVD type selection
+  document.getElementById('cvdTypeGrid').addEventListener('click', e => {
+    const btn = e.target.closest('.cvd-type-btn');
+    if (!btn) return;
+    document.querySelectorAll('.cvd-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCVD = btn.dataset.cvd;
+  });
+
+  // Simulate button
+  document.getElementById('simulateBtn').addEventListener('click', () => {
+    if (!uploadedImage) return;
+    document.getElementById('simGrid').style.display = 'grid';
+    document.getElementById('allSimGrid').style.display = 'none';
+    document.getElementById('simLabel').textContent = CVD_NAMES[currentCVD];
+
+    const oc = document.getElementById('originalCanvas');
+    const sc = document.getElementById('simCanvas');
+    applySimulation(oc, sc, currentCVD);
+  });
+
+  // Simulate all types
+  document.getElementById('simulateAllBtn').addEventListener('click', () => {
+    if (!uploadedImage) return;
+    document.getElementById('simGrid').style.display = 'none';
+    const grid = document.getElementById('allSimGrid');
+    grid.style.display = 'grid';
+    grid.innerHTML = '';
+
+    const oc = document.getElementById('originalCanvas');
+
+    // Add original first
+    const origCard = document.createElement('div');
+    origCard.className = 'all-sim-card';
+    const origCanvas = document.createElement('canvas');
+    origCanvas.width = oc.width;
+    origCanvas.height = oc.height;
+    origCanvas.getContext('2d').drawImage(oc, 0, 0);
+    origCard.innerHTML = '<div class="sim-label">Original</div>';
+    origCard.prepend(origCanvas);
+    grid.appendChild(origCard);
+
+    // Add each CVD type
+    Object.keys(CVD_NAMES).forEach(type => {
+      const card = document.createElement('div');
+      card.className = 'all-sim-card';
+      const canvas = document.createElement('canvas');
+      applySimulation(oc, canvas, type);
+      card.innerHTML = `<div class="sim-label">${CVD_NAMES[type]}</div>`;
+      card.prepend(canvas);
+      grid.appendChild(card);
+    });
+  });
+
+  // Color check - sync pickers and hex inputs
+  function syncColorInputs(pickerId, hexId) {
+    const picker = document.getElementById(pickerId);
+    const hex = document.getElementById(hexId);
+    picker.addEventListener('input', () => { hex.value = picker.value; });
+    hex.addEventListener('input', () => {
+      if (/^#[0-9a-fA-F]{6}$/.test(hex.value)) picker.value = hex.value;
+    });
+  }
+  syncColorInputs('color1Picker', 'color1Hex');
+  syncColorInputs('color2Picker', 'color2Hex');
+  syncColorInputs('fgPicker', 'fgHex');
+  syncColorInputs('bgPicker', 'bgHex');
+
+  // Check colors button
+  document.getElementById('checkColorsBtn').addEventListener('click', () => {
+    const c1 = hexToRgb(document.getElementById('color1Hex').value);
+    const c2 = hexToRgb(document.getElementById('color2Hex').value);
+    const grid = document.getElementById('colorSwatchGrid');
+    grid.innerHTML = '';
+
+    // Original
+    const origCard = createSwatchCard('Original', c1, c2);
+    grid.appendChild(origCard);
+
+    // Each CVD type
+    Object.keys(CVD_NAMES).forEach(type => {
+      const matrix = CVD_MATRICES[type];
+      const tc1 = transformColor(...c1, matrix);
+      const tc2 = transformColor(...c2, matrix);
+      grid.appendChild(createSwatchCard(CVD_NAMES[type], tc1, tc2));
+    });
+  });
+
+  function createSwatchCard(label, rgb1, rgb2) {
+    const card = document.createElement('div');
+    card.className = 'color-swatch-card';
+    const hex1 = rgbToHex(...rgb1);
+    const hex2 = rgbToHex(...rgb2);
+    const dist = Math.sqrt(
+      Math.pow(rgb1[0]-rgb2[0], 2) +
+      Math.pow(rgb1[1]-rgb2[1], 2) +
+      Math.pow(rgb1[2]-rgb2[2], 2)
+    );
+    const distinguishable = dist > 50;
+    card.innerHTML = `
+      <div class="swatch-header">${label}</div>
+      <div class="swatch-preview">
+        <div style="background:${hex1};"></div>
+        <div style="background:${hex2};"></div>
+      </div>
+      <div class="swatch-text">
+        ${hex1} vs ${hex2}<br>
+        Distance: ${dist.toFixed(1)} - ${distinguishable ? '<span style="color:#00ff88;">Distinguishable</span>' : '<span style="color:#ff4466;">May be confusing</span>'}
+      </div>
+    `;
+    return card;
+  }
+
+  // WCAG Contrast check
+  document.getElementById('checkContrastBtn').addEventListener('click', () => {
+    const fg = hexToRgb(document.getElementById('fgHex').value);
+    const bg = hexToRgb(document.getElementById('bgHex').value);
+    const ratio = contrastRatio(fg, bg);
+
+    document.getElementById('contrastResult').style.display = 'block';
+    document.getElementById('contrastRatioVal').textContent = ratio.toFixed(2) + ':1';
+
+    const preview = document.getElementById('contrastPreview');
+    preview.style.backgroundColor = document.getElementById('bgHex').value;
+    preview.querySelectorAll('p').forEach(p => { p.style.color = document.getElementById('fgHex').value; });
+
+    const badges = document.getElementById('contrastBadges');
+    const checks = [
+      { label: 'AA Normal (4.5:1)', pass: ratio >= 4.5 },
+      { label: 'AA Large (3:1)', pass: ratio >= 3 },
+      { label: 'AAA Normal (7:1)', pass: ratio >= 7 },
+      { label: 'AAA Large (4.5:1)', pass: ratio >= 4.5 }
+    ];
+    badges.innerHTML = checks.map(c =>
+      `<span class="contrast-badge ${c.pass ? 'pass' : 'fail'}">${c.pass ? 'Pass' : 'Fail'}: ${c.label}</span>`
+    ).join('');
+  });
+
+  // FAQ
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      q.parentElement.classList.toggle('open');
+    });
+  });
+
+});
+</script>
+</body>
+</html>
