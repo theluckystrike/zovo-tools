@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tax Calculator - Free Federal &amp; State Income Tax Calculator 2024/2025 | Zovo</title>
+<meta name="description" content="Free federal and state income tax calculator for 2024 and 2025 tax years. Calculate taxable income, tax brackets, effective tax rate, FICA taxes, and take-home pay instantly.">
+<link rel="canonical" href="https://tools.zovo.one/tax-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Tax Calculator",
+  "url": "https://tools.zovo.one/tax-calculator/",
+  "description": "Free federal and state income tax calculator for 2024 and 2025 tax years with bracket breakdown, FICA taxes, and state tax estimates.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://tools.zovo.one/"},
+    {"@type": "ListItem", "position": 2, "name": "Tax Calculator", "item": "https://tools.zovo.one/tax-calculator/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What are the federal income tax brackets for 2025?", "acceptedAnswer": {"@type": "Answer", "text": "For 2025, the federal income tax brackets for single filers are: 10% on income up to $11,925, 12% on income from $11,926 to $48,475, 22% on income from $48,476 to $103,350, 24% on income from $103,351 to $197,300, 32% on income from $197,301 to $250,525, 35% on income from $250,526 to $626,350, and 37% on income over $626,350."}},
+    {"@type": "Question", "name": "What is the standard deduction for 2025?", "acceptedAnswer": {"@type": "Answer", "text": "The standard deduction for 2025 is $15,000 for single filers, $30,000 for married filing jointly, $15,000 for married filing separately, and $22,500 for head of household filers."}},
+    {"@type": "Question", "name": "How is effective tax rate different from marginal tax rate?", "acceptedAnswer": {"@type": "Answer", "text": "Your marginal tax rate is the rate applied to your last dollar of taxable income, which is your highest tax bracket. Your effective tax rate is the average rate you pay across all your income, calculated by dividing your total tax by your total taxable income. The effective rate is always lower than or equal to the marginal rate."}},
+    {"@type": "Question", "name": "What are FICA taxes and how much do I pay?", "acceptedAnswer": {"@type": "Answer", "text": "FICA taxes fund Social Security and Medicare. For 2024 and 2025, employees pay 6.2% for Social Security on income up to $168,600 (2024) or $176,100 (2025), plus 1.45% for Medicare on all income. An additional 0.9% Medicare tax applies to income over $200,000 for single filers or $250,000 for married filing jointly."}},
+    {"@type": "Question", "name": "Which states have no income tax?", "acceptedAnswer": {"@type": "Answer", "text": "Nine states have no state income tax: Alaska, Florida, Nevada, New Hampshire (taxes only interest and dividends through 2024), South Dakota, Tennessee, Texas, Washington, and Wyoming. Residents of these states only pay federal income tax and FICA taxes."}},
+    {"@type": "Question", "name": "Should I take the standard deduction or itemize?", "acceptedAnswer": {"@type": "Answer", "text": "You should itemize if your total itemized deductions exceed the standard deduction for your filing status. Common itemized deductions include state and local taxes (capped at $10,000), mortgage interest, charitable contributions, and medical expenses exceeding 7.5% of AGI. Most taxpayers benefit from the standard deduction since the 2017 tax reform nearly doubled it."}},
+    {"@type": "Question", "name": "How do tax brackets actually work?", "acceptedAnswer": {"@type": "Answer", "text": "Tax brackets use a progressive system where only the income within each bracket is taxed at that bracket's rate. For example, a single filer earning $50,000 in 2025 does not pay 22% on the entire amount. They pay 10% on the first $11,925, 12% on the amount from $11,926 to $48,475, and 22% only on the remaining amount above $48,475."}},
+    {"@type": "Question", "name": "What is the additional Medicare tax and who pays it?", "acceptedAnswer": {"@type": "Answer", "text": "The Additional Medicare Tax is a 0.9% surtax on earned income exceeding $200,000 for single filers, $250,000 for married filing jointly, or $125,000 for married filing separately. This tax was introduced by the Affordable Care Act and applies on top of the regular 1.45% Medicare tax, bringing the total Medicare tax rate to 2.35% on income above the threshold."}}
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0f;
+  color: #e0e0e8;
+  line-height: 1.7;
+  font-weight: 400;
+}
+a { color: #00ccff; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+.breadcrumb { padding: 16px 0; font-size: 13px; color: #666; }
+.breadcrumb a { color: #888; }
+.breadcrumb span { margin: 0 6px; }
+
+.hero { text-align: center; padding: 30px 0 20px; }
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.hero p {
+  font-size: 1.05rem;
+  color: #999;
+  max-width: 650px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+.privacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 18px;
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 100px;
+  font-size: 13px;
+  color: #00ff88;
+}
+.privacy-badge svg { flex-shrink: 0; }
+
+.card {
+  background: #12121a;
+  border: 1px solid #1e1e2e;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+.card h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 18px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label {
+  font-size: 13px;
+  color: #aaa;
+  font-weight: 500;
+}
+.form-group input, .form-group select {
+  background: #0a0a0f;
+  border: 1px solid #2a2a3a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #e0e0e8;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: #00ff88;
+}
+.form-group select option { background: #12121a; color: #e0e0e8; }
+
+.form-group.full-width { grid-column: 1 / -1; }
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #0a0a0f;
+  border: 1px solid #2a2a3a;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #ccc;
+  transition: all 0.2s;
+}
+.radio-group input[type="radio"] { display: none; }
+.radio-group input[type="radio"]:checked + span {
+  color: #00ff88;
+}
+.radio-group label:has(input:checked) {
+  border-color: #00ff88;
+  background: rgba(0,255,136,0.06);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #2a2a3a;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: #888;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.toggle-switch input:checked + .toggle-slider { background: rgba(0,255,136,0.3); }
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+  background: #00ff88;
+}
+.toggle-label { font-size: 13px; color: #aaa; }
+
+.btn-calculate {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #00ff88, #00ccff);
+  color: #0a0a0f;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-calculate:hover { opacity: 0.9; }
+.btn-calculate:active { transform: scale(0.99); }
+
+/* Results */
+.results-section { display: none; }
+.results-section.visible { display: block; }
+
+.results-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.result-box {
+  background: #12121a;
+  border: 1px solid #1e1e2e;
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+}
+.result-box .label { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.result-box .value { font-size: 1.5rem; font-weight: 600; color: #00ff88; }
+.result-box .value.blue { color: #00ccff; }
+.result-box .value.white { color: #fff; }
+.result-box .sub { font-size: 12px; color: #666; margin-top: 4px; }
+
+/* Tables */
+.table-wrapper { overflow-x: auto; margin-top: 12px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  text-align: left;
+  padding: 10px 14px;
+  background: #0a0a0f;
+  color: #888;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #1e1e2e;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #1a1a2a;
+  color: #ccc;
+}
+tr:hover td { background: rgba(0,255,136,0.02); }
+
+/* Bar chart */
+.bracket-chart { margin-top: 20px; }
+.bracket-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.bracket-bar-label {
+  width: 60px;
+  text-align: right;
+  font-size: 13px;
+  color: #aaa;
+  flex-shrink: 0;
+}
+.bracket-bar-track {
+  flex: 1;
+  height: 28px;
+  background: #0a0a0f;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.bracket-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #00ff88, #00ccff);
+  transition: width 0.6s ease;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  font-size: 12px;
+  color: #0a0a0f;
+  font-weight: 600;
+  min-width: fit-content;
+}
+.bracket-bar-amount {
+  width: 100px;
+  text-align: right;
+  font-size: 13px;
+  color: #ccc;
+  flex-shrink: 0;
+}
+
+/* Pie chart */
+.pie-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.pie-chart {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  position: relative;
+}
+.pie-legend { display: flex; flex-direction: column; gap: 10px; }
+.pie-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #ccc;
+}
+.pie-legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #1e1e2e;
+}
+.tab-btn {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  color: #888;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  color: #00ff88;
+  border-bottom-color: #00ff88;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* SEO content */
+.seo-content { margin-top: 50px; }
+.seo-content h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 40px 0 14px;
+}
+.seo-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ddd;
+  margin: 24px 0 10px;
+}
+.seo-content p {
+  color: #aaa;
+  margin-bottom: 14px;
+  font-weight: 300;
+}
+.seo-content ul, .seo-content ol {
+  color: #aaa;
+  padding-left: 24px;
+  margin-bottom: 14px;
+}
+.seo-content li { margin-bottom: 6px; font-weight: 300; }
+
+.faq-item {
+  border-bottom: 1px solid #1e1e2e;
+  padding: 18px 0;
+}
+.faq-question {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ddd;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.faq-question::after {
+  content: '+';
+  font-size: 1.3rem;
+  color: #00ff88;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.faq-item.open .faq-question::after {
+  content: '-';
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  color: #999;
+  font-weight: 300;
+  line-height: 1.7;
+}
+.faq-item.open .faq-answer {
+  max-height: 500px;
+  padding-top: 12px;
+}
+
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  margin-top: 50px;
+  border-top: 1px solid #1e1e2e;
+  color: #555;
+  font-size: 13px;
+}
+footer a { color: #00ccff; }
+
+@media (max-width: 600px) {
+  .card { padding: 18px; }
+  .results-summary { grid-template-columns: 1fr 1fr; }
+  .bracket-bar-amount { width: 70px; font-size: 12px; }
+  .bracket-bar-label { width: 45px; font-size: 12px; }
+  .pie-chart { width: 160px; height: 160px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb">
+    <a href="https://tools.zovo.one/">Home</a>
+    <span>/</span>
+    Tax Calculator
+  </nav>
+
+  <section class="hero">
+    <h1>Tax Calculator</h1>
+    <p>Calculate your federal and state income taxes for 2024 and 2025. See bracket breakdowns, FICA taxes, effective tax rate, and take-home pay.</p>
+    <div class="privacy-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Runs entirely in your browser. Zero data sent to any server.
+    </div>
+  </section>
+
+  <div class="card">
+    <h2>Income Details</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="taxYear">Tax Year</label>
+        <select id="taxYear">
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="grossIncome">Gross Annual Income ($)</label>
+        <input type="number" id="grossIncome" value="75000" min="0" step="1000">
+      </div>
+      <div class="form-group full-width">
+        <label>Filing Status</label>
+        <div class="radio-group">
+          <label><input type="radio" name="filingStatus" value="single" checked><span>Single</span></label>
+          <label><input type="radio" name="filingStatus" value="married_jointly"><span>Married Filing Jointly</span></label>
+          <label><input type="radio" name="filingStatus" value="married_separately"><span>Married Filing Separately</span></label>
+          <label><input type="radio" name="filingStatus" value="head_household"><span>Head of Household</span></label>
+        </div>
+      </div>
+      <div class="form-group full-width">
+        <div class="toggle-row">
+          <div class="toggle-switch">
+            <input type="checkbox" id="itemizeToggle">
+            <label class="toggle-slider" for="itemizeToggle"></label>
+          </div>
+          <span class="toggle-label">Itemize deductions instead of standard deduction</span>
+        </div>
+      </div>
+      <div class="form-group" id="itemizedGroup" style="display:none;">
+        <label for="itemizedAmount">Itemized Deductions ($)</label>
+        <input type="number" id="itemizedAmount" value="0" min="0" step="100">
+      </div>
+      <div class="form-group">
+        <label for="stateSelect">State</label>
+        <select id="stateSelect">
+          <option value="none">-- No State Tax --</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-calculate" onclick="calculate()">Calculate Taxes</button>
+  </div>
+
+  <div class="results-section" id="resultsSection">
+    <div class="results-summary" id="summaryBoxes"></div>
+
+    <div class="card">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('bracket')">Bracket Breakdown</button>
+        <button class="tab-btn" onclick="switchTab('chart')">Tax Chart</button>
+        <button class="tab-btn" onclick="switchTab('fica')">FICA Taxes</button>
+        <button class="tab-btn" onclick="switchTab('state')">State Tax</button>
+      </div>
+
+      <div class="tab-content active" id="tab-bracket">
+        <div class="bracket-chart" id="bracketChart"></div>
+        <div class="table-wrapper" style="margin-top:20px;">
+          <table id="bracketTable">
+            <thead>
+              <tr><th>Bracket</th><th>Rate</th><th>Taxable Amount</th><th>Tax</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tab-chart">
+        <div class="pie-container" id="pieContainer"></div>
+      </div>
+
+      <div class="tab-content" id="tab-fica">
+        <div class="table-wrapper">
+          <table id="ficaTable">
+            <thead>
+              <tr><th>Tax</th><th>Rate</th><th>Taxable Wages</th><th>Amount</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tab-state">
+        <div id="stateResult"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="seo-content">
+    <h2>How to Use This Tax Calculator</h2>
+    <p>This free tax calculator helps you estimate your federal income tax liability for the 2024 and 2025 tax years. To get started, enter your gross annual income, select your filing status, choose your tax year, and pick your state of residence. The calculator automatically applies the correct standard deduction for your filing status, or you can toggle to itemized deductions if yours are higher. Click "Calculate Taxes" to see a full breakdown of your federal income tax by bracket, your FICA payroll taxes, your state tax estimate, and your overall effective and marginal tax rates.</p>
+    <p>The results panel shows six key figures at the top: your gross income, total federal tax, effective tax rate, marginal tax rate, total FICA tax, and your estimated take-home pay. Below that, you can switch between tabs to view your bracket-by-bracket breakdown with a visual bar chart, a pie chart showing how your income is split between take-home pay and various taxes, a detailed FICA table covering Social Security, Medicare, and the Additional Medicare Tax, and your estimated state income tax.</p>
+
+    <h2>Understanding Federal Income Tax Brackets for 2025</h2>
+    <p>The United States uses a progressive tax system, meaning your income is taxed in layers. Each layer, or bracket, has its own rate. Only the income that falls within a particular bracket is taxed at that bracket's rate. This is a common point of confusion: moving into a higher tax bracket does not mean all of your income is taxed at the higher rate.</p>
+    <p>For the 2025 tax year, the IRS has adjusted the bracket thresholds upward to account for inflation. Single filers see the 10% bracket cover income up to $11,925, the 12% bracket from $11,926 to $48,475, the 22% bracket from $48,476 to $103,350, the 24% bracket from $103,351 to $197,300, the 32% bracket from $197,301 to $250,525, the 35% bracket from $250,526 to $626,350, and the 37% bracket on all income above $626,350.</p>
+    <p>Married couples filing jointly receive broader brackets. The 10% bracket covers up to $23,850, the 12% bracket extends to $96,950, the 22% bracket to $206,700, the 24% bracket to $394,600, the 32% bracket to $501,050, the 35% bracket to $751,600, and the 37% rate applies to income above $751,600. These wider brackets reflect the combined earning power of two spouses.</p>
+
+    <h3>2025 Standard Deduction Amounts</h3>
+    <p>Before your income is taxed, you subtract either the standard deduction or your itemized deductions, whichever is greater. For 2025, the standard deduction is $15,000 for single filers, $30,000 for married filing jointly, $15,000 for married filing separately, and $22,500 for head of household. These amounts are slightly higher than 2024 due to inflation adjustments. The standard deduction effectively makes a portion of your income tax-free, and roughly 90% of taxpayers choose it over itemizing.</p>
+
+    <h2>Understanding 2024 Tax Brackets</h2>
+    <p>If you are filing for the 2024 tax year, the brackets are slightly different. Single filers pay 10% on income up to $11,600, 12% from $11,601 to $47,150, 22% from $47,151 to $100,525, 24% from $100,526 to $191,950, 32% from $191,951 to $243,725, 35% from $243,726 to $609,350, and 37% on income over $609,350. The standard deduction for 2024 is $14,600 for single, $29,200 for married jointly, $14,600 for married separately, and $21,900 for head of household.</p>
+    <p>When comparing 2024 and 2025, you will notice that each bracket threshold increased modestly. This annual adjustment, known as inflation indexing, prevents "bracket creep" where raises that merely keep pace with inflation would otherwise push you into higher tax brackets without any real increase in purchasing power.</p>
+
+    <h2>FICA Taxes: Social Security and Medicare</h2>
+    <p>In addition to federal income tax, nearly all workers pay FICA (Federal Insurance Contributions Act) taxes on their earned income. FICA consists of two components: Social Security tax and Medicare tax.</p>
+    <p>Social Security tax is 6.2% on earned income up to the annual wage base limit. For 2024, that limit is $168,600. For 2025, it increases to $176,100. Any income above the wage base is not subject to Social Security tax. This means the maximum Social Security tax an employee pays in 2025 is $10,918.20.</p>
+    <p>Medicare tax is 1.45% on all earned income with no cap. Unlike Social Security, every dollar you earn is subject to Medicare tax. Additionally, high earners pay an extra 0.9% Additional Medicare Tax on earned income exceeding $200,000 for single filers or $250,000 for married filing jointly. This surtax was introduced by the Affordable Care Act and is not matched by employers.</p>
+    <p>Your employer also pays a matching amount of FICA taxes (6.2% for Social Security and 1.45% for Medicare) on your behalf. Self-employed individuals pay both the employee and employer portions, totaling 15.3%, though they can deduct the employer-equivalent portion.</p>
+
+    <h2>Effective Tax Rate vs. Marginal Tax Rate</h2>
+    <p>Your marginal tax rate is the rate at which your next dollar of income would be taxed. It corresponds to the highest bracket your income reaches. If you are a single filer with $60,000 of taxable income in 2025, your marginal rate is 22% because the last portion of your income falls in the 22% bracket.</p>
+    <p>Your effective tax rate is what you actually pay as a percentage of your taxable income. Because lower portions of your income are taxed at lower rates (10% and 12%), the effective rate is always lower than the marginal rate. In the example above, your effective federal income tax rate would be approximately 13.0%, even though your marginal rate is 22%. Understanding this distinction is important for financial planning, evaluating job offers, and deciding whether additional income or deductions are worthwhile.</p>
+
+    <h3>Practical Example: Single Filer Earning $85,000 in 2025</h3>
+    <p>Consider a single filer with $85,000 in gross income for 2025 who takes the standard deduction of $15,000. Their taxable income is $70,000. Here is how the federal tax breaks down:</p>
+    <ul>
+      <li>10% on the first $11,925 = $1,192.50</li>
+      <li>12% on income from $11,926 to $48,475 = $4,386.00</li>
+      <li>22% on income from $48,476 to $70,000 = $4,735.50</li>
+    </ul>
+    <p>Total federal income tax: $10,314.00. The effective tax rate is $10,314 / $70,000 = 14.7%, while the marginal rate is 22%. For FICA: Social Security is $85,000 x 6.2% = $5,270, and Medicare is $85,000 x 1.45% = $1,232.50. Total FICA comes to $6,502.50. Combined federal income tax and FICA equals $16,816.50, leaving a take-home of approximately $68,183.50 before any state taxes.</p>
+
+    <h2>State Income Tax Overview</h2>
+    <p>Most states impose their own income tax on top of federal tax. Nine states have no income tax at all: Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, and Wyoming. Among states that do tax income, approaches vary considerably. Some states use a flat rate (such as Illinois at 4.95% or Colorado at 4.40%), while others use progressive brackets similar to the federal system. California has the highest top marginal state income tax rate at 13.3%, followed by Hawaii at 11.0% and New Jersey at 10.75%.</p>
+    <p>This calculator includes a state tax estimator that provides an approximate figure based on your taxable income and the state you select. Because state tax codes are complex and include their own deductions, credits, and special rules, the estimate should be used for planning purposes. Consult your state's revenue department or a tax professional for exact figures.</p>
+
+    <h2>Tips to Reduce Your Tax Liability</h2>
+    <p>There are several strategies you can use to lower the amount of tax you owe. Contributing to tax-advantaged retirement accounts like a traditional 401(k) or traditional IRA reduces your taxable income for the year. In 2025, the 401(k) contribution limit is $23,500 ($31,000 if age 50 or older), and the IRA limit is $7,000 ($8,000 if age 50 or older). Health Savings Account (HSA) contributions are another powerful tool if you have a high-deductible health plan, with limits of $4,300 for individuals and $8,550 for families in 2025.</p>
+    <p>If your itemized deductions exceed the standard deduction, consider bunching charitable contributions into a single year. The state and local tax (SALT) deduction is capped at $10,000, so if you live in a high-tax state, other strategies like maximizing retirement contributions become even more valuable. Tax-loss harvesting in investment accounts can offset capital gains and reduce your taxable income by up to $3,000 per year in net losses.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <div id="faqContainer">
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What are the federal income tax brackets for 2025?</div>
+        <div class="faq-answer">For 2025, the federal income tax brackets for single filers are: 10% on income up to $11,925, 12% on income from $11,926 to $48,475, 22% on income from $48,476 to $103,350, 24% on income from $103,351 to $197,300, 32% on income from $197,301 to $250,525, 35% on income from $250,526 to $626,350, and 37% on income over $626,350. Married filing jointly thresholds are roughly double the single amounts. These thresholds are adjusted annually for inflation.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What is the standard deduction for 2025?</div>
+        <div class="faq-answer">The standard deduction for 2025 is $15,000 for single filers, $30,000 for married filing jointly, $15,000 for married filing separately, and $22,500 for head of household. Most taxpayers take the standard deduction because it exceeds their itemized deductions. The amount is indexed for inflation and increases slightly each year.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">How is effective tax rate different from marginal tax rate?</div>
+        <div class="faq-answer">Your marginal tax rate is the rate applied to your last dollar of taxable income, representing your highest tax bracket. Your effective tax rate is the average rate you pay across all your income, calculated by dividing your total tax by your total taxable income. The effective rate is always lower than or equal to the marginal rate because lower portions of your income are taxed at lower rates in the progressive system.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What are FICA taxes and how much do I pay?</div>
+        <div class="faq-answer">FICA taxes fund Social Security and Medicare. For 2025, employees pay 6.2% for Social Security on income up to $176,100, plus 1.45% for Medicare on all income. An additional 0.9% Medicare tax applies to earned income over $200,000 for single filers or $250,000 for married filing jointly. Your employer pays a matching amount for Social Security and Medicare (but not the additional Medicare tax).</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Which states have no income tax?</div>
+        <div class="faq-answer">Nine states have no state income tax: Alaska, Florida, Nevada, New Hampshire (which is phasing out its tax on interest and dividends), South Dakota, Tennessee, Texas, Washington, and Wyoming. Residents of these states only pay federal income tax and FICA taxes on their earned income.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Should I take the standard deduction or itemize?</div>
+        <div class="faq-answer">You should itemize if your total itemized deductions exceed the standard deduction for your filing status. Common itemized deductions include state and local taxes (SALT, capped at $10,000), mortgage interest, charitable contributions, and medical expenses exceeding 7.5% of AGI. Since the 2017 Tax Cuts and Jobs Act nearly doubled the standard deduction, approximately 90% of taxpayers now take it.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">How do tax brackets actually work?</div>
+        <div class="faq-answer">Tax brackets use a progressive (or marginal) system where only the income within each bracket is taxed at that bracket's rate. For example, a single filer earning $50,000 in taxable income in 2025 does not pay 22% on the entire amount. They pay 10% on the first $11,925, 12% on the amount from $11,926 to $48,475, and 22% only on the remaining $1,525 above $48,475. This results in a much lower total tax than if the entire income were taxed at 22%.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What is the additional Medicare tax and who pays it?</div>
+        <div class="faq-answer">The Additional Medicare Tax is a 0.9% surtax on earned income exceeding $200,000 for single filers, $250,000 for married filing jointly, or $125,000 for married filing separately. This tax was introduced by the Affordable Care Act and applies on top of the regular 1.45% Medicare tax, bringing the total employee Medicare rate to 2.35% on income above the threshold. Unlike regular Medicare tax, employers do not match this additional amount.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<p style="text-align:center;color:#8888a0;font-size:0.8rem;margin:2rem 0 0.5rem;">Last updated: March 19, 2026</p>
+<footer>
+  <p>Built by Michael Lip at <a href="https://zovo.one">zovo.one</a></p>
+</footer>
+<div style="max-width:800px;margin:2rem auto;padding:1.5rem;"><div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6C5CE7;margin-bottom:0.75rem;font-weight:500;">Related Tools</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><a href="/internet-speed-checker/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Internet Speed Checker</a>
+<a href="/invoice-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Invoice Generator</a>
+<a href="/timezone-converter/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Timezone Converter</a>
+<a href="/image-resizer/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Image Resizer</a>
+</div></div>
+
+<script>
+const TAX_DATA = {
+  2025: {
+    brackets: {
+      single: [
+        [11925, 0.10], [48475, 0.12], [103350, 0.22], [197300, 0.24],
+        [250525, 0.32], [626350, 0.35], [Infinity, 0.37]
+      ],
+      married_jointly: [
+        [23850, 0.10], [96950, 0.12], [206700, 0.22], [394600, 0.24],
+        [501050, 0.32], [751600, 0.35], [Infinity, 0.37]
+      ],
+      married_separately: [
+        [11925, 0.10], [48475, 0.12], [103350, 0.22], [197300, 0.24],
+        [250525, 0.32], [375800, 0.35], [Infinity, 0.37]
+      ],
+      head_household: [
+        [17000, 0.10], [64850, 0.12], [103350, 0.22], [197300, 0.24],
+        [250500, 0.32], [626350, 0.35], [Infinity, 0.37]
+      ]
+    },
+    standardDeduction: {
+      single: 15000, married_jointly: 30000, married_separately: 15000, head_household: 22500
+    },
+    ssWageBase: 176100,
+    additionalMedicareThreshold: {
+      single: 200000, married_jointly: 250000, married_separately: 125000, head_household: 200000
+    }
+  },
+  2024: {
+    brackets: {
+      single: [
+        [11600, 0.10], [47150, 0.12], [100525, 0.22], [191950, 0.24],
+        [243725, 0.32], [609350, 0.35], [Infinity, 0.37]
+      ],
+      married_jointly: [
+        [23200, 0.10], [94300, 0.12], [201050, 0.22], [383900, 0.24],
+        [487450, 0.32], [731200, 0.35], [Infinity, 0.37]
+      ],
+      married_separately: [
+        [11600, 0.10], [47150, 0.12], [100525, 0.22], [191950, 0.24],
+        [243725, 0.32], [365600, 0.35], [Infinity, 0.37]
+      ],
+      head_household: [
+        [16550, 0.10], [63100, 0.12], [100500, 0.22], [191950, 0.24],
+        [243700, 0.32], [609350, 0.35], [Infinity, 0.37]
+      ]
+    },
+    standardDeduction: {
+      single: 14600, married_jointly: 29200, married_separately: 14600, head_household: 21900
+    },
+    ssWageBase: 168600,
+    additionalMedicareThreshold: {
+      single: 200000, married_jointly: 250000, married_separately: 125000, head_household: 200000
+    }
+  }
+};
+
+const STATE_TAXES = {
+  'none': {name:'No State Tax',type:'none',rate:0},
+  'AL': {name:'Alabama',type:'progressive',brackets:[[500,0.02],[3000,0.04],[Infinity,0.05]]},
+  'AK': {name:'Alaska',type:'none',rate:0},
+  'AZ': {name:'Arizona',type:'flat',rate:0.025},
+  'AR': {name:'Arkansas',type:'progressive',brackets:[[4400,0.02],[8800,0.04],[Infinity,0.049]]},
+  'CA': {name:'California',type:'progressive',brackets:[[10412,0.01],[24684,0.02],[38959,0.04],[54081,0.06],[68350,0.08],[349137,0.093],[418961,0.103],[698271,0.113],[Infinity,0.123]]},
+  'CO': {name:'Colorado',type:'flat',rate:0.044},
+  'CT': {name:'Connecticut',type:'progressive',brackets:[[10000,0.03],[50000,0.05],[100000,0.055],[200000,0.06],[250000,0.065],[500000,0.069],[Infinity,0.0699]]},
+  'DE': {name:'Delaware',type:'progressive',brackets:[[2000,0.0],[5000,0.022],[10000,0.039],[20000,0.048],[25000,0.052],[60000,0.0555],[Infinity,0.066]]},
+  'FL': {name:'Florida',type:'none',rate:0},
+  'GA': {name:'Georgia',type:'progressive',brackets:[[750,0.01],[2250,0.02],[3750,0.03],[5250,0.04],[7000,0.05],[Infinity,0.055]]},
+  'HI': {name:'Hawaii',type:'progressive',brackets:[[2400,0.014],[4800,0.032],[9600,0.055],[14400,0.064],[19200,0.068],[24000,0.072],[36000,0.076],[48000,0.079],[150000,0.0825],[175000,0.09],[200000,0.10],[Infinity,0.11]]},
+  'ID': {name:'Idaho',type:'flat',rate:0.058},
+  'IL': {name:'Illinois',type:'flat',rate:0.0495},
+  'IN': {name:'Indiana',type:'flat',rate:0.0305},
+  'IA': {name:'Iowa',type:'progressive',brackets:[[6210,0.044],[31050,0.0482],[Infinity,0.057]]},
+  'KS': {name:'Kansas',type:'progressive',brackets:[[15000,0.031],[30000,0.0525],[Infinity,0.057]]},
+  'KY': {name:'Kentucky',type:'flat',rate:0.04},
+  'LA': {name:'Louisiana',type:'progressive',brackets:[[12500,0.0185],[50000,0.035],[Infinity,0.0425]]},
+  'ME': {name:'Maine',type:'progressive',brackets:[[24500,0.058],[58050,0.0675],[Infinity,0.0715]]},
+  'MD': {name:'Maryland',type:'progressive',brackets:[[1000,0.02],[2000,0.03],[3000,0.04],[100000,0.0475],[125000,0.05],[150000,0.0525],[250000,0.055],[Infinity,0.0575]]},
+  'MA': {name:'Massachusetts',type:'flat',rate:0.05},
+  'MI': {name:'Michigan',type:'flat',rate:0.0405},
+  'MN': {name:'Minnesota',type:'progressive',brackets:[[30070,0.0535],[98760,0.068],[183340,0.0785],[Infinity,0.0985]]},
+  'MS': {name:'Mississippi',type:'progressive',brackets:[[10000,0.0],[Infinity,0.05]]},
+  'MO': {name:'Missouri',type:'progressive',brackets:[[1207,0.02],[2414,0.025],[3621,0.03],[4828,0.035],[6035,0.04],[7242,0.045],[8449,0.05],[Infinity,0.054]]},
+  'MT': {name:'Montana',type:'progressive',brackets:[[3600,0.01],[6300,0.02],[9700,0.03],[13000,0.04],[16800,0.05],[21600,0.06],[Infinity,0.0675]]},
+  'NE': {name:'Nebraska',type:'progressive',brackets:[[3700,0.0246],[22170,0.0351],[35730,0.0501],[Infinity,0.0584]]},
+  'NV': {name:'Nevada',type:'none',rate:0},
+  'NH': {name:'New Hampshire',type:'none',rate:0},
+  'NJ': {name:'New Jersey',type:'progressive',brackets:[[20000,0.014],[35000,0.0175],[40000,0.035],[75000,0.05525],[500000,0.0637],[1000000,0.0897],[Infinity,0.1075]]},
+  'NM': {name:'New Mexico',type:'progressive',brackets:[[5500,0.017],[11000,0.032],[16000,0.047],[210000,0.049],[315000,0.059],[Infinity,0.059]]},
+  'NY': {name:'New York',type:'progressive',brackets:[[8500,0.04],[11700,0.045],[13900,0.0525],[80650,0.0585],[215400,0.0625],[1077550,0.0685],[5000000,0.0965],[25000000,0.103],[Infinity,0.109]]},
+  'NC': {name:'North Carolina',type:'flat',rate:0.045},
+  'ND': {name:'North Dakota',type:'progressive',brackets:[[44725,0.0195],[225975,0.0255],[Infinity,0.0290]]},
+  'OH': {name:'Ohio',type:'progressive',brackets:[[26050,0.0],[46100,0.02765],[92150,0.03226],[Infinity,0.03688]]},
+  'OK': {name:'Oklahoma',type:'progressive',brackets:[[1000,0.0025],[2500,0.0075],[3750,0.0175],[4900,0.0275],[7200,0.0375],[Infinity,0.0475]]},
+  'OR': {name:'Oregon',type:'progressive',brackets:[[4050,0.0475],[10200,0.0675],[125000,0.0875],[Infinity,0.099]]},
+  'PA': {name:'Pennsylvania',type:'flat',rate:0.0307},
+  'RI': {name:'Rhode Island',type:'progressive',brackets:[[73450,0.0375],[166950,0.0475],[Infinity,0.0599]]},
+  'SC': {name:'South Carolina',type:'progressive',brackets:[[3460,0.0],[6920,0.03],[10380,0.04],[13840,0.05],[17300,0.06],[Infinity,0.065]]},
+  'SD': {name:'South Dakota',type:'none',rate:0},
+  'TN': {name:'Tennessee',type:'none',rate:0},
+  'TX': {name:'Texas',type:'none',rate:0},
+  'UT': {name:'Utah',type:'flat',rate:0.0465},
+  'VT': {name:'Vermont',type:'progressive',brackets:[[45400,0.0335],[110450,0.066],[229550,0.076],[Infinity,0.0875]]},
+  'VA': {name:'Virginia',type:'progressive',brackets:[[3000,0.02],[5000,0.03],[17000,0.05],[Infinity,0.0575]]},
+  'WA': {name:'Washington',type:'none',rate:0},
+  'WV': {name:'West Virginia',type:'progressive',brackets:[[10000,0.0236],[25000,0.0315],[40000,0.0354],[60000,0.0472],[Infinity,0.0512]]},
+  'WI': {name:'Wisconsin',type:'progressive',brackets:[[14320,0.0354],[28640,0.0465],[315310,0.053],[Infinity,0.0765]]},
+  'WY': {name:'Wyoming',type:'none',rate:0},
+  'DC': {name:'District of Columbia',type:'progressive',brackets:[[10000,0.04],[40000,0.06],[60000,0.065],[250000,0.085],[500000,0.0925],[1000000,0.0975],[Infinity,0.1075]]}
+};
+
+// Populate state dropdown
+(function(){
+  const sel = document.getElementById('stateSelect');
+  const sorted = Object.entries(STATE_TAXES).filter(([k])=>k!=='none').sort((a,b)=>a[1].name.localeCompare(b[1].name));
+  sorted.forEach(([code, data]) => {
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = data.name;
+    sel.appendChild(opt);
+  });
+})();
+
+// Toggle itemized
+document.getElementById('itemizeToggle').addEventListener('change', function(){
+  document.getElementById('itemizedGroup').style.display = this.checked ? 'flex' : 'none';
+});
+
+function fmt(n) {
+  return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+}
+function fmtDec(n) {
+  return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+function pct(n) {
+  return (n * 100).toFixed(1) + '%';
+}
+
+function calcBracketTax(taxableIncome, brackets) {
+  let tax = 0;
+  let prev = 0;
+  const details = [];
+  for (const [limit, rate] of brackets) {
+    if (taxableIncome <= prev) break;
+    const taxable = Math.min(taxableIncome, limit) - prev;
+    const bracketTax = taxable * rate;
+    details.push({ from: prev, to: Math.min(taxableIncome, limit), rate, taxable, tax: bracketTax });
+    tax += bracketTax;
+    prev = limit;
+  }
+  return { tax, details };
+}
+
+function calcStateTax(taxableIncome, stateCode) {
+  const state = STATE_TAXES[stateCode];
+  if (!state || state.type === 'none') return { tax: 0, name: state ? state.name : 'None', details: null };
+  if (state.type === 'flat') {
+    return { tax: taxableIncome * state.rate, name: state.name, details: null, rate: state.rate };
+  }
+  const result = calcBracketTax(taxableIncome, state.brackets);
+  return { tax: result.tax, name: state.name, details: result.details };
+}
+
+function calculate() {
+  const year = parseInt(document.getElementById('taxYear').value);
+  const gross = parseFloat(document.getElementById('grossIncome').value) || 0;
+  const status = document.querySelector('input[name="filingStatus"]:checked').value;
+  const itemize = document.getElementById('itemizeToggle').checked;
+  const itemizedAmt = parseFloat(document.getElementById('itemizedAmount').value) || 0;
+  const stateCode = document.getElementById('stateSelect').value;
+  const data = TAX_DATA[year];
+
+  // Deduction
+  const stdDeduction = data.standardDeduction[status];
+  const deduction = itemize ? itemizedAmt : stdDeduction;
+  const taxableIncome = Math.max(0, gross - deduction);
+
+  // Federal tax
+  const federal = calcBracketTax(taxableIncome, data.brackets[status]);
+  const marginalRate = federal.details.length > 0 ? federal.details[federal.details.length - 1].rate : 0;
+  const effectiveRate = taxableIncome > 0 ? federal.tax / taxableIncome : 0;
+
+  // FICA
+  const ssWages = Math.min(gross, data.ssWageBase);
+  const ssTax = ssWages * 0.062;
+  const medicareTax = gross * 0.0145;
+  const additionalMedicareThreshold = data.additionalMedicareThreshold[status];
+  const additionalMedicare = gross > additionalMedicareThreshold ? (gross - additionalMedicareThreshold) * 0.009 : 0;
+  const totalFica = ssTax + medicareTax + additionalMedicare;
+
+  // State tax
+  const stateResult = calcStateTax(taxableIncome, stateCode);
+
+  // Totals
+  const totalTax = federal.tax + totalFica + stateResult.tax;
+  const takeHome = gross - totalTax;
+
+  // Show results
+  document.getElementById('resultsSection').classList.add('visible');
+
+  // Summary boxes
+  const summaryHTML = `
+    <div class="result-box"><div class="label">Gross Income</div><div class="value white">${fmt(gross)}</div></div>
+    <div class="result-box"><div class="label">Federal Tax</div><div class="value">${fmt(Math.round(federal.tax))}</div></div>
+    <div class="result-box"><div class="label">Effective Rate</div><div class="value blue">${pct(effectiveRate)}</div></div>
+    <div class="result-box"><div class="label">Marginal Rate</div><div class="value blue">${pct(marginalRate)}</div></div>
+    <div class="result-box"><div class="label">FICA Taxes</div><div class="value">${fmt(Math.round(totalFica))}</div></div>
+    <div class="result-box"><div class="label">Take-Home Pay</div><div class="value" style="color:#fff">${fmt(Math.round(takeHome))}</div><div class="sub">${fmt(Math.round(takeHome/12))}/month</div></div>
+  `;
+  document.getElementById('summaryBoxes').innerHTML = summaryHTML;
+
+  // Bracket chart + table
+  renderBracketChart(federal.details);
+  renderBracketTable(federal.details);
+
+  // Pie chart
+  renderPieChart(federal.tax, totalFica, stateResult.tax, takeHome);
+
+  // FICA table
+  renderFicaTable(ssWages, ssTax, gross, medicareTax, additionalMedicareThreshold, additionalMedicare, totalFica);
+
+  // State tab
+  renderStateResult(stateResult, stateCode);
+
+  // Scroll to results
+  document.getElementById('resultsSection').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function renderBracketChart(details) {
+  const container = document.getElementById('bracketChart');
+  const maxTax = Math.max(...details.map(d => d.tax), 1);
+  let html = '';
+  details.forEach(d => {
+    const w = Math.max((d.tax / maxTax) * 100, 2);
+    html += `
+      <div class="bracket-bar-row">
+        <div class="bracket-bar-label">${(d.rate*100).toFixed(0)}%</div>
+        <div class="bracket-bar-track">
+          <div class="bracket-bar-fill" style="width:${w}%">${fmtDec(d.tax)}</div>
+        </div>
+        <div class="bracket-bar-amount">${fmt(Math.round(d.taxable))}</div>
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function renderBracketTable(details) {
+  const tbody = document.querySelector('#bracketTable tbody');
+  let totalTax = 0;
+  let totalTaxable = 0;
+  let html = '';
+  details.forEach(d => {
+    totalTax += d.tax;
+    totalTaxable += d.taxable;
+    html += `<tr>
+      <td>${fmt(d.from)} - ${d.to === Infinity ? '+' : fmt(d.to)}</td>
+      <td>${(d.rate*100).toFixed(0)}%</td>
+      <td>${fmt(Math.round(d.taxable))}</td>
+      <td>${fmtDec(d.tax)}</td>
+    </tr>`;
+  });
+  html += `<tr style="font-weight:600;border-top:2px solid #2a2a3a;">
+    <td>Total</td><td></td>
+    <td>${fmt(Math.round(totalTaxable))}</td>
+    <td>${fmtDec(totalTax)}</td>
+  </tr>`;
+  tbody.innerHTML = html;
+}
+
+function renderPieChart(fedTax, fica, stateTax, takeHome) {
+  const container = document.getElementById('pieContainer');
+  const total = fedTax + fica + stateTax + takeHome;
+  if (total <= 0) { container.innerHTML = '<p style="color:#888;">Enter income to see chart.</p>'; return; }
+
+  const slices = [
+    { label: 'Take-Home Pay', value: takeHome, color: '#00ff88' },
+    { label: 'Federal Tax', value: fedTax, color: '#00ccff' },
+    { label: 'FICA Taxes', value: fica, color: '#6C5CE7' },
+    { label: 'State Tax', value: stateTax, color: '#ff6b6b' }
+  ].filter(s => s.value > 0);
+
+  let cumulativePct = 0;
+  let gradientStops = '';
+  slices.forEach(s => {
+    const pctVal = (s.value / total) * 100;
+    gradientStops += `${s.color} ${cumulativePct}% ${cumulativePct + pctVal}%, `;
+    cumulativePct += pctVal;
+  });
+  gradientStops = gradientStops.slice(0, -2);
+
+  let legendHTML = '';
+  slices.forEach(s => {
+    legendHTML += `<div class="pie-legend-item">
+      <div class="pie-legend-swatch" style="background:${s.color}"></div>
+      ${s.label}: ${fmt(Math.round(s.value))} (${((s.value/total)*100).toFixed(1)}%)
+    </div>`;
+  });
+
+  container.innerHTML = `
+    <div class="pie-chart" style="background:conic-gradient(${gradientStops})"></div>
+    <div class="pie-legend">${legendHTML}</div>
+  `;
+}
+
+function renderFicaTable(ssWages, ssTax, gross, medicareTax, threshold, additionalMedicare, total) {
+  const tbody = document.querySelector('#ficaTable tbody');
+  let html = `
+    <tr><td>Social Security</td><td>6.2%</td><td>${fmt(Math.round(ssWages))}</td><td>${fmtDec(ssTax)}</td></tr>
+    <tr><td>Medicare</td><td>1.45%</td><td>${fmt(Math.round(gross))}</td><td>${fmtDec(medicareTax)}</td></tr>`;
+  if (additionalMedicare > 0) {
+    html += `<tr><td>Additional Medicare</td><td>0.9%</td><td>${fmt(Math.round(gross - threshold))}</td><td>${fmtDec(additionalMedicare)}</td></tr>`;
+  }
+  html += `<tr style="font-weight:600;border-top:2px solid #2a2a3a;">
+    <td>Total FICA</td><td></td><td></td><td>${fmtDec(total)}</td></tr>`;
+  tbody.innerHTML = html;
+}
+
+function renderStateResult(result, stateCode) {
+  const container = document.getElementById('stateResult');
+  if (stateCode === 'none' || result.tax === 0) {
+    const noTaxStates = ['AK','FL','NV','NH','SD','TN','TX','WA','WY'];
+    if (noTaxStates.includes(stateCode)) {
+      container.innerHTML = `<p style="color:#00ff88;font-size:15px;">${result.name} has no state income tax.</p>`;
+    } else if (stateCode === 'none') {
+      container.innerHTML = `<p style="color:#888;font-size:15px;">Select a state to see the estimated state income tax.</p>`;
+    } else {
+      container.innerHTML = `<p style="color:#888;font-size:15px;">Estimated state tax for ${result.name}: ${fmtDec(result.tax)}</p>`;
+    }
+    return;
+  }
+
+  let html = `<p style="color:#ccc;margin-bottom:14px;">Estimated state income tax for ${result.name}: <span style="color:#00ff88;font-weight:600;">${fmtDec(result.tax)}</span></p>`;
+  if (result.details) {
+    html += `<div class="table-wrapper"><table><thead><tr><th>Bracket</th><th>Rate</th><th>Taxable</th><th>Tax</th></tr></thead><tbody>`;
+    let totalTax = 0;
+    result.details.forEach(d => {
+      totalTax += d.tax;
+      html += `<tr><td>${fmt(d.from)} - ${fmt(d.to)}</td><td>${(d.rate*100).toFixed(2)}%</td><td>${fmt(Math.round(d.taxable))}</td><td>${fmtDec(d.tax)}</td></tr>`;
+    });
+    html += `<tr style="font-weight:600;border-top:2px solid #2a2a3a;"><td>Total</td><td></td><td></td><td>${fmtDec(totalTax)}</td></tr></tbody></table></div>`;
+  } else if (result.rate) {
+    html += `<p style="color:#888;font-size:13px;">Flat rate: ${(result.rate*100).toFixed(2)}%</p>`;
+  }
+  html += `<p style="color:#666;font-size:12px;margin-top:14px;">Note: This is an estimate. State taxes involve their own deductions, credits, and rules. Consult your state tax authority for exact figures.</p>`;
+  container.innerHTML = html;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// Auto-calculate on load
+calculate();
+</script>
+</body>
+</html>
