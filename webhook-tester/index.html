@@ -359,122 +359,15 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 </div>
 </section>
 
-<!-- SEO CONTENT -->
-<section class="seo-content">
-<div class="container">
-
-<h2 id="what-is-a-webhook-tester-and-why-you-need-one">What Is a Webhook Tester and Why You Need One</h2>
-<p>A webhook tester is a development tool that lets you construct, send, and debug HTTP webhook payloads without writing code or deploying a server. Webhooks are the backbone of modern application integrations. When an event happens in one system, that system sends an HTTP POST request to a URL you configure, delivering data about the event in real time. Payment processors like Stripe fire webhooks when charges succeed or fail. Version control platforms like GitHub send webhooks when code gets pushed or pull requests get opened. Communication tools like Slack and Discord use webhooks to post messages programmatically.</p>
-<p>The problem developers face is that webhook integrations are notoriously difficult to debug. The sending service fires a request to your endpoint, and if something goes wrong, you have limited visibility into what happened. Maybe the payload format changed. Maybe your endpoint returned an error. Maybe the signature verification failed. A webhook tester solves this by letting you replicate exact webhook payloads and send them to your endpoint on demand, giving you full control over the testing cycle.</p>
-<p>This free webhook tester runs entirely in your browser. There is no server-side component, no account creation, and no data collection. Your requests go directly from your browser to the target URL you specify, using the standard Fetch API. This makes it ideal for testing endpoints running on localhost (via tunneling tools like ngrok), staging servers, or production endpoints during development.</p>
-
-<h2 id="how-to-use-this-free-online-webhook-tester">How to Use This Free Online Webhook Tester</h2>
-<p>Testing webhooks with this tool follows a straightforward workflow that mirrors how real webhook integrations work in production environments.</p>
-<h3>Step 1: Choose or Build Your Payload</h3>
-<p>Start by selecting a webhook template that matches your integration. The template library includes realistic payloads from the most common webhook providers: GitHub push events with commit details, Stripe payment_intent.succeeded events with full charge objects, Slack message payloads with block kit formatting, Discord embeds with rich content, and Twilio SMS received events. Each template contains the exact fields and structure that the real service sends, so your endpoint handler gets tested against production-accurate data.</p>
-<p>If you need a custom payload, type or paste your JSON directly into the payload editor. The editor validates your JSON in real time and highlights syntax errors before you send, preventing wasted time debugging malformed requests.</p>
-<h3>Step 2: Configure the Request</h3>
-<p>Enter the target URL where your webhook handler is running. Select the HTTP method (POST is standard for webhooks, but PUT and PATCH are supported for APIs that use them). Add custom headers like Authorization tokens, X-Webhook-Secret values, or any other headers your endpoint expects. The Content-Type header is set automatically based on your selection but can be overridden.</p>
-<h3>Step 3: Send and Inspect</h3>
-<p>Click Send Request to fire the webhook. The response panel shows you the HTTP status code, response headers, response body, and timing information including DNS lookup time and total request duration. Every request is automatically saved to your local history, so you can replay previous tests without reconfiguring anything.</p>
-
-<h2 id="webhook-payload-templates-explained">Webhook Payload Templates Explained</h2>
-<p>Each template in the library reproduces the exact structure of a real webhook event from the corresponding service. Here is what each template contains and when you would use it.</p>
-<h3>GitHub Webhook Templates</h3>
-<p>GitHub sends webhooks for over 30 different event types. The push event template includes the repository object, pusher details, commit array with SHA hashes, timestamps, and modified file lists. Use this to test CI/CD pipelines that trigger builds on push. The pull request template includes the action field (opened, closed, merged), the full PR object with head and base refs, the user object, and merge commit details. The issue event template includes the issue title, body, labels array, assignees, and milestone data.</p>
-<h3>Stripe Webhook Templates</h3>
-<p>Stripe webhooks wrap every event in a standard envelope with id, object, api_version, and data fields. The payment_intent.succeeded template includes the full payment intent object with amount, currency, payment method details, and metadata. The charge.failed template includes the failure code, failure message, and the outcome object that explains why the charge was declined. These templates are essential for testing payment flow error handling.</p>
-<h3>Slack and Discord Templates</h3>
-<p>The Slack message template uses the Block Kit format with text blocks, section blocks, and action blocks. The interactive component template includes the callback_id, trigger_id, and action values that your app receives when a user clicks a button or selects a menu item. The Discord embed template includes the title, description, color, fields array, thumbnail, and footer that produce rich messages in Discord channels.</p>
-<h3>Twilio SMS Template</h3>
-<p>Twilio sends SMS webhook data as form-encoded fields rather than JSON. The template includes the From number, To number, Body text, MessageSid, AccountSid, and all the metadata fields that Twilio includes. Note that when using this template, you should switch the Content-Type to application/x-www-form-urlencoded.</p>
-
-<h2 id="hmac-signature-verification-for-webhook-security">HMAC Signature Verification for Webhook Security</h2>
-<p>Webhook security is critical because your endpoint is a publicly accessible URL that accepts POST requests. Without verification, anyone could send fake webhook payloads to your endpoint, potentially triggering unauthorized actions like issuing refunds, deploying code, or modifying data.</p>
-<p>The industry standard for webhook verification is HMAC (Hash-based Message Authentication Code) using SHA-256. Here is how it works: the webhook provider and your application share a secret key. When the provider sends a webhook, it computes an HMAC-SHA256 hash of the request body using the shared secret, then includes this hash in a header (like X-Hub-Signature-256 for GitHub or Stripe-Signature for Stripe). Your endpoint computes the same hash on the received body and compares it to the header value. If they match, the request is authentic.</p>
-<p>The HMAC Calculator tab in this tool lets you compute HMAC-SHA256 signatures for any payload and secret combination. You can use this to generate expected signature values during development, verify that your server-side verification code is producing correct hashes, and debug signature mismatches that cause webhook delivery failures.</p>
-
-<h2 id="webhook-handler-code-generation">Webhook Handler Code Generation</h2>
-<p>The Code Generator tab produces ready-to-use server-side code for handling the webhook you are testing. The generated code includes proper HMAC signature verification, JSON body parsing, event type routing, and error handling. Code is available in three languages that cover the majority of webhook handler implementations: Node.js using Express, Python using Flask, and PHP using the built-in request handling. Each generated handler includes comments explaining every step, making it useful as both a starting point and a learning resource.</p>
-
-<h2 id="retry-logic-and-exponential-backoff">Retry Logic and Exponential Backoff</h2>
-<p>Production webhook systems implement retry logic because network failures, temporary server errors, and deployment windows can cause webhook deliveries to fail. When a webhook delivery fails, the sending service typically retries with exponential backoff, meaning each retry waits longer than the previous one. Common patterns include waiting 1 second, then 2 seconds, then 4 seconds, then 8 seconds, up to a maximum number of retries.</p>
-<p>The Send with Retry button simulates this pattern. It sends your request and, if it receives a 5xx error or network failure, automatically retries up to 3 times with exponential backoff delays. The retry panel shows each attempt with its status code, response time, and the delay before the next attempt. This helps you verify that your endpoint recovers correctly from transient failures and returns consistent responses across retries.</p>
-
-<h2 id="common-webhook-integration-patterns">Common Webhook Integration Patterns</h2>
-<p>Understanding how different services structure their webhook systems helps you build more robust integrations.</p>
-<h3>Event Envelope Pattern</h3>
-<p>Most webhook providers wrap event data in a standard envelope. Stripe uses an object with type, data, and api_version fields. GitHub includes an action field alongside the main event object. This pattern lets you route events to different handlers based on the type or action field without parsing the full payload first.</p>
-<h3>Idempotency Keys</h3>
-<p>Webhook deliveries can be duplicated due to network issues or retry logic. Robust handlers use idempotency keys (usually the event ID) to detect and ignore duplicate deliveries. Store processed event IDs in a database or cache, and check incoming events against this store before processing them.</p>
-<h3>Async Processing</h3>
-<p>Webhook endpoints should respond quickly (within 5 seconds for most providers) to avoid timeout-triggered retries. The best practice is to accept the webhook, return a 200 status immediately, and process the event asynchronously using a message queue or background job system. This prevents slow processing from causing duplicate deliveries.</p>
-<h3>Webhook Event Logging</h3>
-<p>Log every incoming webhook with its full headers and body before processing it. When something goes wrong in production, these logs are the only way to reconstruct what happened. Include the timestamp, source IP, signature header, and processing result in each log entry.</p>
-
-<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
-
-
-
-
-<div class="faq-item">
-<div class="faq-q">What is a webhook and how does it differ from an API call?</div>
-<div class="faq-a"><p>A webhook is an HTTP callback that is triggered by an event in a source system. Unlike a traditional API call where your application actively requests data (pull model), a webhook pushes data to your application when something happens (push model). For example, instead of polling the Stripe API every minute to check for new payments, you configure a webhook URL and Stripe sends you a POST request the moment a payment succeeds. This is more efficient, more timely, and reduces unnecessary API calls.</p></div>
-</div>
-
-<div class="faq-item">
-<div class="faq-q">Can this tool receive incoming webhooks from external services?</div>
-<div class="faq-a"><p>This tool is a webhook sender and tester, not a webhook receiver. It runs entirely in your browser and cannot expose a public URL to receive incoming requests from external services. To receive webhooks during development, you need a tunneling service like ngrok or Cloudflare Tunnel that exposes your local server to the internet. You can then use this tool to send additional test payloads to your local endpoint through the tunnel URL.</p></div>
-</div>
-
-<div class="faq-item">
-<div class="faq-q">How do I test webhooks on localhost?</div>
-<div class="faq-a"><p>You can send requests to localhost URLs directly from this tool since it uses your browser's Fetch API. Enter http://localhost:3000/webhook (or whatever port your server runs on) as the target URL. If your server has CORS headers configured, the request will go through. For testing without CORS issues, consider running your server with permissive CORS headers during development, or use a browser extension that modifies CORS headers.</p></div>
-</div>
-
-<div class="faq-item">
-<div class="faq-q">What is HMAC-SHA256 and why is it important for webhooks?</div>
-<div class="faq-a"><p>HMAC-SHA256 is a cryptographic hash function that produces a unique signature for a given message and secret key combination. Webhook providers use it to prove that a request is authentic. The provider and your application share a secret key. The provider hashes the request body with this key and includes the hash in a header. Your application performs the same hash computation and compares the results. If someone sends a fake webhook to your endpoint, they cannot produce a valid signature without knowing the secret key, so your application rejects the request.</p></div>
-</div>
-
-<div class="faq-item">
-<div class="faq-q">Why do my webhook requests fail with CORS errors?</div>
-<div class="faq-a"><p>CORS (Cross-Origin Resource Sharing) errors occur when the target server does not include the proper Access-Control-Allow-Origin headers in its response. Since this tool sends requests from your browser, the browser enforces CORS policies. If you control the target server, add CORS headers to allow requests from any origin during development. If you are testing a third-party service that does not support CORS, you will need to use a command-line tool like curl or a server-side proxy instead.</p></div>
-</div>
-
-<div class="faq-item">
-<div class="faq-q">How do I verify that my webhook handler processes events correctly?</div>
-<div class="faq-a"><p>Send a test payload using a template that matches the event you want to handle. Check the response status code (should be 200 or 202). Then verify the side effects in your application: was the database updated, was the email sent, was the notification created? Repeat with edge cases like malformed payloads, missing fields, and duplicate event IDs to ensure your handler is robust. The request history feature lets you replay any previous test with a single click.</p></div>
-</div>
-
-<div class="faq-item">
-<div class="faq-q">What is exponential backoff in webhook retries?</div>
-<div class="faq-a"><p>Exponential backoff is a retry strategy where each subsequent retry waits exponentially longer than the previous one. For example: first retry after 1 second, second retry after 2 seconds, third retry after 4 seconds, fourth retry after 8 seconds. This prevents overwhelming a failing server with rapid retry attempts. Most webhook providers implement this pattern, and your endpoint should be designed to handle receiving the same event multiple times due to retries. The retry feature in this tool simulates this pattern so you can test your endpoint's behavior under retry conditions.</p></div>
-</div>
-
-<div class="faq-item">
-<div class="faq-q">Is my data safe when using this webhook tester?</div>
-<div class="faq-a"><p>Yes. This tool runs entirely in your browser with zero server-side components. Your webhook URLs, payloads, secrets, and response data never leave your machine except when sent directly to the target URL you specify. Request history is stored in your browser's localStorage and can be cleared at any time. There is no analytics, no tracking, and no data collection of any kind. The source code is fully visible in your browser's developer tools for verification.</p></div>
-</div>
-
-<div class="faq-item">
-<div class="faq-q">Can I test webhook signatures from different providers?</div>
-<div class="faq-a"><p>The HMAC Calculator supports SHA-256 signing, which is the standard used by GitHub (X-Hub-Signature-256), Stripe (Stripe-Signature), Shopify (X-Shopify-Hmac-SHA256), and many other providers. Enter your webhook secret and the payload body, and the tool computes the signature in the same format these services use. You can then compare it against the signature your server computes to verify your verification logic is correct. For providers that use different algorithms (like SHA-1), the tool focuses on the SHA-256 standard as it is the recommended approach for new integrations.</p></div>
-</div>
-
-</div>
-</section>
-
-
-<div class="video-learn" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#12121a;border-left:4px solid #ff0000;border-radius:0 8px 8px 0;">
-  <p style="margin:0 0 8px;font-size:0.7rem;color:#ff0000;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Video Tutorials</p>
-  <a href="https://www.youtube.com/results?search_query=webhook+tester+debugging+tutorial" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1a1a26;border-radius:8px;text-decoration:none;transition:background 0.2s;">
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"/><polygon fill="#fff" points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
-    <div>
-      <p style="margin:0;color:#e0e0e8;font-size:0.9rem;font-weight:500;">Watch Webhook Tester tutorials on YouTube</p>
-      <p style="margin:2px 0 0;color:#8888a0;font-size:0.75rem;">Learn with free video guides and walkthroughs</p>
-    </div>
-  </a>
+<p style="text-align:center;color:#8888a0;font-size:0.8rem;margin:2rem 0 0.5rem;">Last updated: March 19, 2026</p>
+<p style="text-align:center;color:#8888a0;font-size:0.75rem;margin:0.25rem 0 0.5rem;">Last verified working: March 19, 2026 by Michael Lip</p>
+<div class="update-history" style="max-width:700px;margin:1.5rem auto;padding:12px 16px;background:#12121a;border-radius:8px;border:1px solid #2a2a3a;">
+  <p style="color:#00ff88;font-size:0.8rem;font-weight:600;margin:0 0 6px;">Update History</p>
+  <p style="color:#8888a0;font-size:0.75rem;margin:0;line-height:1.6;">
+    March 19, 2026 - Initial release with full functionality<br>
+    March 19, 2026 - Added FAQ section and schema markup<br>
+    March 19, 2026 - Performance optimization and accessibility improvements
+  </p>
 </div>
 <footer class="footer">
 <div class="container">
@@ -1371,17 +1264,6 @@ function handlePushEvent($pushData) {
   ]
 }
 </script>
-<footer id="zovo-footer" style="text-align:center;padding:2rem 1rem;margin-top:3rem;border-top:1px solid #1a1a2a;font-family:Inter,sans-serif;">
-  <div style="margin-bottom:0.5rem;">
-    <a href="/" style="color:#00ff88;text-decoration:none;font-weight:600;">Zovo Tools</a>
-    <span style="color:#444460;margin:0 0.5rem;">·</span>
-    <span style="color:#8888a0;font-size:0.8rem;">Free, private, no tracking</span>
-  </div>
-  <div style="font-size:0.75rem;color:#444460;">
-    Built by <a href="https://zovo.one" style="color:#00ccff;text-decoration:none;">Michael Lip</a> · 
-    <a href="https://github.com/theluckystrike" style="color:#444460;text-decoration:none;">GitHub</a>
-  </div>
-</footer>
 
 <div class="wiki-definition" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#12121a;border-left:4px solid #00ff88;border-radius:0 8px 8px 0;">
   <p style="margin:0 0 4px;font-size:0.7rem;color:#00ff88;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Wikipedia</p>
