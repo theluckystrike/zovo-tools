@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade Calculator - Free Weighted Grade Calculator | Zovo Tools</title>
+<meta name="description" content="Free grade calculator with weighted categories, letter grade mapping, final exam calculator, grade distribution charts, and multi-course support. Save and export your grades.">
+<link rel="canonical" href="https://tools.zovo.one/grade-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Grade Calculator",
+  "url": "https://tools.zovo.one/grade-calculator/",
+  "description": "Free online grade calculator with weighted categories, letter grade mapping, final exam calculator, grade distribution charts, and multi-course support.",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "browserRequirements": "Requires a modern web browser with JavaScript enabled"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Zovo Tools",
+      "item": "https://tools.zovo.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Grade Calculator",
+      "item": "https://tools.zovo.one/grade-calculator/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate my weighted grade?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To calculate a weighted grade, multiply each category's average by its weight (as a decimal), then add all the results together. For example, if Homework (20% weight) has an average of 90% and Exams (80% weight) have an average of 85%, your weighted grade is (0.20 x 90) + (0.80 x 85) = 18 + 68 = 86%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What grade do I need on my final exam to get an A?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the 'What Do I Need on the Final?' calculator. Enter your current overall grade, the weight of your final exam, and your target grade. The calculator will tell you exactly what score you need. For example, if your current grade is 88%, the final is worth 30%, and you want a 90%, you would need a (90 - 0.70 x 88) / 0.30 = 94.67% on the final."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are letter grades typically assigned?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most common letter grade scale in the United States is: A (90-100%), B (80-89%), C (70-79%), D (60-69%), F (below 60%). Some schools use plus/minus grading, where A+ is 97-100%, A is 93-96%, A- is 90-92%, and so on. This calculator lets you customize the thresholds to match your school's specific grading scale."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between weighted and unweighted grades?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unweighted grades treat all assignments equally regardless of category. Weighted grades assign different importance to different categories. For example, if exams are weighted at 50% and homework at 10%, exam scores have five times more impact on your final grade than homework scores. Most college courses use weighted grading."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate my GPA from letter grades?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Assign point values to each letter grade (A=4.0, B=3.0, C=2.0, D=1.0, F=0.0). Multiply each grade's point value by the course's credit hours, sum all the results, then divide by total credit hours. For example, an A in a 3-credit course and a B in a 4-credit course: (4.0x3 + 3.0x4) / (3+4) = 24/7 = 3.43 GPA."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I track grades for multiple classes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, this grade calculator supports multiple courses. Use the course tabs at the top of the calculator to switch between different classes. Each course maintains its own set of categories, assignments, and grade calculations independently. All data is saved to your browser's local storage."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I export or back up my grades?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Click the 'Export' button to download all your grade data as a JSON file. This file contains all courses, categories, assignments, and custom grade thresholds. To restore your data on another device or after clearing your browser, use the 'Import' button and select your saved JSON file."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my grade data stored securely?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All grade data is stored exclusively in your browser's localStorage. No data is ever sent to any server. This means your grades are private and accessible only on the device and browser where you entered them. Use the export feature to create backups or transfer data between devices."
+      }
+    }
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0f0f0f;
+  --surface: #1a1a2e;
+  --border: #2a2a4a;
+  --accent: #6C5CE7;
+  --accent-light: #8577ed;
+  --text: #e0e0e0;
+  --text-dim: #8888a0;
+  --success: #2ecc71;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --radius: 12px;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+header {
+  padding: 24px 0 8px;
+}
+
+.breadcrumb {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.breadcrumb a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 16px 0 8px;
+  color: #fff;
+}
+
+.subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 24px;
+  font-weight: 300;
+}
+
+.privacy-line {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+  padding: 8px 14px;
+  background: rgba(108, 92, 231, 0.06);
+  border-radius: 8px;
+  border: 1px solid rgba(108, 92, 231, 0.15);
+  display: inline-block;
+}
+
+.privacy-line svg {
+  vertical-align: -2px;
+  margin-right: 4px;
+}
+
+/* Course Tabs */
+.course-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.course-tab {
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.course-tab:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.course-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.course-tab .remove-course {
+  font-size: 14px;
+  opacity: 0.6;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.course-tab .remove-course:hover {
+  opacity: 1;
+}
+
+.btn-add-course {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.btn-add-course:hover {
+  border-color: var(--accent);
+  color: var(--accent-light);
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+/* Summary Bar */
+.summary-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.summary-item .s-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.summary-item .s-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.summary-item .s-value.grade-a { color: var(--success); }
+.summary-item .s-value.grade-b { color: #3498db; }
+.summary-item .s-value.grade-c { color: var(--warning); }
+.summary-item .s-value.grade-d { color: #e67e22; }
+.summary-item .s-value.grade-f { color: var(--danger); }
+
+/* Categories */
+.category-block {
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(108, 92, 231, 0.06);
+  cursor: pointer;
+}
+
+.category-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.category-weight {
+  font-size: 12px;
+  color: var(--accent-light);
+  padding: 2px 8px;
+  background: rgba(108, 92, 231, 0.15);
+  border-radius: 4px;
+}
+
+.category-avg {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.category-body {
+  padding: 12px 16px 6px;
+}
+
+/* Assignment rows */
+.assignment-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 32px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.assignment-row.header-row {
+  margin-bottom: 6px;
+}
+
+.assignment-row.header-row span {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.assignment-row input {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.assignment-row input:focus {
+  border-color: var(--accent);
+}
+
+.assignment-row input::placeholder {
+  color: #444;
+}
+
+.btn-remove-assignment {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.btn-remove-assignment:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn-add-assignment {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+
+.btn-add-assignment:hover {
+  border-color: var(--accent);
+  color: var(--accent-light);
+}
+
+/* Category management */
+.category-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.category-controls input {
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+
+.category-controls input:focus {
+  border-color: var(--accent);
+}
+
+.btn-small {
+  padding: 8px 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.btn-small:hover {
+  background: var(--accent-light);
+}
+
+.btn-outline {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.btn-danger-outline {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.btn-danger-outline:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Weight warning */
+.weight-status {
+  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.weight-status.ok {
+  background: rgba(46, 204, 113, 0.1);
+  border: 1px solid rgba(46, 204, 113, 0.2);
+  color: var(--success);
+}
+
+.weight-status.warn {
+  background: rgba(243, 156, 18, 0.1);
+  border: 1px solid rgba(243, 156, 18, 0.2);
+  color: var(--warning);
+}
+
+/* Final Exam Calculator */
+.final-calc {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.final-calc .fc-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.final-calc label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.final-calc input {
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  width: 120px;
+}
+
+.final-calc input:focus {
+  border-color: var(--accent);
+}
+
+.final-result {
+  margin-top: 12px;
+  padding: 14px 18px;
+  background: rgba(108, 92, 231, 0.08);
+  border: 1px solid rgba(108, 92, 231, 0.2);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  display: none;
+}
+
+.final-result.visible {
+  display: block;
+}
+
+/* Chart */
+.chart-container {
+  position: relative;
+  height: 200px;
+  margin-top: 12px;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Grade Thresholds */
+.threshold-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+.threshold-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.threshold-item label {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+  min-width: 24px;
+}
+
+.threshold-item input {
+  width: 60px;
+  padding: 6px 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  text-align: center;
+}
+
+.threshold-item input:focus {
+  border-color: var(--accent);
+}
+
+.threshold-item span {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* Import/Export */
+.io-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Content */
+.content-section {
+  margin-bottom: 48px;
+}
+
+.content-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 40px 0 16px;
+}
+
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 28px 0 12px;
+}
+
+.content-section p {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+}
+
+.content-section ul, .content-section ol {
+  margin: 0 0 16px 24px;
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 300;
+  line-height: 1.8;
+}
+
+.content-section li {
+  margin-bottom: 6px;
+}
+
+.content-section code {
+  background: rgba(108, 92, 231, 0.12);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--accent-light);
+}
+
+.example-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 14px 0 18px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+.example-box .ex-label {
+  font-weight: 500;
+  color: var(--accent-light);
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* FAQ */
+.faq-section {
+  margin-bottom: 48px;
+}
+
+.faq-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.faq-question {
+  width: 100%;
+  text-align: left;
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-question:hover {
+  background: rgba(108, 92, 231, 0.05);
+}
+
+.faq-arrow {
+  transition: transform 0.2s;
+  color: var(--text-dim);
+  font-size: 18px;
+}
+
+.faq-item.open .faq-arrow {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  display: none;
+  padding: 0 20px 16px;
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 300;
+  line-height: 1.8;
+}
+
+.faq-item.open .faq-answer {
+  display: block;
+}
+
+footer {
+  text-align: center;
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+footer a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Hidden file input */
+#import-input {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.5rem; }
+  .card { padding: 16px; }
+  .assignment-row { grid-template-columns: 1.5fr 1fr 1fr 28px; gap: 6px; }
+  .summary-bar { grid-template-columns: repeat(2, 1fr); }
+  .final-calc input { width: 90px; }
+  .threshold-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.assignment-row input::placeholder { color: #444; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="breadcrumb">
+      <a href="https://tools.zovo.one/">Zovo Tools</a> / Grade Calculator
+    </div>
+    <h1>Grade Calculator</h1>
+    <p class="subtitle">Weighted grades, letter grade mapping, final exam calculator, distribution charts, and multi-course support.</p>
+    <div class="privacy-line">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Runs entirely in your browser. No data sent to any server.
+    </div>
+  </header>
+
+  <!-- Course Tabs -->
+  <div class="course-tabs" id="course-tabs"></div>
+
+  <!-- Summary -->
+  <div class="summary-bar" id="summary-bar">
+    <div class="summary-item">
+      <div class="s-label">Overall Grade</div>
+      <div class="s-value" id="sum-overall">--</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-label">Letter Grade</div>
+      <div class="s-value" id="sum-letter">--</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-label">Assignments</div>
+      <div class="s-value" id="sum-assignments">0</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-label">Categories</div>
+      <div class="s-value" id="sum-categories">0</div>
+    </div>
+  </div>
+
+  <!-- Categories & Assignments -->
+  <div class="card">
+    <h2>Categories and Assignments</h2>
+    <div class="weight-status" id="weight-status"></div>
+    <div id="categories-container"></div>
+    <div class="category-controls">
+      <input type="text" id="new-cat-name" placeholder="Category name">
+      <input type="number" id="new-cat-weight" placeholder="Weight %" min="0" max="100" step="any">
+      <button class="btn-small" onclick="addCategory()">Add Category</button>
+    </div>
+    <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn-outline" onclick="loadPresetCategories()">Load preset categories</button>
+    </div>
+  </div>
+
+  <!-- Grade Distribution Chart -->
+  <div class="card">
+    <h2>Grade Distribution</h2>
+    <div class="chart-container">
+      <canvas id="grade-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Final Exam Calculator -->
+  <div class="card">
+    <h2>What Do I Need on the Final?</h2>
+    <div class="final-calc">
+      <div class="fc-group">
+        <label>Current Grade %</label>
+        <input type="number" id="fc-current" placeholder="e.g. 85" step="any">
+      </div>
+      <div class="fc-group">
+        <label>Final Weight %</label>
+        <input type="number" id="fc-weight" placeholder="e.g. 30" step="any">
+      </div>
+      <div class="fc-group">
+        <label>Target Grade %</label>
+        <input type="number" id="fc-target" placeholder="e.g. 90" step="any">
+      </div>
+      <button class="btn-small" onclick="calcFinal()">Calculate</button>
+    </div>
+    <div class="final-result" id="final-result"></div>
+  </div>
+
+  <!-- Letter Grade Thresholds -->
+  <div class="card">
+    <h2>Letter Grade Thresholds</h2>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px;font-weight:300;">Customize minimum percentages for each letter grade.</p>
+    <div class="threshold-grid" id="threshold-grid"></div>
+    <div style="margin-top:12px;">
+      <button class="btn-outline" onclick="resetThresholds()">Reset to defaults</button>
+    </div>
+  </div>
+
+  <!-- Import/Export -->
+  <div class="card">
+    <h2>Import / Export</h2>
+    <div class="io-buttons">
+      <button class="btn-outline" onclick="exportData()">Export grades (JSON)</button>
+      <button class="btn-outline" onclick="document.getElementById('import-input').click()">Import grades</button>
+      <input type="file" id="import-input" accept=".json" onchange="importData(event)">
+    </div>
+  </div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How to Use This Grade Calculator</h2>
+    <p>This free grade calculator helps students calculate their current grade, plan for upcoming exams, and track academic progress across multiple courses. It supports weighted grading categories, customizable letter grade thresholds, grade distribution visualization, and data import/export.</p>
+
+    <h3>Step 1: Set Up Your Categories</h3>
+    <p>Start by creating grade categories that match your course syllabus. Common categories include Homework, Quizzes, Midterm Exams, Final Exam, Projects, Labs, and Participation. Each category needs a name and a weight percentage. The weights should add up to 100%, though the calculator will warn you if they do not.</p>
+    <p>If you are unsure about your categories, click "Load preset categories" to start with a common configuration (Homework 20%, Quizzes 10%, Exams 40%, Projects 20%, Participation 10%). You can modify these at any time.</p>
+
+    <h3>Step 2: Enter Your Assignments</h3>
+    <p>Within each category, add individual assignments by clicking the "+ Add assignment" button. For each assignment, enter three pieces of information:</p>
+    <ul>
+      <li>Assignment name (for your reference)</li>
+      <li>Points earned (your score)</li>
+      <li>Total points possible (what the assignment was out of)</li>
+    </ul>
+    <p>The calculator computes each category's average automatically, then applies the category weights to produce your overall weighted grade.</p>
+
+    <h3>Step 3: Read Your Results</h3>
+    <p>The summary bar at the top updates in real time as you enter grades. It shows your overall weighted percentage, the corresponding letter grade, and how many assignments and categories are active. The grade distribution chart below gives a visual breakdown of how each category contributes to your final grade.</p>
+
+    <h3>Step 4: Plan Ahead with the Final Exam Calculator</h3>
+    <p>The "What Do I Need on the Final?" section lets you figure out the minimum score needed on your final exam (or any remaining assignment) to achieve a target grade. Enter your current overall grade, the weight of the final, and the grade you are aiming for. The calculator uses the formula:</p>
+    <div class="example-box">
+      <span class="ex-label">Formula</span>
+      Required Score = (Target Grade - (1 - Final Weight) x Current Grade) / Final Weight<br><br>
+      <span class="ex-label">Example</span>
+      Current grade: 85%, Final weight: 25%, Target: 90%<br>
+      Required = (90 - 0.75 x 85) / 0.25 = (90 - 63.75) / 0.25 = 105%<br>
+      You would need 105% on the final to achieve a 90% overall.
+    </div>
+
+    <h3>Multiple Courses</h3>
+    <p>Use the course tabs at the top of the calculator to manage grades for different classes. Click "+ Add Course" to create a new course, and click any course tab to switch to it. Each course maintains its own independent set of categories, assignments, and calculations. Right-click or use the X button to remove a course.</p>
+
+    <h2>Understanding Weighted Grades</h2>
+    <p>Weighted grading means that different types of assignments contribute differently to your final grade. This is the standard approach in most college courses and many high school classes.</p>
+
+    <h3>How Weighted Grades Work</h3>
+    <p>In a weighted system, each category of assignments has a designated weight, expressed as a percentage. The sum of all weights should equal 100%. Your grade in each category is calculated as the total points earned divided by the total points possible, converted to a percentage. Then, each category percentage is multiplied by its weight, and the results are summed to produce your overall grade.</p>
+    <div class="example-box">
+      <span class="ex-label">Weighted Grade Example</span>
+      Homework (20% weight): scored 180/200 = 90%<br>
+      Quizzes (15% weight): scored 42/50 = 84%<br>
+      Midterm (25% weight): scored 78/100 = 78%<br>
+      Project (25% weight): scored 92/100 = 92%<br>
+      Participation (15% weight): scored 28/30 = 93.3%<br><br>
+      Weighted grade = (0.20 x 90) + (0.15 x 84) + (0.25 x 78) + (0.25 x 92) + (0.15 x 93.3)<br>
+      = 18 + 12.6 + 19.5 + 23 + 14 = 87.1%
+    </div>
+
+    <h3>Why Weighted Grades Matter</h3>
+    <p>Without weights, a homework assignment worth 10 points would have the same impact on your grade as a midterm exam worth 10 points. That rarely reflects the actual importance of each assignment. Weighting ensures that high-stakes assessments like exams and projects have a proportionally larger effect on your final grade, which better represents your mastery of the material.</p>
+
+    <h2>Letter Grade Scales and GPA</h2>
+    <p>Letter grades provide a standardized way to communicate academic performance. While the most common scale in the United States assigns A through F based on percentage ranges, schools vary in their exact cutoff points.</p>
+
+    <h3>Standard Grading Scale</h3>
+    <p>The default thresholds in this calculator follow the most widely used scale:</p>
+    <ul>
+      <li>A: 90% and above</li>
+      <li>B: 80% to 89%</li>
+      <li>C: 70% to 79%</li>
+      <li>D: 60% to 69%</li>
+      <li>F: below 60%</li>
+    </ul>
+    <p>You can customize these thresholds in the "Letter Grade Thresholds" section to match your school's grading policy. Some institutions use a plus/minus system (A+, A, A-, B+, etc.) with narrower ranges. Others may have different cutoff points entirely.</p>
+
+    <h3>GPA Conversion</h3>
+    <p>Each letter grade corresponds to a GPA point value on a 4.0 scale. A = 4.0, B = 3.0, C = 2.0, D = 1.0, F = 0.0. For plus/minus grades, increments of 0.3 are typical (A- = 3.7, B+ = 3.3, etc.). Your cumulative GPA is the weighted average of all course GPAs, where the weights are the credit hours for each course.</p>
+
+    <h2>Strategies for Improving Your Grades</h2>
+    <p>A grade calculator is not just a reporting tool. It is a planning tool. Here are ways to use it strategically:</p>
+
+    <h3>Identify High-Impact Categories</h3>
+    <p>Focus your study time on categories with the highest weight. Improving your exam score by 5% in a category weighted at 40% has twice the impact of the same improvement in a 20% category. Use the grade distribution chart to visualize where your grade is coming from and where the biggest opportunities lie.</p>
+
+    <h3>Set Realistic Targets</h3>
+    <p>Use the "What Do I Need on the Final?" calculator early in the semester, not just before the final. By entering hypothetical current grades and checking what final scores you would need, you can gauge whether your target grade is realistically achievable and adjust your study plan accordingly.</p>
+
+    <h3>Track Trends Over Time</h3>
+    <p>Enter grades as you receive them throughout the semester. Watching your running average change over time helps you identify problems early. If your grade starts dropping in a particular category, you have time to adjust before it becomes critical.</p>
+
+    <h3>Plan for the Worst Case</h3>
+    <p>Enter estimated low scores for upcoming assignments to see the worst-case scenario for your final grade. This helps you understand how much room you have and whether you can afford to prioritize one course over another during a busy exam period.</p>
+
+    <h2>Exporting and Backing Up Your Data</h2>
+    <p>All grade data is stored in your browser's localStorage, which means it persists between visits but is tied to your specific browser on your specific device. To protect against data loss or to transfer your grades to another device, use the Export feature. It downloads a JSON file containing all courses, categories, assignments, and custom thresholds. Import the file on any device to restore your complete grade setup.</p>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        How do I calculate my weighted grade?
+        <span class="faq-arrow">&#9662;</span>
+      </button>
+      <div class="faq-answer">
+        <p>To calculate a weighted grade, multiply each category's average by its weight (as a decimal), then add all the results together. For example, if Homework (20% weight) has an average of 90% and Exams (80% weight) have an average of 85%, your weighted grade is (0.20 x 90) + (0.80 x 85) = 18 + 68 = 86%.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        What grade do I need on my final exam to get an A?
+        <span class="faq-arrow">&#9662;</span>
+      </button>
+      <div class="faq-answer">
+        <p>Use the "What Do I Need on the Final?" calculator. Enter your current overall grade, the weight of your final exam, and your target grade. The calculator will tell you exactly what score you need. For example, if your current grade is 88%, the final is worth 30%, and you want a 90%, you would need (90 - 0.70 x 88) / 0.30 = 94.67% on the final.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        How are letter grades typically assigned?
+        <span class="faq-arrow">&#9662;</span>
+      </button>
+      <div class="faq-answer">
+        <p>The most common letter grade scale in the United States is: A (90-100%), B (80-89%), C (70-79%), D (60-69%), F (below 60%). Some schools use plus/minus grading, where A+ is 97-100%, A is 93-96%, A- is 90-92%, and so on. This calculator lets you customize the thresholds to match your school's specific grading scale.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        What is the difference between weighted and unweighted grades?
+        <span class="faq-arrow">&#9662;</span>
+      </button>
+      <div class="faq-answer">
+        <p>Unweighted grades treat all assignments equally regardless of category. Weighted grades assign different importance to different categories. For example, if exams are weighted at 50% and homework at 10%, exam scores have five times more impact on your final grade than homework scores. Most college courses use weighted grading.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        How do I calculate my GPA from letter grades?
+        <span class="faq-arrow">&#9662;</span>
+      </button>
+      <div class="faq-answer">
+        <p>Assign point values to each letter grade (A=4.0, B=3.0, C=2.0, D=1.0, F=0.0). Multiply each grade's point value by the course's credit hours, sum all the results, then divide by total credit hours. For example, an A in a 3-credit course and a B in a 4-credit course: (4.0x3 + 3.0x4) / (3+4) = 24/7 = 3.43 GPA.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Can I track grades for multiple classes?
+        <span class="faq-arrow">&#9662;</span>
+      </button>
+      <div class="faq-answer">
+        <p>Yes, this grade calculator supports multiple courses. Use the course tabs at the top of the calculator to switch between different classes. Each course maintains its own set of categories, assignments, and grade calculations independently. All data is saved to your browser's local storage.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        How do I export or back up my grades?
+        <span class="faq-arrow">&#9662;</span>
+      </button>
+      <div class="faq-answer">
+        <p>Click the "Export" button to download all your grade data as a JSON file. This file contains all courses, categories, assignments, and custom grade thresholds. To restore your data on another device or after clearing your browser, use the "Import" button and select your saved JSON file.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Is my grade data stored securely?
+        <span class="faq-arrow">&#9662;</span>
+      </button>
+      <div class="faq-answer">
+        <p>All grade data is stored exclusively in your browser's localStorage. No data is ever sent to any server. This means your grades are private and accessible only on the device and browser where you entered them. Use the export feature to create backups or transfer data between devices.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Built by <a href="https://zovo.one">Michael Lip</a> at <a href="https://zovo.one">zovo.one</a>
+  </footer>
+</div>
+
+<script>
+// ====== DATA MODEL ======
+const DEFAULT_THRESHOLDS = { A: 90, B: 80, C: 70, D: 60, F: 0 };
+
+function defaultCourse(name) {
+  return { name: name, categories: [], nextCatId: 1, nextAssignId: 1 };
+}
+
+let state = {
+  courses: [],
+  activeCourseIndex: 0,
+  thresholds: { ...DEFAULT_THRESHOLDS },
+  nextCourseId: 1
+};
+
+// ====== PERSISTENCE ======
+function saveState() {
+  try {
+    localStorage.setItem('zovo_grade_calc', JSON.stringify(state));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('zovo_grade_calc');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      state = parsed;
+      if (!state.thresholds) state.thresholds = { ...DEFAULT_THRESHOLDS };
+      if (!state.courses || state.courses.length === 0) {
+        state.courses = [defaultCourse('Course 1')];
+        state.activeCourseIndex = 0;
+      }
+    } else {
+      state.courses = [defaultCourse('Course 1')];
+    }
+  } catch(e) {
+    state.courses = [defaultCourse('Course 1')];
+  }
+}
+
+// ====== GETTERS ======
+function activeCourse() {
+  return state.courses[state.activeCourseIndex] || state.courses[0];
+}
+
+function getLetterGrade(pct) {
+  const t = state.thresholds;
+  if (pct >= t.A) return 'A';
+  if (pct >= t.B) return 'B';
+  if (pct >= t.C) return 'C';
+  if (pct >= t.D) return 'D';
+  return 'F';
+}
+
+function getLetterClass(letter) {
+  return 'grade-' + letter.toLowerCase();
+}
+
+function calcCategoryAvg(cat) {
+  const valid = cat.assignments.filter(a => a.score !== '' && a.total !== '' && parseFloat(a.total) > 0);
+  if (valid.length === 0) return null;
+  let earned = 0, possible = 0;
+  valid.forEach(a => {
+    earned += parseFloat(a.score);
+    possible += parseFloat(a.total);
+  });
+  return (earned / possible) * 100;
+}
+
+function calcOverallGrade(course) {
+  let totalWeight = 0;
+  let weightedSum = 0;
+  course.categories.forEach(cat => {
+    const avg = calcCategoryAvg(cat);
+    if (avg !== null && cat.weight > 0) {
+      weightedSum += (cat.weight / 100) * avg;
+      totalWeight += cat.weight / 100;
+    }
+  });
+  if (totalWeight === 0) return null;
+  return weightedSum / totalWeight;
+}
+
+function countAssignments(course) {
+  let n = 0;
+  course.categories.forEach(cat => {
+    n += cat.assignments.filter(a => a.score !== '' && a.total !== '').length;
+  });
+  return n;
+}
+
+function totalWeight(course) {
+  return course.categories.reduce((s, c) => s + (parseFloat(c.weight) || 0), 0);
+}
+
+// ====== RENDERING ======
+function renderAll() {
+  renderCourseTabs();
+  renderSummary();
+  renderCategories();
+  renderWeightStatus();
+  renderChart();
+  renderThresholds();
+  saveState();
+}
+
+function renderCourseTabs() {
+  const container = document.getElementById('course-tabs');
+  let html = '';
+  state.courses.forEach((c, i) => {
+    const active = i === state.activeCourseIndex ? ' active' : '';
+    html += '<button class="course-tab' + active + '" onclick="switchCourse(' + i + ')">' +
+      escHtml(c.name) +
+      (state.courses.length > 1 ? ' <span class="remove-course" onclick="event.stopPropagation();removeCourse(' + i + ')">x</span>' : '') +
+      '</button>';
+  });
+  html += '<button class="btn-add-course" onclick="addCourse()">+ Add Course</button>';
+  container.innerHTML = html;
+}
+
+function renderSummary() {
+  const course = activeCourse();
+  const overall = calcOverallGrade(course);
+  const overallEl = document.getElementById('sum-overall');
+  const letterEl = document.getElementById('sum-letter');
+
+  if (overall !== null) {
+    overallEl.textContent = overall.toFixed(1) + '%';
+    const letter = getLetterGrade(overall);
+    letterEl.textContent = letter;
+    letterEl.className = 's-value ' + getLetterClass(letter);
+    overallEl.className = 's-value ' + getLetterClass(letter);
+  } else {
+    overallEl.textContent = '--';
+    overallEl.className = 's-value';
+    letterEl.textContent = '--';
+    letterEl.className = 's-value';
+  }
+
+  document.getElementById('sum-assignments').textContent = countAssignments(course);
+  document.getElementById('sum-categories').textContent = course.categories.length;
+}
+
+function renderWeightStatus() {
+  const course = activeCourse();
+  const tw = totalWeight(course);
+  const el = document.getElementById('weight-status');
+  if (course.categories.length === 0) {
+    el.style.display = 'none';
+    return;
+  }
+  el.style.display = 'block';
+  if (Math.abs(tw - 100) < 0.01) {
+    el.className = 'weight-status ok';
+    el.textContent = 'Category weights total 100%. All set.';
+  } else {
+    el.className = 'weight-status warn';
+    el.textContent = 'Category weights total ' + tw.toFixed(1) + '%. They should add up to 100% for accurate results.';
+  }
+}
+
+function renderCategories() {
+  const course = activeCourse();
+  const container = document.getElementById('categories-container');
+  if (course.categories.length === 0) {
+    container.innerHTML = '<p style="font-size:13px;color:var(--text-dim);text-align:center;padding:20px 0;font-weight:300;">No categories yet. Add one below or load the preset.</p>';
+    return;
+  }
+  let html = '';
+  course.categories.forEach((cat, ci) => {
+    const avg = calcCategoryAvg(cat);
+    const avgStr = avg !== null ? avg.toFixed(1) + '%' : 'No grades';
+    html += '<div class="category-block">';
+    html += '<div class="category-header">';
+    html += '<div class="category-header-left">';
+    html += '<span class="category-name">' + escHtml(cat.name) + '</span>';
+    html += '<span class="category-weight">' + cat.weight + '%</span>';
+    html += '</div>';
+    html += '<div style="display:flex;align-items:center;gap:10px;">';
+    html += '<span class="category-avg">' + avgStr + '</span>';
+    html += '<button class="btn-danger-outline" style="padding:4px 8px;font-size:11px;" onclick="removeCategory(' + ci + ')">Remove</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="category-body">';
+    html += '<div class="assignment-row header-row"><span>Assignment</span><span>Score</span><span>Total</span><span></span></div>';
+    cat.assignments.forEach((a, ai) => {
+      html += '<div class="assignment-row">';
+      html += '<input type="text" value="' + escAttr(a.name) + '" placeholder="Assignment name" onchange="updateAssignment(' + ci + ',' + ai + ',\'name\',this.value)">';
+      html += '<input type="number" value="' + escAttr(a.score) + '" placeholder="Score" step="any" onchange="updateAssignment(' + ci + ',' + ai + ',\'score\',this.value)" oninput="liveUpdate()">';
+      html += '<input type="number" value="' + escAttr(a.total) + '" placeholder="Total" step="any" onchange="updateAssignment(' + ci + ',' + ai + ',\'total\',this.value)" oninput="liveUpdate()">';
+      html += '<button class="btn-remove-assignment" onclick="removeAssignment(' + ci + ',' + ai + ')">x</button>';
+      html += '</div>';
+    });
+    html += '<button class="btn-add-assignment" onclick="addAssignment(' + ci + ')">+ Add assignment</button>';
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+function renderThresholds() {
+  const grid = document.getElementById('threshold-grid');
+  const letters = ['A', 'B', 'C', 'D', 'F'];
+  let html = '';
+  letters.forEach(l => {
+    html += '<div class="threshold-item">';
+    html += '<label>' + l + '</label>';
+    if (l === 'F') {
+      html += '<input type="number" value="0" disabled>';
+      html += '<span>% +</span>';
+    } else {
+      html += '<input type="number" value="' + state.thresholds[l] + '" min="0" max="100" step="any" onchange="updateThreshold(\'' + l + '\',this.value)">';
+      html += '<span>% +</span>';
+    }
+    html += '</div>';
+  });
+  grid.innerHTML = html;
+}
+
+function renderChart() {
+  const canvas = document.getElementById('grade-chart');
+  const ctx = canvas.getContext('2d');
+  const container = canvas.parentElement;
+  const dpr = window.devicePixelRatio || 1;
+  const w = container.clientWidth;
+  const h = 200;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  ctx.scale(dpr, dpr);
+
+  ctx.clearRect(0, 0, w, h);
+
+  const course = activeCourse();
+  const cats = course.categories.filter(c => calcCategoryAvg(c) !== null);
+
+  if (cats.length === 0) {
+    ctx.fillStyle = '#8888a0';
+    ctx.font = '13px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Add assignments to see grade distribution', w / 2, h / 2);
+    return;
+  }
+
+  const barWidth = Math.min(60, (w - 40) / cats.length - 12);
+  const totalW = cats.length * (barWidth + 12) - 12;
+  let startX = (w - totalW) / 2;
+  const maxH = h - 50;
+  const baseY = h - 28;
+
+  cats.forEach((cat, i) => {
+    const avg = calcCategoryAvg(cat);
+    const barH = (avg / 100) * maxH;
+    const x = startX + i * (barWidth + 12);
+    const y = baseY - barH;
+
+    // Bar
+    const grad = ctx.createLinearGradient(x, y, x, baseY);
+    grad.addColorStop(0, '#8577ed');
+    grad.addColorStop(1, '#6C5CE7');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.roundRect(x, y, barWidth, barH, [4, 4, 0, 0]);
+    ctx.fill();
+
+    // Percentage label
+    ctx.fillStyle = '#fff';
+    ctx.font = '500 12px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(avg.toFixed(0) + '%', x + barWidth / 2, y - 6);
+
+    // Category label
+    ctx.fillStyle = '#8888a0';
+    ctx.font = '300 11px Inter, sans-serif';
+    let label = cat.name.length > 8 ? cat.name.substring(0, 7) + '...' : cat.name;
+    ctx.fillText(label, x + barWidth / 2, baseY + 16);
+  });
+}
+
+// ====== ACTIONS ======
+function addCourse() {
+  const name = 'Course ' + (++state.nextCourseId);
+  state.courses.push(defaultCourse(name));
+  state.activeCourseIndex = state.courses.length - 1;
+  renderAll();
+}
+
+function switchCourse(i) {
+  state.activeCourseIndex = i;
+  renderAll();
+}
+
+function removeCourse(i) {
+  if (state.courses.length <= 1) return;
+  if (!confirm('Remove "' + state.courses[i].name + '"?')) return;
+  state.courses.splice(i, 1);
+  if (state.activeCourseIndex >= state.courses.length) {
+    state.activeCourseIndex = state.courses.length - 1;
+  }
+  renderAll();
+}
+
+function addCategory() {
+  const nameInput = document.getElementById('new-cat-name');
+  const weightInput = document.getElementById('new-cat-weight');
+  const name = nameInput.value.trim();
+  const weight = parseFloat(weightInput.value);
+  if (!name) { nameInput.focus(); return; }
+  if (isNaN(weight) || weight < 0) { weightInput.focus(); return; }
+  const course = activeCourse();
+  course.categories.push({
+    id: course.nextCatId++,
+    name: name,
+    weight: weight,
+    assignments: []
+  });
+  nameInput.value = '';
+  weightInput.value = '';
+  renderAll();
+}
+
+function removeCategory(ci) {
+  const course = activeCourse();
+  if (!confirm('Remove category "' + course.categories[ci].name + '"?')) return;
+  course.categories.splice(ci, 1);
+  renderAll();
+}
+
+function addAssignment(ci) {
+  const course = activeCourse();
+  course.categories[ci].assignments.push({
+    id: course.nextAssignId++,
+    name: '',
+    score: '',
+    total: ''
+  });
+  renderAll();
+}
+
+function removeAssignment(ci, ai) {
+  const course = activeCourse();
+  course.categories[ci].assignments.splice(ai, 1);
+  renderAll();
+}
+
+function updateAssignment(ci, ai, field, value) {
+  const course = activeCourse();
+  course.categories[ci].assignments[ai][field] = value;
+  renderAll();
+}
+
+let liveUpdateTimer = null;
+function liveUpdate() {
+  clearTimeout(liveUpdateTimer);
+  liveUpdateTimer = setTimeout(() => {
+    // Read current input values into state
+    const course = activeCourse();
+    const blocks = document.querySelectorAll('.category-block');
+    blocks.forEach((block, ci) => {
+      if (!course.categories[ci]) return;
+      const rows = block.querySelectorAll('.assignment-row:not(.header-row)');
+      rows.forEach((row, ai) => {
+        if (!course.categories[ci].assignments[ai]) return;
+        const inputs = row.querySelectorAll('input');
+        course.categories[ci].assignments[ai].name = inputs[0].value;
+        course.categories[ci].assignments[ai].score = inputs[1].value;
+        course.categories[ci].assignments[ai].total = inputs[2].value;
+      });
+    });
+    renderSummary();
+    renderWeightStatus();
+    renderChart();
+    saveState();
+  }, 150);
+}
+
+function loadPresetCategories() {
+  const course = activeCourse();
+  if (course.categories.length > 0 && !confirm('This will replace current categories. Continue?')) return;
+  course.categories = [
+    { id: course.nextCatId++, name: 'Homework', weight: 20, assignments: [] },
+    { id: course.nextCatId++, name: 'Quizzes', weight: 10, assignments: [] },
+    { id: course.nextCatId++, name: 'Exams', weight: 40, assignments: [] },
+    { id: course.nextCatId++, name: 'Projects', weight: 20, assignments: [] },
+    { id: course.nextCatId++, name: 'Participation', weight: 10, assignments: [] }
+  ];
+  renderAll();
+}
+
+function updateThreshold(letter, value) {
+  state.thresholds[letter] = parseFloat(value) || 0;
+  renderAll();
+}
+
+function resetThresholds() {
+  state.thresholds = { ...DEFAULT_THRESHOLDS };
+  renderAll();
+}
+
+// Final exam calculator
+function calcFinal() {
+  const current = parseFloat(document.getElementById('fc-current').value);
+  const weight = parseFloat(document.getElementById('fc-weight').value);
+  const target = parseFloat(document.getElementById('fc-target').value);
+  const el = document.getElementById('final-result');
+
+  if (isNaN(current) || isNaN(weight) || isNaN(target) || weight <= 0 || weight > 100) {
+    el.classList.remove('visible');
+    return;
+  }
+
+  const w = weight / 100;
+  const needed = (target - (1 - w) * current) / w;
+  el.classList.add('visible');
+
+  if (needed > 100) {
+    el.innerHTML = 'You need <span style="color:var(--warning);font-weight:600;">' + needed.toFixed(1) + '%</span> on the final. That is above 100%, so reaching ' + target + '% may not be possible without extra credit.';
+  } else if (needed < 0) {
+    el.innerHTML = 'You need <span style="color:var(--success);font-weight:600;">' + needed.toFixed(1) + '%</span> on the final. You have already secured your target grade of ' + target + '%!';
+  } else {
+    el.innerHTML = 'You need <span style="color:var(--accent-light);font-weight:600;">' + needed.toFixed(1) + '%</span> on the final to achieve an overall grade of ' + target + '%.';
+  }
+}
+
+// Import / Export
+function exportData() {
+  const json = JSON.stringify(state, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'zovo-grades-export.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (parsed.courses && Array.isArray(parsed.courses)) {
+        state = parsed;
+        if (!state.thresholds) state.thresholds = { ...DEFAULT_THRESHOLDS };
+        if (state.activeCourseIndex >= state.courses.length) state.activeCourseIndex = 0;
+        renderAll();
+        alert('Grades imported successfully.');
+      } else {
+        alert('Invalid file format.');
+      }
+    } catch(err) {
+      alert('Could not parse the file. Make sure it is a valid JSON export.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// Utility
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function escAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// FAQ
+function toggleFaq(btn) {
+  btn.parentElement.classList.toggle('open');
+}
+
+// Canvas roundRect polyfill
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
+    const r = Array.isArray(radii) ? radii[0] : (radii || 0);
+    this.moveTo(x + r, y);
+    this.lineTo(x + w - r, y);
+    this.quadraticCurveTo(x + w, y, x + w, y + r);
+    this.lineTo(x + w, y + h - r);
+    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    this.lineTo(x + r, y + h);
+    this.quadraticCurveTo(x, y + h, x, y + h - r);
+    this.lineTo(x, y + r);
+    this.quadraticCurveTo(x, y, x + r, y);
+    this.closePath();
+  };
+}
+
+// Resize handler for chart
+window.addEventListener('resize', () => renderChart());
+
+// Init
+loadState();
+renderAll();
+</script>
+
+</body>
+</html>

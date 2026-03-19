@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Calculator - Add, Subtract &amp; Convert Time | Zovo Tools</title>
+<meta name="description" content="Free online time calculator. Add or subtract hours, minutes, seconds. Calculate time differences, convert time zones, track work hours, and use stopwatch/timer features.">
+<link rel="canonical" href="https://tools.zovo.one/time-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Time Calculator",
+  "description": "Free online time calculator for adding, subtracting, and converting time durations, time zones, and work hours.",
+  "url": "https://tools.zovo.one/time-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Zovo Tools", "item": "https://tools.zovo.one/"},
+    {"@type": "ListItem", "position": 2, "name": "Time Calculator", "item": "https://tools.zovo.one/time-calculator/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How do I add hours, minutes, and seconds together?", "acceptedAnswer": {"@type": "Answer", "text": "Use the Add/Subtract tab on our time calculator. Enter your first time duration in the hours, minutes, and seconds fields, select the add (+) operator, then enter the second duration. Click Calculate to see the total. You can chain multiple additions by continuing to add durations."}},
+    {"@type": "Question", "name": "How do I calculate the time difference between two times?", "acceptedAnswer": {"@type": "Answer", "text": "Switch to the Time Difference tab. Enter your start time and end time using the time input fields. The calculator will instantly show you the difference in hours, minutes, and seconds. If the end time is earlier than the start time, the calculator assumes the end time is on the following day."}},
+    {"@type": "Question", "name": "What time zones does the converter support?", "acceptedAnswer": {"@type": "Answer", "text": "The time zone converter supports all major world time zones including UTC, EST, CST, MST, PST, GMT, CET, EET, IST, CST (China), JST, AEST, NZST, and many more. Each zone displays its UTC offset so you can quickly identify the correct conversion."}},
+    {"@type": "Question", "name": "Can I calculate work hours with break deductions?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The Work Hours tab lets you enter your clock-in time, clock-out time, and total break duration in minutes. The calculator subtracts the break time and shows your net working hours, which is useful for timesheets and payroll calculations."}},
+    {"@type": "Question", "name": "How does the date/time arithmetic feature work?", "acceptedAnswer": {"@type": "Answer", "text": "The Date/Time Arithmetic tab lets you start with any date and time, then add or subtract a specified number of days, hours, and minutes. This is useful for calculating deadlines, delivery dates, project timelines, and scheduling events."}},
+    {"@type": "Question", "name": "Is the stopwatch accurate?", "acceptedAnswer": {"@type": "Answer", "text": "The stopwatch uses your browser's high-resolution timer and updates every 10 milliseconds. While browser-based timers are not laboratory-grade instruments, they are accurate enough for everyday timing needs such as cooking, exercise, presentations, and general time tracking."}},
+    {"@type": "Question", "name": "Can I copy the results to my clipboard?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every calculation result has a copy button next to it. Click the button and the formatted result is copied to your clipboard, ready to paste into emails, spreadsheets, documents, or any other application."}},
+    {"@type": "Question", "name": "Is my data private when using this time calculator?", "acceptedAnswer": {"@type": "Answer", "text": "Absolutely. This time calculator runs entirely in your browser using JavaScript. No data is sent to any server, no cookies are set, and nothing is stored. Your calculations are completely private and disappear when you close the page."}}
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0f0f0f;
+  color: #e0e0e0;
+  font-weight: 400;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+a { color: #6C5CE7; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+header {
+  padding: 20px 0;
+  border-bottom: 1px solid #2a2a4a;
+}
+.breadcrumb {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 4px;
+}
+.breadcrumb a { color: #999; }
+.breadcrumb span { margin: 0 6px; }
+header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 8px;
+}
+header p.subtitle {
+  font-size: 15px;
+  color: #aaa;
+  margin-top: 4px;
+  font-weight: 300;
+}
+.tool-section {
+  margin-top: 30px;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.tab-btn {
+  padding: 10px 18px;
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  color: #ccc;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn:hover { border-color: #6C5CE7; color: #fff; }
+.tab-btn.active {
+  background: #6C5CE7;
+  border-color: #6C5CE7;
+  color: #fff;
+}
+.tab-panel {
+  display: none;
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 12px;
+  padding: 28px;
+}
+.tab-panel.active { display: block; }
+.form-row {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 100px;
+}
+.form-group label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-group input, .form-group select {
+  padding: 10px 14px;
+  background: #0f0f0f;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  outline: none;
+  transition: border 0.2s;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: #6C5CE7;
+}
+.form-group select option { background: #1a1a2e; }
+.operator-select {
+  width: 70px;
+  text-align: center;
+  flex: 0 0 70px;
+}
+.btn {
+  padding: 12px 28px;
+  background: #6C5CE7;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.btn:hover { background: #5a4bd6; }
+.btn-secondary {
+  background: transparent;
+  border: 1px solid #2a2a4a;
+  color: #ccc;
+}
+.btn-secondary:hover { border-color: #6C5CE7; color: #fff; background: transparent; }
+.btn-small {
+  padding: 6px 14px;
+  font-size: 12px;
+}
+.result-box {
+  margin-top: 20px;
+  padding: 20px;
+  background: #0f0f0f;
+  border: 1px solid #2a2a4a;
+  border-radius: 10px;
+  display: none;
+}
+.result-box.visible { display: block; }
+.result-label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.result-value {
+  font-size: 26px;
+  font-weight: 600;
+  color: #6C5CE7;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.result-detail {
+  font-size: 14px;
+  color: #aaa;
+  margin-top: 6px;
+  font-weight: 300;
+}
+.copy-btn {
+  padding: 4px 12px;
+  font-size: 11px;
+  background: #2a2a4a;
+  border: none;
+  border-radius: 6px;
+  color: #ccc;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.copy-btn:hover { background: #3a3a5a; }
+/* Stopwatch */
+.stopwatch-display {
+  font-size: 48px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  padding: 30px 0;
+  font-variant-numeric: tabular-nums;
+}
+.stopwatch-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.lap-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 12px;
+}
+.lap-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2a2a4a;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.lap-item span:first-child { color: #888; }
+/* Countdown */
+.countdown-display {
+  font-size: 48px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+  font-variant-numeric: tabular-nums;
+}
+.countdown-display.done { color: #e74c3c; }
+/* Content */
+.content-section {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid #2a2a4a;
+}
+.content-section h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin: 36px 0 14px;
+}
+.content-section h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ddd;
+  margin: 28px 0 10px;
+}
+.content-section p {
+  font-size: 15px;
+  color: #bbb;
+  margin-bottom: 14px;
+  font-weight: 300;
+}
+.content-section ul, .content-section ol {
+  margin: 0 0 16px 24px;
+  font-size: 15px;
+  color: #bbb;
+  font-weight: 300;
+}
+.content-section li { margin-bottom: 6px; }
+.faq-item {
+  margin-bottom: 20px;
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+.faq-item h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 10px;
+}
+.faq-item p {
+  margin-bottom: 0;
+}
+.privacy-line {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  margin-top: 32px;
+  font-weight: 300;
+}
+footer {
+  text-align: center;
+  padding: 40px 0;
+  border-top: 1px solid #2a2a4a;
+  margin-top: 60px;
+  font-size: 14px;
+  color: #666;
+  font-weight: 300;
+}
+@media (max-width: 600px) {
+  header h1 { font-size: 22px; }
+  .tabs { gap: 4px; }
+  .tab-btn { padding: 8px 12px; font-size: 12px; }
+  .tab-panel { padding: 20px 16px; }
+  .form-row { flex-direction: column; }
+  .form-group { min-width: unset; }
+  .operator-select { flex: unset; width: 100%; }
+  .result-value { font-size: 22px; }
+  .stopwatch-display, .countdown-display { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="breadcrumb">
+      <a href="https://tools.zovo.one/">Zovo Tools</a>
+      <span>/</span>
+      Time Calculator
+    </div>
+    <h1>Time Calculator</h1>
+    <p class="subtitle">Add, subtract, and convert time durations. Calculate time differences, work hours, and more.</p>
+  </header>
+
+  <div class="tool-section">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="add-subtract">Add / Subtract</button>
+      <button class="tab-btn" data-tab="difference">Time Difference</button>
+      <button class="tab-btn" data-tab="timezone">Time Zones</button>
+      <button class="tab-btn" data-tab="date-arith">Date Arithmetic</button>
+      <button class="tab-btn" data-tab="work-hours">Work Hours</button>
+      <button class="tab-btn" data-tab="stopwatch">Stopwatch</button>
+      <button class="tab-btn" data-tab="countdown">Countdown</button>
+    </div>
+
+    <!-- Add / Subtract -->
+    <div class="tab-panel active" id="panel-add-subtract">
+      <div id="duration-rows">
+        <div class="form-row duration-entry">
+          <div class="form-group"><label>Hours</label><input type="number" min="0" value="0" class="dur-h"></div>
+          <div class="form-group"><label>Minutes</label><input type="number" min="0" value="0" class="dur-m"></div>
+          <div class="form-group"><label>Seconds</label><input type="number" min="0" value="0" class="dur-s"></div>
+        </div>
+        <div class="form-row duration-entry">
+          <div class="form-group operator-select"><label>Op</label>
+            <select class="dur-op"><option value="add">+</option><option value="sub">-</option></select>
+          </div>
+          <div class="form-group"><label>Hours</label><input type="number" min="0" value="0" class="dur-h"></div>
+          <div class="form-group"><label>Minutes</label><input type="number" min="0" value="0" class="dur-m"></div>
+          <div class="form-group"><label>Seconds</label><input type="number" min="0" value="0" class="dur-s"></div>
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:8px;">
+        <button class="btn btn-secondary btn-small" id="add-row-btn">+ Add Row</button>
+        <button class="btn" id="calc-duration-btn">Calculate</button>
+      </div>
+      <div class="result-box" id="result-add-subtract">
+        <div class="result-label">Result</div>
+        <div class="result-value"><span id="res-dur-val"></span><button class="copy-btn" onclick="copyText('res-dur-val')">Copy</button></div>
+        <div class="result-detail" id="res-dur-detail"></div>
+      </div>
+    </div>
+
+    <!-- Time Difference -->
+    <div class="tab-panel" id="panel-difference">
+      <div class="form-row">
+        <div class="form-group"><label>Start Time</label><input type="time" id="diff-start" step="1" value="09:00:00"></div>
+        <div class="form-group"><label>End Time</label><input type="time" id="diff-end" step="1" value="17:30:00"></div>
+        <button class="btn" id="calc-diff-btn">Calculate</button>
+      </div>
+      <div class="result-box" id="result-difference">
+        <div class="result-label">Time Difference</div>
+        <div class="result-value"><span id="res-diff-val"></span><button class="copy-btn" onclick="copyText('res-diff-val')">Copy</button></div>
+        <div class="result-detail" id="res-diff-detail"></div>
+      </div>
+    </div>
+
+    <!-- Time Zone Converter -->
+    <div class="tab-panel" id="panel-timezone">
+      <div class="form-row">
+        <div class="form-group"><label>Time</label><input type="time" id="tz-time" step="1" value="12:00:00"></div>
+        <div class="form-group"><label>From Zone</label>
+          <select id="tz-from"></select>
+        </div>
+        <div class="form-group"><label>To Zone</label>
+          <select id="tz-to"></select>
+        </div>
+        <button class="btn" id="calc-tz-btn">Convert</button>
+      </div>
+      <div class="form-row">
+        <button class="btn btn-secondary btn-small" id="tz-now-btn">Use Current Time</button>
+      </div>
+      <div class="result-box" id="result-timezone">
+        <div class="result-label">Converted Time</div>
+        <div class="result-value"><span id="res-tz-val"></span><button class="copy-btn" onclick="copyText('res-tz-val')">Copy</button></div>
+        <div class="result-detail" id="res-tz-detail"></div>
+      </div>
+    </div>
+
+    <!-- Date/Time Arithmetic -->
+    <div class="tab-panel" id="panel-date-arith">
+      <div class="form-row">
+        <div class="form-group"><label>Start Date</label><input type="date" id="da-date"></div>
+        <div class="form-group"><label>Start Time</label><input type="time" id="da-time" step="1" value="12:00:00"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group operator-select"><label>Op</label>
+          <select id="da-op"><option value="add">+</option><option value="sub">-</option></select>
+        </div>
+        <div class="form-group"><label>Days</label><input type="number" min="0" value="0" id="da-days"></div>
+        <div class="form-group"><label>Hours</label><input type="number" min="0" value="0" id="da-hours"></div>
+        <div class="form-group"><label>Minutes</label><input type="number" min="0" value="0" id="da-mins"></div>
+      </div>
+      <div class="form-row">
+        <button class="btn" id="calc-da-btn">Calculate</button>
+      </div>
+      <div class="result-box" id="result-date-arith">
+        <div class="result-label">Resulting Date and Time</div>
+        <div class="result-value"><span id="res-da-val"></span><button class="copy-btn" onclick="copyText('res-da-val')">Copy</button></div>
+        <div class="result-detail" id="res-da-detail"></div>
+      </div>
+    </div>
+
+    <!-- Work Hours -->
+    <div class="tab-panel" id="panel-work-hours">
+      <div class="form-row">
+        <div class="form-group"><label>Clock In</label><input type="time" id="wh-in" value="09:00"></div>
+        <div class="form-group"><label>Clock Out</label><input type="time" id="wh-out" value="17:30"></div>
+        <div class="form-group"><label>Break (min)</label><input type="number" min="0" value="30" id="wh-break"></div>
+        <button class="btn" id="calc-wh-btn">Calculate</button>
+      </div>
+      <div class="result-box" id="result-work-hours">
+        <div class="result-label">Net Working Hours</div>
+        <div class="result-value"><span id="res-wh-val"></span><button class="copy-btn" onclick="copyText('res-wh-val')">Copy</button></div>
+        <div class="result-detail" id="res-wh-detail"></div>
+      </div>
+    </div>
+
+    <!-- Stopwatch -->
+    <div class="tab-panel" id="panel-stopwatch">
+      <div class="stopwatch-display" id="sw-display">00:00:00.00</div>
+      <div class="stopwatch-controls">
+        <button class="btn" id="sw-start">Start</button>
+        <button class="btn btn-secondary" id="sw-lap">Lap</button>
+        <button class="btn btn-secondary" id="sw-reset">Reset</button>
+        <button class="copy-btn" style="align-self:center;" onclick="copyText('sw-display')">Copy</button>
+      </div>
+      <div class="lap-list" id="sw-laps"></div>
+    </div>
+
+    <!-- Countdown Timer -->
+    <div class="tab-panel" id="panel-countdown">
+      <div class="form-row" id="cd-inputs">
+        <div class="form-group"><label>Hours</label><input type="number" min="0" value="0" id="cd-h"></div>
+        <div class="form-group"><label>Minutes</label><input type="number" min="0" value="5" id="cd-m"></div>
+        <div class="form-group"><label>Seconds</label><input type="number" min="0" value="0" id="cd-s"></div>
+      </div>
+      <div class="countdown-display" id="cd-display">00:05:00</div>
+      <div class="stopwatch-controls">
+        <button class="btn" id="cd-start">Start</button>
+        <button class="btn btn-secondary" id="cd-reset">Reset</button>
+        <button class="copy-btn" style="align-self:center;" onclick="copyText('cd-display')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="privacy-line">Runs entirely in your browser. No data sent to any server.</p>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How to Use This Time Calculator</h2>
+    <p>This time calculator provides a complete set of tools for working with time in your daily life, at work, and for project management. Whether you need to add up time durations, find the difference between two clock readings, convert time across world time zones, or log your working hours, this tool covers it all in a single page with no signup and no software to install.</p>
+
+    <h3>Adding and Subtracting Time Durations</h3>
+    <p>The Add/Subtract tab is the most versatile feature of this time calculator. You can enter any number of time durations in hours, minutes, and seconds format. Between each row, select either the plus (+) or minus (-) operator to define whether that duration should be added or subtracted from the running total. Click the "Add Row" button to chain as many durations as you need.</p>
+    <p>This feature is useful for totaling task times throughout a day, adding up video or audio clip lengths, calculating the combined duration of multiple flights with layovers, or summing exercise intervals. The calculator handles overflow automatically: if your minutes or seconds exceed 60, they roll over into the next higher unit correctly.</p>
+
+    <h3>Calculating Time Differences</h3>
+    <p>The Time Difference tab lets you enter a start time and an end time to find out exactly how much time has passed. Enter both times using the 24-hour format input. If the end time is earlier than the start time, the calculator assumes you crossed midnight and calculates accordingly. The result is shown in hours, minutes, and seconds, along with the total expressed in decimal hours (useful for billing) and total minutes.</p>
+    <p>Common uses include figuring out how long a meeting lasted, calculating cooking or baking times, determining travel duration, or working out the length of a shift. The time difference calculator pairs well with the work hours tab for employment tracking.</p>
+
+    <h3>Converting Time Zones</h3>
+    <p>The Time Zone Converter tab includes over 20 major world time zones, each labeled with its common abbreviation and UTC offset. Select the time you want to convert, choose the source time zone and the target time zone, then click Convert. The result shows the converted time along with the day shift (whether it moves to the previous or next day).</p>
+    <p>This is useful for scheduling meetings with international colleagues, planning phone calls across time zones, coordinating event start times for global audiences, and figuring out what time a live broadcast airs in your region. The "Use Current Time" button fills in the current local time automatically.</p>
+
+    <h3>Date and Time Arithmetic</h3>
+    <p>Sometimes you need to know what date and time it will be after adding a certain number of days, hours, or minutes to a starting point. The Date Arithmetic tab handles this. Enter a starting date and time, select whether you are adding or subtracting, then specify the number of days, hours, and minutes. The calculator produces the resulting date and time, properly accounting for month boundaries, leap years, and hour rollovers.</p>
+    <p>Use this for calculating delivery windows, project deadlines, medication schedules, subscription renewal dates, or any scenario where you need to project a future (or past) point in time from a known reference.</p>
+
+    <h3>Tracking Work Hours</h3>
+    <p>The Work Hours tab is designed for employees, freelancers, and contractors who need to calculate net working time. Enter your clock-in time, clock-out time, and total break duration in minutes. The calculator subtracts the break and shows your net working hours in both hours-and-minutes format and decimal format (useful for invoicing at hourly rates).</p>
+    <p>For example, if you clocked in at 8:45 AM, clocked out at 5:15 PM, and took a 45-minute lunch break, the calculator shows 7 hours and 45 minutes of net working time, or 7.75 decimal hours. If your hourly rate is $50, you can quickly multiply to get $387.50 for the day.</p>
+
+    <h3>Stopwatch</h3>
+    <p>The Stopwatch tab provides a straightforward start/stop timer with lap functionality. Press Start to begin timing, Lap to record split times without stopping, and Reset to clear everything. The display updates in real time and shows hours, minutes, seconds, and hundredths of a second. Each lap is numbered and listed below the timer. The copy button grabs the current time for pasting elsewhere.</p>
+
+    <h3>Countdown Timer</h3>
+    <p>Set a countdown from any duration in hours, minutes, and seconds. Press Start to begin the countdown. When it reaches zero, the display turns red and the text changes to "Time's up!" to give you a clear visual signal. Press Reset to return to the original duration and start over. This is perfect for cooking timers, study intervals (Pomodoro technique), presentation rehearsals, or any activity with a fixed time limit.</p>
+
+    <h2>Practical Examples and Use Cases</h2>
+    <h3>Project Time Estimation</h3>
+    <p>Suppose you are estimating a project with four tasks: research (2h 30m), design (4h 15m), development (8h 45m), and testing (3h 20m). Use the Add/Subtract tab with four rows, enter each duration, and the calculator returns 18 hours and 50 minutes. This helps you quote accurately and schedule your calendar.</p>
+
+    <h3>International Meeting Scheduling</h3>
+    <p>You are in New York (EST) and need to schedule a call with a colleague in Tokyo (JST). If you propose 9:00 AM EST, the time zone converter instantly tells you it will be 11:00 PM JST on the same day. Seeing that is too late, you try 7:00 AM EST and find it converts to 9:00 PM JST, which works better.</p>
+
+    <h3>Payroll Calculation</h3>
+    <p>An employee works Monday through Friday. Using the Work Hours tab for each day, you record the following net hours: 8.25, 7.75, 8.50, 8.00, and 7.50. Entering each into the Add/Subtract tab produces a weekly total of 40 hours exactly. Multiplied by their hourly rate, you have the gross pay figure ready.</p>
+
+    <h3>Cooking and Baking</h3>
+    <p>A recipe says to marinate for 2 hours, bake for 1 hour 15 minutes, and rest for 20 minutes. Add all three durations to find the total preparation time of 3 hours and 35 minutes. Use the Date Arithmetic tab to find out that if you start at 3:00 PM, dinner will be ready by 6:35 PM.</p>
+
+    <h3>Fitness and Interval Training</h3>
+    <p>Athletes and fitness enthusiasts often work with precise time intervals. If your workout consists of eight rounds of 45-second sprints followed by 15-second rests, the Add/Subtract tab quickly totals that to 8 minutes. Add a 5-minute warmup and 5-minute cooldown using additional rows, and you get 18 minutes for the entire session. The stopwatch with laps helps you track each interval in real time.</p>
+
+    <h3>Travel and Layover Calculations</h3>
+    <p>Planning a multi-leg trip involves adding up flight durations and layovers. Suppose you fly from New York to London (7h 10m), have a 3h 25m layover, then fly London to Dubai (6h 50m). Enter all three durations in the Add/Subtract tab to find that your total travel time is 17 hours and 25 minutes. Then use the Time Zone Converter to figure out what time you arrive in local time at your destination, and the Date Arithmetic tab to calculate the exact arrival date and time from your departure.</p>
+
+    <h3>Education and Study Scheduling</h3>
+    <p>Students preparing for exams can use the countdown timer for focused study sessions using the Pomodoro technique: set 25-minute focus blocks followed by 5-minute breaks. The stopwatch is useful for timed practice tests, and the time difference calculator helps verify how long you actually studied versus how long you planned. Teachers can use the work hours calculator to track tutoring time for billing purposes.</p>
+
+    <h3>Media Production and Video Editing</h3>
+    <p>Video editors and podcasters need to calculate total runtime for episodes, segments, and intros. Use the Add/Subtract tab to total the duration of each segment. If your intro is 0:00:32, segment one is 0:12:45, segment two is 0:15:20, the transition is 0:00:08, and the outro is 0:00:45, the total episode length is 29 minutes and 30 seconds. This helps ensure your content fits within platform requirements or target episode lengths.</p>
+
+    <h2>Best Practices and Tips</h2>
+    <ul>
+      <li>Use the 24-hour (military) time format when entering times to avoid AM/PM confusion.</li>
+      <li>For the time difference calculator, remember that crossing midnight is handled automatically. If you enter a start of 23:00 and end of 02:00, you get 3 hours.</li>
+      <li>When adding many rows in the Add/Subtract tab, double-check each operator (+ or -) to make sure the right durations are being subtracted.</li>
+      <li>Copy results frequently. The copy button formats the result as plain text, suitable for pasting into spreadsheets, emails, or documents.</li>
+      <li>The work hours calculator uses a simple single-shift model. For split shifts, calculate each segment separately and then add them together using the Add/Subtract tab.</li>
+      <li>For time zone conversions involving daylight saving time, remember that this tool uses fixed UTC offsets. During DST transitions, verify that your region has shifted before relying on the result.</li>
+      <li>The stopwatch lap feature is useful for interval training. Each lap time is shown as a cumulative total, making it easy to see your pace over time.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <h3>How do I add hours, minutes, and seconds together?</h3>
+      <p>Use the Add/Subtract tab on our time calculator. Enter your first time duration in the hours, minutes, and seconds fields, select the add (+) operator, then enter the second duration. Click Calculate to see the total. You can chain multiple additions by continuing to add durations.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do I calculate the time difference between two times?</h3>
+      <p>Switch to the Time Difference tab. Enter your start time and end time using the time input fields. The calculator will instantly show you the difference in hours, minutes, and seconds. If the end time is earlier than the start time, the calculator assumes the end time is on the following day.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What time zones does the converter support?</h3>
+      <p>The time zone converter supports all major world time zones including UTC, EST, CST, MST, PST, GMT, CET, EET, IST, CST (China), JST, AEST, NZST, and many more. Each zone displays its UTC offset so you can quickly identify the correct conversion.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I calculate work hours with break deductions?</h3>
+      <p>Yes. The Work Hours tab lets you enter your clock-in time, clock-out time, and total break duration in minutes. The calculator subtracts the break time and shows your net working hours, which is useful for timesheets and payroll calculations.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How does the date/time arithmetic feature work?</h3>
+      <p>The Date/Time Arithmetic tab lets you start with any date and time, then add or subtract a specified number of days, hours, and minutes. This is useful for calculating deadlines, delivery dates, project timelines, and scheduling events.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is the stopwatch accurate?</h3>
+      <p>The stopwatch uses your browser's high-resolution timer and updates every 10 milliseconds. While browser-based timers are not laboratory-grade instruments, they are accurate enough for everyday timing needs such as cooking, exercise, presentations, and general time tracking.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I copy the results to my clipboard?</h3>
+      <p>Yes. Every calculation result has a copy button next to it. Click the button and the formatted result is copied to your clipboard, ready to paste into emails, spreadsheets, documents, or any other application.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is my data private when using this time calculator?</h3>
+      <p>Absolutely. This time calculator runs entirely in your browser using JavaScript. No data is sent to any server, no cookies are set, and nothing is stored. Your calculations are completely private and disappear when you close the page.</p>
+    </div>
+  </div>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a>
+  </footer>
+</div>
+
+<script>
+(function() {
+  // Tabs
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Copy to clipboard
+  window.copyText = function(id) {
+    const el = document.getElementById(id);
+    const text = el.textContent || el.innerText;
+    navigator.clipboard.writeText(text.trim()).then(() => {
+      const btn = el.parentElement.querySelector('.copy-btn') || el.closest('.stopwatch-controls')?.querySelector('.copy-btn');
+    });
+  };
+
+  // ===== Add / Subtract =====
+  document.getElementById('add-row-btn').addEventListener('click', () => {
+    const container = document.getElementById('duration-rows');
+    const row = document.createElement('div');
+    row.className = 'form-row duration-entry';
+    row.innerHTML = `
+      <div class="form-group operator-select"><label>Op</label>
+        <select class="dur-op"><option value="add">+</option><option value="sub">-</option></select>
+      </div>
+      <div class="form-group"><label>Hours</label><input type="number" min="0" value="0" class="dur-h"></div>
+      <div class="form-group"><label>Minutes</label><input type="number" min="0" value="0" class="dur-m"></div>
+      <div class="form-group"><label>Seconds</label><input type="number" min="0" value="0" class="dur-s"></div>
+    `;
+    container.appendChild(row);
+  });
+
+  document.getElementById('calc-duration-btn').addEventListener('click', () => {
+    const entries = document.querySelectorAll('#duration-rows .duration-entry');
+    let totalSeconds = 0;
+    entries.forEach((entry, i) => {
+      const h = parseInt(entry.querySelector('.dur-h').value) || 0;
+      const m = parseInt(entry.querySelector('.dur-m').value) || 0;
+      const s = parseInt(entry.querySelector('.dur-s').value) || 0;
+      const secs = h * 3600 + m * 60 + s;
+      const opEl = entry.querySelector('.dur-op');
+      if (i === 0) {
+        totalSeconds = secs;
+      } else {
+        const op = opEl ? opEl.value : 'add';
+        totalSeconds += (op === 'sub') ? -secs : secs;
+      }
+    });
+    const neg = totalSeconds < 0;
+    const abs = Math.abs(totalSeconds);
+    const rh = Math.floor(abs / 3600);
+    const rm = Math.floor((abs % 3600) / 60);
+    const rs = abs % 60;
+    const sign = neg ? '-' : '';
+    const formatted = sign + pad(rh) + ':' + pad(rm) + ':' + pad(rs);
+    document.getElementById('res-dur-val').textContent = formatted;
+    document.getElementById('res-dur-detail').textContent =
+      'Total: ' + (neg ? '-' : '') + abs + ' seconds | ' +
+      (neg ? '-' : '') + (abs / 3600).toFixed(4) + ' hours | ' +
+      (neg ? '-' : '') + (abs / 60).toFixed(2) + ' minutes';
+    document.getElementById('result-add-subtract').classList.add('visible');
+  });
+
+  // ===== Time Difference =====
+  document.getElementById('calc-diff-btn').addEventListener('click', () => {
+    const start = document.getElementById('diff-start').value;
+    const end = document.getElementById('diff-end').value;
+    if (!start || !end) return;
+    const sp = start.split(':').map(Number);
+    const ep = end.split(':').map(Number);
+    let startSec = sp[0] * 3600 + sp[1] * 60 + (sp[2] || 0);
+    let endSec = ep[0] * 3600 + ep[1] * 60 + (ep[2] || 0);
+    if (endSec < startSec) endSec += 86400;
+    const diff = endSec - startSec;
+    const h = Math.floor(diff / 3600);
+    const m = Math.floor((diff % 3600) / 60);
+    const s = diff % 60;
+    document.getElementById('res-diff-val').textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+    document.getElementById('res-diff-detail').textContent =
+      (diff / 3600).toFixed(4) + ' decimal hours | ' +
+      (diff / 60).toFixed(2) + ' total minutes | ' +
+      diff + ' total seconds';
+    document.getElementById('result-difference').classList.add('visible');
+  });
+
+  // ===== Time Zones =====
+  const zones = [
+    { name: 'UTC (UTC+0)', offset: 0 },
+    { name: 'GMT (UTC+0)', offset: 0 },
+    { name: 'EST (UTC-5)', offset: -5 },
+    { name: 'EDT (UTC-4)', offset: -4 },
+    { name: 'CST (UTC-6)', offset: -6 },
+    { name: 'CDT (UTC-5)', offset: -5 },
+    { name: 'MST (UTC-7)', offset: -7 },
+    { name: 'MDT (UTC-6)', offset: -6 },
+    { name: 'PST (UTC-8)', offset: -8 },
+    { name: 'PDT (UTC-7)', offset: -7 },
+    { name: 'AKST (UTC-9)', offset: -9 },
+    { name: 'HST (UTC-10)', offset: -10 },
+    { name: 'AST (UTC-4)', offset: -4 },
+    { name: 'NST (UTC-3:30)', offset: -3.5 },
+    { name: 'BRT (UTC-3)', offset: -3 },
+    { name: 'ART (UTC-3)', offset: -3 },
+    { name: 'WET (UTC+0)', offset: 0 },
+    { name: 'CET (UTC+1)', offset: 1 },
+    { name: 'EET (UTC+2)', offset: 2 },
+    { name: 'MSK (UTC+3)', offset: 3 },
+    { name: 'GST (UTC+4)', offset: 4 },
+    { name: 'PKT (UTC+5)', offset: 5 },
+    { name: 'IST (UTC+5:30)', offset: 5.5 },
+    { name: 'NPT (UTC+5:45)', offset: 5.75 },
+    { name: 'BST (UTC+6)', offset: 6 },
+    { name: 'ICT (UTC+7)', offset: 7 },
+    { name: 'CST China (UTC+8)', offset: 8 },
+    { name: 'SGT (UTC+8)', offset: 8 },
+    { name: 'JST (UTC+9)', offset: 9 },
+    { name: 'KST (UTC+9)', offset: 9 },
+    { name: 'ACST (UTC+9:30)', offset: 9.5 },
+    { name: 'AEST (UTC+10)', offset: 10 },
+    { name: 'NZST (UTC+12)', offset: 12 },
+  ];
+  const tzFrom = document.getElementById('tz-from');
+  const tzTo = document.getElementById('tz-to');
+  zones.forEach((z, i) => {
+    tzFrom.innerHTML += '<option value="' + i + '"' + (z.name.startsWith('UTC') ? ' selected' : '') + '>' + z.name + '</option>';
+    tzTo.innerHTML += '<option value="' + i + '"' + (z.name.startsWith('EST') ? ' selected' : '') + '>' + z.name + '</option>';
+  });
+
+  document.getElementById('tz-now-btn').addEventListener('click', () => {
+    const now = new Date();
+    document.getElementById('tz-time').value = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+  });
+
+  document.getElementById('calc-tz-btn').addEventListener('click', () => {
+    const timeStr = document.getElementById('tz-time').value;
+    if (!timeStr) return;
+    const tp = timeStr.split(':').map(Number);
+    const fromZone = zones[tzFrom.value];
+    const toZone = zones[tzTo.value];
+    let totalMinutes = tp[0] * 60 + tp[1] + (tp[2] || 0) / 60;
+    let utcMinutes = totalMinutes - fromZone.offset * 60;
+    let targetMinutes = utcMinutes + toZone.offset * 60;
+    let dayShift = 0;
+    if (targetMinutes < 0) { targetMinutes += 1440; dayShift = -1; }
+    if (targetMinutes >= 1440) { targetMinutes -= 1440; dayShift = 1; }
+    const rh = Math.floor(targetMinutes / 60);
+    const rm = Math.floor(targetMinutes % 60);
+    const rs = Math.round(((targetMinutes % 1) * 60) % 60);
+    document.getElementById('res-tz-val').textContent = pad(rh) + ':' + pad(rm) + ':' + pad(rs);
+    let detail = fromZone.name + ' to ' + toZone.name;
+    if (dayShift === -1) detail += ' (previous day)';
+    if (dayShift === 1) detail += ' (next day)';
+    const diffHours = toZone.offset - fromZone.offset;
+    detail += ' | Offset difference: ' + (diffHours >= 0 ? '+' : '') + diffHours + ' hours';
+    document.getElementById('res-tz-detail').textContent = detail;
+    document.getElementById('result-timezone').classList.add('visible');
+  });
+
+  // ===== Date/Time Arithmetic =====
+  const today = new Date();
+  document.getElementById('da-date').value = today.getFullYear() + '-' + pad(today.getMonth() + 1) + '-' + pad(today.getDate());
+
+  document.getElementById('calc-da-btn').addEventListener('click', () => {
+    const dateStr = document.getElementById('da-date').value;
+    const timeStr = document.getElementById('da-time').value;
+    if (!dateStr || !timeStr) return;
+    const op = document.getElementById('da-op').value;
+    const days = parseInt(document.getElementById('da-days').value) || 0;
+    const hours = parseInt(document.getElementById('da-hours').value) || 0;
+    const mins = parseInt(document.getElementById('da-mins').value) || 0;
+    const tp = timeStr.split(':').map(Number);
+    const dt = new Date(dateStr + 'T' + pad(tp[0]) + ':' + pad(tp[1]) + ':' + pad(tp[2] || 0));
+    const totalMs = (days * 86400 + hours * 3600 + mins * 60) * 1000;
+    const result = new Date(op === 'add' ? dt.getTime() + totalMs : dt.getTime() - totalMs);
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const formatted = dayNames[result.getDay()] + ', ' +
+      monthNames[result.getMonth()] + ' ' + result.getDate() + ', ' + result.getFullYear() + ' at ' +
+      pad(result.getHours()) + ':' + pad(result.getMinutes()) + ':' + pad(result.getSeconds());
+    document.getElementById('res-da-val').textContent = formatted;
+    const diffMs = Math.abs(result.getTime() - dt.getTime());
+    const diffDays = Math.floor(diffMs / 86400000);
+    const diffHrs = Math.floor((diffMs % 86400000) / 3600000);
+    const diffMin = Math.floor((diffMs % 3600000) / 60000);
+    document.getElementById('res-da-detail').textContent =
+      (op === 'add' ? 'Added' : 'Subtracted') + ' ' + diffDays + ' days, ' + diffHrs + ' hours, ' + diffMin + ' minutes from the start';
+    document.getElementById('result-date-arith').classList.add('visible');
+  });
+
+  // ===== Work Hours =====
+  document.getElementById('calc-wh-btn').addEventListener('click', () => {
+    const inTime = document.getElementById('wh-in').value;
+    const outTime = document.getElementById('wh-out').value;
+    const breakMin = parseInt(document.getElementById('wh-break').value) || 0;
+    if (!inTime || !outTime) return;
+    const ip = inTime.split(':').map(Number);
+    const op = outTime.split(':').map(Number);
+    let inMin = ip[0] * 60 + ip[1];
+    let outMin = op[0] * 60 + op[1];
+    if (outMin <= inMin) outMin += 1440;
+    const grossMin = outMin - inMin;
+    const netMin = Math.max(0, grossMin - breakMin);
+    const nh = Math.floor(netMin / 60);
+    const nm = netMin % 60;
+    document.getElementById('res-wh-val').textContent = nh + 'h ' + nm + 'm';
+    document.getElementById('res-wh-detail').textContent =
+      'Gross: ' + Math.floor(grossMin / 60) + 'h ' + (grossMin % 60) + 'm | ' +
+      'Break: ' + breakMin + 'm | ' +
+      'Net decimal: ' + (netMin / 60).toFixed(2) + ' hours';
+    document.getElementById('result-work-hours').classList.add('visible');
+  });
+
+  // ===== Stopwatch =====
+  let swRunning = false, swStart = 0, swElapsed = 0, swInterval = null, swLapCount = 0;
+  const swDisplay = document.getElementById('sw-display');
+  const swLaps = document.getElementById('sw-laps');
+
+  function updateStopwatch() {
+    const elapsed = swElapsed + (Date.now() - swStart);
+    swDisplay.textContent = formatMs(elapsed);
+  }
+
+  function formatMs(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    const cs = Math.floor((ms % 1000) / 10);
+    return pad(h) + ':' + pad(m) + ':' + pad(s) + '.' + pad(cs);
+  }
+
+  document.getElementById('sw-start').addEventListener('click', function() {
+    if (!swRunning) {
+      swRunning = true;
+      swStart = Date.now();
+      swInterval = setInterval(updateStopwatch, 10);
+      this.textContent = 'Stop';
+    } else {
+      swRunning = false;
+      swElapsed += Date.now() - swStart;
+      clearInterval(swInterval);
+      this.textContent = 'Start';
+    }
+  });
+
+  document.getElementById('sw-lap').addEventListener('click', () => {
+    if (!swRunning) return;
+    swLapCount++;
+    const elapsed = swElapsed + (Date.now() - swStart);
+    const item = document.createElement('div');
+    item.className = 'lap-item';
+    item.innerHTML = '<span>Lap ' + swLapCount + '</span><span>' + formatMs(elapsed) + '</span>';
+    swLaps.insertBefore(item, swLaps.firstChild);
+  });
+
+  document.getElementById('sw-reset').addEventListener('click', () => {
+    swRunning = false;
+    swElapsed = 0;
+    swLapCount = 0;
+    clearInterval(swInterval);
+    swDisplay.textContent = '00:00:00.00';
+    swLaps.innerHTML = '';
+    document.getElementById('sw-start').textContent = 'Start';
+  });
+
+  // ===== Countdown =====
+  let cdRunning = false, cdTarget = 0, cdInterval = null, cdTotalMs = 0;
+  const cdDisplay = document.getElementById('cd-display');
+
+  function getCdMs() {
+    const h = parseInt(document.getElementById('cd-h').value) || 0;
+    const m = parseInt(document.getElementById('cd-m').value) || 0;
+    const s = parseInt(document.getElementById('cd-s').value) || 0;
+    return (h * 3600 + m * 60 + s) * 1000;
+  }
+
+  function updateCdDisplay() {
+    cdTotalMs = getCdMs();
+    const totalSec = Math.floor(cdTotalMs / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    cdDisplay.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+    cdDisplay.classList.remove('done');
+  }
+
+  ['cd-h', 'cd-m', 'cd-s'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      if (!cdRunning) updateCdDisplay();
+    });
+  });
+
+  function updateCountdown() {
+    const remaining = cdTarget - Date.now();
+    if (remaining <= 0) {
+      clearInterval(cdInterval);
+      cdRunning = false;
+      cdDisplay.textContent = "Time's up!";
+      cdDisplay.classList.add('done');
+      document.getElementById('cd-start').textContent = 'Start';
+      return;
+    }
+    const totalSec = Math.ceil(remaining / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    cdDisplay.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+  }
+
+  document.getElementById('cd-start').addEventListener('click', function() {
+    if (!cdRunning) {
+      const ms = getCdMs();
+      if (ms <= 0) return;
+      cdRunning = true;
+      cdTarget = Date.now() + ms;
+      cdInterval = setInterval(updateCountdown, 100);
+      this.textContent = 'Pause';
+    } else {
+      cdRunning = false;
+      clearInterval(cdInterval);
+      const remaining = cdTarget - Date.now();
+      if (remaining > 0) {
+        document.getElementById('cd-h').value = Math.floor(remaining / 3600000);
+        document.getElementById('cd-m').value = Math.floor((remaining % 3600000) / 60000);
+        document.getElementById('cd-s').value = Math.ceil((remaining % 60000) / 1000);
+      }
+      this.textContent = 'Start';
+    }
+  });
+
+  document.getElementById('cd-reset').addEventListener('click', () => {
+    cdRunning = false;
+    clearInterval(cdInterval);
+    document.getElementById('cd-start').textContent = 'Start';
+    document.getElementById('cd-h').value = 0;
+    document.getElementById('cd-m').value = 5;
+    document.getElementById('cd-s').value = 0;
+    updateCdDisplay();
+  });
+
+  // Utility
+  function pad(n) { return String(Math.abs(Math.floor(n))).padStart(2, '0'); }
+})();
+</script>
+</body>
+</html>
