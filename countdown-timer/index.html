@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Countdown Timer &amp; Event Countdown | Zovo Tools</title>
+    <meta name="description" content="Create beautiful countdown timers for any event. Track multiple countdowns, share them via link, go fullscreen, and count up from past events. Free, private, no tracking.">
+    <meta name="keywords" content="countdown timer, event countdown, online timer, countdown clock, new year countdown, christmas countdown, free countdown tool">
+    <meta name="author" content="Michael Lip">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tools.zovo.one/countdown-timer">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Free Countdown Timer & Event Countdown | Zovo Tools">
+    <meta property="og:description" content="Create beautiful countdown timers for any event. Track multiple countdowns, share via link, fullscreen mode, and count-up from past events.">
+    <meta property="og:url" content="https://tools.zovo.one/countdown-timer">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Zovo Tools">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Countdown Timer & Event Countdown | Zovo Tools">
+    <meta name="twitter:description" content="Create beautiful countdown timers for any event. Track multiple countdowns, share via link, fullscreen mode, and count-up from past events.">
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Countdown Timer & Event Countdown",
+        "description": "Create beautiful countdown timers for any event. Track multiple countdowns, share them via link, go fullscreen, and count up from past events.",
+        "url": "https://tools.zovo.one/countdown-timer",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Michael Lip",
+            "url": "https://zovo.one"
+        }
+    }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #1e1e2e;
+            --accent: #00ff88;
+            --accent-dim: rgba(0, 255, 136, 0.15);
+            --accent-glow: rgba(0, 255, 136, 0.3);
+            --text: #e0e0e0;
+            --text-muted: #888;
+            --text-bright: #ffffff;
+            --danger: #ff4466;
+            --warning: #ffaa00;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+        a:hover { opacity: 0.8; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header */
+        header {
+            padding: 48px 0 32px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        header .badge {
+            display: inline-block;
+            background: var(--accent-dim);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-bright);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+        header p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tool Area */
+        .tool-section {
+            padding: 40px 0;
+        }
+
+        .create-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .create-panel h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-bright);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        .presets {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 8px 18px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: var(--bg);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 12px 28px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 24px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            padding: 12px 28px;
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Countdown Cards */
+        .countdowns-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .countdown-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .countdown-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+
+        .countdown-card.completed::before {
+            background: linear-gradient(90deg, var(--warning), transparent);
+        }
+
+        .countdown-card.countup-mode::before {
+            background: linear-gradient(90deg, #aa88ff, transparent);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-event-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-bright);
+        }
+
+        .card-target-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-action-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .card-action-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .card-action-btn.delete:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .countdown-display {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .countdown-unit {
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .countdown-value {
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            transition: transform 0.15s;
+        }
+
+        .countup-mode .countdown-value {
+            color: #aa88ff;
+        }
+
+        .countdown-value.tick {
+            transform: scale(1.08);
+        }
+
+        .countdown-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 8px;
+        }
+
+        .countdown-separator {
+            font-size: 3.2rem;
+            font-weight: 300;
+            color: var(--border);
+            line-height: 1;
+            align-self: flex-start;
+        }
+
+        .countdown-mode-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-left: 10px;
+        }
+
+        .badge-countdown {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .badge-countup {
+            background: rgba(170, 136, 255, 0.15);
+            color: #aa88ff;
+        }
+
+        .badge-complete {
+            background: rgba(255, 170, 0, 0.15);
+            color: var(--warning);
+        }
+
+        .complete-message {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .complete-message .emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            animation: celebrateBounce 0.6s ease infinite alternate;
+        }
+
+        @keyframes celebrateBounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        .complete-message p {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--warning);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+        }
+
+        /* Fullscreen */
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .fullscreen-overlay.active {
+            display: flex;
+        }
+
+        .fullscreen-event-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 40px;
+        }
+
+        .fullscreen-countdown {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .fullscreen-unit {
+            text-align: center;
+        }
+
+        .fullscreen-value {
+            font-size: 7rem;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .fullscreen-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 12px;
+        }
+
+        .fullscreen-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .fullscreen-close:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--surface);
+            border: 1px solid var(--accent);
+            color: var(--text-bright);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            z-index: 2000;
+            transition: transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: 60px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .content-section h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-bright);
+            margin-bottom: 20px;
+            letter-spacing: -0.01em;
+        }
+
+        .content-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-top: 32px;
+            margin-bottom: 12px;
+        }
+
+        .content-section p {
+            color: var(--text);
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+
+        .content-section ul, .content-section ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content-section li {
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        /* FAQ */
+        .faq-section {
+            padding: 60px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .faq-section h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-bright);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .faq-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 20px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-bright);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .faq-question:hover {
+            color: var(--accent);
+        }
+
+        .faq-question .arrow {
+            transition: transform 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .faq-item.open .faq-question .arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-answer-inner {
+            padding: 0 24px 20px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: var(--accent); }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            header h1 { font-size: 1.8rem; }
+            .countdown-value { font-size: 2.2rem; }
+            .countdown-unit { min-width: 65px; }
+            .countdown-separator { font-size: 2.2rem; }
+            .fullscreen-value { font-size: 4rem; }
+            .create-panel { padding: 20px; }
+            .countdown-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="badge">Free Online Tool</div>
+        <h1>Countdown Timer &amp; Event Countdown</h1>
+        <p>Create countdowns to any event, track multiple timers, share them with friends, and watch time tick away in fullscreen.</p>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <section class="tool-section">
+            <!-- Create Panel -->
+            <div class="create-panel">
+                <h2>Create a Countdown</h2>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" data-mode="countdown" onclick="setMode('countdown')">Countdown To</button>
+                    <button class="mode-btn" data-mode="countup" onclick="setMode('countup')">Count Up From</button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 2;">
+                        <label for="eventName">Event Name</label>
+                        <input type="text" id="eventName" placeholder="e.g., My Birthday, Product Launch" maxlength="80">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="eventDate">Date</label>
+                        <input type="date" id="eventDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventTime">Time (optional)</label>
+                        <input type="time" id="eventTime" value="00:00">
+                    </div>
+                </div>
+
+                <label style="display:block;font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Quick Presets</label>
+                <div class="presets">
+                    <button class="preset-btn" onclick="setPreset('newyear')">New Year</button>
+                    <button class="preset-btn" onclick="setPreset('christmas')">Christmas</button>
+                    <button class="preset-btn" onclick="setPreset('halloween')">Halloween</button>
+                    <button class="preset-btn" onclick="setPreset('valentines')">Valentine's Day</button>
+                    <button class="preset-btn" onclick="setPreset('custom')">Custom</button>
+                </div>
+
+                <div class="action-row">
+                    <button class="btn-primary" onclick="addCountdown()">Add Countdown</button>
+                    <button class="btn-secondary" onclick="clearForm()">Clear</button>
+                </div>
+            </div>
+
+            <!-- Countdowns List -->
+            <div id="countdownsList" class="countdowns-list">
+                <div class="empty-state" id="emptyState">
+                    <div class="icon">&#9202;</div>
+                    <p>No countdowns yet. Create one above to get started.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Section -->
+        <section class="content-section">
+            <h2>The Complete Guide to Countdown Timers</h2>
+
+            <p>Countdown timers are one of the most universally useful tools on the internet. Whether you are counting down to a wedding day, a product launch, a holiday celebration, or simply tracking how long until your next vacation, a countdown timer transforms an abstract future date into something tangible and real. This free countdown timer tool gives you everything you need to create, manage, and share beautiful countdowns for any occasion.</p>
+
+            <p>Unlike many countdown tools that require you to sign up, install software, or deal with advertisements, this countdown timer runs entirely in your browser. Your data stays on your device, stored in your browser's local storage. No accounts, no servers, no tracking. Just a clean, fast countdown experience.</p>
+
+            <h3>How to Use This Countdown Timer</h3>
+
+            <p>Getting started is straightforward. Type in your event name to give your countdown a label that appears prominently above the timer display. Then pick a date using the date picker, and optionally set a specific time. If you only care about the day, the default midnight setting works perfectly. Click "Add Countdown" and your timer appears instantly, ticking down in real time with days, hours, minutes, and seconds all updating live.</p>
+
+            <p>You can create as many countdowns as you need. Each one appears as its own card with a live display, and all of them update simultaneously. This makes it easy to track multiple upcoming events at once, from a conference next week to a birthday next month to a holiday later in the year. Every countdown you create is automatically saved to your browser, so they persist even if you close the tab or restart your computer.</p>
+
+            <h3>Quick Presets for Popular Events</h3>
+
+            <p>For the most common countdown events, we have included quick preset buttons that fill in the details automatically. The New Year preset creates a countdown to January 1st of the upcoming year at midnight. The Christmas preset targets December 25th. Halloween points to October 31st, and Valentine's Day sets February 14th. Each preset automatically names the event for you and picks the correct date, though you can modify the name before adding it if you want something more personal.</p>
+
+            <p>The Custom preset simply clears the form so you can start fresh, which is useful if you have been experimenting with presets and want to go back to a blank slate. All presets respect the mode toggle, so if you have selected "Count Up From" mode, the presets will still fill in the date but your timer will count upward from that date instead of downward to it.</p>
+
+            <h3>Countdown Mode vs. Count-Up Mode</h3>
+
+            <p>Most countdown timers only count down to future events, but sometimes you want to know how long it has been since something happened. That is where count-up mode comes in. Toggle the mode switch to "Count Up From" before creating your timer, and it will display the elapsed time since your chosen date instead of the remaining time until it.</p>
+
+            <p>Count-up mode is useful for tracking milestones like sobriety dates, relationship anniversaries, how long you have been at a job, how many days since you started a project, or any other occasion where the passage of time is what matters. The count-up display shows the same units as a countdown: days, hours, minutes, and seconds, all ticking forward in real time.</p>
+
+            <h3>Sharing Countdowns with Others</h3>
+
+            <p>Every countdown you create can be shared with anyone via a simple link. Click the share button on any countdown card and a specially crafted URL is copied to your clipboard. This URL encodes the event name, target date, and mode directly into the parameters, so when someone opens the link, the countdown is automatically created in their browser. No sign-ups, no accounts, no friction. Just paste the link in a message, email, or social media post and anyone who clicks it will see the same countdown running on their device.</p>
+
+            <p>Shared countdowns are independent once created. Each person's timer runs locally in their own browser, so there is no synchronization to worry about. The countdown will be accurate for everyone regardless of their timezone because the target date and time are encoded as an absolute moment in time.</p>
+
+            <h3>Fullscreen Mode</h3>
+
+            <p>For presentations, events, or just personal focus, fullscreen mode transforms any countdown into a dramatic, screen-filling display. Click the expand button on any countdown card and the timer takes over your entire screen with large, easy-to-read numbers. This is perfect for displaying a countdown on a projector at an event, on a TV screen during a party, or on your monitor when you want a constant visual reminder of an approaching deadline. Press Escape or click the close button to return to the normal view.</p>
+
+            <h3>What Happens When a Countdown Completes</h3>
+
+            <p>When a countdown reaches zero, the card transforms to show a completion message with an animated celebration. The timer stops at zero and the card is visually marked as complete so you can distinguish it from active countdowns at a glance. Completed countdowns remain in your list until you choose to delete them, giving you a record of past events alongside your upcoming ones.</p>
+
+            <h3>Privacy and Data Storage</h3>
+
+            <p>All of your countdowns are stored exclusively in your browser's localStorage. This means your data never leaves your device. There are no user accounts, no cloud storage, no analytics, and no cookies beyond what your browser needs to function. If you clear your browser data or switch to a different browser, your saved countdowns will not carry over, so the share link feature is the recommended way to back up a particularly important countdown.</p>
+
+            <p>This approach to data storage means the tool loads instantly with no network requests after the initial page load. Everything runs client-side in JavaScript, making it fast and responsive even on slow connections. Once the page is loaded, you could disconnect from the internet entirely and your countdowns would continue to work perfectly.</p>
+
+            <h3>Tips for Getting the Most Out of Your Countdowns</h3>
+
+            <ul>
+                <li>Use descriptive event names so you can tell your countdowns apart at a glance when you have several running</li>
+                <li>Share countdown links with friends and family for group events so everyone has their own copy of the timer</li>
+                <li>Use fullscreen mode during the final minutes of a countdown for maximum dramatic effect at parties and events</li>
+                <li>Combine countdown and count-up timers to see both how long until an event and how long since the last one</li>
+                <li>Bookmark the shared link of an important countdown as a backup in case you clear your browser data</li>
+            </ul>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    How accurate is the countdown timer?
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">The countdown updates every second using your device's system clock. It is accurate to within one second of the actual target time. The timer recalculates the remaining time on every tick rather than simply decrementing, so it stays accurate even if your device briefly sleeps or the browser tab is backgrounded.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Will my countdowns be saved if I close the browser?
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Yes. All countdowns are saved to your browser's localStorage automatically whenever you create or delete one. When you return to the page, they are loaded and resume ticking from where they should be. However, clearing your browser data or using a private/incognito window will cause saved countdowns to be lost.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Can I share a countdown with someone in a different timezone?
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Yes. When you share a countdown, the target date and time are stored as a UTC timestamp, which means the countdown will be accurate regardless of the recipient's timezone. Both of you will see the same amount of remaining time, even though the displayed target date may appear differently depending on your local time settings.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Is there a limit to how many countdowns I can create?
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">There is no hard limit imposed by the tool. You can create as many countdowns as you like. The practical limit is your browser's localStorage capacity, which is typically around 5 MB. Since each countdown uses only a few hundred bytes of storage, you could create thousands before reaching that limit.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    What is the difference between countdown and count-up mode?
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Countdown mode shows how much time remains until a future event, ticking downward toward zero. Count-up mode shows how much time has elapsed since a past event, ticking upward from zero. Both modes display days, hours, minutes, and seconds. Use countdown for future events and count-up for tracking milestones or anniversaries.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Does the countdown work offline?
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Once the page has loaded in your browser, the countdown timer works entirely offline. All calculations happen in JavaScript on your device. You do not need an internet connection for the timer to keep running, update the display, or save your data. The only thing that requires a connection is initially loading the page.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    How does the share link work?
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">The share link encodes the event name, target date, and timer mode into the URL as query parameters. When someone opens the link, the tool reads those parameters and automatically creates the countdown in their browser. Each person gets their own independent copy of the countdown. No server or account is involved in the sharing process.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Can I use fullscreen mode during a presentation?
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Absolutely. Fullscreen mode is designed for exactly that use case. Click the expand icon on any countdown card to fill the entire screen with a large, clean countdown display. The numbers are sized to be readable from a distance, making it ideal for projectors, TV screens, or large monitors at events. Press Escape or click the X button to exit fullscreen.</div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <p>Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.</p>
+    </div>
+</footer>
+
+<!-- Fullscreen Overlay -->
+<div class="fullscreen-overlay" id="fullscreenOverlay">
+    <button class="fullscreen-close" onclick="closeFullscreen()">&times;</button>
+    <div class="fullscreen-event-name" id="fullscreenEventName"></div>
+    <div class="fullscreen-countdown" id="fullscreenCountdown"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    let countdowns = [];
+    let currentMode = 'countdown';
+    let fullscreenId = null;
+    let tickInterval = null;
+
+    // Initialize
+    function init() {
+        loadFromStorage();
+        loadFromURL();
+        renderCountdowns();
+        startTicking();
+
+        // Set default date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('eventDate').value = formatDateInput(tomorrow);
+    }
+
+    function formatDateInput(d) {
+        return d.getFullYear() + '-' +
+            String(d.getMonth() + 1).padStart(2, '0') + '-' +
+            String(d.getDate()).padStart(2, '0');
+    }
+
+    // Mode toggle
+    function setMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+    }
+
+    // Presets
+    function setPreset(preset) {
+        const now = new Date();
+        let year = now.getFullYear();
+        let name = '';
+        let date = '';
+
+        switch (preset) {
+            case 'newyear':
+                name = 'New Year ' + (year + 1);
+                date = (year + 1) + '-01-01';
+                document.getElementById('eventTime').value = '00:00';
+                break;
+            case 'christmas':
+                name = 'Christmas ' + (now.getMonth() === 11 && now.getDate() > 25 ? year + 1 : year);
+                const cYear = now.getMonth() === 11 && now.getDate() > 25 ? year + 1 : year;
+                date = cYear + '-12-25';
+                document.getElementById('eventTime').value = '00:00';
+                break;
+            case 'halloween':
+                name = 'Halloween ' + (now.getMonth() > 9 || (now.getMonth() === 9 && now.getDate() > 31) ? year + 1 : year);
+                const hYear = now.getMonth() >= 10 ? year + 1 : (now.getMonth() === 9 && now.getDate() > 31 ? year + 1 : year);
+                date = hYear + '-10-31';
+                document.getElementById('eventTime').value = '18:00';
+                break;
+            case 'valentines':
+                name = "Valentine's Day " + (now.getMonth() > 1 || (now.getMonth() === 1 && now.getDate() > 14) ? year + 1 : year);
+                const vYear = now.getMonth() > 1 || (now.getMonth() === 1 && now.getDate() > 14) ? year + 1 : year;
+                date = vYear + '-02-14';
+                document.getElementById('eventTime').value = '00:00';
+                break;
+            case 'custom':
+                clearForm();
+                return;
+        }
+
+        document.getElementById('eventName').value = name;
+        document.getElementById('eventDate').value = date;
+    }
+
+    // Add countdown
+    function addCountdown() {
+        const name = document.getElementById('eventName').value.trim();
+        const date = document.getElementById('eventDate').value;
+        const time = document.getElementById('eventTime').value || '00:00';
+
+        if (!name) {
+            showToast('Please enter an event name.');
+            return;
+        }
+        if (!date) {
+            showToast('Please select a date.');
+            return;
+        }
+
+        const targetDate = new Date(date + 'T' + time + ':00');
+
+        if (currentMode === 'countdown' && targetDate <= new Date()) {
+            showToast('For countdown mode, please pick a future date.');
+            return;
+        }
+
+        const countdown = {
+            id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+            name: name,
+            target: targetDate.toISOString(),
+            mode: currentMode,
+            createdAt: new Date().toISOString()
+        };
+
+        countdowns.unshift(countdown);
+        saveToStorage();
+        renderCountdowns();
+        clearForm();
+        showToast('Countdown added!');
+    }
+
+    // Delete countdown
+    function deleteCountdown(id) {
+        countdowns = countdowns.filter(c => c.id !== id);
+        saveToStorage();
+        renderCountdowns();
+        if (fullscreenId === id) closeFullscreen();
+    }
+
+    // Share countdown
+    function shareCountdown(id) {
+        const c = countdowns.find(cd => cd.id === id);
+        if (!c) return;
+        const params = new URLSearchParams({
+            name: c.name,
+            target: c.target,
+            mode: c.mode
+        });
+        const url = window.location.origin + window.location.pathname + '?' + params.toString();
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('Share link copied to clipboard!');
+        }).catch(() => {
+            showToast('Could not copy link. Check browser permissions.');
+        });
+    }
+
+    // Fullscreen
+    function openFullscreen(id) {
+        fullscreenId = id;
+        const overlay = document.getElementById('fullscreenOverlay');
+        overlay.classList.add('active');
+        updateFullscreen();
+    }
+
+    function closeFullscreen() {
+        fullscreenId = null;
+        document.getElementById('fullscreenOverlay').classList.remove('active');
+    }
+
+    function updateFullscreen() {
+        if (!fullscreenId) return;
+        const c = countdowns.find(cd => cd.id === fullscreenId);
+        if (!c) { closeFullscreen(); return; }
+
+        document.getElementById('fullscreenEventName').textContent = c.name;
+        const diff = calcDiff(c);
+        const container = document.getElementById('fullscreenCountdown');
+        container.innerHTML = `
+            <div class="fullscreen-unit"><div class="fullscreen-value">${diff.days}</div><div class="fullscreen-label">Days</div></div>
+            <div class="fullscreen-unit"><div class="fullscreen-value">${diff.hours}</div><div class="fullscreen-label">Hours</div></div>
+            <div class="fullscreen-unit"><div class="fullscreen-value">${diff.minutes}</div><div class="fullscreen-label">Minutes</div></div>
+            <div class="fullscreen-unit"><div class="fullscreen-value">${diff.seconds}</div><div class="fullscreen-label">Seconds</div></div>
+        `;
+    }
+
+    // Calculate time difference
+    function calcDiff(countdown) {
+        const target = new Date(countdown.target);
+        const now = new Date();
+        let diff;
+
+        if (countdown.mode === 'countup') {
+            diff = now - target;
+        } else {
+            diff = target - now;
+        }
+
+        if (diff <= 0 && countdown.mode === 'countdown') {
+            return { days: 0, hours: 0, minutes: 0, seconds: 0, completed: true };
+        }
+
+        diff = Math.abs(diff);
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        return {
+            days: String(days).padStart(2, '0'),
+            hours: String(hours).padStart(2, '0'),
+            minutes: String(minutes).padStart(2, '0'),
+            seconds: String(seconds).padStart(2, '0'),
+            completed: false
+        };
+    }
+
+    // Render
+    function renderCountdowns() {
+        const list = document.getElementById('countdownsList');
+        const empty = document.getElementById('emptyState');
+
+        if (countdowns.length === 0) {
+            list.innerHTML = '';
+            list.appendChild(createEmptyState());
+            return;
+        }
+
+        list.innerHTML = countdowns.map(c => {
+            const diff = calcDiff(c);
+            const targetDate = new Date(c.target);
+            const dateStr = targetDate.toLocaleDateString(undefined, {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+
+            const modeClass = c.mode === 'countup' ? 'countup-mode' : (diff.completed ? 'completed' : '');
+            const badgeClass = c.mode === 'countup' ? 'badge-countup' : (diff.completed ? 'badge-complete' : 'badge-countdown');
+            const badgeText = c.mode === 'countup' ? 'Count Up' : (diff.completed ? 'Complete' : 'Countdown');
+
+            let displayHTML;
+            if (diff.completed) {
+                displayHTML = `
+                    <div class="complete-message">
+                        <div class="emoji">&#127881;</div>
+                        <p>The countdown has reached zero!</p>
+                    </div>`;
+            } else {
+                displayHTML = `
+                    <div class="countdown-display" data-id="${c.id}">
+                        <div class="countdown-unit"><div class="countdown-value" data-unit="days">${diff.days}</div><div class="countdown-label">Days</div></div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-unit"><div class="countdown-value" data-unit="hours">${diff.hours}</div><div class="countdown-label">Hours</div></div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-unit"><div class="countdown-value" data-unit="minutes">${diff.minutes}</div><div class="countdown-label">Minutes</div></div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-unit"><div class="countdown-value" data-unit="seconds">${diff.seconds}</div><div class="countdown-label">Seconds</div></div>
+                    </div>`;
+            }
+
+            return `
+                <div class="countdown-card ${modeClass}" data-card-id="${c.id}">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-event-name">${escapeHTML(c.name)}<span class="countdown-mode-badge ${badgeClass}">${badgeText}</span></div>
+                            <div class="card-target-date">${dateStr}</div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-action-btn" onclick="shareCountdown('${c.id}')" title="Share">&#128279;</button>
+                            <button class="card-action-btn" onclick="openFullscreen('${c.id}')" title="Fullscreen">&#9974;</button>
+                            <button class="card-action-btn delete" onclick="deleteCountdown('${c.id}')" title="Delete">&#10005;</button>
+                        </div>
+                    </div>
+                    ${displayHTML}
+                </div>`;
+        }).join('');
+    }
+
+    function createEmptyState() {
+        const div = document.createElement('div');
+        div.className = 'empty-state';
+        div.id = 'emptyState';
+        div.innerHTML = '<div class="icon">&#9202;</div><p>No countdowns yet. Create one above to get started.</p>';
+        return div;
+    }
+
+    // Tick update (without full re-render)
+    function startTicking() {
+        tickInterval = setInterval(() => {
+            countdowns.forEach(c => {
+                const diff = calcDiff(c);
+                const display = document.querySelector(`.countdown-display[data-id="${c.id}"]`);
+                if (display) {
+                    const units = { days: diff.days, hours: diff.hours, minutes: diff.minutes, seconds: diff.seconds };
+                    Object.keys(units).forEach(unit => {
+                        const el = display.querySelector(`[data-unit="${unit}"]`);
+                        if (el && el.textContent !== String(units[unit])) {
+                            el.textContent = units[unit];
+                            el.classList.add('tick');
+                            setTimeout(() => el.classList.remove('tick'), 150);
+                        }
+                    });
+                }
+
+                // Check for completion
+                if (diff.completed) {
+                    const card = document.querySelector(`[data-card-id="${c.id}"]`);
+                    if (card && !card.classList.contains('completed')) {
+                        renderCountdowns(); // Re-render to show completion state
+                    }
+                }
+            });
+
+            updateFullscreen();
+        }, 1000);
+    }
+
+    // Storage
+    function saveToStorage() {
+        try {
+            localStorage.setItem('zovo_countdowns', JSON.stringify(countdowns));
+        } catch (e) {}
+    }
+
+    function loadFromStorage() {
+        try {
+            const data = localStorage.getItem('zovo_countdowns');
+            if (data) countdowns = JSON.parse(data);
+        } catch (e) {
+            countdowns = [];
+        }
+    }
+
+    // URL params
+    function loadFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('name') && params.has('target')) {
+            const name = params.get('name');
+            const target = params.get('target');
+            const mode = params.get('mode') || 'countdown';
+
+            // Check if already exists
+            const exists = countdowns.some(c => c.name === name && c.target === target);
+            if (!exists) {
+                countdowns.unshift({
+                    id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+                    name: name,
+                    target: target,
+                    mode: mode,
+                    createdAt: new Date().toISOString()
+                });
+                saveToStorage();
+                showToast('Shared countdown loaded!');
+            }
+
+            // Clean URL
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+    }
+
+    // Clear form
+    function clearForm() {
+        document.getElementById('eventName').value = '';
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('eventDate').value = formatDateInput(tomorrow);
+        document.getElementById('eventTime').value = '00:00';
+    }
+
+    // Toast
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('visible');
+        setTimeout(() => toast.classList.remove('visible'), 2500);
+    }
+
+    // Escape HTML
+    function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // FAQ toggle
+    function toggleFaq(button) {
+        const item = button.parentElement;
+        const answer = item.querySelector('.faq-answer');
+        const isOpen = item.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(faq => {
+            faq.classList.remove('open');
+            faq.querySelector('.faq-answer').style.maxHeight = '0';
+        });
+
+        if (!isOpen) {
+            item.classList.add('open');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
+    }
+
+    // Keyboard shortcut
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && fullscreenId) closeFullscreen();
+    });
+
+    // Init
+    init();
+</script>
+
+</body>
+</html>
