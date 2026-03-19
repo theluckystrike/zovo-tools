@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube URL Tools and Converter - Extract Thumbnails, Embed Codes, Timestamps | zovo.one</title>
+<meta name="description" content="Free YouTube URL tools and converter. Extract video IDs, download thumbnails in all resolutions, generate embed codes, create timestamp links, and convert YouTube URLs instantly.">
+<meta name="keywords" content="youtube converter, youtube url tools, youtube thumbnail downloader, youtube embed generator, youtube timestamp link, youtube video id extractor">
+<link rel="canonical" href="https://zovo.one/youtube-converter/">
+<meta property="og:title" content="YouTube URL Tools and Converter - Free Online Toolkit">
+<meta property="og:description" content="Extract thumbnails, generate embed codes, create timestamp links, and parse any YouTube URL format. 100% free, no signup required.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/youtube-converter/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;min-height:100vh}
+.container{max-width:900px;margin:0 auto;padding:20px}
+h1{font-size:2rem;font-weight:700;text-align:center;margin:40px 0 12px;color:#fff}
+h1 span{color:#00ff88}
+.subtitle{text-align:center;color:#9090a0;margin-bottom:36px;font-size:1.05rem}
+h2{font-size:1.5rem;font-weight:600;color:#fff;margin:48px 0 16px}
+h3{font-size:1.15rem;font-weight:600;color:#e0e0e8;margin:28px 0 12px}
+p{margin-bottom:16px;color:#b0b0c0}
+.card{background:#12121a;border:1px solid #1e1e2e;border-radius:12px;padding:28px;margin-bottom:20px}
+.input-group{margin-bottom:18px}
+.input-group label{display:block;font-size:.88rem;font-weight:500;color:#9090a0;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:12px 16px;background:#0a0a0f;border:1px solid #2a2a3a;border-radius:8px;color:#e0e0e8;font-family:inherit;font-size:.95rem;transition:border-color .2s}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{outline:none;border-color:#00ff88}
+.input-group textarea{resize:vertical;min-height:80px;font-family:'Courier New',monospace;font-size:.85rem}
+.btn{padding:12px 24px;background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:#00cc6e;transform:translateY(-1px)}
+.btn-sm{padding:8px 16px;font-size:.82rem}
+.btn-outline{background:transparent;color:#00ff88;border:1px solid #00ff88}
+.btn-outline:hover{background:#00ff8815}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.result-box{background:#0a0a0f;border:1px solid #2a2a3a;border-radius:8px;padding:16px;margin-top:14px;word-break:break-all;font-family:'Courier New',monospace;font-size:.88rem;color:#00ff88;position:relative}
+.result-box .copy-btn{position:absolute;top:8px;right:8px;padding:4px 12px;font-size:.75rem;background:#1e1e2e;color:#9090a0;border:1px solid #2a2a3a;border-radius:4px;cursor:pointer;font-family:inherit}
+.result-box .copy-btn:hover{color:#00ff88;border-color:#00ff88}
+.thumbnails-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:16px}
+.thumb-card{background:#0a0a0f;border:1px solid #2a2a3a;border-radius:8px;overflow:hidden}
+.thumb-card img{width:100%;display:block;background:#1e1e2e;min-height:120px}
+.thumb-card .thumb-info{padding:12px;display:flex;justify-content:space-between;align-items:center}
+.thumb-card .thumb-label{font-size:.82rem;color:#9090a0}
+.thumb-card .thumb-res{font-size:.78rem;color:#00ff88;font-family:monospace}
+.embed-preview{margin-top:16px;border-radius:8px;overflow:hidden;background:#000}
+.embed-preview iframe{width:100%;aspect-ratio:16/9;border:none}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.meta-item{background:#0a0a0f;border:1px solid #2a2a3a;border-radius:8px;padding:14px}
+.meta-item .meta-label{font-size:.78rem;color:#9090a0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.meta-item .meta-value{font-size:.95rem;color:#e0e0e8;word-break:break-word}
+.tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:10px 20px;background:#1e1e2e;border:1px solid #2a2a3a;border-radius:8px;color:#9090a0;cursor:pointer;font-family:inherit;font-size:.88rem;font-weight:500;transition:all .2s}
+.tab.active{background:#00ff8820;border-color:#00ff88;color:#00ff88}
+.tab:hover{border-color:#00ff88;color:#e0e0e8}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.checkbox-group{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.checkbox-group input[type="checkbox"]{accent-color:#00ff88;width:16px;height:16px}
+.checkbox-group label{font-size:.9rem;color:#b0b0c0;cursor:pointer}
+.notice{background:#00ff8810;border:1px solid #00ff8830;border-radius:8px;padding:14px 18px;color:#00ff88;font-size:.88rem;margin-bottom:20px}
+.error{color:#ff4466;font-size:.85rem;margin-top:8px;display:none}
+.content-section{margin-top:60px}
+.content-section p{font-size:.95rem;line-height:1.8}
+.faq-item{border-bottom:1px solid #1e1e2e;padding:18px 0}
+.faq-q{font-weight:600;color:#e0e0e8;margin-bottom:8px;font-size:1rem}
+.faq-a{color:#9090a0;font-size:.92rem;line-height:1.7}
+footer{text-align:center;padding:40px 20px;color:#505060;font-size:.85rem;border-top:1px solid #1e1e2e;margin-top:60px}
+footer a{color:#00ff88;text-decoration:none}
+@media(max-width:640px){
+.container{padding:14px}
+h1{font-size:1.5rem;margin-top:24px}
+.card{padding:18px}
+.meta-grid{grid-template-columns:1fr}
+.thumbnails-grid{grid-template-columns:1fr}
+.tabs{gap:2px}
+.tab{padding:8px 14px;font-size:.8rem}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>YouTube URL Tools and <span>Converter</span></h1>
+<p class="subtitle">Parse any YouTube URL. Extract thumbnails, generate embed codes, create timestamp links, and more.</p>
+
+<div class="card">
+<div class="input-group">
+<label>Paste any YouTube URL</label>
+<input type="text" id="ytUrl" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=30" autocomplete="off">
+</div>
+<div class="error" id="urlError">Could not parse a valid YouTube video or playlist from this URL.</div>
+<button class="btn" onclick="parseUrl()">Analyze URL</button>
+</div>
+
+<div id="resultsArea" style="display:none">
+
+<div class="tabs">
+<button class="tab active" onclick="switchTab('parsed')">Parsed Data</button>
+<button class="tab" onclick="switchTab('thumbs')">Thumbnails</button>
+<button class="tab" onclick="switchTab('embed')">Embed Code</button>
+<button class="tab" onclick="switchTab('timestamps')">Timestamp Links</button>
+<button class="tab" onclick="switchTab('meta')">Video Info</button>
+<button class="tab" onclick="switchTab('convert')">URL Converter</button>
+</div>
+
+<!-- Parsed Data Tab -->
+<div class="tab-content active" id="tab-parsed">
+<div class="card">
+<h3>Parsed URL Components</h3>
+<div class="meta-grid" id="parsedGrid"></div>
+</div>
+</div>
+
+<!-- Thumbnails Tab -->
+<div class="tab-content" id="tab-thumbs">
+<div class="card">
+<h3>Video Thumbnails</h3>
+<p style="font-size:.88rem;color:#9090a0">Right-click or long-press any image to save it. Use the download links for direct access.</p>
+<div class="thumbnails-grid" id="thumbGrid"></div>
+</div>
+</div>
+
+<!-- Embed Code Tab -->
+<div class="tab-content" id="tab-embed">
+<div class="card">
+<h3>Embed Code Generator</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="input-group">
+<label>Width (px or %)</label>
+<input type="text" id="embedWidth" value="100%" oninput="updateEmbed()">
+</div>
+<div class="input-group">
+<label>Height (px)</label>
+<input type="text" id="embedHeight" value="450" oninput="updateEmbed()">
+</div>
+</div>
+<div class="input-group">
+<label>Start Time (seconds)</label>
+<input type="number" id="embedStart" value="0" min="0" oninput="updateEmbed()">
+</div>
+<div class="checkbox-group"><input type="checkbox" id="embedAutoplay" onchange="updateEmbed()"><label for="embedAutoplay">Autoplay</label></div>
+<div class="checkbox-group"><input type="checkbox" id="embedLoop" onchange="updateEmbed()"><label for="embedLoop">Loop video</label></div>
+<div class="checkbox-group"><input type="checkbox" id="embedControls" checked onchange="updateEmbed()"><label for="embedControls">Show player controls</label></div>
+<div class="checkbox-group"><input type="checkbox" id="embedMute" onchange="updateEmbed()"><label for="embedMute">Mute audio</label></div>
+<div class="checkbox-group"><input type="checkbox" id="embedModest" onchange="updateEmbed()"><label for="embedModest">Modest branding</label></div>
+<div class="checkbox-group"><input type="checkbox" id="embedNoCookie" checked onchange="updateEmbed()"><label for="embedNoCookie">Privacy-enhanced mode (no-cookie)</label></div>
+<div class="result-box" id="embedCode"><button class="copy-btn" onclick="copyText('embedCode')">Copy</button></div>
+<div class="embed-preview" id="embedPreview"></div>
+</div>
+</div>
+
+<!-- Timestamp Links Tab -->
+<div class="tab-content" id="tab-timestamps">
+<div class="card">
+<h3>Timestamp Link Generator</h3>
+<div class="input-group">
+<label>Timestamp (HH:MM:SS or seconds)</label>
+<input type="text" id="tsInput" placeholder="1:30 or 90 or 1:02:30" oninput="updateTimestamp()">
+</div>
+<div id="tsResults"></div>
+<h3 style="margin-top:28px">Quick Timestamps</h3>
+<div class="btn-row" id="quickTs"></div>
+</div>
+</div>
+
+<!-- Video Info Tab -->
+<div class="tab-content" id="tab-meta">
+<div class="card">
+<h3>Video Metadata</h3>
+<p style="font-size:.88rem;color:#9090a0;margin-bottom:14px">Fetched from noembed.com (free, no authentication required)</p>
+<div id="metaLoading" style="color:#9090a0;font-size:.9rem">Loading video information...</div>
+<div id="metaContent" style="display:none"></div>
+<div id="metaError" style="display:none;color:#ff4466;font-size:.9rem">Could not fetch video metadata. The video may be private or unavailable.</div>
+</div>
+</div>
+
+<!-- URL Converter Tab -->
+<div class="tab-content" id="tab-convert">
+<div class="card">
+<h3>URL Format Converter</h3>
+<p style="font-size:.88rem;color:#9090a0;margin-bottom:16px">All available URL formats for this video</p>
+<div id="urlFormats"></div>
+</div>
+</div>
+
+</div>
+
+<div class="content-section">
+<h2>YouTube URL Tools and Converter: The Complete Online Toolkit</h2>
+
+<p>Working with YouTube URLs is something that millions of people do every single day. Whether you are a content creator trying to embed a video on your website, a developer building an application that integrates with YouTube, a teacher preparing educational materials, or simply someone who wants to share a specific moment from a video with a friend, having the right tools to parse, convert, and extract information from YouTube URLs can save you significant time and effort. This YouTube URL tools and converter page provides everything you need to work with YouTube links in one convenient location, completely free and with no account required.</p>
+
+<p>YouTube uses several different URL formats across its platform. The standard watch URL is the most common, following the pattern youtube.com/watch?v= followed by the video ID. However, there are also shortened youtu.be links, embed URLs used for iframe embedding, playlist URLs with list parameters, channel URLs in various formats, and URLs that include timestamps, playlist indices, and other parameters. Understanding these different formats and being able to convert between them is essential for anyone who works with YouTube content regularly. Our YouTube URL converter handles all of these formats automatically.</p>
+
+<h3>How the YouTube URL Parser Works</h3>
+
+<p>The URL parser at the top of this page accepts any valid YouTube URL format and breaks it down into its component parts. When you paste a URL, the tool immediately identifies the video ID (the unique 11-character identifier that YouTube assigns to every video), any playlist ID that may be included, timestamp parameters, and other URL components. This parsed data is displayed in a clean, organized format that makes it easy to understand exactly what information the URL contains. The parser handles edge cases like URLs with extra parameters, URLs copied from the YouTube mobile app, and URLs from different regional YouTube domains.</p>
+
+<p>Video IDs are the foundation of how YouTube organizes its content. Each video ID is exactly 11 characters long and consists of letters (both uppercase and lowercase), numbers, hyphens, and underscores. This gives YouTube a total of 64 possible characters per position, which means there are over 73 quintillion possible video ID combinations. The parser extracts this ID regardless of which URL format you provide, making it straightforward to use the ID in API calls, database lookups, or other technical applications.</p>
+
+<h3>YouTube Thumbnail Extraction</h3>
+
+<p>Every YouTube video has multiple thumbnail images stored at predictable URLs on YouTube's image servers. These thumbnails are available in several resolutions: the default thumbnail at 120x90 pixels, a medium quality version at 320x180 pixels, a high quality version at 480x360 pixels, a standard definition version at 640x480 pixels, and a maximum resolution version that varies in size but is typically 1280x720 pixels or larger. Our thumbnail extractor shows all available resolutions for any video and provides direct links to each image. This is particularly useful for bloggers, journalists, and content creators who need to reference YouTube videos in their own content.</p>
+
+<p>The thumbnail URLs follow a consistent pattern using img.youtube.com as the host. By knowing the video ID, you can construct the URL for any thumbnail resolution without making any API calls. This means the thumbnail extraction works entirely in your browser with no server-side processing required. The images load directly from YouTube's CDN, ensuring fast delivery regardless of your location. You can right-click any thumbnail to save it, or use the provided direct links to access the full-resolution versions.</p>
+
+<h3>Embed Code Generation</h3>
+
+<p>Embedding YouTube videos on websites is one of the most common tasks that web developers and content managers perform. Our embed code generator creates properly formatted iframe embed codes with extensive customization options. You can control the width and height of the embedded player, set a start time so the video begins at a specific point, enable or disable autoplay, configure looping behavior, show or hide player controls, mute the audio by default, and activate privacy-enhanced mode which uses the youtube-nocookie.com domain to reduce tracking. Each option updates the embed code in real time, and you can see a live preview of exactly how the embedded video will appear.</p>
+
+<p>The privacy-enhanced embedding mode deserves special attention. When you use the standard youtube.com domain for embedding, YouTube sets cookies on your visitors' browsers even before they click play. By enabling the no-cookie option (which is turned on by default in our tool), the embed uses youtube-nocookie.com instead, which does not set cookies until the visitor actually interacts with the video. This is an important consideration for website owners who need to comply with privacy regulations like GDPR, CCPA, or similar data protection laws. The embedded video functions identically in both modes, so there is no downside to using the privacy-enhanced version.</p>
+
+<h3>Timestamp Link Creation</h3>
+
+<p>Sharing a specific moment from a YouTube video is incredibly useful for educational content, video reviews, reaction videos, tutorial references, and casual sharing among friends. Our timestamp link generator lets you specify a time in multiple formats (hours:minutes:seconds, minutes:seconds, or just seconds) and instantly generates both the full youtube.com URL and the shortened youtu.be URL with the timestamp parameter included. The tool also provides quick timestamp buttons at common intervals so you can rapidly generate links without typing.</p>
+
+<p>YouTube supports timestamps in its URLs using the t parameter, which accepts values in seconds. When someone clicks a timestamped link, the video player automatically jumps to that point in the video. This works on all platforms including desktop browsers, mobile apps, and embedded players. The timestamp feature is particularly valuable for educational content where you might want to reference a specific explanation, demonstration, or example within a longer video. Teachers and students frequently use timestamp links to create study guides that reference specific portions of lecture recordings or educational videos.</p>
+
+<h3>Video Metadata Retrieval</h3>
+
+<p>Our tool uses the noembed.com API to fetch basic information about YouTube videos without requiring any API keys or authentication. This includes the video title, the channel name (author), the original video dimensions, and a link to the full-size thumbnail. This metadata retrieval happens entirely on the client side and provides a quick way to verify video information or gather details for documentation purposes. The noembed.com service is a free, open oEmbed provider that supports YouTube and many other platforms.</p>
+
+<h3>URL Format Conversion</h3>
+
+<p>The URL converter tab shows all possible URL formats for any given YouTube video. This includes the standard watch URL, the shortened youtu.be URL, the embed URL, the no-cookie embed URL, and URLs with any detected timestamps preserved. Having all these formats readily available eliminates the need to manually construct URLs when switching between different use cases. A web developer might need the embed URL for an iframe while also needing the standard URL for a link in the page text. A social media manager might prefer the short URL for character-limited posts while keeping the full URL for email campaigns. This converter provides all formats simultaneously.</p>
+
+<h3>Privacy and Security</h3>
+
+<p>This YouTube URL tools and converter page is built with privacy as a fundamental principle. All URL parsing, thumbnail extraction, embed code generation, timestamp link creation, and URL conversion happens entirely in your browser using JavaScript. No URLs are sent to our servers. No data is stored. No cookies are set. The only external request that occurs is when you view the video metadata tab, which makes a request to noembed.com to fetch public video information. Even this request goes directly from your browser to noembed.com without passing through our infrastructure. You can verify this by inspecting the network requests in your browser's developer tools.</p>
+
+<p>The tool also does not require any YouTube API keys, Google account authentication, or third-party service registrations. Everything works out of the box with no setup required. This makes it suitable for use in privacy-conscious environments, corporate networks with restricted access, and educational settings where minimizing third-party data exposure is important.</p>
+
+<h3>Technical Details for Developers</h3>
+
+<p>For developers who want to understand the URL parsing logic, YouTube video IDs follow a specific pattern: they are exactly 11 characters long and use a base-64 alphabet consisting of A-Z, a-z, 0-9, hyphen, and underscore. Playlist IDs start with PL for user-created playlists, or other prefixes like UU for uploads, LL for liked videos, and FL for favorites. The parser uses regular expressions to extract these identifiers from URLs, handling the various formats that YouTube uses including the standard watch page, shortened URLs, embed URLs, and mobile app share URLs.</p>
+
+<p>The embed code generator follows YouTube's official iframe API documentation. It constructs URLs using the proper parameter format and ensures that boolean parameters are correctly represented as 0 or 1 in the query string. The responsive width option uses percentage-based width with a fixed pixel height, which works well for most responsive web layouts. For more advanced responsive embedding, developers may want to wrap the iframe in a container with padding-bottom set to 56.25% (which corresponds to the 16:9 aspect ratio) and position the iframe absolutely within it.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<div class="faq-item">
+<div class="faq-q">What YouTube URL formats does this converter support?</div>
+<div class="faq-a">This tool supports all standard YouTube URL formats including youtube.com/watch?v= URLs, youtu.be shortened links, youtube.com/embed/ URLs, youtube-nocookie.com embed URLs, URLs with timestamp parameters (t= or start=), playlist URLs with list= parameters, and URLs from various regional YouTube domains. It also handles URLs copied from the YouTube mobile app and URLs with additional query parameters like feature=share or si= tracking parameters.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">How do I download YouTube thumbnails in high resolution?</div>
+<div class="faq-a">After pasting a YouTube URL and clicking Analyze, switch to the Thumbnails tab. You will see all available thumbnail resolutions for that video. Right-click (or long-press on mobile) any thumbnail image and select "Save image as" to download it. You can also click the direct link below each thumbnail to open the full-resolution image in a new tab. The maximum resolution thumbnail is typically 1280x720 pixels, though some older videos may not have the maxresdefault version available.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Is the privacy-enhanced embed mode different from regular embedding?</div>
+<div class="faq-a">The privacy-enhanced mode uses youtube-nocookie.com instead of youtube.com for the embed URL. The functional difference is that the no-cookie version does not place tracking cookies on your visitors' browsers until they actually click to play the video. The regular embed sets cookies immediately when the page loads. There is no visual or functional difference in the video player itself. Using privacy-enhanced mode is recommended for compliance with privacy regulations like GDPR and CCPA.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Can I create timestamp links for any point in a YouTube video?</div>
+<div class="faq-a">Yes. Enter the desired time in the Timestamp Links tab using any of these formats: seconds only (like 90), minutes and seconds (like 1:30), or hours, minutes, and seconds (like 1:02:30). The tool generates both the full youtube.com URL and the shortened youtu.be URL with the correct timestamp parameter. These links work on all platforms and will cause the video to start playing from the specified time when clicked.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Does this tool work with YouTube Shorts URLs?</div>
+<div class="faq-a">Yes. YouTube Shorts URLs follow the format youtube.com/shorts/ followed by the video ID. The parser recognizes this format and extracts the video ID correctly. All features including thumbnail extraction, embed code generation, and URL conversion work with Shorts videos just like regular videos. The video ID for a Short is identical to what it would be for a regular video, so all URL formats are interchangeable.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Why is the maxresdefault thumbnail not loading for some videos?</div>
+<div class="faq-a">Not all YouTube videos have a maximum resolution thumbnail available. This is particularly common with older videos that were uploaded before YouTube started generating high-resolution thumbnails, or with videos that have custom thumbnails in non-standard resolutions. If the maxresdefault image shows a gray placeholder or fails to load, use the sddefault (640x480) or hqdefault (480x360) versions instead, which are available for virtually all videos.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Is my data stored or shared when I use this converter?</div>
+<div class="faq-a">No. All processing happens locally in your web browser. No YouTube URLs, video IDs, or any other data is transmitted to our servers. The only external network request occurs when you use the Video Info tab, which fetches publicly available metadata from noembed.com. This request goes directly from your browser to noembed.com. We do not log, store, or analyze any of your usage data.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Can I use the generated embed codes on any website?</div>
+<div class="faq-a">Yes. The iframe embed codes generated by this tool follow YouTube's standard embedding format and work on any website that allows HTML content. This includes WordPress, Squarespace, Wix, Shopify, custom HTML sites, and most content management systems. Some platforms may require you to use their built-in video block or widget rather than pasting raw HTML. The embed codes are also compatible with email clients that support embedded content, though many email clients block iframes for security reasons.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">How do I extract just the video ID from a YouTube URL?</div>
+<div class="faq-a">Paste the URL into the input field and click Analyze. The Parsed Data tab will display the video ID as the first item. You can click the copy button next to it to copy just the video ID to your clipboard. The video ID is always exactly 11 characters long and consists of letters, numbers, hyphens, and underscores. This ID is the same regardless of which URL format you start with.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">What is the difference between youtu.be and youtube.com URLs?</div>
+<div class="faq-a">Both URL formats point to exactly the same video. The youtu.be format is YouTube's official URL shortener. A youtu.be link like youtu.be/dQw4w9WgXcQ is equivalent to youtube.com/watch?v=dQw4w9WgXcQ. The short format is convenient for sharing in places with character limits like social media posts or text messages. Both formats support timestamp parameters, though the syntax differs slightly: youtu.be uses ?t=90 while youtube.com uses &t=90 (or &t=1m30s). Our converter generates both formats automatically.</div>
+</div>
+
+</div>
+
+</div>
+
+<footer>
+Built by Michael Lip at <a href="https://zovo.one">zovo.one</a>
+</footer>
+
+<script>
+let currentVideoId = '';
+let currentPlaylistId = '';
+let currentTimestamp = 0;
+let currentChannelId = '';
+
+function parseYouTubeUrl(url) {
+  url = url.trim();
+  const result = { videoId: '', playlistId: '', timestamp: 0, channelId: '', channelName: '', startIndex: 0 };
+
+  // Normalize
+  if (!url.match(/^https?:\/\//i)) url = 'https://' + url;
+
+  let u;
+  try { u = new URL(url); } catch(e) { return null; }
+
+  const host = u.hostname.replace(/^www\./, '').replace(/^m\./, '').replace(/^music\./, '');
+  const path = u.pathname;
+  const params = u.searchParams;
+
+  // Video ID extraction
+  if (host === 'youtu.be') {
+    result.videoId = path.split('/')[1] || '';
+  } else if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
+    if (path.startsWith('/watch')) {
+      result.videoId = params.get('v') || '';
+    } else if (path.startsWith('/embed/') || path.startsWith('/v/')) {
+      result.videoId = path.split('/')[2] || '';
+    } else if (path.startsWith('/shorts/')) {
+      result.videoId = path.split('/')[2] || '';
+    } else if (path.startsWith('/live/')) {
+      result.videoId = path.split('/')[2] || '';
+    } else if (path.startsWith('/channel/')) {
+      result.channelId = path.split('/')[2] || '';
+    } else if (path.startsWith('/@')) {
+      result.channelName = path.split('/')[1] || '';
+    } else if (path.startsWith('/c/') || path.startsWith('/user/')) {
+      result.channelName = path.split('/')[2] || '';
+    }
+  }
+
+  // Clean video ID (remove extra path segments)
+  if (result.videoId && result.videoId.includes('/')) result.videoId = result.videoId.split('/')[0];
+  if (result.videoId && result.videoId.includes('?')) result.videoId = result.videoId.split('?')[0];
+  if (result.videoId && result.videoId.includes('&')) result.videoId = result.videoId.split('&')[0];
+
+  // Validate video ID: must be 11 chars, base64url
+  if (result.videoId && !/^[A-Za-z0-9_-]{11}$/.test(result.videoId)) {
+    result.videoId = '';
+  }
+
+  // Playlist ID
+  result.playlistId = params.get('list') || '';
+
+  // Timestamp
+  let t = params.get('t') || params.get('start') || params.get('time_continue') || '';
+  if (t) {
+    result.timestamp = parseTimestamp(t);
+  }
+
+  // Start index
+  result.startIndex = parseInt(params.get('index') || '0', 10);
+
+  if (!result.videoId && !result.playlistId && !result.channelId && !result.channelName) return null;
+  return result;
+}
+
+function parseTimestamp(t) {
+  t = String(t).trim();
+  // Format: 1h2m3s or 2m30s or 90s or 90
+  const hmsMatch = t.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/);
+  if (hmsMatch && (hmsMatch[1] || hmsMatch[2] || hmsMatch[3])) {
+    return (parseInt(hmsMatch[1]||0)*3600) + (parseInt(hmsMatch[2]||0)*60) + parseInt(hmsMatch[3]||0);
+  }
+  const num = parseInt(t, 10);
+  return isNaN(num) ? 0 : num;
+}
+
+function parseTimeInput(input) {
+  input = String(input).trim();
+  // Pure number = seconds
+  if (/^\d+$/.test(input)) return parseInt(input, 10);
+  // HH:MM:SS or MM:SS
+  const parts = input.split(':').map(Number);
+  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  if (parts.length === 2) return parts[0]*60 + parts[1];
+  return parseTimestamp(input);
+}
+
+function formatSeconds(s) {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  return `${m}:${String(sec).padStart(2,'0')}`;
+}
+
+function parseUrl() {
+  const url = document.getElementById('ytUrl').value;
+  const err = document.getElementById('urlError');
+  const results = document.getElementById('resultsArea');
+  err.style.display = 'none';
+
+  const parsed = parseYouTubeUrl(url);
+  if (!parsed || (!parsed.videoId && !parsed.playlistId)) {
+    err.style.display = 'block';
+    results.style.display = 'none';
+    return;
+  }
+
+  currentVideoId = parsed.videoId;
+  currentPlaylistId = parsed.playlistId;
+  currentTimestamp = parsed.timestamp;
+  currentChannelId = parsed.channelId;
+
+  results.style.display = 'block';
+
+  renderParsed(parsed);
+  if (currentVideoId) {
+    renderThumbnails();
+    updateEmbed();
+    renderTimestampTab();
+    fetchMeta();
+    renderUrlFormats();
+  }
+
+  switchTab('parsed');
+}
+
+function renderParsed(p) {
+  const grid = document.getElementById('parsedGrid');
+  let items = [];
+  if (p.videoId) items.push(['Video ID', p.videoId]);
+  if (p.playlistId) items.push(['Playlist ID', p.playlistId]);
+  if (p.channelId) items.push(['Channel ID', p.channelId]);
+  if (p.channelName) items.push(['Channel Name', p.channelName]);
+  if (p.timestamp > 0) items.push(['Timestamp', formatSeconds(p.timestamp) + ' (' + p.timestamp + 's)']);
+  if (p.startIndex > 0) items.push(['Playlist Index', p.startIndex]);
+  if (p.videoId) {
+    items.push(['Standard URL', 'https://www.youtube.com/watch?v=' + p.videoId]);
+    items.push(['Short URL', 'https://youtu.be/' + p.videoId]);
+  }
+  grid.innerHTML = items.map(([label, value]) => `
+    <div class="meta-item">
+      <div class="meta-label">${label}</div>
+      <div class="meta-value">${escHtml(value)} <button class="copy-btn" onclick="navigator.clipboard.writeText('${escAttr(value)}')" style="position:relative;top:-1px;margin-left:8px;padding:2px 8px;font-size:.72rem;background:#1e1e2e;color:#9090a0;border:1px solid #2a2a3a;border-radius:3px;cursor:pointer;font-family:inherit">Copy</button></div>
+    </div>
+  `).join('');
+}
+
+function renderThumbnails() {
+  const grid = document.getElementById('thumbGrid');
+  const thumbs = [
+    ['Default', 'default', '120x90'],
+    ['Medium Quality', 'mqdefault', '320x180'],
+    ['High Quality', 'hqdefault', '480x360'],
+    ['Standard Definition', 'sddefault', '640x480'],
+    ['Max Resolution', 'maxresdefault', '1280x720']
+  ];
+  grid.innerHTML = thumbs.map(([name, key, res]) => {
+    const url = `https://img.youtube.com/vi/${currentVideoId}/${key}.jpg`;
+    return `
+      <div class="thumb-card">
+        <img src="${url}" alt="${name} thumbnail" loading="lazy">
+        <div class="thumb-info">
+          <div>
+            <div class="thumb-label">${name}</div>
+            <div class="thumb-res">${res}</div>
+          </div>
+          <a href="${url}" target="_blank" class="btn btn-sm btn-outline" style="text-decoration:none;font-size:.78rem">Open</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateEmbed() {
+  if (!currentVideoId) return;
+  const w = document.getElementById('embedWidth').value || '100%';
+  const h = document.getElementById('embedHeight').value || '450';
+  const start = parseInt(document.getElementById('embedStart').value) || 0;
+  const autoplay = document.getElementById('embedAutoplay').checked;
+  const loop = document.getElementById('embedLoop').checked;
+  const controls = document.getElementById('embedControls').checked;
+  const mute = document.getElementById('embedMute').checked;
+  const modest = document.getElementById('embedModest').checked;
+  const noCookie = document.getElementById('embedNoCookie').checked;
+
+  const domain = noCookie ? 'www.youtube-nocookie.com' : 'www.youtube.com';
+  let params = [];
+  if (start > 0) params.push('start=' + start);
+  if (autoplay) params.push('autoplay=1');
+  if (loop) params.push('loop=1&playlist=' + currentVideoId);
+  if (!controls) params.push('controls=0');
+  if (mute) params.push('mute=1');
+  if (modest) params.push('modestbranding=1');
+  params.push('rel=0');
+
+  const paramStr = params.length ? '?' + params.join('&') : '';
+  const src = `https://${domain}/embed/${currentVideoId}${paramStr}`;
+  const code = `<iframe width="${escHtml(w)}" height="${escHtml(h)}" src="${src}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+
+  const codeEl = document.getElementById('embedCode');
+  codeEl.textContent = code;
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-btn';
+  copyBtn.textContent = 'Copy';
+  copyBtn.onclick = () => { navigator.clipboard.writeText(code); copyBtn.textContent = 'Copied!'; setTimeout(() => copyBtn.textContent = 'Copy', 1500); };
+  codeEl.appendChild(copyBtn);
+
+  document.getElementById('embedPreview').innerHTML = `<iframe width="100%" style="aspect-ratio:16/9" src="${src}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+}
+
+function renderTimestampTab() {
+  if (currentTimestamp > 0) {
+    document.getElementById('tsInput').value = formatSeconds(currentTimestamp);
+    updateTimestamp();
+  } else {
+    document.getElementById('tsInput').value = '';
+    document.getElementById('tsResults').innerHTML = '<p style="color:#9090a0;font-size:.88rem">Enter a timestamp above to generate links.</p>';
+  }
+
+  const quickTimes = [30, 60, 120, 300, 600, 900, 1800, 3600];
+  document.getElementById('quickTs').innerHTML = quickTimes.map(s =>
+    `<button class="btn btn-sm btn-outline" onclick="document.getElementById('tsInput').value='${formatSeconds(s)}';updateTimestamp()">${formatSeconds(s)}</button>`
+  ).join('');
+}
+
+function updateTimestamp() {
+  const input = document.getElementById('tsInput').value;
+  if (!input || !currentVideoId) return;
+  const secs = parseTimeInput(input);
+  if (secs <= 0) {
+    document.getElementById('tsResults').innerHTML = '<p style="color:#9090a0;font-size:.88rem">Enter a valid timestamp.</p>';
+    return;
+  }
+  const fullUrl = `https://www.youtube.com/watch?v=${currentVideoId}&t=${secs}`;
+  const shortUrl = `https://youtu.be/${currentVideoId}?t=${secs}`;
+  document.getElementById('tsResults').innerHTML = `
+    <div class="result-box" style="margin-bottom:10px">${escHtml(fullUrl)}<button class="copy-btn" onclick="navigator.clipboard.writeText('${escAttr(fullUrl)}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button></div>
+    <div class="result-box">${escHtml(shortUrl)}<button class="copy-btn" onclick="navigator.clipboard.writeText('${escAttr(shortUrl)}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button></div>
+    <p style="color:#9090a0;font-size:.85rem;margin-top:10px">Timestamp: ${formatSeconds(secs)} (${secs} seconds)</p>
+  `;
+}
+
+function fetchMeta() {
+  const loading = document.getElementById('metaLoading');
+  const content = document.getElementById('metaContent');
+  const error = document.getElementById('metaError');
+  loading.style.display = 'block';
+  content.style.display = 'none';
+  error.style.display = 'none';
+
+  fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${currentVideoId}`)
+    .then(r => r.json())
+    .then(data => {
+      loading.style.display = 'none';
+      if (data.error) { error.style.display = 'block'; return; }
+      content.style.display = 'block';
+      content.innerHTML = `
+        <div class="meta-grid">
+          <div class="meta-item"><div class="meta-label">Title</div><div class="meta-value">${escHtml(data.title || 'N/A')}</div></div>
+          <div class="meta-item"><div class="meta-label">Author / Channel</div><div class="meta-value">${escHtml(data.author_name || 'N/A')}</div></div>
+          <div class="meta-item"><div class="meta-label">Author URL</div><div class="meta-value"><a href="${escAttr(data.author_url || '#')}" target="_blank" style="color:#00ff88;word-break:break-all">${escHtml(data.author_url || 'N/A')}</a></div></div>
+          <div class="meta-item"><div class="meta-label">Provider</div><div class="meta-value">${escHtml(data.provider_name || 'YouTube')}</div></div>
+          <div class="meta-item"><div class="meta-label">Video Width</div><div class="meta-value">${data.width || 'N/A'}px</div></div>
+          <div class="meta-item"><div class="meta-label">Video Height</div><div class="meta-value">${data.height || 'N/A'}px</div></div>
+        </div>
+        ${data.thumbnail_url ? `<div style="margin-top:16px"><img src="${escAttr(data.thumbnail_url)}" alt="Video thumbnail" style="width:100%;max-width:480px;border-radius:8px;border:1px solid #2a2a3a"></div>` : ''}
+      `;
+    })
+    .catch(() => {
+      loading.style.display = 'none';
+      error.style.display = 'block';
+    });
+}
+
+function renderUrlFormats() {
+  const container = document.getElementById('urlFormats');
+  const formats = [
+    ['Standard URL', `https://www.youtube.com/watch?v=${currentVideoId}`],
+    ['Short URL (youtu.be)', `https://youtu.be/${currentVideoId}`],
+    ['Embed URL', `https://www.youtube.com/embed/${currentVideoId}`],
+    ['No-Cookie Embed', `https://www.youtube-nocookie.com/embed/${currentVideoId}`],
+    ['Shorts Format', `https://www.youtube.com/shorts/${currentVideoId}`],
+    ['Music URL', `https://music.youtube.com/watch?v=${currentVideoId}`],
+  ];
+  if (currentTimestamp > 0) {
+    formats.push(['Timestamped URL', `https://www.youtube.com/watch?v=${currentVideoId}&t=${currentTimestamp}`]);
+    formats.push(['Timestamped Short', `https://youtu.be/${currentVideoId}?t=${currentTimestamp}`]);
+  }
+  if (currentPlaylistId) {
+    formats.push(['Playlist URL', `https://www.youtube.com/playlist?list=${currentPlaylistId}`]);
+    formats.push(['Video in Playlist', `https://www.youtube.com/watch?v=${currentVideoId}&list=${currentPlaylistId}`]);
+  }
+  container.innerHTML = formats.map(([label, url]) => `
+    <div style="margin-bottom:10px">
+      <div style="font-size:.82rem;color:#9090a0;margin-bottom:4px">${label}</div>
+      <div class="result-box" style="margin-top:0">${escHtml(url)}<button class="copy-btn" onclick="navigator.clipboard.writeText('${escAttr(url)}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button></div>
+    </div>
+  `).join('');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target ? event.target.classList.add('active') : document.querySelector(`.tab`).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => {
+    if (t.textContent.toLowerCase().includes(name.substring(0,4)) ||
+        (name==='parsed' && t.textContent.includes('Parsed')) ||
+        (name==='thumbs' && t.textContent.includes('Thumb')) ||
+        (name==='embed' && t.textContent.includes('Embed')) ||
+        (name==='timestamps' && t.textContent.includes('Timestamp')) ||
+        (name==='meta' && t.textContent.includes('Video Info')) ||
+        (name==='convert' && t.textContent.includes('URL Conv'))) {
+      t.classList.add('active');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function copyText(id) {
+  const el = document.getElementById(id);
+  const text = el.textContent.replace('Copy','').replace('Copied!','').trim();
+  navigator.clipboard.writeText(text);
+}
+
+function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function escAttr(s) { return s.replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+// Handle Enter key
+document.getElementById('ytUrl').addEventListener('keydown', e => { if (e.key === 'Enter') parseUrl(); });
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "YouTube URL Tools and Converter",
+  "url": "https://zovo.one/youtube-converter/",
+  "description": "Free YouTube URL tools and converter. Extract video IDs, download thumbnails, generate embed codes, create timestamp links, and convert YouTube URL formats.",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What YouTube URL formats does this converter support?", "acceptedAnswer": {"@type": "Answer", "text": "This tool supports all standard YouTube URL formats including youtube.com/watch?v= URLs, youtu.be shortened links, youtube.com/embed/ URLs, youtube-nocookie.com embed URLs, URLs with timestamp parameters, playlist URLs with list= parameters, and URLs from various regional YouTube domains."}},
+    {"@type": "Question", "name": "How do I download YouTube thumbnails in high resolution?", "acceptedAnswer": {"@type": "Answer", "text": "After pasting a YouTube URL and clicking Analyze, switch to the Thumbnails tab. Right-click or long-press any thumbnail image to save it. The maximum resolution thumbnail is typically 1280x720 pixels."}},
+    {"@type": "Question", "name": "Is the privacy-enhanced embed mode different from regular embedding?", "acceptedAnswer": {"@type": "Answer", "text": "Privacy-enhanced mode uses youtube-nocookie.com instead of youtube.com, which does not place tracking cookies until visitors actually play the video. Recommended for GDPR and CCPA compliance."}},
+    {"@type": "Question", "name": "Can I create timestamp links for any point in a YouTube video?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Enter time in seconds, minutes:seconds, or hours:minutes:seconds format. The tool generates both full and short URLs with the correct timestamp parameter."}},
+    {"@type": "Question", "name": "Does this tool work with YouTube Shorts URLs?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The parser recognizes youtube.com/shorts/ format and all features work with Shorts videos just like regular videos."}},
+    {"@type": "Question", "name": "Why is the maxresdefault thumbnail not loading for some videos?", "acceptedAnswer": {"@type": "Answer", "text": "Not all videos have maximum resolution thumbnails. Use sddefault (640x480) or hqdefault (480x360) versions instead, which are available for virtually all videos."}},
+    {"@type": "Question", "name": "Is my data stored or shared when I use this converter?", "acceptedAnswer": {"@type": "Answer", "text": "No. All processing happens locally in your browser. No data is transmitted to our servers. The only external request is the optional noembed.com metadata fetch."}},
+    {"@type": "Question", "name": "Can I use the generated embed codes on any website?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The iframe embed codes follow YouTube's standard format and work on any website that allows HTML content including WordPress, Squarespace, Wix, and custom sites."}}
+  ]
+}
+</script>
+</body>
+</html>
