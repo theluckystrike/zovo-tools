@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary to Decimal Converter - Binary, Hex, Octal Number Converter | Zovo Tools</title>
+<meta name="description" content="Free online binary to decimal converter. Convert between binary, decimal, octal, and hexadecimal. Includes bit visualization, bitwise operations, IEEE 754 floating point, and step-by-step explanations.">
+<meta name="keywords" content="binary to decimal converter, binary converter, hex converter, octal converter, number system converter, bitwise calculator, IEEE 754">
+<link rel="canonical" href="https://tools.zovo.one/binary-converter/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Binary to Decimal Converter",
+  "description": "Convert between binary, decimal, octal, and hexadecimal number systems. Includes bit visualization, bitwise operations, IEEE 754 floating point display, and step-by-step conversion explanations.",
+  "url": "https://tools.zovo.one/binary-converter/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Zovo Tools", "item": "https://tools.zovo.one/"},
+    {"@type": "ListItem", "position": 2, "name": "Binary to Decimal Converter", "item": "https://tools.zovo.one/binary-converter/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is binary?", "acceptedAnswer": {"@type": "Answer", "text": "Binary is a base-2 number system that uses only two digits: 0 and 1. It is the fundamental language of computers and digital electronics. Each binary digit (bit) represents a power of 2, with the rightmost bit being 2^0 (1), the next being 2^1 (2), then 2^2 (4), and so on."}},
+    {"@type": "Question", "name": "How do you convert binary to decimal?", "acceptedAnswer": {"@type": "Answer", "text": "To convert binary to decimal, multiply each bit by its positional power of 2 and sum the results. For example, binary 1101 = (1 x 2^3) + (1 x 2^2) + (0 x 2^1) + (1 x 2^0) = 8 + 4 + 0 + 1 = 13 in decimal."}},
+    {"@type": "Question", "name": "How do you convert decimal to binary?", "acceptedAnswer": {"@type": "Answer", "text": "Divide the decimal number by 2 repeatedly, recording the remainder each time. Read the remainders from bottom to top. For example, 13 / 2 = 6 remainder 1, 6 / 2 = 3 remainder 0, 3 / 2 = 1 remainder 1, 1 / 2 = 0 remainder 1. Reading bottom to top: 1101."}},
+    {"@type": "Question", "name": "What is hexadecimal?", "acceptedAnswer": {"@type": "Answer", "text": "Hexadecimal (hex) is a base-16 number system that uses digits 0-9 and letters A-F, where A=10, B=11, C=12, D=13, E=14, F=15. It is widely used in computing because one hex digit represents exactly four binary bits, making it a compact way to express binary values."}},
+    {"@type": "Question", "name": "What is octal?", "acceptedAnswer": {"@type": "Answer", "text": "Octal is a base-8 number system that uses digits 0-7. Each octal digit represents exactly three binary bits. It was historically popular in early computing and is still used in Unix file permissions (e.g., chmod 755)."}},
+    {"@type": "Question", "name": "What is two's complement?", "acceptedAnswer": {"@type": "Answer", "text": "Two's complement is a method for representing negative numbers in binary. To find the two's complement of a number, invert all the bits (change 0s to 1s and vice versa) and then add 1. In an 8-bit system, for example, -5 is represented as 11111011."}},
+    {"@type": "Question", "name": "What is IEEE 754 floating point?", "acceptedAnswer": {"@type": "Answer", "text": "IEEE 754 is the standard for representing decimal (fractional) numbers in binary. A 32-bit (single precision) float uses 1 bit for the sign, 8 bits for the exponent, and 23 bits for the mantissa (fraction). A 64-bit (double precision) float uses 1 sign bit, 11 exponent bits, and 52 mantissa bits."}},
+    {"@type": "Question", "name": "What are bitwise operations?", "acceptedAnswer": {"@type": "Answer", "text": "Bitwise operations manipulate individual bits within binary numbers. AND compares each bit pair and returns 1 only if both are 1. OR returns 1 if either bit is 1. XOR returns 1 if the bits differ. NOT inverts all bits. Shift left and shift right move all bits in the specified direction."}}
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0f0f0f;
+  color: #e0e0e0;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: #6C5CE7; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+.breadcrumb { padding: 16px 0; font-size: 13px; color: #888; }
+.breadcrumb a { color: #888; }
+.breadcrumb a:hover { color: #6C5CE7; }
+h1 { font-size: 32px; font-weight: 600; margin-bottom: 12px; color: #fff; }
+.subtitle { font-size: 16px; color: #999; margin-bottom: 32px; font-weight: 300; }
+
+.tool-card {
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.tool-card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: #0f0f0f;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.tab:hover { color: #ccc; }
+.tab.active { background: #6C5CE7; color: #fff; }
+
+.field-group { margin-bottom: 16px; }
+.field-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #aaa;
+  margin-bottom: 6px;
+}
+.field-group input, .field-group textarea, .field-group select {
+  width: 100%;
+  padding: 12px 14px;
+  background: #0f0f0f;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field-group input:focus, .field-group textarea:focus, .field-group select:focus {
+  border-color: #6C5CE7;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.input-row .field-group { flex: 1; }
+.input-row .copy-btn { margin-bottom: 16px; }
+
+.result-box {
+  background: #0f0f0f;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  position: relative;
+}
+.result-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #6C5CE7;
+  word-break: break-all;
+}
+.result-value.error { color: #e74c3c; font-size: 14px; font-weight: 400; }
+
+.copy-btn {
+  padding: 6px 14px;
+  background: #2a2a4a;
+  border: none;
+  border-radius: 6px;
+  color: #ccc;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.copy-btn:hover { background: #6C5CE7; color: #fff; }
+
+.btn {
+  padding: 10px 20px;
+  background: #6C5CE7;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+.btn:hover { opacity: 0.85; }
+.btn-secondary { background: #2a2a4a; color: #ccc; }
+.btn-secondary:hover { background: #3a3a5a; opacity: 1; }
+.inline-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+/* Bit Visualization */
+.bit-vis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 12px;
+}
+.bit-cell {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.bit-cell.off {
+  background: #0f0f0f;
+  border: 1px solid #2a2a4a;
+  color: #555;
+}
+.bit-cell.on {
+  background: #6C5CE7;
+  border: 1px solid #6C5CE7;
+  color: #fff;
+}
+.bit-label {
+  font-size: 10px;
+  color: #555;
+  text-align: center;
+  margin-top: 2px;
+}
+.bit-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Conversion fields row */
+.conv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.conv-field {
+  position: relative;
+}
+.conv-field .copy-btn {
+  position: absolute;
+  top: 30px;
+  right: 8px;
+}
+
+/* Step by step */
+.step-box {
+  background: #0f0f0f;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.8;
+}
+.step-box .step-num {
+  color: #6C5CE7;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+/* IEEE 754 */
+.ieee-row {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+.ieee-bit {
+  width: 24px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 3px;
+  color: #fff;
+}
+.ieee-sign { background: #e74c3c; }
+.ieee-exp { background: #f39c12; }
+.ieee-mant { background: #6C5CE7; }
+.ieee-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+}
+.ieee-legend span::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.ieee-legend .l-sign::before { background: #e74c3c; }
+.ieee-legend .l-exp::before { background: #f39c12; }
+.ieee-legend .l-mant::before { background: #6C5CE7; }
+
+/* Bitwise */
+.bitwise-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: end;
+}
+.bitwise-op-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 16px;
+}
+
+/* Reference table */
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 14px;
+}
+.ref-table th, .ref-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid #2a2a4a;
+}
+.ref-table th { color: #888; font-weight: 500; }
+.ref-table td { color: #e0e0e0; }
+.ref-table td:first-child { color: #6C5CE7; font-weight: 500; }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.ascii-display {
+  margin-top: 12px;
+  padding: 12px;
+  background: #0f0f0f;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ascii-char {
+  font-size: 36px;
+  font-weight: 600;
+  color: #6C5CE7;
+  min-width: 50px;
+  text-align: center;
+}
+.ascii-info {
+  font-size: 13px;
+  color: #888;
+  line-height: 1.6;
+}
+
+/* SEO Content Styles */
+.content-section {
+  padding: 48px 0;
+}
+.content-section h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  margin-top: 40px;
+}
+.content-section h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 36px;
+  margin-bottom: 12px;
+}
+.content-section h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ddd;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+.content-section p {
+  color: #bbb;
+  margin-bottom: 14px;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.content-section ul, .content-section ol {
+  color: #bbb;
+  margin-bottom: 14px;
+  padding-left: 24px;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.content-section li { margin-bottom: 4px; }
+.faq-item { margin-bottom: 20px; }
+.faq-item h3 { color: #fff; font-weight: 500; }
+
+footer {
+  padding: 40px 0;
+  text-align: center;
+  color: #555;
+  font-size: 13px;
+  border-top: 1px solid #1a1a2e;
+  margin-top: 40px;
+}
+.privacy-line {
+  text-align: center;
+  font-size: 12px;
+  color: #555;
+  margin-top: 16px;
+}
+
+@media (max-width: 700px) {
+  h1 { font-size: 24px; }
+  .tool-card { padding: 18px; }
+  .tabs { gap: 2px; }
+  .tab { padding: 8px 12px; font-size: 13px; }
+  .conv-grid { grid-template-columns: 1fr; }
+  .bitwise-grid { grid-template-columns: 1fr; }
+  .bit-cell { width: 32px; height: 32px; font-size: 12px; }
+  .ieee-bit { width: 18px; height: 24px; font-size: 10px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb">
+    <a href="https://tools.zovo.one/">Zovo Tools</a> / Binary to Decimal Converter
+  </nav>
+
+  <h1>Binary to Decimal Converter</h1>
+  <p class="subtitle">Convert between binary, decimal, octal, and hexadecimal number systems in real time.</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('converter')">Converter</button>
+    <button class="tab" onclick="switchTab('bitwise')">Bitwise Ops</button>
+    <button class="tab" onclick="switchTab('ieee')">IEEE 754</button>
+    <button class="tab" onclick="switchTab('steps')">Step-by-Step</button>
+    <button class="tab" onclick="switchTab('reference')">Reference</button>
+  </div>
+
+  <!-- Converter Panel -->
+  <div id="panel-converter" class="panel active">
+    <div class="tool-card">
+      <h2>Number System Converter</h2>
+      <div class="conv-grid">
+        <div class="conv-field field-group">
+          <label for="decInput">Decimal (Base 10)</label>
+          <input type="text" id="decInput" placeholder="e.g. 255" autocomplete="off" data-base="10">
+          <button class="copy-btn" onclick="copyField('decInput')">Copy</button>
+        </div>
+        <div class="conv-field field-group">
+          <label for="binInput">Binary (Base 2)</label>
+          <input type="text" id="binInput" placeholder="e.g. 11111111" autocomplete="off" data-base="2">
+          <button class="copy-btn" onclick="copyField('binInput')">Copy</button>
+        </div>
+        <div class="conv-field field-group">
+          <label for="octInput">Octal (Base 8)</label>
+          <input type="text" id="octInput" placeholder="e.g. 377" autocomplete="off" data-base="8">
+          <button class="copy-btn" onclick="copyField('octInput')">Copy</button>
+        </div>
+        <div class="conv-field field-group">
+          <label for="hexInput">Hexadecimal (Base 16)</label>
+          <input type="text" id="hexInput" placeholder="e.g. FF" autocomplete="off" data-base="16">
+          <button class="copy-btn" onclick="copyField('hexInput')">Copy</button>
+        </div>
+      </div>
+
+      <!-- Bit Visualization -->
+      <h2 style="margin-top:24px;">Bit Visualization (8-bit)</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:8px;">Click bits to toggle them. Values above update in real time.</p>
+      <div class="bit-vis" id="bitVis"></div>
+
+      <!-- Two's Complement -->
+      <div style="margin-top:20px;">
+        <h2>Two's Complement (Signed)</h2>
+        <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;">
+          <div>
+            <span style="font-size:13px;color:#888;">8-bit signed value:</span>
+            <span id="twos8" style="font-size:16px;font-weight:600;color:#6C5CE7;margin-left:8px;">0</span>
+          </div>
+          <div>
+            <span style="font-size:13px;color:#888;">16-bit signed value:</span>
+            <span id="twos16" style="font-size:16px;font-weight:600;color:#6C5CE7;margin-left:8px;">0</span>
+          </div>
+          <div>
+            <span style="font-size:13px;color:#888;">32-bit signed value:</span>
+            <span id="twos32" style="font-size:16px;font-weight:600;color:#6C5CE7;margin-left:8px;">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASCII/Unicode -->
+      <div id="asciiSection" class="ascii-display" style="margin-top:20px;">
+        <div class="ascii-char" id="asciiChar">-</div>
+        <div class="ascii-info" id="asciiInfo">Enter a number to see its ASCII/Unicode character</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bitwise Operations Panel -->
+  <div id="panel-bitwise" class="panel">
+    <div class="tool-card">
+      <h2>Bitwise Operations</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:16px;">Enter decimal numbers. Results shown in all bases.</p>
+      <div class="bitwise-grid">
+        <div class="field-group">
+          <label for="bwA">Value A (decimal)</label>
+          <input type="text" id="bwA" placeholder="e.g. 170" autocomplete="off">
+        </div>
+        <div class="bitwise-op-select">
+          <label style="font-size:13px;color:#aaa;margin-bottom:6px;font-weight:500;">Operation</label>
+          <select id="bwOp" style="padding:10px 12px;background:#0f0f0f;border:1px solid #2a2a4a;border-radius:8px;color:#6C5CE7;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;">
+            <option value="and">AND</option>
+            <option value="or">OR</option>
+            <option value="xor">XOR</option>
+            <option value="not">NOT (A)</option>
+            <option value="shl">Shift Left A</option>
+            <option value="shr">Shift Right A</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="bwB">Value B (decimal)</label>
+          <input type="text" id="bwB" placeholder="e.g. 85" autocomplete="off">
+        </div>
+      </div>
+      <div class="inline-btns">
+        <button class="btn" onclick="doBitwise()">Calculate</button>
+      </div>
+      <div class="result-box" style="margin-top:16px;">
+        <div id="bwResult" style="line-height:1.8;">
+          <span style="color:#888;">Result will appear here</span>
+        </div>
+      </div>
+      <div id="bwBitVis" style="margin-top:16px;"></div>
+    </div>
+  </div>
+
+  <!-- IEEE 754 Panel -->
+  <div id="panel-ieee" class="panel">
+    <div class="tool-card">
+      <h2>IEEE 754 Floating Point Visualization</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:16px;">Enter a decimal number (including fractions) to see its 32-bit (single precision) IEEE 754 representation.</p>
+      <div class="field-group">
+        <label for="ieeeInput">Decimal Number</label>
+        <input type="text" id="ieeeInput" placeholder="e.g. -6.5" autocomplete="off">
+      </div>
+      <div class="inline-btns">
+        <button class="btn" onclick="computeIEEE()">Visualize</button>
+      </div>
+      <div id="ieeeOutput" style="margin-top:16px;">
+        <div class="ieee-row" id="ieeeBits"></div>
+        <div class="ieee-legend">
+          <span class="l-sign">Sign (1 bit)</span>
+          <span class="l-exp">Exponent (8 bits)</span>
+          <span class="l-mant">Mantissa (23 bits)</span>
+        </div>
+        <div id="ieeeDetails" style="margin-top:16px;font-size:14px;color:#ccc;line-height:1.8;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step-by-Step Panel -->
+  <div id="panel-steps" class="panel">
+    <div class="tool-card">
+      <h2>Step-by-Step Conversion</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:16px;">See how a number is converted between bases with full working shown.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;">
+        <div class="field-group" style="flex:1;min-width:150px;">
+          <label for="stepValue">Value</label>
+          <input type="text" id="stepValue" placeholder="e.g. 42" autocomplete="off">
+        </div>
+        <div class="field-group" style="min-width:120px;">
+          <label for="stepFrom">From Base</label>
+          <select id="stepFrom">
+            <option value="10">Decimal</option>
+            <option value="2">Binary</option>
+            <option value="8">Octal</option>
+            <option value="16">Hexadecimal</option>
+          </select>
+        </div>
+        <div class="field-group" style="min-width:120px;">
+          <label for="stepTo">To Base</label>
+          <select id="stepTo">
+            <option value="2">Binary</option>
+            <option value="10">Decimal</option>
+            <option value="8">Octal</option>
+            <option value="16">Hexadecimal</option>
+          </select>
+        </div>
+      </div>
+      <div class="inline-btns">
+        <button class="btn" onclick="showSteps()">Show Steps</button>
+      </div>
+      <div class="step-box" id="stepOutput" style="margin-top:16px;">
+        Enter a value and click "Show Steps" to see the conversion process.
+      </div>
+    </div>
+  </div>
+
+  <!-- Reference Panel -->
+  <div id="panel-reference" class="panel">
+    <div class="tool-card">
+      <h2>Common Conversions Reference</h2>
+      <table class="ref-table">
+        <thead><tr><th>Decimal</th><th>Binary</th><th>Octal</th><th>Hex</th><th>ASCII</th></tr></thead>
+        <tbody id="refTableBody"></tbody>
+      </table>
+    </div>
+    <div class="tool-card">
+      <h2>Powers of 2</h2>
+      <table class="ref-table">
+        <thead><tr><th>Power</th><th>Decimal</th><th>Binary</th><th>Hex</th><th>Common Name</th></tr></thead>
+        <tbody>
+          <tr><td>2^0</td><td>1</td><td>1</td><td>1</td><td>-</td></tr>
+          <tr><td>2^1</td><td>2</td><td>10</td><td>2</td><td>-</td></tr>
+          <tr><td>2^2</td><td>4</td><td>100</td><td>4</td><td>Nibble max+1</td></tr>
+          <tr><td>2^3</td><td>8</td><td>1000</td><td>8</td><td>-</td></tr>
+          <tr><td>2^4</td><td>16</td><td>10000</td><td>10</td><td>Nibble values</td></tr>
+          <tr><td>2^7</td><td>128</td><td>10000000</td><td>80</td><td>Signed byte max+1</td></tr>
+          <tr><td>2^8</td><td>256</td><td>100000000</td><td>100</td><td>Byte values</td></tr>
+          <tr><td>2^10</td><td>1024</td><td>10000000000</td><td>400</td><td>1 KiB</td></tr>
+          <tr><td>2^16</td><td>65536</td><td>-</td><td>10000</td><td>16-bit values</td></tr>
+          <tr><td>2^20</td><td>1048576</td><td>-</td><td>100000</td><td>1 MiB</td></tr>
+          <tr><td>2^32</td><td>4294967296</td><td>-</td><td>100000000</td><td>32-bit values</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="privacy-line">This tool runs entirely in your browser. No data is sent to any server.</p>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h1>Binary to Decimal Converter: The Complete Guide to Number Systems</h1>
+
+    <p>Understanding number systems is fundamental to working with computers, programming, networking, and digital electronics. While we use the decimal (base-10) system in everyday life, computers operate entirely in binary (base-2). Hexadecimal (base-16) and octal (base-8) serve as convenient shorthand notations that bridge the gap between human-readable numbers and machine-level binary representations.</p>
+
+    <p>Our free binary to decimal converter provides instant, real-time conversion between all four major number systems. It goes beyond basic conversion with interactive bit visualization, two's complement representation for negative numbers, bitwise operation calculations, IEEE 754 floating point analysis, and detailed step-by-step conversion explanations. Everything runs directly in your browser with no data sent to any server.</p>
+
+    <h2>Understanding the Four Number Systems</h2>
+
+    <h3>Binary (Base 2)</h3>
+    <p>Binary is the most fundamental number system in computing. It uses only two digits: 0 and 1. Each digit is called a "bit" (binary digit). Every piece of data in a computer, from text and images to video and software, is ultimately stored and processed as sequences of binary digits. The position of each bit determines its value as a power of 2: the rightmost bit represents 2^0 (1), the next represents 2^1 (2), then 2^2 (4), 2^3 (8), and so on.</p>
+
+    <p>For example, the binary number 11010110 can be calculated as: (1 x 128) + (1 x 64) + (0 x 32) + (1 x 16) + (0 x 8) + (1 x 4) + (1 x 2) + (0 x 1) = 214 in decimal.</p>
+
+    <h3>Decimal (Base 10)</h3>
+    <p>Decimal is the standard number system used by humans worldwide. It uses ten digits (0 through 9) and each position represents a power of 10. We learn this system from childhood, making it the most intuitive for daily calculations. In computing contexts, decimal serves as the human-friendly representation that gets translated to binary for machine processing.</p>
+
+    <h3>Octal (Base 8)</h3>
+    <p>Octal uses eight digits (0 through 7). Its key advantage is that each octal digit maps perfectly to exactly three binary bits. This made it popular in early computing when systems used word sizes that were multiples of three (like 12-bit, 24-bit, and 36-bit machines). Today, octal is most commonly seen in Unix/Linux file permissions. For example, the permission value 755 means the owner has read, write, and execute permissions (7 = 111 in binary), while the group and others have read and execute permissions (5 = 101 in binary).</p>
+
+    <h3>Hexadecimal (Base 16)</h3>
+    <p>Hexadecimal uses sixteen symbols: digits 0-9 and letters A through F (where A=10, B=11, C=12, D=13, E=14, F=15). Each hex digit represents exactly four binary bits (a nibble), making it extremely efficient for expressing binary data compactly. A single byte (8 bits) can be written as exactly two hex digits. Hexadecimal is ubiquitous in programming: memory addresses, color codes (like #6C5CE7), MAC addresses, error codes, and raw data dumps all use hex notation.</p>
+
+    <h2>How to Convert Binary to Decimal</h2>
+
+    <p>Converting binary to decimal involves multiplying each bit by its corresponding power of 2 and summing the products:</p>
+    <ol>
+      <li>Write out the binary number.</li>
+      <li>Starting from the rightmost bit, assign powers of 2 (2^0, 2^1, 2^2, and so on) to each position.</li>
+      <li>Multiply each bit (0 or 1) by its positional power of 2.</li>
+      <li>Add all the products together.</li>
+    </ol>
+
+    <p>Example: Convert 10110101 to decimal.</p>
+    <ul>
+      <li>1 x 2^7 = 128</li>
+      <li>0 x 2^6 = 0</li>
+      <li>1 x 2^5 = 32</li>
+      <li>1 x 2^4 = 16</li>
+      <li>0 x 2^3 = 0</li>
+      <li>1 x 2^2 = 4</li>
+      <li>0 x 2^1 = 0</li>
+      <li>1 x 2^0 = 1</li>
+      <li>Sum: 128 + 32 + 16 + 4 + 1 = 181</li>
+    </ul>
+
+    <h2>How to Convert Decimal to Binary</h2>
+
+    <p>The standard method is repeated division by 2:</p>
+    <ol>
+      <li>Divide the decimal number by 2.</li>
+      <li>Record the remainder (0 or 1).</li>
+      <li>Use the quotient for the next division.</li>
+      <li>Repeat until the quotient is 0.</li>
+      <li>Read the remainders from bottom to top to get the binary result.</li>
+    </ol>
+
+    <p>Example: Convert 181 to binary.</p>
+    <ul>
+      <li>181 / 2 = 90, remainder 1</li>
+      <li>90 / 2 = 45, remainder 0</li>
+      <li>45 / 2 = 22, remainder 1</li>
+      <li>22 / 2 = 11, remainder 0</li>
+      <li>11 / 2 = 5, remainder 1</li>
+      <li>5 / 2 = 2, remainder 1</li>
+      <li>2 / 2 = 1, remainder 0</li>
+      <li>1 / 2 = 0, remainder 1</li>
+      <li>Reading bottom to top: 10110101</li>
+    </ul>
+
+    <h2>Hexadecimal and Octal Conversions</h2>
+
+    <p>Converting between binary and hexadecimal is straightforward because each hex digit maps to exactly four bits. Group the binary number into sets of four (from the right), then convert each group to its hex equivalent. For example, 10110101 splits into 1011 (B) and 0101 (5), giving B5 in hexadecimal.</p>
+
+    <p>Similarly, octal conversion groups binary digits into sets of three. The binary number 10110101 becomes 10 (2), 110 (6), 101 (5), giving 265 in octal.</p>
+
+    <h2>Understanding Two's Complement</h2>
+
+    <p>Computers represent negative numbers using a system called two's complement. In this system, the most significant bit (leftmost) serves as the sign bit: 0 for positive, 1 for negative. To find the two's complement (negative) of a binary number, invert all bits and add 1.</p>
+
+    <p>For example, to represent -5 in 8-bit two's complement: start with 5 in binary (00000101), invert all bits (11111010), add 1 (11111011). So -5 is 11111011 in 8-bit two's complement. The range of an 8-bit signed integer is -128 to 127.</p>
+
+    <h2>Bitwise Operations Explained</h2>
+
+    <p>Bitwise operations work on individual bits of numbers and are fundamental to low-level programming, cryptography, graphics, and systems programming:</p>
+
+    <ul>
+      <li>AND: Compares each bit pair; result is 1 only when both bits are 1. Used for masking specific bits.</li>
+      <li>OR: Result is 1 when either or both bits are 1. Used for setting specific bits.</li>
+      <li>XOR (Exclusive OR): Result is 1 when bits differ. Used in encryption, checksums, and swapping values without temporary variables.</li>
+      <li>NOT: Inverts every bit (0 becomes 1, 1 becomes 0). Also called bitwise complement.</li>
+      <li>Shift Left: Moves all bits left by a specified number of positions, filling with zeros. Each left shift effectively multiplies by 2.</li>
+      <li>Shift Right: Moves all bits right by a specified number of positions. Each right shift effectively divides by 2 (integer division).</li>
+    </ul>
+
+    <h2>IEEE 754 Floating Point</h2>
+
+    <p>Decimal fractions (like 3.14 or -6.5) cannot be stored as simple integers. The IEEE 754 standard defines how floating-point numbers are represented in binary. A 32-bit single-precision float is divided into three parts: 1 sign bit (positive or negative), 8 exponent bits (the power of 2, with a bias of 127), and 23 mantissa bits (the fractional precision). This format can represent extremely large and extremely small numbers, though with limited precision. Understanding IEEE 754 is important for anyone working with numerical computing, as it explains why floating-point arithmetic can produce unexpected results (like 0.1 + 0.2 not equaling exactly 0.3).</p>
+
+    <h2>Tips for Working with Number Systems</h2>
+
+    <ul>
+      <li>Memorize the hex values of nibbles: 0000=0, 0001=1, ... 1001=9, 1010=A, 1011=B, 1100=C, 1101=D, 1110=E, 1111=F.</li>
+      <li>Use hex as a shorthand for binary. Two hex digits = one byte, and reading hex becomes much faster than reading long binary strings.</li>
+      <li>For quick powers of 2: 2^10 is roughly 1000 (exactly 1024). This is the basis for kilobytes, megabytes, and gigabytes.</li>
+      <li>In programming, binary literals are often prefixed with 0b, octal with 0o (or just 0 in C), and hex with 0x.</li>
+      <li>When debugging, converting error codes or memory addresses from hex to binary can reveal flag patterns and bit fields.</li>
+      <li>Left-shifting by N is the same as multiplying by 2^N. Right-shifting by N is integer division by 2^N.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <h3>What is binary?</h3>
+      <p>Binary is a base-2 number system that uses only two digits: 0 and 1. It is the fundamental language of computers and digital electronics. Each binary digit (bit) represents a power of 2, with the rightmost bit being 2^0 (1), the next being 2^1 (2), then 2^2 (4), and so on. All data in a computer is ultimately represented in binary.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do you convert binary to decimal?</h3>
+      <p>To convert binary to decimal, multiply each bit by its positional power of 2 and sum the results. For example, binary 1101 equals (1 x 2^3) + (1 x 2^2) + (0 x 2^1) + (1 x 2^0) = 8 + 4 + 0 + 1 = 13 in decimal. Our converter does this instantly as you type.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do you convert decimal to binary?</h3>
+      <p>Divide the decimal number by 2 repeatedly, recording the remainder each time. Read the remainders from bottom to top. For example, 13 divided by 2 gives 6 remainder 1, then 3 remainder 0, then 1 remainder 1, then 0 remainder 1. Reading bottom to top: 1101. Use our step-by-step feature to see this process in detail.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What is hexadecimal?</h3>
+      <p>Hexadecimal (hex) is a base-16 number system that uses digits 0-9 and letters A-F, where A=10, B=11, C=12, D=13, E=14, F=15. It is widely used in computing because one hex digit represents exactly four binary bits, making it a compact way to express binary values. Color codes like #FF5733 and memory addresses are commonly written in hex.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What is octal?</h3>
+      <p>Octal is a base-8 number system that uses digits 0-7. Each octal digit represents exactly three binary bits. While less common today than hexadecimal, octal is still used in Unix/Linux file permissions (the chmod command uses octal values like 755) and in some programming contexts.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What is two's complement?</h3>
+      <p>Two's complement is the standard method for representing negative numbers in binary within computers. To find the two's complement of a number, invert all bits (change 0s to 1s and vice versa) and add 1. In an 8-bit system, -5 is represented as 11111011. The most significant bit acts as the sign: 0 for positive, 1 for negative.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What is IEEE 754 floating point?</h3>
+      <p>IEEE 754 is the universal standard for representing decimal (fractional) numbers in binary. A 32-bit (single precision) float divides its bits into three sections: 1 bit for the sign, 8 bits for the exponent (with a bias of 127), and 23 bits for the mantissa (fractional part). This is how computers store numbers like 3.14 or -0.001.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What are bitwise operations?</h3>
+      <p>Bitwise operations manipulate individual bits within binary numbers. AND compares each bit pair and returns 1 only if both are 1. OR returns 1 if either bit is 1. XOR returns 1 if the bits differ. NOT inverts all bits. Shift left and shift right move bits in the specified direction. These operations are used in encryption, graphics, networking, and systems programming.</p>
+    </div>
+  </div>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a>
+  </footer>
+</div>
+
+<script>
+// === Main Converter ===
+const fields = {
+  dec: document.getElementById('decInput'),
+  bin: document.getElementById('binInput'),
+  oct: document.getElementById('octInput'),
+  hex: document.getElementById('hexInput')
+};
+
+let currentBits = [0,0,0,0,0,0,0,0]; // 8-bit visualization
+let suppressUpdate = false;
+
+function initBitVis() {
+  const container = document.getElementById('bitVis');
+  container.innerHTML = '';
+  for (let i = 7; i >= 0; i--) {
+    const group = document.createElement('div');
+    group.className = 'bit-group';
+    const cell = document.createElement('div');
+    cell.className = 'bit-cell ' + (currentBits[i] ? 'on' : 'off');
+    cell.textContent = currentBits[i];
+    cell.dataset.index = i;
+    cell.addEventListener('click', toggleBit);
+    const label = document.createElement('div');
+    label.className = 'bit-label';
+    label.textContent = '2^' + i;
+    group.appendChild(cell);
+    group.appendChild(label);
+    container.appendChild(group);
+  }
+}
+
+function toggleBit(e) {
+  const idx = parseInt(e.target.dataset.index);
+  currentBits[idx] = currentBits[idx] ? 0 : 1;
+  const val = bitsToDecimal();
+  updateAllFields(val, null);
+  updateBitVisual();
+}
+
+function bitsToDecimal() {
+  let val = 0;
+  for (let i = 0; i < 8; i++) {
+    val += currentBits[i] * Math.pow(2, i);
+  }
+  return val;
+}
+
+function updateBitVisual() {
+  const cells = document.querySelectorAll('#bitVis .bit-cell');
+  cells.forEach(cell => {
+    const idx = parseInt(cell.dataset.index);
+    cell.className = 'bit-cell ' + (currentBits[idx] ? 'on' : 'off');
+    cell.textContent = currentBits[idx];
+  });
+}
+
+function decimalToBits(n) {
+  n = Math.max(0, Math.min(255, Math.floor(n)));
+  for (let i = 0; i < 8; i++) {
+    currentBits[i] = (n >> i) & 1;
+  }
+}
+
+function updateAllFields(decVal, source) {
+  suppressUpdate = true;
+  if (source !== 'dec') fields.dec.value = decVal;
+  if (source !== 'bin') fields.bin.value = decVal.toString(2);
+  if (source !== 'oct') fields.oct.value = decVal.toString(8);
+  if (source !== 'hex') fields.hex.value = decVal.toString(16).toUpperCase();
+
+  // Update bit visualization (for low 8 bits)
+  decimalToBits(decVal & 0xFF);
+  updateBitVisual();
+
+  // Two's complement
+  updateTwosComplement(decVal);
+
+  // ASCII
+  updateASCII(decVal);
+
+  suppressUpdate = false;
+}
+
+function updateTwosComplement(val) {
+  val = Math.floor(val);
+  // 8-bit
+  let v8 = val & 0xFF;
+  if (v8 > 127) v8 -= 256;
+  document.getElementById('twos8').textContent = v8;
+
+  // 16-bit
+  let v16 = val & 0xFFFF;
+  if (v16 > 32767) v16 -= 65536;
+  document.getElementById('twos16').textContent = v16;
+
+  // 32-bit
+  let v32 = val & 0xFFFFFFFF;
+  if (v32 > 2147483647) v32 -= 4294967296;
+  document.getElementById('twos32').textContent = v32;
+}
+
+function updateASCII(val) {
+  const charEl = document.getElementById('asciiChar');
+  const infoEl = document.getElementById('asciiInfo');
+  val = Math.floor(val);
+
+  if (val >= 0 && val <= 0x10FFFF) {
+    if (val < 32) {
+      const controlNames = ['NUL','SOH','STX','ETX','EOT','ENQ','ACK','BEL','BS','TAB','LF','VT','FF','CR','SO','SI','DLE','DC1','DC2','DC3','DC4','NAK','SYN','ETB','CAN','EM','SUB','ESC','FS','GS','RS','US'];
+      charEl.textContent = controlNames[val] || '?';
+      infoEl.textContent = 'Control character (ASCII ' + val + ')';
+    } else if (val === 32) {
+      charEl.textContent = 'SP';
+      infoEl.textContent = 'Space character (ASCII 32)';
+    } else if (val === 127) {
+      charEl.textContent = 'DEL';
+      infoEl.textContent = 'Delete character (ASCII 127)';
+    } else if (val <= 126) {
+      charEl.textContent = String.fromCharCode(val);
+      infoEl.textContent = 'ASCII character ' + val + ' (printable)';
+    } else if (val <= 0x10FFFF) {
+      try {
+        charEl.textContent = String.fromCodePoint(val);
+        infoEl.textContent = 'Unicode U+' + val.toString(16).toUpperCase().padStart(4, '0');
+      } catch {
+        charEl.textContent = '-';
+        infoEl.textContent = 'Invalid Unicode code point';
+      }
+    }
+  } else {
+    charEl.textContent = '-';
+    infoEl.textContent = 'Out of ASCII/Unicode range';
+  }
+}
+
+// Input listeners
+function handleInput(base, inputEl) {
+  if (suppressUpdate) return;
+  const raw = inputEl.value.trim();
+  if (!raw) {
+    suppressUpdate = true;
+    Object.values(fields).forEach(f => { if (f !== inputEl) f.value = ''; });
+    currentBits = [0,0,0,0,0,0,0,0];
+    updateBitVisual();
+    document.getElementById('twos8').textContent = '0';
+    document.getElementById('twos16').textContent = '0';
+    document.getElementById('twos32').textContent = '0';
+    document.getElementById('asciiChar').textContent = '-';
+    document.getElementById('asciiInfo').textContent = 'Enter a number to see its ASCII/Unicode character';
+    suppressUpdate = false;
+    return;
+  }
+
+  let val;
+  try {
+    val = parseInt(raw, base);
+  } catch { return; }
+
+  if (isNaN(val) || val < 0) return;
+  // Limit to reasonable range
+  if (val > Number.MAX_SAFE_INTEGER) return;
+
+  const sourceKey = base === 10 ? 'dec' : base === 2 ? 'bin' : base === 8 ? 'oct' : 'hex';
+  updateAllFields(val, sourceKey);
+}
+
+fields.dec.addEventListener('input', () => handleInput(10, fields.dec));
+fields.bin.addEventListener('input', () => handleInput(2, fields.bin));
+fields.oct.addEventListener('input', () => handleInput(8, fields.oct));
+fields.hex.addEventListener('input', () => handleInput(16, fields.hex));
+
+// === Tab switching ===
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('.tab[onclick="switchTab(\'' + name + '\')"]').classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+// === Bitwise Operations ===
+function doBitwise() {
+  const aStr = document.getElementById('bwA').value.trim();
+  const bStr = document.getElementById('bwB').value.trim();
+  const op = document.getElementById('bwOp').value;
+  const resultEl = document.getElementById('bwResult');
+  const visEl = document.getElementById('bwBitVis');
+
+  const a = parseInt(aStr, 10);
+  if (isNaN(a)) { resultEl.innerHTML = '<span style="color:#e74c3c;">Enter a valid decimal number for Value A</span>'; visEl.innerHTML = ''; return; }
+
+  let result;
+  let opSymbol;
+  let bVal = null;
+
+  if (op === 'not') {
+    result = (~a) >>> 0;
+    opSymbol = 'NOT';
+  } else if (op === 'shl') {
+    const b = parseInt(bStr, 10);
+    if (isNaN(b) || b < 0 || b > 31) { resultEl.innerHTML = '<span style="color:#e74c3c;">Enter shift amount (0-31) for Value B</span>'; visEl.innerHTML = ''; return; }
+    result = (a << b) >>> 0;
+    bVal = b;
+    opSymbol = '<<';
+  } else if (op === 'shr') {
+    const b = parseInt(bStr, 10);
+    if (isNaN(b) || b < 0 || b > 31) { resultEl.innerHTML = '<span style="color:#e74c3c;">Enter shift amount (0-31) for Value B</span>'; visEl.innerHTML = ''; return; }
+    result = a >>> b;
+    bVal = b;
+    opSymbol = '>>';
+  } else {
+    const b = parseInt(bStr, 10);
+    if (isNaN(b)) { resultEl.innerHTML = '<span style="color:#e74c3c;">Enter a valid decimal number for Value B</span>'; visEl.innerHTML = ''; return; }
+    bVal = b;
+    if (op === 'and') { result = (a & b) >>> 0; opSymbol = 'AND'; }
+    else if (op === 'or') { result = (a | b) >>> 0; opSymbol = 'OR'; }
+    else if (op === 'xor') { result = (a ^ b) >>> 0; opSymbol = 'XOR'; }
+  }
+
+  const rDec = result >>> 0;
+  const rBin = rDec.toString(2);
+  const rOct = rDec.toString(8);
+  const rHex = rDec.toString(16).toUpperCase();
+
+  let html = '<div style="margin-bottom:8px;color:#888;">';
+  if (op === 'not') {
+    html += 'NOT ' + a;
+  } else {
+    html += a + ' ' + opSymbol + ' ' + bVal;
+  }
+  html += '</div>';
+  html += '<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;">';
+  html += '<span style="color:#888;">Decimal:</span><span style="color:#6C5CE7;font-weight:600;">' + rDec + '</span>';
+  html += '<span style="color:#888;">Binary:</span><span style="color:#e0e0e0;font-family:monospace;">' + rBin + '</span>';
+  html += '<span style="color:#888;">Octal:</span><span style="color:#e0e0e0;">' + rOct + '</span>';
+  html += '<span style="color:#888;">Hex:</span><span style="color:#e0e0e0;">' + rHex + '</span>';
+  html += '</div>';
+
+  resultEl.innerHTML = html;
+
+  // Bit visualization for the operation
+  const maxBits = 8;
+  const aBin = (a >>> 0).toString(2).padStart(maxBits, '0').slice(-maxBits);
+  const resBin = rBin.padStart(maxBits, '0').slice(-maxBits);
+
+  let visHtml = '<div style="font-size:13px;color:#888;margin-bottom:8px;">Bit-level view (8-bit):</div>';
+  visHtml += '<div style="font-family:monospace;font-size:14px;line-height:2;">';
+  visHtml += '<div style="color:#ccc;">A:   ' + formatBinSpaced(aBin) + '</div>';
+  if (bVal !== null && op !== 'shl' && op !== 'shr') {
+    const bBin = (bVal >>> 0).toString(2).padStart(maxBits, '0').slice(-maxBits);
+    visHtml += '<div style="color:#ccc;">B:   ' + formatBinSpaced(bBin) + '</div>';
+    visHtml += '<div style="color:#555;">     ----------------</div>';
+  }
+  visHtml += '<div style="color:#6C5CE7;font-weight:600;">' + opSymbol + ': ' + formatBinSpaced(resBin) + '</div>';
+  visHtml += '</div>';
+
+  visEl.innerHTML = visHtml;
+}
+
+function formatBinSpaced(bin) {
+  return bin.split('').map(b => '<span style="display:inline-block;width:18px;text-align:center;">' + b + '</span>').join('');
+}
+
+// === IEEE 754 ===
+function computeIEEE() {
+  const input = document.getElementById('ieeeInput').value.trim();
+  const num = parseFloat(input);
+  const bitsEl = document.getElementById('ieeeBits');
+  const detailsEl = document.getElementById('ieeeDetails');
+
+  if (isNaN(num)) {
+    bitsEl.innerHTML = '';
+    detailsEl.innerHTML = '<span style="color:#e74c3c;">Enter a valid decimal number</span>';
+    return;
+  }
+
+  // Get IEEE 754 bits
+  const buf = new ArrayBuffer(4);
+  const view = new DataView(buf);
+  view.setFloat32(0, num);
+  const bits32 = view.getUint32(0);
+
+  const bitStr = bits32.toString(2).padStart(32, '0');
+  const sign = bitStr[0];
+  const exponent = bitStr.substring(1, 9);
+  const mantissa = bitStr.substring(9, 32);
+
+  // Render bits
+  let html = '';
+  html += '<div class="ieee-bit ieee-sign">' + sign + '</div>';
+  for (let i = 0; i < 8; i++) {
+    html += '<div class="ieee-bit ieee-exp">' + exponent[i] + '</div>';
+  }
+  for (let i = 0; i < 23; i++) {
+    html += '<div class="ieee-bit ieee-mant">' + mantissa[i] + '</div>';
+  }
+  bitsEl.innerHTML = html;
+
+  // Details
+  const signVal = sign === '0' ? '+' : '-';
+  const expVal = parseInt(exponent, 2);
+  const biasedExp = expVal - 127;
+
+  let mantissaFrac = 1;
+  for (let i = 0; i < 23; i++) {
+    if (mantissa[i] === '1') {
+      mantissaFrac += Math.pow(2, -(i + 1));
+    }
+  }
+
+  let detailsHtml = '<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 16px;">';
+  detailsHtml += '<span style="color:#888;">Full binary:</span><span style="font-family:monospace;">' + bitStr + '</span>';
+  detailsHtml += '<span style="color:#888;">Hex:</span><span style="font-family:monospace;">0x' + bits32.toString(16).toUpperCase().padStart(8, '0') + '</span>';
+  detailsHtml += '<span style="color:#e74c3c;">Sign bit:</span><span>' + sign + ' (' + signVal + ')</span>';
+  detailsHtml += '<span style="color:#f39c12;">Exponent bits:</span><span>' + exponent + ' (raw: ' + expVal + ', biased: ' + biasedExp + ')</span>';
+  detailsHtml += '<span style="color:#6C5CE7;">Mantissa bits:</span><span>' + mantissa + '</span>';
+  detailsHtml += '<span style="color:#888;">Formula:</span><span>' + signVal + '1.' + mantissa + ' x 2^' + biasedExp + '</span>';
+  detailsHtml += '<span style="color:#888;">Stored value:</span><span style="color:#6C5CE7;font-weight:600;">' + view.getFloat32(0) + '</span>';
+  detailsHtml += '</div>';
+
+  if (num !== view.getFloat32(0)) {
+    detailsHtml += '<div style="margin-top:8px;font-size:13px;color:#f39c12;">Note: The stored value differs from the input due to floating-point precision limits.</div>';
+  }
+
+  detailsEl.innerHTML = detailsHtml;
+}
+
+// === Step-by-Step ===
+function showSteps() {
+  const rawVal = document.getElementById('stepValue').value.trim();
+  const fromBase = parseInt(document.getElementById('stepFrom').value);
+  const toBase = parseInt(document.getElementById('stepTo').value);
+  const output = document.getElementById('stepOutput');
+
+  if (!rawVal) { output.innerHTML = 'Enter a value to convert.'; return; }
+
+  const decVal = parseInt(rawVal, fromBase);
+  if (isNaN(decVal) || decVal < 0) {
+    output.innerHTML = '<span style="color:#e74c3c;">Invalid input for the selected base.</span>';
+    return;
+  }
+
+  const baseName = { 2: 'binary', 8: 'octal', 10: 'decimal', 16: 'hexadecimal' };
+  let html = '';
+  let stepNum = 1;
+
+  // Step 1: Show input
+  html += '<div><span class="step-num">Step ' + (stepNum++) + ':</span> Starting value: ' + rawVal + ' in ' + baseName[fromBase] + '</div>';
+
+  // If not already decimal, convert to decimal first
+  if (fromBase !== 10) {
+    html += '<div><span class="step-num">Step ' + (stepNum++) + ':</span> Convert ' + baseName[fromBase] + ' to decimal:</div>';
+    const digits = rawVal.toUpperCase().split('');
+    let explanation = '';
+    digits.forEach((d, i) => {
+      const digitVal = parseInt(d, fromBase);
+      const power = digits.length - 1 - i;
+      if (i > 0) explanation += ' + ';
+      explanation += d + ' x ' + fromBase + '^' + power + ' (' + (digitVal * Math.pow(fromBase, power)) + ')';
+    });
+    html += '<div style="padding-left:20px;color:#aaa;">' + explanation + '</div>';
+    html += '<div style="padding-left:20px;color:#6C5CE7;font-weight:600;">= ' + decVal + ' in decimal</div>';
+  }
+
+  // If target is decimal, we are done
+  if (toBase === 10) {
+    html += '<div><span class="step-num">Step ' + (stepNum++) + ':</span> Result: <span style="color:#6C5CE7;font-weight:600;">' + decVal + '</span></div>';
+  } else {
+    // Convert decimal to target base
+    html += '<div><span class="step-num">Step ' + (stepNum++) + ':</span> Convert decimal ' + decVal + ' to ' + baseName[toBase] + ' by repeated division:</div>';
+
+    let num = decVal;
+    const remainders = [];
+    if (num === 0) {
+      remainders.push(0);
+      html += '<div style="padding-left:20px;color:#aaa;">0 / ' + toBase + ' = 0, remainder 0</div>';
+    } else {
+      while (num > 0) {
+        const rem = num % toBase;
+        const remStr = toBase === 16 ? rem.toString(16).toUpperCase() : String(rem);
+        const quot = Math.floor(num / toBase);
+        html += '<div style="padding-left:20px;color:#aaa;">' + num + ' / ' + toBase + ' = ' + quot + ', remainder ' + remStr + '</div>';
+        remainders.push(remStr);
+        num = quot;
+      }
+    }
+
+    remainders.reverse();
+    const result = remainders.join('');
+    html += '<div><span class="step-num">Step ' + (stepNum++) + ':</span> Read remainders bottom to top: <span style="color:#6C5CE7;font-weight:600;">' + result + '</span></div>';
+
+    // Verification
+    html += '<div style="margin-top:8px;"><span class="step-num">Verify:</span> ' + rawVal + ' (' + baseName[fromBase] + ') = ' + decVal + ' (decimal) = ' + result + ' (' + baseName[toBase] + ')</div>';
+  }
+
+  output.innerHTML = html;
+}
+
+// === Reference Table ===
+function buildRefTable() {
+  const tbody = document.getElementById('refTableBody');
+  const values = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,32,48,64,100,127,128,255,256,512,1000,1024,2048,4096,65535];
+  let html = '';
+  values.forEach(v => {
+    let ascii = '-';
+    if (v >= 32 && v <= 126) ascii = String.fromCharCode(v);
+    else if (v < 32) {
+      const names = ['NUL','SOH','STX','ETX','EOT','ENQ','ACK','BEL','BS','TAB','LF','VT','FF','CR','SO','SI','DLE','DC1','DC2','DC3','DC4','NAK','SYN','ETB','CAN','EM','SUB','ESC','FS','GS','RS','US'];
+      ascii = names[v] || '-';
+    }
+    html += '<tr><td>' + v + '</td><td>' + v.toString(2) + '</td><td>' + v.toString(8) + '</td><td>' + v.toString(16).toUpperCase() + '</td><td>' + ascii + '</td></tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+// === Copy ===
+function copyField(id) {
+  const el = document.getElementById(id);
+  const text = el.value;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = el.parentElement.querySelector('.copy-btn');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    }
+  });
+}
+
+// === Init ===
+initBitVis();
+buildRefTable();
+</script>
+</body>
+</html>

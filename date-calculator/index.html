@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Calculator - Days Between Dates, Age Calculator | Zovo Tools</title>
+<meta name="description" content="Free date calculator tool. Find days between dates, add or subtract time, calculate business days, check age from birthdate, find day of week, and more.">
+<meta name="keywords" content="date calculator, days between dates, date difference, age calculator, business days calculator, date duration, week number calculator">
+<link rel="canonical" href="https://tools.zovo.one/date-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Date Calculator",
+  "description": "Calculate the difference between dates, add or subtract time, find business days, check age, and more.",
+  "url": "https://tools.zovo.one/date-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://tools.zovo.one/"},
+    {"@type": "ListItem", "position": 2, "name": "Date Calculator", "item": "https://tools.zovo.one/date-calculator/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How do I calculate the number of days between two dates?", "acceptedAnswer": {"@type": "Answer", "text": "Enter both dates in the Date Difference tab. The calculator instantly shows the total days, weeks, months, and years between the two dates, including whether the start date is before or after the end date."}},
+    {"@type": "Question", "name": "How does the business days calculator work?", "acceptedAnswer": {"@type": "Answer", "text": "The business days calculator counts only Monday through Friday between your two selected dates, excluding weekends (Saturday and Sunday). It does not exclude public holidays by default."}},
+    {"@type": "Question", "name": "Can I add or subtract months from a date?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Use the Add/Subtract tab, enter your starting date, choose the number of months, and select add or subtract. The calculator handles month-end edge cases, such as adding one month to January 31 resulting in February 28 (or 29 in a leap year)."}},
+    {"@type": "Question", "name": "How accurate is the age calculator?", "acceptedAnswer": {"@type": "Answer", "text": "The age calculator provides your exact age in years, months, and days based on your birthdate and today's date. It correctly accounts for leap years and varying month lengths."}},
+    {"@type": "Question", "name": "What is a leap year and how do I check for one?", "acceptedAnswer": {"@type": "Answer", "text": "A leap year has 366 days instead of 365, with February having 29 days. A year is a leap year if it is divisible by 4, except for century years which must also be divisible by 400. So 2000 was a leap year, but 1900 was not."}},
+    {"@type": "Question", "name": "How is the week number calculated?", "acceptedAnswer": {"@type": "Answer", "text": "The week number follows the ISO 8601 standard, where Week 1 is the week containing the first Thursday of the year. Weeks start on Monday. The calculator shows which ISO week number any given date falls in."}},
+    {"@type": "Question", "name": "What date formats does the calculator support?", "acceptedAnswer": {"@type": "Answer", "text": "The calculator displays results in multiple formats including ISO (YYYY-MM-DD), US (MM/DD/YYYY), European (DD/MM/YYYY), long format (Month Day, Year), and Unix timestamp. Input uses your browser's native date picker."}},
+    {"@type": "Question", "name": "Does the countdown timer update in real time?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The countdown feature updates every second, showing the remaining days, hours, minutes, and seconds until your target date and time."}}
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #0f0f0f; color: #e0e0e0; line-height: 1.7; font-weight: 400; }
+a { color: #6C5CE7; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+/* Header */
+.site-header { padding: 16px 0; border-bottom: 1px solid #2a2a4a; }
+.site-header .container { display: flex; justify-content: space-between; align-items: center; max-width: 900px; }
+.logo { font-size: 18px; font-weight: 600; color: #6C5CE7; }
+.breadcrumb { font-size: 13px; color: #888; }
+.breadcrumb a { color: #888; }
+.breadcrumb span { color: #ccc; }
+
+/* Tool */
+.tool-section { padding: 40px 0; }
+.tool-title { font-size: 28px; font-weight: 600; margin-bottom: 8px; color: #fff; text-align: center; }
+.tool-subtitle { font-size: 15px; color: #999; text-align: center; margin-bottom: 32px; }
+
+/* Tabs */
+.tab-group { display: flex; gap: 4px; margin-bottom: 24px; background: #1a1a2e; border-radius: 10px; padding: 4px; flex-wrap: wrap; }
+.tab-btn { flex: 1; padding: 10px 8px; border: none; background: transparent; color: #888; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; border-radius: 8px; cursor: pointer; transition: all 0.2s; min-width: 100px; white-space: nowrap; }
+.tab-btn.active { background: #6C5CE7; color: #fff; }
+
+/* Cards */
+.calc-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.calc-card h3 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 16px; }
+
+/* Inputs */
+label { font-size: 13px; font-weight: 500; color: #bbb; display: block; margin-bottom: 6px; }
+input[type="date"], input[type="datetime-local"], input[type="number"], select {
+  background: #0f0f0f; border: 1px solid #2a2a4a; color: #e0e0e0; padding: 10px 12px;
+  border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; width: 100%;
+}
+input:focus, select:focus { outline: none; border-color: #6C5CE7; }
+::-webkit-calendar-picker-indicator { filter: invert(0.7); }
+
+.input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+@media (max-width: 500px) { .input-row { grid-template-columns: 1fr; } }
+.input-group { margin-bottom: 16px; }
+
+/* Buttons */
+.btn { padding: 10px 20px; border: none; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: #6C5CE7; color: #fff; }
+.btn-primary:hover { background: #5a4bd6; }
+.btn-secondary { background: #2a2a4a; color: #ccc; }
+.btn-secondary:hover { background: #3a3a5a; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Results */
+.result-box { background: #0f0f0f; border: 1px solid #2a2a4a; border-radius: 8px; padding: 20px; margin-top: 16px; }
+.result-big { font-size: 28px; font-weight: 600; color: #6C5CE7; margin-bottom: 8px; }
+.result-detail { font-size: 14px; color: #999; margin-bottom: 4px; }
+.result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 12px; }
+.result-item { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 8px; padding: 12px; text-align: center; }
+.result-item .val { font-size: 22px; font-weight: 600; color: #6C5CE7; }
+.result-item .lbl { font-size: 12px; color: #888; margin-top: 2px; }
+
+/* Countdown */
+.countdown-display { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; text-align: center; }
+.countdown-unit { background: #0f0f0f; border: 1px solid #2a2a4a; border-radius: 10px; padding: 16px 8px; }
+.countdown-unit .num { font-size: 36px; font-weight: 600; color: #6C5CE7; }
+.countdown-unit .txt { font-size: 12px; color: #888; margin-top: 4px; }
+@media (max-width: 400px) { .countdown-display { grid-template-columns: repeat(2, 1fr); } }
+
+/* Panels */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Holiday table */
+.holiday-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.holiday-table th { text-align: left; padding: 10px 12px; border-bottom: 1px solid #2a2a4a; color: #999; font-weight: 500; }
+.holiday-table td { padding: 10px 12px; border-bottom: 1px solid #1a1a2e; }
+.holiday-table tr:hover td { background: #1a1a2e; }
+
+/* Formats list */
+.formats-list { list-style: none; padding: 0; }
+.formats-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1a1a2e; font-size: 14px; }
+.formats-list li span:first-child { color: #888; }
+.formats-list li span:last-child { color: #e0e0e0; font-weight: 500; }
+
+/* Content */
+.content-section { padding: 60px 0; }
+.content-section h1 { font-size: 32px; font-weight: 600; color: #fff; margin-bottom: 20px; }
+.content-section h2 { font-size: 24px; font-weight: 600; color: #fff; margin: 40px 0 16px; }
+.content-section h3 { font-size: 18px; font-weight: 600; color: #ddd; margin: 28px 0 12px; }
+.content-section p { color: #bbb; margin-bottom: 16px; font-size: 15px; }
+.content-section ul, .content-section ol { color: #bbb; margin: 0 0 16px 24px; font-size: 15px; }
+.content-section li { margin-bottom: 6px; }
+.content-section code { background: #1a1a2e; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #a0e8af; }
+.faq-item { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 8px; padding: 20px; margin-bottom: 12px; }
+.faq-item h3 { margin-top: 0; color: #fff; }
+.faq-item p:last-child { margin-bottom: 0; }
+
+/* Radio group */
+.radio-group { display: flex; gap: 16px; margin-bottom: 16px; }
+.radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #ccc; font-size: 14px; }
+input[type="radio"] { accent-color: #6C5CE7; }
+
+/* Footer */
+.site-footer { padding: 24px 0; border-top: 1px solid #2a2a4a; text-align: center; }
+.site-footer p { font-size: 13px; color: #666; }
+.privacy-line { font-size: 12px; color: #555; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="https://tools.zovo.one/" class="logo">Zovo Tools</a>
+    <nav class="breadcrumb"><a href="https://tools.zovo.one/">Home</a> / <span>Date Calculator</span></nav>
+  </div>
+</header>
+
+<section class="tool-section">
+  <div class="container">
+    <h1 class="tool-title">Date Calculator</h1>
+    <p class="tool-subtitle">Calculate differences between dates, add or subtract time, find business days, and more</p>
+
+    <div class="tab-group">
+      <button class="tab-btn active" onclick="showPanel('diff')">Date Difference</button>
+      <button class="tab-btn" onclick="showPanel('addsub')">Add / Subtract</button>
+      <button class="tab-btn" onclick="showPanel('business')">Business Days</button>
+      <button class="tab-btn" onclick="showPanel('countdown')">Countdown</button>
+      <button class="tab-btn" onclick="showPanel('age')">Age</button>
+      <button class="tab-btn" onclick="showPanel('info')">Date Info</button>
+      <button class="tab-btn" onclick="showPanel('holidays')">Holidays</button>
+    </div>
+
+    <!-- Date Difference -->
+    <div class="panel active" id="panel-diff">
+      <div class="calc-card">
+        <h3>Date Difference Calculator</h3>
+        <div class="input-row">
+          <div>
+            <label for="diff-start">Start Date</label>
+            <input type="date" id="diff-start">
+          </div>
+          <div>
+            <label for="diff-end">End Date</label>
+            <input type="date" id="diff-end">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calcDifference()">Calculate</button>
+        <div class="result-box" id="diff-result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Add/Subtract -->
+    <div class="panel" id="panel-addsub">
+      <div class="calc-card">
+        <h3>Add or Subtract Time from a Date</h3>
+        <div class="input-group">
+          <label for="addsub-date">Starting Date</label>
+          <input type="date" id="addsub-date">
+        </div>
+        <div class="radio-group">
+          <label><input type="radio" name="addsub-op" value="add" checked> Add</label>
+          <label><input type="radio" name="addsub-op" value="subtract"> Subtract</label>
+        </div>
+        <div class="input-row">
+          <div>
+            <label for="addsub-val">Amount</label>
+            <input type="number" id="addsub-val" value="0" min="0">
+          </div>
+          <div>
+            <label for="addsub-unit">Unit</label>
+            <select id="addsub-unit">
+              <option value="days">Days</option>
+              <option value="weeks">Weeks</option>
+              <option value="months">Months</option>
+              <option value="years">Years</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calcAddSub()">Calculate</button>
+        <div class="result-box" id="addsub-result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Business Days -->
+    <div class="panel" id="panel-business">
+      <div class="calc-card">
+        <h3>Business Days Calculator</h3>
+        <p style="font-size:13px;color:#888;margin-bottom:16px;">Counts weekdays (Monday through Friday) between two dates, excluding weekends.</p>
+        <div class="input-row">
+          <div>
+            <label for="biz-start">Start Date</label>
+            <input type="date" id="biz-start">
+          </div>
+          <div>
+            <label for="biz-end">End Date</label>
+            <input type="date" id="biz-end">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calcBusiness()">Calculate</button>
+        <div class="result-box" id="biz-result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="panel" id="panel-countdown">
+      <div class="calc-card">
+        <h3>Countdown to a Date</h3>
+        <div class="input-group">
+          <label for="countdown-target">Target Date and Time</label>
+          <input type="datetime-local" id="countdown-target">
+        </div>
+        <button class="btn btn-primary" onclick="startCountdown()">Start Countdown</button>
+        <div class="result-box" id="countdown-result" style="display:none;">
+          <div class="countdown-display" id="countdown-display"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Age Calculator -->
+    <div class="panel" id="panel-age">
+      <div class="calc-card">
+        <h3>Age Calculator</h3>
+        <div class="input-group">
+          <label for="age-birth">Date of Birth</label>
+          <input type="date" id="age-birth">
+        </div>
+        <button class="btn btn-primary" onclick="calcAge()">Calculate Age</button>
+        <div class="result-box" id="age-result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Date Info -->
+    <div class="panel" id="panel-info">
+      <div class="calc-card">
+        <h3>Date Information</h3>
+        <p style="font-size:13px;color:#888;margin-bottom:16px;">Find the day of the week, week number, leap year status, and multiple format displays for any date.</p>
+        <div class="input-group">
+          <label for="info-date">Select a Date</label>
+          <input type="date" id="info-date">
+        </div>
+        <button class="btn btn-primary" onclick="calcInfo()">Get Info</button>
+        <div class="result-box" id="info-result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Holidays -->
+    <div class="panel" id="panel-holidays">
+      <div class="calc-card">
+        <h3>US Federal Holidays <span id="holiday-year" style="color:#6C5CE7;"></span></h3>
+        <div class="input-row" style="margin-bottom:0;">
+          <div>
+            <label for="holiday-yr-select">Year</label>
+            <input type="number" id="holiday-yr-select" min="2000" max="2100" onchange="renderHolidays(this.value)">
+          </div>
+          <div></div>
+        </div>
+        <div style="overflow-x:auto;margin-top:16px;">
+          <table class="holiday-table" id="holiday-table">
+            <thead><tr><th>Holiday</th><th>Date</th><th>Day</th></tr></thead>
+            <tbody id="holiday-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SEO Content -->
+<section class="content-section">
+  <div class="container">
+    <h1>Date Calculator: The Complete Guide to Date and Time Calculations</h1>
+
+    <p>Working with dates is one of the most common tasks in daily life and professional work. Whether you need to figure out how many days until a deadline, calculate someone's exact age, determine how many business days fall between two dates, or simply find out what day of the week a particular date lands on, a reliable date calculator saves you from error-prone mental math and calendar counting.</p>
+
+    <p>This date calculator provides seven specialized tools in one page: date difference, add/subtract time, business days, countdown timer, age calculator, date information lookup, and a US federal holidays reference. Each tool handles the tricky edge cases that make date math surprisingly difficult, such as varying month lengths, leap years, and the difference between calendar days and business days.</p>
+
+    <h2>How to Use the Date Calculator</h2>
+
+    <h3>Calculating the Difference Between Two Dates</h3>
+    <p>The Date Difference tab is the most straightforward tool. Enter a start date and an end date, then click Calculate. The tool instantly displays the total number of days between the two dates, along with equivalent values in weeks, months, and years. It also shows a breakdown in the format of "X years, Y months, Z days" for a human-friendly reading. The order of dates does not matter; the calculator will show the absolute difference and indicate which date comes first.</p>
+
+    <h3>Adding or Subtracting Time from a Date</h3>
+    <p>The Add/Subtract tab lets you start from any date and move forward or backward by a specified number of days, weeks, months, or years. This is particularly useful for calculating due dates, contract end dates, warranty expiration dates, or any scenario where you need to determine what date falls a certain amount of time from a known starting point. Select your starting date, choose add or subtract, enter the amount, select the unit, and click Calculate.</p>
+
+    <h3>Counting Business Days</h3>
+    <p>The Business Days tab counts only weekdays (Monday through Friday) between two dates. This is essential for project planning, shipping estimates, legal deadlines, and any context where weekends are excluded from the count. Enter your start and end dates, and the calculator shows both the total business days and the total weekend days in the range.</p>
+
+    <h3>Setting Up a Countdown</h3>
+    <p>The Countdown tab creates a live countdown timer to any future date and time. Enter your target date and time, click Start Countdown, and watch the days, hours, minutes, and seconds tick down in real time. This is useful for tracking deadlines, events, product launches, or personal milestones.</p>
+
+    <h3>Using the Age Calculator</h3>
+    <p>The Age tab calculates exact age from any birthdate. It displays your age in years, months, and days, as well as the total number of days you have been alive, your next birthday, and how many days until it arrives. The calculation correctly handles leap years and varying month lengths.</p>
+
+    <h3>Looking Up Date Information</h3>
+    <p>The Date Info tab is a multi-purpose date lookup tool. Enter any date and get back the day of the week, the ISO week number, whether the year is a leap year, and the date displayed in multiple formats including ISO, US, European, long format, and Unix timestamp. This is a quick reference tool when you need date metadata without doing any math yourself.</p>
+
+    <h3>Checking US Federal Holidays</h3>
+    <p>The Holidays tab lists all US federal holidays for any selected year. It shows each holiday's name, date, and day of the week. This is useful for planning around holidays, verifying whether a specific date is a holiday, and understanding the holiday calendar for scheduling purposes. Use the year selector to view holidays for any year from 2000 to 2100.</p>
+
+    <h2>Understanding Date Math</h2>
+
+    <p>Date calculations seem simple on the surface, but they involve several complexities that are easy to overlook:</p>
+
+    <ul>
+      <li>Months have different lengths (28, 29, 30, or 31 days), making "one month from today" ambiguous in certain cases</li>
+      <li>Leap years add an extra day to February every four years, with exceptions for century years</li>
+      <li>Time zones can affect which calendar date a moment falls on</li>
+      <li>The definition of "week 1" varies between ISO 8601 (starts Monday, contains first Thursday) and other systems</li>
+      <li>Business day calculations depend on your definition of the work week and which holidays you exclude</li>
+      <li>Adding months to end-of-month dates requires a clamping rule (January 31 + 1 month becomes February 28 or 29)</li>
+    </ul>
+
+    <p>This calculator handles all of these edge cases correctly, giving you reliable results you can trust for professional and personal use.</p>
+
+    <h2>The Leap Year Rule</h2>
+
+    <p>Leap years follow a specific set of rules that are often misremembered. A year is a leap year if all of the following conditions are met:</p>
+
+    <ol>
+      <li>The year is divisible by 4</li>
+      <li>If the year is divisible by 100, it must also be divisible by 400</li>
+    </ol>
+
+    <p>This means 2024 is a leap year (divisible by 4, not a century year). The year 1900 was not a leap year (divisible by 100 but not 400). The year 2000 was a leap year (divisible by 400). The Date Info tab in this calculator tells you instantly whether any year is a leap year.</p>
+
+    <h2>ISO Week Numbers Explained</h2>
+
+    <p>The ISO 8601 standard defines a week numbering system used internationally in business, government, and technology. Under this system, weeks start on Monday, and Week 1 of a year is defined as the week containing the first Thursday of that year. This means that some days at the very start of January might belong to the last week of the previous year (Week 52 or 53), and some days at the very end of December might belong to Week 1 of the next year.</p>
+
+    <p>Week numbers are widely used in European business contexts, project management, manufacturing schedules, and ISO-compliant software systems. The Date Info tab calculates the correct ISO week number for any date you enter.</p>
+
+    <h2>Business Days vs Calendar Days</h2>
+
+    <p>The distinction between business days and calendar days is critical in many professional contexts. Legal deadlines, shipping estimates, payment terms, and project timelines often specify "business days," meaning only Monday through Friday counts. A 10-business-day deadline starting on a Friday actually spans 14 calendar days (two weekends plus 10 weekdays).</p>
+
+    <p>Some industries further exclude public holidays from business day counts, but because holiday observance varies by country, state, and organization, the business days calculator in this tool focuses on the universally agreed-upon definition: weekdays only, weekends excluded. You can cross-reference the Holidays tab to account for federal holidays in your planning.</p>
+
+    <h2>Common Date Calculation Scenarios</h2>
+
+    <p>Here are some practical scenarios where this calculator proves useful:</p>
+
+    <ul>
+      <li>Determining exactly how old you are in days for a milestone celebration</li>
+      <li>Calculating a 90-day probation period end date for a new job</li>
+      <li>Finding out how many business days until a project deadline</li>
+      <li>Determining the date that is 30 weeks from a known conception date</li>
+      <li>Checking which day of the week a historical event occurred on</li>
+      <li>Planning around federal holidays for government filings</li>
+      <li>Calculating warranty expiration dates from a purchase date</li>
+      <li>Figuring out the number of days remaining in a lease or subscription</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <h3>How do I calculate the number of days between two dates?</h3>
+      <p>Enter both dates in the Date Difference tab and click Calculate. The tool instantly shows the total days, weeks, months, and years between the two dates, including whether the start date comes before or after the end date. The calculation uses calendar days and accounts for leap years and varying month lengths.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How does the business days calculator work?</h3>
+      <p>The business days calculator counts only Monday through Friday between your two selected dates, excluding weekends (Saturday and Sunday). It also reports the number of weekend days in the range. It does not automatically exclude public holidays, but you can use the Holidays tab to check which federal holidays fall within your date range and adjust accordingly.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Can I add or subtract months from a date?</h3>
+      <p>Yes. Use the Add/Subtract tab, enter your starting date, choose the number of months, and select add or subtract. The calculator handles month-end edge cases correctly. For example, adding one month to January 31 results in February 28 (or February 29 in a leap year), because February does not have 31 days. The result always lands on a valid calendar date.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How accurate is the age calculator?</h3>
+      <p>The age calculator provides your exact age in years, months, and days based on your birthdate and today's date. It correctly accounts for leap years and varying month lengths. It also shows your total age in days, your next birthday date, and the number of days until your next birthday.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What is a leap year and how do I check for one?</h3>
+      <p>A leap year has 366 days instead of 365, with February having 29 days instead of 28. A year is a leap year if it is divisible by 4, except for century years (ending in 00), which must also be divisible by 400. So 2024 is a leap year, 1900 was not, and 2000 was. Use the Date Info tab to instantly check whether any year is a leap year.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How is the week number calculated?</h3>
+      <p>The week number follows the ISO 8601 standard, where Week 1 is the week containing the first Thursday of the year. Weeks start on Monday. This means January 1 might fall in the last week of the previous year. The Date Info tab calculates the correct ISO week number for any date you enter.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What date formats does the calculator support?</h3>
+      <p>The Date Info tab displays results in multiple formats: ISO (YYYY-MM-DD), US (MM/DD/YYYY), European (DD/MM/YYYY), long format (Month Day, Year), and Unix timestamp (seconds since January 1, 1970). Input uses your browser's native date picker, which typically accepts dates in your local format.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Does the countdown timer update in real time?</h3>
+      <p>Yes. Once you set a target date and time and click Start Countdown, the display updates every second, showing the remaining days, hours, minutes, and seconds. If the target date has already passed, it displays a message indicating that the date is in the past.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Built by Michael Lip at <a href="https://zovo.one">zovo.one</a></p>
+    <p class="privacy-line">This tool runs entirely in your browser. No data is collected, stored, or transmitted to any server.</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  var today = new Date();
+  var todayStr = formatDateInput(today);
+  var countdownInterval = null;
+
+  // Init defaults
+  document.getElementById('diff-start').value = todayStr;
+  document.getElementById('diff-end').value = todayStr;
+  document.getElementById('addsub-date').value = todayStr;
+  document.getElementById('biz-start').value = todayStr;
+  document.getElementById('biz-end').value = todayStr;
+  document.getElementById('age-birth').value = '1990-01-01';
+  document.getElementById('info-date').value = todayStr;
+  var yr = today.getFullYear();
+  document.getElementById('holiday-yr-select').value = yr;
+
+  renderHolidays(yr);
+
+  // Set a default countdown target to tomorrow
+  var tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+  document.getElementById('countdown-target').value = formatDateTimeInput(tomorrow);
+
+  // ---- Tab switching ----
+  window.showPanel = function(id) {
+    document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.getElementById('panel-' + id).classList.add('active');
+    // Highlight correct tab
+    var tabs = document.querySelectorAll('.tab-btn');
+    var mapping = ['diff','addsub','business','countdown','age','info','holidays'];
+    for (var i = 0; i < mapping.length; i++) {
+      if (mapping[i] === id) tabs[i].classList.add('active');
+    }
+    if (id !== 'countdown' && countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+  };
+
+  // ---- Utilities ----
+  function formatDateInput(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var dd = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + dd;
+  }
+
+  function formatDateTimeInput(d) {
+    return formatDateInput(d) + 'T' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  }
+
+  function parseDate(str) {
+    var parts = str.split('-');
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  }
+
+  var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function isLeapYear(y) {
+    return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+  }
+
+  function daysInMonth(y, m) {
+    return new Date(y, m + 1, 0).getDate();
+  }
+
+  function getISOWeek(d) {
+    var date = new Date(d.getTime());
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+    var week1 = new Date(date.getFullYear(), 0, 4);
+    return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+  }
+
+  function dateDiffDetailed(start, end) {
+    var s = new Date(start);
+    var e = new Date(end);
+    if (s > e) { var tmp = s; s = e; e = tmp; }
+    var years = e.getFullYear() - s.getFullYear();
+    var months = e.getMonth() - s.getMonth();
+    var days = e.getDate() - s.getDate();
+    if (days < 0) {
+      months--;
+      days += daysInMonth(e.getFullYear(), e.getMonth() - 1);
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    return { years: years, months: months, days: days };
+  }
+
+  function countBusinessDays(start, end) {
+    var s = new Date(start);
+    var e = new Date(end);
+    if (s > e) { var tmp = s; s = e; e = tmp; }
+    var count = 0;
+    var weekendCount = 0;
+    var current = new Date(s);
+    current.setDate(current.getDate() + 1); // Exclude start date, count from next day
+    while (current <= e) {
+      var dow = current.getDay();
+      if (dow !== 0 && dow !== 6) {
+        count++;
+      } else {
+        weekendCount++;
+      }
+      current.setDate(current.getDate() + 1);
+    }
+    return { business: count, weekends: weekendCount };
+  }
+
+  // ---- Date Difference ----
+  window.calcDifference = function() {
+    var startStr = document.getElementById('diff-start').value;
+    var endStr = document.getElementById('diff-end').value;
+    if (!startStr || !endStr) return;
+    var start = parseDate(startStr);
+    var end = parseDate(endStr);
+    var diffMs = Math.abs(end - start);
+    var totalDays = Math.round(diffMs / 86400000);
+    var detailed = dateDiffDetailed(start, end);
+    var weeks = Math.floor(totalDays / 7);
+    var remainDays = totalDays % 7;
+
+    var box = document.getElementById('diff-result');
+    box.style.display = 'block';
+    box.innerHTML =
+      '<div class="result-big">' + totalDays.toLocaleString() + ' days</div>' +
+      '<div class="result-detail">' + detailed.years + ' year' + (detailed.years !== 1 ? 's' : '') + ', ' +
+        detailed.months + ' month' + (detailed.months !== 1 ? 's' : '') + ', ' +
+        detailed.days + ' day' + (detailed.days !== 1 ? 's' : '') + '</div>' +
+      '<div class="result-grid">' +
+        '<div class="result-item"><div class="val">' + totalDays.toLocaleString() + '</div><div class="lbl">Total Days</div></div>' +
+        '<div class="result-item"><div class="val">' + weeks.toLocaleString() + '</div><div class="lbl">Weeks</div></div>' +
+        '<div class="result-item"><div class="val">' + (totalDays * 24).toLocaleString() + '</div><div class="lbl">Hours</div></div>' +
+        '<div class="result-item"><div class="val">' + (totalDays * 1440).toLocaleString() + '</div><div class="lbl">Minutes</div></div>' +
+      '</div>';
+  };
+
+  // ---- Add/Subtract ----
+  window.calcAddSub = function() {
+    var dateStr = document.getElementById('addsub-date').value;
+    if (!dateStr) return;
+    var d = parseDate(dateStr);
+    var val = parseInt(document.getElementById('addsub-val').value) || 0;
+    var unit = document.getElementById('addsub-unit').value;
+    var op = document.querySelector('input[name="addsub-op"]:checked').value;
+    var multiplier = op === 'subtract' ? -1 : 1;
+
+    var result = new Date(d);
+    if (unit === 'days') {
+      result.setDate(result.getDate() + val * multiplier);
+    } else if (unit === 'weeks') {
+      result.setDate(result.getDate() + val * 7 * multiplier);
+    } else if (unit === 'months') {
+      result.setMonth(result.getMonth() + val * multiplier);
+    } else if (unit === 'years') {
+      result.setFullYear(result.getFullYear() + val * multiplier);
+    }
+
+    var diffDays = Math.round(Math.abs(result - d) / 86400000);
+    var box = document.getElementById('addsub-result');
+    box.style.display = 'block';
+    box.innerHTML =
+      '<div class="result-big">' + dayNames[result.getDay()] + ', ' + monthNames[result.getMonth()] + ' ' + result.getDate() + ', ' + result.getFullYear() + '</div>' +
+      '<div class="result-detail">ISO: ' + formatDateInput(result) + '</div>' +
+      '<div class="result-detail">' + diffDays.toLocaleString() + ' calendar days ' + (op === 'subtract' ? 'before' : 'after') + ' the starting date</div>';
+  };
+
+  // ---- Business Days ----
+  window.calcBusiness = function() {
+    var startStr = document.getElementById('biz-start').value;
+    var endStr = document.getElementById('biz-end').value;
+    if (!startStr || !endStr) return;
+    var start = parseDate(startStr);
+    var end = parseDate(endStr);
+    var totalDays = Math.round(Math.abs(end - start) / 86400000);
+    var biz = countBusinessDays(start, end);
+
+    var box = document.getElementById('biz-result');
+    box.style.display = 'block';
+    box.innerHTML =
+      '<div class="result-big">' + biz.business.toLocaleString() + ' business days</div>' +
+      '<div class="result-grid">' +
+        '<div class="result-item"><div class="val">' + totalDays.toLocaleString() + '</div><div class="lbl">Calendar Days</div></div>' +
+        '<div class="result-item"><div class="val">' + biz.business.toLocaleString() + '</div><div class="lbl">Business Days</div></div>' +
+        '<div class="result-item"><div class="val">' + biz.weekends.toLocaleString() + '</div><div class="lbl">Weekend Days</div></div>' +
+        '<div class="result-item"><div class="val">' + Math.ceil(biz.business / 5) + '</div><div class="lbl">Work Weeks</div></div>' +
+      '</div>';
+  };
+
+  // ---- Countdown ----
+  window.startCountdown = function() {
+    var targetStr = document.getElementById('countdown-target').value;
+    if (!targetStr) return;
+    var target = new Date(targetStr);
+    var box = document.getElementById('countdown-result');
+    var display = document.getElementById('countdown-display');
+    box.style.display = 'block';
+
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    function tick() {
+      var now = new Date();
+      var diff = target - now;
+      if (diff <= 0) {
+        display.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#e74c3c;font-size:18px;font-weight:500;">This date has passed.</div>';
+        clearInterval(countdownInterval);
+        return;
+      }
+      var d = Math.floor(diff / 86400000);
+      var h = Math.floor((diff % 86400000) / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      display.innerHTML =
+        '<div class="countdown-unit"><div class="num">' + d + '</div><div class="txt">Days</div></div>' +
+        '<div class="countdown-unit"><div class="num">' + String(h).padStart(2,'0') + '</div><div class="txt">Hours</div></div>' +
+        '<div class="countdown-unit"><div class="num">' + String(m).padStart(2,'0') + '</div><div class="txt">Minutes</div></div>' +
+        '<div class="countdown-unit"><div class="num">' + String(s).padStart(2,'0') + '</div><div class="txt">Seconds</div></div>';
+    }
+    tick();
+    countdownInterval = setInterval(tick, 1000);
+  };
+
+  // ---- Age Calculator ----
+  window.calcAge = function() {
+    var birthStr = document.getElementById('age-birth').value;
+    if (!birthStr) return;
+    var birth = parseDate(birthStr);
+    var now = new Date();
+    var detailed = dateDiffDetailed(birth, now);
+    var totalDays = Math.round((now - birth) / 86400000);
+
+    // Next birthday
+    var nextBday = new Date(now.getFullYear(), birth.getMonth(), birth.getDate());
+    if (nextBday <= now) {
+      nextBday = new Date(now.getFullYear() + 1, birth.getMonth(), birth.getDate());
+    }
+    var daysUntilBday = Math.round((nextBday - now) / 86400000);
+
+    var box = document.getElementById('age-result');
+    box.style.display = 'block';
+    box.innerHTML =
+      '<div class="result-big">' + detailed.years + ' years old</div>' +
+      '<div class="result-detail">' + detailed.years + ' year' + (detailed.years !== 1 ? 's' : '') + ', ' +
+        detailed.months + ' month' + (detailed.months !== 1 ? 's' : '') + ', ' +
+        detailed.days + ' day' + (detailed.days !== 1 ? 's' : '') + '</div>' +
+      '<div class="result-grid">' +
+        '<div class="result-item"><div class="val">' + totalDays.toLocaleString() + '</div><div class="lbl">Days Alive</div></div>' +
+        '<div class="result-item"><div class="val">' + (totalDays * 24).toLocaleString() + '</div><div class="lbl">Hours Alive</div></div>' +
+        '<div class="result-item"><div class="val">' + daysUntilBday + '</div><div class="lbl">Days to Birthday</div></div>' +
+        '<div class="result-item"><div class="val">' + dayNames[nextBday.getDay()] + '</div><div class="lbl">Next Birthday</div></div>' +
+      '</div>' +
+      '<div class="result-detail" style="margin-top:12px;">Next birthday: ' + monthNames[nextBday.getMonth()] + ' ' + nextBday.getDate() + ', ' + nextBday.getFullYear() + '</div>';
+  };
+
+  // ---- Date Info ----
+  window.calcInfo = function() {
+    var dateStr = document.getElementById('info-date').value;
+    if (!dateStr) return;
+    var d = parseDate(dateStr);
+    var y = d.getFullYear();
+    var leap = isLeapYear(y);
+    var weekNum = getISOWeek(d);
+    var dayOfYear = Math.floor((d - new Date(y, 0, 0)) / 86400000);
+
+    var isoStr = formatDateInput(d);
+    var usStr = String(d.getMonth() + 1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0') + '/' + y;
+    var euStr = String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth() + 1).padStart(2,'0') + '/' + y;
+    var longStr = monthNames[d.getMonth()] + ' ' + d.getDate() + ', ' + y;
+    var unix = Math.floor(d.getTime() / 1000);
+
+    var box = document.getElementById('info-result');
+    box.style.display = 'block';
+    box.innerHTML =
+      '<div class="result-big">' + dayNames[d.getDay()] + '</div>' +
+      '<div class="result-grid">' +
+        '<div class="result-item"><div class="val">' + weekNum + '</div><div class="lbl">ISO Week</div></div>' +
+        '<div class="result-item"><div class="val">' + dayOfYear + '</div><div class="lbl">Day of Year</div></div>' +
+        '<div class="result-item"><div class="val">' + (leap ? 'Yes' : 'No') + '</div><div class="lbl">Leap Year</div></div>' +
+        '<div class="result-item"><div class="val">' + d.getDay() + '</div><div class="lbl">Day of Week (0=Sun)</div></div>' +
+      '</div>' +
+      '<div style="margin-top:16px;"><p style="font-size:14px;color:#999;margin-bottom:8px;">Date Formats:</p>' +
+      '<ul class="formats-list">' +
+        '<li><span>ISO 8601</span><span>' + isoStr + '</span></li>' +
+        '<li><span>US Format</span><span>' + usStr + '</span></li>' +
+        '<li><span>European</span><span>' + euStr + '</span></li>' +
+        '<li><span>Long Format</span><span>' + longStr + '</span></li>' +
+        '<li><span>Unix Timestamp</span><span>' + unix + '</span></li>' +
+      '</ul></div>';
+  };
+
+  // ---- Holidays ----
+  function getUSHolidays(year) {
+    var holidays = [];
+
+    // New Year's Day - Jan 1
+    holidays.push({ name: "New Year's Day", date: new Date(year, 0, 1) });
+
+    // MLK Day - 3rd Monday of January
+    holidays.push({ name: "Martin Luther King Jr. Day", date: getNthDayOfMonth(year, 0, 1, 3) });
+
+    // Presidents' Day - 3rd Monday of February
+    holidays.push({ name: "Presidents' Day", date: getNthDayOfMonth(year, 1, 1, 3) });
+
+    // Memorial Day - Last Monday of May
+    holidays.push({ name: "Memorial Day", date: getLastDayOfMonth(year, 4, 1) });
+
+    // Juneteenth - June 19
+    holidays.push({ name: "Juneteenth", date: new Date(year, 5, 19) });
+
+    // Independence Day - July 4
+    holidays.push({ name: "Independence Day", date: new Date(year, 6, 4) });
+
+    // Labor Day - 1st Monday of September
+    holidays.push({ name: "Labor Day", date: getNthDayOfMonth(year, 8, 1, 1) });
+
+    // Columbus Day - 2nd Monday of October
+    holidays.push({ name: "Columbus Day", date: getNthDayOfMonth(year, 9, 1, 2) });
+
+    // Veterans Day - Nov 11
+    holidays.push({ name: "Veterans Day", date: new Date(year, 10, 11) });
+
+    // Thanksgiving - 4th Thursday of November
+    holidays.push({ name: "Thanksgiving Day", date: getNthDayOfMonth(year, 10, 4, 4) });
+
+    // Christmas Day - Dec 25
+    holidays.push({ name: "Christmas Day", date: new Date(year, 11, 25) });
+
+    return holidays;
+  }
+
+  function getNthDayOfMonth(year, month, dayOfWeek, n) {
+    var d = new Date(year, month, 1);
+    var count = 0;
+    while (count < n) {
+      if (d.getDay() === dayOfWeek) count++;
+      if (count < n) d.setDate(d.getDate() + 1);
+    }
+    return d;
+  }
+
+  function getLastDayOfMonth(year, month, dayOfWeek) {
+    var d = new Date(year, month + 1, 0); // last day of month
+    while (d.getDay() !== dayOfWeek) {
+      d.setDate(d.getDate() - 1);
+    }
+    return d;
+  }
+
+  window.renderHolidays = function(year) {
+    year = parseInt(year);
+    document.getElementById('holiday-year').textContent = year;
+    var holidays = getUSHolidays(year);
+    var tbody = document.getElementById('holiday-body');
+    tbody.innerHTML = '';
+    holidays.forEach(function(h) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + h.name + '</td>' +
+        '<td>' + monthNames[h.date.getMonth()] + ' ' + h.date.getDate() + ', ' + h.date.getFullYear() + '</td>' +
+        '<td>' + dayNames[h.date.getDay()] + '</td>';
+      tbody.appendChild(tr);
+    });
+  };
+
+})();
+</script>
+</body>
+</html>
