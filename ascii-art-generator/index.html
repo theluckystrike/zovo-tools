@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASCII Art Generator - Convert Text to ASCII Art | Free Tool</title>
+<meta name="description" content="Convert text to ASCII art using FIGlet-style fonts including Standard, Banner, Block, Slant, and Small. Upload images and convert to ASCII characters. Real-time preview, adjustable width, copy to clipboard. Free, private, runs entirely in your browser.">
+<meta name="keywords" content="ASCII art generator, text to ASCII, FIGlet font, ASCII art converter, image to ASCII, text art, banner text, block letters, ASCII text generator, online ASCII tool">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/ascii-art-generator">
+
+<meta property="og:title" content="ASCII Art Generator - Convert Text to ASCII Art | Zovo Tools">
+<meta property="og:description" content="Convert text to ASCII art using FIGlet-style fonts. Upload images for ASCII conversion. Free, private, no tracking.">
+<meta property="og:url" content="https://tools.zovo.one/ascii-art-generator">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ASCII Art Generator - Convert Text to ASCII Art | Zovo Tools">
+<meta name="twitter:description" content="Convert text to ASCII art using FIGlet-style fonts. Upload images for ASCII conversion. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ASCII Art Generator",
+  "description": "Convert text to ASCII art using FIGlet-style fonts (Standard, Banner, Block, Slant, Small). Upload images and convert them to ASCII characters using brightness mapping.",
+  "url": "https://tools.zovo.one/ascii-art-generator",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Canvas API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What fonts are available for text to ASCII art?", "acceptedAnswer": {"@type": "Answer", "text": "The tool includes five built-in FIGlet-style fonts: Standard, Banner, Block, Slant, and Small. Each produces a distinct style of ASCII art text."}},
+    {"@type": "Question", "name": "Can I convert images to ASCII art?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Upload any image (JPEG, PNG, GIF, WebP) and the tool converts it to ASCII characters using brightness mapping. You can adjust the output width and choose between different character sets."}},
+    {"@type": "Question", "name": "Is my data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All text and image processing is performed entirely in your browser using JavaScript and the Canvas API. No data ever leaves your device."}},
+    {"@type": "Question", "name": "What characters are supported for text to ASCII?", "acceptedAnswer": {"@type": "Answer", "text": "The built-in fonts support uppercase A-Z, lowercase a-z, digits 0-9, and basic punctuation including spaces, periods, commas, exclamation marks, question marks, hyphens, and more."}},
+    {"@type": "Question", "name": "Can I adjust the letter spacing?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Use the letter spacing slider to increase or decrease the space between characters in the ASCII art output. This works with all text fonts."}},
+    {"@type": "Question", "name": "What image formats are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Any image format your browser supports, including JPEG, PNG, GIF, WebP, BMP, and SVG. The image is loaded locally using the Canvas API for processing."}},
+    {"@type": "Question", "name": "How does the image to ASCII conversion work?", "acceptedAnswer": {"@type": "Answer", "text": "Each pixel (or group of pixels) in the image is converted to a grayscale brightness value. That brightness is then mapped to an ASCII character from a set ranging from dense (like @) to sparse (like a space or dot)."}},
+    {"@type": "Question", "name": "Can I copy the ASCII art output?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Click the Copy button above the output area to copy the ASCII art to your clipboard. You can then paste it anywhere: code comments, emails, chat messages, documentation, or social media."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"], select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus, select:focus {
+  border-color: var(--accent);
+}
+textarea { resize: vertical; min-height: 60px; }
+select { cursor: pointer; }
+select option { background: var(--surface); color: var(--text); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Format buttons */
+.format-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.format-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.format-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* Slider */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.slider-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+  background: transparent;
+  height: 6px;
+}
+.slider-val {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 600;
+  min-width: 30px;
+  text-align: right;
+}
+
+/* Output */
+.output-wrap {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 16px;
+}
+.output-code {
+  padding: 16px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: var(--accent);
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 500px;
+}
+.output-code.img-output {
+  font-size: 0.35rem;
+  line-height: 0.45rem;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* File drop zone */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone-icon { font-size: 2rem; margin-bottom: 8px; }
+.drop-zone-text { color: var(--text-muted); font-size: 0.95rem; }
+.drop-zone-text span { color: var(--accent); font-weight: 500; }
+.file-input { display: none; }
+
+/* Options grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+
+/* Image preview */
+.img-preview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  display: none;
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 24px;
+  background: var(--accent);
+  color: #0a0a0f;
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .container { max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>ASCII Art</span> Generator</h1>
+    <p>Convert text to ASCII art using FIGlet-style fonts or transform images into ASCII characters &mdash; all running privately in your browser.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="text-to-ascii">Text to ASCII</button>
+    <button class="tab-btn" data-tab="image-to-ascii">Image to ASCII</button>
+  </div>
+
+  <!-- Text to ASCII Tab -->
+  <div id="text-to-ascii" class="tab-panel active">
+    <div class="card">
+      <h3>Enter Text</h3>
+      <input type="text" id="textInput" placeholder="Type your text here..." value="Hello" maxlength="80">
+    </div>
+
+    <div class="card">
+      <h3>Font</h3>
+      <div class="format-row" id="fontRow">
+        <button class="format-btn active" data-font="standard">Standard</button>
+        <button class="format-btn" data-font="banner">Banner</button>
+        <button class="format-btn" data-font="block">Block</button>
+        <button class="format-btn" data-font="slant">Slant</button>
+        <button class="format-btn" data-font="small">Small</button>
+      </div>
+
+      <div class="options-grid">
+        <div>
+          <label>Letter Spacing</label>
+          <div class="slider-row">
+            <input type="range" id="letterSpacing" min="0" max="5" value="1">
+            <span class="slider-val" id="spacingVal">1</span>
+          </div>
+        </div>
+        <div>
+          <label>Horizontal Alignment</label>
+          <div class="format-row" id="hAlignRow" style="margin-bottom:0;">
+            <button class="format-btn active" data-align="left">Left</button>
+            <button class="format-btn" data-align="center">Center</button>
+            <button class="format-btn" data-align="right">Right</button>
+          </div>
+        </div>
+      </div>
+
+      <label>Max Width (characters)</label>
+      <div class="slider-row" style="margin-bottom:0;">
+        <input type="range" id="maxWidth" min="40" max="200" value="80">
+        <span class="slider-val" id="widthVal">80</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Output</h3>
+      <div class="output-wrap">
+        <button class="copy-btn" id="copyTextAscii">Copy</button>
+        <div class="output-code" id="textOutput">ASCII art will appear here...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image to ASCII Tab -->
+  <div id="image-to-ascii" class="tab-panel">
+    <div class="card">
+      <h3>Upload Image</h3>
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-icon">&#128444;</div>
+        <div class="drop-zone-text">Drag &amp; drop an image here, or <span>click to browse</span></div>
+      </div>
+      <input type="file" class="file-input" id="imageInput" accept="image/*">
+      <img class="img-preview" id="imgPreview" alt="Preview">
+
+      <div class="options-grid">
+        <div>
+          <label>Output Width (characters)</label>
+          <div class="slider-row">
+            <input type="range" id="imgWidth" min="40" max="200" value="100">
+            <span class="slider-val" id="imgWidthVal">100</span>
+          </div>
+        </div>
+        <div>
+          <label>Character Set</label>
+          <div class="format-row" id="charsetRow" style="margin-bottom:0;">
+            <button class="format-btn active" data-charset="standard">Standard</button>
+            <button class="format-btn" data-charset="detailed">Detailed</button>
+            <button class="format-btn" data-charset="blocks">Blocks</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="toggle-row" style="margin-top:8px;">
+        <label class="toggle" style="display:inline-block;">
+          <input type="checkbox" id="invertToggle">
+          <span class="toggle-slider"></span>
+        </label>
+        <span style="font-size:0.9rem;">Invert brightness</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Output</h3>
+      <div class="output-wrap">
+        <button class="copy-btn" id="copyImgAscii">Copy</button>
+        <div class="output-code img-output" id="imgOutput">Upload an image to see ASCII art here...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="content-section">
+    <h2>About the ASCII Art Generator</h2>
+    <p>This free tool converts text and images into ASCII art directly in your browser. For text, it uses FIGlet-style fonts to render large banner-style lettering from standard text input. For images, it maps pixel brightness to ASCII characters to create a text-based representation of any photograph or graphic.</p>
+
+    <h3>Text to ASCII Art</h3>
+    <p>The text-to-ASCII converter includes five built-in fonts:</p>
+    <ul>
+      <li><strong>Standard</strong> &mdash; The classic FIGlet Standard font, the most widely recognized ASCII art font.</li>
+      <li><strong>Banner</strong> &mdash; Large block-style characters using <code>#</code> symbols, great for banners and headers.</li>
+      <li><strong>Block</strong> &mdash; Solid Unicode block characters for a bold, filled appearance.</li>
+      <li><strong>Slant</strong> &mdash; Italic-style characters that lean to the right for a dynamic look.</li>
+      <li><strong>Small</strong> &mdash; Compact ASCII art that takes up less vertical space, ideal for inline use.</li>
+    </ul>
+
+    <h3>Image to ASCII Art</h3>
+    <p>Upload any image and the tool will scale it to your chosen width, convert each pixel region to grayscale, and map the brightness to an ASCII character. Denser characters like <code>@</code> and <code>#</code> represent dark areas, while lighter characters like <code>.</code> and spaces represent bright areas.</p>
+    <p>Three character sets are available: Standard (good balance of detail), Detailed (more gradation levels for smoother output), and Blocks (uses Unicode block elements for a different aesthetic).</p>
+
+    <h3>Privacy</h3>
+    <p>All processing happens entirely in your browser. No data is sent to any server, no cookies are set, and no tracking scripts are loaded. Images are processed using the HTML Canvas API and never leave your device.</p>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="content-section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What fonts are available for text to ASCII art?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Five built-in FIGlet-style fonts are included: Standard, Banner, Block, Slant, and Small. Each creates a distinct visual style of ASCII art text.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I convert images to ASCII art?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. Switch to the "Image to ASCII" tab, upload any image (JPEG, PNG, GIF, WebP), and the tool converts it to ASCII characters using brightness mapping. You can adjust the output width, character set, and toggle inverted brightness.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my data sent to a server?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>No. All text and image processing is performed entirely in your browser using JavaScript and the Canvas API. No data ever leaves your device. There are no cookies, no analytics, and no tracking.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What characters are supported for text to ASCII?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>The built-in fonts support uppercase A-Z, lowercase a-z, digits 0-9, and basic punctuation including spaces, periods, commas, exclamation marks, question marks, hyphens, underscores, at signs, pound signs, and more.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I adjust the letter spacing?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. Use the Letter Spacing slider to increase or decrease the space between characters. A value of 0 gives tight spacing, while higher values add more columns between each letter.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What image formats are supported?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Any image format supported by your browser, including JPEG, PNG, GIF, WebP, BMP, and SVG. The image is loaded and processed locally using the HTML Canvas API.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does the image to ASCII conversion work?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>The image is scaled to the chosen width, then each pixel region is converted to a grayscale brightness value. That brightness is mapped to an ASCII character from a character ramp, where dense characters like @ represent dark pixels and sparse characters like . represent light pixels.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I copy the ASCII art output?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. Click the Copy button above the output area. The ASCII art is copied to your clipboard so you can paste it into code comments, emails, chat messages, READMEs, documentation, or social media.</p></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<canvas id="hiddenCanvas" style="display:none;"></canvas>
+
+<script>
+// ========== FIGLET FONT DATA ==========
+// Each font: object mapping characters to arrays of strings (each string is one line of the character)
+// Standard FIGlet font - full implementation
+
+const FONTS = {};
+
+FONTS.standard = (function() {
+  const font = { height: 6 };
+  const c = {};
+
+  c['A'] = [
+    "    _    ",
+    "   / \\   ",
+    "  / _ \\  ",
+    " / ___ \\ ",
+    "/_/   \\_\\",
+    "         "
+  ];
+  c['B'] = [
+    " ____  ",
+    "| __ ) ",
+    "|  _ \\ ",
+    "| |_) |",
+    "|____/ ",
+    "       "
+  ];
+  c['C'] = [
+    "  ____ ",
+    " / ___|",
+    "| |    ",
+    "| |___ ",
+    " \\____|",
+    "       "
+  ];
+  c['D'] = [
+    " ____  ",
+    "|  _ \\ ",
+    "| | | |",
+    "| |_| |",
+    "|____/ ",
+    "       "
+  ];
+  c['E'] = [
+    " _____ ",
+    "| ____|",
+    "|  _|  ",
+    "| |___ ",
+    "|_____|",
+    "       "
+  ];
+  c['F'] = [
+    " _____ ",
+    "|  ___|",
+    "| |_   ",
+    "|  _|  ",
+    "|_|    ",
+    "       "
+  ];
+  c['G'] = [
+    "  ____ ",
+    " / ___|",
+    "| |  _ ",
+    "| |_| |",
+    " \\____|",
+    "       "
+  ];
+  c['H'] = [
+    " _   _ ",
+    "| | | |",
+    "| |_| |",
+    "|  _  |",
+    "|_| |_|",
+    "       "
+  ];
+  c['I'] = [
+    " ___ ",
+    "|_ _|",
+    " | | ",
+    " | | ",
+    "|___|",
+    "     "
+  ];
+  c['J'] = [
+    "     _ ",
+    "    | |",
+    " _  | |",
+    "| |_| |",
+    " \\___/ ",
+    "       "
+  ];
+  c['K'] = [
+    " _  __",
+    "| |/ /",
+    "| ' / ",
+    "| . \\ ",
+    "|_|\\_\\",
+    "      "
+  ];
+  c['L'] = [
+    " _     ",
+    "| |    ",
+    "| |    ",
+    "| |___ ",
+    "|_____|",
+    "       "
+  ];
+  c['M'] = [
+    " __  __ ",
+    "|  \\/  |",
+    "| |\\/| |",
+    "| |  | |",
+    "|_|  |_|",
+    "        "
+  ];
+  c['N'] = [
+    " _   _ ",
+    "| \\ | |",
+    "|  \\| |",
+    "| |\\  |",
+    "|_| \\_|",
+    "       "
+  ];
+  c['O'] = [
+    "  ___  ",
+    " / _ \\ ",
+    "| | | |",
+    "| |_| |",
+    " \\___/ ",
+    "       "
+  ];
+  c['P'] = [
+    " ____  ",
+    "|  _ \\ ",
+    "| |_) |",
+    "|  __/ ",
+    "|_|    ",
+    "       "
+  ];
+  c['Q'] = [
+    "  ___  ",
+    " / _ \\ ",
+    "| | | |",
+    "| |_| |",
+    " \\__\\_\\",
+    "       "
+  ];
+  c['R'] = [
+    " ____  ",
+    "|  _ \\ ",
+    "| |_) |",
+    "|  _ < ",
+    "|_| \\_\\",
+    "       "
+  ];
+  c['S'] = [
+    " ____  ",
+    "/ ___| ",
+    "\\___ \\ ",
+    " ___) |",
+    "|____/ ",
+    "       "
+  ];
+  c['T'] = [
+    " _____ ",
+    "|_   _|",
+    "  | |  ",
+    "  | |  ",
+    "  |_|  ",
+    "       "
+  ];
+  c['U'] = [
+    " _   _ ",
+    "| | | |",
+    "| | | |",
+    "| |_| |",
+    " \\___/ ",
+    "       "
+  ];
+  c['V'] = [
+    "__     __",
+    "\\ \\   / /",
+    " \\ \\ / / ",
+    "  \\ V /  ",
+    "   \\_/   ",
+    "         "
+  ];
+  c['W'] = [
+    "__        __",
+    "\\ \\      / /",
+    " \\ \\ /\\ / / ",
+    "  \\ V  V /  ",
+    "   \\_/\\_/   ",
+    "            "
+  ];
+  c['X'] = [
+    "__  __",
+    "\\ \\/ /",
+    " \\  / ",
+    " /  \\ ",
+    "/_/\\_\\",
+    "      "
+  ];
+  c['Y'] = [
+    "__   __",
+    "\\ \\ / /",
+    " \\ V / ",
+    "  | |  ",
+    "  |_|  ",
+    "       "
+  ];
+  c['Z'] = [
+    " _____",
+    "|__  /",
+    "  / / ",
+    " / /_ ",
+    "/____|",
+    "      "
+  ];
+
+  // Lowercase
+  c['a'] = [
+    "       ",
+    "  __ _ ",
+    " / _` |",
+    "| (_| |",
+    " \\__,_|",
+    "       "
+  ];
+  c['b'] = [
+    " _     ",
+    "| |__  ",
+    "| '_ \\ ",
+    "| |_) |",
+    "|_.__/ ",
+    "       "
+  ];
+  c['c'] = [
+    "      ",
+    "  ___ ",
+    " / __|",
+    "| (__ ",
+    " \\___|",
+    "      "
+  ];
+  c['d'] = [
+    "     _ ",
+    "  __| |",
+    " / _` |",
+    "| (_| |",
+    " \\__,_|",
+    "       "
+  ];
+  c['e'] = [
+    "      ",
+    "  ___ ",
+    " / _ \\",
+    "|  __/",
+    " \\___|",
+    "      "
+  ];
+  c['f'] = [
+    "  __ ",
+    " / _|",
+    "| |_ ",
+    "|  _|",
+    "|_|  ",
+    "     "
+  ];
+  c['g'] = [
+    "       ",
+    "  __ _ ",
+    " / _` |",
+    "| (_| |",
+    " \\__, |",
+    " |___/ "
+  ];
+  c['h'] = [
+    " _     ",
+    "| |__  ",
+    "| '_ \\ ",
+    "| | | |",
+    "|_| |_|",
+    "       "
+  ];
+  c['i'] = [
+    " _ ",
+    "(_)",
+    "| |",
+    "| |",
+    "|_|",
+    "   "
+  ];
+  c['j'] = [
+    "   _ ",
+    "  (_)",
+    "  | |",
+    "  | |",
+    " _/ |",
+    "|__/ "
+  ];
+  c['k'] = [
+    " _    ",
+    "| | __",
+    "| |/ /",
+    "|   < ",
+    "|_|\\_\\",
+    "      "
+  ];
+  c['l'] = [
+    " _ ",
+    "| |",
+    "| |",
+    "| |",
+    "|_|",
+    "   "
+  ];
+  c['m'] = [
+    "           ",
+    " _ __ ___  ",
+    "| '_ ` _ \\ ",
+    "| | | | | |",
+    "|_| |_| |_|",
+    "           "
+  ];
+  c['n'] = [
+    "       ",
+    " _ __  ",
+    "| '_ \\ ",
+    "| | | |",
+    "|_| |_|",
+    "       "
+  ];
+  c['o'] = [
+    "       ",
+    "  ___  ",
+    " / _ \\ ",
+    "| (_) |",
+    " \\___/ ",
+    "       "
+  ];
+  c['p'] = [
+    "       ",
+    " _ __  ",
+    "| '_ \\ ",
+    "| |_) |",
+    "| .__/ ",
+    "|_|    "
+  ];
+  c['q'] = [
+    "       ",
+    "  __ _ ",
+    " / _` |",
+    "| (_| |",
+    " \\__, |",
+    "    |_|"
+  ];
+  c['r'] = [
+    "      ",
+    " _ __ ",
+    "| '__|",
+    "| |   ",
+    "|_|   ",
+    "      "
+  ];
+  c['s'] = [
+    "     ",
+    " ___ ",
+    "/ __|",
+    "\\__ \\",
+    "|___/",
+    "     "
+  ];
+  c['t'] = [
+    " _   ",
+    "| |_ ",
+    "| __|",
+    "| |_ ",
+    " \\__|",
+    "     "
+  ];
+  c['u'] = [
+    "       ",
+    " _   _ ",
+    "| | | |",
+    "| |_| |",
+    " \\__,_|",
+    "       "
+  ];
+  c['v'] = [
+    "       ",
+    "__   __",
+    "\\ \\ / /",
+    " \\ V / ",
+    "  \\_/  ",
+    "       "
+  ];
+  c['w'] = [
+    "          ",
+    "__      __",
+    "\\ \\ /\\ / /",
+    " \\ V  V / ",
+    "  \\_/\\_/  ",
+    "          "
+  ];
+  c['x'] = [
+    "      ",
+    "__  __",
+    "\\ \\/ /",
+    " >  < ",
+    "/_/\\_\\",
+    "      "
+  ];
+  c['y'] = [
+    "       ",
+    " _   _ ",
+    "| | | |",
+    "| |_| |",
+    " \\__, |",
+    " |___/ "
+  ];
+  c['z'] = [
+    "     ",
+    " ____",
+    "|_  /",
+    " / / ",
+    "/___|",
+    "     "
+  ];
+
+  // Numbers
+  c['0'] = [
+    "  ___  ",
+    " / _ \\ ",
+    "| | | |",
+    "| |_| |",
+    " \\___/ ",
+    "       "
+  ];
+  c['1'] = [
+    " _ ",
+    "/ |",
+    "| |",
+    "| |",
+    "|_|",
+    "   "
+  ];
+  c['2'] = [
+    " ____  ",
+    "|___ \\ ",
+    "  __) |",
+    " / __/ ",
+    "|_____|",
+    "       "
+  ];
+  c['3'] = [
+    " _____ ",
+    "|___ / ",
+    "  |_ \\ ",
+    " ___) |",
+    "|____/ ",
+    "       "
+  ];
+  c['4'] = [
+    " _  _   ",
+    "| || |  ",
+    "| || |_ ",
+    "|__   _|",
+    "   |_|  ",
+    "        "
+  ];
+  c['5'] = [
+    " ____  ",
+    "| ___| ",
+    "|___ \\ ",
+    " ___) |",
+    "|____/ ",
+    "       "
+  ];
+  c['6'] = [
+    "  __   ",
+    " / /_  ",
+    "| '_ \\ ",
+    "| (_) |",
+    " \\___/ ",
+    "       "
+  ];
+  c['7'] = [
+    " _____ ",
+    "|___  |",
+    "   / / ",
+    "  / /  ",
+    " /_/   ",
+    "       "
+  ];
+  c['8'] = [
+    "  ___  ",
+    " ( _ ) ",
+    " / _ \\ ",
+    "| (_) |",
+    " \\___/ ",
+    "       "
+  ];
+  c['9'] = [
+    "  ___  ",
+    " / _ \\ ",
+    "| (_) |",
+    " \\__, |",
+    "   /_/ ",
+    "       "
+  ];
+
+  // Punctuation
+  c[' '] = [
+    "     ",
+    "     ",
+    "     ",
+    "     ",
+    "     ",
+    "     "
+  ];
+  c['!'] = [
+    " _ ",
+    "| |",
+    "| |",
+    "|_|",
+    "(_)",
+    "   "
+  ];
+  c['?'] = [
+    " ___ ",
+    "|__ \\",
+    "  / /",
+    " |_| ",
+    " (_) ",
+    "     "
+  ];
+  c['.'] = [
+    "   ",
+    "   ",
+    "   ",
+    " _ ",
+    "(_)",
+    "   "
+  ];
+  c[','] = [
+    "   ",
+    "   ",
+    "   ",
+    " _ ",
+    "( )",
+    "|/ "
+  ];
+  c['-'] = [
+    "      ",
+    "      ",
+    " ____ ",
+    "|____|",
+    "      ",
+    "      "
+  ];
+  c['_'] = [
+    "         ",
+    "         ",
+    "         ",
+    "         ",
+    " _______ ",
+    "|_______|"
+  ];
+  c[':'] = [
+    "   ",
+    " _ ",
+    "(_)",
+    " _ ",
+    "(_)",
+    "   "
+  ];
+  c[';'] = [
+    "   ",
+    " _ ",
+    "(_)",
+    " _ ",
+    "( )",
+    "|/ "
+  ];
+  c['@'] = [
+    "   ____  ",
+    "  / __ \\ ",
+    " / / _` |",
+    "| | (_| |",
+    " \\ \\__,_|",
+    "  \\____/ "
+  ];
+  c['#'] = [
+    "   _  _   ",
+    " _| || |_ ",
+    "|_  ..  _|",
+    "|_      _|",
+    "  |_||_|  ",
+    "          "
+  ];
+  c['$'] = [
+    "  _  ",
+    " | | ",
+    "/ __|",
+    "\\__ \\",
+    "|___/",
+    " |_| "
+  ];
+  c['('] = [
+    "  __",
+    " / /",
+    "| | ",
+    "| | ",
+    "| | ",
+    " \\_\\"
+  ];
+  c[')'] = [
+    "__  ",
+    "\\ \\ ",
+    " | |",
+    " | |",
+    " | |",
+    "/_/ "
+  ];
+  c['/'] = [
+    "    __",
+    "   / /",
+    "  / / ",
+    " / /  ",
+    "/_/   ",
+    "      "
+  ];
+  c['\\'] = [
+    "__    ",
+    "\\ \\   ",
+    " \\ \\  ",
+    "  \\ \\ ",
+    "   \\_\\",
+    "      "
+  ];
+  c['+'] = [
+    "       ",
+    "   _   ",
+    " _| |_ ",
+    "|_   _|",
+    "  |_|  ",
+    "       "
+  ];
+  c['='] = [
+    "       ",
+    " _____ ",
+    "|_____|",
+    "|_____|",
+    "       ",
+    "       "
+  ];
+  c['*'] = [
+    "      ",
+    "__/\\__",
+    "\\    /",
+    "/_  _\\",
+    "  \\/  ",
+    "      "
+  ];
+  c['&'] = [
+    "  ___   ",
+    " ( _ )  ",
+    " / _ \\/ \\",
+    "| (_>  < ",
+    " \\___/\\/ ",
+    "         "
+  ];
+  c["'"] = [
+    " _ ",
+    "( )",
+    "|/ ",
+    "   ",
+    "   ",
+    "   "
+  ];
+  c['"'] = [
+    " _ _ ",
+    "( | )",
+    " V V ",
+    "     ",
+    "     ",
+    "     "
+  ];
+
+  font.chars = c;
+  return font;
+})();
+
+// Banner font - using # symbols
+FONTS.banner = (function() {
+  const font = { height: 7 };
+  const c = {};
+
+  function makeBanner(pattern) {
+    // pattern is 5x5 grid encoded as array of 5 strings of 0/1
+    return pattern.map(row => row.split('').map(ch => ch === '1' ? '##' : '  ').join(''));
+  }
+
+  const letters = {
+    'A': ['01110','10001','10001','11111','10001','10001','10001'],
+    'B': ['11110','10001','10001','11110','10001','10001','11110'],
+    'C': ['01110','10001','10000','10000','10000','10001','01110'],
+    'D': ['11100','10010','10001','10001','10001','10010','11100'],
+    'E': ['11111','10000','10000','11110','10000','10000','11111'],
+    'F': ['11111','10000','10000','11110','10000','10000','10000'],
+    'G': ['01110','10001','10000','10111','10001','10001','01110'],
+    'H': ['10001','10001','10001','11111','10001','10001','10001'],
+    'I': ['01110','00100','00100','00100','00100','00100','01110'],
+    'J': ['00111','00010','00010','00010','00010','10010','01100'],
+    'K': ['10001','10010','10100','11000','10100','10010','10001'],
+    'L': ['10000','10000','10000','10000','10000','10000','11111'],
+    'M': ['10001','11011','10101','10101','10001','10001','10001'],
+    'N': ['10001','11001','10101','10011','10001','10001','10001'],
+    'O': ['01110','10001','10001','10001','10001','10001','01110'],
+    'P': ['11110','10001','10001','11110','10000','10000','10000'],
+    'Q': ['01110','10001','10001','10001','10101','10010','01101'],
+    'R': ['11110','10001','10001','11110','10100','10010','10001'],
+    'S': ['01110','10001','10000','01110','00001','10001','01110'],
+    'T': ['11111','00100','00100','00100','00100','00100','00100'],
+    'U': ['10001','10001','10001','10001','10001','10001','01110'],
+    'V': ['10001','10001','10001','10001','01010','01010','00100'],
+    'W': ['10001','10001','10001','10101','10101','10101','01010'],
+    'X': ['10001','10001','01010','00100','01010','10001','10001'],
+    'Y': ['10001','10001','01010','00100','00100','00100','00100'],
+    'Z': ['11111','00001','00010','00100','01000','10000','11111'],
+    '0': ['01110','10001','10011','10101','11001','10001','01110'],
+    '1': ['00100','01100','00100','00100','00100','00100','01110'],
+    '2': ['01110','10001','00001','00010','00100','01000','11111'],
+    '3': ['11111','00010','00100','00010','00001','10001','01110'],
+    '4': ['00010','00110','01010','10010','11111','00010','00010'],
+    '5': ['11111','10000','11110','00001','00001','10001','01110'],
+    '6': ['00110','01000','10000','11110','10001','10001','01110'],
+    '7': ['11111','00001','00010','00100','01000','01000','01000'],
+    '8': ['01110','10001','10001','01110','10001','10001','01110'],
+    '9': ['01110','10001','10001','01111','00001','00010','01100'],
+    ' ': ['00000','00000','00000','00000','00000','00000','00000'],
+    '!': ['00100','00100','00100','00100','00100','00000','00100'],
+    '?': ['01110','10001','00001','00110','00100','00000','00100'],
+    '.': ['00000','00000','00000','00000','00000','00000','00100'],
+    ',': ['00000','00000','00000','00000','00000','00100','01000'],
+    '-': ['00000','00000','00000','11111','00000','00000','00000'],
+    ':': ['00000','00100','00000','00000','00000','00100','00000'],
+    '/': ['00001','00010','00010','00100','01000','01000','10000'],
+  };
+
+  for (const [ch, pattern] of Object.entries(letters)) {
+    c[ch] = makeBanner(pattern);
+  }
+
+  // lowercase = uppercase for banner
+  for (let i = 97; i <= 122; i++) {
+    const lower = String.fromCharCode(i);
+    const upper = String.fromCharCode(i - 32);
+    if (c[upper] && !c[lower]) c[lower] = c[upper];
+  }
+
+  font.chars = c;
+  return font;
+})();
+
+// Block font - using block elements
+FONTS.block = (function() {
+  const font = { height: 5 };
+  const c = {};
+
+  function makeBlock(pattern) {
+    return pattern.map(row => row.split('').map(ch => ch === '1' ? '\u2588\u2588' : '  ').join(''));
+  }
+
+  const letters = {
+    'A': ['01110','10001','11111','10001','10001'],
+    'B': ['11110','10001','11110','10001','11110'],
+    'C': ['01111','10000','10000','10000','01111'],
+    'D': ['11110','10001','10001','10001','11110'],
+    'E': ['11111','10000','11110','10000','11111'],
+    'F': ['11111','10000','11110','10000','10000'],
+    'G': ['01111','10000','10011','10001','01110'],
+    'H': ['10001','10001','11111','10001','10001'],
+    'I': ['11111','00100','00100','00100','11111'],
+    'J': ['00011','00001','00001','10001','01110'],
+    'K': ['10010','10100','11000','10100','10010'],
+    'L': ['10000','10000','10000','10000','11111'],
+    'M': ['10001','11011','10101','10001','10001'],
+    'N': ['10001','11001','10101','10011','10001'],
+    'O': ['01110','10001','10001','10001','01110'],
+    'P': ['11110','10001','11110','10000','10000'],
+    'Q': ['01110','10001','10101','10010','01101'],
+    'R': ['11110','10001','11110','10010','10001'],
+    'S': ['01111','10000','01110','00001','11110'],
+    'T': ['11111','00100','00100','00100','00100'],
+    'U': ['10001','10001','10001','10001','01110'],
+    'V': ['10001','10001','01010','01010','00100'],
+    'W': ['10001','10001','10101','11011','10001'],
+    'X': ['10001','01010','00100','01010','10001'],
+    'Y': ['10001','01010','00100','00100','00100'],
+    'Z': ['11111','00010','00100','01000','11111'],
+    '0': ['01110','10001','10001','10001','01110'],
+    '1': ['01100','00100','00100','00100','01110'],
+    '2': ['01110','00001','01110','10000','11111'],
+    '3': ['11110','00001','01110','00001','11110'],
+    '4': ['10010','10010','11111','00010','00010'],
+    '5': ['11111','10000','11110','00001','11110'],
+    '6': ['01110','10000','11110','10001','01110'],
+    '7': ['11111','00001','00010','00100','00100'],
+    '8': ['01110','10001','01110','10001','01110'],
+    '9': ['01110','10001','01111','00001','01110'],
+    ' ': ['00000','00000','00000','00000','00000'],
+    '!': ['00100','00100','00100','00000','00100'],
+    '?': ['01110','00001','00110','00000','00100'],
+    '.': ['00000','00000','00000','00000','00100'],
+    '-': ['00000','00000','11111','00000','00000'],
+    ',': ['00000','00000','00000','00100','01000'],
+  };
+
+  for (const [ch, pattern] of Object.entries(letters)) {
+    c[ch] = makeBlock(pattern);
+  }
+
+  for (let i = 97; i <= 122; i++) {
+    const lower = String.fromCharCode(i);
+    const upper = String.fromCharCode(i - 32);
+    if (c[upper] && !c[lower]) c[lower] = c[upper];
+  }
+
+  font.chars = c;
+  return font;
+})();
+
+// Slant font
+FONTS.slant = (function() {
+  const font = { height: 6 };
+  const c = {};
+
+  c['A'] = [
+    "   ___   ",
+    "  /   |  ",
+    " / /| |  ",
+    "/ ___ |  ",
+    "/_/  |_|  ",
+    "          "
+  ];
+  c['B'] = [
+    "   ____ ",
+    "  / __ )",
+    " / __  |",
+    "/ /_/ / ",
+    "\\____/  ",
+    "        "
+  ];
+  c['C'] = [
+    "  ______",
+    " / ____/",
+    "/ /     ",
+    "/ /___  ",
+    "\\____/  ",
+    "        "
+  ];
+  c['D'] = [
+    "   ____ ",
+    "  / __ \\",
+    " / / / /",
+    "/ /_/ / ",
+    "\\____/  ",
+    "        "
+  ];
+  c['E'] = [
+    "   ____",
+    "  / __/",
+    " / _/  ",
+    "/___/  ",
+    "       ",
+    "       "
+  ];
+  c['F'] = [
+    "   ____",
+    "  / __/",
+    " / /_  ",
+    "/__/   ",
+    "       ",
+    "       "
+  ];
+  c['G'] = [
+    "  ______",
+    " / ____/",
+    "/ / __  ",
+    "/ /_/ / ",
+    "\\____/  ",
+    "        "
+  ];
+  c['H'] = [
+    "   __  __",
+    "  / / / /",
+    " / /_/ / ",
+    "/ __  /  ",
+    "/_/ /_/  ",
+    "         "
+  ];
+  c['I'] = [
+    "   ____",
+    "  /  _/",
+    "  / /  ",
+    "_/ /   ",
+    "/___/  ",
+    "       "
+  ];
+  c['J'] = [
+    "      __",
+    "     / /",
+    " __ / / ",
+    "/ /_/ / ",
+    "\\____/  ",
+    "        "
+  ];
+  c['K'] = [
+    "   __ __",
+    "  / //_/",
+    " / ,<   ",
+    "/ /| |  ",
+    "/_/ |_| ",
+    "        "
+  ];
+  c['L'] = [
+    "   __ ",
+    "  / / ",
+    " / /  ",
+    "/ /___",
+    "\\____/",
+    "      "
+  ];
+  c['M'] = [
+    "   __  ___",
+    "  /  |/  /",
+    " / /|_/ / ",
+    "/ /  / /  ",
+    "/_/  /_/  ",
+    "          "
+  ];
+  c['N'] = [
+    "   _   __",
+    "  / | / /",
+    " /  |/ / ",
+    "/ /|  /  ",
+    "/_/ |_/  ",
+    "         "
+  ];
+  c['O'] = [
+    "  ____ ",
+    " / __ \\",
+    "/ / / /",
+    "\\____/ ",
+    "       ",
+    "       "
+  ];
+  c['P'] = [
+    "   ____ ",
+    "  / __ \\",
+    " / /_/ /",
+    "/ ____/ ",
+    "/_/     ",
+    "        "
+  ];
+  c['Q'] = [
+    "  ____ ",
+    " / __ \\",
+    "/ / / /",
+    "\\___\\_\\",
+    "       ",
+    "       "
+  ];
+  c['R'] = [
+    "   ____ ",
+    "  / __ \\",
+    " / /_/ /",
+    "/ _, _/ ",
+    "/_/ |_| ",
+    "        "
+  ];
+  c['S'] = [
+    "   ____",
+    "  / __/",
+    " _\\ \\  ",
+    "/___/  ",
+    "       ",
+    "       "
+  ];
+  c['T'] = [
+    " ______",
+    "/_  __/",
+    " / /   ",
+    "/ /    ",
+    "/_/    ",
+    "       "
+  ];
+  c['U'] = [
+    "  __  __",
+    " / / / /",
+    "/ /_/ / ",
+    "\\____/  ",
+    "        ",
+    "        "
+  ];
+  c['V'] = [
+    " _    __",
+    "| |  / /",
+    "| | / / ",
+    "|_|/_/  ",
+    "        ",
+    "        "
+  ];
+  c['W'] = [
+    " _       __",
+    "| |     / /",
+    "| | /| / / ",
+    "|__/ |__/  ",
+    "           ",
+    "           "
+  ];
+  c['X'] = [
+    "   _  __",
+    "  | |/ /",
+    " _>  <  ",
+    "/_/|_|  ",
+    "        ",
+    "        "
+  ];
+  c['Y'] = [
+    "__  __",
+    "\\ \\/ /",
+    " \\  / ",
+    " /_/  ",
+    "      ",
+    "      "
+  ];
+  c['Z'] = [
+    " _____",
+    "/__  /",
+    "  / / ",
+    " / /_ ",
+    "/____/",
+    "      "
+  ];
+
+  // lowercase = uppercase for slant
+  for (let i = 97; i <= 122; i++) {
+    const lower = String.fromCharCode(i);
+    const upper = String.fromCharCode(i - 32);
+    if (!c[lower]) c[lower] = c[upper];
+  }
+
+  // Numbers
+  c['0'] = [" ____ ","/ __ \\","\\/ / /","\\____/","      ","      "];
+  c['1'] = [" ___","/  /","/_/ ","    ","    ","    "];
+  c['2'] = [" ___ ","(__ \\","/ __/","\\___/","     ","     "];
+  c['3'] = [" ____","(__ /","_) / ","/___/","     ","     "];
+  c['4'] = [" __ __","/ // /","\\___/ ","  /_/ ","      ","      "];
+  c['5'] = [" ____","/ __/","/_  \\","/___/","     ","     "];
+  c['6'] = [" ____"," / __","/ _ \\","\\___/","     ","     "];
+  c['7'] = [" ___","/_  |"," / / ","/_/  ","     ","     "];
+  c['8'] = [" ___ "," ( _ )","\\ _ \\","\\___/","     ","     "];
+  c['9'] = [" ____","/ __ \\","\\__, /","  /_/ ","      ","      "];
+
+  c[' '] = ["     ","     ","     ","     ","     ","     "];
+  c['!'] = ["  __"," / /","/_/ "," _  ","/_/ ","    "];
+  c['?'] = [" ___ ","/ _ \\","\\___/","  _  "," /_/ ","     "];
+  c['.'] = ["   ","   ","   "," _ ","/_/","   "];
+  c[','] = ["   ","   ","   "," _ ","//","   "];
+  c['-'] = ["      ","      "," ____ ","|____|","      ","      "];
+
+  font.chars = c;
+  return font;
+})();
+
+// Small font
+FONTS.small = (function() {
+  const font = { height: 4 };
+  const c = {};
+
+  c['A'] = [" ___ ","| . |","|   |","|_|_|"];
+  c['B'] = ["___ ","|  )","| _ ","|___"];
+  c['C'] = [" ___","/ __|","| (__","\\___"];
+  c['D'] = ["___ ","|  \\","|  /","|__/"];
+  c['E'] = ["___ ","|__]","|__ ","|___"];
+  c['F'] = ["___ ","|__]","|   ","|   "];
+  c['G'] = [" __ "," / _","|  |"," \\_|"];
+  c['H'] = ["_  _","|__|","| | ","|  |"];
+  c['I'] = ["___"," | "," | ","_|_"];
+  c['J'] = [" ___","  | "," _| ","|__ "];
+  c['K'] = ["_  _","|_/ ","|\\  ","|  \\"];
+  c['L'] = ["_   ","|   ","|   ","|___"];
+  c['M'] = ["_  _","||\\/||","||  ||","|_  _|"];
+  c['N'] = ["_  _","|\\| ","|.\\| ","|  \\|"];
+  c['O'] = [" __ ","/ _\\","| | ","\\__/"];
+  c['P'] = ["___ ","|__)","|   ","|   "];
+  c['Q'] = [" __ ","/ _\\","| \\ ","\\__\\"];
+  c['R'] = ["___ ","|__)","|\\  ","| \\ "];
+  c['S'] = [" ___","/ __","\\__ ","___/"];
+  c['T'] = ["___"," | "," | "," | "];
+  c['U'] = ["_  _","| | ","| |_","\\___|"];
+  c['V'] = ["_  _","| | ","\\ / "," V  "];
+  c['W'] = ["_ _ _ ","|  V  |","\\ / / "," V V  "];
+  c['X'] = ["_  _","\\_/ ","/ \\ ","|  |"];
+  c['Y'] = ["_  _","\\ / "," |  "," |  "];
+  c['Z'] = ["____","  / "," /  ","/___|"];
+  c['0'] = [" __ ","/ _\\","|  |","\\__/"];
+  c['1'] = [" _ ","/| "," | "," |_"];
+  c['2'] = [" __ ","(_ \\","/ / ","\\___|"];
+  c['3'] = ["__ "," _)","__)","   "];
+  c['4'] = ["    ","|_| ","  | ","    "];
+  c['5'] = [" __ ","|_  ","__) ","   "];
+  c['6'] = [" __ ","/ _ ","|__ ","\\__/"];
+  c['7'] = ["___ ","  / "," /  "," /  "];
+  c['8'] = [" __ ","(_ )","/ \\","\\__/"];
+  c['9'] = [" __ ","/ _\\","\\_  ","__/ "];
+  c[' '] = ["   ","   ","   ","   "];
+  c['!'] = [" ! "," ! ","   "," . "];
+  c['?'] = [" ? ","  /","   "," . "];
+  c['.'] = ["  ","  ","  "," ."];
+  c[','] = ["  ","  ","  ",", "];
+  c['-'] = ["   ","   ","---","   "];
+
+  // lowercase = uppercase for small
+  for (let i = 97; i <= 122; i++) {
+    const lower = String.fromCharCode(i);
+    const upper = String.fromCharCode(i - 32);
+    if (c[upper] && !c[lower]) c[lower] = c[upper];
+  }
+
+  font.chars = c;
+  return font;
+})();
+
+
+// ========== TEXT TO ASCII ==========
+let currentFont = 'standard';
+let letterSpacing = 1;
+let hAlign = 'left';
+let maxWidth = 80;
+
+function textToAscii(text) {
+  const font = FONTS[currentFont];
+  if (!font) return 'Font not found';
+
+  const height = font.height;
+  const chars = font.chars;
+  const spacingStr = ' '.repeat(letterSpacing);
+
+  const lines = new Array(height).fill('');
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const glyph = chars[ch];
+    if (!glyph) {
+      // Unknown char - use space
+      const sp = chars[' '];
+      if (sp) {
+        for (let row = 0; row < height; row++) {
+          lines[row] += (sp[row] || '') + (i < text.length - 1 ? spacingStr : '');
+        }
+      }
+      continue;
+    }
+
+    for (let row = 0; row < height; row++) {
+      lines[row] += (glyph[row] || '') + (i < text.length - 1 ? spacingStr : '');
+    }
+  }
+
+  // Apply alignment
+  if (hAlign === 'center' || hAlign === 'right') {
+    const maxLen = Math.max(...lines.map(l => l.length));
+    const targetWidth = Math.max(maxLen, maxWidth);
+    return lines.map(line => {
+      const pad = targetWidth - line.length;
+      if (pad <= 0) return line;
+      if (hAlign === 'center') {
+        return ' '.repeat(Math.floor(pad / 2)) + line;
+      }
+      return ' '.repeat(pad) + line;
+    }).join('\n');
+  }
+
+  return lines.join('\n');
+}
+
+function updateTextOutput() {
+  const text = document.getElementById('textInput').value;
+  if (!text) {
+    document.getElementById('textOutput').textContent = 'Type some text to see ASCII art...';
+    return;
+  }
+  const result = textToAscii(text);
+  document.getElementById('textOutput').textContent = result;
+}
+
+// Font buttons
+document.getElementById('fontRow').querySelectorAll('.format-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('fontRow').querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFont = btn.dataset.font;
+    updateTextOutput();
+  });
+});
+
+// Alignment buttons
+document.getElementById('hAlignRow').querySelectorAll('.format-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('hAlignRow').querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    hAlign = btn.dataset.align;
+    updateTextOutput();
+  });
+});
+
+// Sliders
+document.getElementById('letterSpacing').addEventListener('input', (e) => {
+  letterSpacing = parseInt(e.target.value);
+  document.getElementById('spacingVal').textContent = letterSpacing;
+  updateTextOutput();
+});
+
+document.getElementById('maxWidth').addEventListener('input', (e) => {
+  maxWidth = parseInt(e.target.value);
+  document.getElementById('widthVal').textContent = maxWidth;
+  updateTextOutput();
+});
+
+// Live input
+document.getElementById('textInput').addEventListener('input', updateTextOutput);
+
+// Copy
+document.getElementById('copyTextAscii').addEventListener('click', () => {
+  const text = document.getElementById('textOutput').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
+});
+
+// Initial render
+updateTextOutput();
+
+
+// ========== IMAGE TO ASCII ==========
+let imgCharset = 'standard';
+let imgWidthVal = 100;
+let invertBrightness = false;
+let loadedImage = null;
+
+const charsets = {
+  standard: ' .:-=+*#%@',
+  detailed: " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$",
+  blocks: ' \u2591\u2592\u2593\u2588'
+};
+
+function imageToAscii(img, width, charset, invert) {
+  const canvas = document.getElementById('hiddenCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const aspectRatio = img.height / img.width;
+  // ASCII chars are ~2x taller than wide, so adjust
+  const height = Math.round(width * aspectRatio * 0.5);
+
+  canvas.width = width;
+  canvas.height = height;
+
+  ctx.drawImage(img, 0, 0, width, height);
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const pixels = imageData.data;
+
+  const ramp = invert ? charset.split('').reverse().join('') : charset;
+  let result = '';
+
+  for (let y = 0; y < height; y++) {
+    let line = '';
+    for (let x = 0; x < width; x++) {
+      const idx = (y * width + x) * 4;
+      const r = pixels[idx];
+      const g = pixels[idx + 1];
+      const b = pixels[idx + 2];
+      const brightness = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      const charIdx = Math.floor(brightness * (ramp.length - 1));
+      line += ramp[charIdx];
+    }
+    result += line + '\n';
+  }
+
+  return result.trimEnd();
+}
+
+function updateImageOutput() {
+  if (!loadedImage) return;
+  const cs = charsets[imgCharset] || charsets.standard;
+  const result = imageToAscii(loadedImage, imgWidthVal, cs, invertBrightness);
+  document.getElementById('imgOutput').textContent = result;
+}
+
+// Drop zone
+const dropZone = document.getElementById('dropZone');
+const imageInput = document.getElementById('imageInput');
+
+dropZone.addEventListener('click', () => imageInput.click());
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadImageFile(file);
+});
+imageInput.addEventListener('change', (e) => {
+  if (e.target.files[0]) loadImageFile(e.target.files[0]);
+});
+
+function loadImageFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      loadedImage = img;
+      const preview = document.getElementById('imgPreview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      updateImageOutput();
+      showToast('Image loaded (' + img.width + 'x' + img.height + ')');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Charset buttons
+document.getElementById('charsetRow').querySelectorAll('.format-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('charsetRow').querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    imgCharset = btn.dataset.charset;
+    updateImageOutput();
+  });
+});
+
+// Image width slider
+document.getElementById('imgWidth').addEventListener('input', (e) => {
+  imgWidthVal = parseInt(e.target.value);
+  document.getElementById('imgWidthVal').textContent = imgWidthVal;
+  updateImageOutput();
+});
+
+// Invert toggle
+document.getElementById('invertToggle').addEventListener('change', (e) => {
+  invertBrightness = e.target.checked;
+  updateImageOutput();
+});
+
+// Copy image ASCII
+document.getElementById('copyImgAscii').addEventListener('click', () => {
+  const text = document.getElementById('imgOutput').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
+});
+
+
+// ========== TABS ==========
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ========== FAQ ==========
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    q.parentElement.classList.toggle('open');
+  });
+});
+
+// ========== TOAST ==========
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
