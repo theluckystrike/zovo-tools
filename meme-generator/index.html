@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Meme Generator - Create Custom Memes Online | Zovo</title>
+<meta name="description" content="Create custom memes online for free. Upload images or use built-in templates, add text with full font controls, and download as PNG. No watermarks, no sign-up.">
+<meta name="author" content="Michael Lip">
+<link rel="canonical" href="https://tools.zovo.one/meme-generator">
+<meta property="og:title" content="Free Meme Generator - Create Custom Memes Online | Zovo">
+<meta property="og:description" content="Create custom memes instantly. Upload your own image or pick a template, add top and bottom text, customize fonts, and download as PNG. 100% free, runs in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tools.zovo.one/meme-generator">
+<meta property="og:site_name" content="Zovo">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Free Meme Generator",
+  "url": "https://tools.zovo.one/meme-generator",
+  "description": "Create custom memes online for free. Upload images or use built-in templates, add text, and download as PNG.",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zovo.one" },
+    { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://tools.zovo.one" },
+    { "@type": "ListItem", "position": 3, "name": "Meme Generator", "item": "https://tools.zovo.one/meme-generator" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is this meme generator free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, this meme generator is completely free to use. There are no hidden fees, watermarks, or premium tiers. All features including custom image upload, templates, font controls, and PNG download are available at no cost." }},
+    { "@type": "Question", "name": "Can I upload my own images?", "acceptedAnswer": { "@type": "Answer", "text": "Absolutely. You can upload any image from your device using the file picker or by dragging and dropping the image directly onto the upload area. Common formats like JPG, PNG, GIF, and WebP are all supported." }},
+    { "@type": "Question", "name": "Are memes downloaded to my device?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. When you click the download button, the meme is rendered on an HTML5 canvas and saved directly to your device as a PNG file. The image is generated entirely in your browser and never passes through any server." }},
+    { "@type": "Question", "name": "What image formats are supported?", "acceptedAnswer": { "@type": "Answer", "text": "You can upload images in JPG, JPEG, PNG, GIF, WebP, and BMP formats. The final meme is always exported as a high-quality PNG file regardless of the input format." }},
+    { "@type": "Question", "name": "Can I add more than two text areas?", "acceptedAnswer": { "@type": "Answer", "text": "The generator provides top text and bottom text fields, which covers the standard meme format. You can position each text block anywhere on the image by dragging it, giving you flexibility to place text exactly where you need it." }},
+    { "@type": "Question", "name": "Are my images stored on your servers?", "acceptedAnswer": { "@type": "Answer", "text": "No. All image processing happens entirely in your browser using the HTML5 Canvas API. Your images are never uploaded to any server. Once you close or refresh the page, the image is gone from memory." }},
+    { "@type": "Question", "name": "What font do most memes use?", "acceptedAnswer": { "@type": "Answer", "text": "Impact is the classic meme font. It has been the standard for image macros since the early days of internet memes. Its thick, condensed letterforms with strong contrast make it highly readable even on busy image backgrounds. This generator defaults to Impact but also offers Arial and Comic Sans as alternatives." }},
+    { "@type": "Question", "name": "Can I use these memes commercially?", "acceptedAnswer": { "@type": "Answer", "text": "If you use your own original images, you hold the copyright and can use the resulting memes however you wish. For memes based on popular templates, copyright depends on the source image. Many meme templates fall into a gray area of fair use. For commercial campaigns, using original photography or properly licensed images is the safest approach." }}
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0f0f0f;color:#e0e0e0;line-height:1.7;font-weight:400}
+a{color:#6C5CE7;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1000px;margin:0 auto;padding:20px 16px}
+h1{font-size:1.8rem;font-weight:500;color:#fff;margin-bottom:8px;line-height:1.3}
+h2{font-size:1.35rem;font-weight:500;color:#fff;margin:40px 0 16px}
+h3{font-size:1.1rem;font-weight:500;color:#ddd;margin:24px 0 12px}
+p{margin-bottom:16px;color:#ccc;font-weight:400}
+.breadcrumb{font-size:0.85rem;color:#888;margin-bottom:16px}
+.breadcrumb a{color:#888}
+.breadcrumb a:hover{color:#6C5CE7}
+.tool-card{background:#1a1a2e;border-radius:12px;padding:24px;margin:24px 0;border:1px solid #2a2a4a}
+.tool-layout{display:grid;grid-template-columns:1fr;gap:24px}
+@media(min-width:768px){.tool-layout{grid-template-columns:auto 320px}}
+
+/* Canvas area */
+.canvas-wrap{position:relative;background:#12122a;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:400px}
+.canvas-wrap canvas{display:block;max-width:100%;max-height:600px;cursor:crosshair}
+
+/* Upload area */
+.upload-area{border:2px dashed #3a3a5a;border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s}
+.upload-area:hover,.upload-area.dragover{border-color:#6C5CE7;background:#6C5CE710}
+.upload-area p{color:#888;margin:0;font-size:0.95rem}
+.upload-area .upload-icon{font-size:2rem;color:#6C5CE7;margin-bottom:8px;display:block}
+.upload-area input{display:none}
+
+/* Template grid */
+.template-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+@media(max-width:600px){.template-grid{grid-template-columns:repeat(3,1fr)}}
+.template-item{aspect-ratio:1;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;font-size:0.65rem;color:#fff;font-weight:400;padding:4px;transition:transform 0.15s,box-shadow 0.15s;border:2px solid transparent;line-height:1.2}
+.template-item:hover{transform:scale(1.05);box-shadow:0 0 12px #6C5CE740}
+.template-item.active{border-color:#6C5CE7}
+
+/* Controls */
+.controls-panel{display:flex;flex-direction:column;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:0.82rem;color:#aaa;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{background:#12122a;border:1px solid #333;border-radius:8px;padding:9px 12px;color:#fff;font-size:0.9rem;font-family:inherit;font-weight:400}
+.form-group textarea{resize:vertical;min-height:60px}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#6C5CE7}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.color-input{display:flex;align-items:center;gap:8px}
+.color-input input[type="color"]{width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;background:transparent;padding:0}
+.color-input input[type="color"]::-webkit-color-swatch-wrapper{padding:0}
+.color-input input[type="color"]::-webkit-color-swatch{border:1px solid #444;border-radius:4px}
+.color-input span{font-size:0.82rem;color:#aaa}
+.range-group{display:flex;flex-direction:column;gap:4px}
+.range-group label{font-size:0.82rem;color:#aaa;font-weight:500;display:flex;justify-content:space-between}
+.range-group input[type="range"]{width:100%;accent-color:#6C5CE7}
+.btn{background:#6C5CE7;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:0.9rem;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.2s}
+.btn:hover{background:#5a4bd4}
+.btn-outline{background:transparent;border:1px solid #6C5CE7;color:#6C5CE7}
+.btn-outline:hover{background:#6C5CE720}
+.btn-sm{padding:7px 14px;font-size:0.82rem}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.btn-danger{background:#e74c3c}
+.btn-danger:hover{background:#c0392b}
+.section-label{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;color:#6C5CE7;font-weight:500;margin-bottom:4px;margin-top:8px}
+.align-btns{display:flex;gap:4px}
+.align-btns button{flex:1;background:#12122a;border:1px solid #333;color:#aaa;border-radius:6px;padding:6px;cursor:pointer;font-size:0.8rem;font-family:inherit;transition:all 0.15s}
+.align-btns button.active{border-color:#6C5CE7;color:#6C5CE7;background:#6C5CE715}
+.tab-bar{display:flex;gap:4px;margin-bottom:12px}
+.tab-bar button{flex:1;background:#12122a;border:1px solid #333;color:#aaa;border-radius:8px;padding:8px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:400;transition:all 0.15s}
+.tab-bar button.active{border-color:#6C5CE7;color:#fff;background:#6C5CE720}
+.hidden{display:none}
+.faq-section{margin-top:48px}
+.faq-item{border-bottom:1px solid #222;padding:16px 0}
+.faq-q{font-weight:500;color:#fff;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-q::after{content:'+';font-size:1.2rem;color:#6C5CE7;transition:transform 0.2s}
+.faq-item.open .faq-q::after{content:'-'}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease;color:#aaa;font-weight:400}
+.faq-item.open .faq-a{max-height:600px;padding-top:12px}
+.content-section{margin-top:48px}
+.content-section p,.content-section li{color:#bbb;font-weight:400}
+.content-section ul,.content-section ol{margin:12px 0 16px 24px}
+.content-section li{margin-bottom:8px}
+footer{text-align:center;padding:40px 16px;color:#666;font-size:0.85rem;border-top:1px solid #1a1a2e;margin-top:48px}
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="breadcrumb">
+<a href="https://zovo.one">Home</a> / <a href="https://tools.zovo.one">Tools</a> / Meme Generator
+</nav>
+
+<h1>Free Meme Generator - Create Custom Memes Online</h1>
+<p>Upload an image or pick a template, add your text, customize fonts and colors, then download your meme as a PNG. Everything runs in your browser with nothing uploaded to any server.</p>
+
+<div class="tool-card">
+<!-- Upload / Templates -->
+<div class="tab-bar">
+<button class="active" onclick="showSource('upload')">Upload Image</button>
+<button onclick="showSource('templates')">Templates</button>
+</div>
+
+<div id="sourceUpload">
+<div class="upload-area" id="uploadArea">
+<span class="upload-icon">&#8682;</span>
+<p>Drag and drop an image here, or click to browse</p>
+<p style="font-size:0.8rem;color:#666;margin-top:8px">JPG, PNG, GIF, WebP supported</p>
+<input type="file" id="fileInput" accept="image/*">
+</div>
+</div>
+
+<div id="sourceTemplates" class="hidden">
+<div class="template-grid" id="templateGrid"></div>
+</div>
+
+<!-- Canvas + Controls layout -->
+<div class="tool-layout" style="margin-top:20px">
+<div>
+<div class="canvas-wrap" id="canvasWrap">
+<canvas id="memeCanvas" width="600" height="500"></canvas>
+</div>
+<div class="btn-row" style="margin-top:12px;justify-content:center">
+<button class="btn" onclick="downloadMeme()">Download PNG</button>
+<button class="btn btn-outline btn-sm" onclick="undo()">Undo</button>
+<button class="btn btn-outline btn-sm" onclick="redo()">Redo</button>
+<button class="btn btn-outline btn-sm btn-danger" onclick="resetAll()">Reset</button>
+</div>
+</div>
+
+<div class="controls-panel">
+<div class="section-label">Top Text</div>
+<div class="form-group">
+<textarea id="topText" placeholder="Enter top text..." rows="2" oninput="onTextChange()"></textarea>
+</div>
+
+<div class="section-label">Bottom Text</div>
+<div class="form-group">
+<textarea id="bottomText" placeholder="Enter bottom text..." rows="2" oninput="onTextChange()"></textarea>
+</div>
+
+<div class="section-label">Font</div>
+<div class="form-group">
+<select id="fontFamily" onchange="onTextChange()">
+<option value="Impact">Impact</option>
+<option value="Arial">Arial</option>
+<option value="Comic Sans MS">Comic Sans</option>
+</select>
+</div>
+
+<div class="range-group">
+<label>Font Size <span id="fontSizeVal">42</span>px</label>
+<input type="range" id="fontSize" min="12" max="120" value="42" oninput="document.getElementById('fontSizeVal').textContent=this.value;onTextChange()">
+</div>
+
+<div class="range-group">
+<label>Stroke Width <span id="strokeWidthVal">3</span>px</label>
+<input type="range" id="strokeWidth" min="0" max="12" value="3" oninput="document.getElementById('strokeWidthVal').textContent=this.value;onTextChange()">
+</div>
+
+<div class="form-row">
+<div class="color-input">
+<input type="color" id="fontColor" value="#ffffff" onchange="onTextChange()">
+<span>Text</span>
+</div>
+<div class="color-input">
+<input type="color" id="strokeColor" value="#000000" onchange="onTextChange()">
+<span>Stroke</span>
+</div>
+</div>
+
+<div class="section-label">Alignment</div>
+<div class="align-btns">
+<button class="active" onclick="setAlign('center',this)" data-align="center">Center</button>
+<button onclick="setAlign('left',this)" data-align="left">Left</button>
+<button onclick="setAlign('right',this)" data-align="right">Right</button>
+</div>
+
+<p style="font-size:0.75rem;color:#666;margin:8px 0 0">Drag text on the canvas to reposition.</p>
+</div>
+</div>
+</div>
+
+<div class="content-section">
+<h2>What Are Memes and Why They Matter</h2>
+<p>A meme, in the context of the internet, is a piece of media that spreads from person to person through sharing, imitation, and adaptation. The term was originally coined by evolutionary biologist Richard Dawkins in his 1976 book "The Selfish Gene" to describe units of cultural information that replicate and evolve, much like genes do in biology. Decades later, the word found its true calling as shorthand for the humorous images, videos, and text snippets that define so much of online communication.</p>
+
+<p>Memes matter because they are one of the most democratic forms of expression. Anyone with access to a computer or phone can create one. You do not need expensive software, professional design skills, or a distribution network. A well-crafted meme can reach millions of people in hours, bypassing traditional media gatekeepers entirely. They serve as a shared language among internet users, conveying complex emotions, opinions, and cultural references in a single image. Political movements use them to rally supporters. Brands use them to appear relatable. Friends use them to make each other laugh. The versatility of the meme format is what makes it so enduring.</p>
+
+<p>Internet culture runs on memes the way traditional conversation runs on idioms and references. When someone shares a "Distracted Boyfriend" meme, the audience immediately understands the dynamic of temptation and betrayal being illustrated without needing any further explanation. This shared visual vocabulary creates a sense of belonging among communities and allows people to communicate ideas with remarkable efficiency.</p>
+
+<h2>How to Create a Good Meme</h2>
+<p>Creating a meme that resonates is both simpler and more nuanced than most people expect. The technical part is straightforward: pick an image, add text, export, and share. The creative challenge lies in understanding timing, relatability, and brevity.</p>
+
+<p>Start with a clear concept. The best memes communicate a single idea or joke. If your meme needs a paragraph of explanation, it is probably too complicated. Aim for something that makes sense in under three seconds. The viewer should glance at the image, read the text, and immediately get it. That instant recognition is what makes a meme shareable.</p>
+
+<p>Relatability is the engine of virality. Memes that describe universal experiences tend to perform best. The frustration of stepping on a Lego, the anxiety of seeing your boss type and then stop typing in a chat, the eternal struggle of choosing what to eat for dinner. These scenarios resonate because almost everyone has lived them. When someone sees a meme that perfectly captures a feeling they have had but never articulated, the impulse to share it is almost involuntary.</p>
+
+<p>Keep text short. The classic meme format uses a brief setup on top and a punchline on the bottom. Some templates only need a single line. Wordiness kills memes. Every word should earn its place. If you can remove a word without losing meaning, remove it.</p>
+
+<p>Timing matters enormously. A meme about a trending topic posted within hours of the event will get far more engagement than the same meme posted a week later. Cultural moments create windows of opportunity, and the fastest creators capture the most attention. Having a meme generator bookmarked and ready to go means you can act quickly when inspiration strikes.</p>
+
+<h2>Popular Meme Formats and When to Use Them</h2>
+<p>Different meme templates serve different communicative purposes. Understanding which format fits your message helps you create more effective content.</p>
+
+<p>The Drake format (and its many variations) is ideal for expressing preferences. The top panel shows something being rejected while the bottom panel shows the preferred alternative. It works well for lighthearted comparisons and opinion statements. Distracted Boyfriend captures the moment of being tempted away from something you already have, making it perfect for illustrating misplaced priorities or fleeting interests.</p>
+
+<p>"This Is Fine" depicts calm acceptance of chaos. Use it when things are falling apart but you or someone else is pretending everything is normal. Two Buttons shows the anxiety of choosing between two options, especially when both seem equally compelling or equally bad. Change My Mind works for stating a controversial or strong opinion and inviting debate.</p>
+
+<p>Expanding Brain is structured as a progression, showing increasingly "enlightened" versions of an idea. It works for satirizing overwrought reasoning or presenting escalating absurdity. Disaster Girl features a young girl smiling in front of a burning house, and it is useful for dark humor about causing problems or enjoying chaos.</p>
+
+<p>Woman Yelling at Cat juxtaposes emotional confrontation with calm indifference. It suits situations where one party is overreacting while the other remains unbothered. One Does Not Simply comes from Lord of the Rings and prefaces something that is harder than expected. Surprised Pikachu captures a reaction to an outcome that was completely predictable. Stonks uses a misspelled word and a stock chart to comment on questionable financial or strategic decisions. Among Us references the popular game and applies to situations involving suspicion or betrayal.</p>
+
+<h2>Meme Fonts and Text Styling Tips</h2>
+<p>Impact is the font that defined an era of internet memes. Its thick, condensed letterforms with minimal spacing create text that is readable on virtually any background image. The combination of white fill and black stroke (often called the "meme text" style) has been the standard since the earliest image macro memes on forums and social media platforms.</p>
+
+<p>Using Impact with a generous stroke width (2 to 4 pixels) ensures legibility against both light and dark backgrounds. The stroke creates separation between the text and the image beneath it, which is why this combination has persisted for so long. It simply works in nearly every situation.</p>
+
+<p>Arial offers a cleaner, more modern look. It lacks the aggressive weight of Impact but reads well at smaller sizes. Some meme creators prefer it for formats that require longer text or a more understated tone. Comic Sans, despite its reputation in design circles, has a place in meme culture specifically because of its reputation. Using Comic Sans can add a layer of irony or casualness that suits certain types of humor.</p>
+
+<p>Text placement affects how the eye moves through the meme. Center-aligned text is the default for traditional top-and-bottom layouts. Left-aligned text works better when the text accompanies a specific element on the left side of the image. Right alignment is less common but can create visual balance in certain compositions.</p>
+
+<p>Font size should be proportional to the image. Text that is too small gets lost, while text that is too large overwhelms the image. As a general guideline, your text should be large enough to read on a phone screen without zooming. Most successful memes use font sizes that fill about 15 to 25 percent of the image height per text block.</p>
+
+<h2>Where to Share Memes Effectively</h2>
+<p>Different platforms have different meme cultures. Understanding these differences helps you reach the right audience and maximize engagement.</p>
+
+<p>Reddit is organized into thousands of communities (subreddits), many of which are dedicated to specific meme formats, topics, or humor styles. Posting in the right subreddit is critical. A gaming meme in a general humor subreddit may underperform, while the same meme in a gaming-specific community could reach the front page. Reddit rewards originality and timing, and reposts are generally frowned upon.</p>
+
+<p>Twitter (now X) favors memes that comment on current events, trending topics, and pop culture. The platform moves fast, and memes with topical relevance perform best. Image memes compete with text-based tweets, so visual quality and immediate impact are important.</p>
+
+<p>Instagram meme pages have massive followings. The platform favors polished visuals, but meme pages often thrive with raw, relatable content. Instagram Stories and Reels have become additional avenues for meme distribution, especially for video-based formats.</p>
+
+<p>TikTok has shifted much of meme culture toward video, but static image memes still circulate there as slideshow posts or background images in short clips. Discord servers are hubs for niche meme communities, where inside jokes and community-specific formats thrive. Facebook remains a major meme platform globally, with large meme groups serving diverse audiences.</p>
+
+<h2>Meme Marketing for Brands</h2>
+<p>Brands have increasingly adopted memes as part of their social media strategy, and the results range from brilliant to cringe-inducing. The difference usually comes down to authenticity. Audiences can detect a forced meme instantly, and the backlash from a poorly executed attempt at relatability can be worse than not trying at all.</p>
+
+<p>Successful brand memes work because the company understands its audience deeply enough to participate in their humor rather than just borrowing it. Wendy's Twitter account became famous for its roasts and meme-literate responses because the team behind it genuinely understood internet humor and spoke the language fluently. Duolingo's TikTok presence works because the brand leaned into the existing meme about the app's aggressive notifications rather than fighting it.</p>
+
+<p>For brands considering meme marketing, several principles apply. First, know your audience. A meme that works for a Gen Z audience will not resonate with a corporate B2B audience. Second, be timely but not try-hard. Responding to a trend two days late often looks worse than not responding at all. Third, never punch down. Humor at the expense of vulnerable groups will backfire. Fourth, embrace self-deprecation. The most successful brand memes involve the company making fun of itself or acknowledging its own shortcomings.</p>
+
+<p>Using a meme generator to create brand content keeps the production lightweight and authentic. Over-produced memes with corporate polish defeat the purpose. The casual, slightly rough quality of a quickly made meme is part of what makes it feel genuine.</p>
+
+<h2>Copyright Considerations for Memes</h2>
+<p>The legal status of memes exists in a gray area that has not been fully resolved by courts. Most memes use copyrighted images, whether they are movie stills, photographs, or screenshots from television shows. Strictly speaking, reproducing these images without permission could constitute copyright infringement. In practice, most meme usage falls under fair use doctrine, though this is not a guarantee.</p>
+
+<p>Fair use in the United States considers four factors: the purpose and character of the use, the nature of the copyrighted work, the amount used in relation to the whole, and the effect on the market value of the original. Memes generally fare well on the first factor because they are transformative, meaning the original image is used in a new context to create new meaning. They also typically do not affect the market value of the original work.</p>
+
+<p>However, fair use is a defense, not a right. It must be argued in court if challenged, and outcomes are unpredictable. For personal use and non-commercial sharing, the risk of a copyright claim is extremely low. Meme creators are rarely targeted by rights holders because pursuing legal action against millions of individual users is impractical and would create terrible publicity.</p>
+
+<p>For commercial use, the calculus changes. If you are creating memes to promote a product or service, using copyrighted images carries more risk. Some brands commission original artwork that mimics popular meme formats, which avoids the copyright question entirely. Others use stock images or original photography as the base for their memes. If you upload your own photographs to this generator, you own the copyright to the resulting meme and can use it however you choose.</p>
+
+<h2>The History and Evolution of Internet Memes</h2>
+<p>The history of internet memes stretches back further than most people realize. Before "meme" became synonymous with funny images, early internet culture was already producing and sharing viral content. The dancing baby animation that circulated via email in 1996 is often cited as one of the first internet memes, though it predates the common use of the term.</p>
+
+<p>The early 2000s saw the rise of forums like Something Awful and 4chan, where anonymous users created and remixed images at a rapid pace. This era produced some of the most enduring meme formats, including LOLcats (images of cats with humorous captions in broken English), Demotivational Posters (satirizing corporate motivational posters), and Rage Comics (simple hand-drawn faces expressing common emotions).</p>
+
+<p>Image macros emerged as the dominant format around 2007 to 2012. These are the classic memes featuring a character or stock photo with Impact font text at the top and bottom. Templates like Bad Luck Brian, Scumbag Steve, Overly Attached Girlfriend, and Success Kid became household names. Websites like Quickmeme and Memegenerator made it easy for anyone to create these image macros, democratizing meme production beyond the forum communities where they originated.</p>
+
+<p>The mid-2010s brought a shift toward more absurdist and surreal humor. Memes became increasingly self-referential and meta, with formats that parodied the very concept of memes. Deep-fried memes, with their intentionally degraded image quality, and expanding brain memes reflected a growing sophistication in meme literacy. The audience had internalized the language of memes so thoroughly that they could appreciate jokes about the format itself.</p>
+
+<p>Video memes exploded with the rise of Vine and later TikTok. Short video clips with reusable audio tracks created a new dimension of memetic content. However, static image memes never disappeared. They remain the fastest format to produce and consume, which ensures their continued relevance even as video platforms dominate attention.</p>
+
+<p>Today, memes evolve faster than ever. A format can go from creation to peak popularity to obsolescence in days. The cycle of creation, remixing, saturation, and replacement continues to accelerate. Artificial intelligence has introduced new possibilities, from generating meme images to creating text that mimics meme humor. The democratization that began with simple image editors has reached a point where virtually anyone with a phone can participate in meme culture with no friction at all.</p>
+
+<p>What remains constant through all these changes is the core appeal: memes distill complex feelings, observations, and cultural moments into shareable packages that create connection between strangers. They are folk art for the digital age, constantly evolving, endlessly remixable, and universally understood across languages and borders. A good meme needs nothing more than a resonant image, a few well-chosen words, and a community ready to share it.</p>
+</div>
+
+<div class="faq-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">Is this meme generator free?</div>
+<div class="faq-a">Yes, this meme generator is completely free to use. There are no hidden fees, watermarks, or premium tiers. All features including custom image upload, templates, font controls, and PNG download are available at no cost.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">Can I upload my own images?</div>
+<div class="faq-a">Absolutely. You can upload any image from your device using the file picker or by dragging and dropping the image directly onto the upload area. Common formats like JPG, PNG, GIF, and WebP are all supported.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">Are memes downloaded to my device?</div>
+<div class="faq-a">Yes. When you click the download button, the meme is rendered on an HTML5 canvas and saved directly to your device as a PNG file. The image is generated entirely in your browser and never passes through any server.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">What image formats are supported?</div>
+<div class="faq-a">You can upload images in JPG, JPEG, PNG, GIF, WebP, and BMP formats. The final meme is always exported as a high-quality PNG file regardless of the input format.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">Can I add more than two text areas?</div>
+<div class="faq-a">The generator provides top text and bottom text fields, which covers the standard meme format. You can position each text block anywhere on the image by dragging it, giving you flexibility to place text exactly where you need it.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">Are my images stored on your servers?</div>
+<div class="faq-a">No. All image processing happens entirely in your browser using the HTML5 Canvas API. Your images are never uploaded to any server. Once you close or refresh the page, the image is gone from memory.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">What font do most memes use?</div>
+<div class="faq-a">Impact is the classic meme font. Its thick, condensed letterforms with strong contrast make it highly readable even on busy image backgrounds. This generator defaults to Impact but also offers Arial and Comic Sans as alternatives.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">Can I use these memes commercially?</div>
+<div class="faq-a">If you use your own original images, you hold the copyright and can use the resulting memes however you wish. For memes based on popular templates, copyright depends on the source image. For commercial campaigns, using original photography or properly licensed images is the safest approach.</div>
+</div>
+</div>
+</div>
+
+<footer>
+Built by Michael Lip at <a href="https://zovo.one">zovo.one</a>
+</footer>
+
+<script>
+/* ============================================
+   MEME GENERATOR - All client-side
+   ============================================ */
+
+// ---- State ----
+const state = {
+  img: null,
+  topText: '',
+  bottomText: '',
+  topPos: { x: 0.5, y: 0.08 },   // normalized 0..1
+  bottomPos: { x: 0.5, y: 0.92 },
+  fontSize: 42,
+  fontFamily: 'Impact',
+  fontColor: '#ffffff',
+  strokeColor: '#000000',
+  strokeWidth: 3,
+  align: 'center',
+  canvasW: 600,
+  canvasH: 500
+};
+
+let undoStack = [];
+let redoStack = [];
+let dragging = null; // 'top' | 'bottom' | null
+let dragOffset = { x: 0, y: 0 };
+
+const canvas = document.getElementById('memeCanvas');
+const ctx = canvas.getContext('2d');
+
+// ---- Templates ----
+const templates = [
+  { name: 'Drake', color: '#d4a017' },
+  { name: 'Distracted Boyfriend', color: '#c0392b' },
+  { name: 'This Is Fine', color: '#e67e22' },
+  { name: 'Two Buttons', color: '#2980b9' },
+  { name: 'Change My Mind', color: '#27ae60' },
+  { name: 'Expanding Brain', color: '#8e44ad' },
+  { name: 'Disaster Girl', color: '#e74c3c' },
+  { name: 'Woman Yelling at Cat', color: '#f39c12' },
+  { name: 'One Does Not Simply', color: '#2c3e50' },
+  { name: 'Surprised Pikachu', color: '#f1c40f' },
+  { name: 'Stonks', color: '#1abc9c' },
+  { name: 'Among Us', color: '#e84393' }
+];
+
+function initTemplates() {
+  const grid = document.getElementById('templateGrid');
+  templates.forEach((t, i) => {
+    const div = document.createElement('div');
+    div.className = 'template-item';
+    div.style.background = t.color;
+    div.textContent = t.name;
+    div.onclick = () => selectTemplate(i, div);
+    grid.appendChild(div);
+  });
+}
+
+function selectTemplate(index, el) {
+  document.querySelectorAll('.template-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  const t = templates[index];
+  // Create a placeholder image with color + name
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = 600;
+  tmpCanvas.height = 500;
+  const tCtx = tmpCanvas.getContext('2d');
+  tCtx.fillStyle = t.color;
+  tCtx.fillRect(0, 0, 600, 500);
+  // Subtle gradient overlay
+  const grad = tCtx.createLinearGradient(0, 0, 0, 500);
+  grad.addColorStop(0, 'rgba(0,0,0,0)');
+  grad.addColorStop(1, 'rgba(0,0,0,0.3)');
+  tCtx.fillStyle = grad;
+  tCtx.fillRect(0, 0, 600, 500);
+  // Template name
+  tCtx.fillStyle = 'rgba(255,255,255,0.3)';
+  tCtx.font = '500 28px Inter, sans-serif';
+  tCtx.textAlign = 'center';
+  tCtx.textBaseline = 'middle';
+  tCtx.fillText(t.name, 300, 250);
+  // Grid pattern for visual interest
+  tCtx.strokeStyle = 'rgba(255,255,255,0.08)';
+  tCtx.lineWidth = 1;
+  for (let x = 0; x < 600; x += 40) {
+    tCtx.beginPath(); tCtx.moveTo(x, 0); tCtx.lineTo(x, 500); tCtx.stroke();
+  }
+  for (let y = 0; y < 500; y += 40) {
+    tCtx.beginPath(); tCtx.moveTo(0, y); tCtx.lineTo(600, y); tCtx.stroke();
+  }
+  const img = new Image();
+  img.onload = () => {
+    state.img = img;
+    fitCanvas(img.width, img.height);
+    render();
+  };
+  img.src = tmpCanvas.toDataURL();
+}
+
+// ---- Upload ----
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+
+uploadArea.addEventListener('click', () => fileInput.click());
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadFile(file);
+});
+fileInput.addEventListener('change', e => {
+  if (e.target.files[0]) loadFile(e.target.files[0]);
+});
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      state.img = img;
+      fitCanvas(img.width, img.height);
+      render();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function fitCanvas(imgW, imgH) {
+  const maxW = Math.min(800, window.innerWidth - 60);
+  const maxH = 600;
+  let w = imgW, h = imgH;
+  if (w > maxW) { h = h * maxW / w; w = maxW; }
+  if (h > maxH) { w = w * maxH / h; h = maxH; }
+  w = Math.round(w);
+  h = Math.round(h);
+  canvas.width = w;
+  canvas.height = h;
+  state.canvasW = w;
+  state.canvasH = h;
+}
+
+// ---- Source tabs ----
+function showSource(which) {
+  document.getElementById('sourceUpload').classList.toggle('hidden', which !== 'upload');
+  document.getElementById('sourceTemplates').classList.toggle('hidden', which !== 'templates');
+  document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ---- Text change ----
+function onTextChange() {
+  pushUndo();
+  state.topText = document.getElementById('topText').value;
+  state.bottomText = document.getElementById('bottomText').value;
+  state.fontSize = parseInt(document.getElementById('fontSize').value);
+  state.fontFamily = document.getElementById('fontFamily').value;
+  state.fontColor = document.getElementById('fontColor').value;
+  state.strokeColor = document.getElementById('strokeColor').value;
+  state.strokeWidth = parseInt(document.getElementById('strokeWidth').value);
+  render();
+}
+
+function setAlign(a, btn) {
+  state.align = a;
+  document.querySelectorAll('.align-btns button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+// ---- Undo/Redo ----
+function getSnapshot() {
+  return JSON.stringify({
+    topText: state.topText,
+    bottomText: state.bottomText,
+    topPos: { ...state.topPos },
+    bottomPos: { ...state.bottomPos },
+    fontSize: state.fontSize,
+    fontFamily: state.fontFamily,
+    fontColor: state.fontColor,
+    strokeColor: state.strokeColor,
+    strokeWidth: state.strokeWidth,
+    align: state.align
+  });
+}
+
+function applySnapshot(snap) {
+  const s = JSON.parse(snap);
+  Object.assign(state, {
+    topText: s.topText,
+    bottomText: s.bottomText,
+    topPos: s.topPos,
+    bottomPos: s.bottomPos,
+    fontSize: s.fontSize,
+    fontFamily: s.fontFamily,
+    fontColor: s.fontColor,
+    strokeColor: s.strokeColor,
+    strokeWidth: s.strokeWidth,
+    align: s.align
+  });
+  document.getElementById('topText').value = s.topText;
+  document.getElementById('bottomText').value = s.bottomText;
+  document.getElementById('fontSize').value = s.fontSize;
+  document.getElementById('fontSizeVal').textContent = s.fontSize;
+  document.getElementById('fontFamily').value = s.fontFamily;
+  document.getElementById('fontColor').value = s.fontColor;
+  document.getElementById('strokeColor').value = s.strokeColor;
+  document.getElementById('strokeWidth').value = s.strokeWidth;
+  document.getElementById('strokeWidthVal').textContent = s.strokeWidth;
+  document.querySelectorAll('.align-btns button').forEach(b => {
+    b.classList.toggle('active', b.dataset.align === s.align);
+  });
+  render();
+}
+
+let lastSnapshot = null;
+function pushUndo() {
+  const snap = getSnapshot();
+  if (snap === lastSnapshot) return;
+  undoStack.push(snap);
+  if (undoStack.length > 50) undoStack.shift();
+  redoStack = [];
+  lastSnapshot = snap;
+}
+
+function undo() {
+  if (undoStack.length === 0) return;
+  redoStack.push(getSnapshot());
+  const snap = undoStack.pop();
+  lastSnapshot = snap;
+  applySnapshot(snap);
+}
+
+function redo() {
+  if (redoStack.length === 0) return;
+  undoStack.push(getSnapshot());
+  const snap = redoStack.pop();
+  lastSnapshot = snap;
+  applySnapshot(snap);
+}
+
+// ---- Render ----
+function render() {
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  // Draw background
+  if (state.img) {
+    ctx.drawImage(state.img, 0, 0, w, h);
+  } else {
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#444';
+    ctx.font = '400 16px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Upload an image or select a template', w / 2, h / 2);
+  }
+
+  // Draw text
+  drawText(state.topText, state.topPos);
+  drawText(state.bottomText, state.bottomPos);
+}
+
+function drawText(text, pos) {
+  if (!text) return;
+  const w = canvas.width, h = canvas.height;
+  const x = pos.x * w;
+  const y = pos.y * h;
+  const fs = state.fontSize;
+
+  ctx.font = `${fs}px "${state.fontFamily}", Impact, sans-serif`;
+  ctx.textAlign = state.align;
+  ctx.textBaseline = 'middle';
+
+  // Word wrap
+  const maxWidth = w * 0.9;
+  const lines = wrapText(ctx, text.toUpperCase(), maxWidth);
+  const lineHeight = fs * 1.15;
+  const totalHeight = lines.length * lineHeight;
+  const startY = y - totalHeight / 2 + lineHeight / 2;
+
+  let alignX = x;
+  if (state.align === 'left') alignX = w * 0.05;
+  else if (state.align === 'right') alignX = w * 0.95;
+
+  lines.forEach((line, i) => {
+    const ly = startY + i * lineHeight;
+    if (state.strokeWidth > 0) {
+      ctx.strokeStyle = state.strokeColor;
+      ctx.lineWidth = state.strokeWidth * 2;
+      ctx.lineJoin = 'round';
+      ctx.miterLimit = 2;
+      ctx.strokeText(line, alignX, ly);
+    }
+    ctx.fillStyle = state.fontColor;
+    ctx.fillText(line, alignX, ly);
+  });
+}
+
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split(' ');
+  const lines = [];
+  let current = '';
+  words.forEach(word => {
+    const test = current ? current + ' ' + word : word;
+    if (ctx.measureText(test).width > maxWidth && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = test;
+    }
+  });
+  if (current) lines.push(current);
+  return lines.length ? lines : [''];
+}
+
+// ---- Drag text ----
+function getMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: (clientX - rect.left) * scaleX,
+    y: (clientY - rect.top) * scaleY
+  };
+}
+
+function hitTest(mx, my, pos, text) {
+  if (!text) return false;
+  const w = canvas.width, h = canvas.height;
+  const px = pos.x * w, py = pos.y * h;
+  const fs = state.fontSize;
+  ctx.font = `${fs}px "${state.fontFamily}", Impact, sans-serif`;
+  const lines = wrapText(ctx, text.toUpperCase(), w * 0.9);
+  const lineHeight = fs * 1.15;
+  const totalH = lines.length * lineHeight;
+  let maxLineW = 0;
+  lines.forEach(l => { maxLineW = Math.max(maxLineW, ctx.measureText(l).width); });
+  const halfW = maxLineW / 2 + 20;
+  const halfH = totalH / 2 + 10;
+  return mx > px - halfW && mx < px + halfW && my > py - halfH && my < py + halfH;
+}
+
+function onPointerDown(e) {
+  e.preventDefault();
+  const pos = getMousePos(e);
+  // Check bottom first (on top visually if overlapping)
+  if (hitTest(pos.x, pos.y, state.bottomPos, state.bottomText)) {
+    dragging = 'bottom';
+    pushUndo();
+  } else if (hitTest(pos.x, pos.y, state.topPos, state.topText)) {
+    dragging = 'top';
+    pushUndo();
+  }
+}
+
+function onPointerMove(e) {
+  if (!dragging) return;
+  e.preventDefault();
+  const pos = getMousePos(e);
+  const nx = pos.x / canvas.width;
+  const ny = pos.y / canvas.height;
+  if (dragging === 'top') {
+    state.topPos.x = Math.max(0.05, Math.min(0.95, nx));
+    state.topPos.y = Math.max(0.05, Math.min(0.95, ny));
+  } else {
+    state.bottomPos.x = Math.max(0.05, Math.min(0.95, nx));
+    state.bottomPos.y = Math.max(0.05, Math.min(0.95, ny));
+  }
+  render();
+}
+
+function onPointerUp() {
+  dragging = null;
+}
+
+canvas.addEventListener('mousedown', onPointerDown);
+canvas.addEventListener('mousemove', onPointerMove);
+canvas.addEventListener('mouseup', onPointerUp);
+canvas.addEventListener('mouseleave', onPointerUp);
+canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+canvas.addEventListener('touchmove', onPointerMove, { passive: false });
+canvas.addEventListener('touchend', onPointerUp);
+
+// ---- Download ----
+function downloadMeme() {
+  if (!state.img) {
+    alert('Please upload an image or select a template first.');
+    return;
+  }
+  // Render at full resolution
+  const tmpCanvas = document.createElement('canvas');
+  const imgW = state.img.naturalWidth || state.img.width;
+  const imgH = state.img.naturalHeight || state.img.height;
+  tmpCanvas.width = imgW;
+  tmpCanvas.height = imgH;
+  const tCtx = tmpCanvas.getContext('2d');
+  tCtx.drawImage(state.img, 0, 0, imgW, imgH);
+
+  // Scale factor
+  const scale = imgW / canvas.width;
+
+  // Draw text at full res
+  drawTextHiRes(tCtx, state.topText, state.topPos, imgW, imgH, scale);
+  drawTextHiRes(tCtx, state.bottomText, state.bottomPos, imgW, imgH, scale);
+
+  const link = document.createElement('a');
+  link.download = 'meme.png';
+  link.href = tmpCanvas.toDataURL('image/png');
+  link.click();
+}
+
+function drawTextHiRes(tCtx, text, pos, w, h, scale) {
+  if (!text) return;
+  const x = pos.x * w;
+  const y = pos.y * h;
+  const fs = state.fontSize * scale;
+
+  tCtx.font = `${fs}px "${state.fontFamily}", Impact, sans-serif`;
+  tCtx.textAlign = state.align;
+  tCtx.textBaseline = 'middle';
+
+  const maxWidth = w * 0.9;
+  const lines = wrapText(tCtx, text.toUpperCase(), maxWidth);
+  const lineHeight = fs * 1.15;
+  const totalHeight = lines.length * lineHeight;
+  const startY = y - totalHeight / 2 + lineHeight / 2;
+
+  let alignX = x;
+  if (state.align === 'left') alignX = w * 0.05;
+  else if (state.align === 'right') alignX = w * 0.95;
+
+  lines.forEach((line, i) => {
+    const ly = startY + i * lineHeight;
+    if (state.strokeWidth > 0) {
+      tCtx.strokeStyle = state.strokeColor;
+      tCtx.lineWidth = state.strokeWidth * 2 * scale;
+      tCtx.lineJoin = 'round';
+      tCtx.miterLimit = 2;
+      tCtx.strokeText(line, alignX, ly);
+    }
+    tCtx.fillStyle = state.fontColor;
+    tCtx.fillText(line, alignX, ly);
+  });
+}
+
+// ---- Reset ----
+function resetAll() {
+  pushUndo();
+  state.img = null;
+  state.topText = '';
+  state.bottomText = '';
+  state.topPos = { x: 0.5, y: 0.08 };
+  state.bottomPos = { x: 0.5, y: 0.92 };
+  state.fontSize = 42;
+  state.fontFamily = 'Impact';
+  state.fontColor = '#ffffff';
+  state.strokeColor = '#000000';
+  state.strokeWidth = 3;
+  state.align = 'center';
+  canvas.width = 600;
+  canvas.height = 500;
+  state.canvasW = 600;
+  state.canvasH = 500;
+  document.getElementById('topText').value = '';
+  document.getElementById('bottomText').value = '';
+  document.getElementById('fontSize').value = 42;
+  document.getElementById('fontSizeVal').textContent = '42';
+  document.getElementById('fontFamily').value = 'Impact';
+  document.getElementById('fontColor').value = '#ffffff';
+  document.getElementById('strokeColor').value = '#000000';
+  document.getElementById('strokeWidth').value = 3;
+  document.getElementById('strokeWidthVal').textContent = '3';
+  document.querySelectorAll('.align-btns button').forEach(b => {
+    b.classList.toggle('active', b.dataset.align === 'center');
+  });
+  document.querySelectorAll('.template-item').forEach(e => e.classList.remove('active'));
+  fileInput.value = '';
+  render();
+}
+
+// ---- Init ----
+initTemplates();
+lastSnapshot = getSnapshot();
+render();
+</script>
+</body>
+</html>
