@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary to Text Converter - Convert Binary & Text Online | Free Tool</title>
+<meta name="description" content="Convert between binary, text, hexadecimal, octal, and decimal (ASCII). Auto-detect input, character breakdown table, Unicode support. Free, private, runs in your browser.">
+<meta name="keywords" content="binary to text, text to binary, binary converter, hex converter, octal converter, ASCII converter, binary translator, text to hex, hex to text, unicode converter">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/binary-text-converter">
+
+<meta property="og:title" content="Binary to Text Converter - Convert Binary & Text Online | Zovo Tools">
+<meta property="og:description" content="Convert between binary, text, hex, octal, and decimal formats. Auto-detect input type with character breakdown. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/binary-text-converter">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Binary to Text Converter - Convert Binary & Text Online | Zovo Tools">
+<meta name="twitter:description" content="Convert between binary, text, hex, octal, and decimal. Auto-detect, character breakdown, Unicode support. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Binary to Text Converter",
+  "description": "Convert between binary, text, hexadecimal, octal, and decimal (ASCII codes). Auto-detect input type with character-by-character breakdown.",
+  "url": "https://tools.zovo.one/binary-text-converter",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with JavaScript enabled"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is binary encoding?", "acceptedAnswer": {"@type": "Answer", "text": "Binary encoding represents data using only two digits: 0 and 1. Each character in text is converted to its ASCII or Unicode code point, then expressed as a sequence of binary digits (bits). For example, the letter 'A' has ASCII code 65, which is 01000001 in binary."}},
+    {"@type": "Question", "name": "How does text to binary conversion work?", "acceptedAnswer": {"@type": "Answer", "text": "Each character in the text is converted to its Unicode code point (a number), which is then represented in binary (base-2). Standard ASCII characters use 8 bits (one byte), while extended Unicode characters may use more bits. The binary values for each character are separated by spaces for readability."}},
+    {"@type": "Question", "name": "What is the difference between binary, hex, octal, and decimal?", "acceptedAnswer": {"@type": "Answer", "text": "These are different number bases for representing the same values. Binary is base-2 (digits 0-1), octal is base-8 (digits 0-7), decimal is base-10 (digits 0-9), and hexadecimal is base-16 (digits 0-9 and A-F). Each can represent character codes: 'A' is 01000001 in binary, 101 in octal, 65 in decimal, and 41 in hex."}},
+    {"@type": "Question", "name": "Does this tool support Unicode characters?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. This converter supports the full Unicode character set, including emojis, CJK characters, and special symbols. Each character is converted using its Unicode code point, which may require more than 8 bits for characters outside the basic ASCII range."}},
+    {"@type": "Question", "name": "Is my data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All conversions are performed entirely in your browser using JavaScript. No data is ever transmitted to any server. You can verify this by disconnecting from the internet and confirming the tool continues to work."}},
+    {"@type": "Question", "name": "How does auto-detection work?", "acceptedAnswer": {"@type": "Answer", "text": "The tool analyzes your input to determine its format. If the input contains only 0s, 1s, and spaces, it is detected as binary. If it matches hexadecimal patterns (0-9, A-F with spaces), it is detected as hex. Octal (0-7 with spaces) and decimal patterns are also recognized. Otherwise, the input is treated as plain text."}},
+    {"@type": "Question", "name": "What is the character breakdown table?", "acceptedAnswer": {"@type": "Answer", "text": "The breakdown table shows each character from your input alongside its ASCII/Unicode code point, binary representation, hexadecimal value, and octal value. This provides a comprehensive view of how each character is encoded across all number systems simultaneously."}},
+    {"@type": "Question", "name": "Can I convert large amounts of text?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The converter handles text of any length, processing it character by character in your browser. Live conversion updates as you type, and the breakdown table is generated for the entire input. For very large inputs, the breakdown table may be truncated for performance."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"], select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus, select:focus {
+  border-color: var(--accent);
+}
+textarea { resize: vertical; min-height: 100px; }
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+/* Mode selector */
+.mode-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.mode-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mode-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.mode-btn:not(.active):hover { color: var(--text); border-color: var(--text-muted); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Detected badge */
+.detected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+/* Results */
+.results { margin-top: 20px; }
+.result-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.result-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.result-value {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.88rem;
+  word-break: break-all;
+  color: var(--text);
+  user-select: all;
+  line-height: 1.5;
+}
+.copy-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Breakdown table */
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+.breakdown-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--border);
+  background: var(--surface);
+}
+.breakdown-table td {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+.breakdown-table td:first-child {
+  font-family: var(--font);
+  font-weight: 600;
+  color: #fff;
+  font-size: 1rem;
+}
+.breakdown-table tr:hover td {
+  background: var(--surface2);
+}
+.breakdown-table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .mode-grid { gap: 6px; }
+  .tabs { flex-wrap: wrap; }
+  .tab-btn { font-size: 0.82rem; padding: 10px 8px; }
+  .breakdown-table td, .breakdown-table th { padding: 6px 8px; font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>Binary</span> Text Converter</h1>
+    <p>Convert between text, binary, hexadecimal, octal, and decimal (ASCII codes). Auto-detect input format, view character breakdowns, and convert in real time &mdash; all privately in your browser.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="convert">Convert</button>
+    <button class="tab-btn" data-tab="bulk">Bulk Convert</button>
+    <button class="tab-btn" data-tab="breakdown">Breakdown</button>
+  </div>
+
+  <!-- Convert Tab -->
+  <div id="convert" class="tab-panel active">
+    <div class="card">
+      <h3>Conversion Mode</h3>
+      <div class="mode-grid" id="modeGrid">
+        <button class="mode-btn active" data-mode="auto">Auto-Detect</button>
+        <button class="mode-btn" data-mode="text-to-binary">Text &rarr; Binary</button>
+        <button class="mode-btn" data-mode="binary-to-text">Binary &rarr; Text</button>
+        <button class="mode-btn" data-mode="text-to-hex">Text &rarr; Hex</button>
+        <button class="mode-btn" data-mode="hex-to-text">Hex &rarr; Text</button>
+        <button class="mode-btn" data-mode="text-to-octal">Text &rarr; Octal</button>
+        <button class="mode-btn" data-mode="octal-to-text">Octal &rarr; Text</button>
+        <button class="mode-btn" data-mode="text-to-decimal">Text &rarr; Decimal</button>
+        <button class="mode-btn" data-mode="decimal-to-text">Decimal &rarr; Text</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Input</h3>
+      <div id="detectedBadge" class="detected-badge" style="display:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Detected: <span id="detectedType">Text</span>
+      </div>
+      <textarea id="mainInput" placeholder="Enter text, binary (01001000 01101001), hex (48 69), octal (110 151), or decimal (72 105)..." rows="4"></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="convertBtn">Convert</button>
+        <button class="btn btn-secondary" id="swapBtn">&#8645; Swap</button>
+        <button class="btn btn-secondary" id="clearBtn">Clear</button>
+      </div>
+    </div>
+
+    <div id="convertResults" class="results"></div>
+  </div>
+
+  <!-- Bulk Convert Tab -->
+  <div id="bulk" class="tab-panel">
+    <div class="card">
+      <h3>Bulk Convert</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Convert multiple lines at once. Each line is converted independently.</p>
+      <label>Convert From</label>
+      <div class="mode-grid" id="bulkFromGrid" style="margin-bottom:16px;">
+        <button class="mode-btn active" data-mode="text">Text</button>
+        <button class="mode-btn" data-mode="binary">Binary</button>
+        <button class="mode-btn" data-mode="hex">Hex</button>
+        <button class="mode-btn" data-mode="octal">Octal</button>
+        <button class="mode-btn" data-mode="decimal">Decimal</button>
+      </div>
+      <label>Convert To</label>
+      <div class="mode-grid" id="bulkToGrid" style="margin-bottom:16px;">
+        <button class="mode-btn" data-mode="text">Text</button>
+        <button class="mode-btn active" data-mode="binary">Binary</button>
+        <button class="mode-btn" data-mode="hex">Hex</button>
+        <button class="mode-btn" data-mode="octal">Octal</button>
+        <button class="mode-btn" data-mode="decimal">Decimal</button>
+      </div>
+      <textarea id="bulkInput" placeholder="Enter one item per line..." rows="6"></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="bulkConvertBtn">Convert All</button>
+        <button class="btn btn-secondary" id="bulkClearBtn">Clear</button>
+      </div>
+    </div>
+    <div id="bulkResults" class="results"></div>
+  </div>
+
+  <!-- Breakdown Tab -->
+  <div id="breakdown" class="tab-panel">
+    <div class="card">
+      <h3>Character Breakdown</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Enter text to see the binary, hex, octal, and decimal representation of each character.</p>
+      <textarea id="breakdownInput" placeholder="Type or paste text here..." rows="3"></textarea>
+    </div>
+    <div id="breakdownResults" class="results"></div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2>Understanding Binary and Text Encoding</h2>
+    <p>At the most fundamental level, all digital data is stored and processed as sequences of binary digits &mdash; zeros and ones. Every character you type, every image you view, and every sound you hear on a digital device is ultimately represented in binary. Understanding how text is encoded into binary and other number systems is foundational to computer science, programming, networking, and cybersecurity.</p>
+    <p>This Binary to Text Converter provides a comprehensive toolkit for converting between text and four major number systems: binary (base-2), hexadecimal (base-16), octal (base-8), and decimal (base-10). All conversions happen instantly in your browser with full Unicode support, making it useful for developers, students, and anyone curious about how data encoding works.</p>
+
+    <h3>ASCII and Unicode Character Encoding</h3>
+    <p>ASCII (American Standard Code for Information Interchange) is the foundational character encoding standard, assigning numeric values 0 through 127 to English letters, digits, punctuation marks, and control characters. For example, the uppercase letter 'A' is assigned the value 65, which is <code>01000001</code> in binary, <code>41</code> in hexadecimal, and <code>101</code> in octal. ASCII uses 7 bits per character, allowing exactly 128 unique characters.</p>
+    <p>Unicode extends this concept to encompass virtually every writing system in the world, including Chinese, Japanese, Korean, Arabic, Hindi, emojis, and thousands of special symbols. Unicode assigns a unique code point to each character, and encoding schemes like UTF-8 determine how those code points are stored as bytes. UTF-8 is backward-compatible with ASCII &mdash; the first 128 Unicode code points are identical to ASCII values. This tool processes text using Unicode code points, supporting the full range of characters you might encounter.</p>
+
+    <h3>Number Systems Explained</h3>
+    <p><strong>Binary (Base-2)</strong> uses only the digits 0 and 1. Each digit is called a bit, and 8 bits form a byte. Binary is the native language of computers because digital circuits operate in two states: on (1) and off (0). While binary is verbose (the letter 'A' requires 8 digits), it directly represents how data is stored in memory and transmitted over networks.</p>
+    <p><strong>Hexadecimal (Base-16)</strong> uses digits 0-9 and letters A-F, where A=10, B=11, through F=15. Hex is widely used in programming because each hex digit maps exactly to 4 binary digits, making it a compact and readable representation of binary data. Memory addresses, color codes (#FF0088), MAC addresses, and raw data dumps are commonly expressed in hexadecimal.</p>
+    <p><strong>Octal (Base-8)</strong> uses digits 0-7 and was historically important in computing when systems used 12-bit, 24-bit, or 36-bit word sizes (all divisible by 3). Octal is still used today in Unix file permissions (e.g., <code>chmod 755</code>) and in some programming languages as a number literal format (prefixed with 0 in C/C++).</p>
+    <p><strong>Decimal (Base-10)</strong> is the number system humans use daily. In the context of text encoding, decimal values refer to the ASCII or Unicode code point of each character. Viewing text as decimal numbers provides the most intuitive understanding of character encoding for most people.</p>
+
+    <h3>Practical Applications</h3>
+    <p>Binary and text conversion skills are essential across many domains. Developers regularly encounter hex-encoded data in APIs, network packets, and debugging sessions. System administrators use octal notation for file permissions. Security professionals analyze binary data in malware analysis and forensics. Students learning computer science need to understand how data moves between human-readable text and machine-readable binary.</p>
+    <p>This tool's auto-detection feature analyzes your input to determine its format automatically. It recognizes binary strings (sequences of 0s and 1s separated by spaces), hexadecimal values (groups of hex digits), octal values (groups of digits 0-7), and decimal ASCII codes. When the format is ambiguous, you can explicitly select the conversion mode to ensure accurate results.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What is binary encoding?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Binary encoding represents data using only two digits: 0 and 1. Each character in text is converted to its ASCII or Unicode code point, then expressed as a sequence of binary digits (bits). For example, the letter 'A' has ASCII code 65, which is 01000001 in binary. Binary is the fundamental language of all digital computers and forms the basis of every other encoding system.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does text to binary conversion work?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Each character in the text is converted to its Unicode code point (a number), which is then represented in binary (base-2). Standard ASCII characters use 8 bits (one byte), while extended Unicode characters may use more bits to accommodate their larger code point values. The binary values for each character are separated by spaces for readability.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between binary, hex, octal, and decimal?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>These are different number bases for representing the same values. Binary is base-2 (digits 0-1), octal is base-8 (digits 0-7), decimal is base-10 (digits 0-9), and hexadecimal is base-16 (digits 0-9 and A-F). Each can represent character codes: the letter 'A' is 01000001 in binary, 101 in octal, 65 in decimal, and 41 in hex. They are all interchangeable representations of the same underlying value.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does this tool support Unicode characters?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes, fully. This converter supports the entire Unicode character set, including emojis, CJK characters, Arabic, Cyrillic, and every other script defined in Unicode. Each character is converted using its Unicode code point, which may require more than 8 bits for characters outside the basic ASCII range (code points above 127).</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my data sent to a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No, absolutely not. All conversions are performed entirely within your web browser using JavaScript. No data is ever transmitted to any server. The tool works completely offline &mdash; you can disconnect from the internet and it will continue to function normally. Your text and data remain completely private on your device.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does auto-detection work?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The tool analyzes your input to determine its format. If the input contains only 0s, 1s, and spaces with groups of consistent length, it is detected as binary. If it matches hexadecimal patterns (groups of characters using only 0-9 and A-F), it is detected as hex. Octal (digits 0-7 only) and decimal (numeric codes separated by spaces) patterns are also recognized. If none of these patterns match, the input is treated as plain text for encoding.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the character breakdown table?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The breakdown table displays each character from your input alongside its ASCII or Unicode code point, binary representation, hexadecimal value, and octal value. This gives you a comprehensive, side-by-side view of how each individual character is encoded across all four number systems simultaneously. It is especially useful for learning, debugging, and understanding character encoding at a granular level.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I convert large amounts of text?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. The converter handles text of any practical length, processing it character by character in your browser. Live conversion updates as you type for real-time feedback. The character breakdown table is generated for the entire input. For very large inputs (over 1,000 characters), the breakdown table display may be limited for performance, but the conversion itself will still process the full input.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </footer>
+</div>
+
+<script>
+// ========== Conversion Functions ==========
+function textToBinary(text) {
+  return [...text].map(ch => {
+    const code = ch.codePointAt(0);
+    const bits = code.toString(2);
+    return bits.padStart(code > 127 ? Math.ceil(bits.length / 8) * 8 : 8, '0');
+  }).join(' ');
+}
+
+function binaryToText(binary) {
+  const parts = binary.trim().split(/\s+/);
+  let result = '';
+  for (const part of parts) {
+    if (!/^[01]+$/.test(part)) return '[Invalid binary]';
+    const code = parseInt(part, 2);
+    result += String.fromCodePoint(code);
+  }
+  return result;
+}
+
+function textToHex(text) {
+  return [...text].map(ch => {
+    const code = ch.codePointAt(0);
+    return code.toString(16).toUpperCase().padStart(2, '0');
+  }).join(' ');
+}
+
+function hexToText(hex) {
+  const parts = hex.trim().split(/\s+/);
+  let result = '';
+  for (const part of parts) {
+    if (!/^[0-9a-fA-F]+$/.test(part)) return '[Invalid hex]';
+    const code = parseInt(part, 16);
+    result += String.fromCodePoint(code);
+  }
+  return result;
+}
+
+function textToOctal(text) {
+  return [...text].map(ch => {
+    const code = ch.codePointAt(0);
+    return code.toString(8).padStart(3, '0');
+  }).join(' ');
+}
+
+function octalToText(octal) {
+  const parts = octal.trim().split(/\s+/);
+  let result = '';
+  for (const part of parts) {
+    if (!/^[0-7]+$/.test(part)) return '[Invalid octal]';
+    const code = parseInt(part, 8);
+    result += String.fromCodePoint(code);
+  }
+  return result;
+}
+
+function textToDecimal(text) {
+  return [...text].map(ch => ch.codePointAt(0)).join(' ');
+}
+
+function decimalToText(decimal) {
+  const parts = decimal.trim().split(/\s+/);
+  let result = '';
+  for (const part of parts) {
+    if (!/^\d+$/.test(part)) return '[Invalid decimal]';
+    const code = parseInt(part, 10);
+    result += String.fromCodePoint(code);
+  }
+  return result;
+}
+
+// ========== Auto-Detection ==========
+function detectInputType(input) {
+  const trimmed = input.trim();
+  if (!trimmed) return 'text';
+  const parts = trimmed.split(/\s+/);
+  // Binary: all groups are 0s and 1s, at least 2 chars per group
+  if (parts.every(p => /^[01]{2,}$/.test(p)) && parts.length > 0) return 'binary';
+  // Hex: all groups are hex chars, exactly 2 chars per group (common pattern)
+  if (parts.every(p => /^[0-9a-fA-F]{2,}$/.test(p)) && parts.some(p => /[a-fA-F]/i.test(p))) return 'hex';
+  // Octal: all groups are 0-7, 3 chars per group
+  if (parts.every(p => /^[0-7]{3}$/.test(p))) return 'octal';
+  // Decimal: all groups are plain numbers, reasonable ASCII range
+  if (parts.every(p => /^\d+$/.test(p)) && parts.every(p => parseInt(p) <= 1114111)) {
+    // Check if this looks like codes (multiple groups) vs just a number string
+    if (parts.length >= 2) return 'decimal';
+  }
+  return 'text';
+}
+
+// ========== Mode management ==========
+let currentMode = 'auto';
+
+function setupModeGrid(gridId) {
+  const grid = document.getElementById(gridId);
+  grid.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      grid.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (gridId === 'modeGrid') {
+        currentMode = btn.dataset.mode;
+        doLiveConvert();
+      }
+    });
+  });
+}
+setupModeGrid('modeGrid');
+setupModeGrid('bulkFromGrid');
+setupModeGrid('bulkToGrid');
+
+function getActiveMode(gridId) {
+  const active = document.querySelector(`#${gridId} .mode-btn.active`);
+  return active ? active.dataset.mode : 'text';
+}
+
+// ========== Core Convert ==========
+function convertInput(input, mode) {
+  if (mode === 'auto') {
+    const detected = detectInputType(input);
+    return { detected, results: convertFromDetected(input, detected) };
+  }
+  const results = {};
+  switch (mode) {
+    case 'text-to-binary':
+      results.binary = textToBinary(input);
+      break;
+    case 'binary-to-text':
+      results.text = binaryToText(input);
+      break;
+    case 'text-to-hex':
+      results.hex = textToHex(input);
+      break;
+    case 'hex-to-text':
+      results.text = hexToText(input);
+      break;
+    case 'text-to-octal':
+      results.octal = textToOctal(input);
+      break;
+    case 'octal-to-text':
+      results.text = octalToText(input);
+      break;
+    case 'text-to-decimal':
+      results.decimal = textToDecimal(input);
+      break;
+    case 'decimal-to-text':
+      results.text = decimalToText(input);
+      break;
+  }
+  return { detected: null, results };
+}
+
+function convertFromDetected(input, type) {
+  const results = {};
+  if (type === 'text') {
+    results.binary = textToBinary(input);
+    results.hex = textToHex(input);
+    results.octal = textToOctal(input);
+    results.decimal = textToDecimal(input);
+  } else if (type === 'binary') {
+    results.text = binaryToText(input);
+    if (!results.text.startsWith('[')) {
+      results.hex = textToHex(results.text);
+      results.octal = textToOctal(results.text);
+      results.decimal = textToDecimal(results.text);
+    }
+  } else if (type === 'hex') {
+    results.text = hexToText(input);
+    if (!results.text.startsWith('[')) {
+      results.binary = textToBinary(results.text);
+      results.octal = textToOctal(results.text);
+      results.decimal = textToDecimal(results.text);
+    }
+  } else if (type === 'octal') {
+    results.text = octalToText(input);
+    if (!results.text.startsWith('[')) {
+      results.binary = textToBinary(results.text);
+      results.hex = textToHex(results.text);
+      results.decimal = textToDecimal(results.text);
+    }
+  } else if (type === 'decimal') {
+    results.text = decimalToText(input);
+    if (!results.text.startsWith('[')) {
+      results.binary = textToBinary(results.text);
+      results.hex = textToHex(results.text);
+      results.octal = textToOctal(results.text);
+    }
+  }
+  return results;
+}
+
+// ========== Rendering ==========
+const labelMap = {
+  text: 'Text',
+  binary: 'Binary',
+  hex: 'Hexadecimal',
+  octal: 'Octal',
+  decimal: 'Decimal (ASCII)'
+};
+
+function renderResults(data, containerId) {
+  const container = document.getElementById(containerId);
+  const badge = document.getElementById('detectedBadge');
+  const detectedSpan = document.getElementById('detectedType');
+
+  if (data.detected && containerId === 'convertResults') {
+    badge.style.display = 'inline-flex';
+    detectedSpan.textContent = labelMap[data.detected] || data.detected;
+  } else if (containerId === 'convertResults') {
+    badge.style.display = 'none';
+  }
+
+  let html = '';
+  for (const [key, value] of Object.entries(data.results)) {
+    html += `<div class="result-item">
+      <button class="copy-btn" onclick="copyResult(this, '${key}')">Copy</button>
+      <div class="result-label">${labelMap[key] || key}</div>
+      <div class="result-value" data-key="${key}">${escapeHtml(value)}</div>
+    </div>`;
+  }
+  container.innerHTML = html;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function copyResult(btn, key) {
+  const valueEl = btn.parentElement.querySelector('.result-value');
+  navigator.clipboard.writeText(valueEl.textContent).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 1500);
+  });
+}
+
+// ========== Live conversion ==========
+function doLiveConvert() {
+  const input = document.getElementById('mainInput').value;
+  if (!input.trim()) {
+    document.getElementById('convertResults').innerHTML = '';
+    document.getElementById('detectedBadge').style.display = 'none';
+    return;
+  }
+  const data = convertInput(input, currentMode);
+  renderResults(data, 'convertResults');
+}
+
+document.getElementById('mainInput').addEventListener('input', doLiveConvert);
+
+document.getElementById('convertBtn').addEventListener('click', doLiveConvert);
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('mainInput').value = '';
+  document.getElementById('convertResults').innerHTML = '';
+  document.getElementById('detectedBadge').style.display = 'none';
+});
+
+// ========== Swap ==========
+document.getElementById('swapBtn').addEventListener('click', () => {
+  const resultsEl = document.getElementById('convertResults');
+  const firstResult = resultsEl.querySelector('.result-value');
+  if (firstResult) {
+    document.getElementById('mainInput').value = firstResult.textContent;
+    doLiveConvert();
+  }
+});
+
+// ========== Bulk Convert ==========
+document.getElementById('bulkConvertBtn').addEventListener('click', () => {
+  const input = document.getElementById('bulkInput').value;
+  if (!input.trim()) return;
+
+  const fromType = getActiveMode('bulkFromGrid');
+  const toType = getActiveMode('bulkToGrid');
+  const lines = input.split('\n').filter(l => l.trim());
+
+  let html = '';
+  lines.forEach((line, i) => {
+    let result = '';
+    try {
+      // First convert to text if needed
+      let text = line;
+      if (fromType === 'binary') text = binaryToText(line);
+      else if (fromType === 'hex') text = hexToText(line);
+      else if (fromType === 'octal') text = octalToText(line);
+      else if (fromType === 'decimal') text = decimalToText(line);
+
+      // Then convert from text to target
+      if (toType === 'text') result = text;
+      else if (toType === 'binary') result = textToBinary(text);
+      else if (toType === 'hex') result = textToHex(text);
+      else if (toType === 'octal') result = textToOctal(text);
+      else if (toType === 'decimal') result = textToDecimal(text);
+    } catch (e) {
+      result = '[Error: Invalid input]';
+    }
+
+    html += `<div class="result-item">
+      <button class="copy-btn" onclick="copyResult(this, 'bulk-${i}')">Copy</button>
+      <div class="result-label">Line ${i + 1}</div>
+      <div class="result-value" data-key="bulk-${i}">${escapeHtml(result)}</div>
+    </div>`;
+  });
+
+  document.getElementById('bulkResults').innerHTML = html;
+});
+
+document.getElementById('bulkClearBtn').addEventListener('click', () => {
+  document.getElementById('bulkInput').value = '';
+  document.getElementById('bulkResults').innerHTML = '';
+});
+
+// ========== Breakdown Tab ==========
+function renderBreakdown(text) {
+  const container = document.getElementById('breakdownResults');
+  if (!text) { container.innerHTML = ''; return; }
+
+  const chars = [...text];
+  const displayLimit = 1000;
+  const limited = chars.length > displayLimit;
+  const display = limited ? chars.slice(0, displayLimit) : chars;
+
+  let html = '<div class="card"><h3>Character-by-Character Breakdown</h3>';
+  html += '<div class="breakdown-table-wrap"><table class="breakdown-table">';
+  html += '<thead><tr><th>Char</th><th>Code Point</th><th>Binary</th><th>Hex</th><th>Octal</th></tr></thead><tbody>';
+
+  display.forEach(ch => {
+    const code = ch.codePointAt(0);
+    const bin = code.toString(2).padStart(code > 127 ? Math.ceil(code.toString(2).length / 8) * 8 : 8, '0');
+    const hex = code.toString(16).toUpperCase().padStart(2, '0');
+    const oct = code.toString(8).padStart(3, '0');
+    const displayChar = code < 32 ? '&#x' + code.toString(16) + ';' : escapeHtml(ch);
+    html += `<tr><td>${displayChar}</td><td>${code}</td><td>${bin}</td><td>${hex}</td><td>${oct}</td></tr>`;
+  });
+
+  html += '</tbody></table></div>';
+  if (limited) {
+    html += `<p style="color:var(--text-muted); font-size:0.85rem; margin-top:12px;">Showing first ${displayLimit} of ${chars.length} characters.</p>`;
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+document.getElementById('breakdownInput').addEventListener('input', function() {
+  renderBreakdown(this.value);
+});
+
+// ========== Tab Switching ==========
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ========== FAQ Toggle ==========
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    q.parentElement.classList.toggle('open');
+  });
+});
+</script>
+
+</body>
+</html>
