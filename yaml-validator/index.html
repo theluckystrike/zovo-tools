@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAML Validator & Formatter - Validate YAML Online | Free Tool</title>
+<meta name="description" content="Validate, format, and convert YAML online. YAML to JSON conversion, JSON to YAML, syntax highlighting, multi-document support, and error detection with line numbers. Free, private, runs entirely in your browser.">
+<meta name="keywords" content="YAML validator, YAML formatter, YAML to JSON, JSON to YAML, YAML parser, YAML beautifier, YAML online tool, YAML lint, YAML checker, YAML converter">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/yaml-validator">
+
+<meta property="og:title" content="YAML Validator & Formatter - Validate YAML Online | Zovo Tools">
+<meta property="og:description" content="Validate, format, and convert YAML data. YAML to JSON, JSON to YAML, multi-document support, and clear error messages. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/yaml-validator">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="YAML Validator & Formatter - Validate YAML Online | Zovo Tools">
+<meta name="twitter:description" content="Validate, format, and convert YAML data with clear error messages and line numbers. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "YAML Validator & Formatter",
+  "description": "Validate, format, and convert YAML data online. YAML to JSON and JSON to YAML conversion with syntax highlighting and multi-document support.",
+  "url": "https://tools.zovo.one/yaml-validator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with JavaScript support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is YAML?", "acceptedAnswer": {"@type": "Answer", "text": "YAML (YAML Ain't Markup Language) is a human-readable data serialization format commonly used for configuration files and data exchange. It uses indentation to represent structure, making it clean and easy to read compared to formats like XML or JSON."}},
+    {"@type": "Question", "name": "Is my YAML data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All YAML parsing, validation, and conversion is performed entirely in your browser using the js-yaml library. No data ever leaves your device."}},
+    {"@type": "Question", "name": "What is the difference between YAML and JSON?", "acceptedAnswer": {"@type": "Answer", "text": "YAML is a superset of JSON and supports comments, multi-line strings, anchors/aliases, and uses indentation instead of braces. JSON is stricter, requires quotes around keys, and does not support comments. Both are used for data interchange."}},
+    {"@type": "Question", "name": "What is multi-document YAML?", "acceptedAnswer": {"@type": "Answer", "text": "YAML supports multiple documents in a single file, separated by three dashes (---). This is commonly used in Kubernetes manifests, CI/CD pipelines, and other configuration scenarios where multiple related configurations are stored together."}},
+    {"@type": "Question", "name": "How does the validator detect errors?", "acceptedAnswer": {"@type": "Answer", "text": "The validator uses the js-yaml library to parse your YAML. When a syntax error is found, it provides the exact line number, column, and a descriptive error message including a snippet of the problematic area to help you quickly identify and fix the issue."}},
+    {"@type": "Question", "name": "Can I convert between YAML and JSON?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The tool supports both YAML to JSON and JSON to YAML conversion. Paste YAML in the input and convert to JSON, or paste JSON and convert it to properly formatted YAML."}},
+    {"@type": "Question", "name": "Does YAML support comments?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, YAML supports single-line comments using the hash symbol (#). Comments can appear at the end of a line or on their own line. Note that comments are lost when converting to JSON, as JSON does not support comments."}},
+    {"@type": "Question", "name": "What YAML features are supported?", "acceptedAnswer": {"@type": "Answer", "text": "The tool supports all standard YAML 1.2 features including mappings, sequences, scalars, multi-line strings (literal and folded), anchors and aliases, tags, multi-document files, and all standard data types."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --yellow: #ffcc00;
+  --blue: #66aaff;
+  --purple: #cc88ff;
+  --orange: #ff9944;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus {
+  border-color: var(--accent);
+}
+textarea {
+  resize: vertical;
+  min-height: 220px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.toolbar .btn { padding: 8px 14px; font-size: 0.82rem; }
+.toolbar-sep {
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+/* File drop zone */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone-icon { font-size: 2rem; margin-bottom: 8px; }
+.drop-zone-text { color: var(--text-muted); font-size: 0.95rem; }
+.drop-zone-text span { color: var(--accent); font-weight: 500; }
+.file-input { display: none; }
+
+/* Status bar */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.82rem;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.status-valid { color: var(--green); font-weight: 600; }
+.status-invalid { color: var(--red); font-weight: 600; }
+.status-bar .size-info { color: var(--text-muted); }
+
+/* Output panels */
+.output-panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  max-height: 500px;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  white-space: pre;
+  tab-size: 2;
+  position: relative;
+}
+.output-panel.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  color: var(--text-muted);
+  font-family: var(--font);
+  white-space: normal;
+  text-align: center;
+}
+
+/* Syntax highlighting */
+.sy-key { color: var(--blue); }
+.sy-string { color: var(--green); }
+.sy-number { color: var(--orange); }
+.sy-boolean { color: var(--purple); }
+.sy-null { color: var(--red); font-style: italic; }
+.sy-comment { color: #666680; font-style: italic; }
+.sy-separator { color: var(--yellow); font-weight: 700; }
+.sy-anchor { color: var(--purple); }
+.sy-tag { color: var(--text-muted); }
+
+/* Line numbers */
+.lined-output {
+  display: flex;
+}
+.line-numbers {
+  color: var(--text-muted);
+  text-align: right;
+  padding-right: 16px;
+  margin-right: 16px;
+  border-right: 1px solid var(--border);
+  user-select: none;
+  min-width: 32px;
+  opacity: 0.5;
+  font-size: 0.8rem;
+}
+.line-content {
+  flex: 1;
+  overflow-x: auto;
+}
+
+/* Error display */
+.error-box {
+  background: rgba(255,68,102,0.1);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  color: var(--red);
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.error-box .error-title {
+  font-family: var(--font);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+.error-box .error-location {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  margin-top: 8px;
+}
+.error-snippet {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 6px;
+  white-space: pre;
+  overflow-x: auto;
+}
+.error-snippet .error-line {
+  background: rgba(255,68,102,0.2);
+  display: block;
+}
+
+/* Structure panel */
+.structure-tree {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.struct-node { padding-left: 18px; }
+.struct-node.root { padding-left: 0; }
+.struct-key { color: var(--blue); }
+.struct-type { color: var(--text-muted); font-size: 0.78rem; margin-left: 6px; }
+.struct-bracket { color: var(--text-muted); }
+
+/* Template cards */
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.template-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.template-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.template-card h4 {
+  color: #fff;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+.template-card p {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+/* Split pane for conversion */
+.split-pane {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.split-pane textarea {
+  min-height: 280px;
+}
+@media (max-width: 700px) {
+  .split-pane { grid-template-columns: 1fr; }
+}
+.pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.pane-header label { margin-bottom: 0; font-weight: 600; color: #fff; font-size: 0.9rem; }
+.pane-header .btn { padding: 5px 12px; font-size: 0.78rem; }
+
+/* Multi-doc badges */
+.doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.doc-badge:hover { background: var(--accent); color: #0a0a0f; }
+.doc-badge.active { background: var(--accent); color: #0a0a0f; }
+
+/* Copy toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--accent);
+  color: #0a0a0f;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 1000;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .toolbar { gap: 6px; }
+  .container { padding: 0 12px; }
+  .template-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>YAML</span> Validator &amp; Formatter</h1>
+    <p>Validate, format, and convert YAML data with clear error messages, syntax highlighting, and multi-document support &mdash; all running privately in your browser.</p>
+  </header>
+
+  <!-- Main Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="validate">Validate &amp; Format</button>
+    <button class="tab-btn" data-tab="convert">YAML &harr; JSON</button>
+    <button class="tab-btn" data-tab="templates">Examples</button>
+  </div>
+
+  <!-- ===== VALIDATE & FORMAT TAB ===== -->
+  <div id="validate" class="tab-panel active">
+    <div class="card">
+      <h3>Input YAML</h3>
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-icon">&#128194;</div>
+        <div class="drop-zone-text">Drag &amp; drop a YAML file or <span>click to browse</span></div>
+        <input type="file" class="file-input" id="fileInput" accept=".yml,.yaml,.txt">
+      </div>
+      <textarea id="yamlInput" placeholder="Paste your YAML here..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="validateBtn">Validate</button>
+        <button class="btn btn-secondary" id="formatBtn">Format / Beautify</button>
+        <button class="btn btn-secondary" id="clearBtn">Clear</button>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="status-bar" id="statusBar" style="display:none;">
+      <div id="statusText"></div>
+      <div class="size-info" id="sizeInfo"></div>
+    </div>
+
+    <!-- Error display -->
+    <div id="errorBox" class="error-box" style="display:none;"></div>
+
+    <!-- Toolbar -->
+    <div class="toolbar" id="toolbar" style="display:none;">
+      <button class="btn btn-secondary btn-sm" id="copyYamlBtn">Copy YAML</button>
+      <button class="btn btn-secondary btn-sm" id="downloadYamlBtn">Download YAML</button>
+      <div class="toolbar-sep"></div>
+      <button class="btn btn-secondary btn-sm" id="toJsonBtn">Convert to JSON</button>
+      <div class="toolbar-sep"></div>
+      <button class="btn btn-secondary btn-sm" id="showStructBtn">Document Structure</button>
+    </div>
+
+    <!-- Multi-doc selector -->
+    <div id="docSelector" style="display:none; margin-bottom:16px;"></div>
+
+    <!-- Output panel with syntax highlighting -->
+    <div id="outputPanel" class="output-panel" style="display:none;"></div>
+
+    <!-- Structure panel -->
+    <div id="structPanel" class="card" style="display:none;">
+      <h3>Document Structure</h3>
+      <div id="structTree" class="structure-tree"></div>
+    </div>
+  </div>
+
+  <!-- ===== CONVERT TAB ===== -->
+  <div id="convert" class="tab-panel">
+    <div class="card">
+      <h3>YAML &harr; JSON Converter</h3>
+      <div class="split-pane">
+        <div>
+          <div class="pane-header">
+            <label>YAML</label>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-secondary btn-sm" id="copyLeftBtn">Copy</button>
+              <button class="btn btn-secondary btn-sm" id="clearLeftBtn">Clear</button>
+            </div>
+          </div>
+          <textarea id="convertYaml" placeholder="Paste YAML here..."></textarea>
+        </div>
+        <div>
+          <div class="pane-header">
+            <label>JSON</label>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-secondary btn-sm" id="copyRightBtn">Copy</button>
+              <button class="btn btn-secondary btn-sm" id="clearRightBtn">Clear</button>
+            </div>
+          </div>
+          <textarea id="convertJson" placeholder="Paste JSON here..."></textarea>
+        </div>
+      </div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-primary" id="yamlToJsonBtn">YAML &rarr; JSON</button>
+        <button class="btn btn-primary" id="jsonToYamlBtn">JSON &rarr; YAML</button>
+      </div>
+      <div id="convertError" class="error-box" style="display:none; margin-top:16px;"></div>
+    </div>
+  </div>
+
+  <!-- ===== TEMPLATES TAB ===== -->
+  <div id="templates" class="tab-panel">
+    <div class="card">
+      <h3>Common YAML Examples &amp; Templates</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:12px;">Click a template to load it into the validator.</p>
+      <div class="template-grid" id="templateGrid"></div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2>Understanding YAML &mdash; YAML Ain't Markup Language</h2>
+    <p>YAML is a human-friendly data serialization language that has become the standard for configuration files across the software industry. From Docker Compose and Kubernetes manifests to GitHub Actions workflows and Ansible playbooks, YAML's clean syntax and readability make it the preferred choice for DevOps, infrastructure-as-code, and application configuration.</p>
+    <p>Our YAML Validator &amp; Formatter provides a comprehensive suite of tools for working with YAML data. Validate your YAML for syntax errors with precise line numbers, format and beautify documents, convert between YAML and JSON, and explore document structure &mdash; all entirely within your browser with no data ever leaving your device.</p>
+
+    <h3>YAML Syntax Basics</h3>
+    <p>YAML uses indentation (spaces, never tabs) to represent structure. Key-value pairs are written as <code>key: value</code>, lists use a dash prefix <code>- item</code>, and nested structures are indented further. YAML supports strings, numbers, booleans (<code>true</code>/<code>false</code>), null values, and dates. Comments begin with a hash symbol (<code>#</code>) and extend to the end of the line.</p>
+
+    <h3>Multi-Document YAML</h3>
+    <p>A single YAML file can contain multiple documents separated by three dashes (<code>---</code>). This is widely used in Kubernetes where a single manifest file might define a Deployment, Service, and ConfigMap together. The optional document end marker (<code>...</code>) explicitly marks the end of a document but is rarely used in practice.</p>
+
+    <h3>YAML vs. JSON</h3>
+    <p>While YAML is technically a superset of JSON (meaning valid JSON is also valid YAML), the two formats serve different purposes. YAML excels in human-authored configuration files thanks to its clean syntax, comment support, and multi-line string handling. JSON is better suited for machine-generated data, API responses, and scenarios where strictness and universal parsing support are priorities. Our converter tool makes it easy to move between the two formats.</p>
+
+    <h3>Common YAML Pitfalls</h3>
+    <p>The most common YAML errors include inconsistent indentation, using tabs instead of spaces, forgetting to quote strings that look like other types (e.g., <code>yes</code> being interpreted as a boolean), and incorrect nesting levels. Our validator catches these errors and provides clear messages with line numbers to help you fix them quickly.</p>
+
+    <h3>Advanced YAML Features</h3>
+    <p>YAML supports anchors (<code>&amp;name</code>) and aliases (<code>*name</code>) for reusing content within a document, reducing duplication. Multi-line strings can be written using literal block scalars (<code>|</code>) which preserve line breaks, or folded block scalars (<code>&gt;</code>) which fold line breaks into spaces. Tags allow explicit type specification, and merge keys (<code>&lt;&lt;:</code>) enable inheritance-like patterns in configuration files.</p>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="content-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <div class="faq-q">What is YAML?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>YAML (YAML Ain't Markup Language) is a human-readable data serialization format commonly used for configuration files and data exchange. It uses indentation to represent structure, making it clean and easy to read compared to formats like XML or JSON.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my YAML data sent to a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. All YAML parsing, validation, and conversion is performed entirely in your browser using the js-yaml library. No data ever leaves your device, ensuring complete privacy for sensitive configuration files.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between YAML and JSON?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>YAML is a superset of JSON and supports comments, multi-line strings, anchors/aliases, and uses indentation instead of braces. JSON is stricter, requires quotes around keys, and does not support comments. YAML is preferred for human-authored configuration, while JSON is better for machine-generated data.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is multi-document YAML?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>YAML supports multiple documents in a single file, separated by three dashes (---). This is commonly used in Kubernetes manifests, CI/CD pipelines, and other configuration scenarios where multiple related configurations are stored together.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does the validator detect errors?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The validator uses the js-yaml library to parse your YAML. When a syntax error is found, it provides the exact line number, column position, and a descriptive error message including a snippet of the problematic area to help you quickly identify and fix the issue.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I convert between YAML and JSON?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. Use the YAML-to-JSON converter tab to paste YAML and get formatted JSON, or paste JSON and convert it to properly formatted YAML. Note that YAML comments are lost during conversion since JSON does not support comments.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does YAML support comments?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes, YAML supports single-line comments using the hash symbol (#). Comments can appear at the end of a line or on their own line. They are useful for documenting configuration files but are lost when converting to JSON.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What YAML features are supported?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The tool supports all standard YAML 1.2 features including mappings, sequences, scalars, multi-line strings (literal and folded block scalars), anchors and aliases, tags, multi-document files, and all standard data types including strings, numbers, booleans, null, dates, and nested structures.</p></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </div>
+</footer>
+
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ---- State ----
+  let parsedDocs = [];
+  let activeDocIndex = 0;
+  let structVisible = false;
+
+  // ---- DOM helpers ----
+  const $ = id => document.getElementById(id);
+  const showToast = (msg) => {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  };
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ---- Tab switching ----
+  document.querySelectorAll('.tabs .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabs = btn.closest('.tabs');
+      tabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      $(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---- FAQ toggles ----
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+  });
+
+  // ---- File upload ----
+  const dropZone = $('dropZone');
+  const fileInput = $('fileInput');
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files.length) loadFile(fileInput.files[0]); });
+
+  function loadFile(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      $('yamlInput').value = e.target.result;
+      validateYaml();
+    };
+    reader.readAsText(file);
+  }
+
+  // ---- Validate ----
+  $('validateBtn').addEventListener('click', validateYaml);
+  $('clearBtn').addEventListener('click', () => {
+    $('yamlInput').value = '';
+    parsedDocs = [];
+    hideOutput();
+  });
+
+  // Ctrl/Cmd+Enter shortcut
+  $('yamlInput').addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); validateYaml(); }
+  });
+
+  function validateYaml() {
+    const input = $('yamlInput').value.trim();
+    if (!input) { hideOutput(); return; }
+
+    try {
+      parsedDocs = jsyaml.loadAll(input);
+      // Filter out undefined docs (empty docs between separators)
+      parsedDocs = parsedDocs.filter(d => d !== undefined);
+      if (parsedDocs.length === 0) parsedDocs = [null];
+      activeDocIndex = 0;
+
+      showValid(input);
+    } catch (err) {
+      showInvalid(err, input);
+    }
+  }
+
+  function showValid(input) {
+    $('errorBox').style.display = 'none';
+    $('statusBar').style.display = 'flex';
+    $('toolbar').style.display = 'flex';
+    $('outputPanel').style.display = 'block';
+
+    const lines = input.split('\n').length;
+    $('statusText').innerHTML = `<span class="status-valid">Valid YAML</span> &mdash; ${parsedDocs.length} document${parsedDocs.length > 1 ? 's' : ''}`;
+    $('sizeInfo').textContent = `${lines} lines | ${input.length} chars`;
+
+    // Multi-doc selector
+    if (parsedDocs.length > 1) {
+      $('docSelector').style.display = 'block';
+      renderDocSelector();
+    } else {
+      $('docSelector').style.display = 'none';
+    }
+
+    renderFormattedOutput();
+  }
+
+  function renderDocSelector() {
+    const container = $('docSelector');
+    container.innerHTML = '';
+    parsedDocs.forEach((doc, i) => {
+      const badge = document.createElement('span');
+      badge.className = 'doc-badge' + (i === activeDocIndex ? ' active' : '');
+      badge.textContent = `Document ${i + 1}`;
+      badge.addEventListener('click', () => {
+        activeDocIndex = i;
+        renderDocSelector();
+        renderFormattedOutput();
+        if (structVisible) renderStructure();
+      });
+      container.appendChild(badge);
+    });
+  }
+
+  function renderFormattedOutput() {
+    const panel = $('outputPanel');
+    const doc = parsedDocs[activeDocIndex];
+    const yaml = jsyaml.dump(doc, { indent: 2, lineWidth: -1, noRefs: true, sortKeys: false });
+    panel.innerHTML = highlightYaml(yaml);
+    panel.classList.remove('empty-state');
+  }
+
+  function highlightYaml(yaml) {
+    const lines = yaml.split('\n');
+    const lineNums = lines.map((_, i) => i + 1).join('\n');
+    const highlighted = lines.map(line => highlightYamlLine(line)).join('\n');
+    return `<div class="lined-output"><div class="line-numbers">${lineNums}</div><div class="line-content">${highlighted}</div></div>`;
+  }
+
+  function highlightYamlLine(line) {
+    if (!line.trim()) return '';
+
+    // Comments
+    const commentIdx = findCommentIndex(line);
+    let main = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
+    let comment = commentIdx >= 0 ? line.substring(commentIdx) : '';
+
+    let result = '';
+
+    // Document separator
+    if (/^---/.test(main.trim()) || /^\.\.\./.test(main.trim())) {
+      return `<span class="sy-separator">${escapeHtml(main)}</span>${comment ? `<span class="sy-comment">${escapeHtml(comment)}</span>` : ''}`;
+    }
+
+    // Key: value pair
+    const kvMatch = main.match(/^(\s*)([\w\-\.\/][^:]*?)(:)(\s*)(.*)/);
+    if (kvMatch) {
+      const [, indent, key, colon, space, value] = kvMatch;
+      result += escapeHtml(indent);
+      result += `<span class="sy-key">${escapeHtml(key)}</span>`;
+      result += escapeHtml(colon + space);
+      result += highlightValue(value);
+    }
+    // List item
+    else if (/^\s*-\s/.test(main)) {
+      const match = main.match(/^(\s*-\s*)(.*)/);
+      if (match) {
+        result += escapeHtml(match[1]);
+        // Check if it's a key-value within list
+        const innerKv = match[2].match(/^([\w\-\.\/][^:]*?)(:)(\s*)(.*)/);
+        if (innerKv) {
+          const [, key, colon, space, value] = innerKv;
+          result += `<span class="sy-key">${escapeHtml(key)}</span>`;
+          result += escapeHtml(colon + space);
+          result += highlightValue(value);
+        } else {
+          result += highlightValue(match[2]);
+        }
+      }
+    }
+    // Anchor/alias
+    else if (/^\s*[&*]/.test(main)) {
+      result += `<span class="sy-anchor">${escapeHtml(main)}</span>`;
+    }
+    else {
+      result += highlightValue(main);
+    }
+
+    if (comment) {
+      result += `<span class="sy-comment">${escapeHtml(comment)}</span>`;
+    }
+
+    return result;
+  }
+
+  function highlightValue(val) {
+    if (!val) return '';
+    val = val.trim();
+    if (!val) return '';
+
+    const escaped = escapeHtml(val);
+
+    // Quoted strings
+    if (/^(['"]).*\1$/.test(val)) return `<span class="sy-string">${escaped}</span>`;
+    // Boolean
+    if (/^(true|false|yes|no|on|off|True|False|Yes|No|On|Off|TRUE|FALSE|YES|NO|ON|OFF)$/.test(val)) return `<span class="sy-boolean">${escaped}</span>`;
+    // Null
+    if (/^(null|~|Null|NULL)$/.test(val)) return `<span class="sy-null">${escaped}</span>`;
+    // Number
+    if (/^-?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(val) || /^0x[0-9a-fA-F]+$/.test(val) || /^0o[0-7]+$/.test(val)) return `<span class="sy-number">${escaped}</span>`;
+    // Anchor/alias
+    if (/^[&*]/.test(val)) return `<span class="sy-anchor">${escaped}</span>`;
+    // Tag
+    if (/^!/.test(val)) return `<span class="sy-tag">${escaped}</span>`;
+    // Block scalar indicators
+    if (/^[|>]/.test(val)) return `<span class="sy-string">${escaped}</span>`;
+
+    // Plain string
+    return `<span class="sy-string">${escaped}</span>`;
+  }
+
+  function findCommentIndex(line) {
+    // Find # that is not inside a quoted string
+    let inSingle = false, inDouble = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === "'" && !inDouble) inSingle = !inSingle;
+      else if (ch === '"' && !inSingle) inDouble = !inDouble;
+      else if (ch === '#' && !inSingle && !inDouble && (i === 0 || line[i-1] === ' ')) return i;
+    }
+    return -1;
+  }
+
+  function showInvalid(err, input) {
+    $('statusBar').style.display = 'flex';
+    $('toolbar').style.display = 'none';
+    $('outputPanel').style.display = 'none';
+    $('docSelector').style.display = 'none';
+    $('structPanel').style.display = 'none';
+
+    $('statusText').innerHTML = '<span class="status-invalid">Invalid YAML</span>';
+    $('sizeInfo').textContent = `${input.split('\n').length} lines | ${input.length} chars`;
+
+    const errorBox = $('errorBox');
+    errorBox.style.display = 'block';
+
+    let html = `<div class="error-title">YAML Syntax Error</div>`;
+    html += escapeHtml(err.message || String(err));
+
+    if (err.mark) {
+      html += `<div class="error-location">Line ${err.mark.line + 1}, Column ${err.mark.column + 1}</div>`;
+
+      // Show snippet
+      const lines = input.split('\n');
+      const errLine = err.mark.line;
+      const start = Math.max(0, errLine - 2);
+      const end = Math.min(lines.length, errLine + 3);
+      let snippet = '';
+      for (let i = start; i < end; i++) {
+        const lineNum = String(i + 1).padStart(4, ' ');
+        const prefix = i === errLine ? '>' : ' ';
+        const cls = i === errLine ? ' class="error-line"' : '';
+        snippet += `<span${cls}>${prefix} ${lineNum} | ${escapeHtml(lines[i])}\n</span>`;
+      }
+      html += `<div class="error-snippet">${snippet}</div>`;
+    }
+
+    errorBox.innerHTML = html;
+  }
+
+  function hideOutput() {
+    $('statusBar').style.display = 'none';
+    $('toolbar').style.display = 'none';
+    $('errorBox').style.display = 'none';
+    $('outputPanel').style.display = 'none';
+    $('docSelector').style.display = 'none';
+    $('structPanel').style.display = 'none';
+    structVisible = false;
+  }
+
+  // ---- Format / Beautify ----
+  $('formatBtn').addEventListener('click', () => {
+    const input = $('yamlInput').value.trim();
+    if (!input) return;
+    try {
+      const docs = jsyaml.loadAll(input).filter(d => d !== undefined);
+      if (docs.length === 0) return;
+      const formatted = docs.map(d => jsyaml.dump(d, { indent: 2, lineWidth: -1, noRefs: true })).join('---\n');
+      $('yamlInput').value = formatted;
+      parsedDocs = docs;
+      activeDocIndex = 0;
+      showValid(formatted);
+      showToast('Formatted!');
+    } catch (err) {
+      showInvalid(err, input);
+    }
+  });
+
+  // ---- Toolbar actions ----
+  $('copyYamlBtn').addEventListener('click', () => {
+    const doc = parsedDocs[activeDocIndex];
+    const yaml = jsyaml.dump(doc, { indent: 2, lineWidth: -1, noRefs: true });
+    navigator.clipboard.writeText(yaml).then(() => showToast('YAML copied!'));
+  });
+
+  $('downloadYamlBtn').addEventListener('click', () => {
+    let content;
+    if (parsedDocs.length > 1) {
+      content = parsedDocs.map(d => jsyaml.dump(d, { indent: 2, lineWidth: -1, noRefs: true })).join('---\n');
+    } else {
+      content = jsyaml.dump(parsedDocs[0], { indent: 2, lineWidth: -1, noRefs: true });
+    }
+    const blob = new Blob([content], { type: 'text/yaml' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'data.yaml';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('Downloaded!');
+  });
+
+  $('toJsonBtn').addEventListener('click', () => {
+    if (!parsedDocs.length) return;
+    const doc = parsedDocs[activeDocIndex];
+    const json = JSON.stringify(doc, null, 2);
+    navigator.clipboard.writeText(json).then(() => showToast('JSON copied to clipboard!'));
+  });
+
+  // ---- Structure view ----
+  $('showStructBtn').addEventListener('click', () => {
+    structVisible = !structVisible;
+    if (structVisible) {
+      $('structPanel').style.display = 'block';
+      renderStructure();
+    } else {
+      $('structPanel').style.display = 'none';
+    }
+  });
+
+  function renderStructure() {
+    const tree = $('structTree');
+    const doc = parsedDocs[activeDocIndex];
+    tree.innerHTML = buildStructure(doc, '', true);
+  }
+
+  function buildStructure(val, key, isRoot) {
+    let html = '';
+    const type = getType(val);
+    const indent = isRoot ? 'root' : '';
+
+    if (type === 'object') {
+      const keys = Object.keys(val);
+      const label = key ? `<span class="struct-key">${escapeHtml(key)}</span>` : 'root';
+      html += `<div class="struct-node ${indent}">${label}<span class="struct-type">object (${keys.length} keys)</span>`;
+      keys.forEach(k => { html += buildStructure(val[k], k, false); });
+      html += '</div>';
+    } else if (type === 'array') {
+      const label = key ? `<span class="struct-key">${escapeHtml(key)}</span>` : 'root';
+      html += `<div class="struct-node ${indent}">${label}<span class="struct-type">array (${val.length} items)</span>`;
+      val.forEach((item, i) => { html += buildStructure(item, `[${i}]`, false); });
+      html += '</div>';
+    } else {
+      html += `<div class="struct-node"><span class="struct-key">${escapeHtml(key || 'value')}</span><span class="struct-type">${type}</span></div>`;
+    }
+    return html;
+  }
+
+  function getType(val) {
+    if (val === null || val === undefined) return 'null';
+    if (Array.isArray(val)) return 'array';
+    if (val instanceof Date) return 'date';
+    return typeof val;
+  }
+
+  // ---- Convert Tab ----
+  $('yamlToJsonBtn').addEventListener('click', () => {
+    const yamlInput = $('convertYaml').value.trim();
+    if (!yamlInput) return;
+    $('convertError').style.display = 'none';
+    try {
+      const docs = jsyaml.loadAll(yamlInput).filter(d => d !== undefined);
+      if (docs.length === 0) { $('convertJson').value = 'null'; return; }
+      if (docs.length === 1) {
+        $('convertJson').value = JSON.stringify(docs[0], null, 2);
+      } else {
+        $('convertJson').value = JSON.stringify(docs, null, 2);
+      }
+      showToast('Converted to JSON!');
+    } catch (err) {
+      $('convertError').style.display = 'block';
+      $('convertError').innerHTML = `<div class="error-title">YAML Error</div>${escapeHtml(err.message)}`;
+    }
+  });
+
+  $('jsonToYamlBtn').addEventListener('click', () => {
+    const jsonInput = $('convertJson').value.trim();
+    if (!jsonInput) return;
+    $('convertError').style.display = 'none';
+    try {
+      const data = JSON.parse(jsonInput);
+      $('convertYaml').value = jsyaml.dump(data, { indent: 2, lineWidth: -1, noRefs: true });
+      showToast('Converted to YAML!');
+    } catch (err) {
+      $('convertError').style.display = 'block';
+      $('convertError').innerHTML = `<div class="error-title">JSON Error</div>${escapeHtml(err.message)}`;
+    }
+  });
+
+  $('copyLeftBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText($('convertYaml').value).then(() => showToast('YAML copied!'));
+  });
+  $('copyRightBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText($('convertJson').value).then(() => showToast('JSON copied!'));
+  });
+  $('clearLeftBtn').addEventListener('click', () => { $('convertYaml').value = ''; });
+  $('clearRightBtn').addEventListener('click', () => { $('convertJson').value = ''; });
+
+  // ---- Templates ----
+  const templates = [
+    {
+      name: 'Docker Compose',
+      desc: 'Multi-container Docker application',
+      yaml: `version: "3.8"
+
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    depends_on:
+      - api
+
+  api:
+    build: ./api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret123
+
+volumes:
+  db_data:`
+    },
+    {
+      name: 'Kubernetes Deployment',
+      desc: 'K8s Deployment + Service manifest',
+      yaml: `apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  labels:
+    app: web-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+        - name: web-app
+          image: myapp:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app-service
+spec:
+  selector:
+    app: web-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer`
+    },
+    {
+      name: 'GitHub Actions',
+      desc: 'CI/CD workflow for Node.js',
+      yaml: `name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: \${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to production
+        run: echo "Deploying..."
+        env:
+          API_KEY: \${{ secrets.API_KEY }}`
+    },
+    {
+      name: 'Ansible Playbook',
+      desc: 'Server configuration playbook',
+      yaml: `---
+- name: Configure web servers
+  hosts: webservers
+  become: true
+  vars:
+    http_port: 80
+    max_clients: 200
+
+  tasks:
+    - name: Ensure Nginx is installed
+      apt:
+        name: nginx
+        state: latest
+        update_cache: true
+
+    - name: Copy Nginx config
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: restart nginx
+
+    - name: Ensure Nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted`
+    },
+    {
+      name: '.gitlab-ci.yml',
+      desc: 'GitLab CI/CD pipeline',
+      yaml: `stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  NODE_IMAGE: node:20-alpine
+
+build:
+  stage: build
+  image: \$NODE_IMAGE
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 hour
+
+test:
+  stage: test
+  image: \$NODE_IMAGE
+  script:
+    - npm ci
+    - npm test -- --coverage
+  coverage: '/Statements\\s*:\\s*(\\d+\\.?\\d*)%/'
+
+deploy_production:
+  stage: deploy
+  only:
+    - main
+  script:
+    - echo "Deploying to production"
+  environment:
+    name: production
+    url: https://example.com`
+    },
+    {
+      name: 'OpenAPI Spec',
+      desc: 'REST API specification snippet',
+      yaml: `openapi: "3.0.3"
+info:
+  title: User API
+  version: "1.0.0"
+  description: A simple user management API
+
+paths:
+  /users:
+    get:
+      summary: List all users
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+    post:
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User created
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [admin, user, guest]
+          default: user`
+    },
+    {
+      name: 'YAML Anchors',
+      desc: 'Anchors, aliases, and merge keys',
+      yaml: `defaults: &defaults
+  adapter: postgres
+  host: localhost
+  pool: 5
+
+development:
+  <<: *defaults
+  database: myapp_dev
+
+test:
+  <<: *defaults
+  database: myapp_test
+  pool: 1
+
+production:
+  <<: *defaults
+  host: db.example.com
+  database: myapp_prod
+  pool: 25
+  ssl: true`
+    },
+    {
+      name: 'Multi-line Strings',
+      desc: 'Literal and folded block scalars',
+      yaml: `# Literal block scalar (preserves newlines)
+literal: |
+  This is a multi-line string.
+  Each line break is preserved.
+  Indentation is stripped.
+
+# Folded block scalar (folds newlines to spaces)
+folded: >
+  This is a long paragraph
+  that will be folded into
+  a single line.
+
+  But blank lines create
+  new paragraphs.
+
+# Chomping indicators
+strip: |-
+  No trailing newline
+keep: |+
+  Trailing newlines kept
+
+
+plain: "Inline quoted strings also work"`
+    }
+  ];
+
+  function renderTemplates() {
+    const grid = $('templateGrid');
+    grid.innerHTML = templates.map((t, i) => `
+      <div class="template-card" data-idx="${i}">
+        <h4>${escapeHtml(t.name)}</h4>
+        <p>${escapeHtml(t.desc)}</p>
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('.template-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.dataset.idx);
+        $('yamlInput').value = templates[idx].yaml;
+        // Switch to validate tab
+        document.querySelectorAll('.tabs .tab-btn')[0].click();
+        validateYaml();
+        showToast(`Loaded: ${templates[idx].name}`);
+      });
+    });
+  }
+
+  renderTemplates();
+})();
+</script>
+</body>
+</html>
