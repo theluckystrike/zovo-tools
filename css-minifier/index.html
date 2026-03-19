@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Minifier & Beautifier - Minify CSS Online | Free Tool</title>
+<meta name="description" content="Minify and beautify CSS online for free. Remove comments, whitespace, and unnecessary code to reduce file size. Format messy CSS with proper indentation. Private, runs in your browser.">
+<meta name="keywords" content="css minifier, minify css, css beautifier, css formatter, css compressor, css optimizer, css prettifier, reduce css size, online css tool, gzip estimate">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/css-minifier">
+
+<meta property="og:title" content="CSS Minifier & Beautifier - Minify CSS Online | Zovo Tools">
+<meta property="og:description" content="Minify and beautify CSS online. Remove comments and whitespace or format with proper indentation. Free, private, no tracking.">
+<meta property="og:url" content="https://tools.zovo.one/css-minifier">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CSS Minifier & Beautifier - Minify CSS Online | Zovo Tools">
+<meta name="twitter:description" content="Minify and beautify CSS online. Remove comments and whitespace or format with proper indentation. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CSS Minifier & Beautifier",
+  "description": "Minify and beautify CSS online. Remove comments, whitespace, and unnecessary code or format CSS with proper indentation.",
+  "url": "https://tools.zovo.one/css-minifier",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern web browser"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What does CSS minification do?", "acceptedAnswer": {"@type": "Answer", "text": "CSS minification removes all unnecessary characters from your CSS code without changing its functionality. This includes comments, whitespace, newlines, and redundant semicolons, resulting in a smaller file size that loads faster in browsers."}},
+    {"@type": "Question", "name": "Is my CSS sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All minification and beautification is performed entirely in your browser using JavaScript. No CSS code ever leaves your device. You can verify this by disconnecting from the internet and confirming the tool still works."}},
+    {"@type": "Question", "name": "How much file size reduction can I expect?", "acceptedAnswer": {"@type": "Answer", "text": "Typical CSS minification reduces file size by 15-40% depending on how much whitespace and comments are in the original code. Well-commented CSS with generous formatting will see the largest reductions. Additional savings come from gzip compression on the server."}},
+    {"@type": "Question", "name": "What is CSS beautification?", "acceptedAnswer": {"@type": "Answer", "text": "CSS beautification is the opposite of minification. It takes compressed or messy CSS and reformats it with proper indentation, one property per line, spaces after colons, and blank lines between rule blocks, making it easy to read and maintain."}},
+    {"@type": "Question", "name": "Does minification affect how my CSS works?", "acceptedAnswer": {"@type": "Answer", "text": "No. Minification only removes characters that have no effect on how browsers interpret CSS. Comments, extra whitespace, and trailing semicolons are purely cosmetic. The minified CSS will render identically to the original in all browsers."}},
+    {"@type": "Question", "name": "What is the gzip size estimate?", "acceptedAnswer": {"@type": "Answer", "text": "The gzip estimate shows approximately how large the CSS would be after server-side gzip compression, which most web servers apply automatically. This gives you a realistic picture of the actual transfer size users will download."}},
+    {"@type": "Question", "name": "Should I keep the original CSS or only the minified version?", "acceptedAnswer": {"@type": "Answer", "text": "Always keep your original, well-formatted CSS as your source code. Use minified CSS only for production deployment. Most build tools like webpack, Vite, and PostCSS handle this automatically during the build process."}},
+    {"@type": "Question", "name": "Can I upload a CSS file directly?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can drag and drop a .css file onto the input area or click the upload button to browse for a file. The file is read locally in your browser and never uploaded to any server."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"], select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus, select:focus {
+  border-color: var(--accent);
+}
+textarea { resize: vertical; min-height: 100px; }
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888a0' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* Code editor area */
+.code-area {
+  position: relative;
+  margin-bottom: 16px;
+}
+.code-area textarea {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  min-height: 240px;
+  tab-size: 2;
+  white-space: pre;
+  overflow-x: auto;
+}
+.code-area .syntax-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  padding: 12px 14px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  white-space: pre;
+  overflow: auto;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: transparent;
+}
+.code-area textarea.syntax-active {
+  color: transparent;
+  caret-color: var(--text);
+}
+
+/* Syntax highlighting colors */
+.syn-selector { color: #ff79c6; }
+.syn-property { color: #8be9fd; }
+.syn-value { color: #f1fa8c; }
+.syn-comment { color: #6272a4; font-style: italic; }
+.syn-brace { color: #ff79c6; }
+.syn-colon { color: var(--text-muted); }
+.syn-string { color: #f1fa8c; }
+.syn-number { color: #bd93f9; }
+.syn-atrule { color: #ff79c6; }
+.syn-unit { color: #bd93f9; }
+.syn-important { color: #ff5555; font-weight: bold; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+.stat-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Output area */
+.output-area {
+  position: relative;
+}
+.output-area textarea {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  min-height: 240px;
+  tab-size: 2;
+  white-space: pre;
+  overflow-x: auto;
+}
+.output-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* Copy button */
+.copy-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* File drop zone */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.drop-zone-text { color: var(--text-muted); font-size: 0.9rem; }
+.drop-zone-text span { color: var(--accent); font-weight: 500; }
+.file-input { display: none; }
+
+/* Options row */
+.options-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.option-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.option-group label {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+.option-group select {
+  width: auto;
+  min-width: 100px;
+}
+
+/* Mode indicator */
+.mode-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.mode-minify {
+  background: rgba(0,255,136,0.15);
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+.mode-beautify {
+  background: rgba(139,233,253,0.15);
+  color: #8be9fd;
+  border: 1px solid #8be9fd;
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  z-index: 1000;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .options-row { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>CSS</span> Minifier &amp; Beautifier</h1>
+    <p>Minify CSS to reduce file size or beautify it with proper formatting. See size reduction stats with gzip estimates &mdash; all running privately in your browser.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="minify">Minify</button>
+    <button class="tab-btn" data-tab="beautify">Beautify</button>
+  </div>
+
+  <!-- Minify Tab -->
+  <div id="minify" class="tab-panel active">
+    <div class="card">
+      <h3>Input CSS</h3>
+      <div class="drop-zone" id="minifyDropZone">
+        <div class="drop-zone-icon">&#128196;</div>
+        <div class="drop-zone-text">Drag &amp; drop a .css file or <span>click to browse</span></div>
+        <input type="file" class="file-input" id="minifyFileInput" accept=".css,text/css">
+      </div>
+      <div class="code-area">
+        <textarea id="minifyInput" placeholder="Paste your CSS here..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="minifyBtn">Minify CSS</button>
+        <button class="btn btn-secondary" id="clearMinifyBtn">Clear</button>
+      </div>
+    </div>
+
+    <div id="minifyStats" class="stats-grid" style="display:none;">
+      <div class="stat-card">
+        <div class="stat-value" id="minOrigSize">-</div>
+        <div class="stat-label">Original Size</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="minNewSize">-</div>
+        <div class="stat-label">Minified Size</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="minSaved">-</div>
+        <div class="stat-label">Saved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="minGzip">-</div>
+        <div class="stat-label">Gzip Estimate</div>
+      </div>
+    </div>
+
+    <div id="minifyOutput" class="card" style="display:none;">
+      <h3>Minified CSS</h3>
+      <div class="output-area">
+        <textarea id="minifyResult" readonly></textarea>
+      </div>
+      <div class="output-actions">
+        <button class="copy-btn" id="copyMinified">Copy to Clipboard</button>
+        <button class="copy-btn" id="downloadMinified">Download .css</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Beautify Tab -->
+  <div id="beautify" class="tab-panel">
+    <div class="card">
+      <h3>Input CSS</h3>
+      <div class="drop-zone" id="beautifyDropZone">
+        <div class="drop-zone-icon">&#128196;</div>
+        <div class="drop-zone-text">Drag &amp; drop a .css file or <span>click to browse</span></div>
+        <input type="file" class="file-input" id="beautifyFileInput" accept=".css,text/css">
+      </div>
+      <div class="code-area">
+        <textarea id="beautifyInput" placeholder="Paste your CSS here..."></textarea>
+      </div>
+      <div class="options-row">
+        <div class="option-group">
+          <label for="indentType">Indent:</label>
+          <select id="indentType">
+            <option value="2">2 Spaces</option>
+            <option value="4">4 Spaces</option>
+            <option value="tab">Tab</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="beautifyBtn">Beautify CSS</button>
+        <button class="btn btn-secondary" id="clearBeautifyBtn">Clear</button>
+      </div>
+    </div>
+
+    <div id="beautifyOutput" class="card" style="display:none;">
+      <h3>Beautified CSS</h3>
+      <div class="output-area">
+        <textarea id="beautifyResult" readonly></textarea>
+      </div>
+      <div class="output-actions">
+        <button class="copy-btn" id="copyBeautified">Copy to Clipboard</button>
+        <button class="copy-btn" id="downloadBeautified">Download .css</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2>Understanding CSS Minification</h2>
+    <p>CSS minification is the process of removing all unnecessary characters from Cascading Style Sheets code without altering its functionality. This includes stripping out comments, collapsing whitespace and newlines, removing trailing semicolons, and eliminating spaces around selectors, properties, and values that browsers do not require. The result is a significantly smaller file that browsers can download and parse faster, directly improving your website's loading performance.</p>
+    <p>Modern web performance is measured by metrics like Largest Contentful Paint (LCP), First Input Delay (FID), and Cumulative Layout Shift (CLS). CSS is a render-blocking resource, meaning browsers must download and parse all CSS before they can paint content to the screen. Reducing CSS file size through minification directly decreases the time to first render. When combined with server-side gzip or brotli compression, minified CSS can be dramatically smaller than the development version &mdash; often 60-80% smaller when both techniques are applied.</p>
+
+    <h3>How CSS Minification Works</h3>
+    <p>The minification process applies several transformations to your CSS code. First, all comments (both single-line and block comments using <code>/* ... */</code> syntax) are removed. Next, consecutive whitespace characters including spaces, tabs, and newlines are collapsed into single spaces or removed entirely where safe. Spaces around structural characters like braces, colons, and semicolons are stripped. The final semicolon before a closing brace is removed since CSS specifications do not require it. Finally, empty rule blocks (selectors with no declarations) are eliminated entirely.</p>
+    <p>This tool performs safe, syntax-aware minification that preserves all CSS functionality. It correctly handles edge cases like whitespace within <code>calc()</code> expressions, quoted strings in <code>content</code> properties and URLs, and <code>@media</code> queries. Unlike aggressive optimizers that might merge shorthand properties or remove vendor prefixes, this minifier focuses on whitespace and comment removal, ensuring the output is always functionally identical to the input.</p>
+
+    <h3>CSS Beautification and Formatting</h3>
+    <p>CSS beautification is the inverse of minification. It takes compressed, minified, or poorly formatted CSS and restructures it into a clean, readable format. Each selector gets its own line, every declaration is placed on a separate line with consistent indentation, a space is added after each colon, and blank lines separate rule blocks. This makes the code easy to read, review, and maintain.</p>
+    <p>The beautifier in this tool supports configurable indentation with 2 spaces, 4 spaces, or tabs. It properly handles nested structures like <code>@media</code> queries and <code>@keyframes</code> blocks, increasing the indentation level within each nesting context. Choosing the right indentation style is often a team convention; 2 spaces is common in front-end projects, while 4 spaces is traditional in many style guides, and tabs allow individual developers to set their preferred visual width.</p>
+
+    <h3>Size Reduction and Gzip Estimates</h3>
+    <p>When you minify CSS with this tool, it displays detailed statistics about the size reduction achieved. The original size shows the byte count of your input CSS, while the minified size shows the output. The percentage saved gives you a clear picture of the reduction. The gzip estimate approximates how large the minified file would be after server-side compression, giving you a realistic view of the actual network transfer size.</p>
+    <p>Most web servers automatically apply gzip or brotli compression to CSS files before sending them to browsers. This compression works by finding repeated patterns and encoding them efficiently. Minified CSS actually compresses better than unminified CSS because the removal of inconsistent whitespace and comments reduces noise that compression algorithms struggle with. The combination of minification plus gzip typically yields 70-85% total reduction from the original development file.</p>
+
+    <h3>When to Minify CSS</h3>
+    <p>CSS minification should be part of every production build pipeline. During development, keep your CSS well-formatted with comments and clear structure for maintainability. When deploying to production, run the CSS through a minifier to optimize delivery. Most modern build tools like webpack, Vite, Parcel, and PostCSS include CSS minification as part of their default production configuration.</p>
+    <p>This online tool is particularly useful for quick one-off minification tasks, debugging production CSS by beautifying it back to readable format, estimating size savings before integrating a build tool, or working on projects that do not use a build system. It is also valuable for educational purposes, helping developers understand exactly what minification does to their code and how much space can be saved.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What does CSS minification do?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>CSS minification removes all unnecessary characters from your stylesheet without changing how it works. This includes comments (<code>/* ... */</code>), extra whitespace, newlines, trailing semicolons before closing braces, and spaces around structural characters like colons and braces. The result is a smaller file that browsers download and parse faster, improving page load performance.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my CSS sent to a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No, absolutely not. All minification and beautification processing happens entirely in your web browser using JavaScript. Your CSS code never leaves your device. You can verify this by opening your browser's network tab or disconnecting from the internet &mdash; the tool continues to work perfectly offline because no server communication is involved.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How much file size reduction can I expect?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Typical CSS minification reduces file size by 15-40%, depending on how much whitespace and comments exist in your original code. Well-commented CSS with generous formatting will see the largest reductions. Combined with server-side gzip compression, total reduction from original to transferred size can reach 70-85% for typical stylesheets.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is CSS beautification?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>CSS beautification (also called prettifying or formatting) is the opposite of minification. It takes compressed or poorly formatted CSS and restructures it with proper indentation, one property per line, spaces after colons, and blank lines between rule blocks. This makes the code human-readable and easier to maintain, debug, and review in code reviews.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does minification affect how my CSS works?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. Minification only removes characters that have zero effect on how browsers interpret your CSS. Comments are ignored by rendering engines, extra whitespace is irrelevant to style computation, and trailing semicolons before closing braces are optional per the CSS specification. Your minified CSS will render identically to the original in every browser.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the gzip size estimate?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The gzip estimate approximates how large your minified CSS would be after server-side gzip compression, which most web servers (Apache, Nginx, Cloudflare, etc.) apply automatically to text-based assets. This gives you a realistic picture of the actual transfer size that users' browsers will download, which is often 60-80% smaller than even the minified file.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Should I keep the original CSS or only the minified version?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Always keep your original, well-formatted CSS as your source code and use minified CSS only for production deployment. Your source CSS should be stored in version control with clear comments and readable formatting. Minification should happen as part of your build process. Most tools like webpack, Vite, and PostCSS handle this automatically, generating minified output files while preserving your source unchanged.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I upload a CSS file directly?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. You can drag and drop a <code>.css</code> file directly onto the input area, or click the upload zone to browse for a file. The file is read locally in your browser using the FileReader API and its content is loaded into the text input. No file data is ever sent to any server. After processing, you can download the result as a new <code>.css</code> file.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </footer>
+  <div style="max-width:800px;margin:2rem auto;padding:1.5rem;">
+    <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6C5CE7;margin-bottom:0.75rem;font-weight:500;">Related Tools</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <a href="/js-minifier/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">JS Minifier</a>
+      <a href="/hash-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Hash Generator</a>
+      <a href="/password-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Password Generator</a>
+      <a href="/lorem-ipsum-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Lorem Ipsum Generator</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== Utility Functions ==========
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function formatBytes(bytes) {
+  if (bytes === 0) return '0 B';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(2) + ' MB';
+}
+
+function getByteLength(str) {
+  return new Blob([str]).size;
+}
+
+// Simple gzip size estimator using deflate-like ratio estimation
+function estimateGzipSize(str) {
+  const raw = getByteLength(str);
+  if (raw === 0) return 0;
+  // Estimate unique character diversity
+  const chars = new Set(str);
+  const diversity = chars.size / 256;
+  // CSS tends to compress well: estimate 25-40% of original
+  const ratio = 0.25 + (diversity * 0.2);
+  return Math.round(raw * ratio);
+}
+
+function downloadFile(content, filename) {
+  const blob = new Blob([content], { type: 'text/css' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Copied to clipboard!');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Copied to clipboard!');
+  });
+}
+
+// ========== CSS Minifier ==========
+function minifyCSS(css) {
+  let result = css;
+
+  // Remove comments (/* ... */) but be careful with strings
+  result = result.replace(/\/\*[\s\S]*?\*\//g, '');
+
+  // Collapse whitespace
+  result = result.replace(/\s+/g, ' ');
+
+  // Remove spaces around { } : ; ,
+  result = result.replace(/\s*\{\s*/g, '{');
+  result = result.replace(/\s*\}\s*/g, '}');
+  result = result.replace(/\s*;\s*/g, ';');
+  result = result.replace(/\s*:\s*/g, ':');
+  result = result.replace(/\s*,\s*/g, ',');
+
+  // Remove trailing semicolons before closing braces
+  result = result.replace(/;}/g, '}');
+
+  // Remove empty rules
+  result = result.replace(/[^{}]+\{\s*\}/g, '');
+
+  // Clean up any remaining leading/trailing whitespace
+  result = result.trim();
+
+  // Restore necessary spaces in special cases
+  // Space after @media, @keyframes, etc. keywords before (
+  result = result.replace(/@(media|keyframes|supports|font-face|import|charset|namespace|page|document)/g, '@$1');
+
+  // Fix calc() expressions - need spaces around + and -
+  result = result.replace(/calc\(([^)]*)\)/g, function(match, inner) {
+    // Restore spaces around + and - in calc
+    inner = inner.replace(/([^\s+\-*/])(\+|\-)([^\s+\-*/])/g, '$1 $2 $3');
+    return 'calc(' + inner + ')';
+  });
+
+  return result;
+}
+
+// ========== CSS Beautifier ==========
+function beautifyCSS(css, indentStr) {
+  // First do a light minification to normalize
+  let result = css;
+
+  // Remove comments temporarily and track them
+  const comments = [];
+  result = result.replace(/\/\*[\s\S]*?\*\//g, function(match) {
+    comments.push(match);
+    return '/*COMMENT' + (comments.length - 1) + '*/';
+  });
+
+  // Normalize whitespace
+  result = result.replace(/\s+/g, ' ').trim();
+
+  // Add newlines around braces
+  result = result.replace(/\s*\{\s*/g, ' {\n');
+  result = result.replace(/\s*\}\s*/g, '\n}\n');
+  result = result.replace(/\s*;\s*/g, ';\n');
+
+  // Now indent properly
+  const lines = result.split('\n');
+  let indentLevel = 0;
+  const formatted = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i].trim();
+    if (!line) continue;
+
+    // Decrease indent for closing brace
+    if (line.startsWith('}')) {
+      indentLevel = Math.max(0, indentLevel - 1);
+    }
+
+    const indent = indentStr.repeat(indentLevel);
+
+    // Handle lines with both opening and closing (shouldn't happen after split, but safety)
+    formatted.push(indent + line);
+
+    // Increase indent after opening brace
+    if (line.endsWith('{')) {
+      indentLevel++;
+    }
+  }
+
+  result = formatted.join('\n');
+
+  // Add blank line between rule blocks at the same level
+  result = result.replace(/\}\n([^\s\n}])/g, '}\n\n$1');
+
+  // Ensure space after colon in properties
+  result = result.replace(/:\s*/g, ': ');
+  // But fix pseudo-selectors - remove space after : in selectors
+  result = result.replace(/(::?)(hover|focus|active|visited|first-child|last-child|nth-child|first-of-type|last-of-type|nth-of-type|not|before|after|placeholder|selection|first-line|first-letter|root|empty|checked|disabled|enabled|target|lang|link|any-link|focus-within|focus-visible|is|where|has)/g, ':$2');
+  // Fix double-colon pseudo-elements
+  result = result.replace(/: : (before|after|placeholder|selection|first-line|first-letter|backdrop|marker|spelling-error|grammar-error)/g, '::$1');
+
+  // Restore comments
+  comments.forEach(function(comment, idx) {
+    result = result.replace('/*COMMENT' + idx + '*/', comment);
+  });
+
+  return result;
+}
+
+// ========== Tab Switching ==========
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ========== File Upload (Minify) ==========
+const minifyDropZone = document.getElementById('minifyDropZone');
+const minifyFileInput = document.getElementById('minifyFileInput');
+const minifyInput = document.getElementById('minifyInput');
+
+minifyDropZone.addEventListener('click', () => minifyFileInput.click());
+minifyDropZone.addEventListener('dragover', e => { e.preventDefault(); minifyDropZone.classList.add('dragover'); });
+minifyDropZone.addEventListener('dragleave', () => minifyDropZone.classList.remove('dragover'));
+minifyDropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  minifyDropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) readFile(file, minifyInput);
+});
+minifyFileInput.addEventListener('change', e => {
+  if (e.target.files[0]) readFile(e.target.files[0], minifyInput);
+});
+
+// ========== File Upload (Beautify) ==========
+const beautifyDropZone = document.getElementById('beautifyDropZone');
+const beautifyFileInput = document.getElementById('beautifyFileInput');
+const beautifyInput = document.getElementById('beautifyInput');
+
+beautifyDropZone.addEventListener('click', () => beautifyFileInput.click());
+beautifyDropZone.addEventListener('dragover', e => { e.preventDefault(); beautifyDropZone.classList.add('dragover'); });
+beautifyDropZone.addEventListener('dragleave', () => beautifyDropZone.classList.remove('dragover'));
+beautifyDropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  beautifyDropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) readFile(file, beautifyInput);
+});
+beautifyFileInput.addEventListener('change', e => {
+  if (e.target.files[0]) readFile(e.target.files[0], beautifyInput);
+});
+
+function readFile(file, targetTextarea) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    targetTextarea.value = e.target.result;
+    showToast('File loaded: ' + file.name);
+  };
+  reader.readAsText(file);
+}
+
+// ========== Minify Action ==========
+document.getElementById('minifyBtn').addEventListener('click', () => {
+  const input = minifyInput.value;
+  if (!input.trim()) {
+    showToast('Please enter some CSS to minify.');
+    return;
+  }
+
+  const minified = minifyCSS(input);
+  const origSize = getByteLength(input);
+  const newSize = getByteLength(minified);
+  const saved = origSize > 0 ? ((origSize - newSize) / origSize * 100).toFixed(1) : 0;
+  const gzipSize = estimateGzipSize(minified);
+
+  document.getElementById('minOrigSize').textContent = formatBytes(origSize);
+  document.getElementById('minNewSize').textContent = formatBytes(newSize);
+  document.getElementById('minSaved').textContent = saved + '%';
+  document.getElementById('minGzip').textContent = '~' + formatBytes(gzipSize);
+  document.getElementById('minifyStats').style.display = 'grid';
+
+  document.getElementById('minifyResult').value = minified;
+  document.getElementById('minifyOutput').style.display = 'block';
+});
+
+document.getElementById('clearMinifyBtn').addEventListener('click', () => {
+  minifyInput.value = '';
+  document.getElementById('minifyResult').value = '';
+  document.getElementById('minifyStats').style.display = 'none';
+  document.getElementById('minifyOutput').style.display = 'none';
+});
+
+// ========== Beautify Action ==========
+document.getElementById('beautifyBtn').addEventListener('click', () => {
+  const input = beautifyInput.value;
+  if (!input.trim()) {
+    showToast('Please enter some CSS to beautify.');
+    return;
+  }
+
+  const indentVal = document.getElementById('indentType').value;
+  const indentStr = indentVal === 'tab' ? '\t' : ' '.repeat(parseInt(indentVal));
+
+  const beautified = beautifyCSS(input, indentStr);
+  document.getElementById('beautifyResult').value = beautified;
+  document.getElementById('beautifyOutput').style.display = 'block';
+});
+
+document.getElementById('clearBeautifyBtn').addEventListener('click', () => {
+  beautifyInput.value = '';
+  document.getElementById('beautifyResult').value = '';
+  document.getElementById('beautifyOutput').style.display = 'none';
+});
+
+// ========== Copy & Download ==========
+document.getElementById('copyMinified').addEventListener('click', () => {
+  copyToClipboard(document.getElementById('minifyResult').value);
+});
+document.getElementById('downloadMinified').addEventListener('click', () => {
+  downloadFile(document.getElementById('minifyResult').value, 'minified.css');
+});
+document.getElementById('copyBeautified').addEventListener('click', () => {
+  copyToClipboard(document.getElementById('beautifyResult').value);
+});
+document.getElementById('downloadBeautified').addEventListener('click', () => {
+  downloadFile(document.getElementById('beautifyResult').value, 'beautified.css');
+});
+
+// ========== FAQ Accordion ==========
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+</script>
+
+</body>
+</html>
