@@ -161,6 +161,24 @@ footer{text-align:center;padding:40px 16px;color:#666;font-size:0.85rem;border-t
 
 <h1>Free Subnet Calculator - IPv4 and IPv6 CIDR VLSM</h1>
 <p style="color:#aaa;margin-bottom:24px">Calculate network addresses, subnet masks, host ranges, VLSM subnetting, and IPv6 networks. All calculations run in your browser. Nothing is sent to any server.</p>
+<div class="reading-time" style="font-family:monospace;font-size:0.75rem;color:#8888a0;letter-spacing:0.05em;margin:0.5rem 0 1.5rem;">
+  12 min read &middot; 2810 words
+</div>
+<nav class="toc" aria-label="Table of Contents" style="background:#12121a;border:1px solid #2a2a3a;border-radius:8px;padding:1.25rem;margin:1.5rem 0;">
+  <div style="font-family:monospace;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:#8888a0;margin-bottom:0.75rem;">Contents</div>
+  <ol style="list-style:none;padding:0;margin:0;">
+    <li style="margin:0.4rem 0;"><a href="#what-is-subnetting" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">What Is Subnetting?</a></li>
+    <li style="margin:0.4rem 0;"><a href="#understanding-subnet-masks" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">Understanding Subnet Masks</a></li>
+    <li style="margin:0.4rem 0;"><a href="#network-address-broadcast-address-and-host-range" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">Network Address, Broadcast Address, and Host Range</a></li>
+    <li style="margin:0.4rem 0;"><a href="#cidr-notation-and-prefix-length" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">CIDR Notation and Prefix Length</a></li>
+    <li style="margin:0.4rem 0;"><a href="#variable-length-subnet-masking" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">Variable Length Subnet Masking</a></li>
+    <li style="margin:0.4rem 0;"><a href="#ipv6-subnetting" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">IPv6 Subnetting</a></li>
+    <li style="margin:0.4rem 0;"><a href="#ip-address-classes-and-private-ranges" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">IP Address Classes and Private Ranges</a></li>
+    <li style="margin:0.4rem 0;"><a href="#practical-subnetting-examples" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">Practical Subnetting Examples</a></li>
+    <li style="margin:0.4rem 0;"><a href="#how-to-use-this-subnet-calculator" style="color:#00ccff;text-decoration:none;font-size:0.9rem;">How to Use This Subnet Calculator</a></li>
+  </ol>
+</nav>
+
 
 <div class="tabs">
   <button class="tab active" data-tab="ipv4">IPv4 Subnet</button>
@@ -270,63 +288,63 @@ footer{text-align:center;padding:40px 16px;color:#666;font-size:0.85rem;border-t
 
 <!-- SEO CONTENT -->
 <div class="content-section">
-<h2>What Is Subnetting?</h2>
+<h2 id="what-is-subnetting">What Is Subnetting?</h2>
 <p>Subnetting is the process of dividing a larger IP network into smaller, logical subnetworks called subnets. Every IP address consists of two parts: the network portion, which identifies the specific network, and the host portion, which identifies a specific device within that network. Subnetting works by borrowing bits from the host portion to create additional network identifiers, effectively splitting one large network into multiple smaller ones.</p>
 
 <p>The practice of subnetting emerged in the 1980s as the original classful addressing scheme proved insufficient for the growing internet. Under classful addressing, networks were assigned one of three fixed sizes: Class A (16 million hosts), Class B (65,534 hosts), or Class C (254 hosts). Organizations that needed, say, 500 addresses had to request a Class B network, wasting tens of thousands of addresses. Subnetting solved this problem by allowing administrators to create networks of arbitrary sizes tailored to their actual requirements.</p>
 
 <p>The introduction of CIDR (Classless Inter-Domain Routing) in 1993, defined in RFC 1519, formalized and extended the concept of subnetting across the entire internet. CIDR replaced the rigid class-based system with a flexible prefix-length notation, allowing any number of bits to be designated as the network portion. A CIDR notation like 192.168.1.0/24 indicates that the first 24 bits represent the network and the remaining 8 bits represent host addresses, yielding 256 total addresses (254 usable).</p>
 
-<h2>Understanding Subnet Masks</h2>
+<h2 id="understanding-subnet-masks">Understanding Subnet Masks</h2>
 <p>A subnet mask is a 32-bit number that separates the network portion of an IP address from the host portion. In binary, a subnet mask consists of a contiguous sequence of 1-bits followed by a contiguous sequence of 0-bits. The 1-bits correspond to the network portion and the 0-bits correspond to the host portion. For example, the subnet mask 255.255.255.0 in binary is 11111111.11111111.11111111.00000000, indicating 24 network bits and 8 host bits.</p>
 
 <p>The subnet mask is applied to an IP address using a bitwise AND operation to extract the network address. For the IP address 192.168.1.100 with subnet mask 255.255.255.0, the AND operation produces 192.168.1.0, which is the network address. This operation is fundamental to how routers determine whether two devices are on the same subnet or need to communicate through a gateway.</p>
 
 <p>The wildcard mask is the bitwise inverse of the subnet mask. Where the subnet mask has 1-bits, the wildcard mask has 0-bits, and vice versa. For a subnet mask of 255.255.255.0, the wildcard mask is 0.0.0.255. Wildcard masks are used extensively in Cisco IOS configurations, particularly in access control lists (ACLs) and OSPF area definitions. They indicate which bits of an address must match (0-bits) and which can vary (1-bits).</p>
 
-<h2>Network Address, Broadcast Address, and Host Range</h2>
+<h2 id="network-address-broadcast-address-and-host-range">Network Address, Broadcast Address, and Host Range</h2>
 <p>Every subnet has three important addresses that define its boundaries. The network address is the first address in the subnet and identifies the subnet itself. It is calculated by performing a bitwise AND between the IP address and the subnet mask. The network address has all host bits set to 0 and cannot be assigned to any device.</p>
 
 <p>The broadcast address is the last address in the subnet. It is used to send a packet to all devices on the subnet simultaneously. The broadcast address has all host bits set to 1. For a /24 subnet starting at 192.168.1.0, the broadcast address is 192.168.1.255. Routers do not forward broadcast packets beyond the subnet boundary, which is one reason why subnetting improves network performance: it limits the scope of broadcast traffic.</p>
 
 <p>The usable host range falls between the network address and the broadcast address. For a /24 subnet, the first usable address is 192.168.1.1 and the last usable address is 192.168.1.254, giving 254 usable host addresses. The general formula for calculating usable hosts is 2 raised to the power of (32 minus the prefix length) minus 2. The subtraction of 2 accounts for the network and broadcast addresses. For a /30 subnet, this formula gives 2 raised to the power of 2 minus 2, which equals 2 usable hosts, making /30 subnets ideal for point-to-point links between routers.</p>
 
-<h2>CIDR Notation and Prefix Length</h2>
+<h2 id="cidr-notation-and-prefix-length">CIDR Notation and Prefix Length</h2>
 <p>CIDR notation combines an IP address with a prefix length, separated by a forward slash. The prefix length specifies how many bits from the left side of the address belong to the network portion. A /24 prefix means the first 24 bits are the network portion and the remaining 8 bits are the host portion. Shorter prefixes indicate larger networks: a /16 has 65,534 usable hosts, while a /28 has only 14.</p>
 
 <p>Common CIDR prefix lengths and their corresponding subnet masks include: /8 (255.0.0.0, 16 million hosts), /16 (255.255.0.0, 65,534 hosts), /24 (255.255.255.0, 254 hosts), /25 (255.255.255.128, 126 hosts), /26 (255.255.255.192, 62 hosts), /27 (255.255.255.224, 30 hosts), /28 (255.255.255.240, 14 hosts), /29 (255.255.255.248, 6 hosts), /30 (255.255.255.252, 2 hosts), and /32 (255.255.255.255, 1 host, used for individual host routes).</p>
 
 <p>Understanding the relationship between prefix length and available addresses is essential for network planning. Each additional bit in the prefix length halves the number of available host addresses. Moving from /24 (254 hosts) to /25 (126 hosts) splits the network in two. Moving from /25 to /26 (62 hosts) splits each half again. This binary progression is the foundation of all subnet calculations.</p>
 
-<h2>Variable Length Subnet Masking</h2>
+<h2 id="variable-length-subnet-masking">Variable Length Subnet Masking</h2>
 <p>VLSM allows network administrators to use different subnet mask lengths within the same address space. Before VLSM, a network had to use a single subnet mask throughout, which often led to significant address waste. Consider an organization with a /24 network (254 usable addresses) that needs to create subnets for departments of 100, 50, 25, and 2 users. Without VLSM, they would need to use /25 subnets (126 hosts each), wasting addresses in the smaller departments and not having enough subnets for all four groups.</p>
 
 <p>With VLSM, the administrator can allocate a /25 (126 hosts) for the 100-user department, a /26 (62 hosts) for the 50-user department, a /27 (30 hosts) for the 25-user department, and a /30 (2 hosts) for the point-to-point link. This approach maximizes address utilization by matching subnet sizes to actual requirements. The key rule is that VLSM subnets must not overlap in the address space.</p>
 
 <p>The VLSM allocation process works by sorting host requirements from largest to smallest, then assigning subnet blocks sequentially from the beginning of the available address space. Each allocation starts at the next available network boundary that is properly aligned for the required subnet size. This greedy algorithm produces optimal results as long as the total host requirement fits within the available address space.</p>
 
-<h2>IPv6 Subnetting</h2>
+<h2 id="ipv6-subnetting">IPv6 Subnetting</h2>
 <p>IPv6 uses 128-bit addresses, written as eight groups of four hexadecimal digits separated by colons (e.g., 2001:0db8:85a3:0000:0000:8a2e:0370:7334). Leading zeros within each group can be omitted, and consecutive groups of all zeros can be replaced with a double colon (::) once per address. The vastly larger address space of IPv6 (approximately 3.4 times 10 to the 38th power addresses) eliminates the scarcity-driven complexity of IPv4 subnetting.</p>
 
 <p>IPv6 subnetting follows a more standardized structure than IPv4. The standard allocation for an end-site is a /48 prefix, which provides 16 bits for subnetting (65,536 possible subnets) and 64 bits for host identification within each subnet. Individual subnets almost always use a /64 prefix, which is required for Stateless Address Autoconfiguration (SLAAC) to function. The 64-bit host portion can be derived from the interface's MAC address (using EUI-64) or generated randomly for privacy.</p>
 
 <p>Unlike IPv4, IPv6 does not use broadcast addresses. Instead, it uses multicast and anycast addressing for one-to-many communication. There is no need to subtract 2 from the host count because there is no broadcast address to reserve. The network address (all host bits set to 0) is technically assignable but conventionally reserved for the subnet router anycast address.</p>
 
-<h2>IP Address Classes and Private Ranges</h2>
+<h2 id="ip-address-classes-and-private-ranges">IP Address Classes and Private Ranges</h2>
 <p>Although classful addressing has been replaced by CIDR, understanding the original IP classes remains useful for context. Class A addresses (1.0.0.0 to 126.255.255.255) have an 8-bit network prefix and were assigned to very large organizations. Class B addresses (128.0.0.0 to 191.255.255.255) have a 16-bit prefix. Class C addresses (192.0.0.0 to 223.255.255.255) have a 24-bit prefix. Class D (224.0.0.0 to 239.255.255.255) is reserved for multicast, and Class E (240.0.0.0 to 255.255.255.255) is reserved for experimental use.</p>
 
 <p>RFC 1918 designates three address ranges as private, meaning they are not routable on the public internet and can be freely used within internal networks. The three ranges are 10.0.0.0/8 (a single Class A network with over 16 million addresses), 172.16.0.0/12 (sixteen Class B networks with over 1 million addresses total), and 192.168.0.0/16 (256 Class C networks with over 65,000 addresses). Network Address Translation (NAT) allows devices with private addresses to communicate with the internet by translating their addresses to a public address at the network boundary.</p>
 
 <p>Special-purpose addresses include 127.0.0.0/8 (loopback, most commonly 127.0.0.1), 169.254.0.0/16 (link-local, used when DHCP is unavailable), 0.0.0.0/8 (current network), and 255.255.255.255 (limited broadcast). Understanding these reserved ranges is important for network design to avoid conflicts and ensure proper routing.</p>
 
-<h2>Practical Subnetting Examples</h2>
+<h2 id="practical-subnetting-examples">Practical Subnetting Examples</h2>
 <p>Consider a company that has been allocated the network 10.50.0.0/16 and needs to create subnets for multiple offices. The headquarters needs 500 hosts, two branch offices need 100 hosts each, a data center needs 50 hosts, and there are four point-to-point WAN links between sites. Using VLSM, the allocation would proceed as follows: the headquarters gets 10.50.0.0/23 (510 usable hosts), the branch offices get 10.50.2.0/25 and 10.50.2.128/25 (126 usable hosts each), the data center gets 10.50.3.0/26 (62 usable hosts), and the four WAN links get /30 subnets starting at 10.50.3.64 (2 usable hosts each).</p>
 
 <p>Another common scenario involves designing a home or small office network. A typical ISP provides a single /24 subnet (192.168.1.0/24). To segment this into separate networks for workstations, guest Wi-Fi, IoT devices, and servers, you could split it into four /26 subnets: 192.168.1.0/26 (workstations, 62 hosts), 192.168.1.64/26 (guests, 62 hosts), 192.168.1.128/26 (IoT, 62 hosts), and 192.168.1.192/26 (servers, 62 hosts). Each subnet is isolated at Layer 3, requiring a router to move traffic between them, which allows you to apply firewall rules and access controls between segments.</p>
 
 <p>For cloud deployments on platforms like AWS, Azure, or GCP, proper subnetting is critical. A typical VPC (Virtual Private Cloud) might use a /16 network (e.g., 10.0.0.0/16) divided into /24 subnets across multiple availability zones. Public subnets host load balancers and bastion hosts, while private subnets hold application servers and databases. The CIDR blocks must be carefully planned to avoid overlaps with other VPCs, on-premises networks connected via VPN, and peered networks.</p>
 
-<h2>How to Use This Subnet Calculator</h2>
+<h2 id="how-to-use-this-subnet-calculator">How to Use This Subnet Calculator</h2>
 <p>Enter an IPv4 address in dotted decimal notation (e.g., 192.168.1.100) and a CIDR prefix length (e.g., 24) in the IPv4 Subnet tab. Click Calculate to see the complete subnet details: network address, broadcast address, subnet mask, wildcard mask, first and last usable hosts, total host count, CIDR notation, and IP class. The binary display shows the IP address and subnet mask in binary with color-coded network and host portions.</p>
 
 <p>The subnet table below the results lists all subnets of the same size within the parent classful network or within the supernet boundary. This helps you see the full range of available subnets when planning address allocation. For the VLSM tab, enter a network address with its prefix length, then add rows for each subnet you need, specifying the name and required host count. The calculator will determine the optimal subnet sizes and allocate them sequentially, showing any remaining unused address space.</p>
@@ -393,7 +411,7 @@ footer{text-align:center;padding:40px 16px;color:#666;font-size:0.85rem;border-t
 
 <!-- FAQ -->
 <div class="faq-section">
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-q">What is a subnet and why is subnetting used?</div>
   <div class="faq-a">A subnet (subnetwork) is a logical subdivision of an IP network. Subnetting divides a larger network into smaller, more manageable segments. This improves network performance by reducing broadcast domain size, enhances security by isolating network segments, and allows more efficient use of IP address space.</div>
