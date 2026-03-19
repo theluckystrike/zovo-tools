@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flow Chart Maker - Free Online Flowchart Creator | zovo.one</title>
+<meta name="description" content="Free online flow chart maker. Create professional flowcharts with drag-and-drop nodes, connect with arrows, export as PNG or SVG. No sign-up required, runs entirely in your browser.">
+<meta name="keywords" content="flow chart maker, flowchart creator, online flowchart tool, free flowchart maker, diagram maker, process flow diagram, decision tree maker">
+<link rel="canonical" href="https://zovo.one/flow-chart-maker">
+<meta property="og:title" content="Flow Chart Maker - Free Online Flowchart Creator">
+<meta property="og:description" content="Create professional flowcharts with drag-and-drop nodes, arrows, and export options. Free, no sign-up, runs in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/flow-chart-maker">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--card:#12121a;--text:#e0e0e8;--accent:#00ff88;--secondary:#00ccff;--border:#1e1e2e;--muted:#8888a0;--danger:#ff4466}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;overflow-x:hidden}
+a{color:var(--secondary);text-decoration:none}a:hover{text-decoration:underline}
+.privacy-badge{display:inline-flex;align-items:center;gap:6px;background:#0a2a1a;border:1px solid #00ff8833;border-radius:20px;padding:6px 14px;font-size:.75rem;color:var(--accent)}
+.privacy-badge::before{content:"";width:8px;height:8px;background:var(--accent);border-radius:50%;box-shadow:0 0 6px var(--accent)}
+
+/* Layout */
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.logo{font-size:1.1rem;font-weight:700;color:var(--accent)}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.toolbar button,.toolbar select{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:inherit;font-size:.8rem;cursor:pointer;transition:.2s;white-space:nowrap}
+.toolbar button:hover{border-color:var(--accent);color:var(--accent)}
+.toolbar .sep{width:1px;height:24px;background:var(--border);margin:0 4px}
+.toolbar input[type="color"]{width:32px;height:28px;border:1px solid var(--border);border-radius:6px;background:var(--card);cursor:pointer;padding:2px}
+
+.workspace{display:flex;height:calc(100vh - 52px);overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:200px;min-width:200px;background:var(--card);border-right:1px solid var(--border);padding:12px;overflow-y:auto;flex-shrink:0}
+.sidebar h3{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
+.palette-node{padding:10px 12px;margin-bottom:6px;border:1px solid var(--border);border-radius:8px;cursor:grab;text-align:center;font-size:.8rem;font-weight:500;transition:.2s;user-select:none}
+.palette-node:hover{border-color:var(--accent);color:var(--accent)}
+.palette-node:active{cursor:grabbing}
+.pn-process{border-left:3px solid #00ff88}
+.pn-decision{border-left:3px solid #00ccff}
+.pn-startend{border-left:3px solid #ff8844}
+.pn-io{border-left:3px solid #aa66ff}
+.pn-document{border-left:3px solid #ff4466}
+
+.sidebar-section{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.sidebar label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px;font-weight:500}
+.sidebar input[type="range"]{width:100%;margin:4px 0 10px;accent-color:var(--accent)}
+.sidebar input[type="color"]{width:100%;height:30px;border:1px solid var(--border);border-radius:6px;background:var(--card);cursor:pointer}
+.sidebar .cb-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.8rem}
+.sidebar .cb-row input{accent-color:var(--accent)}
+.sidebar button{width:100%;padding:8px;margin-top:6px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:inherit;font-size:.8rem;cursor:pointer;transition:.2s}
+.sidebar button:hover{border-color:var(--accent);color:var(--accent)}
+.sidebar .btn-danger{border-color:var(--danger);color:var(--danger)}
+.sidebar .btn-danger:hover{background:#2a0a0a}
+
+/* Canvas area */
+.canvas-wrap{flex:1;position:relative;overflow:hidden;background:var(--bg)}
+#fc-canvas{position:absolute;top:0;left:0;cursor:default}
+
+/* Text edit overlay */
+.text-edit-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.5)}
+.text-edit-overlay.active{display:flex}
+.text-edit-box{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:20px;width:320px;max-width:90vw}
+.text-edit-box label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}
+.text-edit-box textarea{width:100%;height:80px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:inherit;font-size:.9rem;resize:vertical}
+.text-edit-box textarea:focus{outline:none;border-color:var(--accent)}
+.text-edit-box .btns{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+.text-edit-box .btns button{padding:8px 18px;border-radius:6px;border:none;cursor:pointer;font-family:inherit;font-size:.85rem;font-weight:600}
+.text-edit-box .btn-ok{background:var(--accent);color:#0a0a0f}
+.text-edit-box .btn-cancel{background:var(--border);color:var(--text)}
+
+/* Content area below editor */
+.content-area{background:var(--bg);border-top:1px solid var(--border)}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+.content-section{padding:40px 0}
+h1{font-size:2.2rem;font-weight:700;margin-bottom:10px;color:#fff}
+h2{font-size:1.5rem;font-weight:600;margin:40px 0 16px;color:#fff}
+h3{font-size:1.15rem;font-weight:600;margin:24px 0 10px;color:#fff}
+p{margin-bottom:14px;color:var(--text)}
+.faq-item{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.faq-q{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:500;background:var(--card);transition:.2s}
+.faq-q:hover{background:#1a1a28}
+.faq-q .arrow{transition:transform .3s;color:var(--accent)}
+.faq-q.open .arrow{transform:rotate(180deg)}
+.faq-a{padding:0 20px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;background:var(--card)}
+.faq-a.open{max-height:800px;padding:0 20px 16px}
+.faq-a p{margin-bottom:10px}
+footer{border-top:1px solid var(--border);padding:30px 0;text-align:center;color:var(--muted);font-size:.85rem}
+
+@media(max-width:768px){
+.sidebar{width:160px;min-width:160px;padding:8px}
+.workspace{height:calc(100vh - 80px)}
+.toolbar{gap:4px}
+.toolbar button,.toolbar select{padding:4px 8px;font-size:.7rem}
+h1{font-size:1.6rem}
+}
+@media(max-width:500px){
+.sidebar{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+<div class="logo">zovo.one</div>
+<div class="toolbar">
+<button id="btn-undo" title="Undo (Ctrl+Z)">&#8630; Undo</button>
+<button id="btn-redo" title="Redo (Ctrl+Y)">&#8631; Redo</button>
+<div class="sep"></div>
+<button id="btn-auto-layout">Auto Layout</button>
+<div class="sep"></div>
+<button id="btn-zoom-in">+ Zoom</button>
+<button id="btn-zoom-out">- Zoom</button>
+<button id="btn-zoom-fit">Fit</button>
+<div class="sep"></div>
+<button id="btn-export-png">PNG</button>
+<button id="btn-export-svg">SVG</button>
+<div class="sep"></div>
+<button id="btn-save">Save</button>
+<button id="btn-load">Load</button>
+<button id="btn-clear">Clear</button>
+<div class="sep"></div>
+<div class="privacy-badge">Runs entirely in your browser. Zero data sent to any server.</div>
+</div>
+</div>
+
+<div class="workspace">
+<div class="sidebar">
+<h3>Nodes</h3>
+<div class="palette-node pn-process" data-type="process">Process</div>
+<div class="palette-node pn-decision" data-type="decision">Decision</div>
+<div class="palette-node pn-startend" data-type="startend">Start / End</div>
+<div class="palette-node pn-io" data-type="io">Input / Output</div>
+<div class="palette-node pn-document" data-type="document">Document</div>
+
+<div class="sidebar-section">
+<h3>Node Style</h3>
+<label>Fill Color</label>
+<input type="color" id="node-fill" value="#1a1a2e">
+<label style="margin-top:10px">Border Color</label>
+<input type="color" id="node-border-color" value="#00ff88">
+<label style="margin-top:10px">Font Size: <span id="fs-val">14</span>px</label>
+<input type="range" id="node-font-size" min="10" max="28" value="14">
+</div>
+
+<div class="sidebar-section">
+<h3>Canvas</h3>
+<div class="cb-row"><input type="checkbox" id="cb-grid" checked><label for="cb-grid">Snap to Grid</label></div>
+<div class="cb-row"><input type="checkbox" id="cb-show-grid" checked><label for="cb-show-grid">Show Grid</label></div>
+</div>
+
+<div class="sidebar-section">
+<h3>Selection</h3>
+<button id="btn-edit-text">Edit Text</button>
+<button id="btn-delete" class="btn-danger">Delete Selected</button>
+</div>
+</div>
+
+<div class="canvas-wrap" id="canvas-wrap">
+<canvas id="fc-canvas"></canvas>
+</div>
+</div>
+
+<div class="text-edit-overlay" id="text-overlay">
+<div class="text-edit-box">
+<label>Node Text</label>
+<textarea id="text-input"></textarea>
+<div class="btns">
+<button class="btn-cancel" id="text-cancel">Cancel</button>
+<button class="btn-ok" id="text-ok">OK</button>
+</div>
+</div>
+</div>
+
+<div class="content-area">
+<section class="content-section">
+<div class="container">
+<h1>Flow Chart Maker</h1>
+<p>Create professional flowcharts directly in your browser with this free drag-and-drop editor. Add process boxes, decision diamonds, start and end nodes, input/output parallelograms, and document shapes. Connect them with arrows, customize colors and fonts, then export your finished diagram as PNG or SVG. Everything runs locally with no server communication and no account required.</p>
+
+<h2>How to Use the Flow Chart Maker</h2>
+<p>Getting started with this flowchart tool takes about 30 seconds. The left sidebar contains five node types that you can drag onto the canvas. Click and hold any node in the palette, then drag it to where you want it on the canvas. Release to place it. You can then click the node to select it, and double-click to edit its text. To connect two nodes, hover near the edge of a node until you see a connection port appear (a small circle). Click and drag from that port to another node to create an arrow between them.</p>
+
+<p>Selected nodes can be moved by clicking and dragging them. You can resize nodes by dragging the small handle at the bottom-right corner. The sidebar provides controls for changing the fill color, border color, and font size of selected nodes. These style controls apply to whichever node is currently selected, and new nodes will inherit the last-used style settings.</p>
+
+<p>The toolbar at the top provides essential functions: undo and redo (also available via Ctrl+Z and Ctrl+Y keyboard shortcuts), auto-layout which arranges your nodes in a clean tree structure, zoom controls for navigating large diagrams, and export buttons for saving your work as PNG or SVG image files. You can also save your diagram to local storage and load it back later, making it easy to work on diagrams across multiple sessions without losing progress.</p>
+
+<h2>Understanding Flowchart Symbols</h2>
+<p>Flowcharts use standardized shapes to represent different types of steps in a process. Each shape has a specific meaning that makes flowcharts universally readable once you understand the conventions. This tool supports the five most commonly used symbols.</p>
+
+<h3>Process (Rectangle)</h3>
+<p>The rectangle represents a process step or action. It is the most common shape in any flowchart and indicates something that needs to be done, such as "Calculate total," "Send email," or "Update database." Most flowcharts consist primarily of process rectangles connected by arrows showing the sequence of operations.</p>
+
+<h3>Decision (Diamond)</h3>
+<p>The diamond shape represents a decision point where the flow can branch into two or more paths based on a condition. Typical decision text includes yes/no questions like "Is the payment valid?" or "Does the user have an account?" Each exit path from a decision diamond should be labeled to indicate which condition leads to that path.</p>
+
+<h3>Start/End (Rounded Rectangle)</h3>
+<p>Rounded rectangles (also called terminators or ovals in some standards) mark the beginning and end of a process. Every well-formed flowchart should have exactly one start node and at least one end node. The start node typically contains text like "Start," "Begin," or a description of what triggers the process. End nodes contain "End," "Stop," or a description of the final outcome.</p>
+
+<h3>Input/Output (Parallelogram)</h3>
+<p>The parallelogram represents data entry or data output. Use this shape when your process involves receiving input from a user, reading data from a file, displaying results on screen, or printing a report. Examples include "Enter customer name," "Read configuration file," or "Display results."</p>
+
+<h3>Document (Wavy Bottom Rectangle)</h3>
+<p>The document shape, characterized by its wavy bottom edge, represents a document or report generated by the process. Use this when a step produces a physical or digital document, such as "Generate invoice," "Print receipt," or "Create PDF report."</p>
+
+<h2>Tips for Creating Effective Flowcharts</h2>
+<p>A well-designed flowchart communicates a process clearly and efficiently. Start by identifying the purpose of your flowchart and the audience who will read it. A flowchart for a technical team documenting a software algorithm will look different from one explaining an employee onboarding process to HR staff.</p>
+
+<p>Keep your flow direction consistent. The most common convention is top-to-bottom or left-to-right. Avoid mixing directions unnecessarily, as it makes the chart harder to follow. The auto-layout feature in this tool arranges nodes in a top-to-bottom tree structure, which is a good starting point that you can then adjust manually.</p>
+
+<p>Write clear, concise text inside each node. Use action verbs for process steps ("Calculate tax," not "Tax calculation") and phrase decision diamonds as questions with clear yes/no or true/false answers. Avoid cramming too much text into a single node. If a step requires extensive description, use a simple label in the node and add detailed notes separately.</p>
+
+<p>Use color purposefully rather than decoratively. A common approach is to use one color for the main process flow, another for exception handling or error paths, and a third for decision branches. This tool lets you customize both fill and border colors for each node, making it easy to implement a consistent color scheme.</p>
+
+<p>For larger processes, consider breaking the flowchart into sub-processes. If your diagram starts to exceed 15 to 20 nodes, it may be clearer to create a high-level overview chart with sub-process references, then detail each sub-process in its own flowchart. This modular approach keeps individual charts readable while still documenting the complete process.</p>
+
+<h2>Common Flowchart Use Cases</h2>
+<p>Flowcharts serve a wide range of purposes across industries and disciplines. In software development, they document algorithms, user flows, system architectures, and debugging procedures. Product managers use them to map out feature requirements and user journeys. Operations teams create process documentation for standard operating procedures, ensuring consistency across shifts and locations.</p>
+
+<p>In education, flowcharts help students understand sequential logic and decision-making processes. Teachers use them to break down complex topics into digestible steps, from the scientific method to essay writing processes. Students create them to plan research projects, outline arguments, or study decision trees in mathematics and computer science.</p>
+
+<p>Business analysts rely heavily on flowcharts when documenting existing processes as part of improvement initiatives. By mapping out every step in a current process, teams can identify bottlenecks, redundancies, and opportunities for automation. The visual nature of flowcharts makes it much easier to spot inefficiencies than reading a text description of the same process.</p>
+
+<p>Quality assurance teams use flowcharts to document testing procedures and decision criteria. A flowchart showing the complete test workflow, including what to do when a test fails, ensures that every team member follows the same protocol and that no steps are accidentally skipped.</p>
+
+<h2>Exporting and Sharing Your Flowcharts</h2>
+<p>This tool provides three ways to preserve your work. The PNG export creates a raster image suitable for embedding in documents, presentations, emails, and web pages. PNG files look crisp at their original size and are universally supported across all platforms and applications.</p>
+
+<p>The SVG export creates a vector image that scales to any size without losing quality. SVG files are ideal for printing, for use in professional design tools like Figma or Adobe Illustrator, and for embedding in web pages where the diagram may need to display at different sizes on different screens.</p>
+
+<p>The Save function stores your diagram as JSON in your browser's local storage. This preserves all node positions, connections, text, and styling so you can continue working on the diagram later. The Load function retrieves your saved diagram. Note that local storage is specific to your browser and device, so if you need to transfer a diagram to another computer, export it as PNG or SVG instead.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div id="faq-container">
+<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is this flow chart maker really free?<span class="arrow">&#9662;</span></div><div class="faq-a"><p>Yes, completely free with no restrictions. There are no premium tiers, no watermarks on exports, no node limits, and no account required. The tool runs entirely in your browser using standard web technologies. You can create as many flowcharts as you want and export them in full quality.</p></div></div>
+
+<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Does my data get sent to any server?<span class="arrow">&#9662;</span></div><div class="faq-a"><p>No. Everything happens locally in your browser. Your flowchart data never leaves your device. When you save a diagram, it is stored in your browser's local storage on your computer. When you export as PNG or SVG, the file is generated entirely on your device. There is no server-side processing involved at any point.</p></div></div>
+
+<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is the difference between PNG and SVG export?<span class="arrow">&#9662;</span></div><div class="faq-a"><p>PNG is a raster format that stores your diagram as pixels. It looks great at its original size but may become blurry if you enlarge it significantly. SVG is a vector format that stores your diagram as mathematical shapes. It can be scaled to any size, from a business card to a billboard, without losing quality. Use PNG for quick sharing via email or chat. Use SVG when you need to embed the diagram in professional documents or resize it later.</p></div></div>
+
+<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I edit a flowchart after saving it?<span class="arrow">&#9662;</span></div><div class="faq-a"><p>Yes. When you click Save, your diagram is stored in your browser's local storage. Click Load to restore it and continue editing. Your complete diagram, including all nodes, connections, text, positions, and styling, is preserved. Just remember that local storage is tied to your browser, so switching browsers or clearing browser data will remove the saved diagram.</p></div></div>
+
+<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I connect two nodes with an arrow?<span class="arrow">&#9662;</span></div><div class="faq-a"><p>Hover your mouse near the edge of a node. Small circular ports will appear on the top, bottom, left, and right sides. Click and hold on one of these ports, then drag to another node. When you release over a valid target node, an arrow will be created connecting them. The arrow will automatically route to avoid overlapping with other nodes where possible.</p></div></div>
+
+<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What does the auto-layout feature do?<span class="arrow">&#9662;</span></div><div class="faq-a"><p>Auto-layout analyzes the connections between your nodes and arranges them in a hierarchical tree structure flowing from top to bottom. It calculates the optimal position for each node based on its connections, ensuring that parent nodes appear above their children and that sibling nodes are spaced evenly. This is useful when your manually arranged diagram has become messy or when you want a clean starting layout that you can then fine-tune.</p></div></div>
+
+<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I use this on a phone or tablet?<span class="arrow">&#9662;</span></div><div class="faq-a"><p>The tool is responsive and works on tablets in landscape mode. On phones, the screen size makes detailed flowchart editing challenging, though basic operations are possible. For the best experience, we recommend using a device with at least a 10-inch screen. The sidebar collapses on very small screens to give the canvas maximum space.</p></div></div>
+
+<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is there a limit to how many nodes I can add?<span class="arrow">&#9662;</span></div><div class="faq-a"><p>There is no hard limit imposed by the tool. Performance depends on your device capabilities. Modern computers and tablets can handle diagrams with hundreds of nodes smoothly. If you notice performance slowdown with very large diagrams, consider breaking your flowchart into smaller sub-process diagrams for better readability and performance.</p></div></div>
+</div>
+</div>
+</section>
+</div>
+
+<footer>
+<div class="container">
+<p>Built by Michael Lip at zovo.one</p>
+</div>
+</footer>
+
+<script>
+function toggleFaq(el){el.classList.toggle('open');el.nextElementSibling.classList.toggle('open')}
+
+(function(){
+const canvas=document.getElementById('fc-canvas');
+const ctx=canvas.getContext('2d');
+const wrap=document.getElementById('canvas-wrap');
+const dpr=window.devicePixelRatio||1;
+
+let W,H;
+let zoom=1,panX=0,panY=0;
+let nodes=[],connections=[];
+let selectedId=null,hoveredId=null;
+let dragState=null; // {type:'move'|'resize'|'connect'|'pan', ...}
+let undoStack=[],redoStack=[];
+let gridSnap=true,showGrid=true;
+let nextId=1;
+const GRID=20;
+const PORT_R=6;
+
+function uid(){return nextId++}
+
+function snap(v){return gridSnap?Math.round(v/GRID)*GRID:v}
+
+function resize(){
+W=wrap.clientWidth;H=wrap.clientHeight;
+canvas.width=W*dpr;canvas.height=H*dpr;
+canvas.style.width=W+'px';canvas.style.height=H+'px';
+render();
+}
+window.addEventListener('resize',resize);
+
+function saveState(){
+undoStack.push(JSON.stringify({nodes:nodes.map(n=>({...n})),connections:connections.map(c=>({...c})),nextId}));
+if(undoStack.length>100)undoStack.shift();
+redoStack=[];
+}
+
+function restoreState(json){
+const s=JSON.parse(json);
+nodes=s.nodes;connections=s.connections;nextId=s.nextId;
+selectedId=null;render();
+}
+
+document.getElementById('btn-undo').addEventListener('click',()=>{
+if(!undoStack.length)return;
+redoStack.push(JSON.stringify({nodes:nodes.map(n=>({...n})),connections:connections.map(c=>({...c})),nextId}));
+restoreState(undoStack.pop());
+});
+document.getElementById('btn-redo').addEventListener('click',()=>{
+if(!redoStack.length)return;
+undoStack.push(JSON.stringify({nodes:nodes.map(n=>({...n})),connections:connections.map(c=>({...c})),nextId}));
+restoreState(redoStack.pop());
+});
+
+document.addEventListener('keydown',e=>{
+if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;
+if(e.ctrlKey&&e.key==='z'){e.preventDefault();document.getElementById('btn-undo').click()}
+if(e.ctrlKey&&e.key==='y'){e.preventDefault();document.getElementById('btn-redo').click()}
+if(e.key==='Delete'||e.key==='Backspace'){if(selectedId&&document.activeElement===document.body){e.preventDefault();deleteSelected()}}
+});
+
+// Node creation
+function createNode(type,x,y){
+const fill=document.getElementById('node-fill').value;
+const border=document.getElementById('node-border-color').value;
+const fs=parseInt(document.getElementById('node-font-size').value);
+const labels={process:'Process',decision:'Decision?',startend:'Start',io:'Input',document:'Document'};
+return{id:uid(),type,x:snap(x),y:snap(y),w:type==='decision'?140:150,h:type==='decision'?100:70,text:labels[type]||'Node',fill,border,fontSize:fs};
+}
+
+// Palette drag
+document.querySelectorAll('.palette-node').forEach(el=>{
+el.addEventListener('mousedown',e=>{
+e.preventDefault();
+const type=el.dataset.type;
+const rect=wrap.getBoundingClientRect();
+const onMove=ev=>{
+if(!dragState){
+dragState={type:'palette',nodeType:type};
+}
+};
+const onUp=ev=>{
+document.removeEventListener('mousemove',onMove);
+document.removeEventListener('mouseup',onUp);
+const r=wrap.getBoundingClientRect();
+const mx=ev.clientX-r.left;
+const my=ev.clientY-r.top;
+if(mx>=0&&my>=0&&mx<=W&&my<=H){
+saveState();
+const wx=(mx-panX)/zoom-75;
+const wy=(my-panY)/zoom-35;
+const n=createNode(type,wx,wy);
+nodes.push(n);
+selectedId=n.id;
+render();
+}
+dragState=null;
+};
+document.addEventListener('mousemove',onMove);
+document.addEventListener('mouseup',onUp);
+});
+});
+
+// Screen to world coords
+function s2w(sx,sy){return{x:(sx-panX)/zoom,y:(sy-panY)/zoom}}
+function w2s(wx,wy){return{x:wx*zoom+panX,y:wy*zoom+panY}}
+
+// Hit test
+function hitNode(wx,wy){
+for(let i=nodes.length-1;i>=0;i--){
+const n=nodes[i];
+if(wx>=n.x&&wx<=n.x+n.w&&wy>=n.y&&wy<=n.y+n.h)return n;
+}
+return null;
+}
+
+// Ports
+function getPorts(n){
+const cx=n.x+n.w/2,cy=n.y+n.h/2;
+return[
+{x:cx,y:n.y,side:'top'},
+{x:cx,y:n.y+n.h,side:'bottom'},
+{x:n.x,y:cy,side:'left'},
+{x:n.x+n.w,y:cy,side:'right'}
+];
+}
+
+function nearPort(wx,wy,threshold){
+threshold=threshold||12;
+for(const n of nodes){
+for(const p of getPorts(n)){
+const d=Math.hypot(wx-p.x,wy-p.y);
+if(d<threshold)return{node:n,port:p};
+}
+}
+return null;
+}
+
+// Resize handle
+function nearResize(n,wx,wy){
+const rx=n.x+n.w,ry=n.y+n.h;
+return Math.hypot(wx-rx,wy-ry)<12;
+}
+
+// Canvas events
+let mouseDown=false;
+canvas.addEventListener('mousedown',e=>{
+const rect=wrap.getBoundingClientRect();
+const sx=e.clientX-rect.left,sy=e.clientY-rect.top;
+const w=s2w(sx,sy);
+mouseDown=true;
+
+// Check port hit for connection
+const portHit=nearPort(w.x,w.y);
+if(portHit){
+saveState();
+dragState={type:'connect',fromNode:portHit.node,fromPort:portHit.port,mx:w.x,my:w.y};
+return;
+}
+
+const hit=hitNode(w.x,w.y);
+if(hit){
+selectedId=hit.id;
+updateSidebarFromNode(hit);
+if(nearResize(hit,w.x,w.y)){
+saveState();
+dragState={type:'resize',node:hit,startW:hit.w,startH:hit.h,sx:w.x,sy:w.y};
+}else{
+saveState();
+dragState={type:'move',node:hit,ox:w.x-hit.x,oy:w.y-hit.y};
+}
+}else{
+selectedId=null;
+dragState={type:'pan',sx:sx,sy:sy,startPX:panX,startPY:panY};
+}
+render();
+});
+
+canvas.addEventListener('mousemove',e=>{
+const rect=wrap.getBoundingClientRect();
+const sx=e.clientX-rect.left,sy=e.clientY-rect.top;
+const w=s2w(sx,sy);
+
+if(dragState){
+if(dragState.type==='move'){
+dragState.node.x=snap(w.x-dragState.ox);
+dragState.node.y=snap(w.y-dragState.oy);
+render();
+}else if(dragState.type==='resize'){
+const dw=w.x-dragState.sx,dh=w.y-dragState.sy;
+dragState.node.w=Math.max(60,snap(dragState.startW+dw));
+dragState.node.h=Math.max(40,snap(dragState.startH+dh));
+render();
+}else if(dragState.type==='connect'){
+dragState.mx=w.x;dragState.my=w.y;
+render();
+}else if(dragState.type==='pan'){
+panX=dragState.startPX+(sx-dragState.sx);
+panY=dragState.startPY+(sy-dragState.sy);
+render();
+}
+}else{
+const pHit=nearPort(w.x,w.y);
+canvas.style.cursor=pHit?'crosshair':hitNode(w.x,w.y)?'move':'grab';
+const prevHover=hoveredId;
+const hNode=hitNode(w.x,w.y);
+hoveredId=hNode?hNode.id:null;
+if(hoveredId!==prevHover)render();
+}
+});
+
+canvas.addEventListener('mouseup',e=>{
+mouseDown=false;
+if(dragState&&dragState.type==='connect'){
+const rect=wrap.getBoundingClientRect();
+const sx=e.clientX-rect.left,sy=e.clientY-rect.top;
+const w=s2w(sx,sy);
+const portHit=nearPort(w.x,w.y,20);
+if(portHit&&portHit.node.id!==dragState.fromNode.id){
+const exists=connections.some(c=>c.from===dragState.fromNode.id&&c.to===portHit.node.id);
+if(!exists){
+connections.push({from:dragState.fromNode.id,to:portHit.node.id,fromSide:dragState.fromPort.side,toSide:portHit.port.side});
+}
+}
+}
+dragState=null;
+render();
+});
+
+canvas.addEventListener('dblclick',e=>{
+const rect=wrap.getBoundingClientRect();
+const sx=e.clientX-rect.left,sy=e.clientY-rect.top;
+const w=s2w(sx,sy);
+const hit=hitNode(w.x,w.y);
+if(hit){
+selectedId=hit.id;
+openTextEditor(hit);
+}
+});
+
+canvas.addEventListener('wheel',e=>{
+e.preventDefault();
+const rect=wrap.getBoundingClientRect();
+const sx=e.clientX-rect.left,sy=e.clientY-rect.top;
+const oldZoom=zoom;
+zoom*=e.deltaY<0?1.1:0.9;
+zoom=Math.max(0.1,Math.min(5,zoom));
+panX=sx-(sx-panX)*(zoom/oldZoom);
+panY=sy-(sy-panY)*(zoom/oldZoom);
+render();
+},{passive:false});
+
+// Drawing
+function render(){
+ctx.setTransform(dpr,0,0,dpr,0,0);
+ctx.clearRect(0,0,W,H);
+
+// Grid
+if(showGrid){
+ctx.save();
+ctx.translate(panX,panY);
+ctx.scale(zoom,zoom);
+ctx.strokeStyle='#1a1a24';ctx.lineWidth=0.5/zoom;
+const gs=GRID;
+const x0=Math.floor(-panX/zoom/gs)*gs;
+const y0=Math.floor(-panY/zoom/gs)*gs;
+const x1=x0+W/zoom+gs;
+const y1=y0+H/zoom+gs;
+for(let x=x0;x<=x1;x+=gs){ctx.beginPath();ctx.moveTo(x,y0);ctx.lineTo(x,y1);ctx.stroke()}
+for(let y=y0;y<=y1;y+=gs){ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke()}
+ctx.restore();
+}
+
+ctx.save();
+ctx.translate(panX,panY);
+ctx.scale(zoom,zoom);
+
+// Connections
+connections.forEach(c=>{
+const fn=nodes.find(n=>n.id===c.from);
+const tn=nodes.find(n=>n.id===c.to);
+if(!fn||!tn)return;
+const fp=getPortPos(fn,c.fromSide);
+const tp=getPortPos(tn,c.toSide);
+drawArrow(fp,tp,fn,tn);
+});
+
+// Connection in progress
+if(dragState&&dragState.type==='connect'){
+const fp=dragState.fromPort;
+ctx.beginPath();ctx.strokeStyle='#00ff8888';ctx.lineWidth=2;
+ctx.setLineDash([6,4]);
+ctx.moveTo(fp.x,fp.y);ctx.lineTo(dragState.mx,dragState.my);
+ctx.stroke();ctx.setLineDash([]);
+}
+
+// Nodes
+nodes.forEach(n=>{
+drawNode(n,n.id===selectedId,n.id===hoveredId);
+});
+
+// Ports on hovered/selected
+nodes.forEach(n=>{
+if(n.id===hoveredId||n.id===selectedId){
+getPorts(n).forEach(p=>{
+ctx.beginPath();ctx.arc(p.x,p.y,PORT_R/zoom*0.8,0,Math.PI*2);
+ctx.fillStyle='#00ff88';ctx.fill();
+ctx.strokeStyle='#0a0a0f';ctx.lineWidth=1.5/zoom;ctx.stroke();
+});
+}
+});
+
+// Resize handle
+if(selectedId){
+const sel=nodes.find(n=>n.id===selectedId);
+if(sel){
+ctx.fillStyle='var(--accent)';
+ctx.fillRect(sel.x+sel.w-5/zoom,sel.y+sel.h-5/zoom,10/zoom,10/zoom);
+ctx.strokeStyle='#00ff88';ctx.lineWidth=1/zoom;
+ctx.strokeRect(sel.x+sel.w-5/zoom,sel.y+sel.h-5/zoom,10/zoom,10/zoom);
+}
+}
+
+ctx.restore();
+}
+
+function getPortPos(n,side){
+const cx=n.x+n.w/2,cy=n.y+n.h/2;
+switch(side){
+case'top':return{x:cx,y:n.y};
+case'bottom':return{x:cx,y:n.y+n.h};
+case'left':return{x:n.x,y:cy};
+case'right':return{x:n.x+n.w,y:cy};
+}
+return{x:cx,y:cy};
+}
+
+function drawArrow(from,to,fromNode,toNode){
+// Simple routing: if straight line overlaps nodes, add a bend
+const mx=(from.x+to.x)/2,my=(from.y+to.y)/2;
+ctx.beginPath();ctx.strokeStyle='#00ccff';ctx.lineWidth=2;ctx.lineJoin='round';
+
+// Check if midpoint is inside any node
+let bend=false;
+for(const n of nodes){
+if(n.id===fromNode.id||n.id===toNode.id)continue;
+if(mx>n.x&&mx<n.x+n.w&&my>n.y&&my<n.y+n.h){
+bend=true;break;
+}
+}
+
+if(bend){
+const ox=30;
+ctx.moveTo(from.x,from.y);
+ctx.lineTo(from.x+(to.x>from.x?ox:-ox),from.y);
+ctx.lineTo(to.x+(to.x>from.x?-ox:ox),to.y);
+ctx.lineTo(to.x,to.y);
+}else{
+ctx.moveTo(from.x,from.y);
+ctx.lineTo(to.x,to.y);
+}
+ctx.stroke();
+
+// Arrowhead
+const angle=Math.atan2(to.y-(bend?to.y:from.y),to.x-(bend?(to.x>from.x?to.x-30:to.x+30):from.x));
+const aLen=10;
+ctx.beginPath();
+ctx.moveTo(to.x,to.y);
+ctx.lineTo(to.x-aLen*Math.cos(angle-0.4),to.y-aLen*Math.sin(angle-0.4));
+ctx.lineTo(to.x-aLen*Math.cos(angle+0.4),to.y-aLen*Math.sin(angle+0.4));
+ctx.closePath();ctx.fillStyle='#00ccff';ctx.fill();
+}
+
+function drawNode(n,selected,hovered){
+ctx.save();
+const lw=selected?2.5:hovered?2:1.5;
+ctx.lineWidth=lw;
+ctx.strokeStyle=selected?'#00ff88':n.border;
+ctx.fillStyle=n.fill;
+
+switch(n.type){
+case'process':
+roundRect(n.x,n.y,n.w,n.h,6);
+break;
+case'decision':
+ctx.beginPath();
+ctx.moveTo(n.x+n.w/2,n.y);
+ctx.lineTo(n.x+n.w,n.y+n.h/2);
+ctx.lineTo(n.x+n.w/2,n.y+n.h);
+ctx.lineTo(n.x,n.y+n.h/2);
+ctx.closePath();
+ctx.fill();ctx.stroke();
+break;
+case'startend':
+roundRect(n.x,n.y,n.w,n.h,n.h/2);
+break;
+case'io':
+ctx.beginPath();
+const skew=15;
+ctx.moveTo(n.x+skew,n.y);
+ctx.lineTo(n.x+n.w,n.y);
+ctx.lineTo(n.x+n.w-skew,n.y+n.h);
+ctx.lineTo(n.x,n.y+n.h);
+ctx.closePath();
+ctx.fill();ctx.stroke();
+break;
+case'document':
+ctx.beginPath();
+ctx.moveTo(n.x,n.y);
+ctx.lineTo(n.x+n.w,n.y);
+ctx.lineTo(n.x+n.w,n.y+n.h-10);
+ctx.bezierCurveTo(n.x+n.w*0.75,n.y+n.h+5,n.x+n.w*0.25,n.y+n.h-25,n.x,n.y+n.h-10);
+ctx.closePath();
+ctx.fill();ctx.stroke();
+break;
+}
+
+// Text
+ctx.fillStyle='#e0e0e8';
+ctx.font=`${n.fontSize||14}px Inter, sans-serif`;
+ctx.textAlign='center';ctx.textBaseline='middle';
+const lines=wrapText(n.text,n.w-20,n.fontSize||14);
+const lh=(n.fontSize||14)*1.3;
+const startY=n.y+n.h/2-(lines.length-1)*lh/2;
+lines.forEach((line,i)=>{
+ctx.fillText(line,n.x+n.w/2,startY+i*lh);
+});
+
+ctx.restore();
+}
+
+function roundRect(x,y,w,h,r){
+r=Math.min(r,w/2,h/2);
+ctx.beginPath();
+ctx.moveTo(x+r,y);
+ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);
+ctx.closePath();ctx.fill();ctx.stroke();
+}
+
+function wrapText(text,maxW,fs){
+const words=text.split(' ');
+const lines=[];
+let line='';
+const testCanvas=document.createElement('canvas').getContext('2d');
+testCanvas.font=`${fs}px Inter, sans-serif`;
+words.forEach(word=>{
+const test=line?line+' '+word:word;
+if(testCanvas.measureText(test).width>maxW&&line){
+lines.push(line);line=word;
+}else{line=test}
+});
+if(line)lines.push(line);
+return lines.length?lines:[''];
+}
+
+// Text editor
+function openTextEditor(node){
+const overlay=document.getElementById('text-overlay');
+const input=document.getElementById('text-input');
+overlay.classList.add('active');
+input.value=node.text;
+input.focus();
+input.select();
+
+const okBtn=document.getElementById('text-ok');
+const cancelBtn=document.getElementById('text-cancel');
+const onOk=()=>{
+saveState();
+node.text=input.value||'Node';
+overlay.classList.remove('active');
+cleanup();render();
+};
+const onCancel=()=>{
+overlay.classList.remove('active');
+cleanup();
+};
+const onKey=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();onOk()}if(e.key==='Escape')onCancel()};
+const cleanup=()=>{
+okBtn.removeEventListener('click',onOk);
+cancelBtn.removeEventListener('click',onCancel);
+input.removeEventListener('keydown',onKey);
+};
+okBtn.addEventListener('click',onOk);
+cancelBtn.addEventListener('click',onCancel);
+input.addEventListener('keydown',onKey);
+}
+
+document.getElementById('btn-edit-text').addEventListener('click',()=>{
+const sel=nodes.find(n=>n.id===selectedId);
+if(sel)openTextEditor(sel);
+});
+
+function deleteSelected(){
+if(!selectedId)return;
+saveState();
+connections=connections.filter(c=>c.from!==selectedId&&c.to!==selectedId);
+nodes=nodes.filter(n=>n.id!==selectedId);
+selectedId=null;render();
+}
+document.getElementById('btn-delete').addEventListener('click',deleteSelected);
+
+// Sidebar sync
+function updateSidebarFromNode(n){
+document.getElementById('node-fill').value=n.fill;
+document.getElementById('node-border-color').value=n.border;
+document.getElementById('node-font-size').value=n.fontSize||14;
+document.getElementById('fs-val').textContent=n.fontSize||14;
+}
+
+document.getElementById('node-fill').addEventListener('input',e=>{
+const sel=nodes.find(n=>n.id===selectedId);
+if(sel){saveState();sel.fill=e.target.value;render()}
+});
+document.getElementById('node-border-color').addEventListener('input',e=>{
+const sel=nodes.find(n=>n.id===selectedId);
+if(sel){saveState();sel.border=e.target.value;render()}
+});
+document.getElementById('node-font-size').addEventListener('input',e=>{
+document.getElementById('fs-val').textContent=e.target.value;
+const sel=nodes.find(n=>n.id===selectedId);
+if(sel){saveState();sel.fontSize=parseInt(e.target.value);render()}
+});
+
+document.getElementById('cb-grid').addEventListener('change',e=>{gridSnap=e.target.checked});
+document.getElementById('cb-show-grid').addEventListener('change',e=>{showGrid=e.target.checked;render()});
+
+// Zoom
+document.getElementById('btn-zoom-in').addEventListener('click',()=>{zoom=Math.min(5,zoom*1.2);render()});
+document.getElementById('btn-zoom-out').addEventListener('click',()=>{zoom=Math.max(0.1,zoom/1.2);render()});
+document.getElementById('btn-zoom-fit').addEventListener('click',()=>{
+if(!nodes.length){zoom=1;panX=0;panY=0;render();return}
+let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+nodes.forEach(n=>{
+minX=Math.min(minX,n.x);minY=Math.min(minY,n.y);
+maxX=Math.max(maxX,n.x+n.w);maxY=Math.max(maxY,n.y+n.h);
+});
+const pw=maxX-minX+80,ph=maxY-minY+80;
+zoom=Math.min(W/pw,H/ph,2);
+panX=W/2-(minX+pw/2-40)*zoom;
+panY=H/2-(minY+ph/2-40)*zoom;
+render();
+});
+
+// Auto layout
+document.getElementById('btn-auto-layout').addEventListener('click',()=>{
+if(!nodes.length)return;
+saveState();
+// Build adjacency
+const children={};const parents={};
+nodes.forEach(n=>{children[n.id]=[];parents[n.id]=[]});
+connections.forEach(c=>{
+if(children[c.from])children[c.from].push(c.to);
+if(parents[c.to])parents[c.to].push(c.from);
+});
+// Find roots (no parents)
+let roots=nodes.filter(n=>parents[n.id].length===0).map(n=>n.id);
+if(!roots.length)roots=[nodes[0].id];
+
+// BFS assign levels
+const level={};const visited=new Set();
+let queue=roots.map(r=>({id:r,lv:0}));
+roots.forEach(r=>{visited.add(r);level[r]=0});
+while(queue.length){
+const{id,lv}=queue.shift();
+level[id]=lv;
+(children[id]||[]).forEach(cid=>{
+if(!visited.has(cid)){visited.add(cid);queue.push({id:cid,lv:lv+1})}
+});
+}
+// Assign unvisited
+nodes.forEach(n=>{if(level[n.id]===undefined)level[n.id]=0});
+
+// Group by level
+const levels={};
+nodes.forEach(n=>{
+const lv=level[n.id];
+if(!levels[lv])levels[lv]=[];
+levels[lv].push(n);
+});
+
+const vGap=120,hGap=40;
+const sortedLevels=Object.keys(levels).map(Number).sort((a,b)=>a-b);
+let y=60;
+sortedLevels.forEach(lv=>{
+const group=levels[lv];
+const totalW=group.reduce((s,n)=>s+n.w,0)+hGap*(group.length-1);
+let x=(W/zoom-totalW)/2;
+group.forEach(n=>{
+n.x=snap(x);n.y=snap(y);
+x+=n.w+hGap;
+});
+const maxH=Math.max(...group.map(n=>n.h));
+y+=maxH+vGap;
+});
+
+// Reassign connection sides
+connections.forEach(c=>{
+const fn=nodes.find(n=>n.id===c.from);
+const tn=nodes.find(n=>n.id===c.to);
+if(!fn||!tn)return;
+if(fn.y+fn.h<=tn.y){c.fromSide='bottom';c.toSide='top'}
+else if(fn.y>=tn.y+tn.h){c.fromSide='top';c.toSide='bottom'}
+else if(fn.x+fn.w<=tn.x){c.fromSide='right';c.toSide='left'}
+else{c.fromSide='left';c.toSide='right'}
+});
+
+render();
+});
+
+// Export PNG
+document.getElementById('btn-export-png').addEventListener('click',()=>{
+if(!nodes.length)return;
+let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+nodes.forEach(n=>{
+minX=Math.min(minX,n.x-20);minY=Math.min(minY,n.y-20);
+maxX=Math.max(maxX,n.x+n.w+20);maxY=Math.max(maxY,n.y+n.h+20);
+});
+const ew=maxX-minX,eh=maxY-minY;
+const expCanvas=document.createElement('canvas');
+expCanvas.width=ew*2;expCanvas.height=eh*2;
+const ec=expCanvas.getContext('2d');
+ec.scale(2,2);ec.translate(-minX,-minY);
+ec.fillStyle='#0a0a0f';ec.fillRect(minX,minY,ew,eh);
+
+// Draw connections
+const origCtx=ctx;
+const origCanvas=canvas;
+// Temporarily swap
+connections.forEach(c=>{
+const fn=nodes.find(n=>n.id===c.from);
+const tn=nodes.find(n=>n.id===c.to);
+if(!fn||!tn)return;
+const fp=getPortPos(fn,c.fromSide);
+const tp=getPortPos(tn,c.toSide);
+// Draw on export context
+ec.beginPath();ec.strokeStyle='#00ccff';ec.lineWidth=2;
+ec.moveTo(fp.x,fp.y);ec.lineTo(tp.x,tp.y);ec.stroke();
+const angle=Math.atan2(tp.y-fp.y,tp.x-fp.x);
+ec.beginPath();ec.moveTo(tp.x,tp.y);
+ec.lineTo(tp.x-10*Math.cos(angle-0.4),tp.y-10*Math.sin(angle-0.4));
+ec.lineTo(tp.x-10*Math.cos(angle+0.4),tp.y-10*Math.sin(angle+0.4));
+ec.closePath();ec.fillStyle='#00ccff';ec.fill();
+});
+
+nodes.forEach(n=>{
+ec.save();
+ec.lineWidth=1.5;ec.strokeStyle=n.border;ec.fillStyle=n.fill;
+switch(n.type){
+case'process':
+ec.beginPath();const r=6;
+ec.moveTo(n.x+r,n.y);ec.lineTo(n.x+n.w-r,n.y);ec.arcTo(n.x+n.w,n.y,n.x+n.w,n.y+r,r);
+ec.lineTo(n.x+n.w,n.y+n.h-r);ec.arcTo(n.x+n.w,n.y+n.h,n.x+n.w-r,n.y+n.h,r);
+ec.lineTo(n.x+r,n.y+n.h);ec.arcTo(n.x,n.y+n.h,n.x,n.y+n.h-r,r);
+ec.lineTo(n.x,n.y+r);ec.arcTo(n.x,n.y,n.x+r,n.y,r);
+ec.closePath();ec.fill();ec.stroke();break;
+case'decision':
+ec.beginPath();ec.moveTo(n.x+n.w/2,n.y);ec.lineTo(n.x+n.w,n.y+n.h/2);
+ec.lineTo(n.x+n.w/2,n.y+n.h);ec.lineTo(n.x,n.y+n.h/2);ec.closePath();
+ec.fill();ec.stroke();break;
+case'startend':
+const rr=n.h/2;ec.beginPath();
+ec.moveTo(n.x+rr,n.y);ec.lineTo(n.x+n.w-rr,n.y);ec.arcTo(n.x+n.w,n.y,n.x+n.w,n.y+rr,rr);
+ec.lineTo(n.x+n.w,n.y+n.h-rr);ec.arcTo(n.x+n.w,n.y+n.h,n.x+n.w-rr,n.y+n.h,rr);
+ec.lineTo(n.x+rr,n.y+n.h);ec.arcTo(n.x,n.y+n.h,n.x,n.y+n.h-rr,rr);
+ec.lineTo(n.x,n.y+rr);ec.arcTo(n.x,n.y,n.x+rr,n.y,rr);
+ec.closePath();ec.fill();ec.stroke();break;
+case'io':
+ec.beginPath();ec.moveTo(n.x+15,n.y);ec.lineTo(n.x+n.w,n.y);
+ec.lineTo(n.x+n.w-15,n.y+n.h);ec.lineTo(n.x,n.y+n.h);
+ec.closePath();ec.fill();ec.stroke();break;
+case'document':
+ec.beginPath();ec.moveTo(n.x,n.y);ec.lineTo(n.x+n.w,n.y);
+ec.lineTo(n.x+n.w,n.y+n.h-10);
+ec.bezierCurveTo(n.x+n.w*0.75,n.y+n.h+5,n.x+n.w*0.25,n.y+n.h-25,n.x,n.y+n.h-10);
+ec.closePath();ec.fill();ec.stroke();break;
+}
+ec.fillStyle='#e0e0e8';ec.font=`${n.fontSize||14}px Inter, sans-serif`;
+ec.textAlign='center';ec.textBaseline='middle';
+const lines=wrapText(n.text,n.w-20,n.fontSize||14);
+const lh=(n.fontSize||14)*1.3;
+const startY=n.y+n.h/2-(lines.length-1)*lh/2;
+lines.forEach((line,i)=>{ec.fillText(line,n.x+n.w/2,startY+i*lh)});
+ec.restore();
+});
+
+const link=document.createElement('a');
+link.download='flowchart.png';link.href=expCanvas.toDataURL('image/png');link.click();
+});
+
+// Export SVG
+document.getElementById('btn-export-svg').addEventListener('click',()=>{
+if(!nodes.length)return;
+let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+nodes.forEach(n=>{
+minX=Math.min(minX,n.x-20);minY=Math.min(minY,n.y-20);
+maxX=Math.max(maxX,n.x+n.w+20);maxY=Math.max(maxY,n.y+n.h+20);
+});
+const ew=maxX-minX,eh=maxY-minY;
+let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${ew}" height="${eh}" viewBox="${minX} ${minY} ${ew} ${eh}">`;
+svg+=`<rect x="${minX}" y="${minY}" width="${ew}" height="${eh}" fill="#0a0a0f"/>`;
+svg+=`<defs><marker id="ah" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#00ccff"/></marker></defs>`;
+
+connections.forEach(c=>{
+const fn=nodes.find(n=>n.id===c.from);const tn=nodes.find(n=>n.id===c.to);
+if(!fn||!tn)return;
+const fp=getPortPos(fn,c.fromSide);const tp=getPortPos(tn,c.toSide);
+svg+=`<line x1="${fp.x}" y1="${fp.y}" x2="${tp.x}" y2="${tp.y}" stroke="#00ccff" stroke-width="2" marker-end="url(#ah)"/>`;
+});
+
+nodes.forEach(n=>{
+let shape='';
+switch(n.type){
+case'process':shape=`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="6" fill="${n.fill}" stroke="${n.border}" stroke-width="1.5"/>`;break;
+case'decision':shape=`<polygon points="${n.x+n.w/2},${n.y} ${n.x+n.w},${n.y+n.h/2} ${n.x+n.w/2},${n.y+n.h} ${n.x},${n.y+n.h/2}" fill="${n.fill}" stroke="${n.border}" stroke-width="1.5"/>`;break;
+case'startend':shape=`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="${n.h/2}" fill="${n.fill}" stroke="${n.border}" stroke-width="1.5"/>`;break;
+case'io':shape=`<polygon points="${n.x+15},${n.y} ${n.x+n.w},${n.y} ${n.x+n.w-15},${n.y+n.h} ${n.x},${n.y+n.h}" fill="${n.fill}" stroke="${n.border}" stroke-width="1.5"/>`;break;
+case'document':shape=`<path d="M${n.x},${n.y} L${n.x+n.w},${n.y} L${n.x+n.w},${n.y+n.h-10} C${n.x+n.w*0.75},${n.y+n.h+5} ${n.x+n.w*0.25},${n.y+n.h-25} ${n.x},${n.y+n.h-10} Z" fill="${n.fill}" stroke="${n.border}" stroke-width="1.5"/>`;break;
+}
+svg+=shape;
+const lines=wrapText(n.text,n.w-20,n.fontSize||14);
+const lh=(n.fontSize||14)*1.3;
+const startY=n.y+n.h/2-(lines.length-1)*lh/2;
+lines.forEach((line,i)=>{
+svg+=`<text x="${n.x+n.w/2}" y="${startY+i*lh}" fill="#e0e0e8" font-family="Inter, sans-serif" font-size="${n.fontSize||14}" text-anchor="middle" dominant-baseline="central">${escXml(line)}</text>`;
+});
+});
+svg+=`</svg>`;
+const blob=new Blob([svg],{type:'image/svg+xml'});
+const link=document.createElement('a');link.download='flowchart.svg';link.href=URL.createObjectURL(blob);link.click();
+});
+
+function escXml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+// Save/Load
+document.getElementById('btn-save').addEventListener('click',()=>{
+const data=JSON.stringify({nodes,connections,nextId,zoom,panX,panY});
+localStorage.setItem('zovo-flowchart',data);
+alert('Diagram saved to browser storage.');
+});
+document.getElementById('btn-load').addEventListener('click',()=>{
+const data=localStorage.getItem('zovo-flowchart');
+if(!data){alert('No saved diagram found.');return}
+const s=JSON.parse(data);
+nodes=s.nodes||[];connections=s.connections||[];nextId=s.nextId||1;
+zoom=s.zoom||1;panX=s.panX||0;panY=s.panY||0;
+selectedId=null;render();
+});
+document.getElementById('btn-clear').addEventListener('click',()=>{
+if(!nodes.length)return;
+if(!confirm('Clear all nodes and connections?'))return;
+saveState();nodes=[];connections=[];selectedId=null;render();
+});
+
+resize();
+})();
+</script>
+</body>
+</html>
