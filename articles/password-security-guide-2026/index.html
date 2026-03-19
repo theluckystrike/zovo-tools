@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Security in 2026 - How to Create and Manage Strong Passwords</title>
+<meta name="description" content="Complete guide to password security in 2026. Learn how passwords get cracked, how to create strong ones, why password managers matter, and how hashing protects stored credentials. Includes free password and hash generation tools.">
+<meta name="author" content="Michael Lip">
+<link rel="canonical" href="https://zovo.one/free-tools/articles/password-security-guide-2026/">
+<link rel="icon" href="https://zovo.one/favicon.ico" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<meta property="og:title" content="Password Security in 2026 - How to Create and Manage Strong Passwords">
+<meta property="og:description" content="Complete guide to creating, managing, and storing passwords securely. Covers brute-force timelines, password managers, hashing, and passkeys.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://zovo.one/free-tools/articles/password-security-guide-2026/">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Password Security in 2026 - How to Create and Manage Strong Passwords">
+<meta name="twitter:description" content="Complete guide to creating, managing, and storing passwords securely. Covers brute-force timelines, password managers, hashing, and passkeys.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Password Security in 2026 - How to Create and Manage Strong Passwords",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Zovo Tools",
+    "url": "https://zovo.one"
+  },
+  "datePublished": "2026-03-20",
+  "dateModified": "2026-03-20",
+  "description": "Complete guide to password security in 2026 covering password creation, management, hashing, and emerging authentication methods.",
+  "mainEntityOfPage": "https://zovo.one/free-tools/articles/password-security-guide-2026/"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How long should a password be in 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "NIST currently recommends a minimum of 15 characters. Security researchers recommend 16 to 20 characters for accounts that matter. A 16-character password using mixed case, numbers, and symbols has roughly 105 bits of entropy and would take billions of years to brute force with current hardware. Length matters more than complexity: a 20-character lowercase passphrase is stronger than an 8-character complex password."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are password managers safe to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, password managers are considered the safest practical approach to credential management by security professionals. They encrypt your vault with a master password using AES-256 or XChaCha20 encryption. The main risk is the master password itself: if it is weak or reused, an attacker who obtains the vault file could decrypt it. Choose a strong, unique master password (a 5+ word passphrase works well) and enable two-factor authentication on the manager account."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between hashing and encryption?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Encryption is reversible: data is transformed using a key and can be transformed back with the same or a corresponding key. Hashing is a one-way function: data goes in and a fixed-length digest comes out, but the original data cannot be recovered from the digest. Passwords should always be hashed (not encrypted) for storage because there is no legitimate reason a system needs to recover your plaintext password. bcrypt, scrypt, and Argon2 are the recommended hashing algorithms for passwords."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are passkeys and will they replace passwords?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Passkeys are a FIDO2/WebAuthn-based authentication method that uses public-key cryptography instead of shared secrets. Your device stores a private key, and the service stores only the public key. Authentication happens via biometrics (fingerprint, face) or device PIN. Passkeys eliminate phishing, credential stuffing, and password reuse risks. Major platforms (Apple, Google, Microsoft) support passkeys as of 2024, and adoption is growing, but full password replacement will take years due to legacy system support requirements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do hackers crack passwords?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The primary methods are: brute force (trying every combination), dictionary attacks (trying common words and variations), credential stuffing (using leaked username/password pairs from breaches on other sites), rainbow tables (precomputed hash lookups, defeated by salting), and social engineering (phishing, pretexting). Most successful attacks exploit password reuse and weak passwords, not sophisticated cracking. Using unique, long passwords for every account neutralizes the most common attack vectors."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I change my passwords regularly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "NIST SP 800-63B (updated 2024) recommends against mandatory periodic password changes. Forced rotations lead to weaker passwords because users create predictable variations (Password1, Password2, Password3). Instead, change passwords only when: you suspect compromise, a service you use reports a breach, or you discover you are reusing a password. Focus on unique, strong passwords with two-factor authentication rather than frequent rotation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is two-factor authentication and which type is best?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Two-factor authentication (2FA) requires a second verification step beyond your password. The types, ranked from most to least secure, are: hardware security keys (YubiKey, Titan), authenticator apps (TOTP codes from Authy, Google Authenticator), push notifications (Duo, Microsoft Authenticator prompts), and SMS codes (vulnerable to SIM swapping). Hardware keys provide the strongest protection against phishing because they verify the requesting domain cryptographically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is bcrypt and why is it recommended for password hashing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "bcrypt is a password hashing function based on the Blowfish cipher, designed in 1999 by Niels Provos and David Mazieres. It is recommended because it is deliberately slow (adjustable via a cost factor), includes a built-in salt to prevent rainbow table attacks, and its slowness scales with hardware improvements (you can increase the cost factor). A cost factor of 12 (the current common recommendation) takes roughly 250 milliseconds per hash, which is negligible for login but makes brute-force cracking impractical."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Zovo Tools",
+      "item": "https://zovo.one/free-tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://zovo.one/free-tools/articles/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Password Security Guide 2026",
+      "item": "https://zovo.one/free-tools/articles/password-security-guide-2026/"
+    }
+  ]
+}
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0a0a0f;
+    color: #e0e0e8;
+    line-height: 1.8;
+    font-size: 16px;
+  }
+  a { color: #00ff88; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .container { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .breadcrumb { font-size: 0.82rem; color: #6a6a80; margin-bottom: 2rem; }
+  .breadcrumb a { color: #6a6a80; }
+  .breadcrumb a:hover { color: #00ff88; }
+  h1 { font-size: 2.4rem; font-weight: 800; line-height: 1.2; margin-bottom: 1rem; color: #ffffff; }
+  .subtitle { font-size: 1.1rem; color: #8888a0; margin-bottom: 2rem; line-height: 1.6; }
+  .meta-line { font-size: 0.82rem; color: #6a6a80; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #2a2a3a; }
+  h2 { font-size: 1.6rem; font-weight: 700; margin: 2.8rem 0 1rem; color: #ffffff; }
+  h3 { font-size: 1.25rem; font-weight: 600; margin: 2rem 0 0.8rem; color: #e0e0e8; }
+  p { margin-bottom: 1.2rem; color: #c8c8d4; }
+  ul, ol { margin: 0 0 1.5rem 1.5rem; color: #c8c8d4; }
+  li { margin-bottom: 0.5rem; }
+  code {
+    background: #1a1a2e;
+    color: #00ff88;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  pre {
+    background: #12121a;
+    border: 1px solid #2a2a3a;
+    border-radius: 8px;
+    padding: 1.2rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #e0e0e8;
+  }
+  .tool-cta {
+    display: inline-block;
+    background: #00ff88;
+    color: #0a0a0f;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin: 1rem 0.5rem 1rem 0;
+    transition: opacity 0.2s;
+  }
+  .tool-cta:hover { opacity: 0.85; text-decoration: none; }
+  .info-block {
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    margin: 2rem 0;
+    background: #12121a;
+    border: 1px solid #2a2a3a;
+  }
+  .wiki-block { border-left: 4px solid #00ff88; }
+  .so-block { border-left: 4px solid #f48024; }
+  .yt-block { border-left: 4px solid #ff0000; }
+  .info-block-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem; }
+  .wiki-block .info-block-title { color: #00ff88; }
+  .so-block .info-block-title { color: #f48024; }
+  .yt-block .info-block-title { color: #ff0000; }
+  .info-block p, .info-block li { font-size: 0.92rem; color: #b0b0c0; }
+  .info-block a { font-size: 0.92rem; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .stat-card {
+    background: #12121a;
+    border: 1px solid #2a2a3a;
+    border-radius: 8px;
+    padding: 1.2rem;
+    text-align: center;
+  }
+  .stat-number { font-size: 1.6rem; font-weight: 800; color: #00ff88; }
+  .stat-label { font-size: 0.78rem; color: #8888a0; margin-top: 0.3rem; }
+  .compat-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.88rem;
+  }
+  .compat-table th, .compat-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #2a2a3a;
+    text-align: left;
+  }
+  .compat-table th { background: #12121a; color: #00ff88; font-weight: 600; }
+  .compat-table td { color: #c8c8d4; }
+  .compat-table tr:nth-child(even) td { background: #0e0e16; }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.88rem;
+  }
+  .data-table th, .data-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #2a2a3a;
+    text-align: left;
+  }
+  .data-table th { background: #12121a; color: #00ff88; font-weight: 600; }
+  .data-table td { color: #c8c8d4; }
+  .data-table tr:nth-child(even) td { background: #0e0e16; }
+  .update-history {
+    background: #12121a;
+    border: 1px solid #2a2a3a;
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    margin: 2rem 0;
+    font-size: 0.88rem;
+    color: #8888a0;
+  }
+  .related-guides {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .related-card {
+    background: #12121a;
+    border: 1px solid #2a2a3a;
+    border-radius: 8px;
+    padding: 1.2rem;
+    transition: border-color 0.2s;
+  }
+  .related-card:hover { border-color: #00ff88; }
+  .related-card a { color: #ffffff; font-weight: 600; font-size: 0.95rem; }
+  .related-card p { font-size: 0.82rem; color: #8888a0; margin-top: 0.4rem; margin-bottom: 0; }
+  .footer-bar {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.82rem;
+    color: #6a6a80;
+    border-top: 1px solid #2a2a3a;
+    margin-top: 3rem;
+  }
+  .warning-block {
+    background: #12121a;
+    border: 1px solid #2a2a3a;
+    border-left: 4px solid #ff4444;
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .warning-block p { font-size: 0.92rem; color: #c8c8d4; margin-bottom: 0.5rem; }
+  .warning-block p:last-child { margin-bottom: 0; }
+  @media (max-width: 700px) {
+    h1 { font-size: 1.7rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .container { padding: 1.2rem 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div style="padding:0.6rem 1.5rem;background:#0a0a0f;border-bottom:1px solid #1a1a2a;display:flex;justify-content:space-between;align-items:center;">
+  <a href="/free-tools/" style="text-decoration:none;"><span style="font-size:1.1rem;font-weight:700;color:#00ff88;">Zovo</span> <span style="font-size:0.75rem;color:#8888a0;">Tools</span></a>
+  <nav style="display:flex;gap:1.5rem;font-size:0.8rem;">
+    <a href="/free-tools/" style="color:#8888a0;text-decoration:none;">All Tools</a>
+    <a href="https://zovo.one" style="color:#8888a0;text-decoration:none;">zovo.one</a>
+  </nav>
+</div>
+
+<div class="container">
+
+<div class="breadcrumb">
+  <a href="/free-tools/">Zovo Tools</a> &raquo; <a href="/free-tools/articles/">Guides</a> &raquo; Password Security Guide 2026
+</div>
+
+<h1>Password Security in 2026 - How to Create and Manage Strong Passwords</h1>
+<p class="subtitle">A practical, up-to-date guide to password security. Covers how passwords get cracked, what makes a password strong, why password managers are non-negotiable, how hashing works behind the scenes, and where authentication is headed with passkeys and FIDO2.</p>
+<div class="meta-line">By Michael Lip / Updated March 20, 2026 / 20 min read</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-number">80%</div>
+    <div class="stat-label">Breaches from Weak/Reused Passwords</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">16+</div>
+    <div class="stat-label">Recommended Min Characters</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">10B+</div>
+    <div class="stat-label">Credentials in Public Breach Dumps</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">3sec</div>
+    <div class="stat-label">Time to Crack 8-Char Password</div>
+  </div>
+</div>
+
+<div class="info-block wiki-block">
+  <div class="info-block-title">Wikipedia: Password Strength</div>
+  <p>Password strength is a measure of the effectiveness of a password against guessing or brute-force attacks. In its usual form, it estimates how many trials an attacker who does not have direct access to the password would need, on average, to guess it correctly. The strength of a password is a function of length, complexity, and unpredictability. Using strong passwords lowers overall risk of a security breach, but strong passwords do not replace the need for other effective security controls.</p>
+  <p style="margin-top:0.6rem;"><a href="https://en.wikipedia.org/wiki/Password_strength" target="_blank" rel="noopener">Read full article on Wikipedia</a> &middot; <span style="color:#6a6a80;">Verified March 20, 2026</span></p>
+</div>
+
+<h2>How Passwords Get Cracked</h2>
+
+<p>Understanding how attackers break passwords is the first step toward creating ones they cannot. There are five primary attack methods, and each exploits different weaknesses.</p>
+
+<h3>Brute Force</h3>
+<p>A brute-force attack tries every possible combination of characters until it finds the right one. The time required depends on password length, character set size, and the attacker's hardware speed. Modern GPUs (like the NVIDIA RTX 5090) can compute over 150 billion MD5 hashes per second. Against properly hashed passwords (bcrypt with a cost factor of 12), that same GPU is limited to roughly 100 hashes per second, which is why hash algorithm choice matters enormously.</p>
+
+<h3>Dictionary Attacks</h3>
+<p>Dictionary attacks try common words, phrases, and known passwords from previous breaches. Attackers maintain wordlists containing millions of entries, including common substitutions (p@ssw0rd, l3tme1n). These attacks are fast because they skip uncommon combinations and focus on what people actually use. The RockYou breach list alone contains 14 million unique passwords and remains a staple of every attacker's toolkit.</p>
+
+<h3>Credential Stuffing</h3>
+<p>When a service gets breached and its user database leaks, attackers try those username/password pairs on other services. Because roughly 65% of people reuse passwords across multiple accounts, credential stuffing has a high success rate. It requires no cracking at all if the breached service stored passwords in plaintext or used weak hashing.</p>
+
+<h3>Rainbow Tables</h3>
+<p>Rainbow tables are precomputed lookup tables that map hash values back to their original passwords. If a database stores unsalted hashes, an attacker can look up any hash and find the password in seconds. Modern password hashing algorithms (bcrypt, scrypt, Argon2) include a random salt with each hash, making rainbow tables useless because each password has a unique salt.</p>
+
+<h3>Social Engineering and Phishing</h3>
+<p>The most effective password attacks often bypass technical defenses entirely. Phishing emails that mimic legitimate login pages, phone calls from fake support agents, and shoulder surfing all target human behavior rather than cryptographic weaknesses. Two-factor authentication is the strongest defense against phishing because even a stolen password is not sufficient to log in.</p>
+
+<h2>What Makes a Password Strong</h2>
+
+<p>Password strength comes down to entropy: the number of possible combinations an attacker must try. Entropy is measured in bits. A password with 80 bits of entropy has 2^80 possible values. Every additional bit doubles the search space.</p>
+
+<table class="data-table">
+  <thead>
+    <tr><th>Password Type</th><th>Example</th><th>Entropy (bits)</th><th>Brute Force Time (MD5)</th><th>Brute Force Time (bcrypt-12)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>6 chars, lowercase</td><td>garden</td><td>28</td><td>Instant</td><td>~31 days</td></tr>
+    <tr><td>8 chars, mixed + numbers</td><td>G4rd3n!x</td><td>52</td><td>~3 seconds</td><td>~1.4 million years</td></tr>
+    <tr><td>12 chars, mixed + symbols</td><td>G4r#en!xP2m$</td><td>79</td><td>~4,000 years</td><td>Trillions of years</td></tr>
+    <tr><td>16 chars, mixed + symbols</td><td>kR7#mP2x!vL9nQ4$</td><td>105</td><td>~340 billion years</td><td>Longer than the universe</td></tr>
+    <tr><td>4-word passphrase</td><td>correct horse battery staple</td><td>~44</td><td>~2 hours</td><td>~5,600 years</td></tr>
+    <tr><td>6-word passphrase</td><td>correct horse battery staple lunar drift</td><td>~78</td><td>~3,500 years</td><td>Trillions of years</td></tr>
+  </tbody>
+</table>
+
+<p>The key takeaways: length is more important than complexity (a 16-character lowercase password is stronger than an 8-character complex one), and the hash algorithm used by the service matters as much as the password itself. You control your password; you cannot control how the service stores it.</p>
+
+<h3>Passphrases vs. Random Strings</h3>
+<p>A passphrase is a sequence of random words, like "correct horse battery staple" (the famous XKCD example). Passphrases are easier to memorize than random character strings and can achieve high entropy through length. A 6-word passphrase from a 7,776-word dictionary (Diceware) has about 78 bits of entropy, which is strong enough for nearly any purpose.</p>
+
+<p>Random character strings generated by a password manager are denser in entropy per character but impossible to memorize. Use passphrases for the few passwords you must remember (master password, device login) and random strings for everything else.</p>
+
+<p>Generate strong passwords instantly with the <a href="/free-tools/password-generator/">Password Generator</a>. It supports custom length, character sets, and passphrase generation.</p>
+
+<a href="/free-tools/password-generator/" class="tool-cta">Open Password Generator</a>
+
+<h2>Password Managers: Why and How</h2>
+
+<p>The average person has over 100 online accounts. Remembering a unique, strong password for each one is not humanly possible. Password managers solve this by generating, storing, and auto-filling credentials. You remember one master password; the manager handles the rest.</p>
+
+<h3>How Password Managers Work</h3>
+<p>A password manager encrypts your credential vault using your master password as the key. The encryption typically uses AES-256 or XChaCha20, both of which are considered unbreakable with current technology. The manager derives an encryption key from your master password using a key derivation function (PBKDF2, Argon2, or scrypt) with hundreds of thousands of iterations, making brute-force attacks against the vault impractical.</p>
+
+<p>Zero-knowledge architecture means the password manager company never has access to your decrypted vault. If they get breached (as happened to LastPass in 2022), attackers get encrypted blobs that are only as vulnerable as your master password is weak.</p>
+
+<h3>Choosing a Password Manager</h3>
+
+<table class="data-table">
+  <thead>
+    <tr><th>Manager</th><th>Platform</th><th>Encryption</th><th>Free Tier</th><th>Open Source</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Bitwarden</td><td>All platforms</td><td>AES-256 + Argon2</td><td>Yes (full featured)</td><td>Yes</td></tr>
+    <tr><td>1Password</td><td>All platforms</td><td>AES-256 + PBKDF2</td><td>14-day trial</td><td>No</td></tr>
+    <tr><td>KeePassXC</td><td>Desktop (Windows, Mac, Linux)</td><td>AES-256 or ChaCha20</td><td>Fully free</td><td>Yes</td></tr>
+    <tr><td>Proton Pass</td><td>All platforms</td><td>AES-256 + Argon2</td><td>Yes (limited)</td><td>Yes</td></tr>
+    <tr><td>Dashlane</td><td>All platforms</td><td>AES-256 + Argon2</td><td>Yes (1 device)</td><td>No</td></tr>
+  </tbody>
+</table>
+
+<p>For most people, Bitwarden is the strongest recommendation: it is open source, independently audited, works on every platform, and has a generous free tier. KeePassXC is the choice for users who want complete local control with no cloud sync.</p>
+
+<div class="warning-block">
+  <p>Never store passwords in a browser's built-in password manager as your only copy. Browser password stores have weaker encryption, limited cross-browser support, and are a common target for info-stealing malware. Use a dedicated password manager and treat browser auto-fill as a convenience layer, not a security solution.</p>
+</div>
+
+<h2>How Password Hashing Works</h2>
+
+<p>When you create an account on a properly built service, the service does not store your password. It stores a hash of your password. A hash function takes input of any length and produces a fixed-length output that is computationally infeasible to reverse.</p>
+
+<h3>Hash Functions Used for Passwords</h3>
+
+<p>Not all hash functions are suitable for passwords. General-purpose hashes like MD5 and SHA-256 are designed to be fast, which is the opposite of what you want for password storage. Password-specific hash functions are deliberately slow.</p>
+
+<table class="data-table">
+  <thead>
+    <tr><th>Algorithm</th><th>Type</th><th>Speed (per hash)</th><th>Salted</th><th>Suitable for Passwords</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>MD5</td><td>General purpose</td><td>~6 nanoseconds</td><td>No (manual)</td><td>No, far too fast</td></tr>
+    <tr><td>SHA-256</td><td>General purpose</td><td>~15 nanoseconds</td><td>No (manual)</td><td>No, far too fast</td></tr>
+    <tr><td>bcrypt</td><td>Password hashing</td><td>~250 milliseconds (cost 12)</td><td>Yes (built-in)</td><td>Yes, industry standard</td></tr>
+    <tr><td>scrypt</td><td>Password hashing</td><td>~100-500 ms (configurable)</td><td>Yes (built-in)</td><td>Yes, memory-hard</td></tr>
+    <tr><td>Argon2id</td><td>Password hashing</td><td>~250-500 ms (configurable)</td><td>Yes (built-in)</td><td>Yes, current best practice</td></tr>
+  </tbody>
+</table>
+
+<p>The speed difference is critical. At 6 nanoseconds per hash, an attacker can try 150 billion MD5 guesses per second on a single GPU. At 250 milliseconds per hash, bcrypt limits the same attacker to roughly 100 guesses per second. That means a password that falls to MD5 in 3 seconds would take bcrypt over 140 years.</p>
+
+<h3>Salting Explained</h3>
+<p>A salt is a random string added to the password before hashing. Each user gets a unique salt, stored alongside the hash. Without salts, two users with the same password would have the same hash, allowing attackers to crack once and compromise all matching accounts. With salts, each hash is unique even for identical passwords. bcrypt, scrypt, and Argon2 include automatic salting.</p>
+
+<p>Experiment with hash generation using the <a href="/free-tools/hash-generator/">Hash Generator</a> and <a href="/free-tools/bcrypt-generator/">bcrypt Generator</a> tools.</p>
+
+<a href="/free-tools/hash-generator/" class="tool-cta">Open Hash Generator</a>
+<a href="/free-tools/bcrypt-generator/" class="tool-cta">Open bcrypt Generator</a>
+
+<h2>Two-Factor Authentication (2FA)</h2>
+
+<p>Two-factor authentication adds a second verification step after your password. Even if an attacker has your password, they cannot log in without the second factor. 2FA reduces account compromise risk by over 99% according to Google's internal data.</p>
+
+<h3>Types of 2FA, Ranked by Security</h3>
+
+<ol>
+  <li>Hardware security keys (YubiKey, Google Titan Key): Physical USB or NFC devices that use FIDO2 cryptographic protocols. Immune to phishing because the key verifies the requesting domain. Recommended for high-value accounts.</li>
+  <li>Authenticator apps (Authy, Google Authenticator, Microsoft Authenticator): Generate time-based one-time passwords (TOTP) that change every 30 seconds. Resistant to phishing but not immune (an attacker with a real-time phishing proxy can relay codes). Store backup codes securely.</li>
+  <li>Push notifications (Duo, Microsoft Authenticator push): Send a yes/no prompt to your phone. Convenient but vulnerable to "MFA fatigue" attacks where attackers spam prompts until the user accidentally approves.</li>
+  <li>SMS codes: Sent to your phone number via text message. Vulnerable to SIM swapping (an attacker convinces your carrier to transfer your number), SS7 interception, and message forwarding. Still better than no 2FA but the weakest option.</li>
+</ol>
+
+<p>Enable 2FA on every account that supports it, starting with email (the account that controls password resets for everything else), financial accounts, and cloud storage.</p>
+
+<h2>Passkeys: The Future of Authentication</h2>
+
+<p>Passkeys represent the most significant shift in authentication since the password was invented. Based on the FIDO2/WebAuthn standard, passkeys replace the shared-secret model (where both you and the server know the password) with public-key cryptography (where the server knows only a public key and authentication happens with a private key that never leaves your device).</p>
+
+<h3>How Passkeys Work</h3>
+<p>When you register a passkey for a site, your device generates a key pair. The private key stays on your device (protected by biometrics or PIN). The public key goes to the server. To log in, the server sends a challenge; your device signs it with the private key after biometric verification. The server verifies the signature with the public key. Your secret never crosses the network.</p>
+
+<h3>Why Passkeys Are More Secure</h3>
+<ul>
+  <li>No phishing risk: Passkeys are bound to the domain. A fake site cannot request your passkey for the real site.</li>
+  <li>No reuse risk: Each passkey is unique to each site.</li>
+  <li>No database breach risk: Servers store only public keys, which are useless to attackers.</li>
+  <li>No memorization required: Biometrics or device PIN handles authentication.</li>
+</ul>
+
+<h3>Current Passkey Support (March 2026)</h3>
+<p>Apple, Google, and Microsoft all support passkeys natively. Major services including Google, Apple, Microsoft, Amazon, PayPal, GitHub, and Coinbase support passkey login. Adoption is accelerating, but most services still offer passkeys as an alternative to passwords rather than a replacement. Full password deprecation is likely years away due to the long tail of legacy systems and edge cases.</p>
+
+<h2>Common Password Mistakes to Avoid</h2>
+
+<p>Security breaches consistently reveal the same patterns. Here are the most common password mistakes, all of which are easily avoidable.</p>
+
+<p>Using personal information: Pet names, birthdays, street addresses, and phone numbers are trivially discoverable through social media, public records, and data broker sites. Never use personally identifiable information in a password.</p>
+
+<p>Common substitutions: Replacing "a" with "@", "e" with "3", or "o" with "0" does not meaningfully increase security. Attackers test these substitutions automatically. "p@ssw0rd" is in every dictionary wordlist.</p>
+
+<p>Keyboard patterns: "qwerty", "123456", "zxcvbn", and similar patterns are among the first combinations tested. They provide near-zero entropy despite looking random to the user.</p>
+
+<p>Short passwords with high complexity: An 8-character password with uppercase, lowercase, numbers, and symbols has about 52 bits of entropy. A 16-character lowercase-only password has about 75 bits. Length beats complexity.</p>
+
+<p>Reusing passwords across sites: If any one of those sites gets breached, every account sharing that password is compromised. This is the single most impactful mistake because it turns one breach into many.</p>
+
+<p>Writing passwords on sticky notes: Physical security matters. A note on your monitor is visible to anyone who walks past your desk, including cleaning staff, visitors, and anyone who photographs your workspace.</p>
+
+<h2>Building a Personal Security Practice</h2>
+
+<h3>Step 1: Set Up a Password Manager</h3>
+<p>Install Bitwarden (or your preferred manager) on all your devices. Create a strong master password using a 5-6 word passphrase. Enable 2FA on the password manager account itself. Write down the master password and recovery code, store them in a secure physical location (not on your computer), and never share them.</p>
+
+<h3>Step 2: Audit and Replace Existing Passwords</h3>
+<p>Export passwords from your browser and import them into the password manager. Review each entry. Replace any password that is: shorter than 12 characters, used on more than one site, based on personal information, or found in the Have I Been Pwned breach database (haveibeenpwned.com/Passwords). Generate new random passwords through the manager.</p>
+
+<h3>Step 3: Enable 2FA Everywhere</h3>
+<p>Start with email, then financial accounts, then social media and cloud storage. Use an authenticator app as the default. Upgrade to a hardware key for your most critical accounts. Store 2FA backup codes in your password manager (it is more secure than printing them, and if your password manager is compromised, the attacker has your passwords anyway).</p>
+
+<h3>Step 4: Monitor for Breaches</h3>
+<p>Sign up for breach notifications at haveibeenpwned.com. Enable notifications in your password manager for compromised credentials (Bitwarden has a built-in breach report). When notified, change the affected password immediately and check for unauthorized account activity.</p>
+
+<div class="info-block so-block">
+  <div class="info-block-title">Stack Overflow Community Discussions</div>
+  <p>Developers regularly discuss password security implementation. Here are relevant community threads:</p>
+  <ul style="margin-top:0.8rem;">
+    <li><a href="https://stackoverflow.com/questions/1054022/best-way-to-store-password-in-database" target="_blank" rel="noopener">Best way to store password in database</a> - Comprehensive discussion of hashing, salting, and algorithm choice for developers</li>
+    <li><a href="https://stackoverflow.com/questions/4948322/fundamental-difference-between-hashing-and-encryption-algorithms" target="_blank" rel="noopener">Fundamental difference between hashing and encryption algorithms</a> - Clear explanations of one-way vs. two-way transformations</li>
+    <li><a href="https://stackoverflow.com/questions/6832445/how-can-bcrypt-have-built-in-salts" target="_blank" rel="noopener">How can bcrypt have built-in salts?</a> - Detailed explanation of bcrypt's salt storage mechanism</li>
+  </ul>
+</div>
+
+<div class="info-block yt-block">
+  <div class="info-block-title">Recommended Video</div>
+  <p>Search YouTube for "how password cracking works 2026" or "password hashing explained" for visual demonstrations. Computerphile's channel has several well-produced videos covering bcrypt, rainbow tables, and salt mechanics. LiveOverflow covers more advanced attack techniques for those interested in the offensive security perspective.</p>
+</div>
+
+<h2>Browser Compatibility for Password and Hash Tools</h2>
+
+<table class="compat-table">
+  <thead>
+    <tr>
+      <th>Browser</th>
+      <th>Password Generator</th>
+      <th>Hash Generator</th>
+      <th>bcrypt Generator</th>
+      <th>Clipboard API</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Chrome 90+</td><td>Full support</td><td>Full support</td><td>Full support</td><td>Full support</td></tr>
+    <tr><td>Firefox 88+</td><td>Full support</td><td>Full support</td><td>Full support</td><td>Full support</td></tr>
+    <tr><td>Safari 14+</td><td>Full support</td><td>Full support</td><td>Full support</td><td>Full support</td></tr>
+    <tr><td>Edge 90+</td><td>Full support</td><td>Full support</td><td>Full support</td><td>Full support</td></tr>
+    <tr><td>Mobile Chrome</td><td>Full support</td><td>Full support</td><td>Full support</td><td>Full support</td></tr>
+    <tr><td>Mobile Safari</td><td>Full support</td><td>Full support</td><td>Full support</td><td>Partial (HTTPS required)</td></tr>
+  </tbody>
+</table>
+
+<h2>Frequently Asked Questions</h2>
+
+<p>Is it safe to use the same password for accounts I do not care about? No. A compromised "throwaway" account can be used to gather personal information, serve as a pivot point for social engineering, or provide an attacker with a username/email combination to test elsewhere. Use your password manager to generate unique passwords for everything, regardless of perceived importance.</p>
+
+<p>How do I remember my master password? Use a passphrase of 5 to 6 random words. Practice typing it several times per day for the first week. Some people find it helpful to create a mental story linking the words. Never write it on your computer; if you must write it, store the physical copy in a secure location like a safe or safety deposit box.</p>
+
+<p>Are password strength meters accurate? Most website-embedded password meters are simplistic and unreliable. They often rate "P@ssword1" as "strong" because it meets complexity checkboxes despite being in every dictionary list. The zxcvbn library (developed by Dropbox) is one of the more accurate strength estimators because it accounts for common patterns, dictionary words, and keyboard sequences.</p>
+
+<p>What happens if I lose access to my 2FA device? This is why backup codes exist. When you set up 2FA, the service provides one-time-use backup codes. Store these in your password manager. If you lose your 2FA device, use a backup code to log in and set up a new device. For hardware keys, register two keys per account and keep one as a backup.</p>
+
+<p>Can quantum computers break my passwords? Quantum computing threatens asymmetric encryption (RSA, ECC) used in passkeys and TLS, but its impact on password hashing is more limited. Grover's algorithm provides a quadratic speedup against symmetric ciphers and hashes, effectively halving the bit strength. A 128-bit-entropy password would have 64 bits of quantum security, which is still substantial. Practical quantum computers capable of this are not expected before the 2030s at the earliest.</p>
+
+<div class="update-history">
+  <p>Update History</p>
+  <p>March 20, 2026 - Initial publication. Covers password cracking methods, entropy calculation, password managers, hashing algorithms, 2FA, passkeys, and practical security steps.</p>
+</div>
+
+<h2>Related Guides</h2>
+<div class="related-guides">
+  <div class="related-card">
+    <a href="/free-tools/articles/citation-formats-explained/">Citation Formats Explained</a>
+    <p>Complete comparison of APA, MLA, and Chicago citation styles for academic writing.</p>
+  </div>
+  <div class="related-card">
+    <a href="/free-tools/articles/mortgage-calculator-guide/">Understanding Mortgage Payments</a>
+    <p>First-time buyer's complete guide to mortgage calculations and home financing.</p>
+  </div>
+  <div class="related-card">
+    <a href="/free-tools/articles/color-theory-for-designers/">Color Theory for Designers</a>
+    <p>Practical guide to color theory with hands-on design tools.</p>
+  </div>
+</div>
+
+<div class="footer-bar">
+  <p>Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> - 250+ free tools, no tracking</p>
+  <p style="margin-top:0.5rem;">Last Updated: March 20, 2026</p>
+</div>
+
+</div>
+</body>
+</html>

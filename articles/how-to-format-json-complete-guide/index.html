@@ -652,6 +652,48 @@ cat data.json | jq -S .</code></pre>
 <h3>JSONL for data pipelines</h3>
 <p>JSON Lines (JSONL) stores one JSON value per line, with newlines as delimiters. This format is ideal for log files, data streaming, and machine learning datasets because it supports append-only writes and line-by-line processing. Major platforms including BigQuery, Elasticsearch, and OpenAI's fine-tuning API accept JSONL input.</p>
 
+<h2>JSON in API Design Best Practices</h2>
+
+<p>Well-designed JSON APIs follow consistent conventions that make them predictable and easy to consume. The naming convention debate (camelCase versus snake_case) has practical implications: JavaScript-heavy frontends prefer camelCase because it matches language conventions, while Python and Ruby backends often prefer snake_case. The most important rule is consistency within a single API. Google's JSON style guide and the JSON:API specification both provide comprehensive guidelines.</p>
+
+<p>Pagination in JSON APIs typically uses one of three patterns. Offset pagination includes <code>"offset"</code> and <code>"limit"</code> parameters with a <code>"total"</code> count in the response. Cursor pagination uses an opaque <code>"cursor"</code> string that points to the next page, which performs better for large datasets because it does not require counting total records. Keyset pagination uses the last item's sort key as the starting point for the next page, combining cursor-level performance with offset-level predictability.</p>
+
+<p>Error responses deserve as much attention as success responses. A well-structured JSON error should include a machine-readable error code, a human-readable message, and optionally a documentation URL and field-level validation details:</p>
+
+<pre><code>{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Request validation failed",
+    "details": [
+      {
+        "field": "email",
+        "message": "Must be a valid email address"
+      },
+      {
+        "field": "age",
+        "message": "Must be a positive integer"
+      }
+    ],
+    "documentation": "https://api.example.com/docs/errors"
+  }
+}</code></pre>
+
+<p>Envelope patterns (wrapping all responses in a <code>"data"</code> key) versus flat responses is another design decision. Envelopes provide a consistent top-level structure that accommodates metadata, pagination info, and error details alongside the primary data. Flat responses are simpler but require conventions for adding metadata. The JSON:API specification mandates an envelope with <code>"data"</code>, <code>"errors"</code>, <code>"meta"</code>, and <code>"links"</code> top-level keys.</p>
+
+<h2>JSON Debugging Techniques</h2>
+
+<p>When JSON parsing fails, the error message is your primary diagnostic tool. Different parsers provide different levels of detail:</p>
+
+<p>Chrome DevTools shows the exact character position where parsing failed when you use <code>JSON.parse()</code> in the console. The error message format is "Unexpected token X in JSON at position Y" where Y is the character offset from the start of the string. Count characters from the beginning of your JSON to locate the exact problem.</p>
+
+<p>Node.js provides similar positional errors. For large JSON files, pipe through <code>jq .</code> to get color-coded error messages that show the line number and character position. The <code>jq</code> error messages are among the most helpful of any JSON parser.</p>
+
+<p>Python's <code>json.JSONDecodeError</code> includes the line number, column number, and character position. When debugging, catch the exception and print its attributes: <code>err.lineno</code>, <code>err.colno</code>, and <code>err.pos</code>. For complex debugging scenarios, the <code>json.tool</code> command-line module (<code>python -m json.tool input.json</code>) validates and formats in one step.</p>
+
+<p>A common debugging workflow for malformed JSON from external sources: first, try to parse it and note the error position. Then, use a JSON formatter tool like the <a href="/free-tools/json-formatter/">Zovo JSON Formatter</a> that provides visual error highlighting. Often the error cascades from an earlier issue (a missing comma on line 5 might cause a parse error on line 10), so look backward from the reported position for the root cause.</p>
+
+<p>For JSON embedded in log files or mixed with other output, extract the JSON portion first. In bash, use <code>grep</code> to find lines containing opening braces, or use <code>sed</code> to extract content between the first <code>{</code> and last <code>}</code>. Then pipe the extracted content through <code>jq .</code> for validation. This extract-then-validate approach prevents false errors caused by surrounding non-JSON content.</p>
+
 <h2>Frequently Asked Questions</h2>
 
 <div class="faq-item">
