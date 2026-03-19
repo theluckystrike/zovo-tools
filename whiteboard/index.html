@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Online Whiteboard - Free Drawing Tool | Zovo</title>
+<meta name="description" content="Free online whiteboard with drawing tools, shapes, text, layers, and export options. Pen, line, rectangle, circle, eraser, undo/redo, zoom, pan. No signup, runs in your browser.">
+<meta name="keywords" content="online whiteboard, drawing tool, free whiteboard, canvas drawing, sketch tool, diagram tool, collaborative whiteboard, digital whiteboard, drawing app, freehand drawing">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/whiteboard">
+
+<meta property="og:title" content="Online Whiteboard - Free Drawing Tool | Zovo Tools">
+<meta property="og:description" content="Free online whiteboard with drawing tools, shapes, text, layers, and export. No signup, runs entirely in your browser.">
+<meta property="og:url" content="https://tools.zovo.one/whiteboard">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Online Whiteboard - Free Drawing Tool | Zovo Tools">
+<meta name="twitter:description" content="Free online whiteboard with drawing tools, shapes, text, layers, and export. No signup, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Online Whiteboard",
+  "description": "Free online whiteboard with drawing tools including pen, shapes, text, eraser, layers, undo/redo, zoom, pan, and export to PNG/JPEG/SVG.",
+  "url": "https://tools.zovo.one/whiteboard",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Canvas API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "Is this whiteboard free to use?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, completely free. There is no signup, no subscription, and no usage limits. The whiteboard runs entirely in your browser with no server-side processing."}},
+    {"@type": "Question", "name": "Can I use this whiteboard on a tablet or phone?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The whiteboard supports touch input for drawing on tablets and smartphones. You can draw with your finger or a stylus. Pinch-to-zoom and two-finger pan are supported on touch devices."}},
+    {"@type": "Question", "name": "What drawing tools are available?", "acceptedAnswer": {"@type": "Answer", "text": "The whiteboard includes a pen tool for freehand drawing, line tool for straight lines, rectangle and circle/ellipse shape tools, a text tool for adding text anywhere on the canvas, and an eraser tool. You can also adjust stroke color, width, and fill settings."}},
+    {"@type": "Question", "name": "Can I export my whiteboard drawing?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can export your drawing as PNG (with transparent or white background), JPEG, or SVG format. The export captures the entire visible canvas area at full resolution."}},
+    {"@type": "Question", "name": "Does the whiteboard support undo and redo?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can undo and redo actions using the toolbar buttons or keyboard shortcuts. Press Ctrl+Z (Cmd+Z on Mac) to undo and Ctrl+Y (Cmd+Y on Mac) to redo. The undo history is maintained for the entire session."}},
+    {"@type": "Question", "name": "Is my drawing data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. Everything happens locally in your browser. Your drawings are never uploaded to any server. This means your work is private, but it also means you should export your drawing before closing the page if you want to keep it."}},
+    {"@type": "Question", "name": "Can I zoom and pan on the canvas?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Use the zoom controls in the toolbar or Ctrl+scroll wheel to zoom in and out. Hold the Space bar and drag to pan across the canvas. On touch devices, use pinch-to-zoom and two-finger drag to pan."}},
+    {"@type": "Question", "name": "What are layers and how do I use them?", "acceptedAnswer": {"@type": "Answer", "text": "The whiteboard provides a foreground and background layer. You can switch between layers to organize your drawing. For example, draw guidelines or reference shapes on the background layer and your main artwork on the foreground layer. Each layer can be shown or hidden independently."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* App Layout */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 100;
+  gap: 12px;
+}
+
+.top-bar-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+.top-bar-title span { color: var(--accent); }
+
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 4px;
+  overflow-x: auto;
+  z-index: 99;
+}
+
+.toolbar::-webkit-scrollbar { height: 4px; }
+.toolbar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.tool-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tool-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  position: relative;
+}
+.tool-btn:hover { color: var(--text); background: var(--surface2); }
+.tool-btn.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: rgba(0,255,136,0.3);
+}
+.tool-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tool-btn.fill-active svg { fill: currentColor; }
+.tool-btn[title]::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 200;
+}
+.tool-btn:hover[title]::after { opacity: 1; }
+
+/* Color & Size Controls */
+.color-input-wrap {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+.color-input-wrap input[type="color"] {
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  -webkit-appearance: none;
+}
+.color-input-wrap input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+.color-input-wrap input[type="color"]::-webkit-color-swatch { border: none; border-radius: 3px; }
+
+.size-slider {
+  width: 80px;
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  flex-shrink: 0;
+}
+.size-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+.size-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+}
+
+.size-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  min-width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Layer Panel */
+.layer-panel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.layer-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.layer-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.layer-btn:hover:not(.active) { border-color: var(--text-muted); color: var(--text); }
+.layer-eye {
+  font-size: 0.8rem;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.layer-eye:hover { opacity: 1; }
+.layer-eye.hidden { opacity: 0.3; text-decoration: line-through; }
+
+/* Action Buttons */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.action-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.action-btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.action-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+/* Canvas Area */
+.canvas-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: crosshair;
+  background:
+    linear-gradient(45deg, #0d0d14 25%, transparent 25%),
+    linear-gradient(-45deg, #0d0d14 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #0d0d14 75%),
+    linear-gradient(-45deg, transparent 75%, #0d0d14 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  background-color: #0a0a12;
+}
+.canvas-area.panning { cursor: grab; }
+.canvas-area.panning:active { cursor: grabbing; }
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  image-rendering: auto;
+}
+
+#bgCanvas { z-index: 1; }
+#fgCanvas { z-index: 2; }
+#previewCanvas { z-index: 3; pointer-events: none; }
+
+/* Zoom Info */
+.zoom-info {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  z-index: 50;
+  user-select: none;
+}
+
+/* Status Bar */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+/* Export Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+}
+.modal h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.modal-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.modal-row label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  min-width: 80px;
+}
+.modal-row select {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  outline: none;
+}
+.modal-row select:focus { border-color: var(--accent); }
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Content Below Canvas (scrollable) */
+.content-scroll {
+  display: none;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.content-scroll.visible {
+  display: block;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Content section */
+.content-section {
+  margin-top: 40px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .toolbar { padding: 4px 8px; gap: 2px; }
+  .tool-btn { width: 32px; height: 32px; font-size: 0.95rem; }
+  .tool-btn svg { width: 16px; height: 16px; }
+  .size-slider { width: 60px; }
+  .top-bar { padding: 6px 10px; }
+  .top-bar-title { font-size: 0.85rem; }
+  .action-btn { padding: 5px 8px; font-size: 0.72rem; }
+  .tool-btn[title]::after { display: none; }
+}
+
+@media (max-width: 480px) {
+  .top-bar-actions .action-btn span.hide-mobile { display: none; }
+  .layer-panel .layer-btn span.hide-mobile { display: none; }
+}
+
+/* Text input overlay */
+.text-input-overlay {
+  position: absolute;
+  z-index: 10;
+  display: none;
+}
+.text-input-overlay textarea {
+  background: transparent;
+  border: 1px dashed var(--accent);
+  color: #fff;
+  font-family: var(--font);
+  padding: 4px;
+  resize: both;
+  outline: none;
+  min-width: 100px;
+  min-height: 30px;
+}
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-title"><span>Whiteboard</span> Tool</div>
+
+    <div class="layer-panel">
+      <button class="layer-btn active" data-layer="fg" title="Foreground layer">
+        <span class="layer-eye" data-layer="fg">&#128065;</span>
+        <span class="hide-mobile">Foreground</span><span class="show-mobile-only" style="display:none;">FG</span>
+      </button>
+      <button class="layer-btn" data-layer="bg" title="Background layer">
+        <span class="layer-eye" data-layer="bg">&#128065;</span>
+        <span class="hide-mobile">Background</span><span class="show-mobile-only" style="display:none;">BG</span>
+      </button>
+    </div>
+
+    <div class="top-bar-actions">
+      <button class="action-btn danger" id="clearBtn" title="Clear canvas">&#128465; <span class="hide-mobile">Clear</span></button>
+      <button class="action-btn" id="exportBtn" title="Export drawing">&#128190; <span class="hide-mobile">Export</span></button>
+      <button class="action-btn" id="toggleContentBtn" title="Show info & FAQ">&#9432;</button>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="tool-group">
+      <button class="tool-btn active" data-tool="pen" title="Pen (P)">
+        <svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="line" title="Line (L)">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="19" y2="5"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="rect" title="Rectangle (R)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="ellipse" title="Ellipse (E)">
+        <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="7"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="text" title="Text (T)">
+        <svg viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9.5" y1="20" x2="14.5" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="eraser" title="Eraser (X)">
+        <svg viewBox="0 0 24 24"><path d="M20 20H7L3 16l10-10 8 8-4 4"/><path d="M6.5 13.5l5 5"/></svg>
+      </button>
+    </div>
+
+    <div class="tool-divider"></div>
+
+    <div class="tool-group">
+      <div class="color-input-wrap" title="Stroke color">
+        <input type="color" id="strokeColor" value="#ffffff">
+      </div>
+      <input type="range" class="size-slider" id="strokeSize" min="1" max="50" value="3" title="Stroke width">
+      <span class="size-label" id="sizeLabel">3</span>
+    </div>
+
+    <div class="tool-divider"></div>
+
+    <div class="tool-group">
+      <button class="tool-btn" id="fillToggle" title="Fill (F)">
+        <svg viewBox="0 0 24 24"><path d="M19 11H5a4 4 0 0 0 0 8h14a4 4 0 0 0 0-8z"/><path d="M12 3v8"/></svg>
+      </button>
+      <div class="color-input-wrap" id="fillColorWrap" title="Fill color" style="opacity:0.4;">
+        <input type="color" id="fillColor" value="#00ff88" disabled>
+      </div>
+    </div>
+
+    <div class="tool-divider"></div>
+
+    <div class="tool-group">
+      <button class="tool-btn" id="undoBtn" title="Undo (Ctrl+Z)">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      </button>
+      <button class="tool-btn" id="redoBtn" title="Redo (Ctrl+Y)">
+        <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.13-9.36L23 10"/></svg>
+      </button>
+    </div>
+
+    <div class="tool-divider"></div>
+
+    <div class="tool-group">
+      <button class="tool-btn" id="zoomInBtn" title="Zoom In (+)">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+      <button class="tool-btn" id="zoomOutBtn" title="Zoom Out (-)">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+      <button class="tool-btn" id="zoomResetBtn" title="Reset Zoom (0)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="11" font-weight="bold">1:1</text></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Canvas Area -->
+  <div class="canvas-area" id="canvasArea">
+    <canvas id="bgCanvas"></canvas>
+    <canvas id="fgCanvas"></canvas>
+    <canvas id="previewCanvas"></canvas>
+    <div class="text-input-overlay" id="textOverlay">
+      <textarea id="textInput" rows="2" placeholder="Type here..."></textarea>
+    </div>
+    <div class="zoom-info" id="zoomInfo">100%</div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span id="statusPos">0, 0</span>
+    <span id="statusInfo">Pen | Foreground</span>
+    <span id="statusShortcuts">Space+drag: Pan | Ctrl+Z: Undo | Ctrl+Y: Redo</span>
+  </div>
+
+  <!-- Content Section (hidden by default, toggleable) -->
+  <div class="content-scroll" id="contentScroll">
+    <div class="container">
+      <section class="content-section">
+        <h2>Free Online Whiteboard Tool</h2>
+        <p>This whiteboard provides a full-featured drawing experience directly in your browser. Whether you need to sketch ideas, create diagrams, annotate screenshots, or simply doodle, all tools run client-side with zero data sent to any server. Your work stays private and there is nothing to install or sign up for.</p>
+
+        <h3>Drawing Tools</h3>
+        <p>The pen tool allows freehand drawing with smooth anti-aliased strokes. Use the line tool for perfectly straight lines, or the rectangle and ellipse tools for geometric shapes. The text tool lets you place text anywhere on the canvas. The eraser tool removes strokes by painting with a transparent brush, and you can adjust its size for precision or broad erasing.</p>
+
+        <h3>Colors, Stroke Width, and Fill</h3>
+        <p>Pick any stroke color using the color picker. Adjust the stroke width from 1 pixel up to 50 pixels using the slider. For shapes (rectangle and ellipse), you can toggle fill mode to create solid filled shapes with a separate fill color. This gives you full control over your drawing style.</p>
+
+        <h3>Layers</h3>
+        <p>The whiteboard supports two layers: foreground and background. Use the background layer for reference guides, grids, or base sketches, and the foreground layer for your main artwork. Each layer can be independently hidden or shown using the eye icon, allowing you to focus on specific parts of your drawing.</p>
+
+        <h3>Zoom, Pan, and Navigation</h3>
+        <p>Zoom in and out using the toolbar buttons, keyboard shortcuts (<code>+</code> and <code>-</code>), or <code>Ctrl+scroll wheel</code>. Hold the <code>Space</code> bar and drag to pan across the canvas. On touch devices, pinch to zoom and use two fingers to pan. The zoom level is displayed in the bottom-right corner of the canvas. Press <code>0</code> to reset to 100% zoom.</p>
+
+        <h3>Export Options</h3>
+        <p>Export your drawing as PNG (with transparent background), JPEG (with white background), or SVG format. The export captures both layers merged together at the current canvas resolution. Downloaded files are named with a timestamp for easy organization.</p>
+
+        <h3>Keyboard Shortcuts</h3>
+        <ul>
+          <li><code>P</code> &mdash; Pen tool</li>
+          <li><code>L</code> &mdash; Line tool</li>
+          <li><code>R</code> &mdash; Rectangle tool</li>
+          <li><code>E</code> &mdash; Ellipse tool</li>
+          <li><code>T</code> &mdash; Text tool</li>
+          <li><code>X</code> &mdash; Eraser tool</li>
+          <li><code>F</code> &mdash; Toggle fill</li>
+          <li><code>Ctrl+Z</code> &mdash; Undo</li>
+          <li><code>Ctrl+Y</code> / <code>Ctrl+Shift+Z</code> &mdash; Redo</li>
+          <li><code>+</code> / <code>=</code> &mdash; Zoom in</li>
+          <li><code>-</code> &mdash; Zoom out</li>
+          <li><code>0</code> &mdash; Reset zoom</li>
+          <li><code>Space + drag</code> &mdash; Pan canvas</li>
+        </ul>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+          <div class="faq-q">Is this whiteboard free to use?<span class="faq-arrow">&#9662;</span></div>
+          <div class="faq-a"><p>Yes, completely free. There is no signup, no subscription, and no usage limits. The whiteboard runs entirely in your browser with no server-side processing. You can use it as much as you want without creating an account.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can I use this whiteboard on a tablet or phone?<span class="faq-arrow">&#9662;</span></div>
+          <div class="faq-a"><p>Yes. The whiteboard supports touch input for drawing on tablets and smartphones. You can draw with your finger or a stylus. Pinch-to-zoom and two-finger pan are supported on touch devices. The toolbar is scrollable on smaller screens to give you access to all tools.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What drawing tools are available?<span class="faq-arrow">&#9662;</span></div>
+          <div class="faq-a"><p>The whiteboard includes a pen tool for freehand drawing, a line tool for straight lines, rectangle and ellipse shape tools, a text tool for adding text anywhere on the canvas, and an eraser tool. You can also adjust stroke color, stroke width, fill color, and toggle fill mode for shapes.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can I export my whiteboard drawing?<span class="faq-arrow">&#9662;</span></div>
+          <div class="faq-a"><p>Yes. You can export your drawing as PNG with a transparent background, JPEG with a white background, or SVG format. The export merges both layers and captures the full canvas at its current resolution. Files are automatically named with a timestamp.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Does the whiteboard support undo and redo?<span class="faq-arrow">&#9662;</span></div>
+          <div class="faq-a"><p>Yes. You can undo and redo actions using the toolbar buttons or keyboard shortcuts. Press Ctrl+Z (or Cmd+Z on Mac) to undo and Ctrl+Y (or Cmd+Y on Mac) to redo. The undo history stores up to 50 states per layer and is maintained for your entire session.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Is my drawing data sent to a server?<span class="faq-arrow">&#9662;</span></div>
+          <div class="faq-a"><p>No. Everything happens locally in your browser. Your drawings are never uploaded to any server, and no tracking or analytics scripts are included. This means your work is completely private, but you should export your drawing before closing the page if you want to keep it.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can I zoom and pan on the canvas?<span class="faq-arrow">&#9662;</span></div>
+          <div class="faq-a"><p>Yes. Use the zoom controls in the toolbar or Ctrl+scroll wheel to zoom in and out (up to 500% and down to 10%). Hold the Space bar and drag to pan across the canvas. On touch devices, use pinch-to-zoom and two-finger drag to navigate. Press 0 to reset to 100% zoom.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What are layers and how do I use them?<span class="faq-arrow">&#9662;</span></div>
+          <div class="faq-a"><p>The whiteboard provides two layers: foreground and background. Switch between them using the layer buttons in the top bar. Draw guidelines or reference shapes on the background layer and your main artwork on the foreground layer. Each layer can be shown or hidden by clicking the eye icon, and clearing the canvas only affects the active layer.</p></div>
+        </div>
+      </section>
+
+      <footer>
+        Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+      </footer>
+    </div>
+  </div>
+</div>
+
+<!-- Export Modal -->
+<div class="modal-overlay" id="exportModal">
+  <div class="modal">
+    <h3>Export Drawing</h3>
+    <div class="modal-row">
+      <label>Format</label>
+      <select id="exportFormat">
+        <option value="png">PNG (transparent)</option>
+        <option value="jpeg">JPEG (white bg)</option>
+        <option value="svg">SVG</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="action-btn" id="exportCancelBtn">Cancel</button>
+      <button class="action-btn primary" id="exportConfirmBtn">Download</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // --- Canvas Setup ---
+  const canvasArea = document.getElementById('canvasArea');
+  const bgCanvas = document.getElementById('bgCanvas');
+  const fgCanvas = document.getElementById('fgCanvas');
+  const previewCanvas = document.getElementById('previewCanvas');
+  const bgCtx = bgCanvas.getContext('2d');
+  const fgCtx = fgCanvas.getContext('2d');
+  const previewCtx = previewCanvas.getContext('2d');
+
+  let canvasWidth, canvasHeight;
+  let zoom = 1;
+  let panX = 0, panY = 0;
+  let isPanning = false;
+  let spaceDown = false;
+  let panStart = { x: 0, y: 0 };
+
+  // --- State ---
+  let currentTool = 'pen';
+  let currentLayer = 'fg'; // 'fg' or 'bg'
+  let strokeColor = '#ffffff';
+  let strokeSize = 3;
+  let fillEnabled = false;
+  let fillColor = '#00ff88';
+  let isDrawing = false;
+  let drawStart = { x: 0, y: 0 };
+  let lastPoint = null;
+  let currentPath = [];
+  let layerVisibility = { fg: true, bg: true };
+
+  // --- Undo/Redo ---
+  const MAX_HISTORY = 50;
+  let fgHistory = [];
+  let fgHistoryIdx = -1;
+  let bgHistory = [];
+  let bgHistoryIdx = -1;
+
+  function getHistory() { return currentLayer === 'fg' ? fgHistory : bgHistory; }
+  function getHistoryIdx() { return currentLayer === 'fg' ? fgHistoryIdx : bgHistoryIdx; }
+  function setHistoryIdx(v) { if (currentLayer === 'fg') fgHistoryIdx = v; else bgHistoryIdx = v; }
+
+  function saveState() {
+    const canvas = currentLayer === 'fg' ? fgCanvas : bgCanvas;
+    const history = getHistory();
+    let idx = getHistoryIdx();
+    // Remove future states
+    history.splice(idx + 1);
+    history.push(canvas.toDataURL());
+    if (history.length > MAX_HISTORY) history.shift();
+    setHistoryIdx(history.length - 1);
+  }
+
+  function undo() {
+    const history = getHistory();
+    let idx = getHistoryIdx();
+    if (idx <= 0) return;
+    setHistoryIdx(idx - 1);
+    restoreState(getHistoryIdx());
+  }
+
+  function redo() {
+    const history = getHistory();
+    let idx = getHistoryIdx();
+    if (idx >= history.length - 1) return;
+    setHistoryIdx(idx + 1);
+    restoreState(getHistoryIdx());
+  }
+
+  function restoreState(idx) {
+    const history = getHistory();
+    const canvas = currentLayer === 'fg' ? fgCanvas : bgCanvas;
+    const ctx = currentLayer === 'fg' ? fgCtx : bgCtx;
+    const img = new Image();
+    img.onload = function() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+    };
+    img.src = history[idx];
+  }
+
+  // --- Resize ---
+  function resizeCanvases() {
+    const rect = canvasArea.getBoundingClientRect();
+    canvasWidth = rect.width;
+    canvasHeight = rect.height;
+
+    // Save current state
+    const fgData = fgCanvas.toDataURL();
+    const bgData = bgCanvas.toDataURL();
+
+    [bgCanvas, fgCanvas, previewCanvas].forEach(c => {
+      c.width = canvasWidth;
+      c.height = canvasHeight;
+    });
+
+    // Restore
+    const restoreImg = (src, ctx) => {
+      const img = new Image();
+      img.onload = () => { ctx.drawImage(img, 0, 0); };
+      img.src = src;
+    };
+    restoreImg(fgData, fgCtx);
+    restoreImg(bgData, bgCtx);
+
+    updateTransform();
+  }
+
+  function updateTransform() {
+    [bgCanvas, fgCanvas, previewCanvas].forEach(c => {
+      c.style.transformOrigin = '0 0';
+      c.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+    });
+    document.getElementById('zoomInfo').textContent = Math.round(zoom * 100) + '%';
+    const textOverlay = document.getElementById('textOverlay');
+    if (textOverlay.style.display === 'block') {
+      textOverlay.style.display = 'none';
+    }
+  }
+
+  window.addEventListener('resize', resizeCanvases);
+  resizeCanvases();
+
+  // Save initial state
+  setTimeout(() => {
+    fgHistory.push(fgCanvas.toDataURL());
+    fgHistoryIdx = 0;
+    bgHistory.push(bgCanvas.toDataURL());
+    bgHistoryIdx = 0;
+  }, 100);
+
+  // --- Get canvas coords from event ---
+  function getCanvasPos(e) {
+    const rect = canvasArea.getBoundingClientRect();
+    let clientX, clientY;
+    if (e.touches && e.touches.length > 0) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    const x = (clientX - rect.left - panX) / zoom;
+    const y = (clientY - rect.top - panY) / zoom;
+    return { x, y };
+  }
+
+  function getActiveCtx() {
+    return currentLayer === 'fg' ? fgCtx : bgCtx;
+  }
+
+  // --- Tool Logic ---
+  function startDraw(e) {
+    if (spaceDown || isPanning) return;
+    if (currentTool === 'text') {
+      placeText(e);
+      return;
+    }
+    isDrawing = true;
+    const pos = getCanvasPos(e);
+    drawStart = { ...pos };
+    lastPoint = { ...pos };
+    currentPath = [{ ...pos }];
+
+    if (currentTool === 'pen' || currentTool === 'eraser') {
+      const ctx = getActiveCtx();
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      if (currentTool === 'eraser') {
+        ctx.globalCompositeOperation = 'destination-out';
+      }
+    }
+  }
+
+  function moveDraw(e) {
+    const pos = getCanvasPos(e);
+    document.getElementById('statusPos').textContent = Math.round(pos.x) + ', ' + Math.round(pos.y);
+
+    if (!isDrawing) return;
+
+    if (currentTool === 'pen' || currentTool === 'eraser') {
+      const ctx = getActiveCtx();
+      ctx.lineWidth = strokeSize;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      if (currentTool === 'pen') {
+        ctx.strokeStyle = strokeColor;
+        ctx.globalCompositeOperation = 'source-over';
+      } else {
+        ctx.globalCompositeOperation = 'destination-out';
+      }
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      lastPoint = { ...pos };
+      currentPath.push({ ...pos });
+    } else {
+      // Shape preview
+      previewCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+      previewCtx.lineWidth = strokeSize;
+      previewCtx.strokeStyle = strokeColor;
+      previewCtx.lineCap = 'round';
+      previewCtx.lineJoin = 'round';
+      previewCtx.globalCompositeOperation = 'source-over';
+
+      if (currentTool === 'line') {
+        previewCtx.beginPath();
+        previewCtx.moveTo(drawStart.x, drawStart.y);
+        previewCtx.lineTo(pos.x, pos.y);
+        previewCtx.stroke();
+      } else if (currentTool === 'rect') {
+        const w = pos.x - drawStart.x;
+        const h = pos.y - drawStart.y;
+        if (fillEnabled) {
+          previewCtx.fillStyle = fillColor;
+          previewCtx.fillRect(drawStart.x, drawStart.y, w, h);
+        }
+        previewCtx.strokeRect(drawStart.x, drawStart.y, w, h);
+      } else if (currentTool === 'ellipse') {
+        const cx = (drawStart.x + pos.x) / 2;
+        const cy = (drawStart.y + pos.y) / 2;
+        const rx = Math.abs(pos.x - drawStart.x) / 2;
+        const ry = Math.abs(pos.y - drawStart.y) / 2;
+        previewCtx.beginPath();
+        previewCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        if (fillEnabled) {
+          previewCtx.fillStyle = fillColor;
+          previewCtx.fill();
+        }
+        previewCtx.stroke();
+      }
+    }
+  }
+
+  function endDraw(e) {
+    if (!isDrawing) return;
+    isDrawing = false;
+
+    const ctx = getActiveCtx();
+    ctx.globalCompositeOperation = 'source-over';
+
+    if (currentTool === 'line' || currentTool === 'rect' || currentTool === 'ellipse') {
+      previewCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+      const pos = e ? getCanvasPos(e) : lastPoint || drawStart;
+
+      ctx.lineWidth = strokeSize;
+      ctx.strokeStyle = strokeColor;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      if (currentTool === 'line') {
+        ctx.beginPath();
+        ctx.moveTo(drawStart.x, drawStart.y);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+      } else if (currentTool === 'rect') {
+        const w = pos.x - drawStart.x;
+        const h = pos.y - drawStart.y;
+        if (fillEnabled) {
+          ctx.fillStyle = fillColor;
+          ctx.fillRect(drawStart.x, drawStart.y, w, h);
+        }
+        ctx.strokeRect(drawStart.x, drawStart.y, w, h);
+      } else if (currentTool === 'ellipse') {
+        const cx = (drawStart.x + pos.x) / 2;
+        const cy = (drawStart.y + pos.y) / 2;
+        const rx = Math.abs(pos.x - drawStart.x) / 2;
+        const ry = Math.abs(pos.y - drawStart.y) / 2;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        if (fillEnabled) {
+          ctx.fillStyle = fillColor;
+          ctx.fill();
+        }
+        ctx.stroke();
+      }
+    }
+
+    saveState();
+    lastPoint = null;
+    currentPath = [];
+  }
+
+  // --- Text Tool ---
+  function placeText(e) {
+    const pos = getCanvasPos(e);
+    const overlay = document.getElementById('textOverlay');
+    const textarea = document.getElementById('textInput');
+    const rect = canvasArea.getBoundingClientRect();
+
+    overlay.style.left = (pos.x * zoom + panX) + 'px';
+    overlay.style.top = (pos.y * zoom + panY) + 'px';
+    overlay.style.display = 'block';
+    textarea.value = '';
+    textarea.style.fontSize = Math.max(14, strokeSize * 4) + 'px';
+    textarea.style.color = strokeColor;
+    textarea.focus();
+
+    textarea.onkeydown = function(ev) {
+      if (ev.key === 'Enter' && !ev.shiftKey) {
+        ev.preventDefault();
+        commitText(pos, textarea.value);
+        overlay.style.display = 'none';
+      }
+      if (ev.key === 'Escape') {
+        overlay.style.display = 'none';
+      }
+    };
+    textarea.onblur = function() {
+      if (textarea.value.trim()) {
+        commitText(pos, textarea.value);
+      }
+      overlay.style.display = 'none';
+    };
+  }
+
+  function commitText(pos, text) {
+    if (!text.trim()) return;
+    const ctx = getActiveCtx();
+    const fontSize = Math.max(14, strokeSize * 4);
+    ctx.font = `${fontSize}px Inter, sans-serif`;
+    ctx.fillStyle = strokeColor;
+    ctx.textBaseline = 'top';
+    const lines = text.split('\n');
+    lines.forEach((line, i) => {
+      ctx.fillText(line, pos.x, pos.y + i * (fontSize * 1.3));
+    });
+    saveState();
+  }
+
+  // --- Pan & Zoom ---
+  function startPan(e) {
+    isPanning = true;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    panStart = { x: clientX - panX, y: clientY - panY };
+    canvasArea.classList.add('panning');
+  }
+
+  function movePan(e) {
+    if (!isPanning) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    panX = clientX - panStart.x;
+    panY = clientY - panStart.y;
+    updateTransform();
+  }
+
+  function endPan() {
+    isPanning = false;
+    canvasArea.classList.remove('panning');
+  }
+
+  function zoomAt(delta, cx, cy) {
+    const oldZoom = zoom;
+    zoom = Math.min(5, Math.max(0.1, zoom + delta));
+    // Zoom toward cursor
+    const rect = canvasArea.getBoundingClientRect();
+    const mx = cx - rect.left;
+    const my = cy - rect.top;
+    panX = mx - (mx - panX) * (zoom / oldZoom);
+    panY = my - (my - panY) * (zoom / oldZoom);
+    updateTransform();
+  }
+
+  // --- Mouse Events ---
+  canvasArea.addEventListener('mousedown', (e) => {
+    if (e.button === 1 || spaceDown) { startPan(e); return; }
+    startDraw(e);
+  });
+  canvasArea.addEventListener('mousemove', (e) => {
+    if (isPanning) { movePan(e); return; }
+    moveDraw(e);
+  });
+  canvasArea.addEventListener('mouseup', (e) => {
+    if (isPanning) { endPan(); return; }
+    endDraw(e);
+  });
+  canvasArea.addEventListener('mouseleave', (e) => {
+    if (isPanning) { endPan(); return; }
+    if (isDrawing) endDraw(e);
+  });
+
+  // --- Touch Events ---
+  let touchStartDist = 0;
+  let touchStartZoom = 1;
+  let isTouchPanning = false;
+
+  canvasArea.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      isTouchPanning = true;
+      touchStartDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      touchStartZoom = zoom;
+      panStart = {
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2 - panX,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2 - panY
+      };
+      return;
+    }
+    if (e.touches.length === 1) {
+      e.preventDefault();
+      startDraw(e);
+    }
+  }, { passive: false });
+
+  canvasArea.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2 && isTouchPanning) {
+      e.preventDefault();
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      const oldZoom = zoom;
+      zoom = Math.min(5, Math.max(0.1, touchStartZoom * (dist / touchStartDist)));
+      const rect = canvasArea.getBoundingClientRect();
+      const mx = midX - rect.left;
+      const my = midY - rect.top;
+      panX = mx - (mx - panX) * (zoom / oldZoom);
+      panY = my - (my - panY) * (zoom / oldZoom);
+      updateTransform();
+      return;
+    }
+    if (e.touches.length === 1) {
+      e.preventDefault();
+      moveDraw(e);
+    }
+  }, { passive: false });
+
+  canvasArea.addEventListener('touchend', (e) => {
+    if (isTouchPanning && e.touches.length < 2) {
+      isTouchPanning = false;
+      return;
+    }
+    endDraw(e);
+  });
+
+  // --- Wheel Zoom ---
+  canvasArea.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+    zoomAt(delta, e.clientX, e.clientY);
+  }, { passive: false });
+
+  // --- Keyboard ---
+  document.addEventListener('keydown', (e) => {
+    // Don't intercept if typing in text input
+    if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+
+    if (e.code === 'Space' && !spaceDown) {
+      e.preventDefault();
+      spaceDown = true;
+      canvasArea.classList.add('panning');
+    }
+
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+      e.preventDefault();
+      if (e.shiftKey) redo(); else undo();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+      e.preventDefault();
+      redo();
+    }
+
+    if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+      switch (e.key.toLowerCase()) {
+        case 'p': selectTool('pen'); break;
+        case 'l': selectTool('line'); break;
+        case 'r': selectTool('rect'); break;
+        case 'e': selectTool('ellipse'); break;
+        case 't': selectTool('text'); break;
+        case 'x': selectTool('eraser'); break;
+        case 'f': toggleFill(); break;
+        case '=': case '+': zoomAt(0.1, window.innerWidth/2, window.innerHeight/2); break;
+        case '-': zoomAt(-0.1, window.innerWidth/2, window.innerHeight/2); break;
+        case '0': zoom = 1; panX = 0; panY = 0; updateTransform(); break;
+      }
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (e.code === 'Space') {
+      spaceDown = false;
+      if (!isPanning) canvasArea.classList.remove('panning');
+    }
+  });
+
+  // --- Tool Selection ---
+  function selectTool(tool) {
+    currentTool = tool;
+    document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tool === tool);
+    });
+    updateStatus();
+  }
+
+  document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+    btn.addEventListener('click', () => selectTool(btn.dataset.tool));
+  });
+
+  // --- Layer Selection ---
+  function selectLayer(layer) {
+    currentLayer = layer;
+    document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.layer === layer);
+    });
+    updateStatus();
+  }
+
+  document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (e.target.classList.contains('layer-eye')) return;
+      selectLayer(btn.dataset.layer);
+    });
+  });
+
+  // Layer visibility
+  document.querySelectorAll('.layer-eye').forEach(eye => {
+    eye.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const layer = eye.dataset.layer;
+      layerVisibility[layer] = !layerVisibility[layer];
+      eye.classList.toggle('hidden', !layerVisibility[layer]);
+      const canvas = layer === 'fg' ? fgCanvas : bgCanvas;
+      canvas.style.opacity = layerVisibility[layer] ? 1 : 0;
+    });
+  });
+
+  // --- Color & Size ---
+  const strokeColorInput = document.getElementById('strokeColor');
+  const fillColorInput = document.getElementById('fillColor');
+  const strokeSizeInput = document.getElementById('strokeSize');
+  const sizeLabel = document.getElementById('sizeLabel');
+
+  strokeColorInput.addEventListener('input', (e) => { strokeColor = e.target.value; });
+  fillColorInput.addEventListener('input', (e) => { fillColor = e.target.value; });
+  strokeSizeInput.addEventListener('input', (e) => {
+    strokeSize = parseInt(e.target.value);
+    sizeLabel.textContent = strokeSize;
+  });
+
+  // --- Fill Toggle ---
+  function toggleFill() {
+    fillEnabled = !fillEnabled;
+    document.getElementById('fillToggle').classList.toggle('active', fillEnabled);
+    document.getElementById('fillToggle').classList.toggle('fill-active', fillEnabled);
+    document.getElementById('fillColorWrap').style.opacity = fillEnabled ? 1 : 0.4;
+    fillColorInput.disabled = !fillEnabled;
+  }
+  document.getElementById('fillToggle').addEventListener('click', toggleFill);
+
+  // --- Undo/Redo Buttons ---
+  document.getElementById('undoBtn').addEventListener('click', undo);
+  document.getElementById('redoBtn').addEventListener('click', redo);
+
+  // --- Zoom Buttons ---
+  document.getElementById('zoomInBtn').addEventListener('click', () => zoomAt(0.2, window.innerWidth/2, window.innerHeight/2));
+  document.getElementById('zoomOutBtn').addEventListener('click', () => zoomAt(-0.2, window.innerWidth/2, window.innerHeight/2));
+  document.getElementById('zoomResetBtn').addEventListener('click', () => { zoom = 1; panX = 0; panY = 0; updateTransform(); });
+
+  // --- Clear ---
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    if (confirm('Clear the ' + (currentLayer === 'fg' ? 'foreground' : 'background') + ' layer?')) {
+      const ctx = getActiveCtx();
+      const canvas = currentLayer === 'fg' ? fgCanvas : bgCanvas;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      saveState();
+    }
+  });
+
+  // --- Export ---
+  const exportModal = document.getElementById('exportModal');
+  document.getElementById('exportBtn').addEventListener('click', () => exportModal.classList.add('open'));
+  document.getElementById('exportCancelBtn').addEventListener('click', () => exportModal.classList.remove('open'));
+  exportModal.addEventListener('click', (e) => { if (e.target === exportModal) exportModal.classList.remove('open'); });
+
+  document.getElementById('exportConfirmBtn').addEventListener('click', () => {
+    const format = document.getElementById('exportFormat').value;
+    const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+
+    // Create merged canvas
+    const mergedCanvas = document.createElement('canvas');
+    mergedCanvas.width = canvasWidth;
+    mergedCanvas.height = canvasHeight;
+    const mCtx = mergedCanvas.getContext('2d');
+
+    if (format === 'jpeg') {
+      mCtx.fillStyle = '#ffffff';
+      mCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
+
+    if (layerVisibility.bg) mCtx.drawImage(bgCanvas, 0, 0);
+    if (layerVisibility.fg) mCtx.drawImage(fgCanvas, 0, 0);
+
+    if (format === 'svg') {
+      // Export as SVG with embedded image
+      const dataUrl = mergedCanvas.toDataURL('image/png');
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${canvasWidth}" height="${canvasHeight}">
+  <image href="${dataUrl}" width="${canvasWidth}" height="${canvasHeight}"/>
+</svg>`;
+      const blob = new Blob([svg], { type: 'image/svg+xml' });
+      downloadBlob(blob, `whiteboard-${ts}.svg`);
+    } else {
+      const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+      mergedCanvas.toBlob((blob) => {
+        downloadBlob(blob, `whiteboard-${ts}.${format === 'jpeg' ? 'jpg' : 'png'}`);
+      }, mimeType, 0.95);
+    }
+
+    exportModal.classList.remove('open');
+  });
+
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // --- Toggle Content ---
+  const contentScroll = document.getElementById('contentScroll');
+  const toggleContentBtn = document.getElementById('toggleContentBtn');
+  toggleContentBtn.addEventListener('click', () => {
+    const visible = contentScroll.classList.toggle('visible');
+    if (visible) {
+      document.body.style.overflow = 'auto';
+      canvasArea.style.display = 'none';
+      document.querySelector('.status-bar').style.display = 'none';
+    } else {
+      document.body.style.overflow = 'hidden';
+      canvasArea.style.display = '';
+      document.querySelector('.status-bar').style.display = '';
+      resizeCanvases();
+    }
+  });
+
+  // --- FAQ ---
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+  });
+
+  // --- Status ---
+  function updateStatus() {
+    const toolNames = { pen: 'Pen', line: 'Line', rect: 'Rectangle', ellipse: 'Ellipse', text: 'Text', eraser: 'Eraser' };
+    const layerNames = { fg: 'Foreground', bg: 'Background' };
+    document.getElementById('statusInfo').textContent = (toolNames[currentTool] || currentTool) + ' | ' + (layerNames[currentLayer] || currentLayer);
+  }
+
+  updateStatus();
+
+  // Prevent context menu on canvas
+  canvasArea.addEventListener('contextmenu', (e) => e.preventDefault());
+})();
+</script>
+</body>
+</html>
