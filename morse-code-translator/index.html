@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morse Code Translator - Convert Text to Morse Code | Free Tool</title>
+<meta name="description" content="Translate text to Morse code and Morse code to text. Audio playback with configurable speed and tone, visual dot/dash display, flash mode, and full reference chart. Free, private, runs in your browser.">
+<meta name="keywords" content="morse code translator, text to morse code, morse code to text, morse code audio, morse code converter, morse code chart, morse code generator, morse code decoder">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/morse-code-translator">
+
+<meta property="og:title" content="Morse Code Translator - Convert Text to Morse Code | Zovo Tools">
+<meta property="og:description" content="Translate between text and Morse code with audio playback, visual animations, and flash mode. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/morse-code-translator">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Morse Code Translator - Convert Text to Morse Code | Zovo Tools">
+<meta name="twitter:description" content="Translate text to Morse code and back. Audio playback, visual display, flash mode. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Morse Code Translator",
+  "description": "Translate between text and International Morse Code with audio playback, visual dot/dash animations, flash mode, and a complete reference chart.",
+  "url": "https://tools.zovo.one/morse-code-translator",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Web Audio API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is Morse code?", "acceptedAnswer": {"@type": "Answer", "text": "Morse code is a method of encoding text characters as sequences of dots (short signals) and dashes (long signals). Developed by Samuel Morse and Alfred Vail in the 1830s for use with the telegraph, it remains in use today in amateur radio, aviation, and emergency signaling. Each letter, number, and some punctuation marks have a unique pattern of dots and dashes."}},
+    {"@type": "Question", "name": "How do I read Morse code?", "acceptedAnswer": {"@type": "Answer", "text": "In Morse code, a dot (.) is a short signal and a dash (-) is a long signal (three times the length of a dot). Letters are separated by spaces equal to three dots in length, and words are separated by spaces equal to seven dots. For example, SOS is ... --- ... (three dots, three dashes, three dots)."}},
+    {"@type": "Question", "name": "Can I hear the Morse code audio?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. This tool uses the Web Audio API to generate accurate Morse code audio playback directly in your browser. You can configure the playback speed (words per minute) and the tone frequency (pitch) to match your preference. The audio follows standard Morse code timing rules."}},
+    {"@type": "Question", "name": "What is WPM in Morse code?", "acceptedAnswer": {"@type": "Answer", "text": "WPM stands for Words Per Minute and measures the speed of Morse code transmission. It is calibrated using the word 'PARIS' as a standard word (50 dot lengths). Beginners typically start at 5-10 WPM, intermediate operators work at 15-25 WPM, and experienced operators can send and receive at 30+ WPM."}},
+    {"@type": "Question", "name": "What characters does Morse code support?", "acceptedAnswer": {"@type": "Answer", "text": "International Morse Code defines patterns for all 26 English letters (A-Z), digits 0-9, and common punctuation marks including period, comma, question mark, exclamation mark, slash, parentheses, ampersand, colon, semicolon, equals sign, plus, minus, quotation marks, apostrophe, and the at sign (@)."}},
+    {"@type": "Question", "name": "Is my data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All translation and audio generation is performed entirely in your browser using JavaScript and the Web Audio API. No data is ever transmitted to any server. The tool works completely offline."}},
+    {"@type": "Question", "name": "What is flash mode?", "acceptedAnswer": {"@type": "Answer", "text": "Flash mode provides a visual representation of Morse code by flashing the screen (or a designated area) in sync with the dots and dashes. Short flashes represent dots and longer flashes represent dashes. This simulates how Morse code was historically transmitted using signal lamps or lights."}},
+    {"@type": "Question", "name": "What is the standard Morse code timing?", "acceptedAnswer": {"@type": "Answer", "text": "International Morse Code follows precise timing rules: a dot is one unit long, a dash is three units long, the gap between parts of the same letter is one unit, the gap between letters is three units, and the gap between words is seven units. One unit length varies based on WPM speed."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"], input[type="range"] {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus {
+  border-color: var(--accent);
+}
+textarea { resize: vertical; min-height: 100px; }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
+  height: 6px;
+  border: none;
+  background: var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger {
+  background: rgba(255,68,102,0.15);
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+.btn-danger:hover { background: rgba(255,68,102,0.25); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Mode selector */
+.mode-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.mode-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mode-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.mode-btn:not(.active):hover { color: var(--text); border-color: var(--text-muted); }
+
+/* Results */
+.results { margin-top: 20px; }
+.result-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.result-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.result-value {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.88rem;
+  word-break: break-all;
+  color: var(--text);
+  user-select: all;
+  line-height: 1.5;
+}
+.copy-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Visual Morse display */
+.morse-visual {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 12px;
+  min-height: 60px;
+  align-items: center;
+}
+.morse-word {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.morse-word + .morse-word::before {
+  content: '';
+  display: block;
+  width: 16px;
+}
+.morse-char-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.morse-char-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-family: var(--font);
+}
+.morse-symbols {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+.morse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: opacity 0.15s;
+}
+.morse-dash {
+  width: 28px;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--accent);
+  transition: opacity 0.15s;
+}
+.morse-dot.dim, .morse-dash.dim { opacity: 0.15; }
+.morse-dot.active, .morse-dash.active {
+  box-shadow: 0 0 12px var(--accent);
+}
+
+/* Flash overlay */
+.flash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.05s;
+}
+.flash-overlay.on {
+  opacity: 0.85;
+}
+
+/* Settings row */
+.settings-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.setting-item {
+  flex: 1;
+  min-width: 180px;
+}
+.setting-item label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.setting-value {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+
+/* Reference chart */
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+.ref-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color 0.2s;
+}
+.ref-item:hover { border-color: var(--accent); }
+.ref-char {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  min-width: 22px;
+  text-align: center;
+}
+.ref-morse {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+/* Toggle */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle input:checked + .toggle-slider { background: var(--accent); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Playback status */
+.playback-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+.playback-status.hidden { display: none; }
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .tabs { flex-wrap: wrap; }
+  .tab-btn { font-size: 0.82rem; padding: 10px 8px; }
+  .settings-row { gap: 12px; }
+  .ref-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<div class="container">
+  <header>
+    <h1><span>Morse Code</span> Translator</h1>
+    <p>Translate between text and International Morse Code. Listen to audio playback, watch visual dot/dash animations, and use flash mode &mdash; all running privately in your browser.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="translator">Translator</button>
+    <button class="tab-btn" data-tab="reference">Reference Chart</button>
+  </div>
+
+  <!-- Translator Tab -->
+  <div id="translator" class="tab-panel active">
+    <div class="card">
+      <h3>Direction</h3>
+      <div class="mode-grid" id="directionGrid">
+        <button class="mode-btn active" data-mode="text-to-morse">Text &rarr; Morse</button>
+        <button class="mode-btn" data-mode="morse-to-text">Morse &rarr; Text</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Input</h3>
+      <textarea id="morseInput" placeholder="Type text here to convert to Morse code..." rows="4"></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="translateBtn">Translate</button>
+        <button class="btn btn-secondary" id="swapBtn">&#8645; Swap</button>
+        <button class="btn btn-secondary" id="clearBtn">Clear</button>
+      </div>
+    </div>
+
+    <div id="translationResults" class="results"></div>
+
+    <!-- Visual Display -->
+    <div class="card" id="visualCard" style="display:none;">
+      <h3>Visual Display</h3>
+      <div class="morse-visual" id="morseVisual"></div>
+    </div>
+
+    <!-- Audio & Flash Controls -->
+    <div class="card">
+      <h3>Audio &amp; Flash Playback</h3>
+      <div class="settings-row">
+        <div class="setting-item">
+          <label>Speed <span class="setting-value" id="wpmValue">15 WPM</span></label>
+          <input type="range" id="wpmSlider" min="5" max="40" value="15" step="1">
+        </div>
+        <div class="setting-item">
+          <label>Frequency <span class="setting-value" id="freqValue">600 Hz</span></label>
+          <input type="range" id="freqSlider" min="300" max="1200" value="600" step="50">
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label class="toggle">
+          <input type="checkbox" id="flashToggle">
+          <span class="toggle-slider"></span>
+        </label>
+        <span style="font-size:0.9rem;">Enable flash mode (screen flashes with Morse code)</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="playBtn">&#9654; Play Audio</button>
+        <button class="btn btn-danger" id="stopBtn" style="display:none;">&#9724; Stop</button>
+      </div>
+      <div class="playback-status hidden" id="playbackStatus">
+        <div class="pulse-dot"></div>
+        <span id="playbackText">Playing...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reference Chart Tab -->
+  <div id="reference" class="tab-panel">
+    <div class="card">
+      <h3>Letters (A-Z)</h3>
+      <div class="ref-grid" id="lettersGrid"></div>
+    </div>
+    <div class="card">
+      <h3>Numbers (0-9)</h3>
+      <div class="ref-grid" id="numbersGrid"></div>
+    </div>
+    <div class="card">
+      <h3>Punctuation</h3>
+      <div class="ref-grid" id="punctuationGrid"></div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2>Understanding Morse Code</h2>
+    <p>Morse code is one of the most enduring communication systems ever invented. Developed in the 1830s and 1840s by Samuel Morse and Alfred Vail for use with the electric telegraph, it encodes text characters as sequences of two signal durations: short signals called dots (or "dits") and long signals called dashes (or "dahs"). Despite being nearly two centuries old, Morse code remains relevant today in amateur radio, aviation, maritime communication, accessibility technology, and emergency signaling.</p>
+    <p>This Morse Code Translator provides a complete set of tools for working with International Morse Code. You can translate text to Morse code and back, listen to audio playback with configurable speed and tone, watch visual dot and dash animations, and even use flash mode to see the code displayed as light signals. The complete reference chart covers all letters, numbers, and punctuation marks defined in International Morse Code.</p>
+
+    <h3>History of Morse Code</h3>
+    <p>The original American Morse Code, developed by Samuel Morse and Alfred Vail, was first used on the Baltimore-Washington telegraph line in 1844. The famous first message was "What hath God wrought." This original version used dots, dashes, and internal spaces within characters, making it somewhat complex. In 1848, Friedrich Clemens Gerke created a simplified version for use in Germany, which was later adopted internationally in 1865 as International Morse Code, eliminating the intra-character spaces.</p>
+    <p>International Morse Code became the worldwide standard for maritime communication and was required for all ships after the Titanic disaster in 1912. The universal distress signal SOS (<code>... --- ...</code>) became one of the most recognizable Morse sequences in history. While commercial use of Morse code for maritime communication officially ended in 1999, it continues to thrive in amateur radio, where operators regularly communicate using Morse (referred to as CW, or Continuous Wave) across vast distances with minimal equipment and power.</p>
+
+    <h3>Morse Code Timing</h3>
+    <p>The timing of Morse code follows precise rules that ensure consistent and readable transmission. The fundamental unit is the length of a dot. A dash is exactly three times the length of a dot. Between individual dots and dashes within a character, there is a silent gap equal to one dot length. Between characters (letters or numbers), the gap is three dot lengths. Between words, the gap extends to seven dot lengths.</p>
+    <p>Speed is measured in Words Per Minute (WPM), calibrated using the standard word "PARIS" which contains exactly 50 dot-lengths including all inter-character and inter-word spacing. At 15 WPM, each dot lasts approximately 80 milliseconds. Beginners typically start learning at 5-10 WPM and gradually increase their speed. Experienced amateur radio operators commonly operate at 20-30 WPM, and some competitive operators exceed 40 WPM.</p>
+
+    <h3>Learning Morse Code</h3>
+    <p>The most effective method for learning Morse code is the Koch method, which involves learning characters at full speed (typically 20 WPM) but starting with just two characters and gradually adding more as proficiency develops. This approach trains your brain to recognize the sound patterns directly rather than counting individual dots and dashes. The audio playback feature in this tool can help with this type of learning by allowing you to hear characters at your chosen speed.</p>
+    <p>Another popular approach is the Farnsworth method, where individual characters are sent at high speed but with extended spacing between them. As the learner improves, the spacing is gradually reduced to standard timing. Visual aids like the reference chart on this page can help with initial memorization, but the ultimate goal is to develop "aural recognition" &mdash; the ability to instantly recognize characters by their sound pattern without conscious decoding.</p>
+
+    <h3>Modern Uses of Morse Code</h3>
+    <p>Beyond amateur radio, Morse code has found surprising applications in the modern world. Some aviation navigation beacons (NDBs and VORs) still transmit their identification codes in Morse. In accessibility technology, Morse code input has been adopted by people with severe physical disabilities as an efficient text input method &mdash; Google even built Morse code input into the Gboard keyboard for Android. The simplicity of Morse (requiring only a binary input) makes it adaptable to any interface that can distinguish between two states.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What is Morse code?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Morse code is a method of encoding text characters as sequences of dots (short signals) and dashes (long signals). Developed by Samuel Morse and Alfred Vail in the 1830s for use with the electric telegraph, it remains in use today in amateur radio, aviation, and emergency signaling. Each letter, number, and some punctuation marks have a unique pattern of dots and dashes that can be transmitted as sound, light, or electrical pulses.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I read Morse code?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>In Morse code, a dot (.) is a short signal and a dash (-) is a long signal that is three times the length of a dot. Within a single letter, dots and dashes are separated by one dot-length gap. Letters are separated by gaps equal to three dot lengths, and words are separated by gaps equal to seven dot lengths. For example, SOS is ... --- ... (three dots, three dashes, three dots), one of the most universally recognized signals.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I hear the Morse code audio?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. This tool uses the Web Audio API built into modern browsers to generate accurate Morse code audio playback. You can configure the playback speed (words per minute) and the tone frequency (pitch in Hz) to match your preference. The audio follows standard International Morse Code timing rules for dots, dashes, and spacing. All audio is generated client-side in your browser.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is WPM in Morse code?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>WPM stands for Words Per Minute and measures the speed of Morse code transmission. It is calibrated using the word "PARIS" as a standard reference (50 dot-length units per word). Beginners typically start at 5-10 WPM, intermediate operators work at 15-25 WPM, and experienced amateur radio operators can send and receive at 30 WPM or higher. Use the speed slider to adjust playback to your comfort level.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What characters does Morse code support?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>International Morse Code defines patterns for all 26 English letters (A-Z), the digits 0 through 9, and common punctuation marks including period, comma, question mark, exclamation mark, slash, parentheses, ampersand, colon, semicolon, equals sign, plus, minus, quotation marks, apostrophe, and the at sign (@). Characters not in the Morse code standard are skipped during translation.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my data sent to a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. All translation, audio generation, and visual display are performed entirely in your browser using JavaScript and the Web Audio API. No data is ever transmitted to any server. The tool works completely offline &mdash; you can disconnect from the internet and every feature will continue to work normally. Your text remains completely private on your device.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is flash mode?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Flash mode provides a visual representation of Morse code by flashing the screen in sync with the dots and dashes during audio playback. Short flashes represent dots and longer flashes represent dashes, simulating how Morse code has historically been transmitted using signal lamps, flashlights, or other light sources. You can enable or disable flash mode with the toggle switch in the playback controls.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the standard Morse code timing?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>International Morse Code follows precise timing rules: a dot is one time unit, a dash is three time units, the gap between dots and dashes within the same letter is one time unit, the gap between letters is three time units, and the gap between words is seven time units. The actual duration of one time unit depends on the transmission speed (WPM). At 15 WPM, one unit is approximately 80 milliseconds.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </footer>
+</div>
+
+<script>
+// ========== Morse Code Table ==========
+const MORSE_TABLE = {
+  'A': '.-',    'B': '-...',  'C': '-.-.',  'D': '-..',   'E': '.',
+  'F': '..-.',  'G': '--.',   'H': '....',  'I': '..',    'J': '.---',
+  'K': '-.-',   'L': '.-..',  'M': '--',    'N': '-.',    'O': '---',
+  'P': '.--.',  'Q': '--.-',  'R': '.-.',   'S': '...',   'T': '-',
+  'U': '..-',   'V': '...-',  'W': '.--',   'X': '-..-',  'Y': '-.--',
+  'Z': '--..',
+  '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+  '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
+  '.': '.-.-.-',  ',': '--..--',  '?': '..--..',  '!': '-.-.--',
+  '/': '-..-.',   '(': '-.--.',   ')': '-.--.-',  '&': '.-...',
+  ':': '---...',  ';': '-.-.-.',  '=': '-...-',   '+': '.-.-.',
+  '-': '-....-',  '"': '.-..-.',  '\'': '.----.',  '@': '.--.-.',
+};
+
+const REVERSE_MORSE = {};
+for (const [char, morse] of Object.entries(MORSE_TABLE)) {
+  REVERSE_MORSE[morse] = char;
+}
+
+// ========== Translation Functions ==========
+function textToMorse(text) {
+  const upper = text.toUpperCase();
+  const words = upper.split(/\s+/);
+  return words.map(word => {
+    return [...word].map(ch => MORSE_TABLE[ch] || '').filter(Boolean).join(' ');
+  }).join(' / ');
+}
+
+function morseToText(morse) {
+  const words = morse.trim().split(/\s*\/\s*/);
+  return words.map(word => {
+    return word.split(/\s+/).map(code => {
+      return REVERSE_MORSE[code] || '';
+    }).join('');
+  }).join(' ');
+}
+
+// ========== Direction Mode ==========
+let direction = 'text-to-morse';
+
+document.getElementById('directionGrid').querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('directionGrid').querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    direction = btn.dataset.mode;
+    const input = document.getElementById('morseInput');
+    if (direction === 'text-to-morse') {
+      input.placeholder = 'Type text here to convert to Morse code...';
+    } else {
+      input.placeholder = 'Enter Morse code (dots and dashes, / between words)...';
+    }
+    doTranslate();
+  });
+});
+
+// ========== Translation & Rendering ==========
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function doTranslate() {
+  const input = document.getElementById('morseInput').value;
+  const resultsEl = document.getElementById('translationResults');
+  const visualCard = document.getElementById('visualCard');
+
+  if (!input.trim()) {
+    resultsEl.innerHTML = '';
+    visualCard.style.display = 'none';
+    return;
+  }
+
+  let morseResult, textResult;
+  if (direction === 'text-to-morse') {
+    morseResult = textToMorse(input);
+    textResult = input;
+    resultsEl.innerHTML = `<div class="result-item">
+      <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      <div class="result-label">Morse Code</div>
+      <div class="result-value">${escapeHtml(morseResult)}</div>
+    </div>`;
+  } else {
+    textResult = morseToText(input);
+    morseResult = input;
+    resultsEl.innerHTML = `<div class="result-item">
+      <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      <div class="result-label">Text</div>
+      <div class="result-value">${escapeHtml(textResult)}</div>
+    </div>`;
+  }
+
+  // Render visual display
+  renderVisual(morseResult);
+}
+
+function renderVisual(morse) {
+  const visualCard = document.getElementById('visualCard');
+  const visualEl = document.getElementById('morseVisual');
+
+  if (!morse.trim()) {
+    visualCard.style.display = 'none';
+    return;
+  }
+
+  visualCard.style.display = 'block';
+  const words = morse.split(/\s*\/\s*/);
+  let html = '';
+
+  words.forEach((word, wi) => {
+    if (wi > 0) html += '<div class="morse-word"></div>';
+    html += '<div class="morse-word">';
+    const chars = word.trim().split(/\s+/);
+    chars.forEach(code => {
+      if (!code) return;
+      const letter = REVERSE_MORSE[code] || '?';
+      html += '<div class="morse-char-group">';
+      html += `<div class="morse-symbols" data-morse="${escapeHtml(code)}">`;
+      [...code].forEach(symbol => {
+        if (symbol === '.') {
+          html += '<div class="morse-dot dim"></div>';
+        } else if (symbol === '-') {
+          html += '<div class="morse-dash dim"></div>';
+        }
+      });
+      html += '</div>';
+      html += `<div class="morse-char-label">${escapeHtml(letter)}</div>`;
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+
+  visualEl.innerHTML = html;
+}
+
+function copyText(btn) {
+  const valueEl = btn.parentElement.querySelector('.result-value');
+  navigator.clipboard.writeText(valueEl.textContent).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 1500);
+  });
+}
+
+// Live translate
+document.getElementById('morseInput').addEventListener('input', doTranslate);
+document.getElementById('translateBtn').addEventListener('click', doTranslate);
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('morseInput').value = '';
+  document.getElementById('translationResults').innerHTML = '';
+  document.getElementById('visualCard').style.display = 'none';
+  stopPlayback();
+});
+
+document.getElementById('swapBtn').addEventListener('click', () => {
+  const resultsEl = document.getElementById('translationResults');
+  const firstResult = resultsEl.querySelector('.result-value');
+  if (firstResult) {
+    // Toggle direction
+    const otherMode = direction === 'text-to-morse' ? 'morse-to-text' : 'text-to-morse';
+    document.getElementById('directionGrid').querySelectorAll('.mode-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === otherMode);
+    });
+    direction = otherMode;
+    document.getElementById('morseInput').value = firstResult.textContent;
+    const input = document.getElementById('morseInput');
+    if (direction === 'text-to-morse') {
+      input.placeholder = 'Type text here to convert to Morse code...';
+    } else {
+      input.placeholder = 'Enter Morse code (dots and dashes, / between words)...';
+    }
+    doTranslate();
+  }
+});
+
+// ========== Settings sliders ==========
+document.getElementById('wpmSlider').addEventListener('input', function() {
+  document.getElementById('wpmValue').textContent = this.value + ' WPM';
+});
+document.getElementById('freqSlider').addEventListener('input', function() {
+  document.getElementById('freqValue').textContent = this.value + ' Hz';
+});
+
+// ========== Audio Playback with Web Audio API ==========
+let audioCtx = null;
+let isPlaying = false;
+let playbackTimeout = null;
+let playbackTimeouts = [];
+
+function getAudioContext() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playTone(ctx, frequency, startTime, duration) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = frequency;
+  gain.gain.setValueAtTime(0, startTime);
+  gain.gain.linearRampToValueAtTime(0.5, startTime + 0.005);
+  gain.gain.setValueAtTime(0.5, startTime + duration - 0.005);
+  gain.gain.linearRampToValueAtTime(0, startTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration);
+}
+
+function getMorseString() {
+  const input = document.getElementById('morseInput').value;
+  if (!input.trim()) return '';
+  if (direction === 'text-to-morse') {
+    return textToMorse(input);
+  }
+  return input;
+}
+
+function stopPlayback() {
+  isPlaying = false;
+  playbackTimeouts.forEach(t => clearTimeout(t));
+  playbackTimeouts = [];
+  document.getElementById('playBtn').style.display = '';
+  document.getElementById('stopBtn').style.display = 'none';
+  document.getElementById('playbackStatus').classList.add('hidden');
+  document.getElementById('flashOverlay').classList.remove('on');
+  // Reset visual
+  document.querySelectorAll('.morse-dot, .morse-dash').forEach(el => {
+    el.classList.add('dim');
+    el.classList.remove('active');
+  });
+}
+
+document.getElementById('playBtn').addEventListener('click', () => {
+  const morse = getMorseString();
+  if (!morse) return;
+
+  stopPlayback();
+  isPlaying = true;
+  document.getElementById('playBtn').style.display = 'none';
+  document.getElementById('stopBtn').style.display = '';
+  document.getElementById('playbackStatus').classList.remove('hidden');
+  document.getElementById('playbackText').textContent = 'Playing...';
+
+  const wpm = parseInt(document.getElementById('wpmSlider').value);
+  const freq = parseInt(document.getElementById('freqSlider').value);
+  const flashEnabled = document.getElementById('flashToggle').checked;
+
+  // Timing based on WPM (PARIS standard: 50 units per word)
+  const dotDuration = 1.2 / wpm; // seconds per dot
+  const dashDuration = dotDuration * 3;
+  const intraCharGap = dotDuration;
+  const interCharGap = dotDuration * 3;
+  const wordGap = dotDuration * 7;
+
+  const ctx = getAudioContext();
+  let currentTime = ctx.currentTime + 0.1;
+  const startTime = currentTime;
+
+  // Build schedule: array of { type, time, duration }
+  const schedule = [];
+  const words = morse.split(/\s*\/\s*/);
+
+  // Flatten for visual animation tracking
+  let visualIndex = 0;
+  const allSymbolEls = document.querySelectorAll('#morseVisual .morse-dot, #morseVisual .morse-dash');
+
+  words.forEach((word, wi) => {
+    if (wi > 0) currentTime += wordGap;
+    const chars = word.trim().split(/\s+/);
+    chars.forEach((code, ci) => {
+      if (ci > 0) currentTime += interCharGap;
+      [...code].forEach((symbol, si) => {
+        if (si > 0) currentTime += intraCharGap;
+        const dur = symbol === '.' ? dotDuration : dashDuration;
+        schedule.push({ type: symbol, time: currentTime, duration: dur, visualIndex });
+        currentTime += dur;
+        visualIndex++;
+      });
+    });
+  });
+
+  // Play tones
+  schedule.forEach(item => {
+    playTone(ctx, freq, item.time, item.duration);
+  });
+
+  // Visual animation + flash
+  const flashOverlay = document.getElementById('flashOverlay');
+  // Reset all to dim first
+  allSymbolEls.forEach(el => { el.classList.add('dim'); el.classList.remove('active'); });
+
+  schedule.forEach(item => {
+    const delayMs = (item.time - startTime) * 1000;
+    const durationMs = item.duration * 1000;
+
+    // Activate visual element
+    const tid1 = setTimeout(() => {
+      if (!isPlaying) return;
+      const el = allSymbolEls[item.visualIndex];
+      if (el) {
+        el.classList.remove('dim');
+        el.classList.add('active');
+      }
+      if (flashEnabled) {
+        flashOverlay.classList.add('on');
+      }
+    }, delayMs);
+    playbackTimeouts.push(tid1);
+
+    // Deactivate
+    const tid2 = setTimeout(() => {
+      if (!isPlaying) return;
+      const el = allSymbolEls[item.visualIndex];
+      if (el) {
+        el.classList.remove('active');
+        // Keep it bright (not dim) after playing
+      }
+      if (flashEnabled) {
+        flashOverlay.classList.remove('on');
+      }
+    }, delayMs + durationMs);
+    playbackTimeouts.push(tid2);
+  });
+
+  // End of playback
+  const totalDuration = (currentTime - startTime) * 1000 + 200;
+  const endTid = setTimeout(() => {
+    if (isPlaying) {
+      document.getElementById('playbackText').textContent = 'Complete';
+      setTimeout(() => stopPlayback(), 1000);
+    }
+  }, totalDuration);
+  playbackTimeouts.push(endTid);
+});
+
+document.getElementById('stopBtn').addEventListener('click', stopPlayback);
+
+// ========== Reference Chart ==========
+function buildReferenceChart() {
+  const lettersGrid = document.getElementById('lettersGrid');
+  const numbersGrid = document.getElementById('numbersGrid');
+  const punctuationGrid = document.getElementById('punctuationGrid');
+
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const numbers = '0123456789'.split('');
+  const punctuation = ['.', ',', '?', '!', '/', '(', ')', '&', ':', ';', '=', '+', '-', '"', "'", '@'];
+
+  letters.forEach(ch => {
+    lettersGrid.innerHTML += `<div class="ref-item"><span class="ref-char">${ch}</span><span class="ref-morse">${MORSE_TABLE[ch]}</span></div>`;
+  });
+
+  numbers.forEach(ch => {
+    numbersGrid.innerHTML += `<div class="ref-item"><span class="ref-char">${ch}</span><span class="ref-morse">${MORSE_TABLE[ch]}</span></div>`;
+  });
+
+  punctuation.forEach(ch => {
+    const display = ch === '"' ? '&quot;' : ch === "'" ? '&apos;' : escapeHtml(ch);
+    punctuationGrid.innerHTML += `<div class="ref-item"><span class="ref-char">${display}</span><span class="ref-morse">${MORSE_TABLE[ch]}</span></div>`;
+  });
+}
+buildReferenceChart();
+
+// ========== Tab Switching ==========
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ========== FAQ Toggle ==========
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    q.parentElement.classList.toggle('open');
+  });
+});
+</script>
+
+</body>
+</html>
