@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free BMI Calculator (Metric and Imperial) - Body Mass Index with Visual Scale | Zovo Tools</title>
+<meta name="description" content="Free BMI calculator with both metric and imperial units. See your BMI on a visual color-coded gauge, get your BMI Prime, healthy weight range, and waist-to-height ratio. No sign-up required.">
+<meta name="keywords" content="BMI calculator, body mass index, metric BMI, imperial BMI, BMI chart, healthy weight, BMI Prime">
+<link rel="canonical" href="https://zovo.one/free-tools/bmi-calculator-metric/">
+<meta property="og:title" content="Free BMI Calculator (Metric and Imperial) - Body Mass Index with Visual Scale">
+<meta property="og:description" content="Free BMI calculator with visual gauge, BMI Prime, healthy weight range, and waist-to-height ratio. Supports metric and imperial units.">
+<meta property="og:url" content="https://zovo.one/free-tools/bmi-calculator-metric/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://zovo.one/free-tools/bmi-calculator-metric/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Free BMI Calculator (Metric and Imperial)",
+  "url": "https://zovo.one/free-tools/bmi-calculator-metric/",
+  "description": "Free BMI calculator with both metric and imperial units. Visual color-coded gauge, BMI Prime, healthy weight range, and waist-to-height ratio calculator.",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  }
+}
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #e0e0e8; line-height: 1.7; min-height: 100vh; }
+  a { color: #00ccff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .navbar { position: sticky; top: 0; z-index: 1000; padding: 0.6rem 1.5rem; background: #0a0a0f; border-bottom: 1px solid #1a1a2a; display: flex; justify-content: space-between; align-items: center; }
+  .navbar .logo span:first-child { font-size: 1.1rem; font-weight: 700; color: #00ff88; }
+  .navbar .logo span:last-child { font-size: 0.75rem; color: #8888a0; }
+  .navbar nav { display: flex; gap: 1.5rem; font-size: 0.8rem; }
+  .navbar nav a { color: #8888a0; }
+  .navbar nav a:hover { color: #e0e0e8; text-decoration: none; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { font-size: 2rem; font-weight: 700; color: #ffffff; margin-bottom: 1rem; line-height: 1.3; }
+  h2 { font-size: 1.4rem; font-weight: 600; color: #ffffff; margin-top: 2.5rem; margin-bottom: 1rem; }
+  h3 { font-size: 1.1rem; font-weight: 600; color: #e0e0e8; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+  p { margin-bottom: 1rem; color: #c0c0cc; }
+  ul, ol { margin-bottom: 1rem; padding-left: 1.5rem; color: #c0c0cc; }
+  li { margin-bottom: 0.4rem; }
+
+  .tool-card { background: #12121a; border: 1px solid #1a1a2a; border-radius: 16px; padding: 2rem; margin: 2rem 0; }
+
+  .unit-toggle { display: flex; background: #0a0a0f; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid #1a1a2a; }
+  .unit-btn { flex: 1; padding: 0.7rem; text-align: center; cursor: pointer; font-size: 0.9rem; font-family: 'Inter', sans-serif; background: transparent; border: none; color: #8888a0; transition: all 0.2s; }
+  .unit-btn.active { background: #00ff88; color: #0a0a0f; font-weight: 600; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .form-group.full { grid-column: span 2; }
+  .form-group label { font-size: 0.85rem; color: #8888a0; }
+  .form-group input, .form-group select { background: #0a0a0f; border: 1px solid #2a2a3a; border-radius: 8px; padding: 0.7rem 1rem; color: #e0e0e8; font-size: 1rem; font-family: 'Inter', sans-serif; }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: #00ff88; }
+  .inline-inputs { display: flex; gap: 0.5rem; }
+  .inline-inputs input { flex: 1; }
+
+  .calc-btn { background: #00ff88; color: #0a0a0f; border: none; padding: 0.85rem 2rem; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; margin-top: 0.5rem; transition: background 0.2s; }
+  .calc-btn:hover { background: #00dd77; }
+
+  .results { display: none; margin-top: 2rem; }
+  .results.show { display: block; }
+
+  .bmi-big { text-align: center; margin-bottom: 1.5rem; }
+  .bmi-big .number { font-size: 3.5rem; font-weight: 700; }
+  .bmi-big .category { font-size: 1.2rem; margin-top: 0.3rem; }
+
+  .gauge-container { margin: 1.5rem 0; position: relative; }
+  .gauge-bar { display: flex; height: 24px; border-radius: 12px; overflow: hidden; }
+  .gauge-segment { height: 100%; }
+  .gauge-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: #8888a0; margin-top: 4px; padding: 0 2px; }
+  .gauge-pointer { position: absolute; top: -6px; width: 4px; height: 36px; background: #ffffff; border-radius: 2px; transition: left 0.5s ease; box-shadow: 0 0 6px rgba(255,255,255,0.5); }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+  .stat-card { background: #0a0a0f; border: 1px solid #1a1a2a; border-radius: 10px; padding: 1rem 1.2rem; }
+  .stat-card .label { font-size: 0.8rem; color: #8888a0; margin-bottom: 0.3rem; }
+  .stat-card .value { font-size: 1.3rem; font-weight: 600; color: #00ff88; }
+  .stat-card .sub { font-size: 0.75rem; color: #666; margin-top: 0.2rem; }
+
+  .bmi-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  .bmi-table th, .bmi-table td { padding: 0.6rem 1rem; text-align: left; border-bottom: 1px solid #1a1a2a; font-size: 0.9rem; }
+  .bmi-table th { color: #8888a0; font-weight: 500; font-size: 0.8rem; }
+  .bmi-table td { color: #c0c0cc; }
+  .bmi-table .highlight { background: rgba(0, 255, 136, 0.05); }
+
+  .formula-box { background: #0a0a0f; border: 1px solid #1a1a2a; border-radius: 10px; padding: 1rem 1.5rem; margin: 1rem 0; font-family: monospace; font-size: 0.9rem; color: #00ccff; }
+
+  .waist-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #1a1a2a; }
+
+  .faq-item { background: #12121a; border: 1px solid #1a1a2a; border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: 0.8rem; }
+  .faq-q { font-weight: 600; color: #ffffff; margin-bottom: 0.5rem; }
+  .faq-a { color: #c0c0cc; font-size: 0.95rem; }
+
+  .footer { text-align: center; padding: 2rem 1.5rem; border-top: 1px solid #1a1a2a; color: #8888a0; font-size: 0.8rem; margin-top: 3rem; }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.5rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: span 1; }
+    .bmi-big .number { font-size: 2.5rem; }
+    .container { padding: 1.5rem 1rem 3rem; }
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <a href="/free-tools/" style="text-decoration:none;">
+    <span style="font-size:1.1rem;font-weight:700;color:#00ff88;">Zovo</span>
+    <span style="font-size:0.75rem;color:#8888a0;">Tools</span>
+  </a>
+  <nav>
+    <a href="/free-tools/">All Tools</a>
+    <a href="/free-tools/articles/">Articles</a>
+    <a href="https://zovo.one">zovo.one</a>
+  </nav>
+</div>
+
+<div class="container">
+
+<h1>Free BMI Calculator with Visual Scale</h1>
+<p>Calculate your Body Mass Index using metric or imperial units. This free BMI calculator shows your result on a color-coded visual gauge, tells you your BMI category, displays your healthy weight range for your height, computes your BMI Prime value, and includes a secondary waist-to-height ratio calculator for a more complete picture of health risk.</p>
+
+<div class="tool-card">
+  <div class="unit-toggle">
+    <button class="unit-btn active" id="metricBtn" onclick="setUnit('metric')">Metric (kg/cm)</button>
+    <button class="unit-btn" id="imperialBtn" onclick="setUnit('imperial')">Imperial (lbs/ft)</button>
+  </div>
+
+  <div id="metricForm">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Weight (kg)</label>
+        <input type="number" id="weightKg" placeholder="70" min="20" max="500" step="0.1">
+      </div>
+      <div class="form-group">
+        <label>Height (cm)</label>
+        <input type="number" id="heightCm" placeholder="175" min="50" max="300" step="0.1">
+      </div>
+    </div>
+  </div>
+
+  <div id="imperialForm" style="display:none;">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Weight (lbs)</label>
+        <input type="number" id="weightLbs" placeholder="154" min="40" max="1100" step="0.1">
+      </div>
+      <div class="form-group">
+        <label>Height</label>
+        <div class="inline-inputs">
+          <input type="number" id="heightFt" placeholder="5" min="1" max="9" step="1" style="width:45%;">
+          <span style="color:#8888a0;align-self:center;">ft</span>
+          <input type="number" id="heightIn" placeholder="9" min="0" max="11" step="0.1" style="width:45%;">
+          <span style="color:#8888a0;align-self:center;">in</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Age (optional)</label>
+      <input type="number" id="age" placeholder="30" min="2" max="120">
+    </div>
+    <div class="form-group">
+      <label>Gender (optional)</label>
+      <select id="gender">
+        <option value="">Select</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="calc-btn" onclick="calculateBMI()">Calculate BMI</button>
+
+  <div class="results" id="results">
+    <div class="bmi-big">
+      <div class="number" id="bmiValue">--</div>
+      <div class="category" id="bmiCategory">--</div>
+    </div>
+
+    <div class="gauge-container">
+      <div class="gauge-bar">
+        <div class="gauge-segment" style="flex:18.5;background:#3b82f6;"></div>
+        <div class="gauge-segment" style="flex:6.4;background:#22c55e;"></div>
+        <div class="gauge-segment" style="flex:5;background:#f59e0b;"></div>
+        <div class="gauge-segment" style="flex:5;background:#ef4444;"></div>
+        <div class="gauge-segment" style="flex:15.1;background:#991b1b;"></div>
+      </div>
+      <div class="gauge-pointer" id="gaugePointer"></div>
+      <div class="gauge-labels">
+        <span>0</span>
+        <span>18.5</span>
+        <span>25</span>
+        <span>30</span>
+        <span>35</span>
+        <span>50</span>
+      </div>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">BMI Prime</div>
+        <div class="value" id="bmiPrime">--</div>
+        <div class="sub">Ratio to upper normal BMI (25)</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Healthy Weight Range</div>
+        <div class="value" id="healthyRange">--</div>
+        <div class="sub" id="healthyRangeSub">For your height</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Weight to Lose/Gain</div>
+        <div class="value" id="weightDiff">--</div>
+        <div class="sub" id="weightDiffSub">To reach normal BMI</div>
+      </div>
+      <div class="stat-card" id="ageCard" style="display:none;">
+        <div class="label">Age Consideration</div>
+        <div class="value" id="ageNote" style="font-size:0.9rem;">--</div>
+      </div>
+    </div>
+
+    <h3>BMI Categories Reference</h3>
+    <table class="bmi-table">
+      <thead><tr><th>Category</th><th>BMI Range</th><th>Health Risk</th></tr></thead>
+      <tbody id="bmiTableBody">
+        <tr><td>Severe Underweight</td><td>&lt; 16.0</td><td>High</td></tr>
+        <tr><td>Moderate Underweight</td><td>16.0 - 16.9</td><td>Moderate</td></tr>
+        <tr><td>Mild Underweight</td><td>17.0 - 18.4</td><td>Low</td></tr>
+        <tr><td>Normal Weight</td><td>18.5 - 24.9</td><td>Minimal</td></tr>
+        <tr><td>Overweight</td><td>25.0 - 29.9</td><td>Increased</td></tr>
+        <tr><td>Obese Class I</td><td>30.0 - 34.9</td><td>High</td></tr>
+        <tr><td>Obese Class II</td><td>35.0 - 39.9</td><td>Very High</td></tr>
+        <tr><td>Obese Class III</td><td>&ge; 40.0</td><td>Extremely High</td></tr>
+      </tbody>
+    </table>
+
+    <div class="waist-section">
+      <h3>Waist-to-Height Ratio Calculator</h3>
+      <p style="font-size:0.9rem;">Waist-to-height ratio (WHtR) is considered a better predictor of cardiovascular risk than BMI alone. A ratio below 0.5 is generally considered healthy.</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label id="waistLabel">Waist Circumference (cm)</label>
+          <input type="number" id="waistInput" placeholder="80" min="30" max="300" step="0.1">
+        </div>
+        <div class="form-group" style="justify-content:flex-end;">
+          <button class="calc-btn" onclick="calculateWHtR()" style="margin-top:0;">Calculate WHtR</button>
+        </div>
+      </div>
+      <div id="whtrResult" style="display:none;">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="label">Waist-to-Height Ratio</div>
+            <div class="value" id="whtrValue">--</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Risk Assessment</div>
+            <div class="value" id="whtrRisk" style="font-size:0.9rem;">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>Understanding Body Mass Index</h2>
+<p>Body Mass Index is a numerical value calculated from your weight and height. It was developed in the early 19th century by Belgian mathematician Adolphe Quetelet and remains one of the most widely used screening tools for categorizing weight status. The formula divides your weight in kilograms by the square of your height in meters. The resulting number falls into one of several categories that indicate whether your weight is considered underweight, normal, overweight, or obese for your height.</p>
+<p>While BMI does not directly measure body fat percentage, it correlates reasonably well with more direct measures of body fat for most people. Health organizations worldwide, including the World Health Organization and the National Institutes of Health, use BMI as a first-line screening tool because it is quick, inexpensive, and non-invasive. It provides a useful starting point for discussions between patients and healthcare providers about weight-related health risks.</p>
+
+<h2>How the BMI Formula Works</h2>
+<p>The metric BMI formula is straightforward. You divide your weight in kilograms by your height in meters squared. If you weigh 70 kilograms and stand 1.75 meters tall, your BMI would be 70 divided by (1.75 times 1.75), which equals 70 divided by 3.0625, giving a BMI of approximately 22.9. This falls in the normal weight category.</p>
+<p>The imperial formula uses a conversion factor. You multiply your weight in pounds by 703, then divide by your height in inches squared. For someone weighing 154 pounds at 69 inches tall, the calculation would be (154 times 703) divided by (69 times 69), which equals 108,262 divided by 4,761, giving approximately 22.7. Both formulas produce the same result, just using different units of measurement.</p>
+
+<h2>BMI Categories and What They Mean</h2>
+<p>The World Health Organization defines four primary BMI categories. Underweight is a BMI below 18.5, which may indicate malnutrition, eating disorders, or underlying health conditions that cause unintended weight loss. Normal weight spans from 18.5 to 24.9 and is associated with the lowest overall health risks from weight-related conditions. Overweight ranges from 25.0 to 29.9 and indicates increased risk for cardiovascular disease, type 2 diabetes, and certain cancers. Obesity begins at a BMI of 30.0 and is further divided into three classes of increasing severity.</p>
+<p>It is important to understand that these categories are population-level guidelines. An individual with a high BMI might have a low health risk if the extra weight comes from muscle mass rather than fat. Conversely, someone with a normal BMI might carry excess visceral fat and face elevated health risks. BMI should always be considered alongside other health indicators and discussed with a qualified healthcare provider.</p>
+
+<h2>What BMI Prime Tells You</h2>
+<p>BMI Prime is a dimensionless ratio that compares your BMI to the upper limit of the normal BMI range (25.0). It is calculated by dividing your BMI by 25. A BMI Prime of 1.0 means you are at the upper boundary of normal weight. Values below 1.0 indicate you are within or below the normal range, while values above 1.0 indicate overweight or obesity.</p>
+<p>The practical advantage of BMI Prime is that it immediately tells you how far you are from normal weight in percentage terms. A BMI Prime of 1.12, for example, means you are 12 percent above the upper limit of normal BMI. This makes it easier to set and track weight management goals. A target BMI Prime between 0.74 and 1.0 corresponds to the normal BMI range of 18.5 to 25.0.</p>
+
+<h2>Healthy Weight Range for Your Height</h2>
+<p>This calculator shows you the range of weights that fall within the normal BMI category for your specific height. Knowing this range is more actionable than just knowing your BMI number because it gives you a concrete weight goal. If you are above the range, you know how many kilograms or pounds you need to lose to reach normal BMI. If you are below, you know how much weight gain would bring you into the normal range.</p>
+<p>The healthy weight range is calculated by working the BMI formula backward. For the lower limit, multiply 18.5 by your height in meters squared. For the upper limit, multiply 24.9 by your height in meters squared. These calculations assume a standard adult body composition. Growing children, pregnant women, and highly muscular individuals may have different healthy weight ranges that are best determined by a healthcare professional.</p>
+
+<h2>Age and Gender Considerations in BMI</h2>
+<p>Standard BMI categories apply to adults aged 20 and older regardless of gender. However, the relationship between BMI and body fat differs between men and women. At the same BMI, women typically have more body fat than men. Older adults tend to have more body fat than younger adults at the same BMI. This means a BMI of 24 might represent different levels of body fat and health risk depending on whether you are a 25-year-old man or a 65-year-old woman.</p>
+<p>For children and adolescents aged 2 through 19, BMI is interpreted using age-specific and sex-specific percentile charts developed by the Centers for Disease Control and Prevention. A child's BMI percentile indicates their position relative to other children of the same age and sex. A BMI at the 85th percentile or above is considered overweight for children, while a BMI at the 95th percentile or above is considered obese.</p>
+
+<h2>Waist-to-Height Ratio as a Complementary Measure</h2>
+<p>The waist-to-height ratio (WHtR) has gained recognition as a valuable complement to BMI for assessing health risk, particularly cardiovascular risk. Research published in journals including the British Medical Journal has shown that WHtR may be a better predictor of heart disease, diabetes, and all-cause mortality than BMI alone. The measurement is simple: divide your waist circumference by your height, both in the same units.</p>
+<p>A WHtR below 0.5 (meaning your waist measures less than half your height) is associated with lower health risk. Values between 0.5 and 0.6 indicate increased risk, while values above 0.6 suggest substantially increased risk for cardiometabolic disease. Unlike BMI, waist circumference directly reflects abdominal fat, which is the type of fat most closely linked to heart disease and metabolic dysfunction. This makes WHtR especially valuable for people whose BMI may not accurately reflect their body composition.</p>
+
+<h2>Limitations of BMI You Should Know</h2>
+<p>BMI has several well-documented limitations that you should keep in mind when interpreting your results. Athletes and people who strength train regularly may have a high BMI due to muscle mass rather than excess fat. Muscle is denser than fat, so a muscular person can weigh more at the same height without carrying excess body fat. In these cases, body fat percentage measurements or waist circumference provide more accurate assessments.</p>
+<p>BMI also does not account for the distribution of weight on your body. Two people with identical BMIs might have very different health risk profiles if one carries fat primarily around the abdomen (apple-shaped) while the other carries it in the hips and thighs (pear-shaped). Abdominal fat is more strongly associated with metabolic disease. Additionally, BMI thresholds were developed primarily using data from European populations and may not be equally applicable to all ethnic groups. Some health organizations recommend lower BMI cutoffs for Asian populations, where health risks increase at lower BMI values.</p>
+
+<h2>Practical Steps After Checking Your BMI</h2>
+<p>If your BMI falls in the normal range, maintaining your current weight through balanced nutrition and regular physical activity is generally the best approach. Continue monitoring your weight periodically, as gradual weight gain over years is common and often goes unnoticed without regular checks. If your BMI indicates overweight, a modest reduction of 5 to 10 percent of your body weight can produce meaningful improvements in blood pressure, blood sugar levels, and cholesterol profiles.</p>
+<p>For BMI values indicating obesity, consulting with a healthcare provider about a comprehensive weight management plan is recommended. Effective approaches typically combine dietary changes, increased physical activity, behavioral modifications, and in some cases medical interventions. Crash diets and extreme restriction are generally counterproductive and can lead to muscle loss, nutritional deficiencies, and weight regain. Sustainable lifestyle changes that create a moderate calorie deficit of 500 to 750 calories per day tend to produce lasting results.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<div class="faq-item">
+  <div class="faq-q">Is BMI an accurate measure of body fat?</div>
+  <div class="faq-a">BMI is not a direct measure of body fat. It is a screening tool that uses weight and height to estimate whether someone falls into an underweight, normal, overweight, or obese category. For most adults, BMI correlates reasonably well with body fat measurements, but it can misclassify muscular individuals as overweight or obese. For a more precise body fat assessment, methods like DEXA scans, hydrostatic weighing, or skinfold measurements are available.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">What is a healthy BMI for adults?</div>
+  <div class="faq-a">The World Health Organization defines a healthy BMI as 18.5 to 24.9 for adults. This range is associated with the lowest risk of weight-related health conditions including heart disease, type 2 diabetes, and certain cancers. However, the optimal BMI for a specific individual depends on many factors including age, sex, ethnicity, muscle mass, and overall health status.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">Should I use metric or imperial units?</div>
+  <div class="faq-a">Use whichever measurement system you are most familiar with. Both metric (kilograms and centimeters) and imperial (pounds, feet, and inches) produce the same BMI result. The calculator automatically handles the conversion. If you are unsure of your weight or height in one system, you can switch to the other to see if those values are more familiar.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">How often should I check my BMI?</div>
+  <div class="faq-a">For most adults, checking BMI once every few months is sufficient for general health monitoring. If you are actively working on weight management, monthly checks can help track progress. Avoid daily or weekly BMI checks based on scale weight, as normal fluctuations in water retention and food intake can cause misleading short-term changes that do not reflect actual changes in body composition.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">Why does BMI not work well for athletes?</div>
+  <div class="faq-a">Athletes, especially those in strength-based sports, often have higher muscle mass than the general population. Since muscle weighs more than fat per unit of volume, a muscular athlete can have a BMI in the overweight or even obese range while having a very low body fat percentage. In these cases, body fat measurements and waist circumference are more meaningful indicators of health status than BMI alone.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">What is BMI Prime and why does it matter?</div>
+  <div class="faq-a">BMI Prime is your BMI divided by 25 (the upper limit of normal BMI). A value of 1.0 means you are exactly at the upper boundary of normal weight. Values below 1.0 are within or below normal range, and values above 1.0 indicate overweight or obesity. BMI Prime is useful because it directly shows the percentage by which you exceed or fall below the normal BMI threshold, making it easier to set quantified goals.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">How is waist-to-height ratio different from BMI?</div>
+  <div class="faq-a">Waist-to-height ratio specifically measures abdominal fat distribution, while BMI looks at total body weight relative to height. Research suggests that WHtR is a better predictor of cardiovascular disease and metabolic risk because abdominal fat is more metabolically active and dangerous than fat stored in other body regions. A WHtR below 0.5 is generally considered healthy regardless of your BMI.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">Does BMI apply differently to different ethnic groups?</div>
+  <div class="faq-a">Yes. Standard BMI categories were developed using primarily European population data. Research has shown that Asian populations tend to develop weight-related health complications at lower BMI values. The WHO has suggested additional trigger points for Asian populations, with overweight beginning at BMI 23 and obesity at BMI 27.5. Some Pacific Islander populations, conversely, may have lower body fat percentages at higher BMI values.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">Can children use this BMI calculator?</div>
+  <div class="faq-a">This calculator uses adult BMI categories, which are not appropriate for children and adolescents under 20. Children's BMI should be interpreted using age-specific and sex-specific growth charts that show percentile rankings. A pediatrician or family doctor can properly assess a child's BMI using the CDC growth charts designed for ages 2 through 19.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">What should I do if my BMI is too high or too low?</div>
+  <div class="faq-a">If your BMI falls outside the normal range, consider scheduling a conversation with your healthcare provider. They can perform additional assessments including body composition analysis, blood work, and a review of your medical history to determine whether your BMI represents a genuine health concern. For most people, gradual lifestyle changes in diet and physical activity are more effective and sustainable than drastic measures.</div>
+</div>
+
+<div class="faq-item">
+  <div class="faq-q">Does this calculator store my health data?</div>
+  <div class="faq-a">No. All calculations are performed entirely in your browser. Your weight, height, and other inputs are never sent to any server. Nothing is stored or tracked. When you close the page, all data is gone. This tool is designed purely for personal reference and educational purposes.</div>
+</div>
+
+</div>
+
+<footer class="footer">
+  Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> — 250+ free tools, no tracking
+</footer>
+
+<script>
+(function() {
+  let currentUnit = 'metric';
+  let currentHeightM = 0;
+
+  window.setUnit = function(unit) {
+    currentUnit = unit;
+    document.getElementById('metricBtn').classList.toggle('active', unit === 'metric');
+    document.getElementById('imperialBtn').classList.toggle('active', unit === 'imperial');
+    document.getElementById('metricForm').style.display = unit === 'metric' ? 'block' : 'none';
+    document.getElementById('imperialForm').style.display = unit === 'imperial' ? 'block' : 'none';
+    document.getElementById('waistLabel').textContent = unit === 'metric' ? 'Waist Circumference (cm)' : 'Waist Circumference (inches)';
+  };
+
+  window.calculateBMI = function() {
+    let weightKg, heightM;
+
+    if (currentUnit === 'metric') {
+      weightKg = parseFloat(document.getElementById('weightKg').value);
+      const heightCm = parseFloat(document.getElementById('heightCm').value);
+      if (!weightKg || !heightCm || weightKg <= 0 || heightCm <= 0) {
+        alert('Please enter valid weight and height values.');
+        return;
+      }
+      heightM = heightCm / 100;
+    } else {
+      const weightLbs = parseFloat(document.getElementById('weightLbs').value);
+      const heightFt = parseFloat(document.getElementById('heightFt').value) || 0;
+      const heightIn = parseFloat(document.getElementById('heightIn').value) || 0;
+      if (!weightLbs || weightLbs <= 0 || (heightFt <= 0 && heightIn <= 0)) {
+        alert('Please enter valid weight and height values.');
+        return;
+      }
+      weightKg = weightLbs * 0.453592;
+      const totalInches = heightFt * 12 + heightIn;
+      heightM = totalInches * 0.0254;
+    }
+
+    currentHeightM = heightM;
+    const bmi = weightKg / (heightM * heightM);
+    const bmiPrime = bmi / 25;
+
+    // Healthy weight range
+    const lowWeight = 18.5 * heightM * heightM;
+    const highWeight = 24.9 * heightM * heightM;
+
+    // Category
+    let category, categoryColor;
+    if (bmi < 16) { category = 'Severe Underweight'; categoryColor = '#3b82f6'; }
+    else if (bmi < 17) { category = 'Moderate Underweight'; categoryColor = '#3b82f6'; }
+    else if (bmi < 18.5) { category = 'Mild Underweight'; categoryColor = '#60a5fa'; }
+    else if (bmi < 25) { category = 'Normal Weight'; categoryColor = '#22c55e'; }
+    else if (bmi < 30) { category = 'Overweight'; categoryColor = '#f59e0b'; }
+    else if (bmi < 35) { category = 'Obese Class I'; categoryColor = '#ef4444'; }
+    else if (bmi < 40) { category = 'Obese Class II'; categoryColor = '#dc2626'; }
+    else { category = 'Obese Class III'; categoryColor = '#991b1b'; }
+
+    // Display
+    document.getElementById('results').classList.add('show');
+    document.getElementById('bmiValue').textContent = bmi.toFixed(1);
+    document.getElementById('bmiValue').style.color = categoryColor;
+    document.getElementById('bmiCategory').textContent = category;
+    document.getElementById('bmiCategory').style.color = categoryColor;
+
+    // Formula display
+    const formulaStr = currentUnit === 'metric'
+      ? `BMI = ${weightKg.toFixed(1)} kg / (${heightM.toFixed(2)} m)² = ${weightKg.toFixed(1)} / ${(heightM*heightM).toFixed(4)} = ${bmi.toFixed(1)}`
+      : `BMI = (${(weightKg/0.453592).toFixed(1)} lbs × 703) / (${(heightM/0.0254).toFixed(1)} in)² = ${bmi.toFixed(1)}`;
+    document.getElementById('formulaBox').textContent = formulaStr;
+
+    // BMI Prime
+    document.getElementById('bmiPrime').textContent = bmiPrime.toFixed(2);
+
+    // Healthy range
+    if (currentUnit === 'metric') {
+      document.getElementById('healthyRange').textContent = lowWeight.toFixed(1) + ' - ' + highWeight.toFixed(1) + ' kg';
+    } else {
+      document.getElementById('healthyRange').textContent = (lowWeight / 0.453592).toFixed(0) + ' - ' + (highWeight / 0.453592).toFixed(0) + ' lbs';
+    }
+
+    // Weight difference
+    let diff = 0;
+    let diffText = '';
+    if (bmi < 18.5) {
+      diff = lowWeight - weightKg;
+      diffText = currentUnit === 'metric' ? '+' + diff.toFixed(1) + ' kg needed' : '+' + (diff / 0.453592).toFixed(0) + ' lbs needed';
+      document.getElementById('weightDiffSub').textContent = 'To reach minimum normal BMI';
+    } else if (bmi > 24.9) {
+      diff = weightKg - highWeight;
+      diffText = currentUnit === 'metric' ? '-' + diff.toFixed(1) + ' kg' : '-' + (diff / 0.453592).toFixed(0) + ' lbs';
+      document.getElementById('weightDiffSub').textContent = 'To reach upper normal BMI';
+    } else {
+      diffText = 'In range';
+      document.getElementById('weightDiffSub').textContent = 'You are within normal BMI';
+    }
+    document.getElementById('weightDiff').textContent = diffText;
+
+    // Gauge pointer position
+    const gaugeMin = 0, gaugeMax = 50;
+    let pct = Math.min(Math.max((bmi - gaugeMin) / (gaugeMax - gaugeMin), 0), 1) * 100;
+    document.getElementById('gaugePointer').style.left = 'calc(' + pct + '% - 2px)';
+
+    // Age consideration
+    const age = parseInt(document.getElementById('age').value);
+    const gender = document.getElementById('gender').value;
+    if (age) {
+      document.getElementById('ageCard').style.display = 'block';
+      let note = '';
+      if (age < 20) {
+        note = 'Adult BMI categories may not apply to individuals under 20. Please use pediatric BMI percentile charts.';
+      } else if (age >= 65) {
+        note = 'For adults 65 and older, a slightly higher BMI (23-30) may be protective. Discuss with your doctor.';
+      } else {
+        note = 'Standard adult BMI categories apply to your age group (' + age + ' years).';
+      }
+      if (gender === 'female') {
+        note += ' Women typically have 5-10% more body fat than men at the same BMI.';
+      } else if (gender === 'male') {
+        note += ' Men tend to carry more muscle mass, which can slightly elevate BMI without added health risk.';
+      }
+      document.getElementById('ageNote').textContent = note;
+    } else {
+      document.getElementById('ageCard').style.display = 'none';
+    }
+
+    // Highlight matching table row
+    const rows = document.getElementById('bmiTableBody').querySelectorAll('tr');
+    rows.forEach(r => r.classList.remove('highlight'));
+    let rowIndex;
+    if (bmi < 16) rowIndex = 0;
+    else if (bmi < 17) rowIndex = 1;
+    else if (bmi < 18.5) rowIndex = 2;
+    else if (bmi < 25) rowIndex = 3;
+    else if (bmi < 30) rowIndex = 4;
+    else if (bmi < 35) rowIndex = 5;
+    else if (bmi < 40) rowIndex = 6;
+    else rowIndex = 7;
+    if (rows[rowIndex]) rows[rowIndex].classList.add('highlight');
+
+    // Scroll to results
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  window.calculateWHtR = function() {
+    if (!currentHeightM) {
+      alert('Please calculate your BMI first so your height is available.');
+      return;
+    }
+    let waist = parseFloat(document.getElementById('waistInput').value);
+    if (!waist || waist <= 0) {
+      alert('Please enter a valid waist circumference.');
+      return;
+    }
+
+    let waistCm = currentUnit === 'metric' ? waist : waist * 2.54;
+    let heightCm = currentHeightM * 100;
+    let whtr = waistCm / heightCm;
+
+    document.getElementById('whtrResult').style.display = 'block';
+    document.getElementById('whtrValue').textContent = whtr.toFixed(3);
+
+    let risk, riskColor;
+    if (whtr < 0.4) { risk = 'Very Low Risk (underweight concern)'; riskColor = '#3b82f6'; }
+    else if (whtr < 0.5) { risk = 'Healthy Range'; riskColor = '#22c55e'; }
+    else if (whtr < 0.6) { risk = 'Increased Risk'; riskColor = '#f59e0b'; }
+    else { risk = 'Substantially Increased Risk'; riskColor = '#ef4444'; }
+
+    document.getElementById('whtrRisk').textContent = risk;
+    document.getElementById('whtrRisk').style.color = riskColor;
+    document.getElementById('whtrValue').style.color = riskColor;
+  };
+})();
+</script>
+
+</body>
+</html>
