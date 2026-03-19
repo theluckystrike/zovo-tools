@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Editor - Create & Edit SVG Online | Free Tool</title>
+<meta name="description" content="Create and edit SVG graphics online with live preview, shape tools, syntax highlighting, SVG optimization, and PNG/JPEG export. Free, private, runs entirely in your browser.">
+<meta name="keywords" content="SVG editor, SVG creator, SVG online, edit SVG, SVG to PNG, SVG optimizer, vector graphics, SVG shapes, SVG code editor, free SVG tool">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/svg-editor">
+
+<meta property="og:title" content="SVG Editor - Create & Edit SVG Online | Zovo Tools">
+<meta property="og:description" content="Create and edit SVG graphics with live preview, shape tools, optimization, and export. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/svg-editor">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SVG Editor - Create & Edit SVG Online | Zovo Tools">
+<meta name="twitter:description" content="Create and edit SVG graphics with live preview, shape tools, and export. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "SVG Editor",
+  "description": "Create and edit SVG graphics online with live preview, shape tools, syntax highlighting, SVG optimization, and PNG/JPEG export.",
+  "url": "https://tools.zovo.one/svg-editor",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Canvas API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is SVG?", "acceptedAnswer": {"@type": "Answer", "text": "SVG (Scalable Vector Graphics) is an XML-based vector image format for two-dimensional graphics. Unlike raster formats like PNG or JPEG, SVG images can be scaled to any size without losing quality, making them ideal for logos, icons, illustrations, and responsive web design."}},
+    {"@type": "Question", "name": "Can I edit existing SVG files?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can paste SVG code directly into the editor or upload an SVG file. The live preview updates instantly as you edit the code, making it easy to modify colors, shapes, dimensions, and other attributes."}},
+    {"@type": "Question", "name": "How does SVG optimization work?", "acceptedAnswer": {"@type": "Answer", "text": "The optimizer removes comments, unnecessary whitespace, empty attributes, and redundant metadata from your SVG code. This reduces file size without affecting the visual appearance, resulting in faster page loads and better performance."}},
+    {"@type": "Question", "name": "Can I export SVG to PNG or JPEG?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The tool renders your SVG onto an HTML5 canvas and exports it as PNG or JPEG at your specified dimensions. This is useful when you need a raster version of your vector graphic for platforms that don't support SVG."}},
+    {"@type": "Question", "name": "Is my SVG data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All editing, optimization, and export operations happen entirely in your browser using JavaScript and the Canvas API. No data is ever transmitted to any server. You can verify this by using the tool offline."}},
+    {"@type": "Question", "name": "What shape tools are available?", "acceptedAnswer": {"@type": "Answer", "text": "The editor provides tools to insert common SVG shapes including rectangles, circles, ellipses, lines, polygons, and text elements. Each shape is inserted with customizable fill color, stroke color, and stroke width."}},
+    {"@type": "Question", "name": "What is the viewBox attribute?", "acceptedAnswer": {"@type": "Answer", "text": "The viewBox attribute defines the coordinate system and aspect ratio of an SVG. It consists of four values: min-x, min-y, width, and height. The viewBox calculator helps you determine the correct values based on your SVG content's bounding dimensions."}},
+    {"@type": "Question", "name": "Can I use this editor for web development?", "acceptedAnswer": {"@type": "Answer", "text": "Absolutely. The editor produces clean SVG code that can be directly embedded in HTML, used as an image source, or included in CSS. The optimization feature ensures your SVG is production-ready with minimal file size."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"], input[type="number"], select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus, input[type="number"]:focus, select:focus {
+  border-color: var(--accent);
+}
+textarea { resize: vertical; min-height: 100px; }
+select { cursor: pointer; }
+
+input[type="color"] {
+  width: 44px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  cursor: pointer;
+  padding: 2px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Editor layout */
+.editor-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+@media (max-width: 768px) {
+  .editor-layout { grid-template-columns: 1fr; }
+}
+
+.code-editor-wrap {
+  position: relative;
+}
+.code-editor {
+  width: 100%;
+  min-height: 400px;
+  padding: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  tab-size: 2;
+  white-space: pre;
+  overflow: auto;
+}
+.code-editor:focus { border-color: var(--accent); }
+
+.preview-pane {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.preview-pane svg {
+  max-width: 100%;
+  max-height: 100%;
+}
+.preview-checkerboard {
+  background-image:
+    linear-gradient(45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
+    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+.preview-error {
+  color: var(--red);
+  font-size: 0.9rem;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Shape toolbar */
+.shape-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.shape-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.shape-btn:hover { border-color: var(--accent); color: var(--accent); }
+.shape-btn svg { width: 16px; height: 16px; }
+
+/* Controls row */
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.control-group label {
+  font-size: 0.78rem;
+  margin-bottom: 2px;
+}
+.control-group input[type="number"] {
+  width: 80px;
+}
+.color-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.color-hex {
+  width: 90px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+}
+
+/* Optimization stats */
+.opt-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.opt-stat {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+.opt-stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.opt-stat-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Export options */
+.export-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.export-option {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.export-option label { margin-bottom: 0; }
+
+/* viewBox calculator */
+.viewbox-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media (max-width: 500px) { .viewbox-grid { grid-template-columns: 1fr 1fr; } }
+
+.viewbox-result {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.9rem;
+  color: var(--accent);
+  word-break: break-all;
+  margin-top: 12px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* Copy button */
+.copy-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* File drop zone */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 30px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone-icon { font-size: 2rem; margin-bottom: 8px; }
+.drop-zone-text { color: var(--text-muted); font-size: 0.95rem; }
+.drop-zone-text span { color: var(--accent); font-weight: 500; }
+.file-input { display: none; }
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .container { max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>SVG</span> Editor</h1>
+    <p>Create and edit SVG graphics with live preview, shape tools, optimization, and PNG/JPEG export &mdash; all running privately in your browser.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="editor">Editor</button>
+    <button class="tab-btn" data-tab="shapes">Shape Tools</button>
+    <button class="tab-btn" data-tab="optimize">Optimize</button>
+    <button class="tab-btn" data-tab="export">Export</button>
+    <button class="tab-btn" data-tab="viewbox">ViewBox</button>
+  </div>
+
+  <!-- Editor Tab -->
+  <div id="editor" class="tab-panel active">
+    <div class="card" style="padding:12px;">
+      <div class="btn-row" style="margin-top:0; margin-bottom:12px; justify-content: space-between; align-items: center;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-sm btn-secondary" id="pasteSvgBtn">Paste SVG</button>
+          <label class="btn btn-sm btn-secondary" style="margin:0; cursor:pointer;">
+            Upload SVG
+            <input type="file" accept=".svg" id="uploadSvgInput" class="file-input">
+          </label>
+          <button class="btn btn-sm btn-secondary" id="copySvgBtn">Copy Code</button>
+          <button class="btn btn-sm btn-secondary" id="downloadSvgBtn">Download SVG</button>
+        </div>
+        <button class="btn btn-sm btn-secondary" id="clearEditorBtn">Clear</button>
+      </div>
+    </div>
+    <div class="editor-layout">
+      <div class="code-editor-wrap">
+        <textarea class="code-editor" id="svgCodeEditor" spellcheck="false" placeholder="Type or paste SVG code here..."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect x="50" y="50" width="300" height="200" rx="20" fill="#1a1a2e" stroke="#00ff88" stroke-width="2"/>
+  <circle cx="200" cy="150" r="60" fill="none" stroke="#00ff88" stroke-width="3"/>
+  <text x="200" y="158" text-anchor="middle" fill="#00ff88" font-family="Inter, sans-serif" font-size="24" font-weight="600">SVG</text>
+</svg></textarea>
+      </div>
+      <div class="preview-pane preview-checkerboard" id="svgPreview"></div>
+    </div>
+  </div>
+
+  <!-- Shapes Tab -->
+  <div id="shapes" class="tab-panel">
+    <div class="card">
+      <h3>Insert Shape</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Click a shape to insert it into the editor. Customize fill, stroke, and dimensions below.</p>
+      <div class="controls-row">
+        <div class="control-group">
+          <label>Fill Color</label>
+          <div class="color-input-row">
+            <input type="color" id="shapeFill" value="#00ff88">
+            <input type="text" class="color-hex" id="shapeFillHex" value="#00ff88">
+          </div>
+        </div>
+        <div class="control-group">
+          <label>Stroke Color</label>
+          <div class="color-input-row">
+            <input type="color" id="shapeStroke" value="#ffffff">
+            <input type="text" class="color-hex" id="shapeStrokeHex" value="#ffffff">
+          </div>
+        </div>
+        <div class="control-group">
+          <label>Stroke Width</label>
+          <input type="number" id="shapeStrokeWidth" value="2" min="0" max="50" step="0.5">
+        </div>
+        <div class="control-group">
+          <label>Fill Opacity</label>
+          <input type="number" id="shapeFillOpacity" value="1" min="0" max="1" step="0.1" style="width:70px;">
+        </div>
+      </div>
+      <div class="shape-toolbar">
+        <button class="shape-btn" data-shape="rect">
+          <svg viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          Rectangle
+        </button>
+        <button class="shape-btn" data-shape="circle">
+          <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          Circle
+        </button>
+        <button class="shape-btn" data-shape="ellipse">
+          <svg viewBox="0 0 16 16"><ellipse cx="8" cy="8" rx="7" ry="5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          Ellipse
+        </button>
+        <button class="shape-btn" data-shape="line">
+          <svg viewBox="0 0 16 16"><line x1="2" y1="14" x2="14" y2="2" stroke="currentColor" stroke-width="1.5"/></svg>
+          Line
+        </button>
+        <button class="shape-btn" data-shape="polygon">
+          <svg viewBox="0 0 16 16"><polygon points="8,1 15,12 1,12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          Polygon
+        </button>
+        <button class="shape-btn" data-shape="text">
+          <svg viewBox="0 0 16 16"><text x="3" y="12" fill="currentColor" font-size="12" font-weight="bold">T</text></svg>
+          Text
+        </button>
+        <button class="shape-btn" data-shape="star">
+          <svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6.5 11,10 12.5,15 8,12 3.5,15 5,10 1,6.5 6,6" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+          Star
+        </button>
+        <button class="shape-btn" data-shape="path">
+          <svg viewBox="0 0 16 16"><path d="M2,12 Q8,0 14,12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          Path
+        </button>
+      </div>
+    </div>
+    <div class="editor-layout">
+      <div class="code-editor-wrap">
+        <textarea class="code-editor" id="svgCodeEditorShapes" spellcheck="false" placeholder="SVG code appears here..."></textarea>
+      </div>
+      <div class="preview-pane preview-checkerboard" id="svgPreviewShapes"></div>
+    </div>
+  </div>
+
+  <!-- Optimize Tab -->
+  <div id="optimize" class="tab-panel">
+    <div class="card">
+      <h3>SVG Optimizer</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Paste or load your SVG code below. The optimizer removes comments, minimizes whitespace, strips unnecessary attributes, and cleans up the markup.</p>
+      <textarea id="optimizeInput" rows="10" placeholder="Paste SVG code to optimize..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="optimizeBtn">Optimize SVG</button>
+        <button class="btn btn-secondary" id="copyOptimizedBtn">Copy Optimized</button>
+        <button class="btn btn-secondary" id="loadFromEditorBtn">Load from Editor</button>
+      </div>
+    </div>
+    <div id="optimizeOutput" style="display:none;">
+      <div class="card">
+        <h3>Optimized SVG</h3>
+        <textarea id="optimizedCode" rows="10" readonly style="background:var(--bg);"></textarea>
+        <div class="opt-stats" id="optStats"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Tab -->
+  <div id="export" class="tab-panel">
+    <div class="card">
+      <h3>Export SVG as Image</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Export the current SVG as PNG or JPEG. Specify custom dimensions for the output image.</p>
+      <div class="export-grid">
+        <div class="export-option">
+          <label>Format</label>
+          <select id="exportFormat">
+            <option value="png">PNG (transparent)</option>
+            <option value="jpeg">JPEG (white bg)</option>
+          </select>
+        </div>
+        <div class="export-option">
+          <label>Width (px)</label>
+          <input type="number" id="exportWidth" value="800" min="1" max="8192">
+        </div>
+        <div class="export-option">
+          <label>Height (px)</label>
+          <input type="number" id="exportHeight" value="600" min="1" max="8192">
+        </div>
+        <div class="export-option">
+          <label>Quality (JPEG)</label>
+          <input type="number" id="exportQuality" value="0.92" min="0.1" max="1" step="0.01">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="exportImageBtn">Export Image</button>
+        <button class="btn btn-secondary" id="loadExportPreviewBtn">Load from Editor</button>
+      </div>
+    </div>
+    <div id="exportPreviewWrap" style="display:none;">
+      <div class="card">
+        <h3>Export Preview</h3>
+        <div style="text-align:center;">
+          <canvas id="exportCanvas" style="max-width:100%; border:1px solid var(--border); border-radius:8px;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ViewBox Tab -->
+  <div id="viewbox" class="tab-panel">
+    <div class="card">
+      <h3>ViewBox Calculator</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Calculate the correct <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:0.88rem;color:var(--accent);">viewBox</code> attribute for your SVG. Enter the desired coordinate system dimensions.</p>
+      <div class="viewbox-grid">
+        <div class="control-group">
+          <label>Min X</label>
+          <input type="number" id="vbMinX" value="0">
+        </div>
+        <div class="control-group">
+          <label>Min Y</label>
+          <input type="number" id="vbMinY" value="0">
+        </div>
+        <div class="control-group">
+          <label>Width</label>
+          <input type="number" id="vbWidth" value="400" min="1">
+        </div>
+        <div class="control-group">
+          <label>Height</label>
+          <input type="number" id="vbHeight" value="300" min="1">
+        </div>
+      </div>
+      <div class="controls-row">
+        <div class="control-group">
+          <label>SVG Width (optional)</label>
+          <input type="text" id="vbSvgWidth" value="100%" style="width:120px;">
+        </div>
+        <div class="control-group">
+          <label>SVG Height (optional)</label>
+          <input type="text" id="vbSvgHeight" value="auto" style="width:120px;">
+        </div>
+        <div class="control-group">
+          <label>preserveAspectRatio</label>
+          <select id="vbPAR" style="width:200px;">
+            <option value="xMidYMid meet">xMidYMid meet (default)</option>
+            <option value="xMidYMid slice">xMidYMid slice</option>
+            <option value="xMinYMin meet">xMinYMin meet</option>
+            <option value="xMaxYMax meet">xMaxYMax meet</option>
+            <option value="none">none (stretch)</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="calcViewboxBtn">Generate ViewBox</button>
+        <button class="btn btn-secondary" id="detectViewboxBtn">Detect from Editor</button>
+        <button class="btn btn-secondary" id="copyViewboxBtn">Copy Attribute</button>
+      </div>
+      <div class="viewbox-result" id="viewboxResult" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2>Working with SVG Graphics</h2>
+    <p>SVG (Scalable Vector Graphics) is a powerful XML-based format for creating two-dimensional vector graphics. Unlike raster images such as PNG or JPEG, SVG graphics are resolution-independent &mdash; they look crisp at any size, from tiny icons to billboard-scale prints. SVG is a W3C standard supported by all modern browsers, making it the ideal format for logos, icons, charts, illustrations, and interactive graphics on the web.</p>
+    <p>Our SVG Editor provides a complete environment for creating and editing SVG code with instant visual feedback. The split-pane editor shows your code on the left and a live rendering on the right, updating in real-time as you type. Whether you are hand-coding SVG from scratch, modifying an existing graphic, or learning SVG syntax, this tool gives you the immediate feedback loop that makes working with vector graphics productive and enjoyable.</p>
+
+    <h3>The SVG Coordinate System and ViewBox</h3>
+    <p>The SVG coordinate system starts at the top-left corner (0, 0), with the x-axis running right and the y-axis running down. The <code>viewBox</code> attribute is one of the most important and often misunderstood features of SVG. It defines a virtual coordinate system that maps onto the SVG viewport, controlling how the graphic scales and positions itself within its container.</p>
+    <p>The <code>viewBox</code> attribute takes four values: <code>min-x min-y width height</code>. These define the rectangle in user space that should be mapped to the viewport. Combined with the <code>preserveAspectRatio</code> attribute, the viewBox controls whether the graphic stretches, crops, or letterboxes to fit its container. Our ViewBox Calculator helps you determine the correct values and generates the complete SVG attribute string ready to paste into your code.</p>
+
+    <h3>SVG Shape Elements</h3>
+    <p>SVG provides a rich set of basic shape elements that serve as building blocks for complex graphics. Rectangles (<code>&lt;rect&gt;</code>) can have rounded corners via the <code>rx</code> and <code>ry</code> attributes. Circles (<code>&lt;circle&gt;</code>) are defined by center coordinates and radius. Ellipses (<code>&lt;ellipse&gt;</code>) extend circles with separate x and y radii. Lines (<code>&lt;line&gt;</code>) connect two points, while polylines and polygons (<code>&lt;polygon&gt;</code>) create complex shapes from lists of coordinate pairs.</p>
+    <p>The <code>&lt;path&gt;</code> element is the most powerful and versatile SVG element, capable of drawing any shape using a compact mini-language of move, line, curve, and arc commands. Text (<code>&lt;text&gt;</code>) elements render text that remains selectable and searchable, a significant advantage over rasterized text in images. Our Shape Tools tab lets you insert any of these elements with customizable colors and stroke properties, generating clean SVG code that you can further refine.</p>
+
+    <h3>SVG Optimization for Production</h3>
+    <p>SVG files created by design tools like Adobe Illustrator, Figma, or Inkscape often contain unnecessary metadata, editor-specific attributes, excessive decimal precision, and redundant whitespace that inflate file size without affecting the visual output. SVG optimization removes this cruft, often reducing file sizes by 30-60% or more.</p>
+    <p>Common optimizations include stripping XML comments and processing instructions, removing editor metadata (like Illustrator or Inkscape namespaces), collapsing unnecessary whitespace, removing empty or invisible elements, and shortening numeric values. Our optimizer performs these transformations client-side, giving you a cleaner, smaller SVG that loads faster and is easier to maintain in your codebase.</p>
+
+    <h3>Exporting SVG to Raster Formats</h3>
+    <p>While SVG is ideal for the web, some platforms and use cases require raster images. Social media platforms, email clients, and certain content management systems may not support SVG embedding. Our export feature renders your SVG onto an HTML5 Canvas element and converts it to PNG (with transparency support) or JPEG (with a white background and adjustable quality). You can specify custom output dimensions to generate images at any resolution, including high-DPI versions for retina displays.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What is SVG?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>SVG (Scalable Vector Graphics) is an XML-based vector image format for two-dimensional graphics. Unlike raster formats like PNG or JPEG, SVG images can be scaled to any size without losing quality, making them ideal for logos, icons, illustrations, and responsive web design. SVG is a W3C standard supported natively by all modern browsers.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I edit existing SVG files?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. You can paste SVG code directly into the editor, upload an SVG file from your device, or paste from your clipboard. The live preview updates instantly as you modify the code, making it easy to adjust colors, dimensions, shapes, and other attributes in real-time without switching between tools.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does SVG optimization work?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The optimizer removes XML comments, processing instructions, unnecessary whitespace, editor-specific metadata, and empty attributes from your SVG code. This reduces file size significantly &mdash; often by 30-60% &mdash; without affecting the visual appearance. Smaller SVG files mean faster page loads and better web performance.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I export SVG to PNG or JPEG?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. The export feature renders your SVG onto an HTML5 Canvas element and converts it to PNG (with transparency support) or JPEG (with white background and adjustable quality). You can specify custom dimensions for the output, making it easy to generate images at any resolution, including 2x or 3x for retina displays.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my SVG data sent to a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. All editing, optimization, rendering, and export operations happen entirely in your browser using JavaScript and the Canvas API. No SVG code or image data is ever transmitted to any server. You can verify this by disconnecting from the internet and confirming the tool continues to work perfectly.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What shape tools are available?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The editor provides tools to insert rectangles, circles, ellipses, lines, polygons, stars, paths, and text elements. Each shape is inserted with your chosen fill color, stroke color, stroke width, and opacity settings. The generated SVG code is clean and standard-compliant, ready for production use or further customization.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the viewBox attribute?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The <code>viewBox</code> attribute defines the coordinate system and aspect ratio of an SVG element. It takes four values &mdash; min-x, min-y, width, and height &mdash; that specify the rectangle in user coordinate space to map onto the viewport. The ViewBox Calculator helps you generate the correct attribute value along with the optional <code>preserveAspectRatio</code> setting.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I use this editor for web development?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Absolutely. The editor produces clean, standard-compliant SVG code that can be embedded directly in HTML, referenced as an image source via <code>&lt;img&gt;</code> tags, used in CSS as background images, or included in build pipelines. The optimization feature ensures your SVG is production-ready with minimal file size and clean markup.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== Utility Functions ==========
+function $(sel) { return document.querySelector(sel); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+function showToast(msg) {
+  const toast = $('#toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Copied to clipboard!');
+  } catch {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Copied to clipboard!');
+  }
+}
+
+// ========== Tab Switching ==========
+$$('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('.tab-btn').forEach(b => b.classList.remove('active'));
+    $$('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    // Sync editors when switching
+    syncEditors(btn.dataset.tab);
+  });
+});
+
+function syncEditors(tab) {
+  if (tab === 'shapes') {
+    $('#svgCodeEditorShapes').value = $('#svgCodeEditor').value;
+    updatePreview('svgCodeEditorShapes', 'svgPreviewShapes');
+  } else if (tab === 'editor') {
+    if ($('#svgCodeEditorShapes').value && $('#svgCodeEditorShapes').value !== $('#svgCodeEditor').value) {
+      // Only sync back if shapes editor was modified
+    }
+    updatePreview('svgCodeEditor', 'svgPreview');
+  }
+}
+
+// ========== SVG Preview ==========
+function updatePreview(editorId, previewId) {
+  const code = document.getElementById(editorId).value.trim();
+  const preview = document.getElementById(previewId);
+
+  if (!code) {
+    preview.innerHTML = '<span style="color:var(--text-muted);font-size:0.9rem;">Preview will appear here</span>';
+    return;
+  }
+
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(code, 'image/svg+xml');
+    const errorNode = doc.querySelector('parsererror');
+    if (errorNode) {
+      preview.innerHTML = '<div class="preview-error">Invalid SVG: Check your code for syntax errors</div>';
+      return;
+    }
+    // Sanitize: remove script tags
+    doc.querySelectorAll('script').forEach(s => s.remove());
+    const svgEl = doc.documentElement;
+    // Ensure SVG fits preview
+    if (!svgEl.getAttribute('width') && !svgEl.getAttribute('viewBox')) {
+      svgEl.setAttribute('width', '100%');
+      svgEl.setAttribute('height', '100%');
+    }
+    preview.innerHTML = '';
+    const imported = document.importNode(svgEl, true);
+    imported.style.maxWidth = '100%';
+    imported.style.maxHeight = '400px';
+    preview.appendChild(imported);
+  } catch (e) {
+    preview.innerHTML = '<div class="preview-error">Error rendering SVG</div>';
+  }
+}
+
+// Real-time preview for main editor
+$('#svgCodeEditor').addEventListener('input', () => {
+  updatePreview('svgCodeEditor', 'svgPreview');
+});
+
+// Real-time preview for shapes editor
+$('#svgCodeEditorShapes').addEventListener('input', () => {
+  updatePreview('svgCodeEditorShapes', 'svgPreviewShapes');
+  // Sync back to main editor
+  $('#svgCodeEditor').value = $('#svgCodeEditorShapes').value;
+});
+
+// Tab key support in editors
+['svgCodeEditor', 'svgCodeEditorShapes', 'optimizeInput'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      el.value = el.value.substring(0, start) + '  ' + el.value.substring(end);
+      el.selectionStart = el.selectionEnd = start + 2;
+      el.dispatchEvent(new Event('input'));
+    }
+  });
+});
+
+// Initial preview
+updatePreview('svgCodeEditor', 'svgPreview');
+
+// ========== Editor Actions ==========
+$('#copySvgBtn').addEventListener('click', () => {
+  copyText($('#svgCodeEditor').value);
+});
+
+$('#downloadSvgBtn').addEventListener('click', () => {
+  const code = $('#svgCodeEditor').value;
+  if (!code.trim()) return showToast('Nothing to download');
+  const blob = new Blob([code], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'graphic.svg';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('SVG downloaded!');
+});
+
+$('#pasteSvgBtn').addEventListener('click', async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    if (text.trim()) {
+      $('#svgCodeEditor').value = text;
+      updatePreview('svgCodeEditor', 'svgPreview');
+      showToast('SVG pasted from clipboard!');
+    }
+  } catch {
+    showToast('Could not read clipboard. Try Ctrl+V instead.');
+  }
+});
+
+$('#uploadSvgInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    $('#svgCodeEditor').value = ev.target.result;
+    updatePreview('svgCodeEditor', 'svgPreview');
+    showToast('SVG loaded!');
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+$('#clearEditorBtn').addEventListener('click', () => {
+  $('#svgCodeEditor').value = '';
+  updatePreview('svgCodeEditor', 'svgPreview');
+});
+
+// ========== Shape Tools ==========
+// Color sync
+$('#shapeFill').addEventListener('input', () => { $('#shapeFillHex').value = $('#shapeFill').value; });
+$('#shapeFillHex').addEventListener('input', () => {
+  const v = $('#shapeFillHex').value;
+  if (/^#[0-9a-fA-F]{6}$/.test(v)) $('#shapeFill').value = v;
+});
+$('#shapeStroke').addEventListener('input', () => { $('#shapeStrokeHex').value = $('#shapeStroke').value; });
+$('#shapeStrokeHex').addEventListener('input', () => {
+  const v = $('#shapeStrokeHex').value;
+  if (/^#[0-9a-fA-F]{6}$/.test(v)) $('#shapeStroke').value = v;
+});
+
+function getShapeAttrs() {
+  return {
+    fill: $('#shapeFillHex').value || '#00ff88',
+    stroke: $('#shapeStrokeHex').value || '#ffffff',
+    strokeWidth: parseFloat($('#shapeStrokeWidth').value) || 2,
+    opacity: parseFloat($('#shapeFillOpacity').value)
+  };
+}
+
+function generateShape(type) {
+  const a = getShapeAttrs();
+  const opacityAttr = a.opacity < 1 ? ` fill-opacity="${a.opacity}"` : '';
+  const shapes = {
+    rect: `  <rect x="50" y="50" width="200" height="120" rx="8" fill="${a.fill}" stroke="${a.stroke}" stroke-width="${a.strokeWidth}"${opacityAttr}/>`,
+    circle: `  <circle cx="200" cy="150" r="80" fill="${a.fill}" stroke="${a.stroke}" stroke-width="${a.strokeWidth}"${opacityAttr}/>`,
+    ellipse: `  <ellipse cx="200" cy="150" rx="120" ry="70" fill="${a.fill}" stroke="${a.stroke}" stroke-width="${a.strokeWidth}"${opacityAttr}/>`,
+    line: `  <line x1="50" y1="50" x2="350" y2="250" stroke="${a.stroke}" stroke-width="${a.strokeWidth}" stroke-linecap="round"/>`,
+    polygon: `  <polygon points="200,30 280,190 120,190" fill="${a.fill}" stroke="${a.stroke}" stroke-width="${a.strokeWidth}"${opacityAttr}/>`,
+    text: `  <text x="200" y="160" text-anchor="middle" fill="${a.fill}" font-family="Inter, sans-serif" font-size="32" font-weight="600"${opacityAttr}>Hello SVG</text>`,
+    star: `  <polygon points="200,40 224,120 308,120 240,168 260,248 200,200 140,248 160,168 92,120 176,120" fill="${a.fill}" stroke="${a.stroke}" stroke-width="${a.strokeWidth}"${opacityAttr}/>`,
+    path: `  <path d="M50,250 Q125,50 200,150 T350,150" fill="none" stroke="${a.stroke}" stroke-width="${a.strokeWidth}" stroke-linecap="round"/>`
+  };
+  return shapes[type] || '';
+}
+
+$$('.shape-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.shape;
+    const editor = $('#svgCodeEditorShapes');
+    let code = editor.value.trim();
+
+    const shape = generateShape(type);
+    if (!shape) return;
+
+    if (!code || !code.includes('<svg')) {
+      // Wrap in svg
+      code = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">\n${shape}\n</svg>`;
+    } else {
+      // Insert before closing svg tag
+      const closingIdx = code.lastIndexOf('</svg>');
+      if (closingIdx !== -1) {
+        code = code.substring(0, closingIdx) + shape + '\n' + code.substring(closingIdx);
+      } else {
+        code += '\n' + shape;
+      }
+    }
+    editor.value = code;
+    updatePreview('svgCodeEditorShapes', 'svgPreviewShapes');
+    $('#svgCodeEditor').value = code;
+    showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} added!`);
+  });
+});
+
+// ========== SVG Optimizer ==========
+$('#loadFromEditorBtn').addEventListener('click', () => {
+  $('#optimizeInput').value = $('#svgCodeEditor').value;
+  showToast('Loaded from editor!');
+});
+
+function optimizeSVG(svgString) {
+  const original = svgString;
+  let s = svgString;
+
+  // Remove XML declaration
+  s = s.replace(/<\?xml[^?]*\?>\s*/gi, '');
+
+  // Remove comments
+  s = s.replace(/<!--[\s\S]*?-->/g, '');
+
+  // Remove DOCTYPE
+  s = s.replace(/<!DOCTYPE[^>]*>/gi, '');
+
+  // Remove processing instructions
+  s = s.replace(/<\?[^?]*\?>/g, '');
+
+  // Remove editor metadata elements
+  s = s.replace(/<metadata[\s\S]*?<\/metadata>/gi, '');
+  s = s.replace(/<sodipodi:[^>]*\/>/gi, '');
+  s = s.replace(/<inkscape:[^>]*\/>/gi, '');
+
+  // Remove editor-specific namespaces from SVG tag
+  s = s.replace(/\s+xmlns:(inkscape|sodipodi|dc|cc|rdf|sketch|serif)="[^"]*"/g, '');
+
+  // Remove editor-specific attributes
+  s = s.replace(/\s+(inkscape|sodipodi|sketch|serif):[a-zA-Z-]+="[^"]*"/g, '');
+  s = s.replace(/\s+data-name="[^"]*"/g, '');
+
+  // Remove empty groups
+  s = s.replace(/<g>\s*<\/g>/g, '');
+
+  // Remove unnecessary whitespace between tags
+  s = s.replace(/>\s+</g, '><');
+
+  // But add newline after opening svg and before closing svg for readability
+  s = s.replace(/(<svg[^>]*>)/, '$1\n');
+  s = s.replace(/<\/svg>/, '\n</svg>');
+
+  // Collapse multiple spaces in attributes to single
+  s = s.replace(/\s{2,}/g, ' ');
+
+  // Remove empty style attributes
+  s = s.replace(/\s+style=""/g, '');
+
+  // Remove empty class attributes
+  s = s.replace(/\s+class=""/g, '');
+
+  // Remove empty id attributes
+  s = s.replace(/\s+id=""/g, '');
+
+  // Shorten color values #aabbcc to #abc where possible
+  s = s.replace(/#([0-9a-fA-F])\1([0-9a-fA-F])\2([0-9a-fA-F])\3/g, '#$1$2$3');
+
+  // Remove default attribute values
+  s = s.replace(/\s+fill-opacity="1"/g, '');
+  s = s.replace(/\s+stroke-opacity="1"/g, '');
+  s = s.replace(/\s+opacity="1"/g, '');
+
+  // Trim leading/trailing whitespace
+  s = s.trim();
+
+  return {
+    original: original,
+    optimized: s,
+    originalSize: new Blob([original]).size,
+    optimizedSize: new Blob([s]).size
+  };
+}
+
+$('#optimizeBtn').addEventListener('click', () => {
+  const input = $('#optimizeInput').value.trim();
+  if (!input) return showToast('Paste SVG code first');
+
+  const result = optimizeSVG(input);
+  $('#optimizedCode').value = result.optimized;
+  $('#optimizeOutput').style.display = 'block';
+
+  const savings = result.originalSize - result.optimizedSize;
+  const pct = result.originalSize > 0 ? ((savings / result.originalSize) * 100).toFixed(1) : 0;
+
+  $('#optStats').innerHTML = `
+    <div class="opt-stat">
+      <div class="opt-stat-value">${formatBytes(result.originalSize)}</div>
+      <div class="opt-stat-label">Original Size</div>
+    </div>
+    <div class="opt-stat">
+      <div class="opt-stat-value">${formatBytes(result.optimizedSize)}</div>
+      <div class="opt-stat-label">Optimized Size</div>
+    </div>
+    <div class="opt-stat">
+      <div class="opt-stat-value">${formatBytes(savings)}</div>
+      <div class="opt-stat-label">Saved</div>
+    </div>
+    <div class="opt-stat">
+      <div class="opt-stat-value">${pct}%</div>
+      <div class="opt-stat-label">Reduction</div>
+    </div>
+  `;
+  showToast('SVG optimized!');
+});
+
+$('#copyOptimizedBtn').addEventListener('click', () => {
+  const code = $('#optimizedCode').value;
+  if (!code) return showToast('Optimize first');
+  copyText(code);
+});
+
+function formatBytes(bytes) {
+  if (bytes === 0) return '0 B';
+  if (bytes < 1024) return bytes + ' B';
+  return (bytes / 1024).toFixed(1) + ' KB';
+}
+
+// ========== Export ==========
+$('#loadExportPreviewBtn').addEventListener('click', () => {
+  renderExportPreview();
+});
+
+$('#exportImageBtn').addEventListener('click', () => {
+  const code = $('#svgCodeEditor').value.trim();
+  if (!code) return showToast('No SVG to export');
+  renderExportPreview(() => {
+    const canvas = $('#exportCanvas');
+    const format = $('#exportFormat').value;
+    const quality = parseFloat($('#exportQuality').value) || 0.92;
+    const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+
+    canvas.toBlob(blob => {
+      if (!blob) return showToast('Export failed');
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `graphic.${format}`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(`${format.toUpperCase()} exported!`);
+    }, mimeType, quality);
+  });
+});
+
+function renderExportPreview(callback) {
+  const code = $('#svgCodeEditor').value.trim();
+  if (!code) return showToast('No SVG in editor');
+
+  const width = parseInt($('#exportWidth').value) || 800;
+  const height = parseInt($('#exportHeight').value) || 600;
+  const format = $('#exportFormat').value;
+  const canvas = $('#exportCanvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = width;
+  canvas.height = height;
+
+  // White background for JPEG
+  if (format === 'jpeg') {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
+  } else {
+    ctx.clearRect(0, 0, width, height);
+  }
+
+  const blob = new Blob([code], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    ctx.drawImage(img, 0, 0, width, height);
+    URL.revokeObjectURL(url);
+    $('#exportPreviewWrap').style.display = 'block';
+    if (callback) callback();
+  };
+  img.onerror = () => {
+    URL.revokeObjectURL(url);
+    showToast('Failed to render SVG. Check for syntax errors.');
+  };
+  img.src = url;
+}
+
+// ========== ViewBox Calculator ==========
+$('#calcViewboxBtn').addEventListener('click', () => {
+  const minX = parseFloat($('#vbMinX').value) || 0;
+  const minY = parseFloat($('#vbMinY').value) || 0;
+  const w = parseFloat($('#vbWidth').value) || 400;
+  const h = parseFloat($('#vbHeight').value) || 300;
+  const svgW = $('#vbSvgWidth').value.trim() || '100%';
+  const svgH = $('#vbSvgHeight').value.trim() || 'auto';
+  const par = $('#vbPAR').value;
+
+  const viewBox = `${minX} ${minY} ${w} ${h}`;
+  const widthAttr = svgW !== 'auto' ? ` width="${svgW}"` : '';
+  const heightAttr = svgH !== 'auto' ? ` height="${svgH}"` : '';
+  const parAttr = par !== 'xMidYMid meet' ? ` preserveAspectRatio="${par}"` : '';
+
+  const result = `viewBox="${viewBox}"${widthAttr}${heightAttr}${parAttr}`;
+  const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" ${result}>\n  <!-- Your content here -->\n</svg>`;
+
+  $('#viewboxResult').style.display = 'block';
+  $('#viewboxResult').innerHTML =
+    `<div style="margin-bottom:8px; font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Attribute String</div>` +
+    `<div style="margin-bottom:16px;">${escapeHtml(result)}</div>` +
+    `<div style="margin-bottom:8px; font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Full SVG Tag</div>` +
+    `<div>${escapeHtml(fullSvg)}</div>`;
+
+  window._lastViewboxAttr = result;
+});
+
+$('#detectViewboxBtn').addEventListener('click', () => {
+  const code = $('#svgCodeEditor').value;
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(code, 'image/svg+xml');
+  const svg = doc.querySelector('svg');
+  if (!svg) return showToast('No SVG found in editor');
+
+  const vb = svg.getAttribute('viewBox');
+  if (vb) {
+    const parts = vb.split(/[\s,]+/);
+    if (parts.length >= 4) {
+      $('#vbMinX').value = parts[0];
+      $('#vbMinY').value = parts[1];
+      $('#vbWidth').value = parts[2];
+      $('#vbHeight').value = parts[3];
+    }
+  }
+  const w = svg.getAttribute('width');
+  const h = svg.getAttribute('height');
+  if (w) $('#vbSvgWidth').value = w;
+  if (h) $('#vbSvgHeight').value = h;
+  const par = svg.getAttribute('preserveAspectRatio');
+  if (par) {
+    const sel = $('#vbPAR');
+    for (let i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === par) { sel.selectedIndex = i; break; }
+    }
+  }
+  showToast('Values detected from editor!');
+});
+
+$('#copyViewboxBtn').addEventListener('click', () => {
+  if (window._lastViewboxAttr) {
+    copyText(window._lastViewboxAttr);
+  } else {
+    showToast('Generate a viewBox first');
+  }
+});
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ========== FAQ ==========
+$$('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const isOpen = item.classList.contains('open');
+    // Close all
+    $$('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+</script>
+
+</body>
+</html>
