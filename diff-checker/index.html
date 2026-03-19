@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diff Checker - Compare Text Online | Free Diff Tool</title>
+<meta name="description" content="Compare two blocks of text side by side or inline. Line-by-line diff with color-coded additions, deletions, and modifications. Word-level highlighting, ignore whitespace/case options. Free, private, runs entirely in your browser.">
+<meta name="keywords" content="diff checker, text compare, diff tool, compare text online, side by side diff, inline diff, text difference, code compare, file compare">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/diff-checker">
+
+<meta property="og:title" content="Diff Checker - Compare Text Online | Zovo Tools">
+<meta property="og:description" content="Compare two blocks of text with side-by-side or inline diff views. Color-coded additions, deletions, and modifications. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/diff-checker">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Diff Checker - Compare Text Online | Zovo Tools">
+<meta name="twitter:description" content="Compare text with color-coded diff highlighting. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Diff Checker",
+  "description": "Compare two blocks of text side by side or inline with color-coded diff highlighting, word-level changes, and statistics.",
+  "url": "https://tools.zovo.one/diff-checker",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern web browser"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How does the diff checker work?", "acceptedAnswer": {"@type": "Answer", "text": "The diff checker uses a longest common subsequence (LCS) algorithm to find the minimal set of changes between two texts. It compares line by line and highlights additions, deletions, and modifications with color coding."}},
+    {"@type": "Question", "name": "Is my text sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All comparison is performed entirely in your browser using JavaScript. No data ever leaves your device."}},
+    {"@type": "Question", "name": "What do the colors mean?", "acceptedAnswer": {"@type": "Answer", "text": "Green highlights indicate added lines or words, red highlights indicate deleted lines or words, and yellow highlights indicate modified lines with word-level changes shown within them."}},
+    {"@type": "Question", "name": "What is the difference between side-by-side and inline view?", "acceptedAnswer": {"@type": "Answer", "text": "Side-by-side view shows the original and modified text in two columns for easy comparison. Inline view shows all changes in a single column with additions and deletions interleaved."}},
+    {"@type": "Question", "name": "What does 'Ignore Whitespace' do?", "acceptedAnswer": {"@type": "Answer", "text": "When enabled, the diff checker treats lines that differ only in leading/trailing spaces, tabs, or multiple consecutive spaces as identical. This is useful for comparing code with different indentation styles."}},
+    {"@type": "Question", "name": "What does 'Ignore Case' do?", "acceptedAnswer": {"@type": "Answer", "text": "When enabled, the diff checker treats uppercase and lowercase letters as identical. For example, 'Hello' and 'hello' would be considered the same."}},
+    {"@type": "Question", "name": "What is word-level diff?", "acceptedAnswer": {"@type": "Answer", "text": "When two lines are similar but not identical, the tool highlights the specific words that changed within each line, making it easy to spot the exact modifications without reading the entire line."}},
+    {"@type": "Question", "name": "Can I compare code files?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can paste any text including source code, configuration files, JSON, XML, or plain text. The diff checker handles any text content with line numbers for easy reference."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --yellow: #ffcc00;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+
+  --diff-add-bg: rgba(0,255,136,0.08);
+  --diff-add-border: rgba(0,255,136,0.25);
+  --diff-del-bg: rgba(255,68,102,0.08);
+  --diff-del-border: rgba(255,68,102,0.25);
+  --diff-mod-bg: rgba(255,204,0,0.06);
+  --diff-mod-border: rgba(255,204,0,0.2);
+  --diff-word-add: rgba(0,255,136,0.25);
+  --diff-word-del: rgba(255,68,102,0.25);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Input grid */
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.input-col label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  transition: border-color 0.2s;
+  outline: none;
+  resize: vertical;
+  min-height: 200px;
+  line-height: 1.6;
+  tab-size: 4;
+}
+textarea:focus {
+  border-color: var(--accent);
+}
+
+/* Options row */
+.options-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.option-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.option-check input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+.option-check input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.option-check input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid #0a0a0f;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* View toggle */
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+}
+.view-btn {
+  padding: 8px 18px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.88rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.view-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.view-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+/* Stats */
+.stats-bar {
+  display: flex;
+  gap: 20px;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  display: none;
+}
+.stats-bar.visible { display: flex; }
+.stat-item {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stat-item strong {
+  font-weight: 600;
+  margin-right: 2px;
+}
+.stat-added strong { color: var(--green); }
+.stat-removed strong { color: var(--red); }
+.stat-modified strong { color: var(--yellow); }
+.stat-unchanged strong { color: var(--text-muted); }
+
+/* Diff output */
+.diff-output {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 20px;
+  display: none;
+}
+.diff-output.visible { display: block; }
+
+/* Side-by-side diff */
+.diff-side-by-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow-x: auto;
+}
+.diff-pane {
+  overflow-x: auto;
+}
+.diff-pane:first-child {
+  border-right: 1px solid var(--border);
+}
+.diff-pane-header {
+  padding: 10px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Diff lines */
+.diff-line {
+  display: flex;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  line-height: 1.65;
+  border-bottom: 1px solid rgba(42,42,58,0.3);
+  min-height: 28px;
+}
+.diff-line:last-child { border-bottom: none; }
+.diff-line-num {
+  min-width: 48px;
+  padding: 2px 10px 2px 8px;
+  text-align: right;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  user-select: none;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.diff-line-content {
+  flex: 1;
+  padding: 2px 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+.diff-line-prefix {
+  display: inline-block;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* Line types */
+.diff-line-add {
+  background: var(--diff-add-bg);
+}
+.diff-line-add .diff-line-num { color: var(--green); opacity: 0.8; }
+.diff-line-add .diff-line-prefix { color: var(--green); }
+.diff-line-add .diff-line-content { color: var(--green); }
+
+.diff-line-del {
+  background: var(--diff-del-bg);
+}
+.diff-line-del .diff-line-num { color: var(--red); opacity: 0.8; }
+.diff-line-del .diff-line-prefix { color: var(--red); }
+.diff-line-del .diff-line-content { color: var(--red); }
+
+.diff-line-mod {
+  background: var(--diff-mod-bg);
+}
+.diff-line-mod .diff-line-num { color: var(--yellow); opacity: 0.8; }
+.diff-line-mod .diff-line-prefix { color: var(--yellow); }
+.diff-line-mod .diff-line-content { color: var(--text); }
+
+.diff-line-empty {
+  background: rgba(42,42,58,0.15);
+}
+.diff-line-empty .diff-line-content { color: transparent; }
+
+/* Word-level highlights */
+.word-add {
+  background: var(--diff-word-add);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.word-del {
+  background: var(--diff-word-del);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+/* Inline diff */
+.diff-inline .diff-line {
+  display: flex;
+}
+.diff-inline .diff-line-nums {
+  display: flex;
+  flex-shrink: 0;
+}
+.diff-inline .diff-line-num {
+  min-width: 44px;
+}
+
+/* Copy diff button */
+.copy-diff-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-diff-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* No diff message */
+.no-diff {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+.no-diff-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  color: var(--green);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--accent);
+  color: #0a0a0f;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 999;
+  pointer-events: none;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 768px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .input-grid { grid-template-columns: 1fr; }
+  .diff-side-by-side { grid-template-columns: 1fr; }
+  .diff-pane:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+  .options-row { gap: 14px; }
+  .stats-bar { gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>Diff</span> Checker</h1>
+    <p>Compare two blocks of text with color-coded diff highlighting. Side-by-side and inline views, word-level changes, and detailed statistics &mdash; all running privately in your browser.</p>
+  </header>
+
+  <!-- Input -->
+  <div class="input-grid">
+    <div class="input-col">
+      <div class="card">
+        <h3>Original Text</h3>
+        <textarea id="textA" placeholder="Paste original text here..." rows="10"></textarea>
+      </div>
+    </div>
+    <div class="input-col">
+      <div class="card">
+        <h3>Modified Text</h3>
+        <textarea id="textB" placeholder="Paste modified text here..." rows="10"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Options & Actions -->
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div class="options-row" style="margin-bottom:0;">
+        <label class="option-check"><input type="checkbox" id="ignoreWhitespace"> Ignore whitespace</label>
+        <label class="option-check"><input type="checkbox" id="ignoreCase"> Ignore case</label>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn active" data-view="side">Side by Side</button>
+        <button class="view-btn" data-view="inline">Inline</button>
+      </div>
+    </div>
+    <div class="btn-row" style="margin-top:16px;">
+      <button class="btn btn-primary" id="compareBtn">Compare</button>
+      <button class="btn btn-secondary" id="clearBtn">Clear</button>
+      <button class="btn btn-secondary copy-diff-btn" id="copyDiffBtn" style="display:none;">Copy Diff</button>
+      <button class="btn btn-secondary" id="swapBtn">Swap Texts</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-item stat-added"><strong id="statAdded">0</strong> added</div>
+    <div class="stat-item stat-removed"><strong id="statRemoved">0</strong> removed</div>
+    <div class="stat-item stat-modified"><strong id="statModified">0</strong> modified</div>
+    <div class="stat-item stat-unchanged"><strong id="statUnchanged">0</strong> unchanged</div>
+  </div>
+
+  <!-- Diff Output -->
+  <div class="diff-output" id="diffOutput"></div>
+
+  <!-- Content -->
+  <div class="content-section">
+    <h2>About Diff Checker</h2>
+    <p>This free diff checker lets you compare two blocks of text and instantly see the differences. It uses a longest common subsequence (LCS) based diff algorithm to compute the minimal set of changes, then displays them with intuitive color coding.</p>
+
+    <h3>Features</h3>
+    <ul>
+      <li><strong>Side-by-side view</strong> &mdash; Shows original and modified text in parallel columns with aligned line numbers.</li>
+      <li><strong>Inline view</strong> &mdash; Shows all changes in a single column with additions and deletions interleaved.</li>
+      <li><strong>Word-level diff</strong> &mdash; For modified lines, highlights the specific words that changed within each line.</li>
+      <li><strong>Color coding</strong> &mdash; Green for additions, red for deletions, yellow for modifications.</li>
+      <li><strong>Line numbers</strong> &mdash; Both views include line numbers for easy reference.</li>
+      <li><strong>Ignore whitespace</strong> &mdash; Option to treat lines differing only in whitespace as identical.</li>
+      <li><strong>Ignore case</strong> &mdash; Option to treat uppercase and lowercase as identical.</li>
+      <li><strong>Statistics</strong> &mdash; Summary of lines added, removed, modified, and unchanged.</li>
+      <li><strong>Copy diff output</strong> &mdash; Copy the unified diff format to your clipboard.</li>
+    </ul>
+
+    <h3>How It Works</h3>
+    <p>The diff algorithm computes the longest common subsequence (LCS) of lines between the two texts. Lines present only in the original are marked as deletions, lines present only in the modified text are marked as additions, and lines that changed are marked as modifications with word-level highlighting showing the exact changes.</p>
+  </div>
+
+  <!-- FAQ -->
+  <div class="content-section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">How does the diff checker work?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The diff checker uses a longest common subsequence (LCS) algorithm to find the minimal set of changes between two texts. It compares line by line and highlights additions, deletions, and modifications with color coding.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Is my text sent to a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. All comparison is performed entirely in your browser using JavaScript. No data ever leaves your device.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What do the colors mean?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Green highlights indicate added lines or words, red highlights indicate deleted lines or words, and yellow highlights indicate modified lines with word-level changes shown within them.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between side-by-side and inline view?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Side-by-side view shows the original and modified text in two columns for easy comparison. Inline view shows all changes in a single column with additions and deletions interleaved.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What does "Ignore Whitespace" do?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>When enabled, the diff checker treats lines that differ only in leading/trailing spaces, tabs, or multiple consecutive spaces as identical. This is useful for comparing code with different indentation styles.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What does "Ignore Case" do?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>When enabled, the diff checker treats uppercase and lowercase letters as identical. For example, "Hello" and "hello" would be considered the same.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What is word-level diff?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>When two lines are similar but not identical, the tool highlights the specific words that changed within each line, making it easy to spot the exact modifications without reading the entire line.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I compare code files?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. You can paste any text including source code, configuration files, JSON, XML, or plain text. The diff checker handles any text content with line numbers for easy reference.</p></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </div>
+</footer>
+
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // DOM
+  const textA = document.getElementById('textA');
+  const textB = document.getElementById('textB');
+  const compareBtn = document.getElementById('compareBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const copyDiffBtn = document.getElementById('copyDiffBtn');
+  const swapBtn = document.getElementById('swapBtn');
+  const ignoreWhitespace = document.getElementById('ignoreWhitespace');
+  const ignoreCase = document.getElementById('ignoreCase');
+  const diffOutput = document.getElementById('diffOutput');
+  const statsBar = document.getElementById('statsBar');
+  const statAdded = document.getElementById('statAdded');
+  const statRemoved = document.getElementById('statRemoved');
+  const statModified = document.getElementById('statModified');
+  const statUnchanged = document.getElementById('statUnchanged');
+  const viewBtns = document.querySelectorAll('.view-btn');
+  const toast = document.getElementById('toast');
+
+  let currentView = 'side';
+  let lastDiffResult = null;
+  let lastUnifiedDiff = '';
+
+  // ==========================================
+  // LCS-based Diff Algorithm (Myers-like)
+  // ==========================================
+
+  function normalizeLine(line, opts) {
+    let l = line;
+    if (opts.ignoreWhitespace) {
+      l = l.replace(/\s+/g, ' ').trim();
+    }
+    if (opts.ignoreCase) {
+      l = l.toLowerCase();
+    }
+    return l;
+  }
+
+  /**
+   * Compute LCS table for two arrays of lines.
+   * Returns the LCS length table.
+   */
+  function computeLCS(a, b, opts) {
+    const m = a.length;
+    const n = b.length;
+    // Use typed array for better perf on large inputs
+    const dp = new Array(m + 1);
+    for (let i = 0; i <= m; i++) {
+      dp[i] = new Uint32Array(n + 1);
+    }
+    for (let i = 1; i <= m; i++) {
+      const na = normalizeLine(a[i - 1], opts);
+      for (let j = 1; j <= n; j++) {
+        const nb = normalizeLine(b[j - 1], opts);
+        if (na === nb) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+    }
+    return dp;
+  }
+
+  /**
+   * Backtrack through LCS table to produce diff operations.
+   * Returns array of { type: 'equal'|'delete'|'insert'|'modify', aIdx, bIdx }
+   */
+  function backtrackDiff(a, b, dp, opts) {
+    const ops = [];
+    let i = a.length, j = b.length;
+
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && normalizeLine(a[i - 1], opts) === normalizeLine(b[j - 1], opts)) {
+        ops.push({ type: 'equal', aIdx: i - 1, bIdx: j - 1 });
+        i--; j--;
+      } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+        ops.push({ type: 'insert', bIdx: j - 1 });
+        j--;
+      } else {
+        ops.push({ type: 'delete', aIdx: i - 1 });
+        i--;
+      }
+    }
+
+    ops.reverse();
+    return ops;
+  }
+
+  /**
+   * Post-process diff ops to group adjacent delete+insert as modify pairs.
+   */
+  function groupModifications(ops, a, b) {
+    const result = [];
+    let i = 0;
+
+    while (i < ops.length) {
+      // Collect consecutive deletes
+      const deletes = [];
+      while (i < ops.length && ops[i].type === 'delete') {
+        deletes.push(ops[i]);
+        i++;
+      }
+      // Collect consecutive inserts
+      const inserts = [];
+      while (i < ops.length && ops[i].type === 'insert') {
+        inserts.push(ops[i]);
+        i++;
+      }
+
+      // Pair up deletes and inserts as modifications
+      const pairs = Math.min(deletes.length, inserts.length);
+      for (let p = 0; p < pairs; p++) {
+        result.push({
+          type: 'modify',
+          aIdx: deletes[p].aIdx,
+          bIdx: inserts[p].bIdx,
+          aLine: a[deletes[p].aIdx],
+          bLine: b[inserts[p].bIdx]
+        });
+      }
+      // Remaining deletes
+      for (let p = pairs; p < deletes.length; p++) {
+        result.push(deletes[p]);
+      }
+      // Remaining inserts
+      for (let p = pairs; p < inserts.length; p++) {
+        result.push(inserts[p]);
+      }
+
+      // Pass through equal ops
+      if (i < ops.length && ops[i].type === 'equal') {
+        result.push(ops[i]);
+        i++;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Word-level diff within a line pair using LCS on words.
+   */
+  function wordDiff(lineA, lineB) {
+    const wordsA = tokenize(lineA);
+    const wordsB = tokenize(lineB);
+
+    const m = wordsA.length, n = wordsB.length;
+    const dp = new Array(m + 1);
+    for (let i = 0; i <= m; i++) dp[i] = new Uint32Array(n + 1);
+
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (wordsA[i - 1] === wordsB[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+    }
+
+    // Backtrack
+    const ops = [];
+    let i = m, j = n;
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && wordsA[i - 1] === wordsB[j - 1]) {
+        ops.push({ type: 'equal', word: wordsA[i - 1] });
+        i--; j--;
+      } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+        ops.push({ type: 'insert', word: wordsB[j - 1] });
+        j--;
+      } else {
+        ops.push({ type: 'delete', word: wordsA[i - 1] });
+        i--;
+      }
+    }
+    ops.reverse();
+    return ops;
+  }
+
+  /**
+   * Tokenize line into words and whitespace tokens for word-diff.
+   */
+  function tokenize(line) {
+    const tokens = [];
+    const re = /(\S+|\s+)/g;
+    let m;
+    while ((m = re.exec(line)) !== null) {
+      tokens.push(m[0]);
+    }
+    return tokens;
+  }
+
+  /**
+   * Build HTML for word-diff showing deletions in line A.
+   */
+  function wordDiffHTMLDel(ops) {
+    let html = '';
+    for (const op of ops) {
+      const escaped = escapeHTML(op.word);
+      if (op.type === 'equal') {
+        html += escaped;
+      } else if (op.type === 'delete') {
+        html += '<span class="word-del">' + escaped + '</span>';
+      }
+      // skip inserts for the delete side
+    }
+    return html;
+  }
+
+  /**
+   * Build HTML for word-diff showing additions in line B.
+   */
+  function wordDiffHTMLAdd(ops) {
+    let html = '';
+    for (const op of ops) {
+      const escaped = escapeHTML(op.word);
+      if (op.type === 'equal') {
+        html += escaped;
+      } else if (op.type === 'insert') {
+        html += '<span class="word-add">' + escaped + '</span>';
+      }
+      // skip deletes for the add side
+    }
+    return html;
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // ==========================================
+  // Main Diff Function
+  // ==========================================
+
+  function computeDiff() {
+    const a = textA.value.split('\n');
+    const b = textB.value.split('\n');
+    const opts = {
+      ignoreWhitespace: ignoreWhitespace.checked,
+      ignoreCase: ignoreCase.checked
+    };
+
+    const dp = computeLCS(a, b, opts);
+    const rawOps = backtrackDiff(a, b, dp, opts);
+    const ops = groupModifications(rawOps, a, b);
+
+    // Stats
+    let added = 0, removed = 0, modified = 0, unchanged = 0;
+    for (const op of ops) {
+      if (op.type === 'equal') unchanged++;
+      else if (op.type === 'insert') added++;
+      else if (op.type === 'delete') removed++;
+      else if (op.type === 'modify') modified++;
+    }
+
+    // Generate unified diff text
+    let unifiedLines = [];
+    unifiedLines.push('--- Original');
+    unifiedLines.push('+++ Modified');
+    for (const op of ops) {
+      if (op.type === 'equal') {
+        unifiedLines.push(' ' + a[op.aIdx]);
+      } else if (op.type === 'delete') {
+        unifiedLines.push('-' + a[op.aIdx]);
+      } else if (op.type === 'insert') {
+        unifiedLines.push('+' + b[op.bIdx]);
+      } else if (op.type === 'modify') {
+        unifiedLines.push('-' + a[op.aIdx]);
+        unifiedLines.push('+' + b[op.bIdx]);
+      }
+    }
+
+    lastDiffResult = { ops, a, b, added, removed, modified, unchanged };
+    lastUnifiedDiff = unifiedLines.join('\n');
+
+    return lastDiffResult;
+  }
+
+  // ==========================================
+  // Rendering
+  // ==========================================
+
+  function renderDiff() {
+    if (!lastDiffResult) return;
+
+    const { ops, a, b, added, removed, modified, unchanged } = lastDiffResult;
+
+    // Update stats
+    statAdded.textContent = added;
+    statRemoved.textContent = removed;
+    statModified.textContent = modified;
+    statUnchanged.textContent = unchanged;
+    statsBar.classList.add('visible');
+
+    // Show copy button
+    copyDiffBtn.style.display = '';
+
+    // Check for no differences
+    if (added === 0 && removed === 0 && modified === 0) {
+      diffOutput.innerHTML = '<div class="no-diff"><div class="no-diff-icon">&#10003;</div>No differences found. The texts are identical.</div>';
+      diffOutput.classList.add('visible');
+      return;
+    }
+
+    if (currentView === 'side') {
+      renderSideBySide(ops, a, b);
+    } else {
+      renderInline(ops, a, b);
+    }
+
+    diffOutput.classList.add('visible');
+  }
+
+  function makeLine(lineNum, content, type, prefix) {
+    const cls = type ? ' diff-line-' + type : '';
+    return '<div class="diff-line' + cls + '">'
+      + '<span class="diff-line-num">' + (lineNum !== null ? lineNum : '') + '</span>'
+      + '<span class="diff-line-content">' + content + '</span>'
+      + '</div>';
+  }
+
+  function renderSideBySide(ops, a, b) {
+    let leftHTML = '';
+    let rightHTML = '';
+    let aNum = 0, bNum = 0;
+
+    for (const op of ops) {
+      if (op.type === 'equal') {
+        aNum = op.aIdx + 1;
+        bNum = op.bIdx + 1;
+        const content = escapeHTML(a[op.aIdx]);
+        leftHTML += makeLine(aNum, content, '', '');
+        rightHTML += makeLine(bNum, content, '', '');
+      } else if (op.type === 'delete') {
+        aNum = op.aIdx + 1;
+        const content = escapeHTML(a[op.aIdx]);
+        leftHTML += makeLine(aNum, content, 'del', '');
+        rightHTML += makeLine(null, '&nbsp;', 'empty', '');
+      } else if (op.type === 'insert') {
+        bNum = op.bIdx + 1;
+        const content = escapeHTML(b[op.bIdx]);
+        leftHTML += makeLine(null, '&nbsp;', 'empty', '');
+        rightHTML += makeLine(bNum, content, 'add', '');
+      } else if (op.type === 'modify') {
+        aNum = op.aIdx + 1;
+        bNum = op.bIdx + 1;
+        const wdiff = wordDiff(a[op.aIdx], b[op.bIdx]);
+        leftHTML += makeLine(aNum, wordDiffHTMLDel(wdiff), 'mod', '');
+        rightHTML += makeLine(bNum, wordDiffHTMLAdd(wdiff), 'mod', '');
+      }
+    }
+
+    diffOutput.innerHTML =
+      '<div class="diff-side-by-side">'
+      + '<div class="diff-pane"><div class="diff-pane-header">Original</div>' + leftHTML + '</div>'
+      + '<div class="diff-pane"><div class="diff-pane-header">Modified</div>' + rightHTML + '</div>'
+      + '</div>';
+  }
+
+  function renderInline(ops, a, b) {
+    let html = '<div class="diff-inline">';
+    let aNum = 0, bNum = 0;
+
+    for (const op of ops) {
+      if (op.type === 'equal') {
+        aNum = op.aIdx + 1;
+        bNum = op.bIdx + 1;
+        const content = escapeHTML(a[op.aIdx]);
+        html += '<div class="diff-line">'
+          + '<span class="diff-line-nums"><span class="diff-line-num">' + aNum + '</span><span class="diff-line-num">' + bNum + '</span></span>'
+          + '<span class="diff-line-prefix">&nbsp;</span>'
+          + '<span class="diff-line-content">' + content + '</span></div>';
+      } else if (op.type === 'delete') {
+        aNum = op.aIdx + 1;
+        const content = escapeHTML(a[op.aIdx]);
+        html += '<div class="diff-line diff-line-del">'
+          + '<span class="diff-line-nums"><span class="diff-line-num">' + aNum + '</span><span class="diff-line-num"></span></span>'
+          + '<span class="diff-line-prefix">-</span>'
+          + '<span class="diff-line-content">' + content + '</span></div>';
+      } else if (op.type === 'insert') {
+        bNum = op.bIdx + 1;
+        const content = escapeHTML(b[op.bIdx]);
+        html += '<div class="diff-line diff-line-add">'
+          + '<span class="diff-line-nums"><span class="diff-line-num"></span><span class="diff-line-num">' + bNum + '</span></span>'
+          + '<span class="diff-line-prefix">+</span>'
+          + '<span class="diff-line-content">' + content + '</span></div>';
+      } else if (op.type === 'modify') {
+        aNum = op.aIdx + 1;
+        bNum = op.bIdx + 1;
+        const wdiff = wordDiff(a[op.aIdx], b[op.bIdx]);
+        html += '<div class="diff-line diff-line-del">'
+          + '<span class="diff-line-nums"><span class="diff-line-num">' + aNum + '</span><span class="diff-line-num"></span></span>'
+          + '<span class="diff-line-prefix">-</span>'
+          + '<span class="diff-line-content">' + wordDiffHTMLDel(wdiff) + '</span></div>';
+        html += '<div class="diff-line diff-line-add">'
+          + '<span class="diff-line-nums"><span class="diff-line-num"></span><span class="diff-line-num">' + bNum + '</span></span>'
+          + '<span class="diff-line-prefix">+</span>'
+          + '<span class="diff-line-content">' + wordDiffHTMLAdd(wdiff) + '</span></div>';
+      }
+    }
+
+    html += '</div>';
+    diffOutput.innerHTML = html;
+  }
+
+  // ==========================================
+  // Event Listeners
+  // ==========================================
+
+  compareBtn.addEventListener('click', () => {
+    computeDiff();
+    renderDiff();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    textA.value = '';
+    textB.value = '';
+    diffOutput.innerHTML = '';
+    diffOutput.classList.remove('visible');
+    statsBar.classList.remove('visible');
+    copyDiffBtn.style.display = 'none';
+    lastDiffResult = null;
+    lastUnifiedDiff = '';
+  });
+
+  swapBtn.addEventListener('click', () => {
+    const tmp = textA.value;
+    textA.value = textB.value;
+    textB.value = tmp;
+    if (lastDiffResult) {
+      computeDiff();
+      renderDiff();
+    }
+  });
+
+  function showToast(msg) {
+    toast.textContent = msg || 'Copied to clipboard!';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  copyDiffBtn.addEventListener('click', () => {
+    if (!lastUnifiedDiff) return;
+    navigator.clipboard.writeText(lastUnifiedDiff).then(() => showToast());
+  });
+
+  viewBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      viewBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentView = btn.dataset.view;
+      if (lastDiffResult) renderDiff();
+    });
+  });
+
+  // Keyboard shortcut: Ctrl/Cmd+Enter to compare
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      computeDiff();
+      renderDiff();
+    }
+  });
+
+  // FAQ toggles
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      q.parentElement.classList.toggle('open');
+    });
+  });
+})();
+</script>
+</body>
+</html>
