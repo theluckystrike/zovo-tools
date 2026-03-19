@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Fix JSON-LD schema, FAQPage schema, and add cross-linking sections to all tools.
+Fix JSON-LD WebApplication schema and FAQPage schema for all tools.
+Task 3 (Related Tools) already complete - all tools have them.
 """
 import os
 import re
@@ -79,109 +80,120 @@ CATEGORIES = {
 }
 
 def get_tool_category(tool_name):
-    """Find which category a tool belongs to."""
     for cat, tools in CATEGORIES.items():
         if tool_name in tools:
             return cat
     return None
 
-def get_related_tools(tool_name, count=5):
-    """Get related tools from the same category."""
-    cat = get_tool_category(tool_name)
-    if not cat:
-        # Try to find by keyword matching
-        for c, tools in CATEGORIES.items():
-            for t in tools:
-                if any(kw in tool_name for kw in t.split("-")) and t != tool_name:
-                    cat = c
-                    break
-            if cat:
-                break
-    if not cat:
-        # Fallback: pick from Developer tools
-        cat = "Developer"
-
-    same_cat = [t for t in CATEGORIES[cat] if t != tool_name]
-    # Verify they exist
-    same_cat = [t for t in same_cat if os.path.isdir(os.path.join(TOOLS_DIR, t))]
-    return same_cat[:count]
-
-def tool_display_name(slug):
-    """Convert tool slug to display name."""
-    words = slug.replace("-", " ").split()
-    # Special casing for acronyms
-    acronyms = {"json", "xml", "yaml", "csv", "jwt", "uuid", "url", "html", "css", "js", "sql", "bmi", "gpa", "qr", "svg", "ip", "dns", "ssl", "http", "og", "api", "ai", "roi", "px", "rem", "apa"}
-    result = []
-    for w in words:
-        if w.lower() in acronyms:
-            result.append(w.upper())
-        else:
-            result.append(w.capitalize())
-    return " ".join(result)
-
-def extract_title(content):
-    """Extract title from HTML."""
-    m = re.search(r'<title>([^<]+)</title>', content)
-    if m:
-        title = m.group(1).split("|")[0].split("-")[0].strip()
-        return html_module.unescape(title)
-    return ""
-
 def extract_description(content):
-    """Extract meta description."""
     m = re.search(r'<meta\s+name="description"\s+content="([^"]+)"', content)
     if m:
         return m.group(1)
     return ""
 
 def get_tool_title(content):
-    """Get the full tool title."""
     m = re.search(r'<title>([^<]+)</title>', content)
     if m:
         return html_module.unescape(m.group(1).split("|")[0].strip())
     return ""
 
 def get_canonical_url(content):
-    """Get canonical URL."""
     m = re.search(r'<link\s+rel="canonical"\s+href="([^"]+)"', content)
     if m:
         return m.group(1)
     return ""
 
+def tool_display_name(slug):
+    words = slug.replace("-", " ").split()
+    acronyms = {"json", "xml", "yaml", "csv", "jwt", "uuid", "url", "html", "css", "js", "sql", "bmi", "gpa", "qr", "svg", "ip", "dns", "ssl", "http", "og", "api", "ai", "roi", "px", "rem", "apa"}
+    return " ".join(w.upper() if w.lower() in acronyms else w.capitalize() for w in words)
+
+
 def extract_faq_items(content):
-    """Extract FAQ Q&A pairs from the HTML."""
+    """Extract FAQ Q&A pairs from the HTML, supporting multiple patterns."""
     faqs = []
-    # Pattern: <div class="faq-q" ...>Question</div> followed by <div class="faq-a">Answer</div>
-    pattern = r'<div\s+class="faq-q"[^>]*>(.*?)</div>\s*<div\s+class="faq-a"[^>]*>(.*?)</div>'
-    matches = re.findall(pattern, content, re.DOTALL)
-    for q, a in matches:
-        q_clean = re.sub(r'<[^>]+>', '', q).strip()
-        a_clean = re.sub(r'<[^>]+>', '', a).strip()
-        if q_clean and a_clean:
-            faqs.append((q_clean, a_clean))
+
+    # Pattern 1: <div class="faq-q" ...>Q</div><div class="faq-a"...>A</div>
+    p1 = re.findall(
+        r'<div\s+class="faq-q"[^>]*>(.*?)</div>\s*<div\s+class="faq-a"[^>]*>(.*?)</div>',
+        content, re.DOTALL
+    )
+    if p1:
+        for q, a in p1:
+            q_clean = re.sub(r'<[^>]+>', '', q).strip()
+            a_clean = re.sub(r'<[^>]+>', '', a).strip()
+            if q_clean and a_clean:
+                faqs.append((q_clean, a_clean))
+        if faqs:
+            return faqs
+
+    # Pattern 2: <button class="faq-q">Q</button><div class="faq-a"><p>A</p></div>
+    p2 = re.findall(
+        r'<button\s+class="faq-q"[^>]*>(.*?)</button>\s*<div\s+class="faq-a"[^>]*>(.*?)</div>',
+        content, re.DOTALL
+    )
+    if p2:
+        for q, a in p2:
+            q_clean = re.sub(r'<[^>]+>', '', q).strip()
+            a_clean = re.sub(r'<[^>]+>', '', a).strip()
+            if q_clean and a_clean:
+                faqs.append((q_clean, a_clean))
+        if faqs:
+            return faqs
+
+    # Pattern 3: <div class="faq-question" ...>Q</div><div class="faq-answer">A</div>
+    p3 = re.findall(
+        r'<div\s+class="faq-question"[^>]*>(.*?)</div>\s*<div\s+class="faq-answer"[^>]*>(.*?)</div>',
+        content, re.DOTALL
+    )
+    if p3:
+        for q, a in p3:
+            q_clean = re.sub(r'<[^>]+>', '', q).strip()
+            a_clean = re.sub(r'<[^>]+>', '', a).strip()
+            if q_clean and a_clean:
+                faqs.append((q_clean, a_clean))
+        if faqs:
+            return faqs
+
+    # Pattern 4: <div class="faq-item"><h3>Q</h3><p>A</p></div>
+    p4 = re.findall(
+        r'<div\s+class="faq-item"[^>]*>\s*<h3>(.*?)</h3>\s*<p>(.*?)</p>',
+        content, re.DOTALL
+    )
+    if p4:
+        for q, a in p4:
+            q_clean = re.sub(r'<[^>]+>', '', q).strip()
+            # Remove leading numbering like "1. "
+            q_clean = re.sub(r'^\d+\.\s*', '', q_clean)
+            a_clean = re.sub(r'<[^>]+>', '', a).strip()
+            if q_clean and a_clean:
+                faqs.append((q_clean, a_clean))
+        if faqs:
+            return faqs
+
     return faqs
+
 
 def build_webapp_schema(tool_name, content):
     """Build WebApplication JSON-LD schema."""
     title = get_tool_title(content)
     desc = extract_description(content)
     url = get_canonical_url(content)
-
     if not url:
         url = f"https://tools.zovo.one/{tool_name}"
 
-    # Determine application category
     cat = get_tool_category(tool_name)
-    if cat == "Developer":
-        app_cat = "DeveloperApplication"
-    elif cat in ("CSS/Design", "Media"):
-        app_cat = "DesignApplication"
-    elif cat in ("Calculators",):
-        app_cat = "UtilitiesApplication"
-    elif cat == "SEO/Marketing":
-        app_cat = "BusinessApplication"
-    else:
-        app_cat = "WebApplication"
+    cat_map = {
+        "Developer": "DeveloperApplication",
+        "CSS/Design": "DesignApplication",
+        "Media": "MultimediaApplication",
+        "Calculators": "UtilitiesApplication",
+        "SEO/Marketing": "BusinessApplication",
+        "Text": "UtilitiesApplication",
+        "Generators": "UtilitiesApplication",
+        "Productivity": "UtilitiesApplication",
+    }
+    app_cat = cat_map.get(cat, "WebApplication")
 
     schema = {
         "@context": "https://schema.org",
@@ -196,62 +208,34 @@ def build_webapp_schema(tool_name, content):
         "isAccessibleForFree": True,
         "browserRequirements": "Requires a modern web browser"
     }
-
     return json.dumps(schema, indent=2)
+
 
 def build_faqpage_schema(faqs):
     """Build FAQPage JSON-LD schema."""
     entities = []
-    for q, a in faqs[:8]:  # Limit to 8 FAQs for schema
-        # Escape for JSON
-        q_esc = q.replace('"', '\\"').replace('\n', ' ').strip()
-        a_esc = a.replace('"', '\\"').replace('\n', ' ').strip()
+    for q, a in faqs[:8]:
         entities.append({
             "@type": "Question",
-            "name": q_esc,
+            "name": q,
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": a_esc
+                "text": a
             }
         })
-
     schema = {
         "@context": "https://schema.org",
         "@type": "FAQPage",
         "mainEntity": entities
     }
-
     return json.dumps(schema, indent=2, ensure_ascii=False)
 
-def build_related_tools_section(tool_name):
-    """Build a styled Related Tools section."""
-    related = get_related_tools(tool_name, 5)
-    if not related:
-        return ""
-
-    links = ""
-    for t in related:
-        display = tool_display_name(t)
-        links += f'<a href="/{t}/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">{display}</a>\n'
-
-    section = f'''<div style="max-width:800px;margin:2rem auto;padding:1.5rem;">
-<div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6C5CE7;margin-bottom:0.75rem;font-weight:500;">Related Tools</div>
-<div style="display:flex;flex-wrap:wrap;gap:8px;">
-{links.strip()}
-</div>
-</div>'''
-
-    return section
-
-def has_related_tools(content):
-    """Check if the tool already has a Related Tools section."""
-    return bool(re.search(r'[Rr]elated\s*[Tt]ools', content))
 
 def process_tool(tool_name):
-    """Process a single tool: add JSON-LD, FAQPage, and related tools."""
+    """Process a single tool."""
     index_path = os.path.join(TOOLS_DIR, tool_name, "index.html")
     if not os.path.isfile(index_path):
-        return None
+        return []
 
     with open(index_path, "r", encoding="utf-8") as f:
         content = f.read()
@@ -260,13 +244,19 @@ def process_tool(tool_name):
     changes = []
 
     # TASK 1: Add WebApplication JSON-LD if missing
-    if 'application/ld+json' not in content:
+    if '"WebApplication"' not in content:
         schema_json = build_webapp_schema(tool_name, content)
-        schema_block = f'''<script type="application/ld+json">
-{schema_json}
-</script>'''
-        # Insert before </head> or before first <style>
-        if '</head>' in content:
+        schema_block = f'<script type="application/ld+json">\n{schema_json}\n</script>'
+
+        # Find insertion point: after existing ld+json blocks, or before </head>, or before <style>
+        if 'application/ld+json' in content:
+            # Insert before the first existing ld+json block
+            idx = content.find('<script type="application/ld+json">')
+            if idx != -1:
+                content = content[:idx] + schema_block + '\n' + content[idx:]
+            else:
+                content = content.replace('</head>', schema_block + '\n</head>', 1)
+        elif '</head>' in content:
             content = content.replace('</head>', schema_block + '\n</head>', 1)
         elif '<style>' in content:
             content = content.replace('<style>', schema_block + '\n<style>', 1)
@@ -277,42 +267,40 @@ def process_tool(tool_name):
         faqs = extract_faq_items(content)
         if faqs:
             faq_json = build_faqpage_schema(faqs)
-            faq_block = f'''<script type="application/ld+json">
-{faq_json}
-</script>'''
-            # Insert after existing ld+json block, or before </head>
+            faq_block = f'<script type="application/ld+json">\n{faq_json}\n</script>'
+
             if 'application/ld+json' in content:
-                # Find the last </script> for ld+json and insert after it
-                last_ldjson = content.rfind('</script>', 0, content.find('</head>'))
-                if last_ldjson != -1:
-                    insert_pos = last_ldjson + len('</script>')
-                    content = content[:insert_pos] + '\n' + faq_block + content[insert_pos:]
+                # Find the last ld+json closing </script> before </head>
+                head_end = content.find('</head>')
+                if head_end == -1:
+                    head_end = len(content)
+                # Find all ld+json script blocks before </head>
+                last_end = -1
+                search_pos = 0
+                while True:
+                    idx = content.find('<script type="application/ld+json">', search_pos, head_end)
+                    if idx == -1:
+                        break
+                    end_idx = content.find('</script>', idx)
+                    if end_idx != -1:
+                        last_end = end_idx + len('</script>')
+                    search_pos = idx + 1
+
+                if last_end != -1:
+                    content = content[:last_end] + '\n' + faq_block + content[last_end:]
                 else:
                     content = content.replace('</head>', faq_block + '\n</head>', 1)
             elif '</head>' in content:
                 content = content.replace('</head>', faq_block + '\n</head>', 1)
             changes.append(f"Added FAQPage schema ({len(faqs)} questions)")
 
-    # TASK 3: Add Related Tools section if missing
-    if not has_related_tools(content):
-        related_section = build_related_tools_section(tool_name)
-        if related_section:
-            # Insert before </body>
-            if '</body>' in content:
-                content = content.replace('</body>', related_section + '\n</body>', 1)
-            changes.append("Added Related Tools section")
-
     if content != original:
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(content)
-        return changes
-    return []
+    return changes
 
-# ============================
-# MAIN EXECUTION
-# ============================
+
 if __name__ == "__main__":
-    # Get all tool directories
     all_tools = sorted([
         d for d in os.listdir(TOOLS_DIR)
         if os.path.isdir(os.path.join(TOOLS_DIR, d))
@@ -323,12 +311,7 @@ if __name__ == "__main__":
     print(f"Found {len(all_tools)} tools with index.html")
     print("=" * 60)
 
-    stats = {
-        "json_ld_added": 0,
-        "faqpage_added": 0,
-        "related_added": 0,
-        "total_modified": 0
-    }
+    stats = {"json_ld_added": 0, "faqpage_added": 0, "total_modified": 0}
 
     for tool in all_tools:
         changes = process_tool(tool)
@@ -339,15 +322,10 @@ if __name__ == "__main__":
                     stats["json_ld_added"] += 1
                 elif "FAQPage" in c:
                     stats["faqpage_added"] += 1
-                elif "Related Tools" in c:
-                    stats["related_added"] += 1
             print(f"  {tool}: {', '.join(changes)}")
-        else:
-            print(f"  {tool}: no changes needed")
 
     print("=" * 60)
     print(f"SUMMARY:")
-    print(f"  JSON-LD schemas added: {stats['json_ld_added']}")
+    print(f"  WebApplication schemas added: {stats['json_ld_added']}")
     print(f"  FAQPage schemas added: {stats['faqpage_added']}")
-    print(f"  Related Tools sections added: {stats['related_added']}")
     print(f"  Total files modified: {stats['total_modified']}")

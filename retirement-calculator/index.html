@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retirement Calculator - Free Retirement Savings &amp; Income Planner | Zovo</title>
+<meta name="description" content="Free retirement calculator with compound growth charts, scenario comparison, Social Security estimates, employer match, inflation-adjusted projections, and gap analysis. Plan your retirement today.">
+<link rel="canonical" href="https://tools.zovo.one/retirement-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Retirement Calculator",
+  "url": "https://tools.zovo.one/retirement-calculator/",
+  "description": "Free retirement calculator with compound growth charts, scenario comparison, employer match, Social Security estimates, and inflation-adjusted projections.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://tools.zovo.one/"},
+    {"@type": "ListItem", "position": 2, "name": "Retirement Calculator", "item": "https://tools.zovo.one/retirement-calculator/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How much money do I need to retire?", "acceptedAnswer": {"@type": "Answer", "text": "A common guideline is to have 25 times your expected annual retirement expenses saved by retirement age. This aligns with the 4% rule, which suggests withdrawing 4% of your portfolio in the first year and adjusting for inflation thereafter. For example, if you need $60,000 per year in retirement, you would need approximately $1,500,000 saved."}},
+    {"@type": "Question", "name": "What is the 4% rule for retirement?", "acceptedAnswer": {"@type": "Answer", "text": "The 4% rule is a retirement withdrawal guideline based on the Trinity Study. It suggests that withdrawing 4% of your portfolio in the first year of retirement and adjusting that amount for inflation each subsequent year gives you a high probability (roughly 95%) of not running out of money over a 30-year retirement period, assuming a balanced stock and bond portfolio."}},
+    {"@type": "Question", "name": "How does compound interest help retirement savings?", "acceptedAnswer": {"@type": "Answer", "text": "Compound interest means your investment returns generate their own returns over time. Early contributions have the most impact because they have the longest time to compound. For example, $10,000 invested at age 25 with a 7% annual return grows to approximately $149,745 by age 65, while the same $10,000 invested at age 45 only grows to about $38,697."}},
+    {"@type": "Question", "name": "What is a good rate of return for retirement planning?", "acceptedAnswer": {"@type": "Answer", "text": "Historical stock market returns average about 10% annually before inflation, or roughly 7% after inflation. A conservative estimate uses 5-6%, moderate uses 7%, and aggressive uses 8-10%. Your actual allocation between stocks, bonds, and other assets determines your expected return. Younger investors can typically afford a more aggressive allocation."}},
+    {"@type": "Question", "name": "How does employer 401(k) match work?", "acceptedAnswer": {"@type": "Answer", "text": "Many employers match a percentage of your 401(k) contributions, typically 50% or 100% of contributions up to a certain percentage of your salary (commonly 3-6%). For example, if your employer matches 50% of contributions up to 6% of salary, and you earn $80,000 contributing 6% ($4,800), your employer adds $2,400 per year. This is essentially free money and should always be maximized."}},
+    {"@type": "Question", "name": "Should I adjust my retirement projections for inflation?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Inflation erodes purchasing power over time. A dollar today will buy less in 20 or 30 years. Using inflation-adjusted (real) returns gives you a clearer picture of what your retirement savings will actually be worth in today's dollars. Historical US inflation averages about 3% per year, though recent years have seen higher rates."}},
+    {"@type": "Question", "name": "When should I start saving for retirement?", "acceptedAnswer": {"@type": "Answer", "text": "As early as possible. Due to compound growth, starting in your 20s gives your money decades to grow. Someone who saves $300 per month from age 25 to 65 at a 7% return accumulates about $719,000. Starting at age 35 with the same monthly contribution and return yields only about $340,000, less than half, because those first 10 years of compounding are extremely powerful."}},
+    {"@type": "Question", "name": "How much Social Security will I receive?", "acceptedAnswer": {"@type": "Answer", "text": "Social Security benefits depend on your 35 highest-earning years, your claiming age, and the benefit formula. The average monthly benefit in 2025 is approximately $1,976. Claiming at 62 reduces benefits permanently by up to 30%, while waiting until 70 increases benefits by about 24% compared to claiming at full retirement age (67 for those born after 1960). The maximum benefit at full retirement age in 2025 is approximately $4,018 per month."}}
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0f;
+  color: #e0e0e8;
+  line-height: 1.7;
+  font-weight: 400;
+}
+a { color: #00ccff; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+.breadcrumb { padding: 16px 0; font-size: 13px; color: #666; }
+.breadcrumb a { color: #888; }
+.breadcrumb span { margin: 0 6px; }
+
+.hero { text-align: center; padding: 30px 0 20px; }
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.hero p {
+  font-size: 1.05rem;
+  color: #999;
+  max-width: 680px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+.privacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 18px;
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 100px;
+  font-size: 13px;
+  color: #00ff88;
+}
+.privacy-badge svg { flex-shrink: 0; }
+
+.card {
+  background: #12121a;
+  border: 1px solid #1e1e2e;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+.card h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 18px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 768px) {
+  .form-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 500px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label {
+  font-size: 13px;
+  color: #aaa;
+  font-weight: 500;
+}
+.form-group input, .form-group select {
+  background: #0a0a0f;
+  border: 1px solid #2a2a3a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #e0e0e8;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: #00ff88;
+}
+.form-group.full-width { grid-column: 1 / -1; }
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #2a2a3a;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: #888;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.toggle-switch input:checked + .toggle-slider { background: rgba(0,255,136,0.3); }
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+  background: #00ff88;
+}
+.toggle-label { font-size: 13px; color: #aaa; }
+
+.btn-calculate {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #00ff88, #00ccff);
+  color: #0a0a0f;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-calculate:hover { opacity: 0.9; }
+.btn-calculate:active { transform: scale(0.99); }
+
+/* Results */
+.results-section { display: none; }
+.results-section.visible { display: block; }
+
+.results-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.result-box {
+  background: #12121a;
+  border: 1px solid #1e1e2e;
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+}
+.result-box .label { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.result-box .value { font-size: 1.4rem; font-weight: 600; color: #00ff88; }
+.result-box .value.blue { color: #00ccff; }
+.result-box .value.white { color: #fff; }
+.result-box .value.red { color: #ff6b6b; }
+.result-box .sub { font-size: 12px; color: #666; margin-top: 4px; }
+
+.gap-banner {
+  padding: 20px 24px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+}
+.gap-banner.on-track {
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.25);
+  color: #00ff88;
+}
+.gap-banner.shortfall {
+  background: rgba(255,107,107,0.08);
+  border: 1px solid rgba(255,107,107,0.25);
+  color: #ff6b6b;
+}
+
+/* Canvas chart */
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  margin: 10px 0 20px;
+}
+.chart-wrapper canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Scenario cards */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+@media (max-width: 600px) {
+  .scenario-grid { grid-template-columns: 1fr; }
+}
+.scenario-card {
+  background: #0a0a0f;
+  border: 1px solid #1e1e2e;
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+}
+.scenario-card.highlight { border-color: #00ff88; }
+.scenario-card .sc-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.scenario-card .sc-rate { font-size: 14px; color: #00ccff; margin-bottom: 10px; }
+.scenario-card .sc-value { font-size: 1.3rem; font-weight: 600; color: #fff; }
+.scenario-card .sc-income { font-size: 13px; color: #00ff88; margin-top: 6px; }
+
+/* Tables */
+.table-wrapper { overflow-x: auto; margin-top: 12px; max-height: 500px; overflow-y: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  text-align: left;
+  padding: 10px 14px;
+  background: #0a0a0f;
+  color: #888;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #1e1e2e;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #1a1a2a;
+  color: #ccc;
+}
+tr:hover td { background: rgba(0,255,136,0.02); }
+
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #1e1e2e;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  color: #888;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn.active {
+  color: #00ff88;
+  border-bottom-color: #00ff88;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* SEO content */
+.seo-content { margin-top: 50px; }
+.seo-content h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 40px 0 14px;
+}
+.seo-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ddd;
+  margin: 24px 0 10px;
+}
+.seo-content p {
+  color: #aaa;
+  margin-bottom: 14px;
+  font-weight: 300;
+}
+.seo-content ul, .seo-content ol {
+  color: #aaa;
+  padding-left: 24px;
+  margin-bottom: 14px;
+}
+.seo-content li { margin-bottom: 6px; font-weight: 300; }
+
+.faq-item {
+  border-bottom: 1px solid #1e1e2e;
+  padding: 18px 0;
+}
+.faq-question {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ddd;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.faq-question::after {
+  content: '+';
+  font-size: 1.3rem;
+  color: #00ff88;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.faq-item.open .faq-question::after { content: '-'; }
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  color: #999;
+  font-weight: 300;
+  line-height: 1.7;
+}
+.faq-item.open .faq-answer {
+  max-height: 500px;
+  padding-top: 12px;
+}
+
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  margin-top: 50px;
+  border-top: 1px solid #1e1e2e;
+  color: #555;
+  font-size: 13px;
+}
+footer a { color: #00ccff; }
+
+@media (max-width: 600px) {
+  .card { padding: 18px; }
+  .results-summary { grid-template-columns: 1fr 1fr; }
+  .chart-wrapper { height: 260px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb">
+    <a href="https://tools.zovo.one/">Home</a>
+    <span>/</span>
+    Retirement Calculator
+  </nav>
+
+  <section class="hero">
+    <h1>Retirement Calculator</h1>
+    <p>Estimate how much you need for retirement, see compound growth projections, compare scenarios, and find out if you are on track to retire comfortably.</p>
+    <div class="privacy-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Runs entirely in your browser. Zero data sent to any server.
+    </div>
+  </section>
+
+  <div class="card">
+    <h2>Your Retirement Details</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="currentAge">Current Age</label>
+        <input type="number" id="currentAge" value="30" min="18" max="80">
+      </div>
+      <div class="form-group">
+        <label for="retirementAge">Retirement Age</label>
+        <input type="number" id="retirementAge" value="65" min="30" max="85">
+      </div>
+      <div class="form-group">
+        <label for="currentSavings">Current Savings ($)</label>
+        <input type="number" id="currentSavings" value="50000" min="0" step="1000">
+      </div>
+      <div class="form-group">
+        <label for="monthlyContribution">Monthly Contribution ($)</label>
+        <input type="number" id="monthlyContribution" value="500" min="0" step="50">
+      </div>
+      <div class="form-group">
+        <label for="annualReturn">Expected Return (%)</label>
+        <input type="number" id="annualReturn" value="7" min="0" max="20" step="0.5">
+      </div>
+      <div class="form-group">
+        <label for="inflationRate">Inflation Rate (%)</label>
+        <input type="number" id="inflationRate" value="3" min="0" max="10" step="0.5">
+      </div>
+      <div class="form-group">
+        <label for="annualSalary">Annual Salary ($) (for match)</label>
+        <input type="number" id="annualSalary" value="75000" min="0" step="1000">
+      </div>
+      <div class="form-group">
+        <label for="employerMatchPct">Employer Match (%)</label>
+        <input type="number" id="employerMatchPct" value="50" min="0" max="100" step="10">
+      </div>
+      <div class="form-group">
+        <label for="employerMatchLimit">Match Up To (% of salary)</label>
+        <input type="number" id="employerMatchLimit" value="6" min="0" max="100" step="1">
+      </div>
+      <div class="form-group full-width">
+        <div class="toggle-row">
+          <div class="toggle-switch">
+            <input type="checkbox" id="inflationToggle" checked>
+            <label class="toggle-slider" for="inflationToggle"></label>
+          </div>
+          <span class="toggle-label">Show inflation-adjusted (real) values</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-calculate" onclick="calculate()">Calculate Retirement Plan</button>
+  </div>
+
+  <div class="results-section" id="resultsSection">
+    <div id="gapBanner"></div>
+    <div class="results-summary" id="summaryBoxes"></div>
+
+    <div class="card">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('growth')">Growth Chart</button>
+        <button class="tab-btn" onclick="switchTab('scenarios')">Scenarios</button>
+        <button class="tab-btn" onclick="switchTab('breakdown')">Year-by-Year</button>
+        <button class="tab-btn" onclick="switchTab('social')">Social Security</button>
+      </div>
+
+      <div class="tab-content active" id="tab-growth">
+        <div class="chart-wrapper">
+          <canvas id="growthChart"></canvas>
+        </div>
+        <p style="font-size:13px;color:#666;text-align:center;">Compound growth of your retirement savings over time</p>
+      </div>
+
+      <div class="tab-content" id="tab-scenarios">
+        <div class="scenario-grid" id="scenarioGrid"></div>
+      </div>
+
+      <div class="tab-content" id="tab-breakdown">
+        <div class="table-wrapper">
+          <table id="breakdownTable">
+            <thead>
+              <tr><th>Age</th><th>Contributions</th><th>Growth</th><th>Balance</th><th>Inflation-Adj.</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tab-social">
+        <div id="socialResult"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="seo-content">
+    <h2>How to Use This Retirement Calculator</h2>
+    <p>This free retirement calculator helps you project your retirement savings and determine whether you are on track for a comfortable retirement. Enter your current age, target retirement age, current savings balance, monthly contribution, expected rate of return, and inflation rate. You can also include your employer's 401(k) match by entering your annual salary, the match percentage, and the maximum salary percentage they match. Click "Calculate Retirement Plan" to see detailed projections, including your total savings at retirement, estimated monthly retirement income using the 4% rule, and a gap analysis telling you whether you need to save more or are ahead of schedule.</p>
+    <p>The results include four tabs: a compound growth chart showing how your savings grow over time, a scenario comparison showing conservative, moderate, and aggressive return assumptions, a year-by-year breakdown table showing contributions, growth, and balance for each year until retirement, and a Social Security estimate based on your age and approximate average benefits. Toggle the inflation adjustment switch to see all values in today's dollars for a more realistic picture of your future purchasing power.</p>
+
+    <h2>Understanding Compound Growth and Retirement Savings</h2>
+    <p>Compound growth is the single most powerful force in retirement planning. When your investments earn returns, those returns are reinvested and begin generating their own returns. Over decades, this snowball effect transforms modest monthly contributions into substantial wealth. The key variable is time. A 25-year-old who invests $400 per month at a 7% average annual return accumulates roughly $1,065,000 by age 65. A 35-year-old making the same contribution at the same return reaches only about $489,000 by age 65. Those extra 10 years of compounding more than double the final amount, despite the 25-year-old contributing only $48,000 more in total deposits.</p>
+    <p>This is why financial planners consistently emphasize starting early. Even if you can only afford small contributions in your twenties, getting money into the market and letting compound growth work for decades has an outsized impact on your retirement readiness compared to contributing larger amounts later in life.</p>
+
+    <h3>The Role of Rate of Return</h3>
+    <p>Your expected rate of return significantly affects the outcome. Historically, the US stock market (measured by the S&P 500) has returned approximately 10% per year before inflation, or roughly 7% after inflation. However, past performance does not guarantee future results, and your personal return depends on your asset allocation. A portfolio heavily weighted toward bonds might average 4-5% per year, while a stock-heavy portfolio could average 8-10%. This calculator lets you test different assumptions and compare conservative (5%), moderate (7%), and aggressive (9%) scenarios side by side.</p>
+
+    <h2>The 4% Rule: How Much Can You Withdraw?</h2>
+    <p>The 4% rule is one of the most widely referenced guidelines in retirement planning. It originated from the 1998 Trinity Study, which analyzed historical stock and bond returns to determine sustainable withdrawal rates over 30-year periods. The rule states that if you withdraw 4% of your portfolio in the first year of retirement and adjust that withdrawal for inflation each subsequent year, you have a roughly 95% chance of not running out of money over 30 years.</p>
+    <p>For example, if you retire with $1,000,000, the 4% rule suggests withdrawing $40,000 in your first year. If inflation is 3%, you would withdraw $41,200 the second year, $42,436 the third year, and so on. This approach balances the need for income with the need to preserve capital over a long retirement. Some financial planners now recommend a more conservative 3.5% withdrawal rate given current market conditions, while others argue that flexible withdrawal strategies (reducing spending in down markets) allow for higher initial rates.</p>
+
+    <h3>How Long Will Your Money Last?</h3>
+    <p>This calculator estimates how many years your savings will last in retirement based on your projected balance, assumed withdrawal rate, and continued portfolio growth during retirement. If your savings at retirement are $800,000 and you withdraw 4% per year ($32,000) while your portfolio continues earning 5% on average, the math works in your favor because your portfolio grows faster than your withdrawals. However, sequence-of-returns risk (experiencing poor returns early in retirement) can derail even well-funded plans. Having a cash reserve covering 1-2 years of expenses and maintaining a diversified portfolio helps mitigate this risk.</p>
+
+    <h2>Employer Match: Free Money You Should Never Leave on the Table</h2>
+    <p>If your employer offers a 401(k) match, contributing at least enough to receive the full match is one of the most important financial decisions you can make. A typical match structure is 50% of your contributions up to 6% of your salary. If you earn $80,000 per year and contribute 6% ($4,800), your employer adds 50% of that ($2,400). That is an instant 50% return on your contributed amount before any market returns.</p>
+    <p>Over a 35-year career with annual raises, that employer match compounds into a substantial sum. Using this calculator, you can see exactly how much the employer match adds to your retirement total. Not contributing enough to get the full match is literally leaving free money on the table and is the first thing to address in any retirement savings plan.</p>
+
+    <h2>Inflation and Purchasing Power</h2>
+    <p>Inflation is the silent threat to retirement plans. At 3% annual inflation, a dollar today will be worth only about $0.41 in 30 years. This means that $1,000,000 in 30 years will have the purchasing power of roughly $412,000 in today's dollars. When planning for retirement, you have two options: use nominal returns and remember that your future dollars buy less, or use real (inflation-adjusted) returns for a more accurate picture.</p>
+    <p>This calculator includes an inflation adjustment toggle. When enabled, all values are shown in today's dollars, meaning the growth chart and balance figures reflect what your money will actually be worth in terms of current purchasing power. This is the more honest way to plan because it avoids the illusion of wealth that nominal numbers can create. A 7% nominal return with 3% inflation gives you approximately 4% real growth per year.</p>
+
+    <h2>Social Security: A Foundation, Not a Full Plan</h2>
+    <p>Social Security provides a foundation of retirement income for most Americans, but it is not designed to be your sole source of funds. The average monthly Social Security benefit in 2025 is approximately $1,976, which translates to about $23,712 per year. The maximum benefit for someone claiming at full retirement age (67 for those born after 1960) is approximately $4,018 per month, or $48,216 per year.</p>
+    <p>Your actual benefit depends on your 35 highest-earning years, your claiming age, and the Social Security benefit formula. Claiming early at age 62 permanently reduces your benefit by up to 30%, while delaying until age 70 increases it by approximately 8% per year beyond full retirement age (a 24% total increase). For many people, delaying Social Security is one of the best guaranteed returns available, but it requires having other savings to bridge the gap.</p>
+
+    <h3>Practical Example: Planning at Age 35</h3>
+    <p>Consider someone who is 35 years old with $40,000 in retirement savings, earning $85,000 per year, contributing $600 per month to their 401(k), and receiving a 50% employer match on the first 6% of salary. Their employer adds $212.50 per month ($85,000 x 6% x 50% / 12). At a 7% average return, their projected balance at age 65 is approximately $1,120,000 in nominal terms or about $535,000 in inflation-adjusted terms (assuming 3% inflation). Using the 4% rule, that translates to roughly $21,400 per year in today's purchasing power, plus Social Security benefits of perhaps $24,000 per year. Combined, they are looking at approximately $45,400 per year in real retirement income. If they need $60,000, there is a gap of about $14,600 per year, suggesting they should increase their monthly contributions or consider working a few more years.</p>
+
+    <h2>Strategies to Close a Retirement Savings Gap</h2>
+    <p>If the calculator shows you are behind on your retirement goals, there are several strategies to close the gap. Increasing your monthly contribution, even by $100 or $200, makes a significant difference over decades. Taking advantage of catch-up contributions (an additional $7,500 per year to a 401(k) for those 50 and older) accelerates savings later in your career. Reducing investment fees by using low-cost index funds preserves more of your returns for compounding. Delaying retirement by even 2-3 years gives your money more time to grow while also shortening the number of years you need to fund. Finally, consider diversifying income sources: rental properties, part-time work in retirement, or building a side business can supplement savings and Social Security.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <div id="faqContainer">
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">How much money do I need to retire?</div>
+        <div class="faq-answer">A common guideline is to have 25 times your expected annual retirement expenses saved by retirement age. This aligns with the 4% rule, which suggests withdrawing 4% of your portfolio in the first year and adjusting for inflation thereafter. For example, if you need $60,000 per year in retirement, you would need approximately $1,500,000 saved. Your actual number depends on your lifestyle, location, health care needs, and other income sources like Social Security.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What is the 4% rule for retirement?</div>
+        <div class="faq-answer">The 4% rule is a retirement withdrawal guideline based on the Trinity Study. It suggests that withdrawing 4% of your portfolio in the first year of retirement and adjusting that amount for inflation each subsequent year gives you a high probability (roughly 95%) of not running out of money over a 30-year retirement period, assuming a balanced portfolio of stocks and bonds. Some planners now recommend 3.5% for greater safety margins.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">How does compound interest help retirement savings?</div>
+        <div class="faq-answer">Compound interest means your investment returns generate their own returns over time. Early contributions have the most impact because they have the longest time to compound. For example, $10,000 invested at age 25 with a 7% annual return grows to approximately $149,745 by age 65, while the same $10,000 invested at age 45 only grows to about $38,697. This is why starting early is the single most impactful thing you can do for your retirement.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What is a good rate of return for retirement planning?</div>
+        <div class="faq-answer">Historical stock market returns average about 10% annually before inflation, or roughly 7% after inflation. A conservative estimate uses 5-6%, moderate uses 7%, and aggressive uses 8-10%. Your actual allocation between stocks, bonds, and other assets determines your expected return. Younger investors with longer time horizons can typically afford a more aggressive allocation, while those nearing retirement should gradually shift toward more conservative investments.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">How does employer 401(k) match work?</div>
+        <div class="faq-answer">Many employers match a percentage of your 401(k) contributions, typically 50% or 100% of contributions up to a certain percentage of your salary (commonly 3-6%). For example, if your employer matches 50% of contributions up to 6% of salary, and you earn $80,000 contributing 6% ($4,800 per year), your employer adds $2,400 per year. This is essentially free money and should always be maximized before considering other investment accounts.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Should I adjust my retirement projections for inflation?</div>
+        <div class="faq-answer">Yes. Inflation erodes purchasing power over time. A dollar today will buy less in 20 or 30 years. Using inflation-adjusted (real) returns gives you a clearer picture of what your retirement savings will actually be worth in today's dollars. Historical US inflation averages about 3% per year. This calculator includes a toggle to switch between nominal and inflation-adjusted values for all projections.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">When should I start saving for retirement?</div>
+        <div class="faq-answer">As early as possible. Due to compound growth, starting in your twenties gives your money decades to grow exponentially. Someone who saves $300 per month from age 25 to 65 at a 7% return accumulates about $719,000. Starting at age 35 with the same monthly contribution and return yields only about $340,000, less than half, because those first 10 years of compounding are extremely powerful. Even small amounts invested early make a meaningful difference.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">How much Social Security will I receive?</div>
+        <div class="faq-answer">Social Security benefits depend on your 35 highest-earning years, your claiming age, and the benefit formula. The average monthly benefit in 2025 is approximately $1,976. Claiming at 62 reduces benefits permanently by up to 30%, while waiting until 70 increases benefits by about 24% compared to claiming at full retirement age (67 for those born after 1960). The maximum benefit at full retirement age in 2025 is approximately $4,018 per month.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<p style="text-align:center;color:#8888a0;font-size:0.8rem;margin:2rem 0 0.5rem;">Last updated: March 19, 2026</p>
+<footer>
+  <p>Built by Michael Lip at <a href="https://zovo.one">zovo.one</a></p>
+</footer>
+
+<script>
+function fmt(n) {
+  return '$' + Math.round(n).toLocaleString('en-US');
+}
+function fmtDec(n) {
+  return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function projectRetirement(currentAge, retireAge, savings, monthlyContrib, annualReturn, inflationRate, employerMonthlyMatch, adjustForInflation) {
+  const years = retireAge - currentAge;
+  const monthlyReturn = annualReturn / 100 / 12;
+  const monthlyInflation = inflationRate / 100 / 12;
+  const totalMonthly = monthlyContrib + employerMonthlyMatch;
+  const yearData = [];
+
+  let balance = savings;
+  for (let y = 0; y < years; y++) {
+    const startBalance = balance;
+    let yearContrib = 0;
+    let yearGrowth = 0;
+    for (let m = 0; m < 12; m++) {
+      const growth = balance * monthlyReturn;
+      yearGrowth += growth;
+      balance += growth + totalMonthly;
+      yearContrib += totalMonthly;
+    }
+    const inflationFactor = Math.pow(1 + inflationRate / 100, y + 1);
+    yearData.push({
+      age: currentAge + y + 1,
+      contributions: yearContrib,
+      growth: yearGrowth,
+      balance: balance,
+      realBalance: balance / inflationFactor
+    });
+  }
+
+  const inflationFactor = Math.pow(1 + inflationRate / 100, years);
+  return {
+    nominalBalance: balance,
+    realBalance: balance / inflationFactor,
+    yearData,
+    years
+  };
+}
+
+function calcYearsMoneyLasts(balance, annualWithdrawal, annualReturn) {
+  if (annualWithdrawal <= 0) return Infinity;
+  if (balance <= 0) return 0;
+  const monthlyW = annualWithdrawal / 12;
+  const monthlyR = annualReturn / 100 / 12;
+  let b = balance;
+  let months = 0;
+  while (b > 0 && months < 1200) {
+    b = b * (1 + monthlyR) - monthlyW;
+    months++;
+  }
+  return Math.round(months / 12);
+}
+
+function estimateSocialSecurity(currentAge) {
+  // Approximate average monthly benefit
+  const avgMonthly = 1976;
+  const maxFRA = 4018;
+  // Simple estimate: scale based on assumed average earner
+  const at62 = Math.round(avgMonthly * 0.70);
+  const at67 = avgMonthly;
+  const at70 = Math.round(avgMonthly * 1.24);
+  return { at62, at67, at70, maxFRA };
+}
+
+function calculate() {
+  const currentAge = parseInt(document.getElementById('currentAge').value) || 30;
+  const retireAge = parseInt(document.getElementById('retirementAge').value) || 65;
+  const savings = parseFloat(document.getElementById('currentSavings').value) || 0;
+  const monthly = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+  const annualReturn = parseFloat(document.getElementById('annualReturn').value) || 7;
+  const inflation = parseFloat(document.getElementById('inflationRate').value) || 3;
+  const salary = parseFloat(document.getElementById('annualSalary').value) || 0;
+  const matchPct = parseFloat(document.getElementById('employerMatchPct').value) || 0;
+  const matchLimit = parseFloat(document.getElementById('employerMatchLimit').value) || 0;
+  const adjustInflation = document.getElementById('inflationToggle').checked;
+
+  if (retireAge <= currentAge) {
+    alert('Retirement age must be greater than current age.');
+    return;
+  }
+
+  // Employer match
+  const annualContrib = monthly * 12;
+  const maxMatchableSalary = salary * (matchLimit / 100);
+  const matchableContrib = Math.min(annualContrib, maxMatchableSalary);
+  const annualMatch = matchableContrib * (matchPct / 100);
+  const monthlyMatch = annualMatch / 12;
+
+  // Main projection
+  const result = projectRetirement(currentAge, retireAge, savings, monthly, annualReturn, inflation, monthlyMatch, adjustInflation);
+  const displayBalance = adjustInflation ? result.realBalance : result.nominalBalance;
+
+  // 4% rule
+  const annualIncome4pct = displayBalance * 0.04;
+  const monthlyIncome4pct = annualIncome4pct / 12;
+
+  // Years money lasts with 4% withdrawal
+  const retirementReturn = Math.max(annualReturn - 2, 2); // assume slightly lower returns in retirement
+  const yearsLast = calcYearsMoneyLasts(displayBalance, annualIncome4pct, retirementReturn);
+
+  // Gap analysis: assume $50K/year need (in today's dollars if adjusted)
+  const annualNeed = 50000;
+  const gap = annualIncome4pct - annualNeed;
+
+  // Social Security
+  const ss = estimateSocialSecurity(currentAge);
+
+  // Show results
+  document.getElementById('resultsSection').classList.add('visible');
+
+  // Gap banner
+  const gapBanner = document.getElementById('gapBanner');
+  if (gap >= 0) {
+    gapBanner.className = 'gap-banner on-track';
+    gapBanner.innerHTML = `You are on track. Your projected retirement income of ${fmt(annualIncome4pct)}/year exceeds the $50,000/year benchmark by ${fmt(gap)}/year.`;
+  } else {
+    const additionalNeeded = Math.abs(gap) * 25;
+    gapBanner.className = 'gap-banner shortfall';
+    gapBanner.innerHTML = `Savings gap detected. You need approximately ${fmt(additionalNeeded)} more at retirement to meet a $50,000/year income target. Consider increasing monthly contributions by ${fmt(Math.abs(gap)/12)}/month.`;
+  }
+
+  // Summary boxes
+  document.getElementById('summaryBoxes').innerHTML = `
+    <div class="result-box">
+      <div class="label">Savings at Retirement</div>
+      <div class="value">${fmt(displayBalance)}</div>
+      <div class="sub">${adjustInflation ? "Today's dollars" : 'Nominal'}</div>
+    </div>
+    <div class="result-box">
+      <div class="label">Monthly Income (4% Rule)</div>
+      <div class="value blue">${fmt(monthlyIncome4pct)}</div>
+      <div class="sub">${fmt(annualIncome4pct)}/year</div>
+    </div>
+    <div class="result-box">
+      <div class="label">Years Money Lasts</div>
+      <div class="value white">${yearsLast >= 100 ? '100+' : yearsLast}</div>
+      <div class="sub">At 4% withdrawal</div>
+    </div>
+    <div class="result-box">
+      <div class="label">Total Contributions</div>
+      <div class="value blue">${fmt((monthly + monthlyMatch) * 12 * result.years)}</div>
+      <div class="sub">Incl. ${fmt(monthlyMatch * 12 * result.years)} employer match</div>
+    </div>
+    <div class="result-box">
+      <div class="label">Total Growth</div>
+      <div class="value">${fmt(result.nominalBalance - savings - (monthly + monthlyMatch) * 12 * result.years)}</div>
+      <div class="sub">Compound returns</div>
+    </div>
+    <div class="result-box">
+      <div class="label">Est. Social Security</div>
+      <div class="value blue">${fmt(ss.at67)}/mo</div>
+      <div class="sub">At full retirement age</div>
+    </div>
+  `;
+
+  // Growth chart
+  drawChart(result.yearData, adjustInflation, currentAge);
+
+  // Scenarios
+  renderScenarios(currentAge, retireAge, savings, monthly, inflation, monthlyMatch, adjustInflation);
+
+  // Year-by-year table
+  renderBreakdown(result.yearData, adjustInflation);
+
+  // Social Security
+  renderSocialSecurity(ss, currentAge);
+
+  document.getElementById('resultsSection').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function drawChart(yearData, adjustInflation, currentAge) {
+  const canvas = document.getElementById('growthChart');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const W = rect.width;
+  const H = rect.height;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const padding = { top: 30, right: 20, bottom: 50, left: 70 };
+  const chartW = W - padding.left - padding.right;
+  const chartH = H - padding.top - padding.bottom;
+
+  const values = yearData.map(d => adjustInflation ? d.realBalance : d.balance);
+  const maxVal = Math.max(...values, 1);
+  const minVal = 0;
+
+  // Grid lines
+  ctx.strokeStyle = '#1e1e2e';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#666';
+  ctx.font = '11px Inter';
+  ctx.textAlign = 'right';
+  const gridLines = 5;
+  for (let i = 0; i <= gridLines; i++) {
+    const y = padding.top + chartH - (i / gridLines) * chartH;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(W - padding.right, y);
+    ctx.stroke();
+    const val = (i / gridLines) * maxVal;
+    ctx.fillText(formatShort(val), padding.left - 8, y + 4);
+  }
+
+  // X-axis labels
+  ctx.textAlign = 'center';
+  const step = Math.max(1, Math.floor(yearData.length / 8));
+  for (let i = 0; i < yearData.length; i += step) {
+    const x = padding.left + (i / (yearData.length - 1)) * chartW;
+    ctx.fillText('Age ' + yearData[i].age, x, H - padding.bottom + 20);
+  }
+  // Last label
+  if (yearData.length > 1) {
+    const x = padding.left + chartW;
+    ctx.fillText('Age ' + yearData[yearData.length - 1].age, x, H - padding.bottom + 20);
+  }
+
+  // Area fill
+  ctx.beginPath();
+  ctx.moveTo(padding.left, padding.top + chartH);
+  for (let i = 0; i < values.length; i++) {
+    const x = padding.left + (i / (values.length - 1)) * chartW;
+    const y = padding.top + chartH - (values[i] / maxVal) * chartH;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(padding.left + chartW, padding.top + chartH);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
+  grad.addColorStop(0, 'rgba(0,255,136,0.25)');
+  grad.addColorStop(1, 'rgba(0,255,136,0.02)');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  for (let i = 0; i < values.length; i++) {
+    const x = padding.left + (i / (values.length - 1)) * chartW;
+    const y = padding.top + chartH - (values[i] / maxVal) * chartH;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.strokeStyle = '#00ff88';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // End dot
+  if (values.length > 0) {
+    const lastX = padding.left + chartW;
+    const lastY = padding.top + chartH - (values[values.length - 1] / maxVal) * chartH;
+    ctx.beginPath();
+    ctx.arc(lastX, lastY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#00ff88';
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '12px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText(fmt(values[values.length - 1]), lastX, lastY - 14);
+  }
+}
+
+function formatShort(n) {
+  if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return '$' + (n / 1000).toFixed(0) + 'K';
+  return '$' + Math.round(n);
+}
+
+function renderScenarios(currentAge, retireAge, savings, monthly, inflation, monthlyMatch, adjustInflation) {
+  const scenarios = [
+    { label: 'Conservative', rate: 5, color: '#00ccff' },
+    { label: 'Moderate', rate: 7, color: '#00ff88' },
+    { label: 'Aggressive', rate: 9, color: '#ff6b6b' }
+  ];
+  const grid = document.getElementById('scenarioGrid');
+  let html = '';
+  scenarios.forEach((s, i) => {
+    const result = projectRetirement(currentAge, retireAge, savings, monthly, s.rate, inflation, monthlyMatch, adjustInflation);
+    const balance = adjustInflation ? result.realBalance : result.nominalBalance;
+    const income = balance * 0.04 / 12;
+    html += `
+      <div class="scenario-card ${i === 1 ? 'highlight' : ''}">
+        <div class="sc-label">${s.label}</div>
+        <div class="sc-rate">${s.rate}% annual return</div>
+        <div class="sc-value">${fmt(balance)}</div>
+        <div class="sc-income">${fmt(income)}/month income</div>
+      </div>`;
+  });
+  grid.innerHTML = html;
+}
+
+function renderBreakdown(yearData, adjustInflation) {
+  const tbody = document.querySelector('#breakdownTable tbody');
+  let html = '';
+  yearData.forEach(d => {
+    html += `<tr>
+      <td>${d.age}</td>
+      <td>${fmt(d.contributions)}</td>
+      <td>${fmt(d.growth)}</td>
+      <td>${fmt(d.balance)}</td>
+      <td>${fmt(d.realBalance)}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+}
+
+function renderSocialSecurity(ss, currentAge) {
+  const container = document.getElementById('socialResult');
+  container.innerHTML = `
+    <div style="margin-bottom:20px;">
+      <p style="color:#aaa;margin-bottom:14px;">Social Security benefits are based on your 35 highest-earning years and claiming age. Below are approximate monthly benefits for an average earner.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;">
+      <div style="background:#0a0a0f;border:1px solid #1e1e2e;border-radius:10px;padding:18px;text-align:center;">
+        <div style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Claim at Age 62</div>
+        <div style="font-size:1.3rem;font-weight:600;color:#ff6b6b;">${fmt(ss.at62)}/mo</div>
+        <div style="font-size:12px;color:#666;margin-top:4px;">Reduced by ~30%</div>
+      </div>
+      <div style="background:#0a0a0f;border:1px solid #00ff88;border-radius:10px;padding:18px;text-align:center;">
+        <div style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Claim at Age 67 (FRA)</div>
+        <div style="font-size:1.3rem;font-weight:600;color:#00ff88;">${fmt(ss.at67)}/mo</div>
+        <div style="font-size:12px;color:#666;margin-top:4px;">Full benefit amount</div>
+      </div>
+      <div style="background:#0a0a0f;border:1px solid #1e1e2e;border-radius:10px;padding:18px;text-align:center;">
+        <div style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Claim at Age 70</div>
+        <div style="font-size:1.3rem;font-weight:600;color:#00ccff;">${fmt(ss.at70)}/mo</div>
+        <div style="font-size:12px;color:#666;margin-top:4px;">Increased by ~24%</div>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding:16px;background:rgba(0,204,255,0.06);border:1px solid rgba(0,204,255,0.15);border-radius:8px;">
+      <p style="color:#aaa;font-size:14px;margin:0;">The maximum monthly benefit at full retirement age (67) in 2025 is approximately ${fmt(ss.maxFRA)}. Your actual benefit depends on your earnings history. Visit <a href="https://www.ssa.gov/myaccount/" target="_blank" rel="noopener">ssa.gov/myaccount</a> for a personalized estimate.</p>
+    </div>
+  `;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// Handle canvas resize
+window.addEventListener('resize', () => {
+  if (document.getElementById('resultsSection').classList.contains('visible')) {
+    calculate();
+  }
+});
+
+// Auto-calculate on load
+calculate();
+</script>
+</body>
+</html>
