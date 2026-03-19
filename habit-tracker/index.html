@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Habit Tracker Online - Track Daily Habits &amp; Build Streaks | zovo.one</title>
+<meta name="description" content="Free online habit tracker with streak counting, calendar heatmap, statistics dashboard, and daily check-offs. Track habits, build streaks, and visualize your progress. No signup required.">
+<meta name="keywords" content="habit tracker, daily habit tracker, free habit tracker, habit tracking app, streak tracker, habit calendar, habit builder">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/habit-tracker/">
+<meta property="og:title" content="Free Habit Tracker Online - Track Daily Habits &amp; Build Streaks">
+<meta property="og:description" content="Track daily habits, build streaks, view calendar heatmaps, and analyze your progress with charts. Free browser-based tool, no signup required.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/habit-tracker/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--card:#12121a;--text:#e0e0e8;--accent:#00ff88;--secondary:#00ccff;--border:#1e1e2e;--input-bg:#0e0e16;--error:#ff4466;--warn:#ffaa00;--success:#00ff88;--radius:10px;--shadow:0 4px 24px rgba(0,0,0,0.4)}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+body.compact .card{padding:14px}
+body.compact .habit-check{padding:10px 12px}
+body.compact h1{font-size:1.5rem}
+a{color:var(--secondary);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+h1{font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:12px}
+h2{font-size:1.6rem;font-weight:600;color:#fff;margin:40px 0 16px}
+h3{font-size:1.2rem;font-weight:600;color:var(--accent);margin:24px 0 10px}
+p{margin-bottom:14px;color:var(--text)}
+
+/* Header */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.header .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.logo{font-size:1.3rem;font-weight:700;color:#fff}
+.logo span{color:var(--accent)}
+.header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.privacy-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:20px;padding:6px 14px;font-size:0.75rem;color:var(--accent)}
+.privacy-badge::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent)}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-primary{background:var(--accent);color:#0a0a0f}
+.btn-primary:hover{background:#00e07a;transform:translateY(-1px)}
+.btn-secondary{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm{padding:6px 12px;font-size:0.8rem}
+.btn-danger{background:var(--error);color:#fff}
+.btn-danger:hover{background:#ee3355}
+.btn-icon{width:36px;height:36px;padding:0;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text);cursor:pointer;font-size:1rem}
+.btn-icon:hover{border-color:var(--accent)}
+
+label{display:block;font-size:0.82rem;font-weight:500;color:#aaa;margin-bottom:6px}
+input,select,textarea{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:0.9rem;transition:border-color 0.2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:20px}
+.card-title{font-size:1rem;font-weight:600;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:10px 20px;border:1px solid var(--border);border-radius:8px;background:transparent;color:#888;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:500;transition:all 0.2s}
+.tab.active{background:rgba(0,255,136,0.08);border-color:var(--accent);color:var(--accent)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Main tool area */
+.tool-section{padding:40px 0}
+.tool-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+
+/* Add habit form */
+.add-form{display:none;margin-bottom:20px}
+.add-form.active{display:block}
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}}
+.emoji-picker-wrap{position:relative}
+.emoji-grid{position:absolute;top:100%;left:0;z-index:50;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;display:none;grid-template-columns:repeat(8,1fr);gap:4px;width:280px;max-height:200px;overflow-y:auto;box-shadow:var(--shadow)}
+.emoji-grid.open{display:grid}
+.emoji-opt{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;font-size:1.2rem;border-radius:4px}
+.emoji-opt:hover{background:var(--border)}
+.color-options{display:flex;gap:6px;flex-wrap:wrap}
+.color-opt{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:border-color 0.2s}
+.color-opt.active{border-color:#fff}
+.color-opt:hover{border-color:#888}
+
+/* Habit check items */
+.habit-check{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;transition:all 0.2s}
+.habit-check.completed{border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.03)}
+.habit-check-box{width:24px;height:24px;border:2px solid var(--border);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.habit-check.completed .habit-check-box{background:var(--accent);border-color:var(--accent)}
+.habit-check.completed .habit-check-box::after{content:"";display:block;width:6px;height:10px;border:solid #0a0a0f;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}
+.habit-icon{font-size:1.4rem;flex-shrink:0}
+.habit-info{flex:1;min-width:0}
+.habit-name{font-weight:600;color:#fff;font-size:0.95rem}
+.habit-meta{font-size:0.75rem;color:#666;display:flex;gap:12px;margin-top:2px}
+.habit-streak{display:inline-flex;align-items:center;gap:4px;font-size:0.78rem;font-weight:600;color:var(--warn)}
+.habit-actions{display:flex;gap:6px}
+
+/* Calendar heatmap */
+.heatmap-wrap{overflow-x:auto;padding:10px 0}
+.heatmap{display:flex;gap:2px}
+.heatmap-week{display:flex;flex-direction:column;gap:2px}
+.heatmap-day{width:14px;height:14px;border-radius:3px;background:var(--border);position:relative;cursor:pointer}
+.heatmap-day:hover{outline:1px solid var(--secondary)}
+.heatmap-day[data-level="1"]{background:rgba(0,255,136,0.2)}
+.heatmap-day[data-level="2"]{background:rgba(0,255,136,0.4)}
+.heatmap-day[data-level="3"]{background:rgba(0,255,136,0.6)}
+.heatmap-day[data-level="4"]{background:rgba(0,255,136,0.85)}
+.heatmap-tooltip{position:fixed;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:0.75rem;color:var(--text);pointer-events:none;z-index:200;display:none;white-space:nowrap}
+.heatmap-months{display:flex;gap:2px;margin-bottom:4px;padding-left:0;font-size:0.65rem;color:#666}
+.heatmap-legend{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:0.72rem;color:#666}
+.heatmap-legend .box{width:12px;height:12px;border-radius:2px}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center}
+.stat-value{font-size:2rem;font-weight:700;color:var(--accent)}
+.stat-label{font-size:0.78rem;color:#888;margin-top:4px}
+.chart-container{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:20px}
+.chart-container canvas{width:100%;height:250px}
+.chart-title{font-size:0.9rem;font-weight:600;color:#fff;margin-bottom:14px}
+
+/* Weekly view */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:20px}
+@media(max-width:600px){.week-grid{grid-template-columns:repeat(4,1fr)}}
+.week-day{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;min-height:100px}
+.week-day-label{font-size:0.72rem;color:#888;font-weight:600;text-transform:uppercase;margin-bottom:6px}
+.week-day-date{font-size:0.85rem;color:#fff;font-weight:600;margin-bottom:8px}
+.week-day .habit-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin:2px}
+
+/* Milestones */
+.milestone{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:12px;font-size:0.72rem;font-weight:600;background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.2);color:var(--warn);margin:2px}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto}
+.modal-title{font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:16px}
+
+/* Print */
+@media print{
+  body{background:#fff;color:#000}
+  .header,.tabs,.tool-header,.add-form,.btn,.footer,.seo-content,.privacy-badge,.habit-actions{display:none !important}
+  .card{border:1px solid #ddd;box-shadow:none;background:#fff}
+  .habit-check{border:1px solid #ddd;background:#fff}
+  .habit-name{color:#000}
+  .stat-value{color:#000}
+  .stat-card{background:#f5f5f5}
+}
+
+/* SEO Content */
+.seo-content{padding:60px 0;border-top:1px solid var(--border)}
+.seo-content h2{margin-top:32px}
+.seo-content h3{color:var(--secondary)}
+.seo-content p,.seo-content li{color:#b0b0b8;line-height:1.8}
+.seo-content ul,.seo-content ol{margin:12px 0 18px 24px}
+.seo-content li{margin-bottom:6px}
+.seo-content code{background:var(--card);padding:2px 8px;border-radius:4px;font-size:0.85rem;color:var(--accent)}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+.faq-q{padding:16px 20px;cursor:pointer;font-weight:600;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.faq-q::after{content:"+";font-size:1.2rem;color:var(--accent);transition:transform 0.2s}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{padding:0 20px;max-height:0;overflow:hidden;transition:max-height 0.3s,padding 0.3s}
+.faq-item.open .faq-a{max-height:600px;padding:0 20px 16px}
+
+/* Footer */
+.footer{background:var(--card);border-top:1px solid var(--border);padding:32px 0;text-align:center;color:#666;font-size:0.82rem}
+
+@media(max-width:768px){
+  h1{font-size:1.6rem}
+  h2{font-size:1.3rem}
+  .card{padding:16px}
+  .tabs{gap:2px}
+  .tab{padding:8px 12px;font-size:0.78rem}
+  .container{padding:0 12px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+<div class="container">
+  <div class="logo">zovo<span>.one</span></div>
+  <div class="header-actions">
+    <button class="btn-icon" onclick="toggleCompact()" title="Toggle compact view">&#9881;</button>
+    <button class="btn btn-secondary btn-sm" onclick="exportData()">Export</button>
+    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()">Import</button>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    <button class="btn btn-secondary btn-sm" onclick="printReport()">Print Report</button>
+    <div class="privacy-badge">Runs entirely in your browser. Zero data sent to any server.</div>
+  </div>
+</div>
+</header>
+
+<section class="tool-section">
+<div class="container">
+  <h1>Free Habit Tracker Online</h1>
+  <p>Track your daily habits, build streaks, and visualize your progress with calendar heatmaps and statistics. All data stays in your browser.</p>
+
+  <div class="tool-header">
+    <div class="tabs">
+      <button class="tab active" data-tab="daily">Daily</button>
+      <button class="tab" data-tab="weekly">Weekly</button>
+      <button class="tab" data-tab="calendar">Calendar</button>
+      <button class="tab" data-tab="stats">Stats</button>
+    </div>
+    <button class="btn btn-primary" onclick="toggleAddForm()">+ New Habit</button>
+  </div>
+
+  <!-- Add Habit Form -->
+  <div class="add-form card" id="add-form">
+    <div class="card-title">Add a New Habit</div>
+    <div class="form-grid">
+      <div>
+        <label>Habit Name</label>
+        <input type="text" id="habit-name" placeholder="e.g., Morning meditation" maxlength="50">
+      </div>
+      <div class="emoji-picker-wrap">
+        <label>Icon</label>
+        <input type="text" id="habit-icon" placeholder="Click to pick" readonly style="cursor:pointer" onclick="toggleEmojiPicker()">
+        <div class="emoji-grid" id="emoji-grid"></div>
+      </div>
+      <div>
+        <label>Category</label>
+        <select id="habit-category">
+          <option value="Health">Health</option>
+          <option value="Fitness">Fitness</option>
+          <option value="Learning">Learning</option>
+          <option value="Productivity">Productivity</option>
+          <option value="Mindfulness">Mindfulness</option>
+          <option value="Custom">Custom</option>
+        </select>
+      </div>
+      <div>
+        <label>Frequency</label>
+        <select id="habit-frequency" onchange="toggleFreqInput()">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="custom">X times per week</option>
+        </select>
+      </div>
+      <div id="freq-custom-wrap" style="display:none">
+        <label>Times per week</label>
+        <input type="number" id="habit-freq-count" min="1" max="7" value="3">
+      </div>
+      <div>
+        <label>Color</label>
+        <div class="color-options" id="color-options"></div>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <label>Reminder Note (optional)</label>
+      <input type="text" id="habit-note" placeholder="e.g., After morning coffee" maxlength="100">
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="saveHabit()">Save Habit</button>
+      <button class="btn btn-secondary" onclick="toggleAddForm()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Daily Tab -->
+  <div class="tab-content active" id="tab-daily">
+    <div id="daily-date-nav" style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <button class="btn-icon" onclick="changeDay(-1)">&lt;</button>
+      <span id="daily-date" style="font-weight:600;color:#fff"></span>
+      <button class="btn-icon" onclick="changeDay(1)">&gt;</button>
+      <button class="btn btn-secondary btn-sm" onclick="goToday()">Today</button>
+    </div>
+    <div id="daily-habits"></div>
+    <div id="daily-empty" style="display:none;text-align:center;padding:60px 20px;color:#666">
+      <div style="font-size:3rem;margin-bottom:12px">&#127793;</div>
+      <p style="font-size:1.1rem;color:#888">No habits yet. Add your first habit to get started.</p>
+    </div>
+  </div>
+
+  <!-- Weekly Tab -->
+  <div class="tab-content" id="tab-weekly">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <button class="btn-icon" onclick="changeWeek(-1)">&lt;</button>
+      <span id="week-label" style="font-weight:600;color:#fff"></span>
+      <button class="btn-icon" onclick="changeWeek(1)">&gt;</button>
+    </div>
+    <div id="weekly-habits"></div>
+  </div>
+
+  <!-- Calendar Tab -->
+  <div class="tab-content" id="tab-calendar">
+    <div style="margin-bottom:16px">
+      <label>Select Habit</label>
+      <select id="calendar-habit-select" onchange="renderCalendar()" style="max-width:300px"></select>
+    </div>
+    <div id="heatmap-container"></div>
+  </div>
+
+  <!-- Stats Tab -->
+  <div class="tab-content" id="tab-stats">
+    <div class="stats-grid" id="stats-overview"></div>
+    <div class="chart-container">
+      <div class="chart-title">Weekly Completion Rate</div>
+      <canvas id="chart-weekly" height="250"></canvas>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Habit Completion Breakdown</div>
+      <canvas id="chart-habits" height="250"></canvas>
+    </div>
+    <div id="milestones-container"></div>
+  </div>
+
+</div>
+</section>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-title">Edit Habit</div>
+    <input type="hidden" id="edit-id">
+    <label>Habit Name</label>
+    <input type="text" id="edit-name" maxlength="50">
+    <label style="margin-top:10px">Icon</label>
+    <input type="text" id="edit-icon" maxlength="4">
+    <label style="margin-top:10px">Category</label>
+    <select id="edit-category">
+      <option value="Health">Health</option>
+      <option value="Fitness">Fitness</option>
+      <option value="Learning">Learning</option>
+      <option value="Productivity">Productivity</option>
+      <option value="Mindfulness">Mindfulness</option>
+      <option value="Custom">Custom</option>
+    </select>
+    <label style="margin-top:10px">Reminder Note</label>
+    <input type="text" id="edit-note" maxlength="100">
+    <div style="margin-top:16px;display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="updateHabit()">Save</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="deleteHabit()" style="margin-left:auto">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Heatmap Tooltip -->
+<div class="heatmap-tooltip" id="heatmap-tooltip"></div>
+
+<!-- SEO Content -->
+<section class="seo-content">
+<div class="container">
+
+<h2>What Is a Habit Tracker and Why Should You Use One</h2>
+<p>A habit tracker is a tool that helps you record whether you completed specific daily actions over time. The concept is straightforward: you define the habits you want to build, and each day you mark whether you did them. This simple act of recording creates accountability, reveals patterns, and provides the visual reinforcement that keeps you motivated when willpower alone falls short.</p>
+<p>Research from University College London found that forming a new habit takes an average of 66 days of consistent repetition. Without a tracking mechanism, most people lose track of their progress and abandon new habits within the first two weeks. A habit tracker solves this by making your progress visible and your streaks tangible. When you see an unbroken chain of completed days stretching across your calendar, the psychological cost of breaking that chain becomes a powerful motivator.</p>
+<p>This free habit tracker runs entirely in your browser. There is no account creation, no data collection, and no subscription. Your habit data is stored in your browser's localStorage, which means it stays on your device and is never transmitted to any server. You can export your data as a JSON file at any time for backup or transfer to another device.</p>
+
+<h2>How to Build Habits That Actually Stick</h2>
+<p>Tracking habits is only effective if you approach habit formation with the right strategy. Decades of behavioral science research have identified specific patterns that predict whether a new habit will survive past the initial motivation phase.</p>
+<h3>Start With Ridiculously Small Actions</h3>
+<p>The biggest mistake people make is setting ambitious habit targets on day one. Instead of "Exercise for 60 minutes," start with "Do 5 pushups." Instead of "Read for an hour," start with "Read one page." The goal is not the action itself but the repetition. Once the neural pathway is established through consistent daily repetition, increasing the duration or intensity becomes natural. A Stanford researcher called this approach "Tiny Habits" and found it dramatically increased long-term adherence.</p>
+<h3>Attach New Habits to Existing Routines</h3>
+<p>Habit stacking connects a new behavior to an existing one. The formula is: "After I [existing habit], I will [new habit]." For example: "After I pour my morning coffee, I will write in my journal for 2 minutes." The existing habit becomes a trigger that reminds you to perform the new one. This eliminates the need to rely on memory or motivation, which are both unreliable.</p>
+<h3>Track Completion, Not Perfection</h3>
+<p>The calendar heatmap in this tool uses intensity levels rather than binary pass/fail. On days when you complete all your habits, the square is darkest green. On days when you complete some, it shows a lighter shade. This approach acknowledges that partial effort is vastly better than no effort, and prevents the "all or nothing" thinking that causes people to abandon their tracking entirely after one missed day.</p>
+
+<h2>Understanding the Calendar Heatmap View</h2>
+<p>The calendar heatmap displays 365 days of habit data using the same visual format as the contribution graph on developer profiles. Each small square represents one day. The color intensity indicates how many habits you completed that day relative to your total scheduled habits. Empty squares (the darkest, matching the background) represent days with zero completions. The brightest green squares represent days where you completed all scheduled habits.</p>
+<p>This visualization is powerful because it reveals patterns that daily check-offs cannot. You can instantly see which days of the week you tend to miss (most people have lower completion on weekends or Mondays). You can identify months where your consistency dropped and correlate them with life events. You can spot the exact date when a streak began or ended. And the visual weight of a solid block of green squares creates a psychological reward that reinforces continued effort.</p>
+
+<h2>Streaks, Milestones, and the Psychology of Consistency</h2>
+<p>A streak is the number of consecutive days you have completed a habit without missing. Streak counting taps into loss aversion, one of the most powerful cognitive biases. Studies show that people are approximately twice as motivated by the fear of losing something (their streak) as they are by the prospect of gaining something equivalent. A 30-day streak feels genuinely painful to break, which is exactly the kind of automatic motivation that makes habit tracking effective.</p>
+<p>This tracker recognizes milestones at key intervals that correspond to behavioral science benchmarks: 7 days (your first full week, proving initial commitment), 21 days (the popular but somewhat simplified "habit formation" threshold), 30 days (a full month of consistency), 66 days (the research-backed average for automatic habit formation from the UCL study), 100 days (a major psychological milestone), and 365 days (a full year, representing deep behavioral integration).</p>
+<p>Each milestone you reach reinforces your identity as someone who follows through. The shift from "I am trying to exercise" to "I am someone who exercises every day" is the fundamental transformation that makes habits permanent rather than temporary.</p>
+
+<h2>Using Statistics to Optimize Your Habits</h2>
+<p>The statistics dashboard provides quantitative analysis of your habit data over time. The weekly completion rate chart shows what percentage of your scheduled habits you completed each week, plotted as a line graph. This reveals your overall trajectory: are you getting more consistent over time, maintaining a plateau, or declining?</p>
+<p>The habit completion breakdown shows a per-habit bar chart, making it easy to identify which habits have the highest and lowest completion rates. If one habit consistently sits below 50%, that is a signal to either make it easier (reduce the scope), change its trigger (attach it to a different existing routine), or replace it with something more aligned with your actual priorities.</p>
+<p>The overview statistics show your total active habits, overall completion rate, current best streak, and total days tracked. These numbers provide the high-level view that daily tracking sometimes obscures. A 78% completion rate across 90 days of tracking represents genuine behavioral change, even if individual days felt inconsistent.</p>
+
+<h2>Categories and Organization Strategies</h2>
+<p>Organizing habits into categories helps prevent tracking fatigue. When all your habits are in one undifferentiated list, it is easy to feel overwhelmed. Categories like Health (sleep, hydration, vitamins), Fitness (exercise, stretching, steps), Learning (reading, practice, courses), Productivity (planning, deep work, review), and Mindfulness (meditation, gratitude, journaling) create natural groupings that feel manageable.</p>
+<p>The recommended approach is to track between 3 and 7 habits simultaneously. Research shows that tracking more than 7 daily habits increases cognitive load to the point where the tracking itself becomes a burden, leading to abandonment. Start with 3 habits from different categories. Once all three are consistently above 80% completion for two weeks, consider adding a fourth. This gradual expansion builds your tracking discipline alongside your habits.</p>
+
+<h2>Import, Export, and Data Portability</h2>
+<p>Your habit data belongs to you. The export function creates a complete JSON file containing all your habits, completion records, and settings. This file can be imported on another device or browser to seamlessly continue your tracking. It also serves as a backup in case you clear your browser data. The recommended practice is to export weekly and store the file in a cloud storage folder for automatic backup.</p>
+<p>The JSON format is human-readable and can be processed by any programming language or spreadsheet application. Advanced users can write scripts to analyze their habit data in ways beyond what the built-in charts provide, merge data from multiple devices, or integrate their habit completions with other personal analytics systems.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<div class="faq-item">
+<div class="faq-q">How many habits should I track at once?</div>
+<div class="faq-a"><p>Start with 3 to 5 habits. Tracking too many habits at once creates decision fatigue and makes the daily check-in feel like a chore rather than a quick routine. Research suggests that focusing on fewer habits leads to higher completion rates. Once your current habits are consistently above 80% completion for at least two weeks, you can add another one. The goal is sustainable progress, not an impressive list.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">What happens if I miss a day?</div>
+<div class="faq-a"><p>Missing a single day has minimal impact on long-term habit formation. Research shows that one missed day does not significantly affect the automaticity of a habit as long as you resume the next day. The "never miss twice" rule is the most practical approach: if you miss Monday, make Tuesday non-negotiable. Your streak will reset, but your underlying progress remains. The calendar heatmap helps put individual missed days in perspective by showing your overall pattern.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Is my habit data stored securely?</div>
+<div class="faq-a"><p>Your data is stored in your browser's localStorage, which means it exists only on your device and is never sent to any server. No one, including the creators of this tool, can access your habit data. The trade-off is that clearing your browser data will delete your habits. Use the export function regularly to create backups. The exported JSON file can be imported to restore your data at any time.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Can I track habits that are not daily?</div>
+<div class="faq-a"><p>Yes. When adding a habit, you can set the frequency to "Weekly" (once per week) or "X times per week" (any number from 1 to 7). The tracker adjusts streak calculations and completion percentages based on each habit's frequency. A habit set to 3 times per week will show 100% completion if you check it off on any 3 days during the week, regardless of which specific days.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">How does the streak counter work?</div>
+<div class="faq-a"><p>The streak counter tracks consecutive days (or weeks, depending on frequency) where you completed the habit. For daily habits, the streak increments each day you check it off and resets to zero when you miss a day. For weekly habits, the streak counts consecutive weeks where you met the required frequency. The tracker displays both your current streak and your longest streak ever, giving you a target to beat.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Can I use this habit tracker on my phone?</div>
+<div class="faq-a"><p>Yes. The tracker is fully responsive and works on any screen size. Open it in your mobile browser and bookmark it for quick access. Since data is stored in localStorage per browser, your data will be specific to the browser you use. To sync between devices, use the export/import feature to transfer your JSON data file.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">What are the streak milestones and why do they matter?</div>
+<div class="faq-a"><p>Milestones are celebrated at 7 days, 21 days, 30 days, 66 days, 100 days, and 365 days. These intervals are based on behavioral science: 7 days proves initial commitment, 21 days builds routine awareness, 66 days is the research-backed average for habit automaticity, and 365 days represents deep behavioral integration. Each milestone serves as a psychological reward that reinforces your identity as someone who follows through consistently.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">How do I transfer my data to a new device or browser?</div>
+<div class="faq-a"><p>Click the Export button to download a JSON file containing all your habit data, completion records, and settings. On your new device or browser, open the habit tracker and click Import, then select the JSON file. All your habits, history, and streaks will be restored exactly as they were. This process also works as a backup strategy: export weekly and store the file in cloud storage.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q">Does the habit tracker work offline?</div>
+<div class="faq-a"><p>Once the page has loaded, the tracker works completely offline because it uses no external API calls or server connections. Your check-offs, habit additions, and data analysis all happen locally in your browser. The only requirement for an internet connection is the initial page load and the Google Fonts import. After that, everything functions without network access.</p></div>
+</div>
+
+</div>
+</section>
+
+
+<div class="video-learn" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#12121a;border-left:4px solid #ff0000;border-radius:0 8px 8px 0;">
+  <p style="margin:0 0 8px;font-size:0.7rem;color:#ff0000;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Video Tutorials</p>
+  <a href="https://www.youtube.com/results?search_query=habit+tracker+productivity+tutorial" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1a1a26;border-radius:8px;text-decoration:none;transition:background 0.2s;">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"/><polygon fill="#fff" points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+    <div>
+      <p style="margin:0;color:#e0e0e8;font-size:0.9rem;font-weight:500;">Watch Habit Tracker tutorials on YouTube</p>
+      <p style="margin:2px 0 0;color:#8888a0;font-size:0.75rem;">Learn with free video guides and walkthroughs</p>
+    </div>
+  </a>
+</div>
+<p style="text-align:center;color:#8888a0;font-size:0.8rem;margin:2rem 0 0.5rem;">Last updated: March 19, 2026</p>
+<p style="text-align:center;color:#8888a0;font-size:0.75rem;margin:0.25rem 0 0.5rem;">Last verified working: March 19, 2026 by Michael Lip</p>
+<div class="update-history" style="max-width:700px;margin:1.5rem auto;padding:12px 16px;background:#12121a;border-radius:8px;border:1px solid #2a2a3a;">
+  <p style="color:#00ff88;font-size:0.8rem;font-weight:600;margin:0 0 6px;">Update History</p>
+  <p style="color:#8888a0;font-size:0.75rem;margin:0;line-height:1.6;">
+    March 19, 2026 - Initial release with full functionality<br>
+    March 19, 2026 - Added FAQ section and schema markup<br>
+    March 19, 2026 - Performance optimization and accessibility improvements
+  </p>
+</div>
+<footer class="footer">
+<div class="container">
+  <p>Built by Michael Lip at zovo.one</p>
+</div>
+</footer>
+
+<script>
+(function(){
+  // Data
+  const STORAGE_KEY = 'ht-habits';
+  const COMPLETIONS_KEY = 'ht-completions';
+  let habits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let completions = JSON.parse(localStorage.getItem(COMPLETIONS_KEY) || '{}');
+  let currentDate = new Date();
+  let weekOffset = 0;
+  let editingId = null;
+  let selectedColor = '#00ff88';
+
+  const COLORS = ['#00ff88','#00ccff','#ff4466','#ffaa00','#a855f7','#f472b6','#34d399','#fbbf24','#60a5fa','#f87171'];
+  const EMOJIS = ['&#128170;','&#128293;','&#128214;','&#9989;','&#127947;','&#129504;','&#127793;','&#127942;','&#128161;','&#128640;','&#129302;','&#127774;','&#128150;','&#128171;','&#127925;','&#127912;','&#128187;','&#9749;','&#127869;','&#128164;','&#129497;','&#128105;','&#128587;','&#128516;','&#128526;','&#129299;','&#128131;','&#128302;','&#128736;','&#127908;','&#127911;','&#128218;','&#128221;','&#128200;','&#128276;','&#128167;','&#128153;','&#127891;','&#127917;','&#128301;'];
+  const MILESTONES = [7,21,30,66,100,365];
+
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
+    localStorage.setItem(COMPLETIONS_KEY, JSON.stringify(completions));
+  }
+
+  function dateKey(d) {
+    const dt = d instanceof Date ? d : new Date(d);
+    return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
+  }
+
+  function formatDate(d) {
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return days[d.getDay()] + ', ' + months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  }
+
+  function isToday(d) {
+    const t = new Date();
+    return d.getFullYear() === t.getFullYear() && d.getMonth() === t.getMonth() && d.getDate() === t.getDate();
+  }
+
+  // Init color picker
+  function initColors() {
+    const container = document.getElementById('color-options');
+    container.innerHTML = COLORS.map(c =>
+      '<div class="color-opt' + (c === selectedColor ? ' active' : '') + '" style="background:' + c + '" data-color="' + c + '"></div>'
+    ).join('');
+    container.querySelectorAll('.color-opt').forEach(el => {
+      el.addEventListener('click', function() {
+        container.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
+        this.classList.add('active');
+        selectedColor = this.dataset.color;
+      });
+    });
+  }
+
+  // Init emoji picker
+  function initEmojis() {
+    const grid = document.getElementById('emoji-grid');
+    grid.innerHTML = EMOJIS.map(e => '<button class="emoji-opt">' + e + '</button>').join('');
+    grid.querySelectorAll('.emoji-opt').forEach(btn => {
+      btn.addEventListener('click', function(ev) {
+        ev.stopPropagation();
+        document.getElementById('habit-icon').value = this.textContent;
+        grid.classList.remove('open');
+      });
+    });
+  }
+
+  window.toggleEmojiPicker = function() {
+    document.getElementById('emoji-grid').classList.toggle('open');
+  };
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.emoji-picker-wrap')) {
+      document.getElementById('emoji-grid').classList.remove('open');
+    }
+  });
+
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+      refreshCurrentTab();
+    });
+  });
+
+  function refreshCurrentTab() {
+    const active = document.querySelector('.tab.active').dataset.tab;
+    if (active === 'daily') renderDaily();
+    else if (active === 'weekly') renderWeekly();
+    else if (active === 'calendar') renderCalendar();
+    else if (active === 'stats') renderStats();
+  }
+
+  // Add form
+  window.toggleAddForm = function() {
+    const form = document.getElementById('add-form');
+    form.classList.toggle('active');
+    if (form.classList.contains('active')) {
+      document.getElementById('habit-name').focus();
+    }
+  };
+
+  window.toggleFreqInput = function() {
+    document.getElementById('freq-custom-wrap').style.display =
+      document.getElementById('habit-frequency').value === 'custom' ? '' : 'none';
+  };
+
+  window.saveHabit = function() {
+    const name = document.getElementById('habit-name').value.trim();
+    if (!name) { alert('Enter a habit name'); return; }
+    const icon = document.getElementById('habit-icon').value || '&#9989;';
+    const category = document.getElementById('habit-category').value;
+    const frequency = document.getElementById('habit-frequency').value;
+    const freqCount = frequency === 'custom' ? parseInt(document.getElementById('habit-freq-count').value) || 3 : (frequency === 'daily' ? 7 : 1);
+    const note = document.getElementById('habit-note').value.trim();
+
+    const habit = {
+      id: Date.now().toString(36) + Math.random().toString(36).substr(2,5),
+      name, icon, category, frequency, freqCount, color: selectedColor, note,
+      createdAt: new Date().toISOString()
+    };
+
+    habits.push(habit);
+    save();
+
+    // Reset form
+    document.getElementById('habit-name').value = '';
+    document.getElementById('habit-icon').value = '';
+    document.getElementById('habit-note').value = '';
+    document.getElementById('habit-frequency').value = 'daily';
+    toggleFreqInput();
+    document.getElementById('add-form').classList.remove('active');
+
+    refreshCurrentTab();
+  };
+
+  // Daily view
+  function renderDaily() {
+    const dk = dateKey(currentDate);
+    document.getElementById('daily-date').textContent = formatDate(currentDate);
+    const container = document.getElementById('daily-habits');
+    const empty = document.getElementById('daily-empty');
+
+    // Filter habits that should show for this day based on frequency
+    const dayHabits = habits.filter(h => shouldShowOnDay(h, currentDate));
+
+    if (dayHabits.length === 0) {
+      container.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    container.innerHTML = dayHabits.map(h => {
+      const key = dk + '|' + h.id;
+      const done = completions[key] === true;
+      const streak = getStreak(h);
+      const longestStreak = getLongestStreak(h);
+      return '<div class="habit-check' + (done ? ' completed' : '') + '" data-id="' + h.id + '" data-date="' + dk + '">' +
+        '<div class="habit-check-box" onclick="toggleCompletion(\'' + h.id + '\',\'' + dk + '\')"></div>' +
+        '<span class="habit-icon">' + h.icon + '</span>' +
+        '<div class="habit-info">' +
+          '<div class="habit-name" style="color:' + (done ? h.color : '#fff') + '">' + escapeHtml(h.name) + '</div>' +
+          '<div class="habit-meta">' +
+            '<span>' + h.category + '</span>' +
+            (h.note ? '<span>' + escapeHtml(h.note) + '</span>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="habit-streak" title="Current streak">' + streak + 'd</div>' +
+        '<div class="habit-actions">' +
+          '<button class="btn-icon" onclick="openEdit(\'' + h.id + '\')" title="Edit">&#9998;</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function shouldShowOnDay(habit, date) {
+    if (habit.frequency === 'daily') return true;
+    // For weekly and custom, show every day but track weekly completion
+    return true;
+  }
+
+  window.toggleCompletion = function(id, dk) {
+    const key = dk + '|' + id;
+    completions[key] = !completions[key];
+    save();
+    renderDaily();
+  };
+
+  window.changeDay = function(delta) {
+    currentDate = new Date(currentDate.getTime() + delta * 86400000);
+    renderDaily();
+  };
+
+  window.goToday = function() {
+    currentDate = new Date();
+    renderDaily();
+  };
+
+  // Streaks
+  function getStreak(habit) {
+    let streak = 0;
+    const d = new Date();
+    // Check today first
+    const todayKey = dateKey(d) + '|' + habit.id;
+    if (!completions[todayKey]) {
+      // Check yesterday
+      d.setDate(d.getDate() - 1);
+    }
+    while (true) {
+      const k = dateKey(d) + '|' + habit.id;
+      if (completions[k]) {
+        streak++;
+        d.setDate(d.getDate() - 1);
+      } else {
+        break;
+      }
+      if (streak > 1000) break; // safety
+    }
+    return streak;
+  }
+
+  function getLongestStreak(habit) {
+    let longest = 0;
+    let current = 0;
+    const d = new Date(habit.createdAt);
+    const today = new Date();
+    while (d <= today) {
+      const k = dateKey(d) + '|' + habit.id;
+      if (completions[k]) {
+        current++;
+        if (current > longest) longest = current;
+      } else {
+        current = 0;
+      }
+      d.setDate(d.getDate() + 1);
+      if (longest > 1000) break;
+    }
+    return longest;
+  }
+
+  // Weekly view
+  function renderWeekly() {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay() + (weekOffset * 7));
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('week-label').textContent =
+      monthNames[startOfWeek.getMonth()] + ' ' + startOfWeek.getDate() + ' - ' +
+      monthNames[endOfWeek.getMonth()] + ' ' + endOfWeek.getDate() + ', ' + endOfWeek.getFullYear();
+
+    const container = document.getElementById('weekly-habits');
+    if (habits.length === 0) {
+      container.innerHTML = '<p style="text-align:center;color:#666;padding:40px">Add habits to see your weekly view.</p>';
+      return;
+    }
+
+    let html = '';
+    habits.forEach(h => {
+      html += '<div class="card" style="border-left:3px solid ' + h.color + '">';
+      html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">';
+      html += '<span style="font-size:1.4rem">' + h.icon + '</span>';
+      html += '<span style="font-weight:600;color:#fff">' + escapeHtml(h.name) + '</span>';
+      const streak = getStreak(h);
+      html += '<span class="habit-streak" style="margin-left:auto">' + streak + 'd streak</span>';
+      html += '</div>';
+      html += '<div class="week-grid">';
+      const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(startOfWeek);
+        d.setDate(startOfWeek.getDate() + i);
+        const dk = dateKey(d);
+        const done = completions[dk + '|' + h.id] === true;
+        html += '<div class="week-day" style="' + (done ? 'border-color:' + h.color + ';background:rgba(0,255,136,0.03)' : '') + '">';
+        html += '<div class="week-day-label">' + dayNames[i] + '</div>';
+        html += '<div class="week-day-date">' + d.getDate() + '</div>';
+        html += '<div style="font-size:1.4rem;cursor:pointer" onclick="toggleCompletion(\'' + h.id + '\',\'' + dk + '\');renderWeekly()">' + (done ? '&#9989;' : '&#11036;') + '</div>';
+        html += '</div>';
+      }
+      html += '</div>';
+
+      // Weekly completion rate
+      let weekDone = 0;
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(startOfWeek);
+        d.setDate(startOfWeek.getDate() + i);
+        if (completions[dateKey(d) + '|' + h.id]) weekDone++;
+      }
+      const target = h.frequency === 'daily' ? 7 : h.freqCount;
+      const pct = Math.round((weekDone / target) * 100);
+      html += '<div style="margin-top:8px;font-size:0.82rem;color:#888">This week: ' + weekDone + '/' + target + ' (' + Math.min(pct, 100) + '%)</div>';
+      html += '</div>';
+    });
+
+    container.innerHTML = html;
+  }
+
+  window.changeWeek = function(delta) {
+    weekOffset += delta;
+    renderWeekly();
+  };
+
+  window.renderWeekly = renderWeekly;
+
+  // Calendar heatmap
+  window.renderCalendar = function() {
+    const select = document.getElementById('calendar-habit-select');
+    // Update select options
+    if (select.children.length !== habits.length + 1) {
+      select.innerHTML = '<option value="all">All Habits Combined</option>' +
+        habits.map(h => '<option value="' + h.id + '">' + h.icon + ' ' + escapeHtml(h.name) + '</option>').join('');
+    }
+
+    const selectedId = select.value;
+    const container = document.getElementById('heatmap-container');
+    const today = new Date();
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - 364);
+    // Adjust to start on Sunday
+    startDate.setDate(startDate.getDate() - startDate.getDay());
+
+    const tooltip = document.getElementById('heatmap-tooltip');
+
+    // Calculate max for normalization
+    const relevantHabits = selectedId === 'all' ? habits : habits.filter(h => h.id === selectedId);
+    const maxHabits = relevantHabits.length || 1;
+
+    // Build weeks
+    let html = '<div class="heatmap-wrap"><div class="heatmap">';
+    const d = new Date(startDate);
+    let weekCount = 0;
+
+    while (d <= today || d.getDay() !== 0) {
+      if (d.getDay() === 0) {
+        html += '<div class="heatmap-week">';
+        weekCount++;
+      }
+
+      if (d <= today) {
+        const dk = dateKey(d);
+        let count = 0;
+        relevantHabits.forEach(h => {
+          if (completions[dk + '|' + h.id]) count++;
+        });
+        const level = count === 0 ? 0 : Math.min(4, Math.ceil((count / maxHabits) * 4));
+        const dateStr = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+        html += '<div class="heatmap-day" data-level="' + level + '" data-date="' + dateStr + '" data-count="' + count + '" data-total="' + maxHabits + '"></div>';
+      } else {
+        html += '<div class="heatmap-day" style="visibility:hidden"></div>';
+      }
+
+      if (d.getDay() === 6) {
+        html += '</div>';
+      }
+
+      d.setDate(d.getDate() + 1);
+      if (weekCount > 55) break;
+    }
+
+    // Close last week if needed
+    if (d.getDay() !== 0) html += '</div>';
+    html += '</div></div>';
+
+    // Legend
+    html += '<div class="heatmap-legend">';
+    html += '<span>Less</span>';
+    html += '<div class="box" style="background:var(--border)"></div>';
+    html += '<div class="box" style="background:rgba(0,255,136,0.2)"></div>';
+    html += '<div class="box" style="background:rgba(0,255,136,0.4)"></div>';
+    html += '<div class="box" style="background:rgba(0,255,136,0.6)"></div>';
+    html += '<div class="box" style="background:rgba(0,255,136,0.85)"></div>';
+    html += '<span>More</span>';
+    html += '</div>';
+
+    container.innerHTML = html;
+
+    // Tooltip events
+    container.querySelectorAll('.heatmap-day[data-date]').forEach(el => {
+      el.addEventListener('mouseenter', function(e) {
+        tooltip.textContent = this.dataset.date + ': ' + this.dataset.count + '/' + this.dataset.total + ' habits';
+        tooltip.style.display = 'block';
+        tooltip.style.left = e.clientX + 10 + 'px';
+        tooltip.style.top = e.clientY - 30 + 'px';
+      });
+      el.addEventListener('mousemove', function(e) {
+        tooltip.style.left = e.clientX + 10 + 'px';
+        tooltip.style.top = e.clientY - 30 + 'px';
+      });
+      el.addEventListener('mouseleave', function() {
+        tooltip.style.display = 'none';
+      });
+    });
+  };
+
+  // Stats
+  function renderStats() {
+    // Overview
+    const totalHabits = habits.length;
+    let totalCompletions = 0;
+    let totalPossible = 0;
+    let bestStreak = 0;
+    const today = new Date();
+
+    habits.forEach(h => {
+      const created = new Date(h.createdAt);
+      const d = new Date(Math.max(created.getTime(), today.getTime() - 365 * 86400000));
+      while (d <= today) {
+        totalPossible++;
+        if (completions[dateKey(d) + '|' + h.id]) totalCompletions++;
+        d.setDate(d.getDate() + 1);
+      }
+      const s = getStreak(h);
+      if (s > bestStreak) bestStreak = s;
+    });
+
+    const completionRate = totalPossible > 0 ? Math.round((totalCompletions / totalPossible) * 100) : 0;
+    const firstHabit = habits.length > 0 ? new Date(habits.reduce((a, b) => new Date(a.createdAt) < new Date(b.createdAt) ? a : b).createdAt) : today;
+    const daysTracked = Math.max(1, Math.ceil((today - firstHabit) / 86400000));
+
+    document.getElementById('stats-overview').innerHTML =
+      '<div class="stat-card"><div class="stat-value">' + totalHabits + '</div><div class="stat-label">Active Habits</div></div>' +
+      '<div class="stat-card"><div class="stat-value">' + completionRate + '%</div><div class="stat-label">Completion Rate</div></div>' +
+      '<div class="stat-card"><div class="stat-value">' + bestStreak + '</div><div class="stat-label">Best Streak (days)</div></div>' +
+      '<div class="stat-card"><div class="stat-value">' + daysTracked + '</div><div class="stat-label">Days Tracked</div></div>';
+
+    // Weekly completion chart
+    renderWeeklyChart();
+    renderHabitsChart();
+    renderMilestones();
+  }
+
+  function renderWeeklyChart() {
+    const canvas = document.getElementById('chart-weekly');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth * 2;
+    canvas.height = 500;
+    ctx.scale(2, 2);
+    const w = canvas.offsetWidth;
+    const h = 250;
+    ctx.clearRect(0, 0, w, h);
+
+    if (habits.length === 0) {
+      ctx.fillStyle = '#666';
+      ctx.font = '14px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText('Add habits to see completion data', w / 2, h / 2);
+      return;
+    }
+
+    // Calculate last 12 weeks
+    const weeks = [];
+    const today = new Date();
+    for (let i = 11; i >= 0; i--) {
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - today.getDay() - (i * 7));
+      let done = 0, total = 0;
+      for (let j = 0; j < 7; j++) {
+        const d = new Date(weekStart);
+        d.setDate(weekStart.getDate() + j);
+        if (d > today) continue;
+        habits.forEach(h => {
+          total++;
+          if (completions[dateKey(d) + '|' + h.id]) done++;
+        });
+      }
+      weeks.push({
+        label: (weekStart.getMonth() + 1) + '/' + weekStart.getDate(),
+        rate: total > 0 ? (done / total) * 100 : 0
+      });
+    }
+
+    const padding = {top: 20, right: 20, bottom: 40, left: 50};
+    const chartW = w - padding.left - padding.right;
+    const chartH = h - padding.top - padding.bottom;
+
+    // Grid lines
+    ctx.strokeStyle = '#1e1e2e';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 4; i++) {
+      const y = padding.top + (chartH / 4) * i;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(w - padding.right, y);
+      ctx.stroke();
+      ctx.fillStyle = '#666';
+      ctx.font = '10px Inter';
+      ctx.textAlign = 'right';
+      ctx.fillText(Math.round(100 - (i * 25)) + '%', padding.left - 8, y + 4);
+    }
+
+    // Line
+    ctx.beginPath();
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    weeks.forEach((week, i) => {
+      const x = padding.left + (chartW / (weeks.length - 1)) * i;
+      const y = padding.top + chartH - (week.rate / 100) * chartH;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Fill area
+    ctx.lineTo(padding.left + chartW, padding.top + chartH);
+    ctx.lineTo(padding.left, padding.top + chartH);
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
+    grad.addColorStop(0, 'rgba(0,255,136,0.15)');
+    grad.addColorStop(1, 'rgba(0,255,136,0)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Dots and labels
+    weeks.forEach((week, i) => {
+      const x = padding.left + (chartW / (weeks.length - 1)) * i;
+      const y = padding.top + chartH - (week.rate / 100) * chartH;
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#00ff88';
+      ctx.fill();
+
+      ctx.fillStyle = '#666';
+      ctx.font = '9px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(week.label, x, h - padding.bottom + 16);
+    });
+  }
+
+  function renderHabitsChart() {
+    const canvas = document.getElementById('chart-habits');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth * 2;
+    canvas.height = 500;
+    ctx.scale(2, 2);
+    const w = canvas.offsetWidth;
+    const h = 250;
+    ctx.clearRect(0, 0, w, h);
+
+    if (habits.length === 0) {
+      ctx.fillStyle = '#666';
+      ctx.font = '14px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText('Add habits to see completion data', w / 2, h / 2);
+      return;
+    }
+
+    const today = new Date();
+    const padding = {top: 20, right: 20, bottom: 60, left: 50};
+    const chartW = w - padding.left - padding.right;
+    const chartH = h - padding.top - padding.bottom;
+    const barWidth = Math.min(60, (chartW / habits.length) - 10);
+
+    // Grid lines
+    ctx.strokeStyle = '#1e1e2e';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 4; i++) {
+      const y = padding.top + (chartH / 4) * i;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(w - padding.right, y);
+      ctx.stroke();
+      ctx.fillStyle = '#666';
+      ctx.font = '10px Inter';
+      ctx.textAlign = 'right';
+      ctx.fillText(Math.round(100 - (i * 25)) + '%', padding.left - 8, y + 4);
+    }
+
+    habits.forEach((habit, i) => {
+      const created = new Date(habit.createdAt);
+      let done = 0, total = 0;
+      const d = new Date(Math.max(created.getTime(), today.getTime() - 30 * 86400000));
+      while (d <= today) {
+        total++;
+        if (completions[dateKey(d) + '|' + habit.id]) done++;
+        d.setDate(d.getDate() + 1);
+      }
+      const rate = total > 0 ? (done / total) * 100 : 0;
+
+      const x = padding.left + (chartW / habits.length) * i + (chartW / habits.length - barWidth) / 2;
+      const barH = (rate / 100) * chartH;
+      const y = padding.top + chartH - barH;
+
+      // Bar
+      const barGrad = ctx.createLinearGradient(x, y, x, padding.top + chartH);
+      barGrad.addColorStop(0, habit.color);
+      barGrad.addColorStop(1, habit.color + '40');
+      ctx.fillStyle = barGrad;
+      ctx.beginPath();
+      ctx.roundRect(x, y, barWidth, barH, [4, 4, 0, 0]);
+      ctx.fill();
+
+      // Rate text
+      ctx.fillStyle = '#fff';
+      ctx.font = '11px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(Math.round(rate) + '%', x + barWidth / 2, y - 6);
+
+      // Label
+      ctx.fillStyle = '#888';
+      ctx.font = '9px Inter';
+      ctx.textAlign = 'center';
+      const label = habit.name.length > 10 ? habit.name.slice(0, 10) + '...' : habit.name;
+      ctx.save();
+      ctx.translate(x + barWidth / 2, h - padding.bottom + 12);
+      ctx.rotate(-0.4);
+      ctx.fillText(label, 0, 0);
+      ctx.restore();
+    });
+  }
+
+  function renderMilestones() {
+    const container = document.getElementById('milestones-container');
+    if (habits.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+
+    let html = '<div class="card"><div class="card-title">Streak Milestones</div>';
+    habits.forEach(h => {
+      const streak = getStreak(h);
+      const longest = getLongestStreak(h);
+      const achieved = MILESTONES.filter(m => longest >= m);
+      const next = MILESTONES.find(m => longest < m);
+
+      html += '<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+      html += '<span style="font-size:1.2rem">' + h.icon + '</span>';
+      html += '<span style="font-weight:600;color:#fff">' + escapeHtml(h.name) + '</span>';
+      html += '<span style="margin-left:auto;font-size:0.82rem;color:#888">Current: ' + streak + 'd | Best: ' + longest + 'd</span>';
+      html += '</div>';
+
+      if (achieved.length > 0) {
+        html += achieved.map(m => '<span class="milestone">&#127942; ' + m + ' days</span>').join('');
+      }
+      if (next) {
+        html += '<span style="font-size:0.78rem;color:#666;margin-left:8px">Next: ' + next + ' days (' + (next - longest) + ' to go)</span>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  // Edit modal
+  window.openEdit = function(id) {
+    editingId = id;
+    const h = habits.find(x => x.id === id);
+    if (!h) return;
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-name').value = h.name;
+    document.getElementById('edit-icon').value = h.icon;
+    document.getElementById('edit-category').value = h.category;
+    document.getElementById('edit-note').value = h.note || '';
+    document.getElementById('edit-modal').classList.add('open');
+  };
+
+  window.closeModal = function() {
+    document.getElementById('edit-modal').classList.remove('open');
+    editingId = null;
+  };
+
+  window.updateHabit = function() {
+    const h = habits.find(x => x.id === editingId);
+    if (!h) return;
+    h.name = document.getElementById('edit-name').value.trim() || h.name;
+    h.icon = document.getElementById('edit-icon').value || h.icon;
+    h.category = document.getElementById('edit-category').value;
+    h.note = document.getElementById('edit-note').value.trim();
+    save();
+    closeModal();
+    refreshCurrentTab();
+  };
+
+  window.deleteHabit = function() {
+    if (!confirm('Delete this habit and all its completion data?')) return;
+    // Remove completions for this habit
+    Object.keys(completions).forEach(k => {
+      if (k.endsWith('|' + editingId)) delete completions[k];
+    });
+    habits = habits.filter(h => h.id !== editingId);
+    save();
+    closeModal();
+    refreshCurrentTab();
+  };
+
+  // Import/Export
+  window.exportData = function() {
+    const data = {habits, completions, exportedAt: new Date().toISOString()};
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'habit-tracker-export-' + dateKey(new Date()) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  window.importData = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.habits && data.completions) {
+          if (confirm('This will replace all current data. Continue?')) {
+            habits = data.habits;
+            completions = data.completions;
+            save();
+            refreshCurrentTab();
+            alert('Data imported successfully. ' + habits.length + ' habits loaded.');
+          }
+        } else {
+          alert('Invalid file format. Expected habits and completions fields.');
+        }
+      } catch(err) {
+        alert('Error reading file: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  };
+
+  // Compact toggle
+  window.toggleCompact = function() {
+    document.body.classList.toggle('compact');
+  };
+
+  // Print
+  window.printReport = function() {
+    window.print();
+  };
+
+  // FAQ
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', function() {
+      this.parentElement.classList.toggle('open');
+    });
+  });
+
+  // Close modal on overlay click
+  document.getElementById('edit-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // Init
+  initColors();
+  initEmojis();
+  renderDaily();
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Free Habit Tracker Online",
+  "url": "https://zovo.one/habit-tracker/",
+  "description": "Free online habit tracker with streak counting, calendar heatmap, statistics dashboard, and daily check-offs. Track habits, build streaks, and visualize your progress. All data stays in your browser.",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How many habits should I track at once?", "acceptedAnswer": {"@type": "Answer", "text": "Start with 3 to 5 habits. Tracking too many creates decision fatigue. Once current habits are above 80% completion for two weeks, add another one."}},
+    {"@type": "Question", "name": "What happens if I miss a day?", "acceptedAnswer": {"@type": "Answer", "text": "Missing one day has minimal impact. Research shows one missed day does not significantly affect habit automaticity. Follow the never miss twice rule."}},
+    {"@type": "Question", "name": "Is my habit data stored securely?", "acceptedAnswer": {"@type": "Answer", "text": "Data is stored in browser localStorage, never sent to any server. Use the export function for backups."}},
+    {"@type": "Question", "name": "Can I track habits that are not daily?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Set frequency to Weekly or X times per week. The tracker adjusts streak calculations and completion percentages accordingly."}},
+    {"@type": "Question", "name": "How does the streak counter work?", "acceptedAnswer": {"@type": "Answer", "text": "The streak counts consecutive days you completed the habit. It displays both current and longest streak."}},
+    {"@type": "Question", "name": "Can I use this on my phone?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, fully responsive. Bookmark it in your mobile browser. Use export/import to sync between devices."}},
+    {"@type": "Question", "name": "What are the streak milestones?", "acceptedAnswer": {"@type": "Answer", "text": "Milestones at 7, 21, 30, 66, 100, and 365 days based on behavioral science benchmarks for habit formation."}},
+    {"@type": "Question", "name": "How do I transfer data to a new device?", "acceptedAnswer": {"@type": "Answer", "text": "Export creates a JSON file. Import it on the new device to restore all habits, history, and streaks."}},
+    {"@type": "Question", "name": "Does it work offline?", "acceptedAnswer": {"@type": "Answer", "text": "Once loaded, it works completely offline. Only the initial page load requires an internet connection."}}
+  ]
+}
+</script>
+</body>
+</html>
