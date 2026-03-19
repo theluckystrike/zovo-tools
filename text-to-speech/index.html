@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text to Speech Online - Free TTS Reader | Zovo Tools</title>
+<meta name="description" content="Convert text to speech online for free. Choose from 100+ voices and languages, adjust speed, pitch, and volume. No signup required, works in your browser.">
+<meta name="keywords" content="text to speech, TTS, read aloud, speech synthesis, voice reader, text reader, free TTS, online text to speech">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/text-to-speech">
+
+<meta property="og:title" content="Text to Speech Online - Free TTS Reader | Zovo Tools">
+<meta property="og:description" content="Convert text to speech online for free. Choose from 100+ voices and languages, adjust speed and pitch. Private and no tracking.">
+<meta property="og:url" content="https://tools.zovo.one/text-to-speech">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Text to Speech Online - Free TTS Reader | Zovo Tools">
+<meta name="twitter:description" content="Convert text to speech online for free. Choose from 100+ voices and languages, adjust speed and pitch. Private and no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Text to Speech Online",
+  "description": "Convert text to speech online for free using the Web Speech API. Choose from hundreds of voices and languages, adjust speed, pitch, and volume.",
+  "url": "https://tools.zovo.one/text-to-speech",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Zovo",
+    "url": "https://zovo.one"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this text to speech tool free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, this text to speech tool is completely free. It uses your browser's built-in speech synthesis capabilities, so there are no costs, subscriptions, or usage limits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What voices and languages are available?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The available voices depend on your browser and operating system. Most modern browsers offer dozens of voices across many languages including English, Spanish, French, German, Japanese, Chinese, and more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this tool store or send my text anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. All text processing happens locally in your browser using the Web Speech API. Your text is never sent to any server, stored, or tracked in any way."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do some voices sound more natural than others?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Voice quality depends on your operating system and browser. Some systems include premium neural voices that sound very natural, while others use older synthesized voices. macOS and iOS typically have the most natural-sounding options."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I adjust the speed and pitch of the voice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You can adjust the speaking rate from 0.5x to 3x normal speed, the pitch from 0 to 2, and the volume from 0 to 1. These controls let you fine-tune the output to your preference."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a character limit for the text input?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no hard limit in the tool itself. However, some browsers (particularly Chrome) have a limit on how much text can be spoken at once. This tool automatically breaks long texts into smaller chunks to work around that limitation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does word highlighting work in all browsers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Word highlighting relies on the SpeechSynthesis boundary event, which is supported in most modern browsers. Chrome, Edge, and Safari generally support it well. Some voices may not fire boundary events, in which case highlighting will not appear."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use this tool on mobile devices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, this tool works on mobile browsers that support the Web Speech API. Most modern mobile browsers on Android and iOS support speech synthesis, though the available voices may differ from desktop."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --border: #1e1e2e;
+  --accent: #00ff88;
+  --accent-dim: rgba(0, 255, 136, 0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e0;
+  --text-muted: #888;
+  --text-bright: #ffffff;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+header {
+  padding: 40px 0 30px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+header .badge {
+  display: inline-block;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 12px;
+}
+
+header p {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.tool-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin: 30px 0;
+}
+
+.tool-section h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 16px;
+}
+
+.textarea-wrap {
+  position: relative;
+}
+
+#tts-text {
+  width: 100%;
+  min-height: 180px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  padding: 16px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+#tts-text:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.char-count {
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.highlight-overlay {
+  width: 100%;
+  min-height: 180px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  padding: 16px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  display: none;
+  color: var(--text);
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.highlight-overlay .hl-word {
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .controls-grid { grid-template-columns: 1fr; }
+  header h1 { font-size: 1.6rem; }
+}
+
+.control-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.control-group select,
+.control-group input[type="range"] {
+  width: 100%;
+}
+
+select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+select:focus { outline: none; border-color: var(--accent); }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  outline: none;
+  margin-top: 8px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+}
+
+.slider-value {
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-top: 4px;
+  text-align: right;
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 12px 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn-primary:hover { background: var(--accent-hover); }
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover { background: #2a2a3e; }
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.status-dot.playing {
+  background: var(--accent);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.status-dot.paused { background: #ffaa00; }
+.status-dot.stopped { background: var(--text-muted); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.quick-phrases {
+  margin-top: 16px;
+}
+
+.quick-phrases h3 {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.phrase-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.phrase-chip {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.phrase-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.content-section {
+  padding: 50px 0;
+}
+
+.content-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 16px;
+}
+
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+.content-section p {
+  margin-bottom: 14px;
+  color: var(--text);
+}
+
+.content-section ul, .content-section ol {
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+
+.content-section li {
+  margin-bottom: 6px;
+}
+
+.faq-section {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+}
+
+.faq-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 24px;
+}
+
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.faq-question {
+  width: 100%;
+  background: var(--surface);
+  border: none;
+  color: var(--text-bright);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 16px 20px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.faq-question:hover { background: var(--border); }
+
+.faq-question .arrow {
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+  color: var(--text-muted);
+}
+
+.faq-item.open .faq-question .arrow { transform: rotate(180deg); }
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.faq-answer-inner {
+  padding: 0 20px 16px;
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 500px;
+}
+
+footer {
+  text-align: center;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="badge">Free Online Tool</div>
+    <h1>Text to Speech Online</h1>
+    <p>Convert any text to natural speech using your browser. Choose voices, adjust speed and pitch, and listen instantly. No signup, no tracking.</p>
+  </header>
+
+  <div class="tool-section">
+    <h2>Enter Your Text</h2>
+    <div class="textarea-wrap">
+      <textarea id="tts-text" placeholder="Type or paste your text here..."></textarea>
+      <div id="highlight-overlay" class="highlight-overlay"></div>
+    </div>
+    <div class="char-count"><span id="char-count">0</span> characters</div>
+  </div>
+
+  <div class="tool-section">
+    <h2>Voice Settings</h2>
+    <div class="controls-grid">
+      <div class="control-group">
+        <label for="language-filter">Language</label>
+        <select id="language-filter">
+          <option value="all">All Languages</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="voice-select">Voice</label>
+        <select id="voice-select">
+          <option value="">Loading voices...</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="rate-slider">Speed</label>
+        <input type="range" id="rate-slider" min="0.5" max="3" step="0.1" value="1">
+        <div class="slider-value" id="rate-value">1.0x</div>
+      </div>
+      <div class="control-group">
+        <label for="pitch-slider">Pitch</label>
+        <input type="range" id="pitch-slider" min="0" max="2" step="0.1" value="1">
+        <div class="slider-value" id="pitch-value">1.0</div>
+      </div>
+      <div class="control-group">
+        <label for="volume-slider">Volume</label>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="1">
+        <div class="slider-value" id="volume-value">100%</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-play">&#9654; Play</button>
+      <button class="btn btn-secondary" id="btn-pause" disabled>&#10074;&#10074; Pause</button>
+      <button class="btn btn-secondary" id="btn-stop" disabled>&#9632; Stop</button>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-text">Ready</span>
+    </div>
+
+    <div class="quick-phrases">
+      <h3>Quick Test Phrases</h3>
+      <div class="phrase-chips" id="phrase-chips"></div>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <h2>How to Use This Text to Speech Tool</h2>
+    <p>This text to speech converter lets you turn written text into spoken audio directly in your browser. It runs entirely on your device using the Web Speech API, which means your text never leaves your computer. There is no data collection, no server processing, and no account required. Simply type or paste your text, choose a voice, adjust the settings to your liking, and press play.</p>
+
+    <p>The tool works by accessing the speech synthesis engine built into your operating system and browser. When you press the play button, your browser takes the text you have entered and converts it into audio using the selected voice. This happens in real time, so you hear the speech as it is generated. The quality and variety of available voices depends on what your system provides. Modern operating systems like macOS, Windows 10 and 11, and recent versions of Android and iOS all come with a good selection of voices.</p>
+
+    <h3>Getting Started</h3>
+    <p>To begin, type or paste the text you want to hear into the text area at the top of the page. You can enter anything from a single sentence to a full article or document. The character counter below the text area shows you how much text you have entered. Once your text is ready, choose a voice from the dropdown menu. You can filter voices by language to find the one you want more quickly. If you are not sure which voice to pick, try a few of the quick test phrases to hear what each voice sounds like before committing to a longer reading.</p>
+
+    <h3>Adjusting Voice Settings</h3>
+    <p>The speed slider controls how fast the voice speaks. The default is 1.0x, which is normal conversational speed. Slide it to the left to slow down the speech, which can be helpful for language learning or careful listening. Slide it to the right to speed things up, which is useful for quickly reviewing long documents. The pitch slider changes the tone of the voice. A lower pitch gives a deeper sound, while a higher pitch makes the voice sound lighter. The volume slider controls how loud the output is.</p>
+
+    <h3>Playback Controls</h3>
+    <p>The play button starts reading your text from the beginning. Once playback has started, you can pause and resume at any time using the pause button. The stop button ends playback completely and resets the position to the start. The status indicator below the buttons shows you the current state: whether the tool is playing, paused, or stopped. During playback, the tool highlights the word currently being spoken in the text display area, making it easy to follow along.</p>
+
+    <h3>Handling Long Texts</h3>
+    <p>Some browsers, particularly Google Chrome, have a limitation where speech synthesis stops working for very long text inputs. This tool automatically handles that by splitting long texts into smaller chunks and speaking them one after another. You do not need to do anything special. Just paste your full text and the tool takes care of the rest. Each chunk is queued up so that playback sounds continuous and natural.</p>
+
+    <h3>Choosing the Right Voice</h3>
+    <p>The voice selection dropdown shows all available voices on your system. Each voice is labeled with its name and language. Some systems offer both standard and enhanced or premium voices. Enhanced voices typically sound more natural and human-like. On macOS, look for voices with names like Samantha, Alex, or the newer Siri voices. On Windows, Microsoft provides several neural voices that sound quite natural. On Chrome OS and some Linux distributions, Google provides a set of voices as well.</p>
+
+    <p>If you are using this tool for language learning, the language filter is particularly helpful. Select the language you are studying to see only voices in that language. You can then paste text in that language and listen to how it should sound. Adjusting the speed to a slower rate makes it easier to catch individual words and pronunciation details.</p>
+
+    <h3>Use Cases for Text to Speech</h3>
+    <p>Text to speech technology has a wide range of practical applications. Students use it to listen to their study materials, turning notes and textbook passages into audio they can absorb while doing other activities. Writers use it to proofread their work, because hearing text read aloud makes it easier to catch awkward phrasing, missing words, and grammatical errors that the eye might skip over. People with reading difficulties or visual impairments rely on text to speech as an essential accessibility tool that gives them equal access to written content.</p>
+
+    <p>Professionals use text to speech for reviewing emails and documents, especially when they are away from their desk or on the go. Content creators use it to generate voice-overs for quick prototypes and drafts before recording final audio. Language learners use it to hear correct pronunciation of words and sentences in their target language, which helps build listening comprehension and speaking confidence.</p>
+
+    <h3>Privacy and Security</h3>
+    <p>This tool is designed with privacy as a core principle. All processing happens locally in your browser. The text you type is never transmitted to any server. There are no analytics trackers, no cookies for advertising, and no data collection of any kind. When you close the page, your text is gone. This makes the tool suitable for sensitive content like personal correspondence, medical information, legal documents, or anything else you would prefer to keep private.</p>
+
+    <h3>Browser Compatibility</h3>
+    <p>The Web Speech API is supported in all major modern browsers. Google Chrome, Microsoft Edge, Mozilla Firefox, Safari, and Opera all provide speech synthesis capabilities. However, the number and quality of available voices varies between browsers and operating systems. For the best experience with the most voices and highest quality, Chrome on macOS or Windows is recommended. Safari on macOS and iOS also provides excellent voice quality with access to Apple's built-in voices.</p>
+
+    <p>Mobile browsers also support this tool. Chrome for Android and Safari for iOS both have speech synthesis support. The interface is fully responsive and works well on smaller screens. On mobile devices, you may notice a slightly different set of available voices compared to desktop, as mobile operating systems sometimes include different voice packages.</p>
+
+    <h3>Tips for Better Results</h3>
+    <p>For the most natural-sounding output, keep your text well-formatted with proper punctuation. The speech engine uses punctuation marks to determine where to pause and how to shape its intonation. Sentences ending with question marks will be read with rising intonation, while exclamation marks add emphasis. Commas create short pauses, and periods create longer ones. If the speech sounds too rushed or too slow, experiment with the speed slider to find your preferred listening rate. Many people find a slightly faster speed of 1.2x to 1.5x comfortable for extended listening.</p>
+
+    <p>When reading text in a language other than English, make sure you have selected a voice for that language. Using an English voice to read French or Spanish text will result in incorrect pronunciation. The language filter makes it easy to find voices for the language you need. Some systems offer multiple regional variants of the same language, such as American English versus British English, or Latin American Spanish versus European Spanish.</p>
+
+    <h3>Technical Background</h3>
+    <p>The Web Speech API is a web standard maintained by the World Wide Web Consortium (W3C). It provides two main capabilities: speech synthesis (text to speech) and speech recognition (speech to text). This tool uses the speech synthesis portion of the API. The actual voice generation is handled by the speech engine built into your operating system, which means the quality and selection of voices is determined by your system rather than by the web page itself.</p>
+
+    <p>The API provides several useful events that this tool takes advantage of. The boundary event fires whenever the engine crosses a word or sentence boundary during speech, which powers the word highlighting feature. The end event fires when speech finishes, which the tool uses to start the next chunk of text for long inputs. The pause and resume methods allow the tool to provide full playback control.</p>
+
+    <h3>Accessibility and Inclusivity</h3>
+    <p>Text to speech is a foundational accessibility technology. For people who are blind or have low vision, screen readers use the same speech synthesis technology that powers this tool. Having a standalone text to speech converter can complement screen reader usage by providing a more controlled listening experience with adjustable speed, pitch, and voice selection. People with dyslexia also benefit significantly from hearing text read aloud, as it engages a different processing pathway in the brain and can improve comprehension and retention compared to reading silently.</p>
+
+    <p>Educators working with students who have learning differences find text to speech invaluable. It allows students to engage with grade-level content even when their reading skills have not yet caught up. Rather than simplifying the material, text to speech gives these students access to the full complexity of the text through an auditory channel. This supports learning without lowering expectations, which research consistently shows leads to better academic outcomes over time.</p>
+
+    <h3>Creative and Professional Applications</h3>
+    <p>Beyond personal use, text to speech has practical applications in professional settings. Podcast creators and video producers sometimes use speech synthesis to draft scripts and hear how their writing sounds before recording with a human voice. Customer service teams use text to speech to prototype automated phone system messages. Developers building voice-enabled applications use browser-based speech synthesis during the prototyping phase to test conversation flows before investing in commercial voice APIs. This tool provides a quick and free way to test how any text will sound when spoken aloud, making it useful across a wide range of workflows and industries.</p>
+  </div>
+
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <button class="faq-question">Is this text to speech tool free to use? <span class="arrow">&#9660;</span></button>
+      <div class="faq-answer"><div class="faq-answer-inner">Yes, this text to speech tool is completely free. It uses your browser's built-in speech synthesis capabilities, so there are no costs, subscriptions, or usage limits. You can use it as many times as you want without creating an account or providing any personal information.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">What voices and languages are available? <span class="arrow">&#9660;</span></button>
+      <div class="faq-answer"><div class="faq-answer-inner">The available voices depend on your browser and operating system. Most modern browsers offer dozens of voices across many languages including English, Spanish, French, German, Japanese, Chinese, Korean, Portuguese, Italian, and more. macOS users typically have access to the most voices, while Windows and Chrome OS also provide good selections. You can use the language filter to browse voices by language.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Does this tool store or send my text anywhere? <span class="arrow">&#9660;</span></button>
+      <div class="faq-answer"><div class="faq-answer-inner">No. All text processing happens locally in your browser using the Web Speech API. Your text is never sent to any server, stored, or tracked in any way. There are no analytics, cookies, or third-party scripts. When you close the tab, your text is gone completely.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Why do some voices sound more natural than others? <span class="arrow">&#9660;</span></button>
+      <div class="faq-answer"><div class="faq-answer-inner">Voice quality depends on your operating system and browser. Some systems include premium neural or enhanced voices that are trained on large amounts of human speech data, resulting in very natural-sounding output. Other voices use older concatenative synthesis technology that can sound more robotic. macOS, iOS, and recent versions of Windows with Microsoft neural voices typically offer the most natural options.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Can I adjust the speed and pitch of the voice? <span class="arrow">&#9660;</span></button>
+      <div class="faq-answer"><div class="faq-answer-inner">Yes. You can adjust the speaking rate from 0.5x (half speed) to 3x (triple speed), the pitch from 0 (lowest) to 2 (highest), and the volume from silent to full. These settings apply to all voices and let you customize the listening experience to your preference. Changes take effect the next time you press play.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Is there a character limit for the text input? <span class="arrow">&#9660;</span></button>
+      <div class="faq-answer"><div class="faq-answer-inner">There is no hard limit in the tool itself. However, some browsers (particularly Chrome) have a limit on how much text the speech engine can handle in a single utterance. This tool automatically breaks long texts into smaller chunks and speaks them sequentially to work around that limitation, so you can paste text of any length.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Does word highlighting work in all browsers? <span class="arrow">&#9660;</span></button>
+      <div class="faq-answer"><div class="faq-answer-inner">Word highlighting relies on the SpeechSynthesis boundary event, which is supported in most modern desktop browsers. Chrome, Edge, and Safari generally support it well. Some voices, particularly on certain platforms, may not fire boundary events consistently, in which case the highlighting may not appear or may be less accurate. Firefox support can vary depending on the version and operating system.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Can I use this tool on mobile devices? <span class="arrow">&#9660;</span></button>
+      <div class="faq-answer"><div class="faq-answer-inner">Yes, this tool works on mobile browsers that support the Web Speech API. Most modern browsers on Android and iOS support speech synthesis. The interface adapts to smaller screens automatically. Note that on some mobile browsers, speech synthesis may only start in response to a direct user interaction like tapping a button, which this tool handles correctly.</div></div>
+    </div>
+  </div>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> - Free, private, no tracking.
+  </footer>
+</div>
+
+<script>
+(function() {
+  const textArea = document.getElementById('tts-text');
+  const highlightOverlay = document.getElementById('highlight-overlay');
+  const charCount = document.getElementById('char-count');
+  const langFilter = document.getElementById('language-filter');
+  const voiceSelect = document.getElementById('voice-select');
+  const rateSlider = document.getElementById('rate-slider');
+  const pitchSlider = document.getElementById('pitch-slider');
+  const volumeSlider = document.getElementById('volume-slider');
+  const rateValue = document.getElementById('rate-value');
+  const pitchValue = document.getElementById('pitch-value');
+  const volumeValue = document.getElementById('volume-value');
+  const btnPlay = document.getElementById('btn-play');
+  const btnPause = document.getElementById('btn-pause');
+  const btnStop = document.getElementById('btn-stop');
+  const statusDot = document.getElementById('status-dot');
+  const statusText = document.getElementById('status-text');
+  const phraseChips = document.getElementById('phrase-chips');
+
+  let voices = [];
+  let isSpeaking = false;
+  let isPaused = false;
+  let chunks = [];
+  let currentChunkIndex = 0;
+  let currentText = '';
+
+  const CHUNK_SIZE = 200;
+
+  const quickPhrases = {
+    'English': 'The quick brown fox jumps over the lazy dog.',
+    'Spanish': 'El veloz murci\u00e9lago hind\u00fa com\u00eda feliz cardillo y kiwi.',
+    'French': 'Portez ce vieux whisky au juge blond qui fume.',
+    'German': 'Victor jagt zw\u00f6lf Boxk\u00e4mpfer quer \u00fcber den gro\u00dfen Sylter Deich.',
+    'Italian': 'Quel fez sgargiante gi\u00e0 copre di vizi quindici nobiluomini.',
+    'Portuguese': 'Vejo luxo e quero caf\u00e9 com p\u00e3o de a\u00e7\u00facar no trem.',
+    'Japanese': '\u3044\u308d\u306f\u306b\u307b\u3078\u3068\u3061\u308a\u306c\u308b\u3092\u308f\u304b\u3088\u305f\u308c\u305d\u3064\u306d\u306a\u3089\u3080',
+    'Chinese': '\u5feb\u68d5\u8272\u7684\u72d0\u72f8\u8df3\u8fc7\u61d2\u60f0\u7684\u72d7\u3002',
+    'Korean': '\ud0a4\uc2a4\uc758 \uace0\uc720\uc870\uac74\uc740 \uc785\uc220\ub07c\ub9ac \ub9cc\ub0a8\uc774\ub2e4.',
+    'Russian': '\u0421\u044a\u0435\u0448\u044c \u0435\u0449\u0451 \u044d\u0442\u0438\u0445 \u043c\u044f\u0433\u043a\u0438\u0445 \u0444\u0440\u0430\u043d\u0446\u0443\u0437\u0441\u043a\u0438\u0445 \u0431\u0443\u043b\u043e\u043a.',
+    'Hindi': '\u0928\u092e\u0938\u094d\u0924\u0947, \u092e\u0948\u0902 \u090f\u0915 \u092a\u0930\u0940\u0915\u094d\u0937\u0923 \u0935\u093e\u0915\u094d\u092f \u0939\u0942\u0901\u0964',
+    'Arabic': '\u0635\u0650\u0641 \u062e\u064e\u0644\u0642\u064e \u062e\u064e\u0648\u062f\u064D \u0643\u064E\u0645\u0650\u062b\u0644\u0650 \u0627\u0644\u0634\u064E\u0645\u0633\u0650 \u0625\u0650\u0630 \u0628\u064E\u0632\u064E\u063A\u064E\u062A.'
+  };
+
+  function loadVoices() {
+    voices = speechSynthesis.getVoices();
+    if (voices.length === 0) return;
+
+    const languages = new Map();
+    voices.forEach(v => {
+      const lang = v.lang.split('-')[0];
+      const langName = getLanguageName(v.lang);
+      if (!languages.has(langName)) languages.set(langName, lang);
+    });
+
+    langFilter.innerHTML = '<option value="all">All Languages</option>';
+    const sorted = [...languages.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+    sorted.forEach(([name, code]) => {
+      const opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = name;
+      langFilter.appendChild(opt);
+    });
+
+    populateVoices();
+    buildPhraseChips();
+  }
+
+  function getLanguageName(langTag) {
+    try {
+      const dn = new Intl.DisplayNames(['en'], { type: 'language' });
+      return dn.of(langTag.split('-')[0]) || langTag;
+    } catch {
+      return langTag;
+    }
+  }
+
+  function populateVoices() {
+    const filter = langFilter.value;
+    voiceSelect.innerHTML = '';
+
+    let filtered = voices;
+    if (filter !== 'all') {
+      filtered = voices.filter(v => v.lang.startsWith(filter));
+    }
+
+    if (filtered.length === 0) {
+      const opt = document.createElement('option');
+      opt.textContent = 'No voices available';
+      opt.value = '';
+      voiceSelect.appendChild(opt);
+      return;
+    }
+
+    filtered.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = voices.indexOf(v);
+      opt.textContent = v.name + ' (' + v.lang + ')' + (v.default ? ' - Default' : '');
+      voiceSelect.appendChild(opt);
+    });
+  }
+
+  function buildPhraseChips() {
+    phraseChips.innerHTML = '';
+    Object.keys(quickPhrases).forEach(lang => {
+      const chip = document.createElement('button');
+      chip.className = 'phrase-chip';
+      chip.textContent = lang;
+      chip.addEventListener('click', () => {
+        textArea.value = quickPhrases[lang];
+        textArea.dispatchEvent(new Event('input'));
+      });
+      phraseChips.appendChild(chip);
+    });
+  }
+
+  function splitIntoChunks(text) {
+    if (text.length <= CHUNK_SIZE) return [text];
+    const result = [];
+    const sentences = text.match(/[^.!?]+[.!?]+[\s]*/g) || [text];
+    let current = '';
+
+    sentences.forEach(sentence => {
+      if ((current + sentence).length > CHUNK_SIZE && current.length > 0) {
+        result.push(current.trim());
+        current = sentence;
+      } else {
+        current += sentence;
+      }
+    });
+
+    if (current.trim().length > 0) result.push(current.trim());
+    return result;
+  }
+
+  function setStatus(state, message) {
+    statusDot.className = 'status-dot ' + state;
+    statusText.textContent = message;
+  }
+
+  function speakChunk(index) {
+    if (index >= chunks.length) {
+      stopSpeaking();
+      return;
+    }
+
+    currentChunkIndex = index;
+    const utterance = new SpeechSynthesisUtterance(chunks[index]);
+
+    const voiceIdx = parseInt(voiceSelect.value);
+    if (!isNaN(voiceIdx) && voices[voiceIdx]) {
+      utterance.voice = voices[voiceIdx];
+    }
+
+    utterance.rate = parseFloat(rateSlider.value);
+    utterance.pitch = parseFloat(pitchSlider.value);
+    utterance.volume = parseFloat(volumeSlider.value);
+
+    let chunkOffset = 0;
+    for (let i = 0; i < index; i++) {
+      chunkOffset += chunks[i].length;
+      const between = currentText.substring(chunkOffset).search(/\S/);
+      if (between > 0) chunkOffset += between;
+    }
+
+    utterance.onboundary = function(e) {
+      if (e.name === 'word') {
+        const globalPos = chunkOffset + e.charIndex;
+        const wordLen = e.charLength || chunks[index].substring(e.charIndex).split(/\s/)[0].length;
+        highlightWord(globalPos, wordLen);
+      }
+    };
+
+    utterance.onend = function() {
+      if (isSpeaking && !isPaused) {
+        speakChunk(index + 1);
+      }
+    };
+
+    utterance.onerror = function(e) {
+      if (e.error !== 'interrupted' && e.error !== 'canceled') {
+        setStatus('stopped', 'Error: ' + e.error);
+        stopSpeaking();
+      }
+    };
+
+    speechSynthesis.speak(utterance);
+  }
+
+  function highlightWord(pos, len) {
+    const text = currentText;
+    if (pos >= text.length) return;
+
+    const before = escapeHtml(text.substring(0, pos));
+    const word = escapeHtml(text.substring(pos, pos + len));
+    const after = escapeHtml(text.substring(pos + len));
+
+    highlightOverlay.innerHTML = before + '<span class="hl-word">' + word + '</span>' + after;
+
+    const highlighted = highlightOverlay.querySelector('.hl-word');
+    if (highlighted) {
+      const overlayRect = highlightOverlay.getBoundingClientRect();
+      const wordRect = highlighted.getBoundingClientRect();
+      if (wordRect.bottom > overlayRect.bottom || wordRect.top < overlayRect.top) {
+        highlighted.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function startSpeaking() {
+    const text = textArea.value.trim();
+    if (!text) return;
+
+    speechSynthesis.cancel();
+    currentText = text;
+    chunks = splitIntoChunks(text);
+    currentChunkIndex = 0;
+    isSpeaking = true;
+    isPaused = false;
+
+    textArea.style.display = 'none';
+    highlightOverlay.style.display = 'block';
+    highlightOverlay.textContent = text;
+
+    btnPlay.disabled = true;
+    btnPause.disabled = false;
+    btnStop.disabled = false;
+    btnPause.innerHTML = '&#10074;&#10074; Pause';
+
+    setStatus('playing', 'Playing...');
+    speakChunk(0);
+  }
+
+  function pauseSpeaking() {
+    if (isPaused) {
+      speechSynthesis.resume();
+      isPaused = false;
+      btnPause.innerHTML = '&#10074;&#10074; Pause';
+      setStatus('playing', 'Playing...');
+    } else {
+      speechSynthesis.pause();
+      isPaused = true;
+      btnPause.innerHTML = '&#9654; Resume';
+      setStatus('paused', 'Paused');
+    }
+  }
+
+  function stopSpeaking() {
+    speechSynthesis.cancel();
+    isSpeaking = false;
+    isPaused = false;
+
+    textArea.style.display = '';
+    highlightOverlay.style.display = 'none';
+
+    btnPlay.disabled = false;
+    btnPause.disabled = true;
+    btnStop.disabled = true;
+    btnPause.innerHTML = '&#10074;&#10074; Pause';
+
+    setStatus('stopped', 'Stopped');
+  }
+
+  textArea.addEventListener('input', () => {
+    charCount.textContent = textArea.value.length;
+  });
+
+  rateSlider.addEventListener('input', () => {
+    rateValue.textContent = parseFloat(rateSlider.value).toFixed(1) + 'x';
+  });
+
+  pitchSlider.addEventListener('input', () => {
+    pitchValue.textContent = parseFloat(pitchSlider.value).toFixed(1);
+  });
+
+  volumeSlider.addEventListener('input', () => {
+    volumeValue.textContent = Math.round(parseFloat(volumeSlider.value) * 100) + '%';
+  });
+
+  langFilter.addEventListener('change', populateVoices);
+
+  btnPlay.addEventListener('click', startSpeaking);
+  btnPause.addEventListener('click', pauseSpeaking);
+  btnStop.addEventListener('click', stopSpeaking);
+
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
