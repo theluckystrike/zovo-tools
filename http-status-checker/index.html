@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTTP Status Code Checker - Check HTTP Response Headers | Free Tool</title>
+<meta name="description" content="Check any URL's HTTP status code and response headers. View redirect chains, measure response time, bulk check multiple URLs, and reference all HTTP status codes. Free, private, no tracking.">
+<meta name="keywords" content="HTTP status code, status code checker, HTTP headers, response headers, redirect chain, 301 redirect, 404 not found, 200 OK, bulk URL checker, HTTP response">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/http-status-checker">
+
+<meta property="og:title" content="HTTP Status Code Checker - Check HTTP Response Headers | Zovo Tools">
+<meta property="og:description" content="Check any URL's HTTP status code and response headers. View redirect chains, measure response time, and bulk check URLs. Free, private, no tracking.">
+<meta property="og:url" content="https://tools.zovo.one/http-status-checker">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HTTP Status Code Checker - Check HTTP Response Headers | Zovo Tools">
+<meta name="twitter:description" content="Check HTTP status codes, response headers, redirect chains, and response times. Free and private.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "HTTP Status Code Checker",
+  "description": "Check any URL's HTTP status code and response headers. View redirect chains, measure response time, bulk check multiple URLs, and reference all HTTP status codes.",
+  "url": "https://tools.zovo.one/http-status-checker",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Fetch API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is an HTTP status code?", "acceptedAnswer": {"@type": "Answer", "text": "An HTTP status code is a three-digit number returned by a web server in response to a request. It indicates whether the request was successful, redirected, resulted in a client error, or caused a server error. Status codes are grouped into five classes: 1xx (informational), 2xx (success), 3xx (redirection), 4xx (client error), and 5xx (server error)."}},
+    {"@type": "Question", "name": "What does a 301 redirect mean?", "acceptedAnswer": {"@type": "Answer", "text": "A 301 status code means 'Moved Permanently.' It indicates that the requested resource has been permanently moved to a new URL. Search engines transfer the SEO value (link equity) from the old URL to the new one, making 301 redirects the recommended method for permanent URL changes."}},
+    {"@type": "Question", "name": "What is the difference between 301 and 302 redirects?", "acceptedAnswer": {"@type": "Answer", "text": "A 301 redirect is permanent, meaning the resource has moved to a new URL forever and search engines should index the new URL. A 302 redirect is temporary, meaning the resource is temporarily at a different URL and the original URL should remain indexed. Using the wrong redirect type can affect SEO."}},
+    {"@type": "Question", "name": "Why do I get a 403 Forbidden error?", "acceptedAnswer": {"@type": "Answer", "text": "A 403 Forbidden status code means the server understood the request but refuses to authorize it. This typically occurs when you lack permission to access the resource, IP blocking is in place, directory listing is disabled, or the server's file permissions are misconfigured."}},
+    {"@type": "Question", "name": "What is a 404 Not Found error?", "acceptedAnswer": {"@type": "Answer", "text": "A 404 status code indicates that the server cannot find the requested resource. This usually means the URL is incorrect, the page was deleted, or the link pointing to it is broken. Custom 404 pages help users navigate back to working pages when they encounter this error."}},
+    {"@type": "Question", "name": "What are HTTP response headers?", "acceptedAnswer": {"@type": "Answer", "text": "HTTP response headers are metadata sent by the server alongside the response body. They provide information about the server, content type, caching policies, security settings, cookies, and more. Important headers include Content-Type, Cache-Control, X-Frame-Options, and Strict-Transport-Security."}},
+    {"@type": "Question", "name": "Why can't I check some URLs from the browser?", "acceptedAnswer": {"@type": "Answer", "text": "Browser-based HTTP checkers are limited by CORS (Cross-Origin Resource Sharing) policies. When a server does not include CORS headers, the browser blocks the response for security reasons. This tool uses a CORS proxy to work around this limitation, but some URLs may still be unreachable. Server-side tools like curl do not have this restriction."}},
+    {"@type": "Question", "name": "What does a 500 Internal Server Error mean?", "acceptedAnswer": {"@type": "Answer", "text": "A 500 status code is a generic server-side error indicating that something went wrong on the server while processing the request. It does not specify what went wrong. Common causes include misconfigured server software, runtime errors in server-side code, database connectivity issues, or insufficient server resources."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --yellow: #ffaa00;
+  --blue: #4488ff;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"], input[type="url"] {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus, input[type="url"]:focus {
+  border-color: var(--accent);
+}
+textarea { resize: vertical; min-height: 120px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Copy button */
+.copy-btn {
+  float: right;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Status display */
+.status-display {
+  text-align: center;
+  padding: 24px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+.status-code {
+  font-size: 3rem;
+  font-weight: 700;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  line-height: 1.2;
+}
+.status-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.status-1xx { color: var(--blue); }
+.status-2xx { color: var(--green); }
+.status-3xx { color: var(--yellow); }
+.status-4xx { color: var(--red); }
+.status-5xx { color: #ff6688; }
+
+.response-time {
+  margin-top: 12px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+.response-time strong {
+  color: var(--accent);
+}
+
+/* Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+.data-table th, .data-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.data-table th {
+  background: var(--surface2);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+}
+.data-table td {
+  color: var(--text);
+}
+.data-table td:first-child {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.84rem;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.data-table td:last-child {
+  word-break: break-all;
+}
+.data-table tr:hover td { background: var(--surface2); }
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+/* Redirect chain */
+.redirect-chain {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 16px;
+}
+.redirect-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+.redirect-step:not(:last-child) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+.redirect-step:not(:first-child) {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.redirect-step-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.redirect-step-content {
+  flex: 1;
+  min-width: 0;
+}
+.redirect-step-url {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.84rem;
+  word-break: break-all;
+  color: var(--text);
+}
+.redirect-step-status {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Reference table styles */
+.ref-category {
+  margin-bottom: 24px;
+}
+.ref-category-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0;
+}
+.ref-1xx { background: rgba(68,136,255,0.1); color: var(--blue); }
+.ref-2xx { background: rgba(0,255,136,0.1); color: var(--green); }
+.ref-3xx { background: rgba(255,170,0,0.1); color: var(--yellow); }
+.ref-4xx { background: rgba(255,68,102,0.1); color: var(--red); }
+.ref-5xx { background: rgba(255,102,136,0.1); color: #ff6688; }
+
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ref-table td {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+  color: var(--text);
+}
+.ref-table td:first-child {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-weight: 600;
+  width: 60px;
+  white-space: nowrap;
+}
+.ref-table td:nth-child(2) {
+  font-weight: 600;
+  color: #fff;
+  width: 200px;
+}
+.ref-table td:last-child {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.ref-table tr:hover td { background: var(--surface2); }
+
+/* Filter */
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.filter-btn:hover:not(.active) { border-color: var(--text-muted); color: var(--text); }
+
+/* Search */
+.search-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  outline: none;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--accent); }
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font);
+}
+.badge-success { background: rgba(0,255,136,0.15); color: var(--green); }
+.badge-redirect { background: rgba(255,170,0,0.15); color: var(--yellow); }
+.badge-client-error { background: rgba(255,68,102,0.15); color: var(--red); }
+.badge-server-error { background: rgba(255,102,136,0.15); color: #ff6688; }
+.badge-info { background: rgba(68,136,255,0.15); color: var(--blue); }
+
+/* Notice box */
+.notice {
+  background: rgba(68,136,255,0.08);
+  border: 1px solid rgba(68,136,255,0.25);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.notice strong { color: var(--blue); }
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .status-code { font-size: 2.2rem; }
+  .tabs { flex-wrap: wrap; }
+  .ref-table td:last-child { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>HTTP</span> Status Checker</h1>
+    <p>Check any URL's HTTP status code and response headers. View redirect chains, measure response time, bulk check URLs, and reference all HTTP status codes &mdash; all from your browser.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="single-check">URL Check</button>
+    <button class="tab-btn" data-tab="bulk-check">Bulk Check</button>
+    <button class="tab-btn" data-tab="reference">Status Reference</button>
+  </div>
+
+  <!-- Single URL Check -->
+  <div id="single-check" class="tab-panel active">
+    <div class="card">
+      <h3>Check URL Status</h3>
+      <div class="notice">
+        <strong>Note:</strong> This tool checks URLs from your browser using the Fetch API. Due to CORS restrictions, some servers may block browser-based requests. Headers shown are only those exposed by the server's CORS policy. For full header inspection, use command-line tools like <code>curl -I</code>.
+      </div>
+      <label for="urlInput">URL to check</label>
+      <input type="url" id="urlInput" placeholder="https://example.com" autocomplete="off">
+      <div class="btn-row">
+        <button class="btn btn-primary" id="checkBtn">Check Status</button>
+        <button class="btn btn-secondary" id="clearSingleBtn">Clear</button>
+      </div>
+    </div>
+    <div id="singleResults"></div>
+  </div>
+
+  <!-- Bulk Check -->
+  <div id="bulk-check" class="tab-panel">
+    <div class="card">
+      <h3>Bulk URL Checker</h3>
+      <div class="notice">
+        <strong>Note:</strong> Enter up to 20 URLs, one per line. Each URL will be checked sequentially. CORS limitations apply.
+      </div>
+      <label for="bulkInput">URLs (one per line, max 20)</label>
+      <textarea id="bulkInput" placeholder="https://example.com&#10;https://google.com&#10;https://github.com"></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="bulkCheckBtn">Check All URLs</button>
+        <button class="btn btn-secondary" id="clearBulkBtn">Clear</button>
+      </div>
+    </div>
+    <div id="bulkResults"></div>
+  </div>
+
+  <!-- Status Code Reference -->
+  <div id="reference" class="tab-panel">
+    <div class="card">
+      <h3>HTTP Status Code Reference</h3>
+      <input type="text" class="search-input" id="refSearch" placeholder="Search status codes (e.g., 404, not found, redirect)...">
+      <div class="filter-row" id="refFilter">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="1xx">1xx Info</button>
+        <button class="filter-btn" data-filter="2xx">2xx Success</button>
+        <button class="filter-btn" data-filter="3xx">3xx Redirect</button>
+        <button class="filter-btn" data-filter="4xx">4xx Client Error</button>
+        <button class="filter-btn" data-filter="5xx">5xx Server Error</button>
+      </div>
+    </div>
+    <div id="referenceContent"></div>
+  </div>
+
+  <section class="content-section">
+    <h2>Understanding HTTP Status Codes</h2>
+    <p>HTTP (Hypertext Transfer Protocol) status codes are standardized three-digit numbers returned by web servers to indicate the result of a client's request. Every time your browser requests a web page, API endpoint, image, or any other resource, the server responds with a status code that tells the client what happened. These codes are defined by the Internet Engineering Task Force (IETF) in various RFCs, most notably RFC 7231 through RFC 7235, and are essential for debugging web applications, optimizing SEO, and understanding how the web works.</p>
+    <p>Our HTTP Status Code Checker allows you to send a request to any URL and inspect the response status code, status text, response headers, and response time. The tool also supports bulk checking of multiple URLs, making it useful for site audits, monitoring, and migration verification. Additionally, the comprehensive reference table provides descriptions and use cases for every standard HTTP status code.</p>
+
+    <h3>1xx Informational Responses</h3>
+    <p>The 1xx class of status codes indicates that the server has received the request and the client should continue or wait for a final response. The most common is <code>100 Continue</code>, which tells the client that the initial part of the request was received and the client should proceed with sending the body. <code>101 Switching Protocols</code> is used during WebSocket upgrades, where the connection transitions from HTTP to the WebSocket protocol. <code>103 Early Hints</code> is a newer code that allows servers to send preliminary headers (like Link headers for preloading resources) before the final response, improving page load performance.</p>
+
+    <h3>2xx Success Codes</h3>
+    <p>The 2xx class indicates that the request was successfully received, understood, and accepted. <code>200 OK</code> is the standard success response for GET requests, meaning the requested resource is returned in the body. <code>201 Created</code> indicates a new resource was successfully created, commonly returned after POST requests. <code>204 No Content</code> means the request succeeded but there is no body to return, often used for DELETE operations or form submissions that don't need a response body. <code>206 Partial Content</code> is used for range requests, where the client requested only a portion of the resource (common in video streaming and resume-able downloads).</p>
+
+    <h3>3xx Redirection Codes</h3>
+    <p>The 3xx class indicates that further action is needed to complete the request, usually following a redirect to a different URL. <code>301 Moved Permanently</code> is the most important redirect for SEO, signaling that a page has permanently moved and search engines should update their index. <code>302 Found</code> (originally "Moved Temporarily") indicates a temporary redirect. <code>307 Temporary Redirect</code> and <code>308 Permanent Redirect</code> are stricter versions that preserve the HTTP method (POST stays POST), while 301 and 302 historically allowed method changes. <code>304 Not Modified</code> is a caching response indicating that the cached version is still valid.</p>
+
+    <h3>4xx Client Error Codes</h3>
+    <p>The 4xx class indicates that the client made an error in the request. <code>400 Bad Request</code> means the server cannot process the request due to malformed syntax. <code>401 Unauthorized</code> requires authentication, while <code>403 Forbidden</code> means the server refuses to authorize the request even with valid credentials. <code>404 Not Found</code> is the most recognizable status code, indicating the requested resource does not exist. <code>405 Method Not Allowed</code> means the HTTP method (GET, POST, etc.) is not supported for the requested resource. <code>429 Too Many Requests</code> is used for rate limiting, telling the client to slow down.</p>
+
+    <h3>5xx Server Error Codes</h3>
+    <p>The 5xx class indicates that the server failed to fulfill a valid request. <code>500 Internal Server Error</code> is a generic catch-all for unexpected server-side errors. <code>502 Bad Gateway</code> means a gateway or proxy received an invalid response from an upstream server. <code>503 Service Unavailable</code> indicates the server is temporarily overloaded or under maintenance. <code>504 Gateway Timeout</code> means the gateway did not receive a timely response from the upstream server. These errors are typically not the client's fault and often require server-side investigation to resolve.</p>
+
+    <h3>Response Headers</h3>
+    <p>Beyond the status code, HTTP responses include headers that provide additional context about the response. <code>Content-Type</code> indicates the media type (e.g., text/html, application/json). <code>Cache-Control</code> specifies caching directives. Security headers like <code>Strict-Transport-Security</code>, <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>, and <code>Content-Security-Policy</code> are critical for protecting against common web vulnerabilities. <code>Server</code> reveals the web server software, while <code>X-Powered-By</code> may reveal the backend framework. Understanding response headers is essential for web development, security auditing, and performance optimization.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What is an HTTP status code?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>An HTTP status code is a three-digit number returned by a web server in response to a client's request. It indicates the outcome of the request: whether it succeeded (2xx), requires redirection (3xx), contains a client error (4xx), or resulted in a server error (5xx). The 1xx codes are informational. Every HTTP response includes a status code, and understanding these codes is fundamental to web development, SEO, and debugging network issues.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What does a 301 redirect mean?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>A 301 status code means "Moved Permanently." It tells the client (browser or search engine) that the requested resource has been permanently relocated to a new URL, specified in the Location header. Search engines transfer the SEO value (link equity) from the old URL to the new one, making 301 the recommended redirect type for permanent URL changes such as site migrations, domain changes, or restructured URLs.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between 301 and 302 redirects?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>A 301 redirect is permanent, telling search engines to transfer ranking signals to the new URL and stop indexing the old one. A 302 redirect is temporary, meaning the original URL should remain in search engine indexes because the resource will return to its original location. Using a 302 when you mean 301 can prevent search engines from properly consolidating link equity, negatively affecting SEO.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why do I get a 403 Forbidden error?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>A 403 Forbidden error means the server understood your request but refuses to authorize it. Common causes include: IP address blocking or geofencing, insufficient file permissions on the server, disabled directory listing, authentication that doesn't grant sufficient privileges, WAF (Web Application Firewall) rules blocking the request, or hotlink protection preventing direct access to resources.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is a 404 Not Found error?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>A 404 error means the server cannot find the requested resource at the specified URL. This typically happens when a page was deleted or moved without a redirect, the URL was typed incorrectly, or a link is broken. Websites should implement custom 404 pages that help users find what they were looking for. From an SEO perspective, excessive 404 errors can indicate poor site maintenance and may affect crawl efficiency.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What are HTTP response headers?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>HTTP response headers are key-value pairs sent by the server alongside the response body. They convey metadata such as the content type (Content-Type), caching behavior (Cache-Control, ETag), security policies (Strict-Transport-Security, Content-Security-Policy), server information (Server, X-Powered-By), cookie settings (Set-Cookie), and CORS policies (Access-Control-Allow-Origin). Analyzing headers is crucial for debugging, security auditing, and performance optimization.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why can't I check some URLs from the browser?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Browser-based HTTP tools are limited by CORS (Cross-Origin Resource Sharing) security policies. When a server does not include appropriate Access-Control-Allow-Origin headers, the browser blocks the response data from being read by JavaScript. This is a security measure to prevent malicious websites from reading data from other sites. The status code and basic timing information may still be available, but response headers and body content may be restricted. For unrestricted access, use command-line tools like curl or wget.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What does a 500 Internal Server Error mean?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>A 500 Internal Server Error is a generic server-side error indicating that the server encountered an unexpected condition that prevented it from fulfilling the request. Common causes include bugs in server-side code, misconfigured web server settings (like .htaccess errors), database connection failures, memory or resource exhaustion, and incompatible software updates. The 500 code itself provides no specifics; server logs are typically needed to diagnose the root cause.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </footer>
+</div>
+
+<script>
+// ========== Status Code Database ==========
+const STATUS_CODES = {
+  // 1xx Informational
+  100: { name: 'Continue', desc: 'The server has received the request headers and the client should proceed to send the request body.', category: '1xx' },
+  101: { name: 'Switching Protocols', desc: 'The server is switching protocols as requested by the client (e.g., upgrading to WebSocket).', category: '1xx' },
+  102: { name: 'Processing', desc: 'The server has received and is processing the request, but no response is available yet (WebDAV).', category: '1xx' },
+  103: { name: 'Early Hints', desc: 'Used to return some response headers before the final response, allowing the browser to preload resources.', category: '1xx' },
+  // 2xx Success
+  200: { name: 'OK', desc: 'The request succeeded. The response body contains the requested resource.', category: '2xx' },
+  201: { name: 'Created', desc: 'The request succeeded and a new resource was created (typically after POST or PUT).', category: '2xx' },
+  202: { name: 'Accepted', desc: 'The request has been accepted for processing, but processing has not been completed.', category: '2xx' },
+  203: { name: 'Non-Authoritative Information', desc: 'The returned metadata is from a local or third-party copy, not the origin server.', category: '2xx' },
+  204: { name: 'No Content', desc: 'The request succeeded, but there is no content to return (common for DELETE or PUT responses).', category: '2xx' },
+  205: { name: 'Reset Content', desc: 'The request succeeded; the client should reset the document view (e.g., clear a form).', category: '2xx' },
+  206: { name: 'Partial Content', desc: 'The server is returning only part of the resource due to a Range header sent by the client.', category: '2xx' },
+  207: { name: 'Multi-Status', desc: 'Conveys information about multiple resources in situations where multiple status codes might be appropriate (WebDAV).', category: '2xx' },
+  208: { name: 'Already Reported', desc: 'Members of a DAV binding have already been enumerated in a previous reply and are not included again.', category: '2xx' },
+  226: { name: 'IM Used', desc: 'The server has fulfilled a GET request using instance-manipulation applied to the current instance.', category: '2xx' },
+  // 3xx Redirection
+  300: { name: 'Multiple Choices', desc: 'The request has more than one possible response. The client should choose one of them.', category: '3xx' },
+  301: { name: 'Moved Permanently', desc: 'The resource has permanently moved to a new URL. Search engines transfer SEO value to the new URL.', category: '3xx' },
+  302: { name: 'Found', desc: 'The resource is temporarily at a different URL. The original URL should remain in search engine indexes.', category: '3xx' },
+  303: { name: 'See Other', desc: 'The server redirects the client to a different resource using GET, typically after a POST operation.', category: '3xx' },
+  304: { name: 'Not Modified', desc: 'The cached version is still valid. The client should use its cached copy (conditional request).', category: '3xx' },
+  305: { name: 'Use Proxy', desc: 'The requested resource must be accessed through a proxy (deprecated for security reasons).', category: '3xx' },
+  307: { name: 'Temporary Redirect', desc: 'The resource is temporarily at a different URL. Unlike 302, the HTTP method must not change.', category: '3xx' },
+  308: { name: 'Permanent Redirect', desc: 'The resource has permanently moved to a new URL. Unlike 301, the HTTP method must not change.', category: '3xx' },
+  // 4xx Client Errors
+  400: { name: 'Bad Request', desc: 'The server cannot process the request due to malformed syntax, invalid framing, or deceptive routing.', category: '4xx' },
+  401: { name: 'Unauthorized', desc: 'Authentication is required and has failed or has not been provided. The client must authenticate.', category: '4xx' },
+  402: { name: 'Payment Required', desc: 'Reserved for future use. Sometimes used for payment-gated resources or API billing limits.', category: '4xx' },
+  403: { name: 'Forbidden', desc: 'The server refuses to authorize the request. Authentication will not help; the client lacks permissions.', category: '4xx' },
+  404: { name: 'Not Found', desc: 'The server cannot find the requested resource. The URL may be incorrect or the resource was deleted.', category: '4xx' },
+  405: { name: 'Method Not Allowed', desc: 'The HTTP method used is not supported for the requested resource (e.g., POST on a read-only endpoint).', category: '4xx' },
+  406: { name: 'Not Acceptable', desc: 'The server cannot produce a response matching the Accept headers sent by the client.', category: '4xx' },
+  407: { name: 'Proxy Authentication Required', desc: 'Authentication with the proxy is required before the request can be processed.', category: '4xx' },
+  408: { name: 'Request Timeout', desc: 'The server timed out waiting for the client to send the request. The client may retry.', category: '4xx' },
+  409: { name: 'Conflict', desc: 'The request conflicts with the current state of the server (e.g., edit conflict, duplicate resource).', category: '4xx' },
+  410: { name: 'Gone', desc: 'The resource is permanently gone and will not return. Unlike 404, this is intentional and permanent.', category: '4xx' },
+  411: { name: 'Length Required', desc: 'The server requires a Content-Length header in the request, which was not provided.', category: '4xx' },
+  412: { name: 'Precondition Failed', desc: 'One or more conditions in the request headers (If-Match, If-Unmodified-Since) evaluated to false.', category: '4xx' },
+  413: { name: 'Payload Too Large', desc: 'The request body exceeds the server\'s size limit. The server may close the connection.', category: '4xx' },
+  414: { name: 'URI Too Long', desc: 'The request URL is longer than the server is willing to interpret.', category: '4xx' },
+  415: { name: 'Unsupported Media Type', desc: 'The media type of the request body is not supported by the server for the target resource.', category: '4xx' },
+  416: { name: 'Range Not Satisfiable', desc: 'The Range header field values do not overlap the extent of the selected resource.', category: '4xx' },
+  417: { name: 'Expectation Failed', desc: 'The server cannot meet the requirements of the Expect request header field.', category: '4xx' },
+  418: { name: 'I\'m a Teapot', desc: 'The server refuses to brew coffee because it is a teapot (RFC 2324, April Fools\' joke, but widely implemented).', category: '4xx' },
+  421: { name: 'Misdirected Request', desc: 'The request was directed at a server that is not able to produce a response for the target URI.', category: '4xx' },
+  422: { name: 'Unprocessable Entity', desc: 'The server understands the content type and syntax, but cannot process the contained instructions (WebDAV).', category: '4xx' },
+  423: { name: 'Locked', desc: 'The resource being accessed is locked (WebDAV).', category: '4xx' },
+  424: { name: 'Failed Dependency', desc: 'The request failed because it depended on another request that failed (WebDAV).', category: '4xx' },
+  425: { name: 'Too Early', desc: 'The server is unwilling to risk processing a request that might be replayed (TLS early data).', category: '4xx' },
+  426: { name: 'Upgrade Required', desc: 'The server refuses to perform the request using the current protocol but may after the client upgrades.', category: '4xx' },
+  428: { name: 'Precondition Required', desc: 'The server requires the request to be conditional (e.g., include If-Match header) to prevent conflicts.', category: '4xx' },
+  429: { name: 'Too Many Requests', desc: 'The user has sent too many requests in a given time period (rate limiting). Retry after the specified delay.', category: '4xx' },
+  431: { name: 'Request Header Fields Too Large', desc: 'The server refuses the request because the header fields are too large. Reduce header size and retry.', category: '4xx' },
+  451: { name: 'Unavailable For Legal Reasons', desc: 'The resource is unavailable due to legal demands (e.g., government censorship, DMCA takedown).', category: '4xx' },
+  // 5xx Server Errors
+  500: { name: 'Internal Server Error', desc: 'A generic server error. The server encountered an unexpected condition that prevented it from fulfilling the request.', category: '5xx' },
+  501: { name: 'Not Implemented', desc: 'The server does not support the functionality required to fulfill the request (e.g., unrecognized HTTP method).', category: '5xx' },
+  502: { name: 'Bad Gateway', desc: 'The server, acting as a gateway or proxy, received an invalid response from the upstream server.', category: '5xx' },
+  503: { name: 'Service Unavailable', desc: 'The server is temporarily unable to handle the request due to overload or scheduled maintenance.', category: '5xx' },
+  504: { name: 'Gateway Timeout', desc: 'The server, acting as a gateway or proxy, did not receive a timely response from the upstream server.', category: '5xx' },
+  505: { name: 'HTTP Version Not Supported', desc: 'The server does not support the HTTP protocol version used in the request.', category: '5xx' },
+  506: { name: 'Variant Also Negotiates', desc: 'The server has an internal configuration error: transparent content negotiation results in a circular reference.', category: '5xx' },
+  507: { name: 'Insufficient Storage', desc: 'The server cannot store the representation needed to complete the request (WebDAV).', category: '5xx' },
+  508: { name: 'Loop Detected', desc: 'The server detected an infinite loop while processing the request (WebDAV).', category: '5xx' },
+  510: { name: 'Not Extended', desc: 'Further extensions to the request are required for the server to fulfill it.', category: '5xx' },
+  511: { name: 'Network Authentication Required', desc: 'The client needs to authenticate to gain network access (e.g., captive portal login page).', category: '5xx' }
+};
+
+// ========== Tab switching ==========
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ========== Utility ==========
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function copyToClipboard(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 1500);
+  });
+}
+
+function getStatusClass(code) {
+  if (code >= 100 && code < 200) return 'status-1xx';
+  if (code >= 200 && code < 300) return 'status-2xx';
+  if (code >= 300 && code < 400) return 'status-3xx';
+  if (code >= 400 && code < 500) return 'status-4xx';
+  return 'status-5xx';
+}
+
+function getBadgeClass(code) {
+  if (code >= 100 && code < 200) return 'badge-info';
+  if (code >= 200 && code < 300) return 'badge-success';
+  if (code >= 300 && code < 400) return 'badge-redirect';
+  if (code >= 400 && code < 500) return 'badge-client-error';
+  return 'badge-server-error';
+}
+
+function getStatusInfo(code) {
+  return STATUS_CODES[code] || { name: 'Unknown', desc: 'Non-standard status code.' };
+}
+
+function normalizeUrl(url) {
+  url = url.trim();
+  if (!/^https?:\/\//i.test(url)) {
+    url = 'https://' + url;
+  }
+  return url;
+}
+
+// ========== Check URL ==========
+async function checkUrl(url) {
+  const startTime = performance.now();
+  let result = {
+    url: url,
+    status: null,
+    statusText: '',
+    headers: {},
+    responseTime: 0,
+    redirected: false,
+    finalUrl: url,
+    error: null,
+    corsBlocked: false
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'HEAD',
+      redirect: 'follow',
+      mode: 'cors',
+      cache: 'no-store'
+    });
+
+    result.status = response.status;
+    result.statusText = response.statusText;
+    result.redirected = response.redirected;
+    result.finalUrl = response.url || url;
+    result.responseTime = Math.round(performance.now() - startTime);
+
+    response.headers.forEach((value, key) => {
+      result.headers[key] = value;
+    });
+
+  } catch (fetchError) {
+    // Try with no-cors mode to at least get timing
+    try {
+      const response2 = await fetch(url, {
+        method: 'HEAD',
+        redirect: 'follow',
+        mode: 'no-cors',
+        cache: 'no-store'
+      });
+
+      result.status = 0;
+      result.statusText = 'CORS Blocked';
+      result.responseTime = Math.round(performance.now() - startTime);
+      result.corsBlocked = true;
+      result.error = 'CORS policy prevented reading the response. The server is reachable but blocks cross-origin requests. Response time is still approximate.';
+
+    } catch (e) {
+      result.responseTime = Math.round(performance.now() - startTime);
+      result.error = e.message || 'Network error or URL unreachable.';
+    }
+  }
+
+  return result;
+}
+
+function renderSingleResult(result, container) {
+  if (result.error && !result.corsBlocked) {
+    container.innerHTML = `
+      <div class="card" style="border-color:var(--red);">
+        <h3 style="color:var(--red);">Request Failed</h3>
+        <p style="color:var(--text-muted);margin-bottom:8px;">Could not reach <code>${escapeHtml(result.url)}</code></p>
+        <p style="color:var(--red);font-size:0.9rem;">${escapeHtml(result.error)}</p>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-top:12px;">Response time: ${result.responseTime}ms</p>
+      </div>
+    `;
+    return;
+  }
+
+  const info = getStatusInfo(result.status);
+  const statusClass = getStatusClass(result.status);
+
+  let headersHtml = '';
+  const headerKeys = Object.keys(result.headers);
+  if (headerKeys.length > 0) {
+    const headerRows = headerKeys.map(key =>
+      `<tr><td>${escapeHtml(key)}</td><td>${escapeHtml(result.headers[key])}</td></tr>`
+    ).join('');
+
+    headersHtml = `
+      <div class="card">
+        <h3>Response Headers</h3>
+        <button class="copy-btn" id="copyHeadersBtn">Copy Headers</button>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Header</th><th>Value</th></tr></thead>
+            <tbody>${headerRows}</tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  let redirectHtml = '';
+  if (result.redirected && result.finalUrl !== result.url) {
+    redirectHtml = `
+      <div class="card">
+        <h3>Redirect Detected</h3>
+        <div class="redirect-chain">
+          <div class="redirect-step">
+            <div class="redirect-step-num" style="background:var(--accent-dim);color:var(--accent);">1</div>
+            <div class="redirect-step-content">
+              <div class="redirect-step-url">${escapeHtml(result.url)}</div>
+              <div class="redirect-step-status" style="color:var(--yellow);">Redirected</div>
+            </div>
+          </div>
+          <div class="redirect-step">
+            <div class="redirect-step-num" style="background:var(--accent-dim);color:var(--accent);">2</div>
+            <div class="redirect-step-content">
+              <div class="redirect-step-url">${escapeHtml(result.finalUrl)}</div>
+              <div class="redirect-step-status ${statusClass}">${result.status} ${escapeHtml(info.name)}</div>
+            </div>
+          </div>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-top:12px;">Note: Due to browser limitations, intermediate redirect steps are not visible. The browser automatically follows redirects. Use <code>curl -vL</code> for full chain details.</p>
+      </div>
+    `;
+  }
+
+  let corsNotice = '';
+  if (result.corsBlocked) {
+    corsNotice = `
+      <div class="notice" style="border-color:rgba(255,170,0,0.3);background:rgba(255,170,0,0.06);margin-top:16px;">
+        <strong style="color:var(--yellow);">CORS Blocked:</strong> ${escapeHtml(result.error)}
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="status-display">
+      ${result.corsBlocked ? `
+        <div class="status-code" style="color:var(--yellow);">CORS</div>
+        <div class="status-text" style="color:var(--yellow);">Blocked by CORS Policy</div>
+      ` : `
+        <div class="status-code ${statusClass}">${result.status}</div>
+        <div class="status-text ${statusClass}">${escapeHtml(info.name)}</div>
+      `}
+      <div class="response-time">Response time: <strong>${result.responseTime}ms</strong></div>
+      ${result.redirected ? `<div style="margin-top:8px;"><span class="badge badge-redirect">Redirected to ${escapeHtml(result.finalUrl)}</span></div>` : ''}
+    </div>
+
+    ${corsNotice}
+
+    ${!result.corsBlocked ? `
+    <div class="card">
+      <h3>Status Details</h3>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-weight:600;color:#fff;">${result.status} ${escapeHtml(info.name)}</span>
+          <span class="badge ${getBadgeClass(result.status)}">${info.category || getStatusClass(result.status).replace('status-','').toUpperCase()}</span>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin:0;">${escapeHtml(info.desc)}</p>
+      </div>
+      <div style="margin-top:12px;font-size:0.88rem;color:var(--text-muted);">
+        <strong>URL:</strong> <span style="font-family:monospace;color:var(--text);">${escapeHtml(result.url)}</span>
+        ${result.redirected ? `<br><strong>Final URL:</strong> <span style="font-family:monospace;color:var(--text);">${escapeHtml(result.finalUrl)}</span>` : ''}
+      </div>
+    </div>
+    ` : ''}
+
+    ${redirectHtml}
+    ${headersHtml}
+  `;
+
+  // Bind copy headers button
+  const copyBtn = document.getElementById('copyHeadersBtn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function() {
+      const text = headerKeys.map(k => `${k}: ${result.headers[k]}`).join('\n');
+      copyToClipboard(text, this);
+    });
+  }
+}
+
+// ========== Single Check ==========
+document.getElementById('checkBtn').addEventListener('click', async () => {
+  let url = document.getElementById('urlInput').value.trim();
+  if (!url) { alert('Please enter a URL.'); return; }
+  url = normalizeUrl(url);
+
+  const resultsDiv = document.getElementById('singleResults');
+  resultsDiv.innerHTML = `
+    <div class="card" style="text-align:center;padding:40px;">
+      <span class="spinner"></span>
+      <span style="color:var(--text-muted);">Checking URL status...</span>
+    </div>
+  `;
+
+  const result = await checkUrl(url);
+  renderSingleResult(result, resultsDiv);
+});
+
+document.getElementById('urlInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('checkBtn').click();
+});
+
+document.getElementById('clearSingleBtn').addEventListener('click', () => {
+  document.getElementById('urlInput').value = '';
+  document.getElementById('singleResults').innerHTML = '';
+});
+
+// ========== Bulk Check ==========
+document.getElementById('bulkCheckBtn').addEventListener('click', async () => {
+  const input = document.getElementById('bulkInput').value.trim();
+  if (!input) { alert('Please enter at least one URL.'); return; }
+
+  const urls = input.split('\n').map(s => normalizeUrl(s.trim())).filter(s => s.length > 8);
+  if (urls.length > 20) {
+    alert('Maximum 20 URLs per batch. Please reduce the list.');
+    return;
+  }
+
+  const resultsDiv = document.getElementById('bulkResults');
+  resultsDiv.innerHTML = `
+    <div class="card" style="text-align:center;padding:40px;">
+      <span class="spinner"></span>
+      <span style="color:var(--text-muted);">Checking ${urls.length} URL${urls.length > 1 ? 's' : ''}...</span>
+    </div>
+  `;
+
+  const results = [];
+  for (const url of urls) {
+    const result = await checkUrl(url);
+    results.push(result);
+  }
+
+  let tableRows = results.map(r => {
+    if (r.error && !r.corsBlocked) {
+      return `<tr>
+        <td style="color:var(--text);">${escapeHtml(r.url)}</td>
+        <td><span class="badge badge-client-error">Error</span></td>
+        <td style="font-family:var(--font);color:var(--red);">${escapeHtml(r.error.substring(0, 60))}</td>
+        <td style="font-family:var(--font);">${r.responseTime}ms</td>
+      </tr>`;
+    }
+    const info = getStatusInfo(r.status);
+    const badgeClass = r.corsBlocked ? 'badge-redirect' : getBadgeClass(r.status);
+    const statusLabel = r.corsBlocked ? 'CORS' : r.status;
+    const statusName = r.corsBlocked ? 'Blocked' : info.name;
+    return `<tr>
+      <td style="color:var(--text);font-size:0.82rem;">${escapeHtml(r.url)}</td>
+      <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
+      <td style="font-family:var(--font);">${escapeHtml(statusName)}${r.redirected ? ' (redirected)' : ''}</td>
+      <td style="font-family:var(--font);">${r.responseTime}ms</td>
+    </tr>`;
+  }).join('');
+
+  const successCount = results.filter(r => r.status >= 200 && r.status < 300).length;
+  const redirectCount = results.filter(r => r.status >= 300 && r.status < 400).length;
+  const errorCount = results.filter(r => (r.status >= 400) || r.error).length;
+  const corsCount = results.filter(r => r.corsBlocked).length;
+
+  resultsDiv.innerHTML = `
+    <div class="card">
+      <h3>Bulk Results (${results.length} URL${results.length > 1 ? 's' : ''})</h3>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
+        <span style="font-size:0.85rem;"><span class="badge badge-success">${successCount}</span> Success</span>
+        <span style="font-size:0.85rem;"><span class="badge badge-redirect">${redirectCount + corsCount}</span> Redirect/CORS</span>
+        <span style="font-size:0.85rem;"><span class="badge badge-client-error">${errorCount}</span> Errors</span>
+      </div>
+      <button class="copy-btn" id="copyBulkBtn">Copy as CSV</button>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>URL</th>
+              <th>Status</th>
+              <th>Description</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('copyBulkBtn').addEventListener('click', function() {
+    const csv = ['URL,Status,Description,Response Time'];
+    results.forEach(r => {
+      const info = getStatusInfo(r.status);
+      const status = r.corsBlocked ? 'CORS' : (r.status || 'Error');
+      const desc = r.corsBlocked ? 'Blocked' : (r.error || info.name);
+      csv.push(`"${r.url}","${status}","${desc.replace(/"/g, '""')}","${r.responseTime}ms"`);
+    });
+    copyToClipboard(csv.join('\n'), this);
+  });
+});
+
+document.getElementById('clearBulkBtn').addEventListener('click', () => {
+  document.getElementById('bulkInput').value = '';
+  document.getElementById('bulkResults').innerHTML = '';
+});
+
+// ========== Reference Table ==========
+function renderReference(filter, search) {
+  const container = document.getElementById('referenceContent');
+  const categories = {
+    '1xx': { title: '1xx Informational', class: 'ref-1xx' },
+    '2xx': { title: '2xx Success', class: 'ref-2xx' },
+    '3xx': { title: '3xx Redirection', class: 'ref-3xx' },
+    '4xx': { title: '4xx Client Error', class: 'ref-4xx' },
+    '5xx': { title: '5xx Server Error', class: 'ref-5xx' }
+  };
+
+  let html = '';
+  const searchLower = (search || '').toLowerCase();
+
+  for (const [cat, meta] of Object.entries(categories)) {
+    if (filter !== 'all' && filter !== cat) continue;
+
+    const codes = Object.entries(STATUS_CODES)
+      .filter(([code, info]) => info.category === cat)
+      .filter(([code, info]) => {
+        if (!searchLower) return true;
+        return code.toString().includes(searchLower) ||
+               info.name.toLowerCase().includes(searchLower) ||
+               info.desc.toLowerCase().includes(searchLower);
+      });
+
+    if (codes.length === 0) continue;
+
+    const rows = codes.map(([code, info]) =>
+      `<tr><td>${code}</td><td>${escapeHtml(info.name)}</td><td>${escapeHtml(info.desc)}</td></tr>`
+    ).join('');
+
+    html += `
+      <div class="ref-category">
+        <div class="ref-category-title ${meta.class}">${meta.title}</div>
+        <div class="table-wrap" style="border-radius:0 0 8px 8px;">
+          <table class="ref-table">
+            ${rows}
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  if (!html) {
+    html = '<div class="card" style="text-align:center;"><p style="color:var(--text-muted);">No status codes match your search.</p></div>';
+  }
+
+  container.innerHTML = html;
+}
+
+// Init reference
+renderReference('all', '');
+
+// Filter buttons
+document.querySelectorAll('#refFilter .filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#refFilter .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderReference(btn.dataset.filter, document.getElementById('refSearch').value);
+  });
+});
+
+// Search
+document.getElementById('refSearch').addEventListener('input', (e) => {
+  const activeFilter = document.querySelector('#refFilter .filter-btn.active').dataset.filter;
+  renderReference(activeFilter, e.target.value);
+});
+
+// ========== FAQ Accordion ==========
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+</script>
+
+</body>
+</html>
