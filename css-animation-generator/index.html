@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Animation Generator - Create Keyframe Animations | Free Tool</title>
+<meta name="description" content="Visual CSS animation builder with keyframe editor. Create bounce, fade, slide, spin, and custom animations. Set timing, easing, transforms, and more. Generate @keyframes CSS code instantly. Free, private, runs in your browser.">
+<meta name="keywords" content="CSS animation generator, keyframe editor, CSS animations, @keyframes, animation builder, CSS transitions, bounce animation, fade animation, CSS transform, animation timing">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/css-animation-generator">
+
+<meta property="og:title" content="CSS Animation Generator - Create Keyframe Animations | Zovo Tools">
+<meta property="og:description" content="Visual CSS animation builder with keyframe editor, 15+ presets, live preview, and code generation. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/css-animation-generator">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CSS Animation Generator - Create Keyframe Animations | Zovo Tools">
+<meta name="twitter:description" content="Visual CSS keyframe animation builder with 15+ presets and live preview. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CSS Animation Generator",
+  "description": "Visual CSS animation builder with keyframe editor, transform controls, timing functions, 15+ presets, live preview, and CSS code generation.",
+  "url": "https://tools.zovo.one/css-animation-generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with CSS Animations support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What are CSS keyframe animations?", "acceptedAnswer": {"@type": "Answer", "text": "CSS @keyframes animations let you define a sequence of styles that an element transitions through over time. You specify styles at various percentage points (0% to 100%), and the browser smoothly interpolates between them."}},
+    {"@type": "Question", "name": "What is the difference between CSS transitions and animations?", "acceptedAnswer": {"@type": "Answer", "text": "CSS transitions animate between two states when a property changes (like on hover). CSS animations using @keyframes can animate through multiple states, run automatically, loop infinitely, and provide much more control over the animation sequence."}},
+    {"@type": "Question", "name": "What is animation-timing-function?", "acceptedAnswer": {"@type": "Answer", "text": "The timing function controls the speed curve of the animation. Common values include ease (slow start, fast middle, slow end), linear (constant speed), ease-in (slow start), ease-out (slow end), and cubic-bezier() for custom curves."}},
+    {"@type": "Question", "name": "What does animation-fill-mode do?", "acceptedAnswer": {"@type": "Answer", "text": "animation-fill-mode determines what styles apply before and after the animation. 'forwards' keeps the final keyframe styles. 'backwards' applies the first keyframe styles during the delay. 'both' combines forwards and backwards behavior."}},
+    {"@type": "Question", "name": "How do I make an animation loop infinitely?", "acceptedAnswer": {"@type": "Answer", "text": "Set animation-iteration-count to 'infinite'. The animation will repeat forever. You can also set a specific number like 3 to repeat exactly three times."}},
+    {"@type": "Question", "name": "What CSS properties can be animated?", "acceptedAnswer": {"@type": "Answer", "text": "Most visual CSS properties can be animated, including transform (translate, rotate, scale, skew), opacity, color, background-color, border-radius, box-shadow, width, height, margin, padding, and many more. For best performance, stick to transform and opacity."}},
+    {"@type": "Question", "name": "What is animation-direction?", "acceptedAnswer": {"@type": "Answer", "text": "animation-direction controls which direction the animation plays. 'normal' plays forward, 'reverse' plays backward, 'alternate' alternates between forward and backward on each iteration, and 'alternate-reverse' starts backward then alternates."}},
+    {"@type": "Question", "name": "Is my animation data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All animation building, preview rendering, and CSS code generation happens entirely in your browser. No data is transmitted to any server. The tool is completely private and works offline once loaded."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+input[type="text"], input[type="number"], select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.92rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+}
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm { padding: 6px 14px; font-size: 0.82rem; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.btn-danger { background: rgba(255,68,102,0.15); color: var(--red); border: 1px solid transparent; }
+.btn-danger:hover { border-color: var(--red); }
+
+/* Layout */
+.tool-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 850px) {
+  .tool-layout { grid-template-columns: 1fr; }
+  .sidebar { position: static !important; }
+}
+
+.sidebar { position: sticky; top: 20px; }
+
+/* Control group */
+.control-group {
+  margin-bottom: 14px;
+}
+.control-group label { margin-bottom: 4px; }
+.control-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.control-row input[type="number"] { width: 80px; flex-shrink: 0; }
+.control-row select { flex: 1; }
+.value-display {
+  font-size: 0.82rem;
+  color: var(--accent);
+  font-weight: 600;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* Preset pills */
+.preset-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.preset-pill {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.preset-pill:hover, .preset-pill.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* Keyframe timeline */
+.timeline {
+  position: relative;
+  height: 60px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 16px 0;
+  cursor: pointer;
+}
+.timeline-track {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+.timeline-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  opacity: 0.3;
+  width: 100%;
+}
+.kf-marker {
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.kf-marker:hover, .kf-marker.active {
+  transform: translate(-50%, -50%) scale(1.3);
+  box-shadow: 0 0 10px rgba(0,255,136,0.4);
+}
+.kf-marker.active {
+  background: #fff;
+  border-color: var(--accent);
+}
+.kf-label {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* Keyframe editor */
+.kf-editor { margin-top: 16px; }
+.kf-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.kf-editor-header h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.kf-props {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.kf-props .control-group { margin-bottom: 4px; }
+.kf-props label { font-size: 0.78rem; }
+.kf-props input, .kf-props select { padding: 7px 10px; font-size: 0.85rem; }
+
+/* Preview area */
+.preview-wrapper {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.preview-wrapper h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.preview-stage {
+  width: 100%;
+  min-height: 300px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.preview-element {
+  width: 100px;
+  height: 100px;
+  background: var(--accent);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--bg);
+  font-size: 0.85rem;
+}
+.preview-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+}
+.preview-controls span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* Shape picker */
+.shape-picker {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+.shape-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shape-btn:hover, .shape-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.shape-btn .shape-icon {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+}
+.shape-btn .shape-icon.square { border-radius: 3px; }
+.shape-btn .shape-icon.circle { border-radius: 50%; }
+.shape-btn .shape-icon.pill { border-radius: 9px; width: 26px; height: 14px; }
+.shape-btn .shape-icon.text { background: none; color: var(--accent); font-weight: 700; font-size: 0.75rem; }
+
+/* Code output */
+.code-output {
+  position: relative;
+  margin-top: 20px;
+}
+.code-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.83rem;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* Color input styling */
+input[type="color"] {
+  width: 40px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  cursor: pointer;
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 850px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .preview-wrapper { padding: 16px; }
+  .kf-props { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>CSS <span>Animation</span> Generator</h1>
+    <p>Visual keyframe animation builder. Add keyframes, control transforms, timing, and easing &mdash; then generate clean CSS code. Choose from 15+ presets or build your own. Everything runs privately in your browser.</p>
+  </header>
+
+  <div class="tool-layout">
+    <!-- Sidebar Controls -->
+    <div class="sidebar">
+      <!-- Presets -->
+      <div class="card">
+        <h3>Presets</h3>
+        <div class="preset-grid" id="presetGrid"></div>
+      </div>
+
+      <!-- Animation Settings -->
+      <div class="card">
+        <h3>Animation Settings</h3>
+
+        <div class="control-group">
+          <label>Animation Name</label>
+          <input type="text" id="animName" value="my-animation" placeholder="animation name">
+        </div>
+
+        <div class="control-group">
+          <label>Duration</label>
+          <div class="control-row">
+            <input type="range" id="durationRange" min="0.1" max="5" step="0.1" value="1" style="flex:1;">
+            <span class="value-display" id="durationDisplay">1s</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Delay</label>
+          <div class="control-row">
+            <input type="range" id="delayRange" min="0" max="3" step="0.1" value="0" style="flex:1;">
+            <span class="value-display" id="delayDisplay">0s</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Timing Function</label>
+          <select id="timingFn">
+            <option value="ease" selected>ease</option>
+            <option value="linear">linear</option>
+            <option value="ease-in">ease-in</option>
+            <option value="ease-out">ease-out</option>
+            <option value="ease-in-out">ease-in-out</option>
+            <option value="cubic-bezier">cubic-bezier (custom)</option>
+          </select>
+        </div>
+
+        <div class="control-group" id="bezierGroup" style="display:none;">
+          <label>Cubic Bezier Values</label>
+          <div class="control-row">
+            <input type="number" id="bz1" value="0.25" step="0.05" min="0" max="1" style="width:60px;">
+            <input type="number" id="bz2" value="0.1" step="0.05" min="-2" max="2" style="width:60px;">
+            <input type="number" id="bz3" value="0.25" step="0.05" min="0" max="1" style="width:60px;">
+            <input type="number" id="bz4" value="1" step="0.05" min="-2" max="2" style="width:60px;">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Iteration Count</label>
+          <div class="control-row">
+            <select id="iterationType" style="width:110px;">
+              <option value="number">Number</option>
+              <option value="infinite">Infinite</option>
+            </select>
+            <input type="number" id="iterationCount" value="1" min="1" max="100" style="width:70px;">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Direction</label>
+          <select id="direction">
+            <option value="normal">normal</option>
+            <option value="reverse">reverse</option>
+            <option value="alternate">alternate</option>
+            <option value="alternate-reverse">alternate-reverse</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Fill Mode</label>
+          <select id="fillMode">
+            <option value="none">none</option>
+            <option value="forwards" selected>forwards</option>
+            <option value="backwards">backwards</option>
+            <option value="both">both</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Keyframes -->
+      <div class="card">
+        <h3>Keyframes</h3>
+        <div class="timeline" id="timeline">
+          <div class="timeline-track">
+            <div class="timeline-fill"></div>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:8px;">
+          <button class="btn btn-sm btn-primary" id="addKfBtn">+ Add Keyframe</button>
+          <button class="btn btn-sm btn-danger" id="removeKfBtn">Remove Selected</button>
+        </div>
+
+        <div class="kf-editor" id="kfEditor">
+          <div class="kf-editor-header">
+            <h4 id="kfEditorTitle">Select a keyframe</h4>
+            <div class="control-row" style="gap:4px;">
+              <label style="margin:0;white-space:nowrap;">Position %</label>
+              <input type="number" id="kfPosition" min="0" max="100" value="0" style="width:65px;padding:6px 8px;font-size:0.82rem;">
+            </div>
+          </div>
+          <div class="kf-props" id="kfProps">
+            <div class="control-group">
+              <label>Translate X</label>
+              <input type="text" id="kfTranslateX" value="0" placeholder="e.g. 100px, 50%">
+            </div>
+            <div class="control-group">
+              <label>Translate Y</label>
+              <input type="text" id="kfTranslateY" value="0" placeholder="e.g. -50px, 20%">
+            </div>
+            <div class="control-group">
+              <label>Rotate</label>
+              <input type="text" id="kfRotate" value="0deg" placeholder="e.g. 360deg">
+            </div>
+            <div class="control-group">
+              <label>Scale</label>
+              <input type="text" id="kfScale" value="1" placeholder="e.g. 1.5, 0.8">
+            </div>
+            <div class="control-group">
+              <label>Skew X</label>
+              <input type="text" id="kfSkewX" value="0deg" placeholder="e.g. 15deg">
+            </div>
+            <div class="control-group">
+              <label>Skew Y</label>
+              <input type="text" id="kfSkewY" value="0deg" placeholder="e.g. 10deg">
+            </div>
+            <div class="control-group">
+              <label>Opacity</label>
+              <input type="number" id="kfOpacity" value="1" min="0" max="1" step="0.1">
+            </div>
+            <div class="control-group">
+              <label>Background Color</label>
+              <div class="control-row">
+                <input type="color" id="kfBgColor" value="#00ff88">
+                <input type="text" id="kfBgColorText" value="#00ff88" style="flex:1;">
+              </div>
+            </div>
+            <div class="control-group">
+              <label>Border Radius</label>
+              <input type="text" id="kfBorderRadius" value="12px" placeholder="e.g. 50%, 20px">
+            </div>
+            <div class="control-group">
+              <label>Box Shadow</label>
+              <input type="text" id="kfBoxShadow" value="none" placeholder="e.g. 0 5px 15px rgba(0,0,0,0.3)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview & Code -->
+    <div>
+      <div class="preview-wrapper">
+        <h3>Live Preview</h3>
+        <div class="preview-stage" id="previewStage">
+          <div class="preview-element" id="previewElement">Zovo</div>
+        </div>
+        <div class="preview-controls">
+          <button class="btn btn-sm btn-primary" id="playBtn">Play</button>
+          <button class="btn btn-sm btn-secondary" id="pauseBtn">Pause</button>
+          <button class="btn btn-sm btn-secondary" id="resetBtn">Reset</button>
+          <span id="statusText">Ready</span>
+        </div>
+        <div class="shape-picker">
+          <button class="shape-btn active" data-shape="square" title="Square">
+            <div class="shape-icon square"></div>
+          </button>
+          <button class="shape-btn" data-shape="circle" title="Circle">
+            <div class="shape-icon circle"></div>
+          </button>
+          <button class="shape-btn" data-shape="pill" title="Pill">
+            <div class="shape-icon pill"></div>
+          </button>
+          <button class="shape-btn" data-shape="text" title="Text block">
+            <div class="shape-icon text">Aa</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="code-output">
+        <button class="copy-btn" id="copyCodeBtn">Copy CSS</button>
+        <div class="code-block" id="codeOutput"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="content-section">
+    <h2>About CSS Animation Generator</h2>
+    <p>This visual CSS animation generator helps you build complex keyframe animations without writing code from scratch. Define keyframes at any percentage position, control transforms (translate, rotate, scale, skew), opacity, colors, border-radius, and box-shadow. Preview your animation in real-time and generate clean, production-ready CSS code.</p>
+
+    <h3>How to Use</h3>
+    <ol>
+      <li><strong>Choose a preset</strong> to start with a common animation, or build from scratch.</li>
+      <li><strong>Configure animation settings</strong> &mdash; duration, timing function, delay, iteration count, direction, and fill mode.</li>
+      <li><strong>Add keyframes</strong> by clicking "+ Add Keyframe" and set the percentage position on the timeline.</li>
+      <li><strong>Edit keyframe properties</strong> &mdash; click a keyframe marker to select it, then adjust transform, opacity, color, border-radius, and box-shadow values.</li>
+      <li><strong>Preview</strong> your animation with Play/Pause/Reset controls. Change the preview element shape as needed.</li>
+      <li><strong>Copy the CSS</strong> code to use in your project.</li>
+    </ol>
+
+    <h3>Animation Properties Explained</h3>
+    <ul>
+      <li><code>duration</code> &mdash; How long one cycle of the animation takes</li>
+      <li><code>timing-function</code> &mdash; The speed curve (ease, linear, ease-in, ease-out, ease-in-out, or cubic-bezier)</li>
+      <li><code>delay</code> &mdash; Time to wait before the animation starts</li>
+      <li><code>iteration-count</code> &mdash; How many times the animation repeats (number or infinite)</li>
+      <li><code>direction</code> &mdash; Whether animation plays forward, backward, or alternates</li>
+      <li><code>fill-mode</code> &mdash; What styles apply before and after the animation runs</li>
+    </ul>
+
+    <h3>Performance Tips</h3>
+    <ul>
+      <li>Stick to <code>transform</code> and <code>opacity</code> for best performance &mdash; they are GPU-accelerated</li>
+      <li>Avoid animating <code>width</code>, <code>height</code>, <code>margin</code>, or <code>padding</code> as they cause layout recalculations</li>
+      <li>Use <code>will-change: transform</code> to hint the browser about upcoming animations</li>
+      <li>Keep animation durations reasonable &mdash; most UI animations work well between 0.2s and 0.8s</li>
+    </ul>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="content-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <div class="faq-q">What are CSS keyframe animations?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>CSS <code>@keyframes</code> animations let you define a sequence of styles that an element transitions through over time. You specify styles at various percentage points (0% to 100%), and the browser smoothly interpolates between them. They provide much more control than simple CSS transitions.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between CSS transitions and animations?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>CSS transitions animate between two states when a property changes (like on hover). CSS animations using <code>@keyframes</code> can animate through multiple states, run automatically on page load, loop infinitely, and provide much more control over the animation sequence including direction and fill behavior.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is animation-timing-function?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>The timing function controls the speed curve of the animation. Common values include <code>ease</code> (slow start, fast middle, slow end), <code>linear</code> (constant speed), <code>ease-in</code> (slow start), <code>ease-out</code> (slow end), and <code>cubic-bezier()</code> for fully custom curves.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What does animation-fill-mode do?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p><code>animation-fill-mode</code> determines what styles apply before and after the animation. <code>forwards</code> keeps the final keyframe styles after the animation ends. <code>backwards</code> applies the first keyframe styles during the delay period. <code>both</code> combines forwards and backwards behavior.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I make an animation loop infinitely?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Set <code>animation-iteration-count</code> to <code>infinite</code>. The animation will repeat forever. You can also set a specific number like <code>3</code> to repeat exactly three times. Combine with <code>animation-direction: alternate</code> for a smooth back-and-forth loop.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What CSS properties can be animated?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Most visual CSS properties can be animated, including <code>transform</code> (translate, rotate, scale, skew), <code>opacity</code>, <code>color</code>, <code>background-color</code>, <code>border-radius</code>, <code>box-shadow</code>, <code>width</code>, <code>height</code>, and many more. For best performance, stick to <code>transform</code> and <code>opacity</code> as they are GPU-accelerated.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is animation-direction?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p><code>animation-direction</code> controls which direction the animation plays. <code>normal</code> plays forward (0% to 100%), <code>reverse</code> plays backward, <code>alternate</code> alternates between forward and backward on each iteration, and <code>alternate-reverse</code> starts backward then alternates.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my animation data sent to a server?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. All animation building, preview rendering, and CSS code generation happens entirely in your browser. No data is transmitted to any server. The tool is completely private and works offline once loaded.</p></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== STATE ====================
+const state = {
+  name: 'my-animation',
+  duration: 1,
+  delay: 0,
+  timingFn: 'ease',
+  bezier: [0.25, 0.1, 0.25, 1],
+  iterationCount: 1,
+  iterationType: 'number',
+  direction: 'normal',
+  fillMode: 'forwards',
+  keyframes: [
+    { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+    { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+  ],
+  selectedKf: 0,
+  isPlaying: false,
+  shape: 'square'
+};
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+// ==================== PRESETS ====================
+const presets = {
+  'bounce': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 20, translateX: '0', translateY: '-30px', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 40, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 60, translateX: '0', translateY: '-15px', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 80, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1, timingFn: 'ease', iterationType: 'infinite', direction: 'normal', fillMode: 'both'
+  },
+  'fade-in': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 0, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 0.6, timingFn: 'ease-out', iterationType: 'number', direction: 'normal', fillMode: 'forwards'
+  },
+  'fade-out': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 0, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 0.6, timingFn: 'ease-in', iterationType: 'number', direction: 'normal', fillMode: 'forwards'
+  },
+  'slide-in-left': {
+    keyframes: [
+      { position: 0, translateX: '-100px', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 0, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 0.5, timingFn: 'ease-out', iterationType: 'number', direction: 'normal', fillMode: 'forwards'
+  },
+  'slide-in-right': {
+    keyframes: [
+      { position: 0, translateX: '100px', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 0, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 0.5, timingFn: 'ease-out', iterationType: 'number', direction: 'normal', fillMode: 'forwards'
+  },
+  'slide-in-up': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '40px', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 0, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 0.5, timingFn: 'ease-out', iterationType: 'number', direction: 'normal', fillMode: 'forwards'
+  },
+  'pulse': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 50, translateX: '0', translateY: '0', rotate: '0deg', scale: '1.1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: '0 0 20px rgba(0,255,136,0.4)' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1.5, timingFn: 'ease-in-out', iterationType: 'infinite', direction: 'normal', fillMode: 'both'
+  },
+  'shake': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 10, translateX: '-10px', translateY: '0', rotate: '-1deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 20, translateX: '10px', translateY: '0', rotate: '1deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 30, translateX: '-10px', translateY: '0', rotate: '-1deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 40, translateX: '10px', translateY: '0', rotate: '1deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 50, translateX: '-5px', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 60, translateX: '5px', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 70, translateX: '-2px', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 80, translateX: '2px', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 0.8, timingFn: 'ease-in-out', iterationType: 'number', direction: 'normal', fillMode: 'both'
+  },
+  'spin': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '360deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1, timingFn: 'linear', iterationType: 'infinite', direction: 'normal', fillMode: 'none'
+  },
+  'flip': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 40, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '-20deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 50, translateX: '0', translateY: '-20px', rotate: '0deg', scale: '1.1', skewX: '0deg', skewY: '20deg', opacity: 1, bgColor: '#6699ff', borderRadius: '12px', boxShadow: 'none' },
+      { position: 80, translateX: '0', translateY: '0', rotate: '0deg', scale: '0.95', skewX: '0deg', skewY: '-5deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1, timingFn: 'ease-in-out', iterationType: 'number', direction: 'normal', fillMode: 'both'
+  },
+  'swing': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 20, translateX: '0', translateY: '0', rotate: '15deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 40, translateX: '0', translateY: '0', rotate: '-10deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 60, translateX: '0', translateY: '0', rotate: '5deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 80, translateX: '0', translateY: '0', rotate: '-2deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1, timingFn: 'ease-in-out', iterationType: 'number', direction: 'normal', fillMode: 'both'
+  },
+  'zoom-in': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '0', skewX: '0deg', skewY: '0deg', opacity: 0, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 60, translateX: '0', translateY: '0', rotate: '0deg', scale: '1.05', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 0.5, timingFn: 'ease-out', iterationType: 'number', direction: 'normal', fillMode: 'forwards'
+  },
+  'zoom-out': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 40, translateX: '0', translateY: '0', rotate: '0deg', scale: '1.05', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '0', skewX: '0deg', skewY: '0deg', opacity: 0, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 0.5, timingFn: 'ease-in', iterationType: 'number', direction: 'normal', fillMode: 'forwards'
+  },
+  'rubber-band': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 30, translateX: '0', translateY: '0', rotate: '0deg', scale: '1.25', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 40, translateX: '0', translateY: '0', rotate: '0deg', scale: '0.75', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 50, translateX: '0', translateY: '0', rotate: '0deg', scale: '1.15', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 65, translateX: '0', translateY: '0', rotate: '0deg', scale: '0.95', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 75, translateX: '0', translateY: '0', rotate: '0deg', scale: '1.05', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1, timingFn: 'ease-in-out', iterationType: 'number', direction: 'normal', fillMode: 'both'
+  },
+  'jello': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 11, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '-12.5deg', skewY: '-12.5deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 22, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '6.25deg', skewY: '6.25deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 33, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '-3.125deg', skewY: '-3.125deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 44, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '1.5625deg', skewY: '1.5625deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 55, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '-0.78deg', skewY: '-0.78deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 66, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0.39deg', skewY: '0.39deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1, timingFn: 'ease-in-out', iterationType: 'number', direction: 'normal', fillMode: 'both'
+  },
+  'heartbeat': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#ff4466', borderRadius: '12px', boxShadow: 'none' },
+      { position: 14, translateX: '0', translateY: '0', rotate: '0deg', scale: '1.3', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#ff4466', borderRadius: '12px', boxShadow: '0 0 15px rgba(255,68,102,0.4)' },
+      { position: 28, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#ff4466', borderRadius: '12px', boxShadow: 'none' },
+      { position: 42, translateX: '0', translateY: '0', rotate: '0deg', scale: '1.3', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#ff4466', borderRadius: '12px', boxShadow: '0 0 15px rgba(255,68,102,0.4)' },
+      { position: 70, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#ff4466', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#ff4466', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1.5, timingFn: 'ease-in-out', iterationType: 'infinite', direction: 'normal', fillMode: 'both'
+  },
+  'wobble': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 15, translateX: '-25px', translateY: '0', rotate: '-5deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 30, translateX: '20px', translateY: '0', rotate: '3deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 45, translateX: '-15px', translateY: '0', rotate: '-3deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 60, translateX: '10px', translateY: '0', rotate: '2deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 75, translateX: '-5px', translateY: '0', rotate: '-1deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1, timingFn: 'ease-in-out', iterationType: 'number', direction: 'normal', fillMode: 'both'
+  },
+  'flash': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 25, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 0, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 50, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 75, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 0, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1, timingFn: 'linear', iterationType: 'number', direction: 'normal', fillMode: 'both'
+  },
+  'tada': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 10, translateX: '0', translateY: '0', rotate: '-3deg', scale: '0.9', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 20, translateX: '0', translateY: '0', rotate: '-3deg', scale: '0.9', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 30, translateX: '0', translateY: '0', rotate: '3deg', scale: '1.1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 40, translateX: '0', translateY: '0', rotate: '-3deg', scale: '1.1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 50, translateX: '0', translateY: '0', rotate: '3deg', scale: '1.1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 60, translateX: '0', translateY: '0', rotate: '-3deg', scale: '1.1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 70, translateX: '0', translateY: '0', rotate: '3deg', scale: '1.1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 80, translateX: '0', translateY: '0', rotate: '-3deg', scale: '1.1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 90, translateX: '0', translateY: '0', rotate: '3deg', scale: '1.1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 1, timingFn: 'ease-in-out', iterationType: 'number', direction: 'normal', fillMode: 'both'
+  },
+  'color-shift': {
+    keyframes: [
+      { position: 0, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' },
+      { position: 25, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#6699ff', borderRadius: '20px', boxShadow: 'none' },
+      { position: 50, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#cc66ff', borderRadius: '50%', boxShadow: 'none' },
+      { position: 75, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#ff9966', borderRadius: '20px', boxShadow: 'none' },
+      { position: 100, translateX: '0', translateY: '0', rotate: '0deg', scale: '1', skewX: '0deg', skewY: '0deg', opacity: 1, bgColor: '#00ff88', borderRadius: '12px', boxShadow: 'none' }
+    ],
+    duration: 3, timingFn: 'ease-in-out', iterationType: 'infinite', direction: 'normal', fillMode: 'both'
+  }
+};
+
+// Render preset buttons
+(function renderPresetButtons() {
+  const grid = $('#presetGrid');
+  const presetNames = {
+    'bounce': 'Bounce', 'fade-in': 'Fade In', 'fade-out': 'Fade Out',
+    'slide-in-left': 'Slide Left', 'slide-in-right': 'Slide Right', 'slide-in-up': 'Slide Up',
+    'pulse': 'Pulse', 'shake': 'Shake', 'spin': 'Spin',
+    'flip': 'Flip', 'swing': 'Swing', 'zoom-in': 'Zoom In', 'zoom-out': 'Zoom Out',
+    'rubber-band': 'Rubber Band', 'jello': 'Jello', 'heartbeat': 'Heartbeat',
+    'wobble': 'Wobble', 'flash': 'Flash', 'tada': 'Tada', 'color-shift': 'Color Shift'
+  };
+  for (const key in presetNames) {
+    const btn = document.createElement('button');
+    btn.className = 'preset-pill';
+    btn.dataset.preset = key;
+    btn.textContent = presetNames[key];
+    grid.appendChild(btn);
+  }
+})();
+
+// ==================== PRESET APPLICATION ====================
+$$('.preset-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('.preset-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyPreset(btn.dataset.preset);
+  });
+});
+
+function applyPreset(name) {
+  const p = presets[name];
+  if (!p) return;
+  state.name = name;
+  state.keyframes = JSON.parse(JSON.stringify(p.keyframes));
+  state.duration = p.duration;
+  state.timingFn = p.timingFn;
+  state.iterationType = p.iterationType;
+  state.iterationCount = p.iterationType === 'infinite' ? 1 : 1;
+  state.direction = p.direction;
+  state.fillMode = p.fillMode;
+  state.delay = 0;
+  state.selectedKf = 0;
+
+  // Update UI
+  $('#animName').value = name;
+  $('#durationRange').value = state.duration;
+  $('#durationDisplay').textContent = state.duration + 's';
+  $('#delayRange').value = 0;
+  $('#delayDisplay').textContent = '0s';
+  $('#timingFn').value = state.timingFn;
+  $('#bezierGroup').style.display = state.timingFn === 'cubic-bezier' ? 'block' : 'none';
+  $('#iterationType').value = state.iterationType;
+  $('#iterationCount').value = state.iterationCount;
+  $('#iterationCount').disabled = state.iterationType === 'infinite';
+  $('#direction').value = state.direction;
+  $('#fillMode').value = state.fillMode;
+
+  renderTimeline();
+  selectKeyframe(0);
+  generateCode();
+  playAnimation();
+}
+
+// ==================== ANIMATION CONTROLS ====================
+$('#animName').addEventListener('input', e => {
+  state.name = e.target.value.replace(/[^a-zA-Z0-9_-]/g, '-') || 'my-animation';
+  generateCode();
+});
+
+$('#durationRange').addEventListener('input', e => {
+  state.duration = parseFloat(e.target.value);
+  $('#durationDisplay').textContent = state.duration + 's';
+  generateCode();
+});
+
+$('#delayRange').addEventListener('input', e => {
+  state.delay = parseFloat(e.target.value);
+  $('#delayDisplay').textContent = state.delay + 's';
+  generateCode();
+});
+
+$('#timingFn').addEventListener('change', e => {
+  state.timingFn = e.target.value;
+  $('#bezierGroup').style.display = state.timingFn === 'cubic-bezier' ? 'block' : 'none';
+  generateCode();
+});
+
+['bz1','bz2','bz3','bz4'].forEach((id, i) => {
+  $(`#${id}`).addEventListener('input', e => {
+    state.bezier[i] = parseFloat(e.target.value);
+    generateCode();
+  });
+});
+
+$('#iterationType').addEventListener('change', e => {
+  state.iterationType = e.target.value;
+  $('#iterationCount').disabled = state.iterationType === 'infinite';
+  generateCode();
+});
+
+$('#iterationCount').addEventListener('input', e => {
+  state.iterationCount = parseInt(e.target.value) || 1;
+  generateCode();
+});
+
+$('#direction').addEventListener('change', e => {
+  state.direction = e.target.value;
+  generateCode();
+});
+
+$('#fillMode').addEventListener('change', e => {
+  state.fillMode = e.target.value;
+  generateCode();
+});
+
+// ==================== TIMELINE ====================
+function renderTimeline() {
+  const timeline = $('#timeline');
+  // Remove existing markers
+  timeline.querySelectorAll('.kf-marker').forEach(m => m.remove());
+
+  state.keyframes.forEach((kf, i) => {
+    const marker = document.createElement('div');
+    marker.className = 'kf-marker' + (i === state.selectedKf ? ' active' : '');
+    // Position marker along the track (20px padding each side)
+    const leftPct = kf.position;
+    marker.style.left = `calc(20px + ${leftPct}% * (100% - 40px) / 100)`;
+    marker.dataset.index = i;
+
+    const label = document.createElement('span');
+    label.className = 'kf-label';
+    label.textContent = kf.position + '%';
+    marker.appendChild(label);
+
+    marker.addEventListener('click', e => {
+      e.stopPropagation();
+      selectKeyframe(i);
+    });
+
+    timeline.appendChild(marker);
+  });
+}
+
+function selectKeyframe(index) {
+  if (index < 0 || index >= state.keyframes.length) return;
+  state.selectedKf = index;
+  const kf = state.keyframes[index];
+
+  // Update markers
+  $$('.kf-marker').forEach((m, i) => {
+    m.classList.toggle('active', i === index);
+  });
+
+  // Update editor
+  $('#kfEditorTitle').textContent = `Keyframe at ${kf.position}%`;
+  $('#kfPosition').value = kf.position;
+  $('#kfTranslateX').value = kf.translateX;
+  $('#kfTranslateY').value = kf.translateY;
+  $('#kfRotate').value = kf.rotate;
+  $('#kfScale').value = kf.scale;
+  $('#kfSkewX').value = kf.skewX;
+  $('#kfSkewY').value = kf.skewY;
+  $('#kfOpacity').value = kf.opacity;
+  $('#kfBgColor').value = kf.bgColor;
+  $('#kfBgColorText').value = kf.bgColor;
+  $('#kfBorderRadius').value = kf.borderRadius;
+  $('#kfBoxShadow').value = kf.boxShadow;
+}
+
+// Add keyframe
+$('#addKfBtn').addEventListener('click', () => {
+  // Find a good position for new keyframe
+  const positions = state.keyframes.map(k => k.position).sort((a, b) => a - b);
+  let newPos = 50;
+  // Find largest gap
+  let maxGap = 0;
+  for (let i = 0; i < positions.length - 1; i++) {
+    const gap = positions[i + 1] - positions[i];
+    if (gap > maxGap) {
+      maxGap = gap;
+      newPos = Math.round(positions[i] + gap / 2);
+    }
+  }
+
+  const newKf = {
+    position: newPos,
+    translateX: '0', translateY: '0',
+    rotate: '0deg', scale: '1',
+    skewX: '0deg', skewY: '0deg',
+    opacity: 1, bgColor: '#00ff88',
+    borderRadius: '12px', boxShadow: 'none'
+  };
+  state.keyframes.push(newKf);
+  state.keyframes.sort((a, b) => a.position - b.position);
+
+  const newIndex = state.keyframes.indexOf(newKf);
+  renderTimeline();
+  selectKeyframe(newIndex);
+  generateCode();
+});
+
+// Remove keyframe
+$('#removeKfBtn').addEventListener('click', () => {
+  if (state.keyframes.length <= 2) {
+    showToast('Need at least 2 keyframes');
+    return;
+  }
+  state.keyframes.splice(state.selectedKf, 1);
+  state.selectedKf = Math.min(state.selectedKf, state.keyframes.length - 1);
+  renderTimeline();
+  selectKeyframe(state.selectedKf);
+  generateCode();
+});
+
+// Position change
+$('#kfPosition').addEventListener('input', e => {
+  let val = parseInt(e.target.value);
+  if (isNaN(val)) val = 0;
+  val = Math.max(0, Math.min(100, val));
+  state.keyframes[state.selectedKf].position = val;
+  state.keyframes.sort((a, b) => a.position - b.position);
+  // Find new index
+  const kf = state.keyframes.find(k => k.position === val);
+  state.selectedKf = state.keyframes.indexOf(kf);
+  renderTimeline();
+  selectKeyframe(state.selectedKf);
+  generateCode();
+});
+
+// Keyframe property inputs
+const kfFields = {
+  'kfTranslateX': 'translateX',
+  'kfTranslateY': 'translateY',
+  'kfRotate': 'rotate',
+  'kfScale': 'scale',
+  'kfSkewX': 'skewX',
+  'kfSkewY': 'skewY',
+  'kfOpacity': 'opacity',
+  'kfBorderRadius': 'borderRadius',
+  'kfBoxShadow': 'boxShadow'
+};
+
+for (const [id, field] of Object.entries(kfFields)) {
+  $(`#${id}`).addEventListener('input', e => {
+    state.keyframes[state.selectedKf][field] = e.target.value;
+    generateCode();
+  });
+}
+
+$('#kfBgColor').addEventListener('input', e => {
+  state.keyframes[state.selectedKf].bgColor = e.target.value;
+  $('#kfBgColorText').value = e.target.value;
+  generateCode();
+});
+$('#kfBgColorText').addEventListener('input', e => {
+  const val = e.target.value;
+  state.keyframes[state.selectedKf].bgColor = val;
+  if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+    $('#kfBgColor').value = val;
+  }
+  generateCode();
+});
+
+// ==================== SHAPE PICKER ====================
+$$('.shape-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('.shape-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const el = $('#previewElement');
+    const shape = btn.dataset.shape;
+    state.shape = shape;
+    el.style.width = '';
+    el.style.height = '';
+    el.style.borderRadius = '';
+    el.textContent = 'Zovo';
+    switch (shape) {
+      case 'square':
+        el.style.width = '100px'; el.style.height = '100px'; el.style.borderRadius = '12px'; break;
+      case 'circle':
+        el.style.width = '100px'; el.style.height = '100px'; el.style.borderRadius = '50%'; break;
+      case 'pill':
+        el.style.width = '160px'; el.style.height = '60px'; el.style.borderRadius = '30px'; break;
+      case 'text':
+        el.style.width = '180px'; el.style.height = 'auto'; el.style.padding = '16px 24px';
+        el.style.borderRadius = '8px'; el.textContent = 'Animated Text'; break;
+    }
+  });
+});
+
+// ==================== PREVIEW PLAYBACK ====================
+let styleEl = null;
+
+function injectAnimation() {
+  if (styleEl) styleEl.remove();
+  styleEl = document.createElement('style');
+
+  const timingValue = state.timingFn === 'cubic-bezier'
+    ? `cubic-bezier(${state.bezier.join(',')})`
+    : state.timingFn;
+
+  const iterCount = state.iterationType === 'infinite' ? 'infinite' : state.iterationCount;
+
+  let kfCSS = `@keyframes ${state.name} {\n`;
+  state.keyframes.forEach(kf => {
+    kfCSS += `  ${kf.position}% {\n`;
+    const transforms = [];
+    if (kf.translateX !== '0' && kf.translateX !== '0px') transforms.push(`translateX(${addUnit(kf.translateX)})`);
+    if (kf.translateY !== '0' && kf.translateY !== '0px') transforms.push(`translateY(${addUnit(kf.translateY)})`);
+    if (kf.rotate !== '0deg' && kf.rotate !== '0') transforms.push(`rotate(${kf.rotate})`);
+    if (kf.scale !== '1') transforms.push(`scale(${kf.scale})`);
+    if (kf.skewX !== '0deg' && kf.skewX !== '0') transforms.push(`skewX(${kf.skewX})`);
+    if (kf.skewY !== '0deg' && kf.skewY !== '0') transforms.push(`skewY(${kf.skewY})`);
+    if (transforms.length > 0) kfCSS += `    transform: ${transforms.join(' ')};\n`;
+    kfCSS += `    opacity: ${kf.opacity};\n`;
+    kfCSS += `    background-color: ${kf.bgColor};\n`;
+    kfCSS += `    border-radius: ${kf.borderRadius};\n`;
+    if (kf.boxShadow !== 'none') kfCSS += `    box-shadow: ${kf.boxShadow};\n`;
+    kfCSS += `  }\n`;
+  });
+  kfCSS += `}\n`;
+
+  styleEl.textContent = kfCSS + `
+    #previewElement.animating {
+      animation-name: ${state.name};
+      animation-duration: ${state.duration}s;
+      animation-delay: ${state.delay}s;
+      animation-timing-function: ${timingValue};
+      animation-iteration-count: ${iterCount};
+      animation-direction: ${state.direction};
+      animation-fill-mode: ${state.fillMode};
+    }
+  `;
+  document.head.appendChild(styleEl);
+}
+
+function addUnit(val) {
+  if (typeof val === 'string' && (val.includes('px') || val.includes('%') || val.includes('em') || val.includes('rem') || val.includes('vh') || val.includes('vw'))) {
+    return val;
+  }
+  const num = parseFloat(val);
+  if (isNaN(num) || num === 0) return val;
+  return val + 'px';
+}
+
+function playAnimation() {
+  const el = $('#previewElement');
+  el.classList.remove('animating');
+  void el.offsetWidth; // force reflow
+  injectAnimation();
+  el.classList.add('animating');
+  state.isPlaying = true;
+  $('#statusText').textContent = 'Playing';
+}
+
+function pauseAnimation() {
+  const el = $('#previewElement');
+  if (state.isPlaying) {
+    el.style.animationPlayState = 'paused';
+    state.isPlaying = false;
+    $('#statusText').textContent = 'Paused';
+  } else {
+    el.style.animationPlayState = 'running';
+    state.isPlaying = true;
+    $('#statusText').textContent = 'Playing';
+  }
+}
+
+function resetAnimation() {
+  const el = $('#previewElement');
+  el.classList.remove('animating');
+  el.style.animationPlayState = '';
+  el.style.transform = '';
+  el.style.opacity = '';
+  el.style.backgroundColor = '';
+  el.style.borderRadius = '';
+  el.style.boxShadow = '';
+  state.isPlaying = false;
+  $('#statusText').textContent = 'Ready';
+}
+
+$('#playBtn').addEventListener('click', playAnimation);
+$('#pauseBtn').addEventListener('click', pauseAnimation);
+$('#resetBtn').addEventListener('click', resetAnimation);
+
+// ==================== CODE GENERATION ====================
+function generateCode() {
+  const timingValue = state.timingFn === 'cubic-bezier'
+    ? `cubic-bezier(${state.bezier.join(', ')})`
+    : state.timingFn;
+
+  const iterCount = state.iterationType === 'infinite' ? 'infinite' : state.iterationCount;
+
+  let css = `@keyframes ${state.name} {\n`;
+
+  state.keyframes.forEach(kf => {
+    css += `  ${kf.position}% {\n`;
+    const transforms = [];
+    if (kf.translateX !== '0' && kf.translateX !== '0px') transforms.push(`translateX(${addUnit(kf.translateX)})`);
+    if (kf.translateY !== '0' && kf.translateY !== '0px') transforms.push(`translateY(${addUnit(kf.translateY)})`);
+    if (kf.rotate !== '0deg' && kf.rotate !== '0') transforms.push(`rotate(${kf.rotate})`);
+    if (kf.scale !== '1') transforms.push(`scale(${kf.scale})`);
+    if (kf.skewX !== '0deg' && kf.skewX !== '0') transforms.push(`skewX(${kf.skewX})`);
+    if (kf.skewY !== '0deg' && kf.skewY !== '0') transforms.push(`skewY(${kf.skewY})`);
+
+    if (transforms.length > 0) {
+      css += `    transform: ${transforms.join(' ')};\n`;
+    }
+    if (kf.opacity != 1) {
+      css += `    opacity: ${kf.opacity};\n`;
+    }
+    css += `    background-color: ${kf.bgColor};\n`;
+    css += `    border-radius: ${kf.borderRadius};\n`;
+    if (kf.boxShadow !== 'none') {
+      css += `    box-shadow: ${kf.boxShadow};\n`;
+    }
+    css += `  }\n`;
+  });
+
+  css += `}\n\n`;
+  css += `.animated-element {\n`;
+  css += `  animation-name: ${state.name};\n`;
+  css += `  animation-duration: ${state.duration}s;\n`;
+  if (state.delay > 0) {
+    css += `  animation-delay: ${state.delay}s;\n`;
+  }
+  css += `  animation-timing-function: ${timingValue};\n`;
+  css += `  animation-iteration-count: ${iterCount};\n`;
+  css += `  animation-direction: ${state.direction};\n`;
+  css += `  animation-fill-mode: ${state.fillMode};\n`;
+  css += `}\n`;
+
+  $('#codeOutput').textContent = css;
+}
+
+// ==================== COPY ====================
+$('#copyCodeBtn').addEventListener('click', () => {
+  const code = $('#codeOutput').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('CSS copied to clipboard!');
+    $('#copyCodeBtn').textContent = 'Copied!';
+    setTimeout(() => { $('#copyCodeBtn').textContent = 'Copy CSS'; }, 2000);
+  });
+});
+
+// ==================== TOAST ====================
+function showToast(msg) {
+  const toast = $('#toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ==================== FAQ ====================
+$$('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    q.parentElement.classList.toggle('open');
+  });
+});
+
+// ==================== INIT ====================
+renderTimeline();
+selectKeyframe(0);
+generateCode();
+</script>
+</body>
+</html>
