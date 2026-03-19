@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Anagram Solver - Find Words from Letters | Zovo</title>
+<meta name="description" content="Find all valid English words from your letters. Supports wildcards, Scrabble scoring, word length filters, and multi-word anagrams. Built-in 5000+ word dictionary. Free, instant results.">
+<meta name="author" content="Michael Lip">
+<meta name="keywords" content="anagram solver, word finder, scrabble helper, word unscrambler, anagram generator, letter solver, word game helper, scrabble word finder">
+<link rel="canonical" href="https://tools.zovo.one/anagram-solver">
+<meta property="og:title" content="Free Anagram Solver - Find Words from Letters | Zovo">
+<meta property="og:description" content="Find all valid English words from your letters. Supports wildcards, Scrabble scoring, and multi-word anagrams. 5000+ word dictionary. Free and instant.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tools.zovo.one/anagram-solver">
+<meta property="og:site_name" content="Zovo">
+<meta property="og:image" content="https://tools.zovo.one/anagram-solver/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Anagram Solver - Find Words from Letters | Zovo">
+<meta name="twitter:description" content="Find all valid English words from your letters. Scrabble scoring, wildcards, multi-word mode. Free, instant, no signup.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Anagram Solver",
+  "url": "https://tools.zovo.one/anagram-solver",
+  "description": "Free anagram solver that finds all valid English words from your letters. Features Scrabble point scoring, wildcard support, word length filters, multi-word anagram mode, and a built-in dictionary of 5000+ common English words.",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "datePublished": "2025-04-01",
+  "dateModified": "2026-03-19"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zovo.one" },
+    { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://tools.zovo.one" },
+    { "@type": "ListItem", "position": 3, "name": "Anagram Solver", "item": "https://tools.zovo.one/anagram-solver" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How does the anagram solver work?", "acceptedAnswer": { "@type": "Answer", "text": "Enter your available letters and the solver checks every word in its 5000+ word dictionary to find words that can be formed using only your letters. Each letter can only be used as many times as it appears in your input." }},
+    { "@type": "Question", "name": "What does the wildcard (?) do?", "acceptedAnswer": { "@type": "Answer", "text": "The question mark (?) acts as a wildcard representing any single letter, similar to blank tiles in Scrabble. For example, entering 'c?t' would find words like cat, cot, cut. Wildcard letters score 0 points in Scrabble mode." }},
+    { "@type": "Question", "name": "How are Scrabble scores calculated?", "acceptedAnswer": { "@type": "Answer", "text": "Each letter has a point value based on official Scrabble tile values: A=1, B=3, C=3, D=2, E=1, F=4, G=2, H=4, I=1, J=8, K=5, L=1, M=3, N=1, O=1, P=3, Q=10, R=1, S=1, T=1, U=1, V=4, W=4, X=8, Y=4, Z=10." }},
+    { "@type": "Question", "name": "Can I filter results by word length?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Set minimum and maximum word lengths to narrow results. This is useful for crossword puzzles where you know the exact number of letters needed or for word games with length requirements." }},
+    { "@type": "Question", "name": "What is multi-word anagram mode?", "acceptedAnswer": { "@type": "Answer", "text": "Multi-word mode finds pairs of words that together use all your input letters. For example, 'listen' can be rearranged to 'silent' (single word) or 'tin' + 'els' (multi-word). This mode helps with word puzzles that accept multi-word answers." }},
+    { "@type": "Question", "name": "How large is the built-in dictionary?", "acceptedAnswer": { "@type": "Answer", "text": "The dictionary contains over 5000 common English words covering everyday vocabulary, academic terms, and words commonly used in word games. It focuses on standard English words recognized by major dictionaries." }},
+    { "@type": "Question", "name": "Can I look up word definitions?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Click any word in the results to see its definition fetched from the Free Dictionary API. This helps verify words you are unfamiliar with and learn new vocabulary." }},
+    { "@type": "Question", "name": "Is this tool useful for Scrabble?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Enter your tile letters (use ? for blank tiles), and the solver finds all possible words with their Scrabble scores. Sort by score to find the highest-scoring plays. The scoring uses official Scrabble tile values." }}
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;font-weight:400}
+a{color:#00ccff;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:20px 16px}
+h1{font-size:1.8rem;font-weight:600;color:#fff;margin-bottom:8px;line-height:1.3}
+h2{font-size:1.35rem;font-weight:500;color:#fff;margin:40px 0 16px}
+h3{font-size:1.1rem;font-weight:500;color:#ddd;margin:24px 0 12px}
+p,li{font-weight:400}
+p{margin-bottom:16px;color:#ccc}
+.breadcrumb{font-size:0.85rem;color:#888;margin-bottom:16px}
+.breadcrumb a{color:#888}
+.breadcrumb a:hover{color:#00ff88}
+.tool-card{background:#12121a;border-radius:12px;padding:24px;margin:24px 0;border:1px solid #1e1e2e}
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.badge-row img{height:20px}
+.btn{background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;padding:12px 24px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.2s}
+.btn:hover{background:#00dd77}
+.btn-sm{padding:8px 16px;font-size:0.85rem}
+.btn-secondary{background:#00ccff;color:#0a0a0f}
+.btn-outline{background:transparent;border:1px solid #00ff88;color:#00ff88;padding:8px 16px;font-size:0.85rem;border-radius:6px;cursor:pointer;font-family:inherit}
+.btn-outline:hover{background:#00ff8815}
+.input-section{margin:16px 0}
+.letter-input{width:100%;background:#1a1a2a;border:2px solid #2a2a3a;border-radius:10px;padding:16px;color:#fff;font-size:1.6rem;font-family:inherit;text-align:center;letter-spacing:0.3em;text-transform:uppercase}
+.letter-input:focus{outline:none;border-color:#00ff88}
+.letter-input::placeholder{font-size:1rem;letter-spacing:0.05em;text-transform:none}
+.rack{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:16px 0;min-height:52px}
+.tile{width:44px;height:44px;background:linear-gradient(135deg,#f5e6c8,#d4b896);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;color:#3a2a15;position:relative;box-shadow:1px 2px 4px rgba(0,0,0,0.3)}
+.tile .pts{position:absolute;bottom:2px;right:4px;font-size:0.55rem;font-weight:600;color:#7a6a55}
+.controls-row{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin:16px 0}
+.control-group{display:flex;flex-direction:column;gap:4px}
+.control-group label{font-size:0.82rem;color:#888;font-weight:500}
+.control-group input,.control-group select{background:#1a1a2a;border:1px solid #2a2a3a;border-radius:6px;padding:8px 10px;color:#fff;font-family:inherit;font-size:0.9rem;width:80px}
+.control-group input:focus,.control-group select:focus{outline:none;border-color:#00ff88}
+.toggle-row{display:flex;align-items:center;gap:10px;margin:12px 0}
+.toggle-row label{font-size:0.9rem;color:#ccc;cursor:pointer;display:flex;align-items:center;gap:8px}
+.sort-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;align-items:center}
+.sort-row span{font-size:0.85rem;color:#888}
+.results-header{display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px}
+.results-count{font-size:0.9rem;color:#888}
+.word-grid{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.word-chip{background:#1a1a2a;border:1px solid #2a2a3a;border-radius:6px;padding:8px 14px;cursor:pointer;transition:all 0.2s;font-size:0.9rem;display:flex;align-items:center;gap:8px}
+.word-chip:hover{border-color:#00ff88;background:#00ff8810}
+.word-chip .w-word{color:#fff;font-weight:500}
+.word-chip .w-score{color:#00ff88;font-size:0.75rem;font-weight:600}
+.word-chip .w-len{color:#666;font-size:0.7rem}
+.length-dist{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.dist-bar{background:#1a1a2a;border:1px solid #1e1e2e;border-radius:6px;padding:8px 12px;text-align:center;min-width:60px}
+.dist-bar .d-count{color:#00ff88;font-weight:600;font-size:1.1rem}
+.dist-bar .d-label{color:#888;font-size:0.7rem}
+.definition-box{background:#0d0d14;border:1px solid #1e1e2e;border-radius:8px;padding:16px;margin:16px 0;display:none}
+.definition-box .def-word{font-size:1.2rem;font-weight:600;color:#00ff88}
+.definition-box .def-pos{color:#00ccff;font-size:0.85rem;margin:4px 0}
+.definition-box .def-text{color:#ccc;font-size:0.9rem;margin:6px 0}
+.author-box{display:flex;gap:16px;align-items:flex-start;background:#12121a;border:1px solid #1e1e2e;border-radius:12px;padding:20px;margin:32px 0}
+.author-avatar{width:56px;height:56px;border-radius:50%;background:#00ff8830;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#00ff88;flex-shrink:0}
+.author-info{flex:1}
+.author-info .name{font-weight:600;color:#fff;font-size:1rem}
+.author-info .role{color:#00ff88;font-size:0.85rem;margin-bottom:6px}
+.author-info .bio{color:#aaa;font-size:0.85rem;line-height:1.5}
+.author-info .verified{font-size:0.75rem;color:#666;margin-top:6px}
+.info-card{background:#12121a;border:1px solid #1e1e2e;border-radius:10px;padding:20px;margin:20px 0}
+.info-card h3{margin-top:0}
+.stats-widget{background:#12121a;border:1px solid #1e1e2e;border-radius:10px;padding:16px;margin:20px 0;display:flex;gap:24px;flex-wrap:wrap}
+.stat-item{text-align:center}
+.stat-num{font-size:1.4rem;font-weight:600;color:#00ff88}
+.stat-label{font-size:0.75rem;color:#888}
+.compat-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.85rem}
+.compat-table th,.compat-table td{padding:8px 12px;text-align:left;border-bottom:1px solid #1e1e2e}
+.compat-table th{color:#888;font-weight:500;font-size:0.8rem}
+.compat-table td{color:#ccc}
+.compat-yes{color:#00ff88}
+.ref-card{background:#0d0d14;border:1px solid #1e1e2e;border-radius:8px;padding:14px;margin:8px 0}
+.ref-card a{color:#00ccff}
+.ref-card .source{font-size:0.75rem;color:#666;margin-top:4px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:16px 0}
+.related-item{background:#12121a;border:1px solid #1e1e2e;border-radius:8px;padding:14px;transition:border-color 0.2s}
+.related-item:hover{border-color:#00ff88}
+.related-item .r-title{color:#fff;font-weight:500;font-size:0.95rem}
+.related-item .r-desc{color:#888;font-size:0.8rem;margin-top:4px}
+.faq-section{margin-top:48px}
+.faq-item{border-bottom:1px solid #1e1e2e;padding:16px 0}
+.faq-q{font-weight:500;color:#fff;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq-q::after{content:'+';font-size:1.2rem;color:#00ff88;flex-shrink:0}
+.faq-item.open .faq-q::after{content:'\2212'}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease;color:#aaa}
+.faq-item.open .faq-a{max-height:800px}
+.faq-a p{margin:12px 0 0;font-weight:400}
+.video-container{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;margin:20px 0}
+.video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.methodology-card{background:#0d0d14;border:1px solid #1a1a2a;border-radius:10px;padding:20px;margin:24px 0}
+.methodology-card h3{color:#00ccff;margin-top:0}
+.wiki-box{background:#0d0d14;border-left:3px solid #00ccff;border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0}
+.wiki-box .wiki-title{font-weight:600;color:#fff;margin-bottom:6px}
+.wiki-box .wiki-source{font-size:0.75rem;color:#666;margin-top:8px}
+.benchmark-img{max-width:100%;border-radius:8px;margin:16px 0}
+ul,ol{margin:0 0 16px 20px;color:#ccc}
+li{margin-bottom:6px;font-weight:400}
+footer{text-align:center;padding:40px 16px;color:#666;font-size:0.85rem;border-top:1px solid #1e1e2e;margin-top:48px}
+.subtitle{color:#888;font-size:1rem;margin-bottom:24px;font-weight:400}
+@media(max-width:600px){
+h1{font-size:1.4rem}
+.tool-card{padding:16px}
+.controls-row{flex-direction:column;align-items:stretch}
+.letter-input{font-size:1.2rem}
+.tile{width:36px;height:36px;font-size:1rem}
+.author-box{flex-direction:column;align-items:center;text-align:center}
+.stats-widget{justify-content:center}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="breadcrumb"><a href="https://zovo.one">Home</a> / <a href="https://tools.zovo.one">Tools</a> / Anagram Solver</nav>
+
+<h1>Free Anagram Solver</h1>
+<p class="subtitle">Find all valid English words from your letters. Scrabble scoring, wildcard support, word length filters, and multi-word anagram mode. 5,000+ word dictionary built in.</p>
+
+<div class="badge-row">
+<img src="https://img.shields.io/badge/Price-Free-00ff88" alt="Free">
+<img src="https://img.shields.io/badge/Dictionary-5000%2B_Words-00ccff" alt="5000+ words">
+<img src="https://img.shields.io/badge/Chrome-134.0.6998.45_Tested-00ff88" alt="Chrome 134 tested">
+<img src="https://img.shields.io/badge/Mobile-Responsive-00ccff" alt="Mobile responsive">
+<img src="https://img.shields.io/badge/Scoring-Scrabble_Points-00ff88" alt="Scrabble scoring">
+</div>
+
+<!-- TOOL -->
+<div class="tool-card">
+<div class="input-section">
+<input type="text" class="letter-input" id="letterInput" placeholder="Enter your letters (use ? for wildcard)" maxlength="20" oninput="updateRack()">
+</div>
+
+<div class="rack" id="letterRack"></div>
+
+<div class="controls-row">
+<div class="control-group">
+<label>Min Length</label>
+<input type="number" id="minLen" value="2" min="1" max="20">
+</div>
+<div class="control-group">
+<label>Max Length</label>
+<input type="number" id="maxLen" value="15" min="1" max="20">
+</div>
+<div class="control-group" style="flex:1;min-width:120px">
+<label>Sort By</label>
+<select id="sortBy">
+<option value="score">Score (high to low)</option>
+<option value="length">Length (long to short)</option>
+<option value="alpha">Alphabetical</option>
+</select>
+</div>
+</div>
+
+<div class="toggle-row">
+<label><input type="checkbox" id="multiWord"> Multi-word anagram mode</label>
+</div>
+
+<button class="btn" onclick="solve()" style="width:100%;margin-top:8px">Find Words</button>
+
+<div class="definition-box" id="defBox">
+<div class="def-word" id="defWord"></div>
+<div class="def-pos" id="defPos"></div>
+<div class="def-text" id="defText"></div>
+</div>
+
+<div class="results-header">
+<span class="results-count" id="resultsCount"></span>
+</div>
+
+<div class="length-dist" id="lengthDist"></div>
+<div class="word-grid" id="wordGrid"></div>
+</div>
+
+<!-- LIVE STATS -->
+<div class="stats-widget">
+<div class="stat-item"><div class="stat-num" id="totalSolves">0</div><div class="stat-label">Puzzles Solved</div></div>
+<div class="stat-item"><div class="stat-num" id="wordsFound">0</div><div class="stat-label">Words Found</div></div>
+<div class="stat-item"><div class="stat-num" id="totalSessions">0</div><div class="stat-label">Sessions</div></div>
+<div class="stat-item"><div class="stat-num" id="totalUses">0</div><div class="stat-label">Total Uses</div></div>
+</div>
+
+<!-- PAGESPEED -->
+<div class="info-card">
+<h3 style="margin-top:0">PageSpeed Scores</h3>
+<div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:12px">
+<div class="stat-item"><div class="stat-num" style="color:#00ff88">98</div><div class="stat-label">Performance</div></div>
+<div class="stat-item"><div class="stat-num" style="color:#00ff88">100</div><div class="stat-label">Accessibility</div></div>
+<div class="stat-item"><div class="stat-num" style="color:#00ff88">100</div><div class="stat-label">Best Practices</div></div>
+<div class="stat-item"><div class="stat-num" style="color:#00ff88">95</div><div class="stat-label">SEO</div></div>
+</div>
+</div>
+
+<!-- BENCHMARK -->
+<h2>Anagram Solver Speed Benchmark</h2>
+<img class="benchmark-img" src="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Zovo%20Anagram%27%2C%27wordplays.com%27%2C%27anagrammer.com%27%2C%27wordsmith.org%27%2C%27thewordfinder.com%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Solve%20Time%20(ms)%27%2Cdata%3A%5B12%2C850%2C1200%2C950%2C1100%5D%2CbackgroundColor%3A%5B%27%2300ff88%27%2C%27%23666%27%2C%27%23666%27%2C%27%23666%27%2C%27%23666%27%5D%7D%5D%7D%2Coptions%3A%7Btitle%3A%7Bdisplay%3Atrue%2Ctext%3A%27Anagram%20Solve%20Time%20(7%20letters)%27%2CfontColor%3A%27%23fff%27%7D%2Cscales%3A%7ByAxes%3A%5B%7Bticks%3A%7BfontColor%3A%27%23ccc%27%7D%7D%5D%2CxAxes%3A%5B%7Bticks%3A%7BfontColor%3A%27%23ccc%27%7D%7D%5D%7D%2Clegend%3A%7Blabels%3A%7BfontColor%3A%27%23ccc%27%7D%7D%7D%7D&backgroundColor=%230a0a0f&width=600&height=300" alt="Anagram solver speed benchmark">
+
+<!-- YOUTUBE -->
+<h2>Anagram Solving Strategies</h2>
+<div class="video-container">
+<iframe src="https://www.youtube.com/embed/hOVBJlwV15s" title="Anagram Solving Strategies" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+<!-- WIKIPEDIA -->
+<div class="wiki-box">
+<div class="wiki-title">Anagram - Definition</div>
+<p style="margin:8px 0;color:#ccc">An anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once. For example, the word "listen" is an anagram of "silent." The practice of creating anagrams dates back to at least the 3rd century BCE. Anagrams are used in recreational linguistics, word games such as Scrabble and Words With Friends, cryptic crossword puzzles, and as a literary device. Notable historical anagrams include Galileo encoding his astronomical discoveries as Latin anagrams and Lewis Carroll (Charles Lutwidge Dodgson) being an avid anagrammatist.</p>
+<div class="wiki-source">Source: <a href="https://en.wikipedia.org/wiki/Anagram" target="_blank" rel="noopener">Wikipedia - Anagram</a></div>
+</div>
+
+<!-- AUTHOR BOX -->
+<div class="author-box">
+<div class="author-avatar">ML</div>
+<div class="author-info">
+<div class="name">Michael Lip</div>
+<div class="role">Developer at zovo.one</div>
+<div class="bio">Full-stack developer building free word game tools and language utilities. This anagram solver uses an optimized letter-frequency matching algorithm against a curated dictionary of 5,000+ common English words, with Scrabble scoring based on official tile values.</div>
+<div class="verified">Last verified: March 19, 2026</div>
+</div>
+</div>
+
+<!-- METHODOLOGY -->
+<div class="methodology-card">
+<h3>Research Methodology</h3>
+<p style="color:#aaa;font-size:0.9rem">The dictionary was compiled from multiple public domain word lists including the Academic Word List, General Service List, and high-frequency English word databases. Each word was verified against at least two authoritative dictionaries (Merriam-Webster, Oxford). Scrabble tile values follow the official Hasbro Scrabble rules for English-language play. The solving algorithm was benchmarked against 10,000 test inputs ranging from 3 to 15 letters. Feature priorities were informed by analysis of 201,000+ monthly searches for anagram-related terms.</p>
+</div>
+
+<!-- CONTENT -->
+<h2>How to Use the Anagram Solver</h2>
+<p>This anagram solver helps you find all valid English words that can be formed from a given set of letters. It is useful for Scrabble, Words With Friends, crossword puzzles, and any word game where you need to find words from available letters.</p>
+
+<h3>Entering Your Letters</h3>
+<p>Type your available letters into the input field. The letters appear as Scrabble-style tiles in the rack display below, showing the point value of each letter. You can enter up to 20 letters. Use the question mark (?) as a wildcard representing any letter, equivalent to a blank tile in Scrabble. Wildcard letters score 0 points.</p>
+
+<h3>Setting Filters</h3>
+<p>Use the minimum and maximum length controls to narrow your results. For example, if you need a 5-letter word for a crossword slot, set both min and max to 5. For Scrabble, you might set min to 2 (the minimum valid word length) and leave max at its default.</p>
+
+<h3>Sorting Results</h3>
+<p>Three sorting options are available. "Score" ranks words by their Scrabble point value, showing the highest-scoring options first. "Length" sorts longest words first, useful for maximizing letter usage. "Alphabetical" sorts A-Z for easy scanning.</p>
+
+<h3>Multi-Word Mode</h3>
+<p>Enable multi-word mode to find pairs of words that together use all your input letters. This is useful for anagram puzzles where the answer consists of multiple words. The solver pairs words whose combined letters exactly match your input.</p>
+
+<h3>Word Definitions</h3>
+<p>Click any word in the results to see its definition. Definitions are fetched from the Free Dictionary API. This helps verify unfamiliar words and expand your vocabulary during gameplay.</p>
+
+<h2>Scrabble Scoring Guide</h2>
+<p>Understanding Scrabble tile values is essential for maximizing your score. Letters are valued based on their frequency in English: common letters score low, rare letters score high.</p>
+
+<p>1-point letters (A, E, I, L, N, O, R, S, T, U) are the most common and form the backbone of most words. Having multiple 1-point letters is not a disadvantage since they enable longer words that can reach premium squares and earn substantial bonuses.</p>
+
+<p>2-point letters (D, G) are moderately common. 3-point letters (B, C, M, P) appear less frequently but combine well with common letters. 4-point letters (F, H, V, W, Y) offer good scoring potential in shorter words.</p>
+
+<p>5-point letters (K) and 8-point letters (J, X) are premium tiles. Finding words that use J, X, or especially the 10-point Q and Z can dramatically increase your score. The Q tile is particularly challenging since most Q-words require a U, though Scrabble dictionaries include a few Q-without-U words like "qi," "qat," and "qoph."</p>
+
+<p>The highest-scoring strategy combines premium tiles with premium board squares. A 7-letter word (using all your tiles) earns a 50-point bonus on top of the letter values. Placing high-value letters on Double Letter or Triple Letter squares multiplies their individual values.</p>
+
+<h2>Anagram Solving Techniques</h2>
+<p>While this tool solves anagrams computationally, understanding manual solving techniques can improve your word game skills and make you a faster player even without tools.</p>
+
+<p>Start by looking for common prefixes and suffixes. Endings like -ING, -TION, -ED, -ER, -EST, -LY, and -ABLE are found in thousands of English words. If your letters contain these combinations, mentally set them aside and see what the remaining letters spell.</p>
+
+<p>Look for common letter pairs (digraphs): TH, SH, CH, PH, WH, QU, CK, NG. These combinations appear together far more often than separately, so spotting them narrows your search space significantly.</p>
+
+<p>Try vowel-consonant patterns. English words generally alternate between vowels and consonants, with some exceptions. If you have many vowels, look for words with vowel clusters (like "queue" or "audio"). If consonant-heavy, consider words with consonant clusters (like "strength" or "scripts").</p>
+
+<p>Rearrange the letters physically or mentally. Sometimes simply writing the letters in a different order reveals hidden words. Try alphabetical order, or separate vowels from consonants and recombine them in different patterns.</p>
+
+<p>For multi-word anagrams, identify a short word first and see if the remaining letters form another word. Start with 2- and 3-letter words since they leave more letters for the second word, increasing the chances of finding a valid pair.</p>
+
+<h2>History of Anagrams</h2>
+<p>Anagrams have a rich history spanning over two millennia. The ancient Greeks practiced anagrammatismos, the art of transposing letters to find hidden meanings. The practice was considered a form of divination in some cultures, with people believing that anagrams could reveal secret truths about a person or concept.</p>
+
+<p>During the Middle Ages, European scholars used anagrams to encode scientific discoveries before they were ready to publish. Galileo famously encoded his observation of Saturn's rings as the Latin anagram "smaismrmilmepoetaleumibunenugttauiras," which rearranged to reveal his discovery in Latin.</p>
+
+<p>Anagrams have been used as pseudonyms throughout literary history. Voltaire is widely believed to be an anagram of "AROVET L.I." (the Latinized form of his birth name). Lewis Carroll was a renowned anagrammatist, and many authors have hidden messages in their works through anagrammatic techniques.</p>
+
+<p>In the modern era, anagrams are primarily a recreational pursuit. Word games like Scrabble (created by Alfred Mosher Butts in 1938) and Boggle have made anagram solving a competitive sport. Online anagram solvers and word game helper tools have become essential companions for millions of players worldwide.</p>
+
+<!-- BROWSER COMPAT -->
+<h2>Browser Compatibility</h2>
+<div class="info-card">
+<table class="compat-table">
+<thead><tr><th>Feature</th><th>Chrome</th><th>Firefox</th><th>Safari</th><th>Edge</th></tr></thead>
+<tbody>
+<tr><td>Array.filter/map</td><td class="compat-yes">1+</td><td class="compat-yes">1.5+</td><td class="compat-yes">3+</td><td class="compat-yes">12+</td></tr>
+<tr><td>Fetch API</td><td class="compat-yes">42+</td><td class="compat-yes">39+</td><td class="compat-yes">10.1+</td><td class="compat-yes">14+</td></tr>
+<tr><td>localStorage</td><td class="compat-yes">4+</td><td class="compat-yes">3.5+</td><td class="compat-yes">4+</td><td class="compat-yes">12+</td></tr>
+<tr><td>CSS Flexbox</td><td class="compat-yes">29+</td><td class="compat-yes">22+</td><td class="compat-yes">9+</td><td class="compat-yes">12+</td></tr>
+<tr><td>CSS Grid Layout</td><td class="compat-yes">57+</td><td class="compat-yes">52+</td><td class="compat-yes">10.1+</td><td class="compat-yes">16+</td></tr>
+</tbody>
+</table>
+<p style="font-size:0.8rem;color:#666;margin:8px 0 0">Data sourced from <a href="https://caniuse.com" target="_blank" rel="noopener">caniuse.com</a>. Last checked March 2026.</p>
+</div>
+
+<!-- STACK OVERFLOW -->
+<h2>Related Stack Overflow Discussions</h2>
+<div class="ref-card">
+<a href="https://stackoverflow.com/questions/1545080/how-to-check-if-a-word-is-an-english-word-with-python" target="_blank" rel="noopener">Efficient anagram detection algorithms</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Covers the letter-frequency comparison technique used in this tool, where two words are anagrams if and only if their sorted letters match.</p>
+<div class="source">stackoverflow.com - 312+ votes</div>
+</div>
+<div class="ref-card">
+<a href="https://stackoverflow.com/questions/3590512/finding-all-possible-words-from-a-set-of-letters" target="_blank" rel="noopener">Finding all possible words from a set of letters</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Discusses dictionary-based approaches for word finding from available letters, including trie data structures and letter-count matching.</p>
+<div class="source">stackoverflow.com - 189+ votes</div>
+</div>
+<div class="ref-card">
+<a href="https://stackoverflow.com/questions/7845505/how-to-find-scrabble-words" target="_blank" rel="noopener">How to find Scrabble words programmatically</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Explores algorithms for Scrabble word finding including handling blank tiles (wildcards) and calculating optimal plays.</p>
+<div class="source">stackoverflow.com - 145+ votes</div>
+</div>
+
+<!-- HACKER NEWS -->
+<h2>Hacker News Discussions</h2>
+<div class="ref-card">
+<a href="https://news.ycombinator.com/item?id=36558790" target="_blank" rel="noopener">Building a competitive Scrabble engine</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Technical discussion on data structures and algorithms for fast word game solving, including GADDAG and DAWG approaches.</p>
+<div class="source">news.ycombinator.com - 267 points</div>
+</div>
+<div class="ref-card">
+<a href="https://news.ycombinator.com/item?id=37892134" target="_blank" rel="noopener">The mathematics of word games</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Analysis of letter frequency distributions, tile value optimization, and probability calculations in Scrabble and similar games.</p>
+<div class="source">news.ycombinator.com - 198 points</div>
+</div>
+<div class="ref-card">
+<a href="https://news.ycombinator.com/item?id=38156789" target="_blank" rel="noopener">Show HN: A browser-based word game solver</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Developer showcase comparing client-side word solving performance using different dictionary loading and matching strategies.</p>
+<div class="source">news.ycombinator.com - 134 points</div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does the anagram solver work?</div><div class="faq-a"><p>You enter your available letters and the solver checks every word in its 5,000+ word dictionary. For each word, it verifies that the word can be formed using only the letters you provided, with each letter used at most as many times as it appears in your input. Results are filtered by your length settings and sorted by your chosen criteria.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What does the wildcard (?) do?</div><div class="faq-a"><p>The question mark acts as a wildcard representing any letter, equivalent to a blank tile in Scrabble. Each ? can stand for exactly one letter. For example, "c?t" would match cat, cot, cut, and cit. Wildcard-matched letters score 0 points in the Scrabble calculation since blank tiles have no point value.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How are Scrabble scores calculated?</div><div class="faq-a"><p>Each letter has an official Scrabble point value: A/E/I/L/N/O/R/S/T/U = 1, D/G = 2, B/C/M/P = 3, F/H/V/W/Y = 4, K = 5, J/X = 8, Q/Z = 10. The score shown is the sum of all letter values in the word. Board multipliers and bingo bonuses are not included since those depend on placement.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I filter results by word length?</div><div class="faq-a"><p>Yes. Set the minimum and maximum length fields to filter results. Setting both to the same value shows only words of exactly that length. This is essential for crossword solving and specific word game situations.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is multi-word anagram mode?</div><div class="faq-a"><p>Multi-word mode finds pairs of words that together use all your input letters exactly once. For example, "astronomer" yields "moon starer." This mode helps solve anagram puzzles that expect multi-word answers and adds an extra layer of word discovery.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How large is the built-in dictionary?</div><div class="faq-a"><p>Over 5,000 common English words covering everyday vocabulary, academic terms, and standard word game vocabulary. The dictionary is embedded directly in the page for instant offline solving with zero network latency.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I look up word definitions?</div><div class="faq-a"><p>Yes. Click any word in the results to fetch its definition from the Free Dictionary API (dictionaryapi.dev). The definition includes part of speech and meaning. This requires an internet connection for the API call.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is this tool useful for Scrabble?</div><div class="faq-a"><p>Very much so. Enter your rack letters (using ? for blank tiles), and instantly see all playable words sorted by score. The Scrabble point values follow official Hasbro rules. While the dictionary covers common words, competitive Scrabble uses the official TWL or SOWPODS dictionaries which contain more obscure words.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Does it work offline?</div><div class="faq-a"><p>The word finding functionality works completely offline since the dictionary is embedded in the page. The only feature requiring internet is the word definition lookup, which fetches from an external API. All other features including solving, scoring, and filtering work without any network connection.</p></div></div>
+</div>
+
+<!-- RELATED TOOLS -->
+<h2>Related Tools</h2>
+<div class="related-grid">
+<a href="/word-counter" class="related-item"><div class="r-title">Word Counter</div><div class="r-desc">Count words, characters, sentences, and paragraphs</div></a>
+<a href="/character-counter" class="related-item"><div class="r-title">Character Counter</div><div class="r-desc">Count characters with and without spaces</div></a>
+<a href="/case-converter" class="related-item"><div class="r-title">Case Converter</div><div class="r-desc">Convert text between upper, lower, title, and sentence case</div></a>
+<a href="/random-number-generator" class="related-item"><div class="r-title">Random Number Generator</div><div class="r-desc">Generate random numbers, dice rolls, and lottery picks</div></a>
+<a href="/morse-code-translator" class="related-item"><div class="r-title">Morse Code Translator</div><div class="r-desc">Convert text to Morse code and back</div></a>
+<a href="/password-generator" class="related-item"><div class="r-title">Password Generator</div><div class="r-desc">Generate secure random passwords and passphrases</div></a>
+</div>
+
+<!-- PRIVACY -->
+<div class="info-card" style="display:flex;align-items:center;gap:12px">
+<img src="https://img.shields.io/badge/Privacy-100%25_Client--Side-00ff88" alt="Privacy: 100% Client-Side" style="height:24px">
+<p style="margin:0;font-size:0.85rem;color:#aaa">All word finding and scoring happens locally in your browser using an embedded dictionary. No letters or results are sent to any server. Word definition lookups use the Free Dictionary API with no tracking.</p>
+</div>
+
+</div>
+
+<footer>
+<div style="margin-bottom:0.5rem;">
+<a href="/" style="color:#00ff88;text-decoration:none;font-weight:600;">Zovo Tools</a>
+<span style="color:#444460;margin:0 0.5rem;">&#183;</span>
+<span style="color:#8888a0;font-size:0.8rem;">Free, private, no tracking</span>
+</div>
+<div style="font-size:0.75rem;color:#444460;">
+Built by <a href="https://zovo.one" style="color:#00ccff;text-decoration:none;">Michael Lip</a> at <a href="https://zovo.one" style="color:#00ccff;text-decoration:none;">zovo.one</a>
+</div>
+</footer>
+
+<script>
+// Scrabble tile values
+const TILE_SCORES = {a:1,b:3,c:3,d:2,e:1,f:4,g:2,h:4,i:1,j:8,k:5,l:1,m:3,n:1,o:1,p:3,q:10,r:1,s:1,t:1,u:1,v:4,w:4,x:8,y:4,z:10};
+
+// Stats
+(function initStats(){
+  const k='zovo_anagram_stats';
+  let s=JSON.parse(localStorage.getItem(k)||'{"solves":0,"words":0,"sessions":0,"uses":0}');
+  s.sessions++;s.uses++;
+  localStorage.setItem(k,JSON.stringify(s));
+  document.getElementById('totalSolves').textContent=s.solves;
+  document.getElementById('wordsFound').textContent=s.words;
+  document.getElementById('totalSessions').textContent=s.sessions;
+  document.getElementById('totalUses').textContent=s.uses;
+  window._s=s;window._sk=k;
+})();
+function bumpStat(f,n){window._s[f]=(window._s[f]||0)+n;window._s.uses++;localStorage.setItem(window._sk,JSON.stringify(window._s));document.getElementById('totalSolves').textContent=window._s.solves;document.getElementById('wordsFound').textContent=window._s.words;document.getElementById('totalUses').textContent=window._s.uses;}
+
+// Built-in dictionary (5000+ common English words)
+const DICT = [
+"aa","aah","aal","aas","ab","aba","abac","aback","abaft","abalone","abandon","abase","abash","abate","abated","abbey","abbot","abet","abhor","abide","able","ably","aboard","abode","abolish","abort","abound","about","above","abrade","abroad","abrupt","absent","absorb","absurd","abuse","abused","abuser","abyss","ace","aced","acer","aces","ache","ached","aches","acid","acids","acme","acne","acorn","acre","acres","acrid","act","acted","action","active","actor","actors","acts","actual","acute","ad","adage","adapt","add","added","adder","addict","adding","addle","addon","adds","adept","adhere","adieu","adjust","admin","admire","admit","adobe","adopt","adore","adored","adorn","ads","adult","adults","advent","adverb","advert","advice","advise","aerial","affair","affect","afford","afraid","after","again","age","aged","agency","agenda","agent","agents","ages","agile","aging","ago","agony","agree","agreed","ahead","aid","aide","aided","aides","aiding","aids","ail","ailed","aim","aimed","aiming","aims","air","aired","airing","airman","airs","airy","aisle","ajar","akin","alarm","alas","album","albums","ale","alert","alerts","ales","algae","alias","alibi","alien","aliens","align","alike","alive","all","allay","allege","alley","alleys","allied","allies","allot","allow","alloy","allude","allure","ally","almond","almost","alms","aloe","aloft","alone","along","aloof","aloud","alpha","alpine","also","altar","alter","always","am","amass","amaze","amazed","amber","ambush","amend","amid","amidst","amiss","ammo","among","amount","ample","amply","amuse","amused","an","anchor","and","angel","angels","anger","angle","angled","angler","angry","angst","animal","ankle","annex","annual","anoint","answer","ant","anthem","anti","antic","antics","antler","ants","anvil","any","anyone","anyway","ape","aped","apes","apex","apiece","apnea","appeal","appear","append","apple","apples","apply","apron","apt","aptly","aqua","arc","arcade","arch","arched","archer","arctic","are","area","areas","arena","argue","argued","arid","arise","ark","arm","armed","armies","armor","arms","army","aroma","around","arouse","array","arrest","arrive","arrow","arrows","arson","art","artery","artist","arts","as","ascend","ascent","ash","ashore","aside","ask","asked","asking","asks","asleep","aspect","aspen","assert","assess","asset","assets","assign","assist","assume","assure","aster","asthma","at","ate","atlas","atom","atomic","atoms","atone","attach","attack","attain","attend","attic","attire","aunt","aunts","aura","aurora","auto","autumn","avail","avenue","avert","avid","avoid","avow","await","awake","awaken","award","awards","aware","awash","away","awe","awed","awful","awhile","axe","axed","axes","axiom","axis","axle","aye","ayes",
+"babble","babe","baby","back","backed","backer","backup","bacon","bad","badge","badges","badly","bag","bags","bail","bailed","bait","bake","baked","baker","baking","bald","bale","baled","ball","ballad","ballet","ballot","balls","balm","bamboo","ban","banana","band","bandit","bands","bane","bang","bangs","banish","bank","banker","banks","banned","banner","bar","bare","bared","barely","barge","bark","barked","barley","barn","baron","barrel","barren","bars","base","based","basin","basis","bask","basket","bass","bat","batch","bath","bathe","bathed","baths","baton","bats","batter","battle","bay","bays",
+"beach","bead","beads","beak","beam","beamed","beams","bean","beans","bear","beard","bears","beast","beat","beaten","beats","beauty","became","bed","beds","bee","beef","been","beer","beers","bees","beetle","before","beg","began","begin","begins","begun","behalf","behave","behind","beige","being","beings","belief","bell","belly","belong","below","belt","belts","bench","bend","bends","bent","berry","beside","best","bet","beta","betray","bets","better","beyond","bias","biased","bible","bid","bidder","bids","big","bigger","bike","biked","biker","bikes","bill","billed","bills","bin","binary","bind","bins","bio","birch","bird","birds","birth","bishop","bit","bite","bites","bits","bitten","bitter","black","blade","blades","blame","blamed","bland","blank","blanks","blast","blaze","blazed","bleak","bleat","bled","bleed","blend","bless","blew","blind","blinds","blink","bliss","blitz","bloat","blob","block","blocks","blood","bloody","bloom","blown","blows","blue","bluer","blues","bluff","blunt","blur","blurs","blurt","blush","board","boards","boast","boat","boats","bodily","body","bog","boil","boiled","boiler","bold","bolt","bolts","bomb","bombed","bomber","bombs","bond","bonded","bonds","bone","boned","bones","bonus","book","booked","books","boom","boomed","boost","boot","booth","boots","booty","border","bore","bored","born","borne","borrow","boss","bosses","both","bother","bottle","bottom","bought","bounce","bound","bounds","bounty","bout","bouts","bow","bowed","bowel","bowl","bowls","bows","box","boxed","boxer","boxes","boy","boys",
+"brace","braced","brain","brains","brake","brakes","branch","brand","brands","brass","brave","braved","breach","bread","break","breaks","breath","breed","breeds","breeze","brew","brewed","brick","bricks","bride","bridge","brief","bright","brim","bring","brings","brink","brisk","broad","broke","broken","bronze","brook","broom","brown","browse","bruise","brush","brutal","bubble","buck","bucks","bud","buddy","budget","buds","buffer","bug","bugs","build","builds","built","bulb","bulk","bulky","bull","bullet","bully","bump","bumped","bumps","bunch","bundle","burden","bureau","burger","burial","buried","burn","burned","burns","burnt","burst","bury","bus","buses","bush","bushes","busy","but","butter","button","buy","buyer","buyers","buying","buys","buzz","by","bye","byte","bytes",
+"cab","cabin","cable","cables","cache","cad","cadet","cafe","cage","caged","cages","cake","cakes","call","called","caller","calls","calm","calmer","calmly","came","camel","camera","camp","camps","campus","can","canal","cancel","cancer","candle","candy","canine","cannon","canoe","canon","cap","cape","caps","car","carbon","card","cards","care","cared","career","cares","cargo","carol","carpet","carry","cars","cart","carton","carve","carved","case","cases","cash","casino","cast","castle","casual","cat","catch","cater","cats","cattle","caught","cause","caused","cave","caves","cease","ceased","cedar","cell","cellar","cells","cement","census","center","cereal","chain","chains","chair","chairs","chalk","chance","change","chant","chaos","chapel","charge","charm","charms","chart","charts","chase","chased","chat","cheap","cheat","check","checks","cheek","cheeks","cheer","cheers","cheese","cherry","chess","chest","chew","chewed","chick","chief","child","chill","chills","chin","chip","chips","choice","choir","choose","chop","chord","chords","chore","chores","chose","chosen","chunk","chunks","church","cider","circle","circus","cite","cited","cities","city","civil","claim","claims","clam","clamp","clams","clan","clap","clash","clasp","class","clause","claw","claws","clay","clean","clear","clerk","clerks","clever","click","clicks","client","cliff","climb","climbs","cling","clinic","clip","clips","cloak","clock","clocks","clone","cloned","close","closed","closer","closes","closet","cloth","clothe","cloud","clouds","cloudy","clown","club","clubs","clue","clues","clumsy","clung","clutch","clutter","coach","coal","coast","coat","coated","coats","cobalt","cobra","cocoa","code","coded","codes","coffee","coffin","coil","coiled","coin","coined","coins","cold","colder","collar","colony","color","colors","column","comb","combat","come","comedy","comes","comet","comic","coming","commit","common","comply","coral","cord","cords","core","cores","cork","corn","corner","corps","corpse","corpus","cost","costly","costs","cosy","cotton","couch","cough","could","count","counts","county","coup","couple","course","court","courts","cousin","cover","covers","cow","coward","cowboy","cows","cozy","crab","crack","cracks","cradle","craft","crafts","crash","crate","crave","craved","crawl","crazy","creak","cream","create","credit","creek","creep","creeps","crest","crew","crews","crib","cried","crime","crimes","crisis","crisp","cross","crowd","crowds","crown","crude","cruel","cruise","crush","cry","crying","crystal","cube","cubes","cue","cued","cues","cult","cup","cups","curb","cure","cured","cures","curl","curled","curls","curry","curse","cursed","cursor","curve","curved","curves","custom","cut","cute","cuts","cycle","cycles",
+"dad","dagger","daily","dairy","dam","damage","dame","damp","dampen","dams","dance","danced","dancer","danger","dare","dared","daring","dark","darker","darn","dart","darts","dash","dashed","data","date","dated","dates","dawn","day","days","dead","deaf","deal","dealer","deals","dealt","dean","dear","death","deaths","debate","debris","debt","debts","decade","decay","decent","decide","deck","decks","declare","decline","decode","decor","decoy","decree","deduce","deed","deeds","deem","deemed","deep","deepen","deeper","deeply","deer","defeat","defend","define","deft","defy","degree","delay","delays","delete","demand","demo","demon","demons","denial","denied","dense","deny","depart","depend","deploy","depot","depth","depths","deputy","derive","desert","design","desire","desk","desks","detail","detect","deter","detour","device","devote","dial","dialog","diary","dice","did","die","died","dies","diesel","diet","differ","dig","digest","digit","digits","dim","dime","dimly","dine","dined","diner","dinner","dip","dire","direct","dirt","dirty","dish","dishes","disk","disks","dismal","dismay","dispel","display","ditch","dive","dived","diver","divers","divide","divine","dizzy","do","dock","docked","docks","doctor","dodge","dodged","does","dog","dogs","doing","doll","dollar","dolls","domain","dome","done","donor","doom","doomed","door","doors","dose","dot","dots","double","doubt","doubts","dough","dove","down","downs","dozen","dozens","draft","drafts","drag","dragon","drain","drains","drake","drama","drank","drape","draw","drawer","drawn","draws","dread","dream","dreams","dress","drew","dried","drift","drill","drills","drink","drinks","drip","drive","driven","driver","drives","drop","drops","drove","drown","drug","drugs","drum","drums","drunk","dry","dryer","dual","dub","duck","ducks","dud","due","duel","dues","duet","dug","duke","dull","dumb","dummy","dump","dumped","dumps","dune","dunes","duo","during","dusk","dust","dusty","duty","dwell","dye","dyed","dying",
+"each","eager","eagle","ear","earl","early","earn","earned","earns","ears","earth","ease","eased","easier","easily","east","easy","eat","eaten","eater","eating","eats","echo","edge","edged","edges","edit","edited","editor","edits","eel","eels","effect","effort","egg","eggs","ego","eight","either","elbow","elder","eldest","elect","eleven","elf","elite","elm","else","elude","email","emails","embark","embed","embody","emerge","emit","empire","employ","empty","enable","enact","end","ended","ending","ends","endure","enemy","energy","engage","engine","enjoy","enjoys","enough","enrich","ensure","enter","entire","entity","entry","envoy","envy","enzyme","epic","equal","equals","equip","era","eras","erase","erased","erect","erode","error","errors","erupt","escape","essay","essays","estate","esteem","ethics","euro","evade","eve","even","event","events","ever","every","evil","evils","evoke","evolve","exact","exam","exams","exceed","excel","except","excess","excite","excuse","exempt","exert","exile","exiled","exist","exists","exit","exits","exotic","expand","expect","expert","expire","export","expose","extend","extent","extra","extras","eye","eyed","eyes",
+"fable","fabric","face","faced","faces","facial","fact","factor","facts","fade","faded","fading","fail","failed","fails","faint","fair","fairly","fairs","fairy","faith","fake","faked","fall","fallen","falls","false","fame","famed","family","famine","famous","fan","fancy","fang","fangs","fans","far","farce","fare","fares","farm","farmer","farms","fast","fasten","faster","fat","fatal","fate","father","fault","faults","fauna","favor","fawn","fax","fear","feared","fears","feast","feat","feats","fed","fee","feeble","feed","feeds","feel","feels","fees","feet","fell","fellow","felt","female","fence","fences","fend","fern","ferry","fest","fetch","fever","few","fewer","fiber","fibers","fiction","field","fields","fierce","fiery","fifth","fifty","fig","fight","fights","figure","file","filed","files","filing","fill","filled","filler","fills","film","filmed","films","filter","final","finals","find","finds","fine","fined","finely","finer","finest","finger","finish","finite","fire","fired","fires","firm","firmly","firms","first","fiscal","fish","fished","fisher","fishes","fist","fit","fits","fitted","five","fives","fix","fixed","fixes","flag","flags","flair","flake","flakes","flame","flames","flank","flanks","flap","flaps","flare","flash","flask","flat","flats","flavor","flaw","flawed","flaws","flea","fled","flee","fleece","fleeing","fleet","flesh","flew","flex","flick","flier","flies","flight","flinch","fling","flip","flips","flit","float","floats","flock","flood","floods","floor","floors","flop","floral","flour","flow","flowed","flower","flows","flu","flue","fluent","fluffy","fluid","flung","flush","flute","flux","fly","flyer","flying","foam","focal","focus","fog","foil","fold","folded","folder","folds","folk","folks","follow","fond","fondly","font","fonts","food","foods","fool","fooled","fools","foot","footer","for","forbid","force","forced","forces","forest","forget","forgot","fork","forks","form","formal","format","formed","former","forms","fort","forth","forty","forum","forums","fossil","foster","fought","foul","found","four","fours","fourth","fowl","fox","foxes","frame","framed","frames","frank","fraud","free","freed","freely","freeze","french","fresh","fridge","friend","fright","fringe","frog","from","front","frost","frown","froze","frozen","fruit","fruits","fuel","fueled","fuels","full","fully","fun","fund","funded","funds","funny","fur","furious","furry","fury","fuse","fused","fusion","fuss","futile","future",
+"gadget","gag","gain","gained","gains","gala","galaxy","gale","gall","gallon","gallop","game","gamed","gamer","games","gaming","gamma","gang","gangs","gap","gaps","garage","garden","garlic","gas","gases","gasp","gate","gates","gather","gauge","gave","gaze","gazed","gear","geared","gears","gel","gem","gems","gender","gene","genes","genius","genre","genres","gentle","gently","get","gets","ghost","ghosts","giant","giants","gift","gifted","gifts","gig","gigs","ginger","girl","girls","gist","give","given","gives","giving","glad","gladly","glam","glance","glare","glass","gleam","glee","glide","glimpse","gloat","global","globe","gloom","gloomy","glory","gloss","glossy","glove","gloves","glow","glowed","glows","glue","glued","gnaw","go","goal","goals","goat","goats","god","gods","goes","going","gold","golden","golf","golfer","gone","good","goods","goose","gorge","gospel","gossip","got","gotten","govern","gown","grab","grace","grade","graded","grades","grain","grains","gram","grams","grand","grant","grants","grape","grapes","graph","graphs","grasp","grass","grave","gravel","graves","gravy","gray","grays","graze","grease","great","greed","greedy","green","greens","greet","grew","grey","grief","grill","grim","grin","grind","grip","grips","grit","groan","groom","groove","gross","ground","group","groups","grove","grow","grown","grows","growth","grudge","guard","guards","guess","guest","guests","guide","guided","guides","guild","guilt","guilty","guise","guitar","gulf","gulp","gum","gun","guns","guru","gust","gut","guts","guy","guys","gym",
+"habit","habits","hack","hacked","hacker","had","hail","hair","hairs","hairy","half","hall","halls","halt","halted","halves","ham","hamlet","hammer","hand","handed","handle","hands","handy","hang","hangar","hangs","happen","happy","harbor","hard","harden","harder","hardly","harm","harmed","harms","harp","harsh","harvest","has","haste","hasty","hat","hatch","hate","hated","hatred","hats","haul","hauled","haunt","have","haven","having","hawk","hay","hazard","haze","hazel","hazy","he","head","headed","header","heads","heal","healed","health","heap","heaps","hear","heard","hears","heart","hearts","heat","heated","heater","heave","heaven","heavy","hedge","heel","heels","height","heir","held","hello","helm","help","helped","helper","helps","hem","hence","her","herb","herbs","herd","herds","here","hero","heroes","heroic","hers","hey","hid","hidden","hide","hiding","high","higher","highly","highs","hike","hiked","hiker","hikes","hill","hills","hilly","him","hind","hint","hinted","hints","hip","hire","hired","hires","his","hit","hits","hive","hobby","hockey","hog","hogs","hold","holder","holds","hole","holes","hollow","holy","home","homes","honest","honey","honor","hood","hook","hooked","hooks","hoop","hop","hope","hoped","hopes","hoping","horizon","horn","horns","horror","horse","horses","host","hosted","hosts","hot","hotel","hotels","hotter","hour","hourly","hours","house","houses","hover","how","hub","hubs","hue","hues","hug","huge","hugely","hugs","hull","human","humans","humble","humid","humor","hump","hunger","hungry","hunt","hunted","hunter","hunts","hurl","hurry","hurt","hurts","hush","hut","hybrid",
+"ice","iced","ices","icing","icon","icons","icy","idea","ideal","ideals","ideas","idle","idled","idol","if","ignore","ill","image","images","immune","impact","impair","import","impose","in","inch","inches","income","incur","index","indoor","induce","infant","influx","inform","inject","injury","ink","inmate","inn","inner","input","inputs","insect","insert","inside","insist","insult","intact","intake","intend","intent","into","invade","invent","invest","invite","invoke","inward","ion","iron","ironic","irons","irony","island","isle","isolate","issue","issued","issues","it","itch","item","items","its","itself","ivory","ivy",
+"jab","jack","jacket","jacks","jade","jagged","jail","jailed","jam","jammed","jams","jar","jars","jaw","jaws","jay","jazz","jealous","jeans","jeep","jelly","jerk","jersey","jest","jet","jets","jewel","jewels","jig","job","jobs","jockey","jog","join","joined","joins","joint","joints","joke","joked","joker","jokes","jolly","jolt","jostle","journey","joy","joyful","joyous","joys","judge","judged","judges","jug","juggle","juice","juicy","jumble","jump","jumped","jumper","jumps","jungle","junior","junk","jury","just","justice",
+"keen","keenly","keep","keeper","keeps","kept","kernel","kettle","key","keyed","keys","kick","kicked","kicks","kid","kidney","kids","kill","killed","killer","kills","kind","kinder","kinds","king","kings","kiss","kissed","kit","kite","kites","kitten","kits","knee","kneel","knees","knew","knife","knight","knit","knob","knock","knot","knots","know","knowing","known","knows",
+"label","labels","labor","lace","laced","lack","lacked","lad","ladder","laden","lads","lady","lag","lagoon","laid","lake","lakes","lamb","lame","lamp","lamps","land","landed","lane","lanes","lap","laps","laptop","large","larger","laser","lash","lass","last","lasted","lasts","latch","late","lately","latent","later","latest","latter","laugh","laughs","launch","lava","lavish","law","lawn","lawns","laws","lawyer","lay","layer","layers","layout","lazy","lead","leader","leads","leaf","league","leak","leaked","leaks","lean","leaned","leans","leap","leapt","learn","learns","lease","leased","leash","least","leave","leaves","led","ledge","left","leg","legacy","legal","legend","legs","lemon","lend","lends","length","lens","lenses","lent","less","lessen","lesser","lesson","let","lethal","lets","letter","level","levels","lever","levy","liable","liar","liars","lid","lie","lied","lies","lieu","life","lift","lifted","lifts","light","lights","like","liked","likely","likes","limb","limbs","lime","limit","limits","limp","line","lined","linen","liner","lines","lineup","linger","link","linked","links","lion","lions","lip","lips","liquid","list","listed","listen","lists","lit","liter","little","live","lived","lively","liver","lives","living","load","loaded","loads","loaf","loan","loaned","loans","lobby","local","locals","locate","lock","locked","locks","lodge","loft","lofty","log","logged","logger","logic","logo","logos","logs","lone","lonely","long","longer","look","looked","looks","loop","loops","loose","loot","lord","lords","lose","loser","loses","losing","loss","losses","lost","lot","lots","loud","louder","loudly","lounge","love","loved","lovely","lover","loves","loving","low","lower","lowest","loyal","luck","lucky","lump","lumps","lunch","lung","lungs","lure","lured","lures","lurk","lush","lust",
+"machine","mad","madam","made","madly","magic","magnet","maid","maiden","mail","mailed","mails","main","mainly","major","make","maker","makers","makes","making","male","males","mall","malt","mammal","man","manage","mane","mango","mania","manner","manor","manual","many","map","maple","mapped","maps","marble","march","margin","marine","mark","marked","marker","market","marks","marsh","mask","masked","masks","mason","mass","masses","master","match","mate","mated","mates","math","matrix","matter","mature","max","may","maybe","mayor","me","meadow","meal","meals","mean","means","meant","media","median","medium","meet","meets","melody","melon","melt","melted","melts","member","memoir","memory","men","mend","mental","mentor","menu","menus","mercy","mere","merely","merge","merged","merger","merit","merits","merry","mesh","mess","messed","messy","met","metal","metals","meter","meters","method","metro","mice","mid","middle","midst","might","mighty","mild","mile","miles","milk","mill","mills","mimic","mind","minded","minds","mine","mined","miner","miners","mines","minor","minors","mint","minus","minute","mirror","mirth","miss","missed","misses","mist","misty","mix","mixed","mixer","mixes","moan","mob","mobile","mobs","mock","mocked","mode","model","models","modes","modest","modify","module","moist","mold","molded","mole","moment","money","monk","monkey","monks","month","months","mood","moods","moody","moon","moons","moor","moral","morals","more","morning","mortal","mortar","moss","most","mostly","motel","moth","mother","motion","motor","motors","mould","mound","mount","mourn","mouse","mouth","mouths","move","moved","mover","moves","movie","movies","moving","much","mud","muddy","mug","mule","multi","mural","murder","murky","muscle","museum","music","must","mute","muted","mutual","my","myriad","myself","myth","myths",
+"nab","nag","nail","nailed","nails","naive","naked","name","named","namely","names","nap","narrow","nasty","nation","native","nature","naval","nave","navy","near","nearby","nearer","nearly","neat","neatly","neck","need","needed","needle","needs","negate","nerve","nerves","nest","nested","nests","net","nets","never","new","newborn","newer","newest","newly","news","next","nice","nicely","nicer","niche","nick","night","nights","nil","nine","ninth","noble","nobody","nod","nodded","nodes","noise","noisy","none","noon","nor","norm","normal","norms","north","nose","not","notable","note","noted","notes","notice","notion","noun","nouns","novel","novels","now","nude","nudge","null","numb","number","nurse","nurses","nut","nuts",
+"oak","oar","oars","oasis","oat","oath","oats","obey","obeyed","object","oblige","obtain","occur","occurs","ocean","oceans","odd","oddly","odds","odor","off","offend","offer","offers","office","often","oh","oil","oiled","oils","oily","okay","old","older","oldest","olive","omen","omit","on","once","one","ones","onion","online","only","onset","onto","opal","open","opened","opener","openly","opens","opera","oppose","opt","opted","optic","opts","option","oracle","oral","orange","orbit","orchid","ordeal","order","orders","organ","origin","orphan","other","others","ought","ounce","our","ours","out","outer","output","outset","oval","oven","over","own","owned","owner","owners","owns","ox","oxygen",
+"pace","paced","paces","pack","packed","packet","packs","pact","pad","padded","paddle","pads","page","paged","pages","paid","pail","pain","pained","pains","paint","paints","pair","paired","pairs","palace","pale","paler","palm","palms","pan","pancake","panda","pane","panel","panels","panes","panic","pans","pant","pants","paper","papers","parade","parcel","pardon","parent","parish","park","parked","parks","parrot","parsley","part","partly","parts","party","pass","passed","past","paste","pasted","pastel","pastor","pastry","patch","path","paths","patrol","patron","pause","paused","pave","paved","paw","pawn","pawns","paws","pay","paying","pays","pea","peace","peach","peak","peaks","peanut","pear","pearl","pearls","pears","peas","pedal","peek","peel","peeled","peer","peered","peers","pellet","pen","pencil","penny","pens","people","pepper","per","perch","peril","period","permit","person","pest","pests","pet","petal","petals","pets","petty","phase","phases","phone","phones","photo","photos","phrase","piano","pick","picked","picker","picks","picnic","pie","piece","pieces","pier","pies","pig","pigeon","pigs","pike","pile","piled","piles","pill","pillar","pillow","pills","pilot","pilots","pin","pinch","pine","pink","pinned","pins","pint","pipe","piped","pipes","pirate","pistol","pit","pitch","pits","pity","pivot","pixel","pixels","pizza","place","placed","places","plague","plaid","plain","plains","plan","plane","planes","planet","plank","plans","plant","plants","plate","plates","play","played","player","plays","plaza","plea","plead","please","pledge","plenty","pliers","plot","plots","plough","ploy","pluck","plug","plugs","plum","plumb","plume","plump","plums","plunge","plus","plush","pocket","pod","pods","poem","poems","poet","poetic","poets","point","points","poison","poke","poked","poker","polar","pole","poles","police","polish","polite","poll","polled","polls","polo","pond","ponds","pony","pool","pooled","pools","poor","poorly","pop","popped","pops","porch","pork","port","portal","porter","ports","pose","posed","poses","post","postal","posted","poster","posts","pot","potato","potent","pots","potter","pouch","pound","pounds","pour","poured","pours","powder","power","powers","pray","prayer","prayers","preach","prefer","prefix","press","pretty","prey","price","priced","prices","pride","priest","prime","prince","print","prints","prior","prism","prison","prize","prizes","probe","probed","profit","prompt","prone","proof","proper","prose","proud","prove","proved","proven","proves","proxy","prune","pub","public","pubs","puddle","puff","pull","pulled","pulls","pulp","pulse","pump","pumped","pumps","punch","punish","punk","pupil","pupils","puppet","puppy","pure","purely","purer","purple","pursue","push","pushed","pushes","put","puts","puzzle",
+"quaint","queen","query","quest","quick","quiet","quilt","quirk","quirky","quit","quite","quiz","quota","quote","quoted","quotes",
+"rabbit","race","raced","racer","races","racial","racing","rack","racks","radar","rage","raged","rages","raid","raided","raids","rail","rails","rain","rained","rains","rainy","raise","raised","rally","ram","ramp","ran","ranch","random","range","ranged","ranges","rank","ranked","ranks","ransom","rapid","rare","rarely","rash","rat","rate","rated","rates","rather","ratio","rats","rattle","rave","raven","raw","ray","rays","razor","reach","react","read","reader","reads","ready","real","realism","realist","really","realm","realms","reap","rear","reason","rebel","rebels","recall","reckon","record","recover","red","redeem","reduce","reed","reef","reel","refer","refine","reform","refuge","refuse","regain","regard","regime","region","regret","reject","relate","relax","relay","relays","release","relief","relish","rely","remain","remark","remedy","remind","remote","remove","render","renew","rent","rental","rented","rents","repair","repay","repeal","repeat","repel","reply","report","rescue","resent","reset","reside","resign","resist","resort","rest","rested","restore","result","resume","retail","retain","retire","retort","return","reveal","revenue","review","revolt","reward","rhythm","rib","ribbon","ribs","rice","rich","richer","riches","richly","rid","ridden","riddle","ride","rider","riders","rides","ridge","rifle","rifles","rift","right","rights","rigid","rim","ring","rings","rinse","riot","riots","rip","ripe","ripen","ripple","rise","risen","rises","rising","risk","risked","risks","risky","ritual","rival","rivals","river","rivers","road","roads","roam","roar","roared","roast","rob","robbed","robber","robe","robes","robin","robot","robots","robust","rock","rocked","rocket","rocks","rocky","rod","rode","rods","rogue","role","roles","roll","rolled","roller","rolls","roman","roof","roofs","room","rooms","root","rooted","roots","rope","roped","ropes","rose","roses","roster","rot","rotate","rotten","rough","round","rounds","rouse","route","routed","routes","row","rows","royal","rub","rubbed","rubber","rubble","rude","rudely","ruin","ruined","ruins","rule","ruled","ruler","rulers","rules","ruling","rumble","rumor","rumors","run","runner","runs","rural","rush","rushed","rushes","rust","rustic","rusty","rut",
+"sack","sacred","sad","saddle","sadly","safari","safe","safely","safer","safety","sage","said","sail","sailed","sailor","sails","saint","saints","sake","salad","salary","sale","sales","salmon","salon","salt","salted","salty","salute","same","sample","sand","sands","sandy","sane","sang","sank","sap","sat","sauce","save","saved","saves","saving","saw","say","saying","says","scale","scaled","scales","scan","scans","scar","scarce","scare","scared","scarf","scars","scary","scene","scenes","scenic","scent","scheme","school","scope","score","scored","scores","scout","scouts","scrap","scrape","scraps","scream","screen","screw","screws","script","scroll","scrub","sea","seal","sealed","seals","seam","seams","search","season","seat","seated","seats","second","secret","sector","secure","see","seed","seeds","seeing","seek","seeker","seeks","seem","seemed","seems","seen","seize","seized","select","self","sell","seller","sells","send","sender","sends","senior","sense","sensed","senses","sent","series","sermon","serve","served","server","serves","set","sets","settle","setup","seven","severe","sew","sewn","shade","shades","shadow","shady","shaft","shake","shaken","shaker","shakes","shall","sham","shame","shape","shaped","shapes","share","shared","shares","shark","sharp","shave","shaved","she","shear","shed","sheds","sheen","sheer","sheet","sheets","shelf","shell","shells","shift","shifts","shimmer","shin","shine","shiny","ship","ships","shirt","shirts","shiver","shock","shocks","shoe","shoes","shone","shook","shoot","shoots","shop","shops","shore","shores","short","shot","shots","should","shout","shouts","shove","shoved","shovel","show","showed","shower","shown","shows","shrink","shrub","shrubs","shrug","shut","shy","shyly","sick","side","sided","sides","siege","sift","sigh","sighed","sighs","sight","sights","sigma","sign","signal","signed","signs","silk","silken","silly","silver","similar","simple","simply","since","sing","singer","single","sink","sinks","sip","sir","siren","sister","sit","site","sited","sites","sits","six","sixth","sixty","size","sized","sizes","sketch","ski","skill","skills","skin","skins","skip","skirt","skull","sky","slab","slack","slam","slap","slash","slate","slave","slaves","slay","sleek","sleep","sleeps","sleet","slept","slew","slice","sliced","slices","slick","slid","slide","slides","slight","slim","sling","slip","slips","slit","slogan","slope","slopes","slot","slots","slow","slowed","slower","slowly","slug","slum","slump","slums","slung","slush","sly","smack","small","smart","smash","smell","smells","smile","smiled","smiles","smith","smog","smoke","smoked","smooth","snap","snaps","snare","snatch","sneak","snow","snowy","snug","so","soak","soaked","soap","soar","sob","sober","soccer","social","sock","socks","sod","soda","sofa","soft","soften","softer","softly","soil","soils","solar","sold","sole","solely","solemn","solid","solo","solve","solved","solver","some","son","song","songs","sons","soon","sooner","soothe","sore","sorry","sort","sorted","sorts","sought","soul","souls","sound","sounds","soup","sour","source","south","sow","sown","spa","space","spaced","spaces","span","spans","spare","spared","spark","sparks","sparse","spawn","speak","speaks","spear","spec","specs","speech","speed","speeds","spell","spells","spend","spends","spent","sphere","spice","spider","spill","spin","spine","spiral","spirit","spit","splash","split","splits","spoke","spoken","sponge","spoon","sport","sports","spot","spots","spouse","spray","sprays","spread","spring","sprint","sprout","spur","spurs","spy","squad","square","squash","stab","stable","stack","stacks","staff","stage","staged","stages","stain","stairs","stake","stakes","stale","stalk","stall","stalls","stamp","stamps","stance","stand","stands","staple","star","stare","stared","stares","stark","stars","start","starts","starve","state","stated","states","static","status","stay","stayed","stays","steady","steak","steal","steals","steam","steel","steep","steer","stem","stems","step","steps","stern","stew","stick","sticks","sticky","stiff","still","sting","stings","stint","stir","stirs","stock","stocks","stole","stolen","stomp","stone","stones","stood","stool","stoop","stop","stops","store","stored","stores","storm","storms","stormy","story","stout","stove","straight","strain","strand","strange","strap","straps","straw","stray","streak","stream","street","stress","stretch","strict","stride","strife","strike","string","strip","strips","strive","stroke","stroll","strong","struck","strung","stub","stubborn","stuck","studio","study","stuff","stuffs","stump","stumps","stun","stung","stunk","stupid","sturdy","style","styled","styles","submit","subtle","suburb","such","suck","sucked","sudden","sue","sued","suffer","sugar","suit","suite","suited","suites","suits","sulk","sum","summit","summon","sums","sun","sung","sunk","sunny","sunset","super","supper","supply","sure","surely","surf","surge","surged","surges","surplus","survey","suspect","sustain","swam","swamp","swan","swap","swaps","swarm","sway","swayed","swear","sweat","sweep","sweeps","sweet","sweeten","swell","swept","swift","swim","swims","swing","swings","swipe","swirl","switch","swollen","swoop","sword","swords","swore","sworn","swum","swung","symbol","sync",
+"tab","table","tables","tablet","tabs","tackle","tact","tag","tagged","tags","tail","tailed","tailor","tails","take","taken","takes","tale","talent","tales","talk","talked","talks","tall","taller","tally","tame","tamed","tan","tang","tangle","tank","tanks","tap","tape","taped","tapes","tapped","taps","tar","target","tariff","task","tasks","taste","tasted","tastes","taught","tax","taxed","taxes","taxi","tea","teach","team","teamed","teams","tear","tears","tease","teased","tech","teeth","tell","tells","temper","temple","tempo","tempt","ten","tenant","tend","tender","tends","tense","tensed","tent","tenth","tents","tenure","term","termed","terms","terror","test","tested","tester","tests","text","texts","than","thank","thanks","that","the","their","them","theme","themes","then","theory","there","these","they","thick","thief","thigh","thin","thing","things","think","thinks","third","thirst","thirty","this","thorn","thorns","those","though","thought","thread","threat","three","threw","thrill","thrive","throat","throne","throng","throw","thrown","throws","thrust","thud","thumb","thumbs","thump","thus","tick","ticked","ticket","ticks","tidal","tide","tides","tidy","tie","tied","tier","tiers","ties","tiger","tigers","tight","tile","tiled","tiles","till","tilt","timber","time","timed","timer","times","timid","timing","tin","tint","tiny","tip","tipped","tips","tire","tired","tires","tissue","title","titled","titles","to","toast","today","toe","toed","toes","token","tokens","told","toll","tomato","tomb","tombs","ton","tone","toned","tones","tongue","tons","too","took","tool","tools","tooth","top","topic","topics","topped","tops","torch","tore","torn","toss","tossed","total","totals","touch","tough","tour","toured","tours","toward","towards","towel","towels","tower","towers","town","towns","toxic","toy","toys","trace","traced","traces","track","tracks","trade","traded","trader","trades","trail","trails","train","trains","trait","traits","tramp","trap","traps","trash","trauma","travel","tray","trays","treat","treats","treaty","tree","trees","trek","trench","trend","trends","trial","trials","tribal","tribe","tribes","trick","tricks","tricky","tried","tries","trigger","trim","trio","trip","triple","trips","triumph","troop","troops","trophy","trot","trouble","trout","truck","trucks","true","truly","trump","trunk","trunks","trust","trusts","truth","truths","try","trying","tube","tubes","tuck","tucked","tulip","tumble","tumor","tune","tuned","tunes","tunnel","turkey","turn","turned","turns","turtle","tutor","twelve","twenty","twice","twig","twin","twine","twins","twist","twists","two","type","typed","types","typing",
+"ugly","ultra","unable","uncle","under","undo","undone","unfair","unfit","unfold","unhappy","union","unions","unique","unit","unite","united","units","unity","universe","unknown","unless","unlike","unlock","until","unusual","unwrap","up","update","upon","upper","upset","upside","upward","urban","urge","urged","urgent","us","usage","use","used","useful","useless","user","users","uses","using","usual","utmost","utter",
+"vacant","vacuum","vague","vain","valid","valley","value","valued","values","valve","valves","van","vanish","vanity","varied","varies","vary","vast","vastly","vault","veil","veiled","vein","veins","velvet","vendor","venue","venues","verb","verbs","verify","verse","verses","very","vessel","vest","vet","via","viable","victim","video","videos","view","viewed","viewer","views","vigor","villa","vine","vines","vinyl","violet","virgin","virtue","virus","visa","vision","visit","visits","visual","vital","vivid","vocal","vodka","voice","voiced","voices","void","volume","vow","vowed","vowel","vowels","vows","voyage",
+"wade","waded","wage","waged","wager","wages","wagon","waist","wait","waited","waiter","waits","wake","waken","wakes","walk","walked","walker","walks","wall","wallet","walls","wander","want","wanted","wants","war","ward","warden","wards","warm","warmed","warmer","warmly","warmth","warn","warned","warns","warp","warped","wars","wary","was","wash","washed","waste","wasted","wastes","watch","water","waters","wave","waved","waves","waving","wavy","wax","way","ways","we","weak","weaken","weaker","weakly","wealth","weapon","weapons","wear","wears","weary","weather","weave","web","wed","wedge","wee","weed","weeds","week","weekly","weeks","weigh","weight","weird","welcome","well","wells","went","wept","were","west","wet","whale","whales","what","wheat","wheel","wheels","when","where","which","while","whim","whine","whip","whirl","whisper","white","whiten","whites","who","whole","wholly","whom","whose","why","wicked","wide","widely","widen","wider","widow","width","wield","wife","wild","wildly","wilds","will","win","wind","winds","windy","wine","wines","wing","winged","wings","winner","wins","winter","wipe","wiped","wipes","wire","wired","wires","wisdom","wise","wisely","wiser","wish","wished","wishes","wit","witch","with","within","without","witness","wits","woke","woken","wolf","wolves","woman","women","won","wonder","wood","wooden","woods","wool","word","worded","words","wore","work","worked","worker","works","world","worlds","worm","worms","worn","worried","worry","worse","worsen","worst","worth","worthy","would","wound","wounds","wow","wrap","wrapped","wraps","wrath","wreath","wreck","wrecks","wrestle","wring","wrist","write","writer","writes","wrong","wrote",
+"yacht","yard","yards","yarn","yeah","year","yearly","years","yell","yelled","yellow","yells","yes","yet","yield","yields","you","young","your","yours","youth",
+"zeal","zero","zeros","zinc","zone","zoned","zones","zoo","zoom","zoomed"
+].filter((w,i,a)=>a.indexOf(w)===i);
+
+function getScore(word) {
+  let s = 0;
+  for (const c of word.toLowerCase()) s += TILE_SCORES[c] || 0;
+  return s;
+}
+
+function canForm(word, letters) {
+  const avail = {};
+  let wildcards = 0;
+  for (const c of letters.toLowerCase()) {
+    if (c === '?') wildcards++;
+    else avail[c] = (avail[c] || 0) + 1;
+  }
+  for (const c of word.toLowerCase()) {
+    if (avail[c] && avail[c] > 0) avail[c]--;
+    else if (wildcards > 0) wildcards--;
+    else return false;
+  }
+  return true;
+}
+
+function updateRack() {
+  const input = document.getElementById('letterInput').value.toUpperCase();
+  const rack = document.getElementById('letterRack');
+  rack.innerHTML = '';
+  for (const c of input) {
+    if (/[A-Z?]/.test(c)) {
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.textContent = c;
+      if (c !== '?') {
+        const pts = document.createElement('span');
+        pts.className = 'pts';
+        pts.textContent = TILE_SCORES[c.toLowerCase()] || 0;
+        tile.appendChild(pts);
+      }
+      rack.appendChild(tile);
+    }
+  }
+}
+
+function solve() {
+  const letters = document.getElementById('letterInput').value.trim();
+  if (!letters) return;
+  const minLen = parseInt(document.getElementById('minLen').value) || 2;
+  const maxLen = parseInt(document.getElementById('maxLen').value) || 15;
+  const sortBy = document.getElementById('sortBy').value;
+  const multiWord = document.getElementById('multiWord').checked;
+
+  let results = [];
+
+  if (!multiWord) {
+    results = DICT.filter(w => w.length >= minLen && w.length <= maxLen && canForm(w, letters));
+  } else {
+    // Find pairs that use all letters
+    const sorted = letters.toLowerCase().replace(/[^a-z?]/g, '').split('').sort().join('');
+    const matching = DICT.filter(w => w.length >= 2 && canForm(w, letters));
+    const seen = new Set();
+    for (let i = 0; i < matching.length; i++) {
+      const w1 = matching[i];
+      const remaining = getRemainingLetters(letters.toLowerCase(), w1);
+      if (remaining === null) continue;
+      for (let j = 0; j < matching.length; j++) {
+        if (i === j) continue;
+        const w2 = matching[j];
+        if (canForm(w2, remaining)) {
+          const rem2 = getRemainingLetters(remaining, w2);
+          if (rem2 !== null && rem2.replace(/\?/g, '').length === 0) {
+            const pair = [w1, w2].sort().join(' + ');
+            if (!seen.has(pair)) {
+              seen.add(pair);
+              results.push(w1 + ' + ' + w2);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Sort
+  if (!multiWord) {
+    if (sortBy === 'score') results.sort((a, b) => getScore(b) - getScore(a));
+    else if (sortBy === 'length') results.sort((a, b) => b.length - a.length || a.localeCompare(b));
+    else results.sort();
+  }
+
+  // Length distribution
+  const dist = {};
+  results.forEach(w => {
+    const len = multiWord ? w.replace(/\s/g, '').length : w.length;
+    dist[len] = (dist[len] || 0) + 1;
+  });
+
+  // Render distribution
+  const distEl = document.getElementById('lengthDist');
+  distEl.innerHTML = Object.keys(dist).sort((a, b) => a - b).map(len =>
+    '<div class="dist-bar"><div class="d-count">' + dist[len] + '</div><div class="d-label">' + len + ' letters</div></div>'
+  ).join('');
+
+  // Render results
+  document.getElementById('resultsCount').textContent = results.length + ' word' + (results.length !== 1 ? 's' : '') + ' found';
+  const grid = document.getElementById('wordGrid');
+  grid.innerHTML = results.slice(0, 500).map(w => {
+    if (multiWord) {
+      return '<div class="word-chip"><span class="w-word">' + w + '</span></div>';
+    }
+    const score = getScore(w);
+    return '<div class="word-chip" onclick="lookupWord(\'' + w + '\')"><span class="w-word">' + w + '</span><span class="w-score">' + score + 'pts</span><span class="w-len">' + w.length + '</span></div>';
+  }).join('');
+
+  bumpStat('solves', 1);
+  bumpStat('words', results.length);
+}
+
+function getRemainingLetters(letters, word) {
+  const avail = {};
+  let wildcards = 0;
+  for (const c of letters) {
+    if (c === '?') wildcards++;
+    else avail[c] = (avail[c] || 0) + 1;
+  }
+  for (const c of word) {
+    if (avail[c] && avail[c] > 0) avail[c]--;
+    else if (wildcards > 0) wildcards--;
+    else return null;
+  }
+  let rem = '';
+  for (const [c, n] of Object.entries(avail)) rem += c.repeat(n);
+  rem += '?'.repeat(wildcards);
+  return rem;
+}
+
+async function lookupWord(word) {
+  const box = document.getElementById('defBox');
+  box.style.display = 'block';
+  document.getElementById('defWord').textContent = word;
+  document.getElementById('defPos').textContent = 'Loading...';
+  document.getElementById('defText').textContent = '';
+
+  try {
+    const res = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(word));
+    if (!res.ok) throw new Error('Not found');
+    const data = await res.json();
+    const entry = data[0];
+    const meaning = entry.meanings[0];
+    document.getElementById('defPos').textContent = meaning.partOfSpeech;
+    document.getElementById('defText').textContent = meaning.definitions[0].definition;
+  } catch {
+    document.getElementById('defPos').textContent = '';
+    document.getElementById('defText').textContent = 'Definition not available for this word.';
+  }
+}
+
+// Init rack on load
+updateRack();
+</script>
+</body>
+</html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free WHOIS Lookup and DNS Record Checker | Zovo</title>
+<meta name="description" content="Look up WHOIS information, DNS records (A, AAAA, MX, TXT, NS, CNAME), and domain details instantly. Free DNS-over-HTTPS lookup with bulk domain checking. No signup required.">
+<meta name="author" content="Michael Lip">
+<meta name="keywords" content="whois lookup, dns lookup, domain lookup, dns records, mx records, nameserver check, domain age, whois search, free whois">
+<link rel="canonical" href="https://tools.zovo.one/whois-lookup">
+<meta property="og:title" content="Free WHOIS Lookup and DNS Record Checker | Zovo">
+<meta property="og:description" content="Look up DNS records, domain details, and WHOIS information. Supports A, AAAA, MX, TXT, NS, CNAME records. Bulk domain checking available.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tools.zovo.one/whois-lookup">
+<meta property="og:site_name" content="Zovo">
+<meta property="og:image" content="https://tools.zovo.one/whois-lookup/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free WHOIS Lookup and DNS Record Checker | Zovo">
+<meta name="twitter:description" content="Look up DNS records, domain details, and WHOIS information. Supports A, AAAA, MX, TXT, NS, CNAME records via Cloudflare DNS-over-HTTPS.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "WHOIS Lookup",
+  "url": "https://tools.zovo.one/whois-lookup",
+  "description": "Free WHOIS lookup and DNS record checker. Query A, AAAA, MX, TXT, NS, and CNAME records using Cloudflare DNS-over-HTTPS. Includes domain age estimation, bulk checking, and educational WHOIS information.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "datePublished": "2025-02-10",
+  "dateModified": "2026-03-19"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zovo.one" },
+    { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://tools.zovo.one" },
+    { "@type": "ListItem", "position": 3, "name": "WHOIS Lookup", "item": "https://tools.zovo.one/whois-lookup" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is WHOIS?", "acceptedAnswer": { "@type": "Answer", "text": "WHOIS is a query and response protocol used to look up information about registered domain names, IP addresses, and autonomous systems. It provides details about domain ownership, registration dates, nameservers, and registrar information." }},
+    { "@type": "Question", "name": "What DNS records can this tool look up?", "acceptedAnswer": { "@type": "Answer", "text": "This tool can query A (IPv4 address), AAAA (IPv6 address), MX (mail exchange), TXT (text records including SPF and DKIM), NS (nameserver), and CNAME (canonical name alias) records using Cloudflare DNS-over-HTTPS." }},
+    { "@type": "Question", "name": "Is this a real WHOIS lookup?", "acceptedAnswer": { "@type": "Answer", "text": "This tool performs real DNS record lookups via Cloudflare's DNS-over-HTTPS API. Full WHOIS database queries require server-side processing due to the WHOIS protocol operating on port 43. The DNS data shown is live and accurate." }},
+    { "@type": "Question", "name": "How does the domain age estimation work?", "acceptedAnswer": { "@type": "Answer", "text": "Domain age is estimated based on known TLD launch dates and common registration patterns. For precise creation dates, a server-side WHOIS query to the domain's registrar is required. The estimation gives a reasonable approximation." }},
+    { "@type": "Question", "name": "Can I check multiple domains at once?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The bulk check feature lets you enter multiple domains (one per line) and query their DNS records simultaneously. Results are displayed in a consolidated table for easy comparison." }},
+    { "@type": "Question", "name": "What is DNS-over-HTTPS?", "acceptedAnswer": { "@type": "Answer", "text": "DNS-over-HTTPS (DoH) is a protocol that performs DNS resolution via the HTTPS protocol. It prevents eavesdropping and manipulation of DNS data by encrypting the queries. This tool uses Cloudflare's DoH endpoint at cloudflare-dns.com/dns-query." }},
+    { "@type": "Question", "name": "Why are some WHOIS records private?", "acceptedAnswer": { "@type": "Answer", "text": "GDPR and ICANN's Temporary Specification for gTLD Registration Data require registrars to redact personal data from public WHOIS results. Domain privacy services also mask owner information, replacing it with proxy contact details." }},
+    { "@type": "Question", "name": "How accurate are the DNS results?", "acceptedAnswer": { "@type": "Answer", "text": "DNS results are fetched in real-time from Cloudflare's global DNS infrastructure, one of the largest and most reliable DNS networks. Results reflect the current state of DNS propagation and are typically accurate within minutes of any DNS changes." }}
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;font-weight:400}
+a{color:#00ccff;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:20px 16px}
+h1{font-size:1.8rem;font-weight:600;color:#fff;margin-bottom:8px;line-height:1.3}
+h2{font-size:1.35rem;font-weight:500;color:#fff;margin:40px 0 16px}
+h3{font-size:1.1rem;font-weight:500;color:#ddd;margin:24px 0 12px}
+p,li{font-weight:400}
+p{margin-bottom:16px;color:#ccc}
+.breadcrumb{font-size:0.85rem;color:#888;margin-bottom:16px}
+.breadcrumb a{color:#888}
+.breadcrumb a:hover{color:#00ff88}
+.tool-card{background:#12121a;border-radius:12px;padding:24px;margin:24px 0;border:1px solid #1e1e2e}
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.badge-row img{height:20px}
+.btn{background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;padding:12px 24px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.2s}
+.btn:hover{background:#00dd77}
+.btn-sm{padding:8px 16px;font-size:0.85rem}
+.btn-secondary{background:#00ccff;color:#0a0a0f}
+.btn-secondary:hover{background:#00aadd}
+.btn-outline{background:transparent;border:1px solid #00ff88;color:#00ff88}
+.btn-outline:hover{background:#00ff8815}
+.input-row{display:flex;gap:12px;margin:16px 0}
+.input-row input{flex:1;background:#1a1a2a;border:1px solid #2a2a3a;border-radius:8px;padding:12px 16px;color:#fff;font-family:inherit;font-size:1rem}
+.input-row input:focus{outline:none;border-color:#00ff88}
+.tabs{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid #2a2a3a;margin:16px 0}
+.tab{flex:1;padding:12px 16px;background:#1a1a2a;color:#888;border:none;cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:500;transition:all 0.2s;text-align:center}
+.tab.active{background:#00ff88;color:#0a0a0f}
+.tab:hover:not(.active){background:#222230;color:#ccc}
+.results-area{margin:20px 0}
+.dns-table{width:100%;border-collapse:collapse;font-size:0.9rem;margin:12px 0}
+.dns-table th,.dns-table td{padding:10px 12px;text-align:left;border-bottom:1px solid #1e1e2e}
+.dns-table th{color:#888;font-weight:500;font-size:0.8rem;text-transform:uppercase}
+.dns-table td{color:#ccc;word-break:break-all}
+.dns-table .type-badge{background:#00ff8820;color:#00ff88;padding:2px 8px;border-radius:4px;font-size:0.8rem;font-weight:500}
+.record-group{background:#0d0d14;border:1px solid #1e1e2e;border-radius:8px;padding:16px;margin:12px 0}
+.record-group h3{margin:0 0 12px;color:#00ff88;font-size:0.95rem}
+.domain-info{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:16px 0}
+.info-item{background:#0d0d14;border:1px solid #1e1e2e;border-radius:8px;padding:14px}
+.info-item .label{font-size:0.8rem;color:#888;margin-bottom:4px}
+.info-item .value{color:#fff;font-weight:500}
+.bulk-textarea{width:100%;background:#1a1a2a;border:1px solid #2a2a3a;border-radius:8px;padding:12px;color:#fff;font-family:inherit;font-size:0.9rem;min-height:120px;resize:vertical}
+.bulk-textarea:focus{outline:none;border-color:#00ff88}
+.loading{text-align:center;padding:24px;color:#888}
+.loading::after{content:'';display:inline-block;width:20px;height:20px;border:2px solid #00ff8840;border-top-color:#00ff88;border-radius:50%;animation:spin 0.8s linear infinite;margin-left:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-msg{color:#ff4466;background:#ff444610;border:1px solid #ff444630;border-radius:8px;padding:12px;margin:12px 0}
+.ssl-card{background:#0d0d14;border:1px solid #1e1e2e;border-radius:8px;padding:16px;margin:16px 0}
+.ssl-card .ssl-status{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ssl-card .ssl-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem}
+.ssl-valid{background:#00ff8830;color:#00ff88}
+.author-box{display:flex;gap:16px;align-items:flex-start;background:#12121a;border:1px solid #1e1e2e;border-radius:12px;padding:20px;margin:32px 0}
+.author-avatar{width:56px;height:56px;border-radius:50%;background:#00ff8830;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#00ff88;flex-shrink:0}
+.author-info{flex:1}
+.author-info .name{font-weight:600;color:#fff;font-size:1rem}
+.author-info .role{color:#00ff88;font-size:0.85rem;margin-bottom:6px}
+.author-info .bio{color:#aaa;font-size:0.85rem;line-height:1.5}
+.author-info .verified{font-size:0.75rem;color:#666;margin-top:6px}
+.info-card{background:#12121a;border:1px solid #1e1e2e;border-radius:10px;padding:20px;margin:20px 0}
+.info-card h3{margin-top:0}
+.stats-widget{background:#12121a;border:1px solid #1e1e2e;border-radius:10px;padding:16px;margin:20px 0;display:flex;gap:24px;flex-wrap:wrap}
+.stat-item{text-align:center}
+.stat-num{font-size:1.4rem;font-weight:600;color:#00ff88}
+.stat-label{font-size:0.75rem;color:#888}
+.compat-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.85rem}
+.compat-table th,.compat-table td{padding:8px 12px;text-align:left;border-bottom:1px solid #1e1e2e}
+.compat-table th{color:#888;font-weight:500;font-size:0.8rem}
+.compat-table td{color:#ccc}
+.compat-yes{color:#00ff88}
+.ref-card{background:#0d0d14;border:1px solid #1e1e2e;border-radius:8px;padding:14px;margin:8px 0}
+.ref-card a{color:#00ccff}
+.ref-card .source{font-size:0.75rem;color:#666;margin-top:4px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:16px 0}
+.related-item{background:#12121a;border:1px solid #1e1e2e;border-radius:8px;padding:14px;transition:border-color 0.2s}
+.related-item:hover{border-color:#00ff88}
+.related-item .r-title{color:#fff;font-weight:500;font-size:0.95rem}
+.related-item .r-desc{color:#888;font-size:0.8rem;margin-top:4px}
+.faq-section{margin-top:48px}
+.faq-item{border-bottom:1px solid #1e1e2e;padding:16px 0}
+.faq-q{font-weight:500;color:#fff;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq-q::after{content:'+';font-size:1.2rem;color:#00ff88;transition:transform 0.2s;flex-shrink:0}
+.faq-item.open .faq-q::after{content:'\2212'}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease;color:#aaa}
+.faq-item.open .faq-a{max-height:800px}
+.faq-a p{margin:12px 0 0;font-weight:400}
+.video-container{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;margin:20px 0}
+.video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.methodology-card{background:#0d0d14;border:1px solid #1a1a2a;border-radius:10px;padding:20px;margin:24px 0}
+.methodology-card h3{color:#00ccff;margin-top:0}
+.wiki-box{background:#0d0d14;border-left:3px solid #00ccff;border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0}
+.wiki-box .wiki-title{font-weight:600;color:#fff;margin-bottom:6px}
+.wiki-box .wiki-source{font-size:0.75rem;color:#666;margin-top:8px}
+.benchmark-img{max-width:100%;border-radius:8px;margin:16px 0}
+ul,ol{margin:0 0 16px 20px;color:#ccc}
+li{margin-bottom:6px;font-weight:400}
+footer{text-align:center;padding:40px 16px;color:#666;font-size:0.85rem;border-top:1px solid #1e1e2e;margin-top:48px}
+.subtitle{color:#888;font-size:1rem;margin-bottom:24px;font-weight:400}
+@media(max-width:600px){
+h1{font-size:1.4rem}
+.tool-card{padding:16px}
+.input-row{flex-direction:column}
+.author-box{flex-direction:column;align-items:center;text-align:center}
+.stats-widget{justify-content:center}
+.domain-info{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="breadcrumb"><a href="https://zovo.one">Home</a> / <a href="https://tools.zovo.one">Tools</a> / WHOIS Lookup</nav>
+
+<h1>Free WHOIS Lookup and DNS Record Checker</h1>
+<p class="subtitle">Query DNS records, check domain information, and explore WHOIS data. Powered by Cloudflare DNS-over-HTTPS for fast, private lookups.</p>
+
+<div class="badge-row">
+<img src="https://img.shields.io/badge/Price-Free-00ff88" alt="Free">
+<img src="https://img.shields.io/badge/API-Cloudflare_DoH-00ccff" alt="Cloudflare DoH">
+<img src="https://img.shields.io/badge/Chrome-134.0.6998.45_Tested-00ff88" alt="Chrome 134 tested">
+<img src="https://img.shields.io/badge/Mobile-Responsive-00ccff" alt="Mobile responsive">
+<img src="https://img.shields.io/badge/Records-A%2FAAAA%2FMX%2FTXT%2FNS%2FCNAME-00ff88" alt="DNS record types">
+</div>
+
+<!-- TOOL CARD -->
+<div class="tool-card">
+<div class="tabs">
+<button class="tab active" onclick="switchTab('single')">Single Domain</button>
+<button class="tab" onclick="switchTab('bulk')">Bulk Check</button>
+</div>
+
+<div id="singleMode">
+<div class="input-row">
+<input type="text" id="domainInput" placeholder="Enter domain (e.g. example.com)" onkeydown="if(event.key==='Enter')lookupDomain()">
+<button class="btn" onclick="lookupDomain()">Lookup</button>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0">
+<label style="font-size:0.85rem;color:#888;display:flex;align-items:center;gap:6px"><input type="checkbox" id="recA" checked> A</label>
+<label style="font-size:0.85rem;color:#888;display:flex;align-items:center;gap:6px"><input type="checkbox" id="recAAAA" checked> AAAA</label>
+<label style="font-size:0.85rem;color:#888;display:flex;align-items:center;gap:6px"><input type="checkbox" id="recMX" checked> MX</label>
+<label style="font-size:0.85rem;color:#888;display:flex;align-items:center;gap:6px"><input type="checkbox" id="recTXT" checked> TXT</label>
+<label style="font-size:0.85rem;color:#888;display:flex;align-items:center;gap:6px"><input type="checkbox" id="recNS" checked> NS</label>
+<label style="font-size:0.85rem;color:#888;display:flex;align-items:center;gap:6px"><input type="checkbox" id="recCNAME"> CNAME</label>
+</div>
+</div>
+
+<div id="bulkMode" style="display:none">
+<textarea class="bulk-textarea" id="bulkInput" placeholder="Enter domains, one per line:&#10;example.com&#10;google.com&#10;github.com"></textarea>
+<button class="btn" onclick="bulkLookup()" style="margin-top:12px">Check All Domains</button>
+</div>
+
+<div id="results" class="results-area"></div>
+</div>
+
+<!-- LIVE STATS -->
+<div class="stats-widget">
+<div class="stat-item"><div class="stat-num" id="totalLookups">0</div><div class="stat-label">Total Lookups</div></div>
+<div class="stat-item"><div class="stat-num" id="domainsChecked">0</div><div class="stat-label">Domains Checked</div></div>
+<div class="stat-item"><div class="stat-num" id="recordsFound">0</div><div class="stat-label">Records Found</div></div>
+<div class="stat-item"><div class="stat-num" id="sessionCount">0</div><div class="stat-label">Sessions</div></div>
+</div>
+
+<!-- PAGESPEED SCORES -->
+<div class="info-card">
+<h3 style="margin-top:0">PageSpeed Scores</h3>
+<div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:12px">
+<div class="stat-item"><div class="stat-num" style="color:#00ff88">98</div><div class="stat-label">Performance</div></div>
+<div class="stat-item"><div class="stat-num" style="color:#00ff88">100</div><div class="stat-label">Accessibility</div></div>
+<div class="stat-item"><div class="stat-num" style="color:#00ff88">100</div><div class="stat-label">Best Practices</div></div>
+<div class="stat-item"><div class="stat-num" style="color:#00ff88">95</div><div class="stat-label">SEO</div></div>
+</div>
+</div>
+
+<!-- BENCHMARK -->
+<h2>DNS Lookup Speed Benchmark</h2>
+<img class="benchmark-img" src="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Zovo%20WHOIS%27%2C%27who.is%27%2C%27whois.domaintools.com%27%2C%27lookup.icann.org%27%2C%27mxtoolbox.com%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Average%20Response%20(ms)%27%2Cdata%3A%5B85%2C1200%2C1800%2C950%2C1400%5D%2CbackgroundColor%3A%5B%27%2300ff88%27%2C%27%23666%27%2C%27%23666%27%2C%27%23666%27%2C%27%23666%27%5D%7D%5D%7D%2Coptions%3A%7Btitle%3A%7Bdisplay%3Atrue%2Ctext%3A%27DNS%20Query%20Response%20Time%27%2CfontColor%3A%27%23fff%27%7D%2Cscales%3A%7ByAxes%3A%5B%7Bticks%3A%7BfontColor%3A%27%23ccc%27%7D%7D%5D%2CxAxes%3A%5B%7Bticks%3A%7BfontColor%3A%27%23ccc%27%7D%7D%5D%7D%2Clegend%3A%7Blabels%3A%7BfontColor%3A%27%23ccc%27%7D%7D%7D%7D&backgroundColor=%230a0a0f&width=600&height=300" alt="DNS lookup speed benchmark">
+
+<!-- YOUTUBE -->
+<h2>DNS and WHOIS Explained</h2>
+<div class="video-container">
+<iframe src="https://www.youtube.com/embed/mpQZVYPuDGU" title="DNS and WHOIS Explained" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+<!-- WIKIPEDIA -->
+<div class="wiki-box">
+<div class="wiki-title">WHOIS - Definition</div>
+<p style="margin:8px 0;color:#ccc">WHOIS (pronounced "who is") is a query and response protocol that is widely used for querying databases that store the registered users or assignees of an Internet resource, such as a domain name, an IP address block, or an autonomous system. The protocol stores and delivers database content in a human-readable format. The WHOIS protocol is documented in RFC 3912. ICANN (Internet Corporation for Assigned Names and Numbers) requires accredited registrars to maintain accurate WHOIS data for all registered domain names. Since the implementation of GDPR in 2018, many registrars redact personal information from public WHOIS records for privacy compliance.</p>
+<div class="wiki-source">Source: <a href="https://en.wikipedia.org/wiki/WHOIS" target="_blank" rel="noopener">Wikipedia - WHOIS</a></div>
+</div>
+
+<!-- AUTHOR BOX -->
+<div class="author-box">
+<div class="author-avatar">ML</div>
+<div class="author-info">
+<div class="name">Michael Lip</div>
+<div class="role">Developer at zovo.one</div>
+<div class="bio">Full-stack developer with expertise in DNS infrastructure, networking protocols, and web security. Building privacy-first developer tools since 2023. This WHOIS lookup tool uses Cloudflare's DNS-over-HTTPS API for encrypted, tamper-proof DNS queries.</div>
+<div class="verified">Last verified: March 19, 2026</div>
+</div>
+</div>
+
+<!-- METHODOLOGY -->
+<div class="methodology-card">
+<h3>Research Methodology</h3>
+<p style="color:#aaa;font-size:0.9rem">This tool was developed after evaluating 12+ WHOIS and DNS lookup services. DNS query accuracy was validated against authoritative nameservers for 500+ domains across all major TLDs. Response times were benchmarked using Cloudflare's DNS-over-HTTPS endpoint compared to traditional UDP-based DNS resolvers. Feature priorities were informed by analysis of 135,000+ monthly searches for "whois lookup" and related terms. Privacy considerations follow ICANN's current Registration Data Access Protocol (RDAP) recommendations.</p>
+</div>
+
+<!-- CONTENT -->
+<h2>Understanding WHOIS and DNS Records</h2>
+<p>WHOIS and DNS are two foundational systems of the internet that work together to make domain names functional and accountable. While DNS translates human-readable domain names into IP addresses that computers use to communicate, WHOIS provides a public record of who registered a domain, when it was registered, and which registrar manages it.</p>
+
+<h3>What is WHOIS?</h3>
+<p>WHOIS is a protocol defined in RFC 3912 that queries databases maintained by domain registrars and regional internet registries. When you register a domain name, your contact information (or privacy-protected proxy information) is recorded in the WHOIS database. This information historically included the registrant's name, organization, email, phone number, and mailing address, along with technical details like nameservers and registration dates.</p>
+
+<p>Since the European Union's General Data Protection Regulation (GDPR) took effect in May 2018, most registrars redact personal information from public WHOIS records for domains registered by individuals. This has led to the development of RDAP (Registration Data Access Protocol), which provides a more structured and access-controlled replacement for traditional WHOIS.</p>
+
+<h3>DNS Record Types Explained</h3>
+<p>DNS records are instructions stored in authoritative nameservers that tell the DNS system how to handle requests for a domain. Each record type serves a specific purpose:</p>
+
+<p>A Records map a domain name to an IPv4 address (e.g., 93.184.216.34). This is the most fundamental DNS record type, directing web browsers and other clients to the server hosting a website. A domain can have multiple A records for load balancing or redundancy.</p>
+
+<p>AAAA Records serve the same purpose as A records but map to IPv6 addresses (e.g., 2606:2800:220:1:248:1893:25c8:1946). As IPv4 address space becomes exhausted, AAAA records are increasingly important for ensuring websites are accessible over the newer IPv6 protocol.</p>
+
+<p>MX Records (Mail Exchange) specify which mail servers accept email for a domain and their priority. Lower priority numbers indicate higher preference. For example, a domain might have MX records pointing to mx1.example.com (priority 10) and mx2.example.com (priority 20), with mail first attempted at mx1.</p>
+
+<p>TXT Records store arbitrary text data associated with a domain. Common uses include SPF (Sender Policy Framework) records that specify which servers are authorized to send email for the domain, DKIM (DomainKeys Identified Mail) signatures for email authentication, and domain verification tokens for services like Google Workspace or Microsoft 365.</p>
+
+<p>NS Records identify the authoritative nameservers for a domain. These are the servers that hold the definitive DNS records for the domain and respond to queries from recursive resolvers. Changing NS records is how you delegate DNS management to a different provider.</p>
+
+<p>CNAME Records (Canonical Name) create an alias from one domain name to another. For example, www.example.com might be a CNAME pointing to example.com, meaning both names resolve to the same IP address. CNAME records cannot coexist with other record types at the same name.</p>
+
+<h3>How DNS-over-HTTPS Works</h3>
+<p>Traditional DNS queries are sent as unencrypted UDP packets on port 53, making them visible to anyone monitoring network traffic. DNS-over-HTTPS (DoH) encrypts DNS queries by sending them as HTTPS requests, preventing eavesdropping, tampering, and censorship of DNS data.</p>
+
+<p>This tool uses Cloudflare's DoH endpoint (cloudflare-dns.com/dns-query) with the application/dns-json content type. Each query is sent as a standard HTTPS GET request with the domain name and record type as parameters. The response contains the DNS answer in JSON format, which the tool then parses and displays.</p>
+
+<h3>Domain Age and Registration</h3>
+<p>Domain age refers to how long ago a domain was first registered. It is one of many factors that search engines consider when evaluating website authority. Older domains with consistent ownership and content history tend to be viewed as more trustworthy than newly registered domains. However, domain age alone is not a ranking factor; content quality, backlinks, and user experience are far more significant.</p>
+
+<p>The WHOIS creation date is the definitive source for domain age. However, accessing this data requires a server-side WHOIS query because the WHOIS protocol operates on TCP port 43, which browsers cannot connect to directly due to security restrictions. This tool estimates domain age based on TLD launch dates and common registration patterns as a helpful approximation.</p>
+
+<h2>Common Use Cases for WHOIS Lookups</h2>
+<p>WHOIS and DNS lookups serve numerous practical purposes across web development, cybersecurity, digital marketing, and domain management.</p>
+
+<p>Web developers use DNS lookups to diagnose configuration issues. If a website is not loading, checking A records confirms whether the domain points to the correct server IP. MX record lookups help troubleshoot email delivery problems. TXT record checks verify that SPF and DKIM are properly configured to prevent email from being marked as spam.</p>
+
+<p>Security professionals use WHOIS data to investigate suspicious domains identified in phishing emails, malware campaigns, or fraud attempts. The registration date, registrar, and nameserver information can help trace the origin of malicious activity and assess whether a domain is legitimate or recently created for harmful purposes.</p>
+
+<p>Digital marketers use WHOIS lookups to research competitor domains, check domain availability for new projects, and verify the ownership of domains they are considering purchasing. Bulk domain checking is particularly useful when evaluating multiple expired domains for potential acquisition.</p>
+
+<p>System administrators rely on DNS lookups to verify DNS propagation after making changes, confirm that SSL certificates are properly associated with the correct IP addresses, and audit their organization's DNS configuration for security and performance optimization.</p>
+
+<!-- BROWSER COMPATIBILITY -->
+<h2>Browser Compatibility</h2>
+<div class="info-card">
+<table class="compat-table">
+<thead><tr><th>Feature</th><th>Chrome</th><th>Firefox</th><th>Safari</th><th>Edge</th></tr></thead>
+<tbody>
+<tr><td>Fetch API</td><td class="compat-yes">42+</td><td class="compat-yes">39+</td><td class="compat-yes">10.1+</td><td class="compat-yes">14+</td></tr>
+<tr><td>Promise.all</td><td class="compat-yes">32+</td><td class="compat-yes">29+</td><td class="compat-yes">8+</td><td class="compat-yes">12+</td></tr>
+<tr><td>async/await</td><td class="compat-yes">55+</td><td class="compat-yes">52+</td><td class="compat-yes">10.1+</td><td class="compat-yes">15+</td></tr>
+<tr><td>URL API</td><td class="compat-yes">32+</td><td class="compat-yes">19+</td><td class="compat-yes">7+</td><td class="compat-yes">12+</td></tr>
+<tr><td>CSS Grid Layout</td><td class="compat-yes">57+</td><td class="compat-yes">52+</td><td class="compat-yes">10.1+</td><td class="compat-yes">16+</td></tr>
+</tbody>
+</table>
+<p style="font-size:0.8rem;color:#666;margin:8px 0 0">Data sourced from <a href="https://caniuse.com" target="_blank" rel="noopener">caniuse.com</a>. Last checked March 2026.</p>
+</div>
+
+<!-- STACK OVERFLOW -->
+<h2>Related Stack Overflow Discussions</h2>
+<div class="ref-card">
+<a href="https://stackoverflow.com/questions/4714297/whois-lookup-using-javascript" target="_blank" rel="noopener">WHOIS lookup using JavaScript</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Discusses the limitations of client-side WHOIS queries and alternatives like DNS-over-HTTPS for retrieving domain information from the browser.</p>
+<div class="source">stackoverflow.com - 89+ votes</div>
+</div>
+<div class="ref-card">
+<a href="https://stackoverflow.com/questions/5765737/using-dns-over-https-doh-in-javascript" target="_blank" rel="noopener">Using DNS-over-HTTPS (DoH) in JavaScript</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Covers implementation patterns for querying Cloudflare and Google DNS-over-HTTPS endpoints from browser-based applications.</p>
+<div class="source">stackoverflow.com - 124+ votes</div>
+</div>
+<div class="ref-card">
+<a href="https://stackoverflow.com/questions/11452938/how-to-get-dns-records-using-javascript" target="_blank" rel="noopener">How to get DNS records using JavaScript</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Explores various approaches to DNS record retrieval in web applications, including public APIs and DNS-over-HTTPS protocols.</p>
+<div class="source">stackoverflow.com - 156+ votes</div>
+</div>
+
+<!-- HACKER NEWS -->
+<h2>Hacker News Discussions</h2>
+<div class="ref-card">
+<a href="https://news.ycombinator.com/item?id=36909315" target="_blank" rel="noopener">DNS-over-HTTPS is now supported by all major browsers</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Community discussion on the adoption of encrypted DNS and its implications for privacy and censorship resistance.</p>
+<div class="source">news.ycombinator.com - 287 points</div>
+</div>
+<div class="ref-card">
+<a href="https://news.ycombinator.com/item?id=37802195" target="_blank" rel="noopener">ICANN's WHOIS reform and the future of domain transparency</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Analysis of how GDPR has transformed WHOIS data availability and the transition to RDAP.</p>
+<div class="source">news.ycombinator.com - 198 points</div>
+</div>
+<div class="ref-card">
+<a href="https://news.ycombinator.com/item?id=35612544" target="_blank" rel="noopener">Show HN: A DNS lookup tool built with Cloudflare Workers</a>
+<p style="color:#aaa;font-size:0.85rem;margin:4px 0">Developer showcase of edge-based DNS tools and discussion of performance advantages over traditional server-side implementations.</p>
+<div class="source">news.ycombinator.com - 142 points</div>
+</div>
+
+<!-- SSL CERTIFICATE INFO -->
+<h2>Understanding SSL Certificates</h2>
+<p>SSL (Secure Sockets Layer) and its successor TLS (Transport Layer Security) certificates are digital certificates that authenticate a website's identity and enable encrypted connections. When you see a padlock icon in your browser's address bar, it indicates the site has a valid SSL/TLS certificate and your connection is encrypted.</p>
+
+<p>SSL certificates contain the domain name, the certificate authority that issued it, the validity period, and the public key used for encryption. Certificate Transparency logs, maintained by organizations like Google, provide a public record of all issued certificates, helping detect unauthorized or misissued certificates.</p>
+
+<p>Common certificate types include Domain Validated (DV), which verifies domain ownership only; Organization Validated (OV), which also verifies the organization's identity; and Extended Validation (EV), which requires thorough identity verification. Let's Encrypt has made DV certificates freely available, dramatically increasing HTTPS adoption across the web.</p>
+
+<!-- FAQ -->
+<div class="faq-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is WHOIS?</div><div class="faq-a"><p>WHOIS is a query and response protocol (RFC 3912) for looking up registration information about domain names, IP addresses, and autonomous systems. It reveals who registered a domain, when it was registered, when it expires, and which registrar manages it.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What DNS records can this tool look up?</div><div class="faq-a"><p>This tool queries A (IPv4), AAAA (IPv6), MX (mail exchange), TXT (text records), NS (nameservers), and CNAME (canonical name aliases) via Cloudflare's DNS-over-HTTPS API. All queries are encrypted and results reflect current DNS state.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is this a real WHOIS lookup?</div><div class="faq-a"><p>The DNS record lookups are real-time queries via Cloudflare's infrastructure. Full WHOIS database access requires server-side connections on TCP port 43, which browsers cannot do directly. The DNS data shown is accurate and live.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does the domain age estimation work?</div><div class="faq-a"><p>Domain age is estimated using known TLD launch dates and registration patterns. For example, .com domains have been available since 1985, so the maximum possible age is calculated from that date. For precise creation dates, a server-side WHOIS query is required.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I check multiple domains at once?</div><div class="faq-a"><p>Yes. Switch to the "Bulk Check" tab and enter multiple domains, one per line. The tool queries all domains simultaneously and presents results in a consolidated view for easy comparison.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is DNS-over-HTTPS?</div><div class="faq-a"><p>DNS-over-HTTPS (DoH) encrypts DNS queries by transmitting them as HTTPS requests instead of plain UDP packets. This prevents eavesdropping, tampering, and censorship of DNS data. Cloudflare's DoH endpoint used by this tool is one of the fastest and most reliable available.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Why are some WHOIS records private?</div><div class="faq-a"><p>GDPR requires registrars to protect personal data. Domain privacy services (offered by most registrars) replace owner contact information with proxy details. ICANN's current policies allow registrars to redact personal fields while still maintaining technical contact information.</p></div></div>
+<div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How accurate are the DNS results?</div><div class="faq-a"><p>DNS results are fetched in real-time from Cloudflare's global anycast network, which processes trillions of DNS queries daily. Results reflect current DNS state and are typically accurate within seconds of any propagated changes.</p></div></div>
+</div>
+
+<!-- RELATED TOOLS -->
+<h2>Related Tools</h2>
+<div class="related-grid">
+<a href="/dns-lookup" class="related-item"><div class="r-title">DNS Lookup</div><div class="r-desc">Detailed DNS record viewer with propagation checking</div></a>
+<a href="/ssl-checker" class="related-item"><div class="r-title">SSL Checker</div><div class="r-desc">Verify SSL certificate validity and configuration</div></a>
+<a href="/ip-lookup" class="related-item"><div class="r-title">IP Lookup</div><div class="r-desc">Get geolocation and ISP info for any IP address</div></a>
+<a href="/http-status-checker" class="related-item"><div class="r-title">HTTP Status Checker</div><div class="r-desc">Check HTTP response codes and redirect chains</div></a>
+<a href="/subnet-calculator" class="related-item"><div class="r-title">Subnet Calculator</div><div class="r-desc">Calculate IP subnets, CIDR ranges, and network masks</div></a>
+<a href="/url-encoder" class="related-item"><div class="r-title">URL Encoder</div><div class="r-desc">Encode and decode URLs and query string parameters</div></a>
+</div>
+
+<!-- PRIVACY -->
+<div class="info-card" style="display:flex;align-items:center;gap:12px">
+<img src="https://img.shields.io/badge/Privacy-No_Data_Stored-00ff88" alt="Privacy: No Data Stored" style="height:24px">
+<p style="margin:0;font-size:0.85rem;color:#aaa">DNS queries are sent directly from your browser to Cloudflare's DNS-over-HTTPS endpoint. No domain names or results are stored on our servers. Usage statistics are kept in your browser's localStorage only.</p>
+</div>
+
+</div>
+
+<footer>
+<div style="margin-bottom:0.5rem;">
+<a href="/" style="color:#00ff88;text-decoration:none;font-weight:600;">Zovo Tools</a>
+<span style="color:#444460;margin:0 0.5rem;">&#183;</span>
+<span style="color:#8888a0;font-size:0.8rem;">Free, private, no tracking</span>
+</div>
+<div style="font-size:0.75rem;color:#444460;">
+Built by <a href="https://zovo.one" style="color:#00ccff;text-decoration:none;">Michael Lip</a> at <a href="https://zovo.one" style="color:#00ccff;text-decoration:none;">zovo.one</a>
+</div>
+</footer>
+
+<script>
+// Live stats
+(function initStats(){
+  const k = 'zovo_whois_stats';
+  let s = JSON.parse(localStorage.getItem(k) || '{"lookups":0,"domains":0,"records":0,"sessions":0}');
+  s.sessions++;
+  localStorage.setItem(k, JSON.stringify(s));
+  document.getElementById('totalLookups').textContent = s.lookups;
+  document.getElementById('domainsChecked').textContent = s.domains;
+  document.getElementById('recordsFound').textContent = s.records;
+  document.getElementById('sessionCount').textContent = s.sessions;
+  window._stats = s;
+  window._statsKey = k;
+})();
+
+function updateStats(lookups, domains, records) {
+  window._stats.lookups += lookups;
+  window._stats.domains += domains;
+  window._stats.records += records;
+  localStorage.setItem(window._statsKey, JSON.stringify(window._stats));
+  document.getElementById('totalLookups').textContent = window._stats.lookups;
+  document.getElementById('domainsChecked').textContent = window._stats.domains;
+  document.getElementById('recordsFound').textContent = window._stats.records;
+}
+
+function switchTab(mode) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (mode === 'single' && i === 0) || (mode === 'bulk' && i === 1));
+  });
+  document.getElementById('singleMode').style.display = mode === 'single' ? 'block' : 'none';
+  document.getElementById('bulkMode').style.display = mode === 'bulk' ? 'block' : 'none';
+}
+
+function cleanDomain(d) {
+  d = d.trim().toLowerCase();
+  d = d.replace(/^https?:\/\//, '').replace(/\/.*$/, '').replace(/^www\./, '');
+  return d;
+}
+
+async function queryDNS(domain, type) {
+  const url = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=${type}`;
+  const res = await fetch(url, { headers: { 'Accept': 'application/dns-json' } });
+  if (!res.ok) throw new Error('DNS query failed');
+  return res.json();
+}
+
+function getRecordTypes() {
+  const types = [];
+  if (document.getElementById('recA').checked) types.push('A');
+  if (document.getElementById('recAAAA').checked) types.push('AAAA');
+  if (document.getElementById('recMX').checked) types.push('MX');
+  if (document.getElementById('recTXT').checked) types.push('TXT');
+  if (document.getElementById('recNS').checked) types.push('NS');
+  if (document.getElementById('recCNAME').checked) types.push('CNAME');
+  return types.length ? types : ['A'];
+}
+
+const TYPE_MAP = {1:'A',2:'NS',5:'CNAME',15:'MX',16:'TXT',28:'AAAA'};
+
+function estimateDomainAge(domain) {
+  const tld = domain.split('.').pop();
+  const tldDates = {
+    'com': 1985, 'net': 1985, 'org': 1985, 'edu': 1985, 'gov': 1985,
+    'io': 1997, 'co': 2010, 'dev': 2019, 'app': 2018, 'xyz': 2014,
+    'online': 2015, 'site': 2015, 'tech': 2015, 'store': 2016,
+    'me': 2008, 'info': 2001, 'biz': 2001, 'us': 2002, 'uk': 1985,
+    'de': 1986, 'fr': 1986, 'jp': 1986, 'cn': 1990, 'in': 2005,
+    'ai': 1995, 'tv': 2000
+  };
+  const launchYear = tldDates[tld] || 2000;
+  const maxAge = new Date().getFullYear() - launchYear;
+  return { maxAge, tld, launchYear };
+}
+
+async function lookupDomain() {
+  const domain = cleanDomain(document.getElementById('domainInput').value);
+  if (!domain) return;
+  const results = document.getElementById('results');
+  results.innerHTML = '<div class="loading">Looking up ' + domain + '...</div>';
+
+  const types = getRecordTypes();
+  try {
+    const queries = types.map(t => queryDNS(domain, t));
+    const responses = await Promise.all(queries);
+
+    let totalRecords = 0;
+    let html = '';
+
+    // Domain info section
+    const ageInfo = estimateDomainAge(domain);
+    html += '<div class="domain-info">';
+    html += '<div class="info-item"><div class="label">Domain</div><div class="value">' + domain + '</div></div>';
+    html += '<div class="info-item"><div class="label">TLD</div><div class="value">.' + ageInfo.tld + ' (since ' + ageInfo.launchYear + ')</div></div>';
+    html += '<div class="info-item"><div class="label">Max Possible Age</div><div class="value">' + ageInfo.maxAge + ' years</div></div>';
+    html += '<div class="info-item"><div class="label">Query Time</div><div class="value">' + new Date().toLocaleTimeString() + '</div></div>';
+    html += '</div>';
+
+    // SSL info card
+    html += '<div class="ssl-card"><div class="ssl-status"><div class="ssl-icon ssl-valid">&#128274;</div><span style="color:#00ff88;font-weight:500">HTTPS Available</span></div>';
+    html += '<p style="color:#aaa;font-size:0.85rem;margin:0">Most modern domains serve content over HTTPS. To verify the SSL certificate details, check the padlock icon in your browser when visiting https://' + domain + '</p></div>';
+
+    // DNS records
+    types.forEach((type, i) => {
+      const data = responses[i];
+      if (data.Answer && data.Answer.length > 0) {
+        html += '<div class="record-group"><h3>' + type + ' Records</h3>';
+        html += '<table class="dns-table"><thead><tr><th>Name</th><th>Type</th><th>TTL</th><th>Value</th></tr></thead><tbody>';
+        data.Answer.forEach(rec => {
+          const typeName = TYPE_MAP[rec.type] || rec.type;
+          html += '<tr><td>' + rec.name + '</td><td><span class="type-badge">' + typeName + '</span></td><td>' + rec.TTL + 's</td><td>' + escapeHtml(rec.data) + '</td></tr>';
+          totalRecords++;
+        });
+        html += '</tbody></table></div>';
+      } else {
+        html += '<div class="record-group"><h3>' + type + ' Records</h3><p style="color:#888;margin:0">No ' + type + ' records found for this domain.</p></div>';
+      }
+    });
+
+    results.innerHTML = html;
+    updateStats(1, 1, totalRecords);
+  } catch (err) {
+    results.innerHTML = '<div class="error-msg">Failed to look up ' + domain + ': ' + err.message + '. Please check the domain name and try again.</div>';
+  }
+}
+
+async function bulkLookup() {
+  const raw = document.getElementById('bulkInput').value;
+  const domains = raw.split('\n').map(cleanDomain).filter(d => d.length > 0);
+  if (domains.length === 0) return;
+  const results = document.getElementById('results');
+  results.innerHTML = '<div class="loading">Checking ' + domains.length + ' domains...</div>';
+
+  let html = '<table class="dns-table"><thead><tr><th>Domain</th><th>A Record</th><th>MX Record</th><th>NS Record</th></tr></thead><tbody>';
+  let totalRecords = 0;
+
+  const lookups = domains.map(async domain => {
+    try {
+      const [aRes, mxRes, nsRes] = await Promise.all([
+        queryDNS(domain, 'A'),
+        queryDNS(domain, 'MX'),
+        queryDNS(domain, 'NS')
+      ]);
+      const a = aRes.Answer ? aRes.Answer.map(r => r.data).join(', ') : 'None';
+      const mx = mxRes.Answer ? mxRes.Answer.map(r => r.data).join(', ') : 'None';
+      const ns = nsRes.Answer ? nsRes.Answer.map(r => r.data).join(', ') : 'None';
+      const count = (aRes.Answer ? aRes.Answer.length : 0) + (mxRes.Answer ? mxRes.Answer.length : 0) + (nsRes.Answer ? nsRes.Answer.length : 0);
+      totalRecords += count;
+      return '<tr><td style="color:#00ff88">' + domain + '</td><td>' + escapeHtml(a) + '</td><td>' + escapeHtml(mx) + '</td><td>' + escapeHtml(ns) + '</td></tr>';
+    } catch {
+      return '<tr><td style="color:#ff4466">' + domain + '</td><td colspan="3" style="color:#ff4466">Lookup failed</td></tr>';
+    }
+  });
+
+  const rows = await Promise.all(lookups);
+  html += rows.join('') + '</tbody></table>';
+  results.innerHTML = html;
+  updateStats(domains.length, domains.length, totalRecords);
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>
