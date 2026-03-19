@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XML Formatter &amp; Validator - Beautify XML Online | Free Tool</title>
+<meta name="description" content="Format, beautify, minify, and validate XML online. Syntax highlighting, XML to JSON conversion, configurable indentation, line numbers, and error highlighting. Free, private, runs entirely in your browser.">
+<meta name="keywords" content="XML formatter, XML beautifier, XML validator, XML minifier, XML to JSON, pretty print XML, XML syntax highlighting, online XML tool">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/xml-formatter">
+
+<meta property="og:title" content="XML Formatter & Validator - Beautify XML Online | Zovo Tools">
+<meta property="og:description" content="Format, validate, and convert XML with syntax highlighting and configurable indentation. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/xml-formatter">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XML Formatter & Validator - Beautify XML Online | Zovo Tools">
+<meta name="twitter:description" content="Format, validate, and convert XML online. Syntax highlighting, minification, and error detection. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "XML Formatter & Validator",
+  "description": "Format, beautify, minify, and validate XML online with syntax highlighting, XML to JSON conversion, and configurable indentation.",
+  "url": "https://tools.zovo.one/xml-formatter",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with DOMParser support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How does XML formatting work?", "acceptedAnswer": {"@type": "Answer", "text": "The tool parses your XML using the browser's DOMParser, then serializes it back with proper indentation and line breaks. You can choose between 2 spaces, 4 spaces, or tab indentation."}},
+    {"@type": "Question", "name": "How does XML validation work?", "acceptedAnswer": {"@type": "Answer", "text": "The tool uses the browser's built-in DOMParser to parse the XML. If the XML is malformed, DOMParser returns a parsererror document which the tool detects and displays with line and column information."}},
+    {"@type": "Question", "name": "Can I minify XML?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Click the Minify button to remove all unnecessary whitespace, comments, and line breaks, producing the most compact valid XML representation."}},
+    {"@type": "Question", "name": "Does the tool support XML to JSON conversion?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The XML to JSON conversion maps elements to objects, attributes to special @attribute keys, and text content to #text keys. Arrays are created when multiple sibling elements share the same tag name."}},
+    {"@type": "Question", "name": "Is my data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All formatting, validation, and conversion happens entirely in your browser. No data is ever transmitted to any server."}},
+    {"@type": "Question", "name": "What does syntax highlighting show?", "acceptedAnswer": {"@type": "Answer", "text": "Tags are displayed in one color, attribute names in another, attribute values in a third, and comments in a fourth. This makes XML structure easy to read and debug at a glance."}},
+    {"@type": "Question", "name": "Can I upload XML files?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can drag and drop XML files onto the input area or click to browse and select a file. The file content is loaded into the editor for formatting or validation."}},
+    {"@type": "Question", "name": "What indentation options are available?", "acceptedAnswer": {"@type": "Answer", "text": "You can choose between 2 spaces, 4 spaces, or tab character indentation. The selected indentation is applied consistently throughout the formatted output."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  /* Syntax colors */
+  --xml-tag: #ff79c6;
+  --xml-attr-name: #8be9fd;
+  --xml-attr-value: #f1fa8c;
+  --xml-comment: #6272a4;
+  --xml-text: #e0e0e8;
+  --xml-decl: #bd93f9;
+  --xml-cdata: #ffb86c;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, select:focus {
+  border-color: var(--accent);
+}
+textarea {
+  resize: vertical;
+  min-height: 200px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  tab-size: 4;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+/* Options row */
+.options-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  align-items: flex-end;
+}
+.options-row .option-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+
+/* File drop zone */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone-icon { font-size: 2rem; margin-bottom: 8px; }
+.drop-zone-text { color: var(--text-muted); font-size: 0.95rem; }
+.drop-zone-text span { color: var(--accent); font-weight: 500; }
+.file-input { display: none; }
+.file-info {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* Output code block with syntax highlighting */
+.code-output {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.code-scroll {
+  overflow: auto;
+  max-height: 500px;
+}
+.code-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.83rem;
+  line-height: 1.7;
+}
+.code-table td {
+  vertical-align: top;
+  padding: 0;
+}
+.line-numbers {
+  width: 50px;
+  text-align: right;
+  padding: 12px 8px 12px 12px;
+  color: var(--text-muted);
+  user-select: none;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.78rem;
+  white-space: pre-line;
+}
+.code-content {
+  padding: 12px 16px;
+  white-space: pre;
+  overflow-x: auto;
+  color: var(--text);
+}
+.code-content .tag { color: var(--xml-tag); }
+.code-content .attr-name { color: var(--xml-attr-name); }
+.code-content .attr-value { color: var(--xml-attr-value); }
+.code-content .comment { color: var(--xml-comment); font-style: italic; }
+.code-content .text-node { color: var(--xml-text); }
+.code-content .decl { color: var(--xml-decl); }
+.code-content .cdata { color: var(--xml-cdata); }
+
+/* Output actions */
+.output-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* Status messages */
+.status {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 12px;
+}
+.status-success {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+.status-error {
+  background: rgba(255,68,102,0.1);
+  border: 1px solid var(--red);
+  color: var(--red);
+}
+.status-error pre {
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  white-space: pre-wrap;
+  color: var(--red);
+  opacity: 0.85;
+}
+
+/* JSON output textarea */
+.json-output-area textarea {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  min-height: 200px;
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .options-row { flex-direction: column; gap: 12px; }
+  .line-numbers { width: 36px; font-size: 0.72rem; padding: 8px 4px 8px 8px; }
+  .code-content { padding: 8px 10px; font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>XML</span> Formatter &amp; Validator</h1>
+    <p>Format, beautify, validate, and minify XML with syntax highlighting and XML-to-JSON conversion &mdash; all running privately in your browser.</p>
+  </header>
+
+  <!-- Input Card -->
+  <div class="card">
+    <h3>XML Input</h3>
+    <div class="drop-zone" id="xmlDropZone">
+      <div class="drop-zone-icon">&#128196;</div>
+      <div class="drop-zone-text">Drag &amp; drop an XML file here or <span>click to browse</span></div>
+      <input type="file" class="file-input" id="xmlFileInput" accept=".xml,.xsl,.xslt,.svg,.xhtml,.plist,.config,.csproj,.html,.txt">
+    </div>
+    <div id="xmlFileInfo" class="file-info"></div>
+    <textarea id="xmlInput" placeholder='Paste your XML here...
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <item id="1">
+    <name>Example</name>
+    <value>Hello World</value>
+  </item>
+</root>'></textarea>
+  </div>
+
+  <!-- Options Card -->
+  <div class="card">
+    <h3>Options</h3>
+    <div class="options-row">
+      <div class="option-group">
+        <label for="indentSelect">Indentation</label>
+        <select id="indentSelect">
+          <option value="2" selected>2 Spaces</option>
+          <option value="4">4 Spaces</option>
+          <option value="tab">Tab</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="formatBtn">Format / Beautify</button>
+      <button class="btn btn-secondary" id="minifyBtn">Minify</button>
+      <button class="btn btn-secondary" id="validateBtn">Validate</button>
+      <button class="btn btn-secondary" id="toJsonBtn">XML to JSON</button>
+      <button class="btn btn-secondary" id="clearBtn">Clear</button>
+    </div>
+  </div>
+
+  <!-- Status Area -->
+  <div id="statusArea"></div>
+
+  <!-- Output Card -->
+  <div id="outputCard" class="card" style="display:none;">
+    <h3 id="outputTitle">Formatted XML</h3>
+    <div class="code-output" id="codeOutput">
+      <div class="code-scroll" id="codeScroll">
+        <table class="code-table">
+          <tr>
+            <td class="line-numbers" id="lineNumbers"></td>
+            <td class="code-content" id="codeContent"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="output-actions">
+      <button class="btn btn-secondary btn-sm" id="copyOutputBtn">Copy to Clipboard</button>
+      <button class="btn btn-secondary btn-sm" id="downloadOutputBtn">Download</button>
+    </div>
+  </div>
+
+  <!-- JSON Output Card -->
+  <div id="jsonOutputCard" class="card" style="display:none;">
+    <h3>JSON Output</h3>
+    <div class="json-output-area">
+      <textarea id="jsonOutput" readonly rows="14"></textarea>
+    </div>
+    <div class="output-actions">
+      <button class="btn btn-secondary btn-sm" id="copyJsonBtn">Copy to Clipboard</button>
+      <button class="btn btn-secondary btn-sm" id="downloadJsonBtn">Download .json</button>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2>Understanding XML Formatting and Validation</h2>
+    <p>XML (Extensible Markup Language) is a markup language designed to store and transport data in a human-readable and machine-parseable format. XML is used extensively in web services (SOAP), configuration files, data interchange between systems, document formats (OOXML, SVG), and many other applications. Properly formatted XML is essential for readability, debugging, and maintaining complex XML documents.</p>
+    <p>Our XML Formatter and Validator tool processes your XML entirely in the browser using the native DOMParser API. It can beautify compressed XML with proper indentation, minify verbose XML for production use, validate XML structure for errors, and convert XML to JSON format. No data is ever sent to any server, ensuring complete privacy for sensitive XML data.</p>
+
+    <h3>XML Formatting and Beautification</h3>
+    <p>XML formatting (also called pretty-printing or beautification) takes raw or compressed XML and adds consistent indentation and line breaks to make the document structure clear. Each nested element is indented one level deeper than its parent. You can choose between 2 spaces, 4 spaces, or tab characters for indentation. Proper formatting makes it significantly easier to read, review, and debug XML documents, especially those generated by automated systems that output single-line XML.</p>
+
+    <h3>XML Validation</h3>
+    <p>XML validation checks whether a document is well-formed according to XML specifications. Well-formed XML must have a single root element, properly nested and closed tags, correctly quoted attribute values, and proper use of special characters (escaped as entities). Our tool uses the browser's DOMParser, which detects syntax errors and reports the specific error message, making it easy to locate and fix problems in your XML documents.</p>
+
+    <h3>XML Minification</h3>
+    <p>XML minification removes all unnecessary whitespace, line breaks, and comments from an XML document, producing the most compact valid representation. This is useful for reducing file size in production environments, optimizing network transfer of XML data, and preparing XML for embedding in other formats. The minified output maintains all data and structural integrity while minimizing byte count.</p>
+
+    <h3>XML to JSON Conversion</h3>
+    <p>Converting XML to JSON transforms the hierarchical XML structure into equivalent JSON objects and arrays. Element tags become object keys, attributes are mapped to special <code>@attribute</code> keys, text content uses a <code>#text</code> key, and repeated sibling elements with the same name are collected into arrays. This conversion is useful when working with APIs that accept JSON, or when processing XML data in JavaScript applications that prefer JSON.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">How does XML formatting work?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>The tool parses your XML using the browser's DOMParser, then traverses the document tree and serializes it back with proper indentation and line breaks. You can choose between 2 spaces, 4 spaces, or tab indentation.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does XML validation work?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>The tool uses the browser's built-in DOMParser to parse the XML. If the XML is malformed, DOMParser returns a parsererror document which the tool detects and displays with detailed error information to help you locate and fix the issue.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I minify XML?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. Click the Minify button to remove all unnecessary whitespace, line breaks, and formatting, producing the most compact valid XML representation while preserving all data and structure.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does the tool support XML to JSON conversion?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. The XML to JSON conversion maps elements to objects, attributes to special @attribute keys, and text content to #text keys. Repeated sibling elements with the same tag name are automatically collected into arrays.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my data sent to a server?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>No. All formatting, validation, and conversion happens entirely in your browser using JavaScript and the native DOMParser API. No data is ever transmitted to any server. Your information remains completely private.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What does syntax highlighting show?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Tags and brackets are displayed in pink, attribute names in cyan, attribute values in yellow, comments in gray, CDATA sections in orange, and processing instructions in purple. This color coding makes XML structure easy to read and debug at a glance.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I upload XML files?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. You can drag and drop XML files onto the input area or click to browse and select a file from your computer. The file content is loaded into the editor for formatting, validation, or conversion.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What indentation options are available?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>You can choose between 2 spaces, 4 spaces, or tab character indentation. The selected indentation style is applied consistently throughout the entire formatted output.</p></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </div>
+</footer>
+
+<script>
+/* ===== FAQ ===== */
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+});
+
+/* ===== File drop zone ===== */
+(function() {
+  const zone = document.getElementById('xmlDropZone');
+  const input = document.getElementById('xmlFileInput');
+  const info = document.getElementById('xmlFileInfo');
+  const textarea = document.getElementById('xmlInput');
+
+  zone.addEventListener('click', () => input.click());
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  input.addEventListener('change', () => { if (input.files.length) handleFile(input.files[0]); });
+
+  function handleFile(file) {
+    info.textContent = file.name + ' (' + formatSize(file.size) + ')';
+    const reader = new FileReader();
+    reader.onload = () => { textarea.value = reader.result; };
+    reader.readAsText(file);
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+})();
+
+/* ===== Utility: HTML escape ===== */
+function esc(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/* ===== XML Parser / Validator ===== */
+function parseXML(xmlStr) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xmlStr, 'application/xml');
+  const err = doc.querySelector('parsererror');
+  if (err) {
+    return { error: err.textContent, doc: null };
+  }
+  return { error: null, doc };
+}
+
+/* ===== XML Formatter (manual tree walk) ===== */
+function formatXML(xmlStr, indent) {
+  const { error, doc } = parseXML(xmlStr);
+  if (error) return { error, result: null };
+
+  const indentStr = indent === 'tab' ? '\t' : ' '.repeat(parseInt(indent));
+  let output = '';
+
+  // Check for XML declaration
+  const declMatch = xmlStr.match(/<\?xml[^?]*\?>/);
+  if (declMatch) {
+    output += declMatch[0] + '\n';
+  }
+
+  function serializeNode(node, level) {
+    const pad = indentStr.repeat(level);
+
+    if (node.nodeType === Node.COMMENT_NODE) {
+      output += pad + '<!--' + node.nodeValue + '-->\n';
+      return;
+    }
+
+    if (node.nodeType === Node.PROCESSING_INSTRUCTION_NODE) {
+      output += pad + '<?' + node.target + ' ' + node.data + '?>\n';
+      return;
+    }
+
+    if (node.nodeType === Node.CDATA_SECTION_NODE) {
+      output += pad + '<![CDATA[' + node.nodeValue + ']]>\n';
+      return;
+    }
+
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.nodeValue.trim();
+      if (text) {
+        output += pad + text + '\n';
+      }
+      return;
+    }
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      output += pad + '<' + node.tagName;
+
+      // Attributes
+      for (let i = 0; i < node.attributes.length; i++) {
+        const attr = node.attributes[i];
+        output += ' ' + attr.name + '="' + esc(attr.value) + '"';
+      }
+
+      // Children
+      const children = [];
+      for (let i = 0; i < node.childNodes.length; i++) {
+        const child = node.childNodes[i];
+        if (child.nodeType === Node.TEXT_NODE && !child.nodeValue.trim()) continue;
+        children.push(child);
+      }
+
+      if (children.length === 0) {
+        output += '/>\n';
+      } else if (children.length === 1 && children[0].nodeType === Node.TEXT_NODE) {
+        // Inline text content
+        output += '>' + children[0].nodeValue.trim() + '</' + node.tagName + '>\n';
+      } else {
+        output += '>\n';
+        children.forEach(child => serializeNode(child, level + 1));
+        output += pad + '</' + node.tagName + '>\n';
+      }
+    }
+  }
+
+  // Serialize all top-level nodes
+  for (let i = 0; i < doc.childNodes.length; i++) {
+    const node = doc.childNodes[i];
+    // Skip the xml declaration processing instruction if present (we already handled it)
+    if (node.nodeType === Node.PROCESSING_INSTRUCTION_NODE && node.target === 'xml') continue;
+    serializeNode(node, 0);
+  }
+
+  return { error: null, result: output.trimEnd() };
+}
+
+/* ===== XML Minifier ===== */
+function minifyXML(xmlStr) {
+  const { error, doc } = parseXML(xmlStr);
+  if (error) return { error, result: null };
+
+  const serializer = new XMLSerializer();
+  let output = serializer.serializeToString(doc);
+
+  // Remove whitespace between tags
+  output = output.replace(/>\s+</g, '><');
+  // Remove leading/trailing whitespace
+  output = output.trim();
+
+  // Prepend XML declaration if original had one
+  const declMatch = xmlStr.match(/<\?xml[^?]*\?>/);
+  if (declMatch && !output.startsWith('<?xml')) {
+    output = declMatch[0] + output;
+  }
+
+  return { error: null, result: output };
+}
+
+/* ===== XML to JSON ===== */
+function xmlToJson(xmlStr) {
+  const { error, doc } = parseXML(xmlStr);
+  if (error) return { error, result: null };
+
+  function nodeToObj(node) {
+    const obj = {};
+
+    // Attributes
+    if (node.attributes && node.attributes.length > 0) {
+      for (let i = 0; i < node.attributes.length; i++) {
+        const attr = node.attributes[i];
+        obj['@' + attr.name] = attr.value;
+      }
+    }
+
+    // Children
+    const childElements = {};
+    let textContent = '';
+    let hasChildElements = false;
+
+    for (let i = 0; i < node.childNodes.length; i++) {
+      const child = node.childNodes[i];
+      if (child.nodeType === Node.ELEMENT_NODE) {
+        hasChildElements = true;
+        const tag = child.tagName;
+        const childObj = nodeToObj(child);
+        if (childElements[tag] !== undefined) {
+          if (!Array.isArray(childElements[tag])) {
+            childElements[tag] = [childElements[tag]];
+          }
+          childElements[tag].push(childObj);
+        } else {
+          childElements[tag] = childObj;
+        }
+      } else if (child.nodeType === Node.TEXT_NODE || child.nodeType === Node.CDATA_SECTION_NODE) {
+        textContent += child.nodeValue;
+      }
+    }
+
+    // Merge child elements into obj
+    for (const key in childElements) {
+      obj[key] = childElements[key];
+    }
+
+    // Text content
+    const trimmed = textContent.trim();
+    if (trimmed) {
+      if (hasChildElements || Object.keys(obj).length > 0) {
+        obj['#text'] = trimmed;
+      } else {
+        return trimmed;
+      }
+    }
+
+    if (Object.keys(obj).length === 0) return '';
+    return obj;
+  }
+
+  const root = doc.documentElement;
+  const result = {};
+  result[root.tagName] = nodeToObj(root);
+
+  return { error: null, result: JSON.stringify(result, null, 2) };
+}
+
+/* ===== Syntax highlighting ===== */
+function highlightXML(xmlStr) {
+  // Escape first, then apply highlighting
+  let html = esc(xmlStr);
+
+  // Comments: <!-- ... -->
+  html = html.replace(/&lt;!--[\s\S]*?--&gt;/g, match => {
+    return '<span class="comment">' + match + '</span>';
+  });
+
+  // CDATA sections
+  html = html.replace(/&lt;!\[CDATA\[[\s\S]*?\]\]&gt;/g, match => {
+    return '<span class="cdata">' + match + '</span>';
+  });
+
+  // Processing instructions: <?...?>
+  html = html.replace(/&lt;\?[\s\S]*?\?&gt;/g, match => {
+    return '<span class="decl">' + match + '</span>';
+  });
+
+  // Closing tags: </tagname>
+  html = html.replace(/&lt;\/([a-zA-Z_:][\w:.\-]*)&gt;/g, (match, tag) => {
+    return '<span class="tag">&lt;/' + tag + '&gt;</span>';
+  });
+
+  // Self-closing tags and opening tags with attributes
+  html = html.replace(/&lt;([a-zA-Z_:][\w:.\-]*)((?:\s+[^&]*?)?)(\/?&gt;)/g, (match, tag, attrs, close) => {
+    // Highlight attributes within the tag
+    let highlightedAttrs = attrs.replace(/([a-zA-Z_:][\w:.\-]*)=(&quot;[^&]*?&quot;)/g, (m, name, val) => {
+      return '<span class="attr-name">' + name + '</span>=<span class="attr-value">' + val + '</span>';
+    });
+    return '<span class="tag">&lt;' + tag + '</span>' + highlightedAttrs + '<span class="tag">' + close + '</span>';
+  });
+
+  return html;
+}
+
+/* ===== Display output with line numbers and syntax highlighting ===== */
+let currentOutput = '';
+let currentOutputType = 'xml';
+
+function displayOutput(text, title, type) {
+  currentOutput = text;
+  currentOutputType = type || 'xml';
+
+  document.getElementById('outputTitle').textContent = title || 'Output';
+  document.getElementById('outputCard').style.display = 'block';
+  document.getElementById('jsonOutputCard').style.display = 'none';
+
+  const lines = text.split('\n');
+  const lineNums = lines.map((_, i) => i + 1).join('\n');
+
+  document.getElementById('lineNumbers').textContent = lineNums;
+
+  if (type === 'xml') {
+    document.getElementById('codeContent').innerHTML = highlightXML(text);
+  } else {
+    document.getElementById('codeContent').textContent = text;
+  }
+}
+
+function displayJsonOutput(json) {
+  document.getElementById('outputCard').style.display = 'none';
+  document.getElementById('jsonOutputCard').style.display = 'block';
+  document.getElementById('jsonOutput').value = json;
+  currentOutput = json;
+  currentOutputType = 'json';
+}
+
+/* ===== Status display ===== */
+function showStatus(msg, isError, detail) {
+  const el = document.getElementById('statusArea');
+  let html = '<div class="status ' + (isError ? 'status-error' : 'status-success') + '">' + esc(msg);
+  if (detail) {
+    html += '<pre>' + esc(detail) + '</pre>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function clearStatus() {
+  document.getElementById('statusArea').innerHTML = '';
+}
+
+/* ===== Button handlers ===== */
+document.getElementById('formatBtn').addEventListener('click', () => {
+  clearStatus();
+  const xml = document.getElementById('xmlInput').value;
+  if (!xml.trim()) { showStatus('Please enter or upload XML.', true); return; }
+
+  const indent = document.getElementById('indentSelect').value;
+  const { error, result } = formatXML(xml, indent);
+
+  if (error) {
+    showStatus('XML is not well-formed.', true, error);
+    document.getElementById('outputCard').style.display = 'none';
+    document.getElementById('jsonOutputCard').style.display = 'none';
+  } else {
+    showStatus('XML formatted successfully.', false);
+    displayOutput(result, 'Formatted XML', 'xml');
+  }
+});
+
+document.getElementById('minifyBtn').addEventListener('click', () => {
+  clearStatus();
+  const xml = document.getElementById('xmlInput').value;
+  if (!xml.trim()) { showStatus('Please enter or upload XML.', true); return; }
+
+  const { error, result } = minifyXML(xml);
+
+  if (error) {
+    showStatus('XML is not well-formed.', true, error);
+    document.getElementById('outputCard').style.display = 'none';
+    document.getElementById('jsonOutputCard').style.display = 'none';
+  } else {
+    showStatus('XML minified successfully. Reduced from ' + xml.length + ' to ' + result.length + ' characters.', false);
+    displayOutput(result, 'Minified XML', 'xml');
+  }
+});
+
+document.getElementById('validateBtn').addEventListener('click', () => {
+  clearStatus();
+  const xml = document.getElementById('xmlInput').value;
+  if (!xml.trim()) { showStatus('Please enter or upload XML.', true); return; }
+
+  const { error } = parseXML(xml);
+
+  if (error) {
+    showStatus('XML validation failed.', true, error);
+    document.getElementById('outputCard').style.display = 'none';
+    document.getElementById('jsonOutputCard').style.display = 'none';
+  } else {
+    showStatus('XML is valid and well-formed.', false);
+    document.getElementById('outputCard').style.display = 'none';
+    document.getElementById('jsonOutputCard').style.display = 'none';
+  }
+});
+
+document.getElementById('toJsonBtn').addEventListener('click', () => {
+  clearStatus();
+  const xml = document.getElementById('xmlInput').value;
+  if (!xml.trim()) { showStatus('Please enter or upload XML.', true); return; }
+
+  const { error, result } = xmlToJson(xml);
+
+  if (error) {
+    showStatus('XML is not well-formed.', true, error);
+    document.getElementById('outputCard').style.display = 'none';
+    document.getElementById('jsonOutputCard').style.display = 'none';
+  } else {
+    showStatus('XML converted to JSON successfully.', false);
+    displayJsonOutput(result);
+  }
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('xmlInput').value = '';
+  document.getElementById('outputCard').style.display = 'none';
+  document.getElementById('jsonOutputCard').style.display = 'none';
+  document.getElementById('xmlFileInfo').textContent = '';
+  clearStatus();
+});
+
+/* ===== Copy / Download ===== */
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+  });
+}
+
+function downloadFile(content, filename, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('copyOutputBtn').addEventListener('click', function() {
+  copyText(currentOutput, this);
+});
+
+document.getElementById('downloadOutputBtn').addEventListener('click', () => {
+  if (currentOutput) {
+    downloadFile(currentOutput, 'formatted.xml', 'application/xml');
+  }
+});
+
+document.getElementById('copyJsonBtn').addEventListener('click', function() {
+  copyText(document.getElementById('jsonOutput').value, this);
+});
+
+document.getElementById('downloadJsonBtn').addEventListener('click', () => {
+  const json = document.getElementById('jsonOutput').value;
+  if (json) downloadFile(json, 'data.json', 'application/json');
+});
+</script>
+
+</body>
+</html>
