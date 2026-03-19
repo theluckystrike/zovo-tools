@@ -11,7 +11,7 @@
 
 TOOL_SLUG="$1"
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
-DOMAIN="theluckystrike.github.io/zovo-tools"
+DOMAIN="zovo.one/free-tools"
 
 if [ -z "$TOOL_SLUG" ]; then
   echo "Usage: $0 <tool-slug>"

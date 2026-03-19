@@ -16,7 +16,7 @@ import glob
 import html
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SITE_URL = "https://tools.zovo.one"
+SITE_URL = "https://zovo.one/free-tools"
 
 
 def extract_title(content):
