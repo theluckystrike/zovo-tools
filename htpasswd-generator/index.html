@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Htpasswd Generator - Create .htpasswd Password Hashes | Free Tool</title>
+<meta name="description" content="Generate .htpasswd password hashes for Apache authentication. Supports SHA-1, MD5 (apr1), and plaintext algorithms. Create multiple user entries, download .htpasswd files. Free, private, runs in your browser.">
+<meta name="keywords" content="htpasswd generator, htpasswd, apache authentication, password hash, SHA-1 hash, MD5 apr1, basic auth, .htpasswd file, htpasswd creator, web server authentication">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/htpasswd-generator">
+
+<meta property="og:title" content="Htpasswd Generator - Create .htpasswd Password Hashes | Zovo Tools">
+<meta property="og:description" content="Generate .htpasswd password entries for Apache authentication. SHA-1, MD5 (apr1), and plaintext support. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/htpasswd-generator">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Htpasswd Generator - Create .htpasswd Password Hashes | Zovo Tools">
+<meta name="twitter:description" content="Generate .htpasswd password entries for Apache authentication. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Htpasswd Generator",
+  "description": "Generate .htpasswd password hashes for Apache web server authentication. Supports SHA-1 ({SHA}), MD5 (apr1), and plaintext algorithms.",
+  "url": "https://tools.zovo.one/htpasswd-generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Web Crypto API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is an .htpasswd file?", "acceptedAnswer": {"@type": "Answer", "text": "An .htpasswd file stores usernames and encrypted passwords for HTTP Basic Authentication on Apache web servers. Each line contains a username and password hash separated by a colon. The file is typically placed in a non-web-accessible directory and referenced from .htaccess or Apache configuration."}},
+    {"@type": "Question", "name": "Which password algorithm should I use?", "acceptedAnswer": {"@type": "Answer", "text": "For production use, bcrypt is the most secure option. If bcrypt is not available, use SHA-1 ({SHA}) which provides reasonable security. MD5 (apr1) is Apache-specific and widely compatible. Never use plaintext in production. This tool generates SHA-1 and MD5 hashes that work with standard Apache installations."}},
+    {"@type": "Question", "name": "Is my password sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All password hashing is performed entirely in your browser using JavaScript and the Web Crypto API. Your passwords never leave your device. There is no server-side processing, no tracking, and no data collection."}},
+    {"@type": "Question", "name": "How do I use the generated .htpasswd file?", "acceptedAnswer": {"@type": "Answer", "text": "Upload the .htpasswd file to your server (outside the web root for security). Then create or modify an .htaccess file in the directory you want to protect with: AuthType Basic, AuthName \"Restricted\", AuthUserFile /path/to/.htpasswd, and Require valid-user."}},
+    {"@type": "Question", "name": "What is the difference between SHA-1 and MD5 (apr1)?", "acceptedAnswer": {"@type": "Answer", "text": "SHA-1 ({SHA}) uses the SHA-1 algorithm and is Base64 encoded. MD5 (apr1) uses Apache's custom MD5-based algorithm with a salt, making it more resistant to rainbow table attacks. Both are widely supported by Apache, but apr1 is the more secure of the two."}},
+    {"@type": "Question", "name": "Can I have multiple users in one .htpasswd file?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Each line in an .htpasswd file represents one user. Use this tool's multi-entry mode to generate entries for multiple users, then download them all as a single .htpasswd file."}},
+    {"@type": "Question", "name": "What is Apache Basic Authentication?", "acceptedAnswer": {"@type": "Answer", "text": "Basic Authentication is a simple HTTP authentication method where the browser prompts for a username and password. The credentials are sent Base64-encoded (not encrypted) with each request. It should always be used with HTTPS to protect credentials in transit."}},
+    {"@type": "Question", "name": "How do I generate a secure password?", "acceptedAnswer": {"@type": "Answer", "text": "Use the built-in password generator in this tool to create cryptographically random passwords. A strong password should be at least 16 characters long and include uppercase letters, lowercase letters, numbers, and special characters. The generator uses the Web Crypto API for secure randomness."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --yellow: #ffcc00;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+input[type="text"], input[type="password"], select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+input[type="text"]:focus, input[type="password"]:focus, select:focus {
+  border-color: var(--accent);
+}
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Input row */
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 600px) {
+  .input-row { grid-template-columns: 1fr; }
+}
+.input-group { margin-bottom: 16px; }
+.input-group:last-child { margin-bottom: 0; }
+
+/* Password field with toggle */
+.password-wrap {
+  position: relative;
+}
+.password-wrap input {
+  padding-right: 90px;
+}
+.pw-toggle {
+  position: absolute;
+  right: 44px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.pw-toggle:hover { color: var(--accent); }
+.pw-gen {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.7rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pw-gen:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Radio group */
+.algo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.algo-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text);
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.algo-option:hover { border-color: var(--accent); }
+.algo-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+.algo-option input[type="radio"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+.algo-option input[type="radio"]:checked {
+  border-color: var(--accent);
+}
+.algo-option input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+}
+.algo-label { font-weight: 500; }
+.algo-tag {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+.tag-recommended { background: rgba(0,255,136,0.15); color: var(--accent); }
+.tag-legacy { background: rgba(255,204,0,0.15); color: var(--yellow); }
+.tag-unsafe { background: rgba(255,68,102,0.15); color: var(--red); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger {
+  background: rgba(255,68,102,0.1);
+  color: var(--red);
+  border: 1px solid rgba(255,68,102,0.3);
+}
+.btn-danger:hover { background: rgba(255,68,102,0.2); }
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Results */
+.result-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.result-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.result-hash {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  word-break: break-all;
+  color: var(--text);
+  user-select: all;
+  line-height: 1.5;
+}
+.result-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.copy-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Entries list */
+.entries-list { margin-top: 20px; }
+.entry-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.entry-content {
+  flex: 1;
+  min-width: 0;
+}
+.entry-user {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+.entry-hash {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  word-break: break-all;
+  line-height: 1.4;
+}
+.entry-algo {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.entry-remove {
+  padding: 4px 8px;
+  border: 1px solid rgba(255,68,102,0.3);
+  background: transparent;
+  color: var(--red);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.entry-remove:hover { background: rgba(255,68,102,0.15); }
+
+/* Algorithm info box */
+.algo-info {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 12px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.algo-info strong { color: var(--text); }
+
+/* Password strength */
+.pw-strength {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.pw-strength-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: all 0.3s;
+  width: 0%;
+}
+.pw-strength-text {
+  font-size: 0.75rem;
+  margin-top: 4px;
+  color: var(--text-muted);
+}
+
+/* Password generator settings */
+.pw-gen-settings {
+  display: none;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 10px;
+}
+.pw-gen-settings.show { display: block; }
+.pw-gen-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.pw-gen-row:last-child { margin-bottom: 0; }
+.pw-gen-row label { margin-bottom: 0; flex: 1; }
+.pw-gen-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+}
+.pw-gen-row input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+.pw-gen-row input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.pw-gen-row input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid #0a0a0f;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* File output preview */
+.file-preview {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+.file-preview pre {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+}
+.file-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.file-preview-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+.content-section pre {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+}
+.content-section pre code {
+  background: none;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* Algorithm comparison table */
+.algo-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.algo-table th {
+  background: var(--surface2);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #fff;
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.algo-table td {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--accent);
+  color: #0a0a0f;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 1000;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .algo-grid { gap: 6px; }
+  .algo-option { padding: 6px 10px; font-size: 0.82rem; }
+  .entry-item { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>Htpasswd</span> Generator</h1>
+    <p>Create .htpasswd password hashes for Apache web server authentication. SHA-1, MD5 (apr1), and plaintext support &mdash; all running privately in your browser.</p>
+  </header>
+
+  <!-- Generator Card -->
+  <div class="card">
+    <h3>Generate Entry</h3>
+
+    <div class="input-row">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="e.g. admin" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <div class="password-wrap">
+          <input type="password" id="password" placeholder="Enter password" autocomplete="off">
+          <button class="pw-toggle" id="pwToggle" type="button">Show</button>
+          <button class="pw-gen" id="pwGenBtn" type="button">Gen</button>
+        </div>
+        <div class="pw-strength"><div class="pw-strength-fill" id="pwStrengthFill"></div></div>
+        <div class="pw-strength-text" id="pwStrengthText"></div>
+      </div>
+    </div>
+
+    <!-- Password Generator Settings -->
+    <div class="pw-gen-settings" id="pwGenSettings">
+      <div class="pw-gen-row">
+        <label>Length: <strong id="pwLenDisplay">20</strong></label>
+        <input type="range" id="pwLength" min="8" max="64" value="20">
+      </div>
+      <div class="pw-gen-row">
+        <input type="checkbox" id="pwUpper" checked> <label for="pwUpper">Uppercase (A-Z)</label>
+      </div>
+      <div class="pw-gen-row">
+        <input type="checkbox" id="pwLower" checked> <label for="pwLower">Lowercase (a-z)</label>
+      </div>
+      <div class="pw-gen-row">
+        <input type="checkbox" id="pwNumbers" checked> <label for="pwNumbers">Numbers (0-9)</label>
+      </div>
+      <div class="pw-gen-row">
+        <input type="checkbox" id="pwSymbols" checked> <label for="pwSymbols">Symbols (!@#$%...)</label>
+      </div>
+      <div class="btn-row" style="margin-top:12px;">
+        <button class="btn btn-primary btn-sm" id="generatePwBtn">Generate Password</button>
+      </div>
+    </div>
+
+    <!-- Algorithm Selection -->
+    <div class="input-group" style="margin-top:16px;">
+      <label>Algorithm</label>
+      <div class="algo-grid" id="algoGrid">
+        <label class="algo-option selected" data-algo="sha1">
+          <input type="radio" name="algo" value="sha1" checked>
+          <span class="algo-label">{SHA} SHA-1</span>
+          <span class="algo-tag tag-recommended">Recommended</span>
+        </label>
+        <label class="algo-option" data-algo="md5">
+          <input type="radio" name="algo" value="md5">
+          <span class="algo-label">MD5 (apr1)</span>
+          <span class="algo-tag tag-legacy">Compatible</span>
+        </label>
+        <label class="algo-option" data-algo="plain">
+          <input type="radio" name="algo" value="plain">
+          <span class="algo-label">Plaintext</span>
+          <span class="algo-tag tag-unsafe">Testing Only</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="algo-info" id="algoInfo">
+      <strong>{SHA} SHA-1:</strong> Uses SHA-1 hashing with Base64 encoding. Widely supported by Apache and most web servers. Suitable for most use cases. For maximum security in production, use bcrypt via the command-line <code>htpasswd</code> tool.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="addEntryBtn">Add Entry</button>
+      <button class="btn btn-secondary" id="clearFormBtn">Clear</button>
+    </div>
+  </div>
+
+  <!-- Single Result Preview -->
+  <div class="card" id="singleResultCard" style="display:none;">
+    <h3>Generated Entry</h3>
+    <div class="result-item">
+      <div class="result-label">htpasswd line</div>
+      <div class="result-hash" id="singleResult"></div>
+      <div class="result-actions">
+        <button class="copy-btn" id="copySingleBtn">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entries List -->
+  <div class="card" id="entriesCard" style="display:none;">
+    <h3>Entries (<span id="entryCount">0</span>)</h3>
+    <div id="entriesList"></div>
+
+    <div class="file-preview" id="filePreview">
+      <div class="file-preview-header">
+        <span class="file-preview-title">.htpasswd file content</span>
+        <button class="copy-btn" id="copyFileBtn">Copy All</button>
+      </div>
+      <pre id="fileContent"></pre>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="downloadBtn">Download .htpasswd</button>
+      <button class="btn btn-secondary" id="copyAllBtn">Copy to Clipboard</button>
+      <button class="btn btn-danger btn-sm" id="clearAllBtn">Clear All</button>
+    </div>
+  </div>
+
+  <!-- How to Use -->
+  <div class="content-section">
+    <h2>How to Use .htpasswd</h2>
+    <p>The <code>.htpasswd</code> file provides password protection for directories on Apache web servers using HTTP Basic Authentication. Here is how to set it up:</p>
+
+    <h3>Step 1: Generate Your .htpasswd File</h3>
+    <p>Enter a username and password above, select an algorithm, and click "Add Entry." Repeat for each user you need to add, then download the file.</p>
+
+    <h3>Step 2: Upload to Your Server</h3>
+    <p>Place the <code>.htpasswd</code> file in a secure location <strong>outside your web root</strong> (e.g., <code>/etc/apache2/.htpasswd</code>). This prevents direct download of the password file.</p>
+
+    <h3>Step 3: Configure .htaccess</h3>
+    <p>Create or edit the <code>.htaccess</code> file in the directory you want to protect:</p>
+    <pre><code>AuthType Basic
+AuthName "Restricted Area"
+AuthUserFile /etc/apache2/.htpasswd
+Require valid-user</code></pre>
+
+    <h3>Algorithm Comparison</h3>
+    <table class="algo-table">
+      <thead>
+        <tr>
+          <th>Algorithm</th>
+          <th>Format</th>
+          <th>Security</th>
+          <th>Compatibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>bcrypt</strong></td>
+          <td><code>$2y$...</code></td>
+          <td style="color:var(--green)">Excellent</td>
+          <td>Apache 2.4+</td>
+        </tr>
+        <tr>
+          <td><strong>SHA-1 {SHA}</strong></td>
+          <td><code>{SHA}base64</code></td>
+          <td style="color:var(--yellow)">Good</td>
+          <td>All Apache versions</td>
+        </tr>
+        <tr>
+          <td><strong>MD5 (apr1)</strong></td>
+          <td><code>$apr1$salt$hash</code></td>
+          <td style="color:var(--yellow)">Good (salted)</td>
+          <td>Apache-specific</td>
+        </tr>
+        <tr>
+          <td><strong>Plaintext</strong></td>
+          <td><code>password</code></td>
+          <td style="color:var(--red)">None</td>
+          <td>All (testing only)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Note:</strong> For production environments, bcrypt is the preferred algorithm. Use the command-line <code>htpasswd -B</code> tool to generate bcrypt hashes. This browser tool provides SHA-1 and MD5 (apr1) which are widely compatible and suitable for most use cases.</p>
+
+    <h3>Security Best Practices</h3>
+    <ul>
+      <li>Always use HTTPS with Basic Authentication to encrypt credentials in transit</li>
+      <li>Store the <code>.htpasswd</code> file outside the web-accessible directory</li>
+      <li>Use strong, unique passwords for each user</li>
+      <li>Use bcrypt (<code>htpasswd -B</code>) for production when possible</li>
+      <li>Consider using more robust authentication methods for sensitive applications</li>
+      <li>Regularly rotate passwords and review user access</li>
+    </ul>
+  </div>
+
+  <!-- FAQ -->
+  <div class="content-section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q"><span>What is an .htpasswd file?</span><span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>An .htpasswd file stores usernames and encrypted passwords for HTTP Basic Authentication on Apache web servers. Each line contains a username and password hash separated by a colon. The file is typically placed in a non-web-accessible directory and referenced from .htaccess or the Apache configuration.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>Which password algorithm should I use?</span><span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>For production use, bcrypt is the most secure option (use the command-line htpasswd -B tool). For browser-generated hashes, SHA-1 ({SHA}) provides good security and is universally compatible. MD5 (apr1) is Apache-specific and includes salting. Never use plaintext in production environments.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>Is my password sent to a server?</span><span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. All password hashing is performed entirely in your browser using JavaScript and the Web Crypto API. Your passwords never leave your device. There is no server-side processing, no tracking, and no data collection.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>How do I use the generated .htpasswd file?</span><span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Upload the .htpasswd file to your server (outside the web root for security). Then create or modify an .htaccess file in the directory you want to protect with: AuthType Basic, AuthName "Restricted", AuthUserFile /path/to/.htpasswd, and Require valid-user.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>What is the difference between SHA-1 and MD5 (apr1)?</span><span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>SHA-1 ({SHA}) uses the SHA-1 algorithm and is Base64 encoded. It does not use a salt, making identical passwords produce identical hashes. MD5 (apr1) uses Apache's custom MD5-based algorithm with a random salt, making it more resistant to rainbow table attacks. Both are widely supported by Apache.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>Can I have multiple users in one .htpasswd file?</span><span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. Each line in an .htpasswd file represents one user. Use this tool to add multiple entries, then download them all as a single .htpasswd file. Each user gets their own line in the format username:passwordhash.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>What is Apache Basic Authentication?</span><span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Basic Authentication is a simple HTTP authentication method where the browser prompts for a username and password. The credentials are sent Base64-encoded (not encrypted) with each request. It should always be used with HTTPS to protect credentials in transit.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>How do I generate a secure password?</span><span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Click the "Gen" button next to the password field to open the password generator. You can customize the length and character types. The generator uses the Web Crypto API (crypto.getRandomValues) for cryptographically secure randomness. A strong password should be at least 16 characters long.</p></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =============================================
+// MD5 (APR1) Implementation
+// =============================================
+
+function md5(input) {
+  // Pure JS MD5 implementation
+  function safeAdd(x, y) {
+    var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+    var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+    return (msw << 16) | (lsw & 0xFFFF);
+  }
+  function bitRotateLeft(num, cnt) {
+    return (num << cnt) | (num >>> (32 - cnt));
+  }
+  function md5cmn(q, a, b, x, s, t) {
+    return safeAdd(bitRotateLeft(safeAdd(safeAdd(a, q), safeAdd(x, t)), s), b);
+  }
+  function md5ff(a, b, c, d, x, s, t) { return md5cmn((b & c) | ((~b) & d), a, b, x, s, t); }
+  function md5gg(a, b, c, d, x, s, t) { return md5cmn((b & d) | (c & (~d)), a, b, x, s, t); }
+  function md5hh(a, b, c, d, x, s, t) { return md5cmn(b ^ c ^ d, a, b, x, s, t); }
+  function md5ii(a, b, c, d, x, s, t) { return md5cmn(c ^ (b | (~d)), a, b, x, s, t); }
+
+  function binlMD5(x, len) {
+    x[len >> 5] |= 0x80 << (len % 32);
+    x[(((len + 64) >>> 9) << 4) + 14] = len;
+    var a = 1732584193, b = -271733879, c = -1732584194, d = 271733878;
+    for (var i = 0; i < x.length; i += 16) {
+      var olda = a, oldb = b, oldc = c, oldd = d;
+      a = md5ff(a, b, c, d, x[i], 7, -680876936);
+      d = md5ff(d, a, b, c, x[i + 1], 12, -389564586);
+      c = md5ff(c, d, a, b, x[i + 2], 17, 606105819);
+      b = md5ff(b, c, d, a, x[i + 3], 22, -1044525330);
+      a = md5ff(a, b, c, d, x[i + 4], 7, -176418897);
+      d = md5ff(d, a, b, c, x[i + 5], 12, 1200080426);
+      c = md5ff(c, d, a, b, x[i + 6], 17, -1473231341);
+      b = md5ff(b, c, d, a, x[i + 7], 22, -45705983);
+      a = md5ff(a, b, c, d, x[i + 8], 7, 1770035416);
+      d = md5ff(d, a, b, c, x[i + 9], 12, -1958414417);
+      c = md5ff(c, d, a, b, x[i + 10], 17, -42063);
+      b = md5ff(b, c, d, a, x[i + 11], 22, -1990404162);
+      a = md5ff(a, b, c, d, x[i + 12], 7, 1804603682);
+      d = md5ff(d, a, b, c, x[i + 13], 12, -40341101);
+      c = md5ff(c, d, a, b, x[i + 14], 17, -1502002290);
+      b = md5ff(b, c, d, a, x[i + 15], 22, 1236535329);
+      a = md5gg(a, b, c, d, x[i + 1], 5, -165796510);
+      d = md5gg(d, a, b, c, x[i + 6], 9, -1069501632);
+      c = md5gg(c, d, a, b, x[i + 11], 14, 643717713);
+      b = md5gg(b, c, d, a, x[i], 20, -373897302);
+      a = md5gg(a, b, c, d, x[i + 5], 5, -701558691);
+      d = md5gg(d, a, b, c, x[i + 10], 9, 38016083);
+      c = md5gg(c, d, a, b, x[i + 15], 14, -660478335);
+      b = md5gg(b, c, d, a, x[i + 4], 20, -405537848);
+      a = md5gg(a, b, c, d, x[i + 9], 5, 568446438);
+      d = md5gg(d, a, b, c, x[i + 14], 9, -1019803690);
+      c = md5gg(c, d, a, b, x[i + 3], 14, -187363961);
+      b = md5gg(b, c, d, a, x[i + 8], 20, 1163531501);
+      a = md5gg(a, b, c, d, x[i + 13], 5, -1444681467);
+      d = md5gg(d, a, b, c, x[i + 2], 9, -51403784);
+      c = md5gg(c, d, a, b, x[i + 7], 14, 1735328473);
+      b = md5gg(b, c, d, a, x[i + 12], 20, -1926607734);
+      a = md5hh(a, b, c, d, x[i + 5], 4, -378558);
+      d = md5hh(d, a, b, c, x[i + 8], 11, -2022574463);
+      c = md5hh(c, d, a, b, x[i + 11], 16, 1839030562);
+      b = md5hh(b, c, d, a, x[i + 14], 23, -35309556);
+      a = md5hh(a, b, c, d, x[i + 1], 4, -1530992060);
+      d = md5hh(d, a, b, c, x[i + 4], 11, 1272893353);
+      c = md5hh(c, d, a, b, x[i + 7], 16, -155497632);
+      b = md5hh(b, c, d, a, x[i + 10], 23, -1094730640);
+      a = md5hh(a, b, c, d, x[i + 13], 4, 681279174);
+      d = md5hh(d, a, b, c, x[i + 0], 11, -358537222);
+      c = md5hh(c, d, a, b, x[i + 3], 16, -722521979);
+      b = md5hh(b, c, d, a, x[i + 6], 23, 76029189);
+      a = md5hh(a, b, c, d, x[i + 9], 4, -640364487);
+      d = md5hh(d, a, b, c, x[i + 12], 11, -421815835);
+      c = md5hh(c, d, a, b, x[i + 15], 16, 530742520);
+      b = md5hh(b, c, d, a, x[i + 2], 23, -995338651);
+      a = md5ii(a, b, c, d, x[i], 6, -198630844);
+      d = md5ii(d, a, b, c, x[i + 7], 10, 1126891415);
+      c = md5ii(c, d, a, b, x[i + 14], 15, -1416354905);
+      b = md5ii(b, c, d, a, x[i + 5], 21, -57434055);
+      a = md5ii(a, b, c, d, x[i + 12], 6, 1700485571);
+      d = md5ii(d, a, b, c, x[i + 3], 10, -1894986606);
+      c = md5ii(c, d, a, b, x[i + 10], 15, -1051523);
+      b = md5ii(b, c, d, a, x[i + 1], 21, -2054922799);
+      a = md5ii(a, b, c, d, x[i + 8], 6, 1873313359);
+      d = md5ii(d, a, b, c, x[i + 15], 10, -30611744);
+      c = md5ii(c, d, a, b, x[i + 6], 15, -1560198380);
+      b = md5ii(b, c, d, a, x[i + 13], 21, 1309151649);
+      a = md5ii(a, b, c, d, x[i + 4], 6, -145523070);
+      d = md5ii(d, a, b, c, x[i + 11], 10, -1120210379);
+      c = md5ii(c, d, a, b, x[i + 2], 15, 718787259);
+      b = md5ii(b, c, d, a, x[i + 9], 21, -343485551);
+      a = safeAdd(a, olda);
+      b = safeAdd(b, oldb);
+      c = safeAdd(c, oldc);
+      d = safeAdd(d, oldd);
+    }
+    return [a, b, c, d];
+  }
+
+  function str2binl(str) {
+    var output = [];
+    for (var i = 0; i < str.length * 8; i += 8) {
+      output[i >> 5] |= (str.charCodeAt(i / 8) & 0xFF) << (i % 32);
+    }
+    return output;
+  }
+
+  function binl2str(input) {
+    var output = '';
+    for (var i = 0; i < input.length * 32; i += 8) {
+      output += String.fromCharCode((input[i >> 5] >>> (i % 32)) & 0xFF);
+    }
+    return output;
+  }
+
+  function rawMD5(s) {
+    return binl2str(binlMD5(str2binl(s), s.length * 8));
+  }
+
+  return rawMD5(input);
+}
+
+// Apache APR1 MD5
+function apr1MD5(password, salt) {
+  if (!salt) {
+    var chars = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    salt = '';
+    var arr = new Uint8Array(8);
+    crypto.getRandomValues(arr);
+    for (var i = 0; i < 8; i++) salt += chars[arr[i] % chars.length];
+  }
+
+  var ctx = password + '$apr1$' + salt;
+  var ctx1 = md5(password + salt + password);
+
+  var plen = password.length;
+  for (var i = plen; i > 0; i -= 16) {
+    ctx += ctx1.substring(0, Math.min(i, 16));
+  }
+
+  for (var i = plen; i > 0; i >>= 1) {
+    if (i & 1) ctx += '\0';
+    else ctx += password.charAt(0);
+  }
+
+  var result = md5(ctx);
+
+  for (var i = 0; i < 1000; i++) {
+    var ctx2 = '';
+    if (i & 1) ctx2 += password;
+    else ctx2 += result;
+    if (i % 3) ctx2 += salt;
+    if (i % 7) ctx2 += password;
+    if (i & 1) ctx2 += result;
+    else ctx2 += password;
+    result = md5(ctx2);
+  }
+
+  var itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+  function to64(v, n) {
+    var s = '';
+    while (--n >= 0) {
+      s += itoa64.charAt(v & 0x3f);
+      v >>= 6;
+    }
+    return s;
+  }
+
+  var output = '';
+  output += to64((result.charCodeAt(0) << 16) | (result.charCodeAt(6) << 8) | result.charCodeAt(12), 4);
+  output += to64((result.charCodeAt(1) << 16) | (result.charCodeAt(7) << 8) | result.charCodeAt(13), 4);
+  output += to64((result.charCodeAt(2) << 16) | (result.charCodeAt(8) << 8) | result.charCodeAt(14), 4);
+  output += to64((result.charCodeAt(3) << 16) | (result.charCodeAt(9) << 8) | result.charCodeAt(15), 4);
+  output += to64((result.charCodeAt(4) << 16) | (result.charCodeAt(10) << 8) | result.charCodeAt(5), 4);
+  output += to64(result.charCodeAt(11), 2);
+
+  return '$apr1$' + salt + '$' + output;
+}
+
+// =============================================
+// SHA-1 Implementation using Web Crypto API
+// =============================================
+
+async function sha1Hash(password) {
+  var encoder = new TextEncoder();
+  var data = encoder.encode(password);
+  var hashBuffer = await crypto.subtle.digest('SHA-1', data);
+  var hashArray = new Uint8Array(hashBuffer);
+  var binary = '';
+  for (var i = 0; i < hashArray.length; i++) {
+    binary += String.fromCharCode(hashArray[i]);
+  }
+  return '{SHA}' + btoa(binary);
+}
+
+// =============================================
+// Password Generator
+// =============================================
+
+function generatePassword(length, useUpper, useLower, useNumbers, useSymbols) {
+  var chars = '';
+  if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
+  if (useNumbers) chars += '0123456789';
+  if (useSymbols) chars += '!@#$%^&*()-_=+[]{}|;:,.<>?';
+  if (!chars) chars = 'abcdefghijklmnopqrstuvwxyz';
+
+  var arr = new Uint32Array(length);
+  crypto.getRandomValues(arr);
+  var password = '';
+  for (var i = 0; i < length; i++) {
+    password += chars[arr[i] % chars.length];
+  }
+  return password;
+}
+
+function getPasswordStrength(pw) {
+  if (!pw) return { score: 0, label: '', color: '' };
+  var score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (pw.length >= 16) score++;
+  if (/[a-z]/.test(pw)) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^a-zA-Z0-9]/.test(pw)) score++;
+
+  if (score <= 2) return { score: 20, label: 'Very Weak', color: 'var(--red)' };
+  if (score <= 3) return { score: 40, label: 'Weak', color: '#ff8844' };
+  if (score <= 4) return { score: 60, label: 'Fair', color: 'var(--yellow)' };
+  if (score <= 5) return { score: 80, label: 'Strong', color: '#88cc44' };
+  return { score: 100, label: 'Very Strong', color: 'var(--green)' };
+}
+
+// =============================================
+// UI Logic
+// =============================================
+
+var entries = [];
+var toast = document.getElementById('toast');
+
+// Elements
+var usernameInput = document.getElementById('username');
+var passwordInput = document.getElementById('password');
+var pwToggle = document.getElementById('pwToggle');
+var pwGenBtn = document.getElementById('pwGenBtn');
+var pwGenSettings = document.getElementById('pwGenSettings');
+var pwLength = document.getElementById('pwLength');
+var pwLenDisplay = document.getElementById('pwLenDisplay');
+var pwStrengthFill = document.getElementById('pwStrengthFill');
+var pwStrengthText = document.getElementById('pwStrengthText');
+var algoGrid = document.getElementById('algoGrid');
+var algoInfo = document.getElementById('algoInfo');
+var addEntryBtn = document.getElementById('addEntryBtn');
+var clearFormBtn = document.getElementById('clearFormBtn');
+var singleResultCard = document.getElementById('singleResultCard');
+var singleResult = document.getElementById('singleResult');
+var entriesCard = document.getElementById('entriesCard');
+var entriesList = document.getElementById('entriesList');
+var entryCount = document.getElementById('entryCount');
+var fileContent = document.getElementById('fileContent');
+
+// Password toggle
+pwToggle.addEventListener('click', function() {
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    pwToggle.textContent = 'Hide';
+  } else {
+    passwordInput.type = 'password';
+    pwToggle.textContent = 'Show';
+  }
+});
+
+// Password generator toggle
+pwGenBtn.addEventListener('click', function() {
+  pwGenSettings.classList.toggle('show');
+});
+
+// Password length slider
+pwLength.addEventListener('input', function() {
+  pwLenDisplay.textContent = this.value;
+});
+
+// Generate password button
+document.getElementById('generatePwBtn').addEventListener('click', function() {
+  var pw = generatePassword(
+    parseInt(pwLength.value),
+    document.getElementById('pwUpper').checked,
+    document.getElementById('pwLower').checked,
+    document.getElementById('pwNumbers').checked,
+    document.getElementById('pwSymbols').checked
+  );
+  passwordInput.value = pw;
+  passwordInput.type = 'text';
+  pwToggle.textContent = 'Hide';
+  updateStrength();
+});
+
+// Password strength
+passwordInput.addEventListener('input', updateStrength);
+function updateStrength() {
+  var strength = getPasswordStrength(passwordInput.value);
+  pwStrengthFill.style.width = strength.score + '%';
+  pwStrengthFill.style.background = strength.color;
+  pwStrengthText.textContent = strength.label;
+  pwStrengthText.style.color = strength.color;
+}
+
+// Algorithm selection
+var algoDescriptions = {
+  sha1: '<strong>{SHA} SHA-1:</strong> Uses SHA-1 hashing with Base64 encoding. Widely supported by Apache and most web servers. Suitable for most use cases. For maximum security in production, use bcrypt via the command-line <code>htpasswd</code> tool.',
+  md5: '<strong>MD5 (apr1):</strong> Apache\'s custom MD5 algorithm with a random salt. More resistant to rainbow table attacks than unsalted SHA-1. The <code>$apr1$</code> prefix identifies this format. Apache-specific but widely compatible.',
+  plain: '<strong>Plaintext:</strong> Stores the password in clear text with no hashing. <span style="color:var(--red);">Never use this in production.</span> Only useful for testing or development environments where security is not a concern.'
+};
+
+algoGrid.addEventListener('click', function(e) {
+  var option = e.target.closest('.algo-option');
+  if (!option) return;
+  document.querySelectorAll('.algo-option').forEach(function(o) { o.classList.remove('selected'); });
+  option.classList.add('selected');
+  option.querySelector('input[type="radio"]').checked = true;
+  var algo = option.dataset.algo;
+  algoInfo.innerHTML = algoDescriptions[algo];
+});
+
+// Generate hash
+async function generateHash(username, password, algo) {
+  var hash;
+  switch (algo) {
+    case 'sha1':
+      hash = await sha1Hash(password);
+      break;
+    case 'md5':
+      hash = apr1MD5(password);
+      break;
+    case 'plain':
+      hash = password;
+      break;
+  }
+  return username + ':' + hash;
+}
+
+function getSelectedAlgo() {
+  var checked = document.querySelector('input[name="algo"]:checked');
+  return checked ? checked.value : 'sha1';
+}
+
+function getAlgoLabel(algo) {
+  switch(algo) {
+    case 'sha1': return '{SHA}';
+    case 'md5': return 'apr1';
+    case 'plain': return 'Plain';
+    default: return algo;
+  }
+}
+
+// Add entry
+addEntryBtn.addEventListener('click', async function() {
+  var username = usernameInput.value.trim();
+  var password = passwordInput.value;
+  var algo = getSelectedAlgo();
+
+  if (!username) {
+    usernameInput.focus();
+    showToast('Please enter a username');
+    return;
+  }
+  if (!password) {
+    passwordInput.focus();
+    showToast('Please enter a password');
+    return;
+  }
+  if (/[:\s]/.test(username)) {
+    usernameInput.focus();
+    showToast('Username cannot contain colons or spaces');
+    return;
+  }
+
+  var line = await generateHash(username, password, algo);
+
+  // Show single result
+  singleResult.textContent = line;
+  singleResultCard.style.display = '';
+
+  // Add to entries
+  entries.push({ username: username, line: line, algo: algo });
+  renderEntries();
+
+  showToast('Entry added: ' + username);
+});
+
+// Copy single result
+document.getElementById('copySingleBtn').addEventListener('click', function() {
+  navigator.clipboard.writeText(singleResult.textContent).then(function() {
+    showToast('Entry copied to clipboard');
+  });
+});
+
+// Clear form
+clearFormBtn.addEventListener('click', function() {
+  usernameInput.value = '';
+  passwordInput.value = '';
+  passwordInput.type = 'password';
+  pwToggle.textContent = 'Show';
+  pwStrengthFill.style.width = '0%';
+  pwStrengthText.textContent = '';
+  singleResultCard.style.display = 'none';
+  pwGenSettings.classList.remove('show');
+});
+
+// Render entries
+function renderEntries() {
+  if (entries.length === 0) {
+    entriesCard.style.display = 'none';
+    return;
+  }
+
+  entriesCard.style.display = '';
+  entryCount.textContent = entries.length;
+
+  var html = '';
+  entries.forEach(function(entry, idx) {
+    html += '<div class="entry-item">';
+    html += '<div class="entry-content">';
+    html += '<div class="entry-user">' + escapeHtml(entry.username) + ' <span class="entry-algo">' + getAlgoLabel(entry.algo) + '</span></div>';
+    html += '<div class="entry-hash">' + escapeHtml(entry.line) + '</div>';
+    html += '</div>';
+    html += '<button class="entry-remove" data-idx="' + idx + '">Remove</button>';
+    html += '</div>';
+  });
+  entriesList.innerHTML = html;
+
+  // File content
+  var fileLines = entries.map(function(e) { return e.line; }).join('\n');
+  fileContent.textContent = fileLines;
+
+  // Bind remove buttons
+  document.querySelectorAll('.entry-remove').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(this.dataset.idx);
+      entries.splice(idx, 1);
+      renderEntries();
+      showToast('Entry removed');
+    });
+  });
+}
+
+// Copy file content
+document.getElementById('copyFileBtn').addEventListener('click', function() {
+  var text = entries.map(function(e) { return e.line; }).join('\n');
+  navigator.clipboard.writeText(text).then(function() {
+    showToast('File content copied to clipboard');
+  });
+});
+
+document.getElementById('copyAllBtn').addEventListener('click', function() {
+  var text = entries.map(function(e) { return e.line; }).join('\n');
+  navigator.clipboard.writeText(text).then(function() {
+    showToast('File content copied to clipboard');
+  });
+});
+
+// Download .htpasswd
+document.getElementById('downloadBtn').addEventListener('click', function() {
+  var text = entries.map(function(e) { return e.line; }).join('\n') + '\n';
+  var blob = new Blob([text], { type: 'text/plain' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '.htpasswd';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('.htpasswd file downloaded');
+});
+
+// Clear all
+document.getElementById('clearAllBtn').addEventListener('click', function() {
+  if (entries.length > 0 && !confirm('Remove all ' + entries.length + ' entries?')) return;
+  entries = [];
+  renderEntries();
+  singleResultCard.style.display = 'none';
+  showToast('All entries cleared');
+});
+
+// FAQ toggle
+document.querySelectorAll('.faq-q').forEach(function(q) {
+  q.addEventListener('click', function() {
+    this.parentElement.classList.toggle('open');
+  });
+});
+
+// Toast
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2000);
+}
+
+// Escape HTML
+function escapeHtml(text) {
+  var div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Enter key support
+usernameInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') passwordInput.focus();
+});
+passwordInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') addEntryBtn.click();
+});
+</script>
+</body>
+</html>
