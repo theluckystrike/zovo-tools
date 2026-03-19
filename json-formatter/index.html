@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -310,7 +310,7 @@ footer{text-align:center;padding:40px 16px;color:#666;font-size:0.85rem;border-t
 
 <p>GraphQL APIs, while using a different query language, also return data in JSON format. WebSocket connections, Server-Sent Events, and webhook payloads frequently use JSON as well. The format's dominance in web communication means that tools for working with JSON efficiently are indispensable in a developer's toolkit.</p>
 
-<h2>JSON vs XML: When to Use Each</h2>
+<h2>When to Use Each</h2>
 <p>Before JSON's rise to dominance, XML (Extensible Markup Language) was the primary format for data interchange. While XML is still used in many enterprise systems, SOAP services, and configuration files (such as Android layouts and Maven pom.xml), JSON has largely replaced it for new API development. Understanding the differences helps you choose the right format for your use case.</p>
 
 <p>JSON is more concise than XML. The same data structure requires significantly fewer characters in JSON because XML uses opening and closing tags for every element. For example, representing a person's name and age in XML requires tags like <code>&lt;name&gt;Michael&lt;/name&gt;</code>, while JSON simply uses <code>"name": "Michael"</code>. This compactness reduces bandwidth usage, which matters for mobile applications and high-traffic APIs.</p>
@@ -341,6 +341,31 @@ footer{text-align:center;padding:40px 16px;color:#666;font-size:0.85rem;border-t
 <p>For nested data, the tree view is invaluable. It lets you collapse sections you do not need, making it easier to focus on the specific part of the document you are investigating. The JSON path finder helps you construct the correct accessor expression for reaching a specific value, which you can then use directly in your code.</p>
 
 <p>When comparing API responses before and after a change, use the Compare tab to paste both versions side by side. The diff view highlights exactly what changed, whether it is an added field, a removed element, or a modified value. This is especially useful during API migrations, schema updates, and debugging intermittent data issues where responses vary between requests.</p>
+
+<h2>JSON Data Types Explained</h2>
+<p>JSON supports six data types, and understanding each one is important for writing correct and interoperable data. Strings are sequences of Unicode characters enclosed in double quotes. They support escape sequences including <code>\"</code> for a literal quote, <code>\\</code> for a backslash, <code>\/</code> for a forward slash, <code>\b</code> for backspace, <code>\f</code> for form feed, <code>\n</code> for newline, <code>\r</code> for carriage return, <code>\t</code> for tab, and <code>\uXXXX</code> for Unicode characters specified by their four-digit hex code.</p>
+
+<p>Numbers in JSON do not distinguish between integers and floating-point values at the format level. A number is simply a sequence of digits, optionally preceded by a minus sign, optionally containing a decimal point, and optionally followed by an exponent. However, different programming languages will parse these numbers differently. JavaScript treats all numbers as 64-bit floating-point (IEEE 754), which means very large integers may lose precision. If you need to transmit large integers (such as database IDs or cryptocurrency values), consider sending them as strings instead.</p>
+
+<p>Booleans are represented by the lowercase literals <code>true</code> and <code>false</code>, without quotes. The null type is represented by the literal <code>null</code>, also without quotes. These three literals are case-sensitive: <code>True</code>, <code>FALSE</code>, and <code>Null</code> are all invalid in JSON, even though some programming languages accept them.</p>
+
+<p>Objects are unordered collections of key-value pairs. The keys must be unique strings, though the JSON specification does not mandate uniqueness (most parsers will either use the last value or reject the document). Arrays are ordered sequences of zero or more values, and the values within an array do not need to be the same type. You can mix strings, numbers, objects, and arrays freely within a single array, though most well-designed APIs use homogeneous arrays for clarity.</p>
+
+<h2>JSON Best Practices for Developers</h2>
+<p>Writing clean, maintainable JSON requires following a few conventions that go beyond the basic syntax rules. Consistent naming conventions help teams work together efficiently. Most JavaScript-oriented projects use camelCase for property names (e.g., <code>firstName</code>, <code>orderTotal</code>), while Python-oriented projects often use snake_case (e.g., <code>first_name</code>, <code>order_total</code>). Pick one convention and apply it consistently throughout your API.</p>
+
+<p>Use meaningful, descriptive property names rather than abbreviations. A property named <code>createdAt</code> is immediately understandable, while <code>crAt</code> requires documentation or context to interpret. For date and time values, use the ISO 8601 format (<code>2024-12-25T10:30:00Z</code>) to ensure consistent parsing across different languages and time zones. Avoid using Unix timestamps unless your API explicitly documents them, as they are less human-readable and can cause confusion about whether they represent seconds or milliseconds.</p>
+
+<p>Keep your JSON structures as flat as reasonable. Deeply nested objects (five or more levels) become difficult to navigate, validate, and transform. If you find yourself nesting deeply, consider restructuring the data or splitting it into multiple endpoints. When representing collections, always use arrays rather than objects with numeric keys. An array like <code>[{"id": 1}, {"id": 2}]</code> is more idiomatic and easier to iterate than <code>{"0": {"id": 1}, "1": {"id": 2}}</code>.</p>
+
+<p>For API responses, establish a consistent envelope structure. Many APIs wrap their data in a standard format that includes the payload, pagination information, and error details. This predictability makes your API easier to consume and debug. Similarly, use appropriate HTTP status codes alongside your JSON responses rather than embedding error codes within a 200 OK response.</p>
+
+<h2>Performance Considerations with JSON</h2>
+<p>While JSON is excellent for readability and interoperability, it is not always the most efficient format for every scenario. JSON is a text-based format, which means it is larger than binary alternatives when transmitting numerical data or binary content. For high-throughput systems, consider formats like Protocol Buffers, MessagePack, or CBOR, which offer smaller payloads and faster parsing at the cost of human readability.</p>
+
+<p>When working with large JSON documents in the browser, be mindful of memory usage. Parsing a 10 MB JSON string with <code>JSON.parse()</code> requires holding both the original string and the resulting object in memory simultaneously. For very large datasets, consider streaming JSON parsers that process the document incrementally rather than loading it entirely into memory. Libraries like <code>JSONStream</code> for Node.js and the <code>json</code> module's incremental decoder in Python can handle arbitrarily large JSON documents with constant memory usage.</p>
+
+<p>Minification matters for production APIs. Removing unnecessary whitespace from JSON responses can reduce payload size by 10 to 30 percent for typical data structures, leading to faster network transfers and lower bandwidth costs. Most web servers and CDNs can also apply gzip or Brotli compression to JSON responses, which provides even more significant size reductions, typically 70 to 90 percent for large JSON payloads.</p>
 </div>
 
 <!-- FAQ -->
@@ -381,6 +406,15 @@ footer{text-align:center;padding:40px 16px;color:#666;font-size:0.85rem;border-t
 </div>
 
 <footer>Built by Michael Lip at <a href="https://zovo.one">zovo.one</a></footer>
+<div style="max-width:800px;margin:2rem auto;padding:1.5rem;">
+<div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6C5CE7;margin-bottom:0.75rem;font-weight:500;">Related Tools</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;">
+<a href="/pomodoro-timer/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Pomodoro Timer</a>
+<a href="/countdown-timer/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Countdown Timer</a>
+<a href="/stopwatch/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Stopwatch</a>
+<a href="/word-counter/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Word Counter</a>
+</div>
+</div>
 </div>
 
 <div class="toast" id="toast"></div>

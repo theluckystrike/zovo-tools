@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown Editor - Free Online Markdown Editor with Live Preview | Zovo Tools</title>
+<meta name="description" content="Free online Markdown editor with live preview, syntax highlighting, toolbar shortcuts, export to HTML/MD, auto-save, and dark mode. No sign-up, no tracking, works offline.">
+<meta name="keywords" content="markdown editor, online markdown editor, markdown preview, markdown to html, free markdown editor, live markdown preview, GFM editor, markdown table editor">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/markdown-editor">
+
+<meta property="og:title" content="Markdown Editor - Free Online Markdown Editor with Live Preview">
+<meta property="og:description" content="Write Markdown with a live preview, toolbar shortcuts, syntax highlighting, and export. Free, private, no tracking.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tools.zovo.one/markdown-editor">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Markdown Editor - Free Online Markdown Editor with Live Preview">
+<meta name="twitter:description" content="Write Markdown with a live preview, toolbar shortcuts, syntax highlighting, and export. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Markdown Editor",
+  "description": "Free online Markdown editor with live preview, toolbar shortcuts, syntax highlighting, fenced code blocks, GFM tables, task lists, and export to HTML or Markdown. No sign-up required.",
+  "url": "https://tools.zovo.one/markdown-editor",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+  },
+  "featureList": [
+    "Live Markdown preview",
+    "Toolbar shortcuts for formatting",
+    "Fenced code blocks with syntax highlighting",
+    "GFM pipe tables",
+    "Task lists",
+    "Word and character count",
+    "Export to HTML or Markdown",
+    "Auto-save to localStorage",
+    "Split, editor-only, and preview-only views",
+    "Dark and light preview themes"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this Markdown editor free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, this Markdown editor is completely free. There are no premium tiers, no sign-up requirements, and no usage limits. You can use every feature without paying anything."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the editor track my data or store it on a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Everything runs locally in your browser. Your Markdown content is saved to your browser's localStorage for auto-save purposes, but nothing is ever sent to any server. Your writing stays private."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What Markdown syntax does this editor support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This editor supports standard Markdown and several GitHub Flavored Markdown (GFM) extensions including headings, bold, italic, strikethrough, links, images, inline code, fenced code blocks with syntax highlighting, blockquotes, ordered and unordered lists, task lists (checkboxes), GFM pipe tables, and horizontal rules."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I export my Markdown as HTML?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Click the 'Export HTML' button in the toolbar to download your rendered content as a complete HTML file. You can also export the raw Markdown source using the 'Export MD' button."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the auto-save feature work across sessions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Your content is automatically saved to localStorage every time you type. When you return to the editor, your previous content is restored. Clearing your browser data will remove the saved content."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use this editor on mobile devices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The editor is fully responsive. On smaller screens, you can toggle between the editor view and the preview view. On larger screens, you can use the split-pane layout to see both side by side."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the syntax highlighting in code blocks work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When you use fenced code blocks with a language identifier (e.g., ```javascript), the editor applies basic syntax highlighting to keywords, strings, numbers, and comments for common languages like JavaScript, Python, CSS, HTML, and more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this editor require an internet connection?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "After the initial page load, the editor works completely offline. All parsing and rendering happens in your browser. The only external resource is the Google Fonts stylesheet for the Inter typeface, which is cached after first load."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface-2: #1a1a26;
+  --surface-3: #222233;
+  --accent: #00ff88;
+  --accent-dim: #00cc6a;
+  --text: #e0e0e6;
+  --text-muted: #8888a0;
+  --text-dim: #555566;
+  --border: #2a2a3a;
+  --border-light: #3a3a4f;
+  --danger: #ff4466;
+  --info: #66aaff;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+html { font-size: 16px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 18px; color: var(--bg);
+}
+.header h1 { font-size: 1.25rem; font-weight: 700; color: var(--text); }
+.header h1 span { color: var(--accent); }
+.header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* Stats bar */
+.stats {
+  display: flex; align-items: center; gap: 16px;
+  font-size: 0.8rem; color: var(--text-muted);
+  padding: 0 8px;
+}
+.stats span { white-space: nowrap; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--surface-3); border-color: var(--border-light); }
+.btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.btn-accent { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+.btn-accent:hover { background: var(--accent-dim); border-color: var(--accent-dim); }
+
+/* Toolbar */
+.toolbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  overflow-x: auto;
+}
+.toolbar-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--mono);
+  transition: all 0.15s;
+}
+.toolbar-btn:hover { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+.toolbar-sep { width: 1px; height: 22px; background: var(--border); margin: 0 6px; }
+
+/* Main editor area */
+.editor-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.editor-pane, .preview-pane {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.editor-pane { border-right: 1px solid var(--border); }
+.pane-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  padding: 6px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+#editor {
+  flex: 1;
+  width: 100%;
+  resize: none;
+  background: var(--bg);
+  color: var(--text);
+  border: none;
+  padding: 20px;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  outline: none;
+  tab-size: 2;
+}
+#editor::placeholder { color: var(--text-dim); }
+
+#preview {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 28px;
+  background: var(--bg);
+}
+
+/* Preview dark theme (default) */
+#preview.theme-dark { background: var(--bg); color: var(--text); }
+#preview.theme-light { background: #ffffff; color: #1a1a2e; }
+
+/* Preview styles */
+#preview h1 { font-size: 2rem; font-weight: 700; margin: 1.2em 0 0.5em; padding-bottom: 0.3em; border-bottom: 1px solid var(--border); }
+#preview h2 { font-size: 1.5rem; font-weight: 700; margin: 1.1em 0 0.4em; padding-bottom: 0.25em; border-bottom: 1px solid var(--border); }
+#preview h3 { font-size: 1.25rem; font-weight: 600; margin: 1em 0 0.4em; }
+#preview h4 { font-size: 1.1rem; font-weight: 600; margin: 1em 0 0.3em; }
+#preview h5 { font-size: 1rem; font-weight: 600; margin: 1em 0 0.3em; }
+#preview h6 { font-size: 0.9rem; font-weight: 600; margin: 1em 0 0.3em; color: var(--text-muted); }
+#preview p { margin: 0.7em 0; line-height: 1.75; }
+#preview a { color: var(--accent); text-decoration: none; }
+#preview a:hover { text-decoration: underline; }
+#preview strong { font-weight: 700; }
+#preview em { font-style: italic; }
+#preview del { text-decoration: line-through; opacity: 0.7; }
+#preview img { max-width: 100%; border-radius: var(--radius); margin: 0.5em 0; }
+#preview code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: var(--surface-2);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--accent);
+}
+#preview pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  overflow-x: auto;
+  margin: 1em 0;
+  line-height: 1.5;
+}
+#preview pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+  font-size: 0.85rem;
+}
+#preview blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 4px 16px;
+  margin: 1em 0;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+#preview ul, #preview ol { margin: 0.7em 0; padding-left: 1.8em; }
+#preview li { margin: 0.3em 0; line-height: 1.65; }
+#preview li.task-item { list-style: none; margin-left: -1.4em; }
+#preview li.task-item input { margin-right: 8px; accent-color: var(--accent); }
+#preview hr { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+#preview table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+#preview th, #preview td { border: 1px solid var(--border); padding: 8px 14px; text-align: left; }
+#preview th { background: var(--surface); font-weight: 600; }
+#preview tr:nth-child(even) { background: var(--surface); }
+
+/* Light theme overrides */
+#preview.theme-light h1, #preview.theme-light h2 { border-bottom-color: #ddd; }
+#preview.theme-light code { background: #f0f0f5; color: #0a7e42; }
+#preview.theme-light pre { background: #f5f5fa; border-color: #ddd; }
+#preview.theme-light pre code { color: #1a1a2e; }
+#preview.theme-light blockquote { background: #f5f5fa; color: #666; }
+#preview.theme-light a { color: #0a7e42; }
+#preview.theme-light th { background: #f0f0f5; }
+#preview.theme-light td, #preview.theme-light th { border-color: #ddd; }
+#preview.theme-light tr:nth-child(even) { background: #f9f9fc; }
+#preview.theme-light hr { border-top-color: #ddd; }
+
+/* Syntax highlighting in code blocks */
+.sh-keyword { color: #c678dd; }
+.sh-string { color: #98c379; }
+.sh-number { color: #d19a66; }
+.sh-comment { color: #5c6370; font-style: italic; }
+.sh-function { color: #61afef; }
+.sh-operator { color: #56b6c2; }
+.sh-tag { color: #e06c75; }
+.sh-attr { color: #d19a66; }
+.sh-value { color: #98c379; }
+
+/* View modes */
+.editor-container.view-editor .preview-pane { display: none; }
+.editor-container.view-editor .editor-pane { border-right: none; }
+.editor-container.view-preview .editor-pane { display: none; }
+
+/* Saved indicator */
+.save-indicator {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  padding: 4px 8px;
+  transition: opacity 0.3s;
+}
+.save-indicator.visible { color: var(--accent); }
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.site-footer a { color: var(--accent); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+
+/* Content section */
+.content-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+.content-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+.content-section h2 span { color: var(--accent); }
+.content-section p {
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 24px 0 8px;
+  color: var(--text);
+}
+.faq-item { margin-bottom: 20px; }
+.faq-item h3 { color: var(--accent); font-size: 1rem; margin-bottom: 6px; }
+.faq-item p { margin-bottom: 8px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header { padding: 12px 16px; }
+  .header h1 { font-size: 1.1rem; }
+  .editor-container { flex-direction: column; }
+  .editor-pane { border-right: none; border-bottom: 1px solid var(--border); min-height: 40vh; }
+  .preview-pane { min-height: 40vh; }
+  .stats { gap: 10px; }
+  #editor { padding: 14px; }
+  #preview { padding: 14px 18px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <div class="logo">M</div>
+    <h1>Markdown <span>Editor</span></h1>
+  </div>
+  <div class="header-right">
+    <div class="stats">
+      <span id="wordCount">0 words</span>
+      <span id="charCount">0 chars</span>
+    </div>
+    <span class="save-indicator" id="saveIndicator">Saved</span>
+    <button class="btn" id="viewSplit" title="Split view">Split</button>
+    <button class="btn" id="viewEditor" title="Editor only">Editor</button>
+    <button class="btn" id="viewPreview" title="Preview only">Preview</button>
+    <button class="btn" id="themeToggle" title="Toggle preview theme">Light</button>
+    <button class="btn btn-accent" id="exportHTML" title="Export as HTML">Export HTML</button>
+    <button class="btn" id="exportMD" title="Export as Markdown">Export MD</button>
+  </div>
+</header>
+
+<div class="toolbar" id="toolbar">
+  <button class="toolbar-btn" data-action="bold" title="Bold (Ctrl+B)">B</button>
+  <button class="toolbar-btn" data-action="italic" title="Italic (Ctrl+I)"><i>I</i></button>
+  <button class="toolbar-btn" data-action="strikethrough" title="Strikethrough"><s>S</s></button>
+  <span class="toolbar-sep"></span>
+  <button class="toolbar-btn" data-action="h1" title="Heading 1">H1</button>
+  <button class="toolbar-btn" data-action="h2" title="Heading 2">H2</button>
+  <button class="toolbar-btn" data-action="h3" title="Heading 3">H3</button>
+  <span class="toolbar-sep"></span>
+  <button class="toolbar-btn" data-action="link" title="Link">&lt;/&gt;</button>
+  <button class="toolbar-btn" data-action="image" title="Image">Img</button>
+  <span class="toolbar-sep"></span>
+  <button class="toolbar-btn" data-action="code" title="Inline code">` `</button>
+  <button class="toolbar-btn" data-action="codeblock" title="Code block">```</button>
+  <span class="toolbar-sep"></span>
+  <button class="toolbar-btn" data-action="quote" title="Blockquote">"</button>
+  <button class="toolbar-btn" data-action="ul" title="Unordered list">&#8226;</button>
+  <button class="toolbar-btn" data-action="ol" title="Ordered list">1.</button>
+  <button class="toolbar-btn" data-action="tasklist" title="Task list">&#9745;</button>
+  <span class="toolbar-sep"></span>
+  <button class="toolbar-btn" data-action="table" title="Table">&#9638;</button>
+  <button class="toolbar-btn" data-action="hr" title="Horizontal rule">---</button>
+</div>
+
+<div class="editor-container view-split" id="editorContainer">
+  <div class="editor-pane">
+    <div class="pane-label">Markdown</div>
+    <textarea id="editor" placeholder="Start writing Markdown here..." spellcheck="false"></textarea>
+  </div>
+  <div class="preview-pane">
+    <div class="pane-label">Preview</div>
+    <div id="preview" class="theme-dark"></div>
+  </div>
+</div>
+
+<div class="content-section">
+  <h2>Free Online <span>Markdown Editor</span> with Live Preview</h2>
+  <p>Welcome to the Zovo Markdown Editor, a powerful, free, and completely private online writing tool designed for developers, writers, bloggers, and anyone who works with Markdown. This editor provides a seamless split-pane experience where you can write Markdown on the left and see the beautifully rendered output on the right, updating in real time as you type. There is no account to create, no data sent to any server, and no tracking of any kind. Everything happens right in your browser.</p>
+
+  <p>Markdown has become the standard for writing documentation, README files, blog posts, and technical content across the web. Originally created by John Gruber in 2004, Markdown's simple syntax allows you to format text using plain characters that are easy to read even before rendering. Our editor supports the full standard Markdown specification plus popular extensions from GitHub Flavored Markdown (GFM), making it suitable for everything from quick notes to comprehensive technical documentation.</p>
+
+  <h3>Formatting Toolbar</h3>
+  <p>The toolbar at the top of the editor gives you quick access to all common Markdown formatting options. Click any button to insert the corresponding syntax at your cursor position, or select text first and click a button to wrap it with formatting. Supported toolbar actions include bold, italic, strikethrough, headings (H1 through H3), links, images, inline code, fenced code blocks, blockquotes, unordered lists, ordered lists, task lists, tables, and horizontal rules. For keyboard enthusiasts, bold and italic also respond to Ctrl+B and Ctrl+I (Cmd on Mac).</p>
+
+  <h3>Full Markdown Syntax Support</h3>
+  <p>This editor parses and renders a comprehensive subset of Markdown and GFM. Headings are supported from H1 through H6 using the hash prefix syntax. Inline formatting includes bold (double asterisks or underscores), italic (single asterisks or underscores), and strikethrough (double tildes). Links and images use the standard bracket-parenthesis syntax. Inline code uses backticks, while fenced code blocks use triple backticks with optional language identifiers for syntax highlighting. Blockquotes use the greater-than prefix and can be nested. Both ordered and unordered lists are fully supported, including nested lists. Task lists use the GFM checkbox syntax with square brackets. Pipe tables follow the GFM table specification with header rows, alignment, and automatic column sizing. Horizontal rules can be created with three or more hyphens, asterisks, or underscores.</p>
+
+  <h3>Syntax Highlighting in Code Blocks</h3>
+  <p>When you specify a language after the opening triple backticks of a fenced code block, the editor applies basic syntax highlighting to make your code more readable. Supported highlighting covers keywords, strings, numbers, comments, functions, and operators for popular languages including JavaScript, TypeScript, Python, CSS, HTML, Java, C, C++, Go, Rust, Ruby, PHP, SQL, Bash, and more. The highlighting is performed entirely in the browser with no external dependencies, keeping the editor fast and private.</p>
+
+  <h3>GFM Tables</h3>
+  <p>Creating tables in Markdown has never been easier. Use the table button in the toolbar to insert a pre-formatted table template, then fill in your data. The editor supports the full GFM pipe table syntax including left, center, and right alignment using colons in the separator row. Tables are rendered with clean borders and alternating row backgrounds for easy readability. You can create tables with any number of columns and rows, making it simple to present structured data in your documents.</p>
+
+  <h3>Auto-Save and Export</h3>
+  <p>Never lose your work again. The editor automatically saves your content to your browser's localStorage every time you make a change. When you return to the editor, your previous content is restored exactly as you left it. For sharing or archiving, you can export your work in two formats: Export HTML generates a complete, styled HTML file with your rendered content, while Export MD downloads the raw Markdown source. Both exports happen entirely in your browser with no server involvement.</p>
+
+  <h3>View Modes and Themes</h3>
+  <p>The editor offers three view modes to suit different workflows. Split view shows the editor and preview side by side, which is ideal for real-time editing. Editor-only view maximizes your writing space when you need to focus on content. Preview-only view gives you a full-width rendering of your document, perfect for reviewing before export. Additionally, the preview pane supports both dark and light themes. The dark theme matches the editor interface with comfortable low-contrast colors, while the light theme provides a clean white background that simulates how your content might appear on a standard webpage or printed document.</p>
+
+  <h3>Word and Character Count</h3>
+  <p>The header displays a live word count and character count that update as you type. These metrics are calculated from the raw Markdown source, giving you an accurate measure of your content length. Whether you are writing a tweet-length note or a multi-thousand-word article, the counts help you track your progress and stay within any length requirements you might have.</p>
+
+  <h3>Privacy and Performance</h3>
+  <p>This Markdown editor is built with privacy as a core principle. There are no cookies, no analytics scripts, no server-side processing, and no third-party trackers. Your content never leaves your browser. The editor loads a single HTML file with embedded CSS and JavaScript, plus the Inter font from Google Fonts. After the initial page load, the editor works completely offline. The custom Markdown parser is lightweight and fast, capable of handling long documents without lag. Whether you are writing on a desktop, laptop, tablet, or phone, the editor adapts to your screen size and delivers a smooth experience.</p>
+
+  <h2>Frequently Asked <span>Questions</span></h2>
+
+  <div class="faq-item">
+    <h3>Is this Markdown editor free to use?</h3>
+    <p>Yes, this Markdown editor is completely free. There are no premium tiers, no sign-up requirements, and no usage limits. You can use every feature without paying anything. The tool is maintained as part of the Zovo Tools collection to provide useful utilities for the web community.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>Does the editor track my data or store it on a server?</h3>
+    <p>No. Everything runs locally in your browser. Your Markdown content is saved to your browser's localStorage for auto-save purposes, but nothing is ever sent to any server. There are no analytics, no cookies, and no third-party scripts collecting information about you or your writing. Your work stays completely private.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>What Markdown syntax does this editor support?</h3>
+    <p>This editor supports standard Markdown and several GitHub Flavored Markdown (GFM) extensions. Supported syntax includes headings (H1 through H6), bold, italic, strikethrough, links, images, inline code, fenced code blocks with syntax highlighting for common programming languages, blockquotes, ordered and unordered lists, task lists with checkboxes, GFM pipe tables with alignment, and horizontal rules. This covers the vast majority of Markdown formatting used across the web.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>Can I export my Markdown as HTML?</h3>
+    <p>Yes. Click the "Export HTML" button in the header to download your rendered content as a complete, standalone HTML file. The exported file includes basic styling so it looks good when opened in any browser. You can also export the raw Markdown source using the "Export MD" button, which downloads a plain .md file you can open in any text editor or Markdown application.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>Does the auto-save feature work across sessions?</h3>
+    <p>Yes. Your content is automatically saved to your browser's localStorage every time you type. When you close the tab or browser and return later, your previous content is restored automatically. Note that clearing your browser data, clearing site storage, or using incognito or private browsing mode will remove the saved content. For permanent storage, use the export feature to download your files.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>Can I use this editor on mobile devices?</h3>
+    <p>Yes. The editor is fully responsive and adapts to any screen size. On smaller screens, the layout stacks vertically with the editor on top and the preview below. You can also switch to editor-only or preview-only mode for a more focused experience on mobile. The toolbar scrolls horizontally to remain accessible on narrow screens. Touch input is fully supported for both editing and toolbar interaction.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>How does the syntax highlighting in code blocks work?</h3>
+    <p>When you use fenced code blocks (triple backticks) with a language identifier, such as ```javascript or ```python, the editor applies basic syntax highlighting to make your code more readable. The highlighting recognizes keywords, strings, numbers, comments, function calls, and operators for a range of popular languages. The highlighting engine is built into the editor with no external libraries, so it works offline and adds no extra load time. While it covers the most common syntax patterns, it is not a full language parser and may not highlight every edge case perfectly.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>Does this editor require an internet connection?</h3>
+    <p>After the initial page load, the editor works completely offline. All parsing and rendering happens in your browser using embedded JavaScript. The only external resource is the Google Fonts stylesheet that loads the Inter typeface, and that is cached by your browser after the first visit. If you bookmark or save the page, you can use it without any internet connection at all. This makes it a great tool for writing on the go, on airplanes, or in any environment with limited connectivity.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+</footer>
+<div style="max-width:800px;margin:2rem auto;padding:1.5rem;">
+<div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6C5CE7;margin-bottom:0.75rem;font-weight:500;">Related Tools</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;">
+<a href="/paraphrase-tool/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Paraphrase Tool</a>
+<a href="/word-counter/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Word Counter</a>
+<a href="/essay-outline-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Essay Outline Generator</a>
+<a href="/grade-calculator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Grade Calculator</a>
+</div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const editor = document.getElementById('editor');
+  const preview = document.getElementById('preview');
+  const container = document.getElementById('editorContainer');
+  const wordCountEl = document.getElementById('wordCount');
+  const charCountEl = document.getElementById('charCount');
+  const saveIndicator = document.getElementById('saveIndicator');
+
+  // --- Markdown Parser ---
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // Syntax highlighting for code blocks
+  const langKeywords = {
+    javascript: /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|this|class|extends|import|export|from|default|try|catch|finally|throw|async|await|yield|of|in|typeof|instanceof|void|delete|null|undefined|true|false|NaN|Infinity)\b/g,
+    typescript: /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|this|class|extends|import|export|from|default|try|catch|finally|throw|async|await|yield|of|in|typeof|instanceof|void|delete|null|undefined|true|false|type|interface|enum|implements|abstract|private|protected|public|readonly|as|is|keyof|never|unknown|any)\b/g,
+    python: /\b(def|class|return|if|elif|else|for|while|break|continue|import|from|as|try|except|finally|raise|with|yield|lambda|pass|del|global|nonlocal|assert|True|False|None|and|or|not|in|is|async|await|print|self)\b/g,
+    css: /\b(color|background|margin|padding|border|font|display|position|width|height|top|left|right|bottom|flex|grid|align|justify|overflow|opacity|transform|transition|animation|none|auto|inherit|initial|important)\b/g,
+    html: /\b(html|head|body|div|span|p|a|img|ul|ol|li|h1|h2|h3|h4|h5|h6|table|tr|td|th|form|input|button|script|style|link|meta|title|section|article|nav|header|footer|main|class|id|src|href|alt|type|value|name|content)\b/g,
+    java: /\b(public|private|protected|static|final|abstract|class|interface|extends|implements|return|if|else|for|while|do|switch|case|break|continue|new|this|super|try|catch|finally|throw|throws|import|package|void|int|long|double|float|boolean|char|byte|short|String|null|true|false|instanceof)\b/g,
+    go: /\b(func|return|if|else|for|range|switch|case|break|continue|var|const|type|struct|interface|map|chan|go|defer|select|package|import|nil|true|false|string|int|bool|float64|float32|error|make|len|append|fmt)\b/g,
+    rust: /\b(fn|let|mut|return|if|else|for|while|loop|match|break|continue|struct|enum|impl|trait|pub|use|mod|crate|self|super|where|as|in|ref|move|async|await|unsafe|static|const|type|true|false|Some|None|Ok|Err|String|Vec|Option|Result)\b/g,
+    ruby: /\b(def|end|class|module|return|if|elsif|else|unless|for|while|do|case|when|break|next|begin|rescue|ensure|raise|require|include|extend|attr|self|nil|true|false|puts|yield|block|proc|lambda)\b/g,
+    php: /\b(function|return|if|else|elseif|for|foreach|while|do|switch|case|break|continue|class|extends|implements|new|this|public|private|protected|static|echo|print|require|include|use|namespace|null|true|false|array|string|int|float|bool|void)\b/g,
+    sql: /\b(SELECT|FROM|WHERE|AND|OR|NOT|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|ALTER|DROP|INDEX|JOIN|LEFT|RIGHT|INNER|OUTER|ON|AS|ORDER|BY|GROUP|HAVING|LIMIT|OFFSET|UNION|ALL|DISTINCT|COUNT|SUM|AVG|MIN|MAX|NULL|IS|IN|BETWEEN|LIKE|EXISTS|CASE|WHEN|THEN|ELSE|END|PRIMARY|KEY|FOREIGN|REFERENCES)\b/gi,
+    bash: /\b(echo|cd|ls|mkdir|rm|cp|mv|cat|grep|sed|awk|find|chmod|chown|export|source|if|then|else|elif|fi|for|do|done|while|case|esac|function|return|exit|read|local|shift|test|true|false|null)\b/g,
+    c: /\b(int|char|float|double|void|long|short|unsigned|signed|struct|union|enum|typedef|if|else|for|while|do|switch|case|break|continue|return|sizeof|static|extern|const|volatile|register|auto|include|define|NULL|true|false|printf|scanf|malloc|free)\b/g,
+    cpp: /\b(int|char|float|double|void|long|short|unsigned|signed|struct|union|enum|typedef|class|public|private|protected|virtual|override|template|typename|namespace|using|if|else|for|while|do|switch|case|break|continue|return|new|delete|this|nullptr|true|false|const|static|extern|volatile|auto|include|define|string|vector|cout|cin|endl|std)\b/g,
+    json: /("(?:[^"\\]|\\.)*")\s*:/g,
+  };
+
+  function highlightCode(code, lang) {
+    let escaped = escapeHtml(code);
+    if (!lang) return escaped;
+
+    const l = lang.toLowerCase().replace(/^(js)$/, 'javascript').replace(/^(ts)$/, 'typescript').replace(/^(sh|shell|zsh)$/, 'bash').replace(/^(c\+\+|cxx)$/, 'cpp').replace(/^(rb)$/, 'ruby').replace(/^(py)$/, 'python');
+
+    // Comments
+    escaped = escaped.replace(/(\/\/.*$)/gm, '<span class="sh-comment">$1</span>');
+    escaped = escaped.replace(/(#(?!include|define).*$)/gm, '<span class="sh-comment">$1</span>');
+    escaped = escaped.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="sh-comment">$1</span>');
+
+    // Strings (double and single quoted)
+    escaped = escaped.replace(/("(?:[^"\\]|\\.)*")/g, '<span class="sh-string">$1</span>');
+    escaped = escaped.replace(/('(?:[^'\\]|\\.)*')/g, '<span class="sh-string">$1</span>');
+    escaped = escaped.replace(/(`(?:[^`\\]|\\.)*`)/g, '<span class="sh-string">$1</span>');
+
+    // Numbers
+    escaped = escaped.replace(/\b(\d+\.?\d*(?:e[+-]?\d+)?)\b/gi, '<span class="sh-number">$1</span>');
+
+    // Keywords
+    const kw = langKeywords[l];
+    if (kw) {
+      escaped = escaped.replace(new RegExp(kw.source, kw.flags), function(match) {
+        return '<span class="sh-keyword">' + match + '</span>';
+      });
+    }
+
+    return escaped;
+  }
+
+  // Parse inline markdown
+  function parseInline(text) {
+    // Escape HTML
+    text = escapeHtml(text);
+
+    // Images: ![alt](url)
+    text = text.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
+
+    // Links: [text](url)
+    text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    // Inline code
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Bold + Italic (***text*** or ___text___)
+    text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    text = text.replace(/___(.+?)___/g, '<strong><em>$1</em></strong>');
+
+    // Bold (**text** or __text__)
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    text = text.replace(/__(.+?)__/g, '<strong>$1</strong>');
+
+    // Italic (*text* or _text_)
+    text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    text = text.replace(/(?<!\w)_(.+?)_(?!\w)/g, '<em>$1</em>');
+
+    // Strikethrough (~~text~~)
+    text = text.replace(/~~(.+?)~~/g, '<del>$1</del>');
+
+    return text;
+  }
+
+  // Main parser
+  function parseMarkdown(md) {
+    const lines = md.split('\n');
+    let html = '';
+    let i = 0;
+
+    while (i < lines.length) {
+      const line = lines[i];
+
+      // Fenced code block
+      const codeMatch = line.match(/^```(\w*)/);
+      if (codeMatch) {
+        const lang = codeMatch[1];
+        let codeContent = [];
+        i++;
+        while (i < lines.length && !lines[i].match(/^```\s*$/)) {
+          codeContent.push(lines[i]);
+          i++;
+        }
+        i++; // skip closing ```
+        const codeText = codeContent.join('\n');
+        html += '<pre><code>' + highlightCode(codeText, lang) + '</code></pre>\n';
+        continue;
+      }
+
+      // Horizontal rule
+      if (/^(\*{3,}|-{3,}|_{3,})\s*$/.test(line)) {
+        html += '<hr>\n';
+        i++;
+        continue;
+      }
+
+      // Heading
+      const headingMatch = line.match(/^(#{1,6})\s+(.+)/);
+      if (headingMatch) {
+        const level = headingMatch[1].length;
+        html += '<h' + level + '>' + parseInline(headingMatch[2]) + '</h' + level + '>\n';
+        i++;
+        continue;
+      }
+
+      // Table (GFM pipe tables)
+      if (line.includes('|') && i + 1 < lines.length && /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(lines[i + 1])) {
+        // Parse header
+        const headerCells = line.split('|').map(c => c.trim()).filter(c => c !== '');
+        const sepCells = lines[i + 1].split('|').map(c => c.trim()).filter(c => c !== '');
+        const aligns = sepCells.map(s => {
+          if (s.startsWith(':') && s.endsWith(':')) return 'center';
+          if (s.endsWith(':')) return 'right';
+          return 'left';
+        });
+        html += '<table><thead><tr>';
+        headerCells.forEach((cell, ci) => {
+          const align = aligns[ci] || 'left';
+          html += '<th style="text-align:' + align + '">' + parseInline(cell) + '</th>';
+        });
+        html += '</tr></thead><tbody>';
+        i += 2;
+        while (i < lines.length && lines[i].includes('|')) {
+          const cells = lines[i].split('|').map(c => c.trim()).filter(c => c !== '');
+          html += '<tr>';
+          headerCells.forEach((_, ci) => {
+            const align = aligns[ci] || 'left';
+            html += '<td style="text-align:' + align + '">' + parseInline(cells[ci] || '') + '</td>';
+          });
+          html += '</tr>';
+          i++;
+        }
+        html += '</tbody></table>\n';
+        continue;
+      }
+
+      // Blockquote
+      if (line.startsWith('>')) {
+        let quoteLines = [];
+        while (i < lines.length && lines[i].startsWith('>')) {
+          quoteLines.push(lines[i].replace(/^>\s?/, ''));
+          i++;
+        }
+        html += '<blockquote>' + parseMarkdown(quoteLines.join('\n')) + '</blockquote>\n';
+        continue;
+      }
+
+      // Task list
+      const taskMatch = line.match(/^(\s*)[-*+]\s+\[([ xX])\]\s+(.*)/);
+      if (taskMatch) {
+        html += '<ul>';
+        while (i < lines.length) {
+          const tm = lines[i].match(/^(\s*)[-*+]\s+\[([ xX])\]\s+(.*)/);
+          if (!tm) break;
+          const checked = tm[2] !== ' ' ? ' checked disabled' : ' disabled';
+          html += '<li class="task-item"><input type="checkbox"' + checked + '>' + parseInline(tm[3]) + '</li>';
+          i++;
+        }
+        html += '</ul>\n';
+        continue;
+      }
+
+      // Unordered list
+      const ulMatch = line.match(/^(\s*)[-*+]\s+(.*)/);
+      if (ulMatch) {
+        html += '<ul>';
+        while (i < lines.length) {
+          const um = lines[i].match(/^(\s*)[-*+]\s+(.*)/);
+          if (!um) break;
+          html += '<li>' + parseInline(um[2]) + '</li>';
+          i++;
+        }
+        html += '</ul>\n';
+        continue;
+      }
+
+      // Ordered list
+      const olMatch = line.match(/^(\s*)\d+[.)]\s+(.*)/);
+      if (olMatch) {
+        html += '<ol>';
+        while (i < lines.length) {
+          const om = lines[i].match(/^(\s*)\d+[.)]\s+(.*)/);
+          if (!om) break;
+          html += '<li>' + parseInline(om[2]) + '</li>';
+          i++;
+        }
+        html += '</ol>\n';
+        continue;
+      }
+
+      // Empty line
+      if (line.trim() === '') {
+        i++;
+        continue;
+      }
+
+      // Paragraph - collect consecutive non-empty, non-block lines
+      let paraLines = [];
+      while (i < lines.length && lines[i].trim() !== '' && !lines[i].match(/^(#{1,6}\s|```|>|\s*[-*+]\s|\s*\d+[.)]\s|(\*{3,}|-{3,}|_{3,})\s*$)/) && !(lines[i].includes('|') && i + 1 < lines.length && /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(lines[i + 1]))) {
+        paraLines.push(lines[i]);
+        i++;
+      }
+      if (paraLines.length > 0) {
+        html += '<p>' + parseInline(paraLines.join('<br>')) + '</p>\n';
+      }
+    }
+
+    return html;
+  }
+
+  // --- Update Preview ---
+  function updatePreview() {
+    const md = editor.value;
+    preview.innerHTML = parseMarkdown(md);
+    updateStats(md);
+    autoSave(md);
+  }
+
+  function updateStats(text) {
+    const trimmed = text.trim();
+    const words = trimmed === '' ? 0 : trimmed.split(/\s+/).length;
+    const chars = text.length;
+    wordCountEl.textContent = words + ' word' + (words !== 1 ? 's' : '');
+    charCountEl.textContent = chars + ' char' + (chars !== 1 ? 's' : '');
+  }
+
+  // --- Auto-save ---
+  let saveTimeout;
+  function autoSave(text) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      try {
+        localStorage.setItem('zovo-md-editor-content', text);
+        saveIndicator.classList.add('visible');
+        setTimeout(() => saveIndicator.classList.remove('visible'), 1500);
+      } catch(e) { /* localStorage full or unavailable */ }
+    }, 300);
+  }
+
+  function loadSaved() {
+    try {
+      const saved = localStorage.getItem('zovo-md-editor-content');
+      if (saved) {
+        editor.value = saved;
+        updatePreview();
+      } else {
+        editor.value = getSampleMarkdown();
+        updatePreview();
+      }
+    } catch(e) {
+      editor.value = getSampleMarkdown();
+      updatePreview();
+    }
+  }
+
+  function getSampleMarkdown() {
+    return `# Welcome to the Markdown Editor
+
+This is a **free online Markdown editor** with live preview. Start typing on the left and see the rendered output on the right.
+
+## Features
+
+- **Bold**, *italic*, and ~~strikethrough~~ text
+- [Links](https://zovo.one) and images
+- Fenced code blocks with syntax highlighting
+- GFM pipe tables
+- Task lists and more
+
+### Code Example
+
+\`\`\`javascript
+function greet(name) {
+  const message = \`Hello, \${name}!\`;
+  console.log(message);
+  return message;
+}
+
+greet("World");
+\`\`\`
+
+### Table Example
+
+| Feature | Supported |
+|---------|-----------|
+| Bold | Yes |
+| Tables | Yes |
+| Code blocks | Yes |
+
+### Task List
+
+- [x] Write some Markdown
+- [x] See live preview
+- [ ] Export to HTML
+
+> **Tip:** Use the toolbar buttons above for quick formatting, or type Markdown syntax directly.
+
+---
+
+*Happy writing!*`;
+  }
+
+  // --- Toolbar Actions ---
+  function insertAtCursor(before, after, placeholder) {
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    const selected = editor.value.substring(start, end);
+    const text = selected || placeholder || '';
+    const insertion = before + text + (after || '');
+    editor.value = editor.value.substring(0, start) + insertion + editor.value.substring(end);
+    editor.focus();
+    if (selected) {
+      editor.selectionStart = start;
+      editor.selectionEnd = start + insertion.length;
+    } else {
+      editor.selectionStart = start + before.length;
+      editor.selectionEnd = start + before.length + text.length;
+    }
+    updatePreview();
+  }
+
+  function insertAtLineStart(prefix) {
+    const start = editor.selectionStart;
+    const lineStart = editor.value.lastIndexOf('\n', start - 1) + 1;
+    editor.value = editor.value.substring(0, lineStart) + prefix + editor.value.substring(lineStart);
+    editor.focus();
+    editor.selectionStart = editor.selectionEnd = start + prefix.length;
+    updatePreview();
+  }
+
+  const toolbarActions = {
+    bold: () => insertAtCursor('**', '**', 'bold text'),
+    italic: () => insertAtCursor('*', '*', 'italic text'),
+    strikethrough: () => insertAtCursor('~~', '~~', 'strikethrough'),
+    h1: () => insertAtLineStart('# '),
+    h2: () => insertAtLineStart('## '),
+    h3: () => insertAtLineStart('### '),
+    link: () => insertAtCursor('[', '](https://example.com)', 'link text'),
+    image: () => insertAtCursor('![', '](https://example.com/image.png)', 'alt text'),
+    code: () => insertAtCursor('`', '`', 'code'),
+    codeblock: () => insertAtCursor('```\n', '\n```', 'code here'),
+    quote: () => insertAtLineStart('> '),
+    ul: () => insertAtLineStart('- '),
+    ol: () => insertAtLineStart('1. '),
+    tasklist: () => insertAtLineStart('- [ ] '),
+    table: () => {
+      const table = '\n| Column 1 | Column 2 | Column 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |\n| Cell 4   | Cell 5   | Cell 6   |\n';
+      insertAtCursor(table, '', '');
+    },
+    hr: () => insertAtCursor('\n---\n', '', ''),
+  };
+
+  document.getElementById('toolbar').addEventListener('click', (e) => {
+    const btn = e.target.closest('.toolbar-btn');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    if (toolbarActions[action]) toolbarActions[action]();
+  });
+
+  // Keyboard shortcuts
+  editor.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+      e.preventDefault();
+      toolbarActions.bold();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+      e.preventDefault();
+      toolbarActions.italic();
+    }
+    // Tab for indentation
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const start = editor.selectionStart;
+      editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(editor.selectionEnd);
+      editor.selectionStart = editor.selectionEnd = start + 2;
+      updatePreview();
+    }
+  });
+
+  // --- View Modes ---
+  function setView(mode) {
+    container.className = 'editor-container view-' + mode;
+    document.getElementById('viewSplit').classList.toggle('active', mode === 'split');
+    document.getElementById('viewEditor').classList.toggle('active', mode === 'editor');
+    document.getElementById('viewPreview').classList.toggle('active', mode === 'preview');
+    try { localStorage.setItem('zovo-md-editor-view', mode); } catch(e) {}
+  }
+
+  document.getElementById('viewSplit').addEventListener('click', () => setView('split'));
+  document.getElementById('viewEditor').addEventListener('click', () => setView('editor'));
+  document.getElementById('viewPreview').addEventListener('click', () => setView('preview'));
+
+  // --- Theme Toggle ---
+  let previewTheme = 'dark';
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    previewTheme = previewTheme === 'dark' ? 'light' : 'dark';
+    preview.className = 'theme-' + previewTheme;
+    themeToggle.textContent = previewTheme === 'dark' ? 'Light' : 'Dark';
+    try { localStorage.setItem('zovo-md-editor-theme', previewTheme); } catch(e) {}
+  });
+
+  // --- Export ---
+  function downloadFile(filename, content, type) {
+    const blob = new Blob([content], { type: type });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  document.getElementById('exportHTML').addEventListener('click', () => {
+    const htmlContent = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Exported Markdown</title>\n<style>\nbody { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.7; color: #1a1a2e; }\npre { background: #f5f5fa; padding: 16px; border-radius: 8px; overflow-x: auto; }\ncode { font-family: monospace; background: #f0f0f5; padding: 2px 6px; border-radius: 3px; }\npre code { background: none; padding: 0; }\ntable { border-collapse: collapse; width: 100%; }\nth, td { border: 1px solid #ddd; padding: 8px 14px; text-align: left; }\nth { background: #f0f0f5; }\nblockquote { border-left: 3px solid #0a7e42; padding: 4px 16px; margin: 1em 0; color: #666; background: #f9f9fc; }\nimg { max-width: 100%; }\nhr { border: none; border-top: 1px solid #ddd; margin: 1.5em 0; }\n</style>\n</head>\n<body>\n' + preview.innerHTML + '\n</body>\n</html>';
+    downloadFile('document.html', htmlContent, 'text/html');
+  });
+
+  document.getElementById('exportMD').addEventListener('click', () => {
+    downloadFile('document.md', editor.value, 'text/markdown');
+  });
+
+  // --- Initialize ---
+  editor.addEventListener('input', updatePreview);
+
+  // Restore saved state
+  try {
+    const savedView = localStorage.getItem('zovo-md-editor-view');
+    if (savedView) setView(savedView); else setView('split');
+    const savedTheme = localStorage.getItem('zovo-md-editor-theme');
+    if (savedTheme) {
+      previewTheme = savedTheme;
+      preview.className = 'theme-' + previewTheme;
+      themeToggle.textContent = previewTheme === 'dark' ? 'Light' : 'Dark';
+    }
+  } catch(e) { setView('split'); }
+
+  loadSaved();
+})();
+</script>
+</body>
+</html>
