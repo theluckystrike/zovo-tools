@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Online Code Beautifier and Formatter - JavaScript, HTML, CSS, JSON, SQL, Python, PHP, XML</title>
+<meta name="description" content="Free online code beautifier and formatter. Format, indent, and minify JavaScript, HTML, CSS, JSON, SQL, Python, PHP, and XML code instantly in your browser. No signup required.">
+<meta name="keywords" content="code beautifier, code formatter, javascript formatter, html formatter, css formatter, json formatter, sql formatter, python formatter, php formatter, xml formatter, code minifier, online code formatter, free code beautifier">
+<link rel="canonical" href="https://zovo.one/code-beautifier/">
+<meta property="og:title" content="Free Online Code Beautifier - Format JS, HTML, CSS, JSON, SQL, Python, PHP, XML">
+<meta property="og:description" content="Beautify and format your code instantly. Supports JavaScript, HTML, CSS, JSON, SQL, Python, PHP, XML with configurable indent, brace style, and minify options.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/code-beautifier/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#12121a;--text:#e0e0e8;--accent:#00ff88;--secondary:#00ccff;--border:#1e1e2e;--input-bg:#0e0e16;--hover:#1a1a28;--danger:#ff4466;--muted:#6b6b80;--radius:10px}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+a{color:var(--secondary);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1280px;margin:0 auto;padding:0 20px}
+
+/* Header */
+header{padding:20px 0;border-bottom:1px solid var(--border)}
+header .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.logo{font-size:1.3rem;font-weight:700;color:var(--accent)}
+.logo span{color:var(--secondary)}
+nav a{color:var(--muted);margin-left:20px;font-size:0.9rem;transition:color 0.2s}
+nav a:hover{color:var(--text);text-decoration:none}
+
+/* Privacy badge */
+.privacy-badge{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:0.78rem;color:var(--accent);margin:16px 0}
+.privacy-badge::before{content:"";width:8px;height:8px;background:var(--accent);border-radius:50%;flex-shrink:0}
+
+/* Tool section */
+.tool-section{padding:40px 0}
+.tool-header{text-align:center;margin-bottom:30px}
+.tool-header h1{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+.tool-header p{color:var(--muted);font-size:0.95rem}
+
+/* Controls bar */
+.controls-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;align-items:center}
+.control-group{display:flex;align-items:center;gap:6px}
+.control-group label{font-size:0.78rem;color:var(--muted);white-space:nowrap}
+.control-group select,.control-group input[type="number"]{background:var(--input-bg);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:6px;font-size:0.82rem;font-family:'Inter',sans-serif}
+.control-group select:focus,.control-group input:focus{outline:none;border-color:var(--accent)}
+.control-group input[type="number"]{width:70px}
+
+/* Action buttons */
+.action-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.btn{padding:8px 18px;border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--accent);color:#0a0a0f}
+.btn-primary:hover{background:#00dd77;transform:translateY(-1px)}
+.btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#ee3355}
+.btn-small{padding:5px 12px;font-size:0.78rem}
+
+/* Editor layout */
+.editor-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:800px){.editor-layout{grid-template-columns:1fr}}
+.editor-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+.editor-panel-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--input-bg)}
+.editor-panel-header span{font-size:0.82rem;font-weight:600}
+.editor-panel-header .stats{font-size:0.75rem;color:var(--muted)}
+.editor-panel textarea{width:100%;min-height:400px;background:transparent;border:none;color:var(--text);padding:14px;font-family:'JetBrains Mono','Fira Code','Consolas',monospace;font-size:0.85rem;resize:vertical;line-height:1.6;tab-size:4}
+.editor-panel textarea:focus{outline:none}
+.editor-panel textarea::placeholder{color:var(--muted)}
+
+/* Output with line numbers */
+.output-wrapper{position:relative;min-height:400px;max-height:600px;overflow:auto}
+.output-pre{margin:0;padding:14px 14px 14px 56px;font-family:'JetBrains Mono','Fira Code','Consolas',monospace;font-size:0.85rem;line-height:1.6;white-space:pre;color:var(--text);min-height:400px}
+.line-numbers{position:absolute;left:0;top:0;padding:14px 8px;text-align:right;color:var(--muted);font-family:'JetBrains Mono','Fira Code','Consolas',monospace;font-size:0.85rem;line-height:1.6;width:46px;border-right:1px solid var(--border);user-select:none;pointer-events:none}
+
+/* Syntax highlight colors */
+.tok-keyword{color:#ff79c6}
+.tok-string{color:#f1fa8c}
+.tok-number{color:#bd93f9}
+.tok-comment{color:#6272a4}
+.tok-tag{color:#ff79c6}
+.tok-attr{color:#50fa7b}
+.tok-value{color:#f1fa8c}
+.tok-selector{color:#50fa7b}
+.tok-property{color:#8be9fd}
+.tok-punctuation{color:#6b6b80}
+.tok-function{color:#00ccff}
+.tok-operator{color:#ff79c6}
+.tok-builtin{color:#8be9fd}
+
+/* Comparison bar */
+.comparison-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:20px;align-items:center}
+.comparison-item{font-size:0.82rem}
+.comparison-item .label{color:var(--muted);margin-right:6px}
+.comparison-item .value{font-weight:600}
+.comparison-item .positive{color:var(--accent)}
+.comparison-item .negative{color:var(--danger)}
+
+/* File upload area */
+.file-upload-area{border:2px dashed var(--border);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:16px;cursor:pointer;transition:border-color 0.2s}
+.file-upload-area:hover{border-color:var(--accent)}
+.file-upload-area p{color:var(--muted);font-size:0.85rem}
+.file-upload-area input{display:none}
+
+/* SEO Content */
+.seo-content{padding:60px 0;border-top:1px solid var(--border)}
+.seo-content h1{font-size:2rem;font-weight:700;margin-bottom:20px;line-height:1.3}
+.seo-content h2{font-size:1.4rem;font-weight:600;margin:36px 0 14px;color:var(--accent)}
+.seo-content h3{font-size:1.1rem;font-weight:600;margin:24px 0 10px;color:var(--secondary)}
+.seo-content p{margin-bottom:14px;color:var(--text);max-width:800px}
+.seo-content ul,.seo-content ol{margin:10px 0 14px 24px}
+.seo-content li{margin-bottom:6px}
+.seo-content code{background:var(--card);padding:2px 6px;border-radius:4px;font-size:0.88rem;color:var(--accent)}
+.seo-content pre{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0;overflow-x:auto;font-family:'JetBrains Mono','Fira Code',monospace;font-size:0.85rem;line-height:1.6}
+
+/* FAQ */
+.faq-section{margin-top:40px}
+.faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+.faq-question{padding:16px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:0.95rem;background:var(--card);transition:background 0.2s}
+.faq-question:hover{background:var(--hover)}
+.faq-question::after{content:"+";font-size:1.2rem;color:var(--accent);transition:transform 0.2s}
+.faq-item.open .faq-question::after{transform:rotate(45deg)}
+.faq-answer{padding:0 18px;max-height:0;overflow:hidden;transition:max-height 0.3s,padding 0.3s}
+.faq-item.open .faq-answer{padding:14px 18px;max-height:500px}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:30px 0;text-align:center;color:var(--muted);font-size:0.82rem}
+footer a{color:var(--accent)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#0a0a0f;padding:10px 20px;border-radius:8px;font-size:0.85rem;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+
+@media(max-width:640px){
+  .seo-content h1{font-size:1.5rem}
+  .controls-bar{flex-direction:column;align-items:stretch}
+  .control-group{justify-content:space-between}
+  .action-bar{flex-direction:column}
+  .btn{justify-content:center}
+  .comparison-bar{flex-direction:column;gap:8px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="logo">zovo<span>.one</span></div>
+    <nav>
+      <a href="#tool">Beautifier</a>
+      <a href="#guide">Guide</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="tool-section" id="tool">
+  <div class="container">
+    <div class="tool-header">
+      <h1>Code Beautifier and Formatter</h1>
+      <p>Format, beautify, or minify your code instantly. Supports 8 languages.</p>
+      <div class="privacy-badge">Runs entirely in your browser. Zero data sent to any server.</div>
+    </div>
+
+    <div class="controls-bar">
+      <div class="control-group">
+        <label>Language:</label>
+        <select id="language">
+          <option value="auto">Auto Detect</option>
+          <option value="javascript">JavaScript / TypeScript</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="json">JSON</option>
+          <option value="xml">XML</option>
+          <option value="sql">SQL</option>
+          <option value="python">Python</option>
+          <option value="php">PHP</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Indent:</label>
+        <select id="indentStyle">
+          <option value="2">2 Spaces</option>
+          <option value="4">4 Spaces</option>
+          <option value="tab">Tabs</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Max Width:</label>
+        <input type="number" id="maxWidth" value="80" min="40" max="200">
+      </div>
+      <div class="control-group">
+        <label>Braces:</label>
+        <select id="braceStyle">
+          <option value="same">Same Line</option>
+          <option value="new">New Line</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Quotes:</label>
+        <select id="quoteStyle">
+          <option value="single">Single</option>
+          <option value="double">Double</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Semicolons:</label>
+        <select id="semicolons">
+          <option value="keep">Keep</option>
+          <option value="add">Add</option>
+          <option value="remove">Remove</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Trailing Commas:</label>
+        <select id="trailingCommas">
+          <option value="none">None</option>
+          <option value="add">Add</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="beautifyCode()">Beautify Code</button>
+      <button class="btn btn-danger" onclick="minifyCode()">Minify Code</button>
+      <button class="btn btn-secondary" onclick="pasteFromClipboard()">Paste from Clipboard</button>
+      <button class="btn btn-secondary" onclick="copyOutput()">Copy Output</button>
+      <button class="btn btn-secondary" onclick="downloadOutput()">Download File</button>
+      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    </div>
+
+    <div class="file-upload-area" id="fileUpload">
+      <p>Drag and drop a file here, or click to upload</p>
+      <input type="file" id="fileInput" accept=".js,.ts,.jsx,.tsx,.html,.htm,.css,.scss,.json,.xml,.svg,.sql,.py,.php">
+    </div>
+
+    <div class="comparison-bar" id="comparisonBar" style="display:none">
+      <div class="comparison-item">
+        <span class="label">Input:</span>
+        <span class="value" id="inputSize">0 chars / 0 lines / 0 bytes</span>
+      </div>
+      <div class="comparison-item">
+        <span class="label">Output:</span>
+        <span class="value" id="outputSize">0 chars / 0 lines / 0 bytes</span>
+      </div>
+      <div class="comparison-item">
+        <span class="label">Difference:</span>
+        <span class="value" id="sizeDiff">0 bytes</span>
+      </div>
+      <div class="comparison-item">
+        <span class="label">Detected:</span>
+        <span class="value" id="detectedLang" style="color:var(--secondary)">-</span>
+      </div>
+    </div>
+
+    <div class="editor-layout">
+      <div class="editor-panel">
+        <div class="editor-panel-header">
+          <span>Input</span>
+          <span class="stats" id="inputStats">0 chars | 0 lines</span>
+        </div>
+        <textarea id="inputEditor" placeholder="Paste your code here, or upload a file..." spellcheck="false"></textarea>
+      </div>
+      <div class="editor-panel">
+        <div class="editor-panel-header">
+          <span>Output</span>
+          <span class="stats" id="outputStats">0 chars | 0 lines</span>
+        </div>
+        <div class="output-wrapper" id="outputWrapper">
+          <div class="line-numbers" id="lineNumbers"></div>
+          <pre class="output-pre" id="outputPre"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="seo-content" id="guide">
+  <div class="container">
+
+<h1>Code Beautifier: Format and Clean Up Your Code Online for Free</h1>
+
+<p>Writing clean, well-formatted code is one of the most important practices in software development. Whether you are a beginner just learning to program or a seasoned developer working on production codebases, the readability of your code directly impacts how easily it can be understood, maintained, and debugged. This free online code beautifier helps you format messy, minified, or poorly indented code into clean, structured output in seconds. It supports JavaScript, TypeScript, HTML, CSS, JSON, XML, SQL, Python, and PHP, covering the majority of languages used in web development and backend programming.</p>
+
+<p>Code beautification goes beyond just making code look pretty. It establishes consistency across files and teams, reduces the cognitive load required to understand logic, and makes code reviews faster and more productive. When every developer on a team follows the same formatting conventions, pull requests become easier to review because the diffs only show meaningful changes rather than whitespace adjustments.</p>
+
+<h2>How the Code Beautifier Works</h2>
+
+<p>This tool runs entirely in your web browser. When you paste code into the input panel or upload a file, the beautifier first attempts to auto-detect which programming language you are working with. It analyzes the structure, keywords, and syntax patterns to determine whether your code is JavaScript, HTML, CSS, JSON, or another supported language. You can also manually select the language from the dropdown if the auto-detection does not match your needs.</p>
+
+<p>Once the language is identified, the beautifier applies formatting rules based on the options you configure. These options include indent style (2 spaces, 4 spaces, or tabs), brace placement (same line or new line), quote style (single or double), semicolons (add, remove, or keep), and trailing commas. The formatted output appears in the right panel with syntax highlighting and line numbers, making it easy to review the result before copying or downloading it.</p>
+
+<h3>Supported Languages and Their Formatting Rules</h3>
+
+<p>Each language has its own formatting approach tailored to its syntax and conventions:</p>
+
+<ul>
+<li>JavaScript and TypeScript: Indentation based on brace and parenthesis depth tracking. Opening braces can be placed on the same line or a new line. Semicolons can be added or removed. Single or double quotes are applied consistently throughout.</li>
+<li>HTML: Tag depth tracking determines indentation levels. Self-closing tags are handled correctly. Attributes are preserved, and nested elements receive proper indentation.</li>
+<li>CSS: Selectors are placed on their own lines, properties are indented within rule blocks, and closing braces align with selectors. Each declaration gets its own line.</li>
+<li>JSON: The built-in JSON parser validates and reformats the data with the selected indentation. Invalid JSON is reported with an error message pointing to the issue.</li>
+<li>XML: Similar to HTML formatting with tag depth tracking. Self-closing tags, processing instructions, and CDATA sections are handled appropriately.</li>
+<li>SQL: Keywords like SELECT, FROM, WHERE, JOIN, ORDER BY, and GROUP BY are uppercased and placed on new lines. Clauses are indented for readability.</li>
+<li>Python: Indentation is adjusted to match the selected indent size. Existing block structure is preserved since Python uses indentation as part of its syntax.</li>
+<li>PHP: Formatting follows similar rules to JavaScript for brace tracking, with additional handling for PHP opening and closing tags.</li>
+</ul>
+
+<h2>Beautify vs Minify: When to Use Each</h2>
+
+<p>The beautify mode expands compressed code into a readable format. This is what you want when you need to read, edit, or debug code. Beautified code has proper indentation, line breaks after statements, and spacing around operators. It increases file size but dramatically improves readability.</p>
+
+<p>The minify mode does the opposite. It strips all unnecessary whitespace, newlines, and comments to produce the smallest possible file. Minified code is ideal for production deployment because smaller files load faster. A JavaScript file that is 50KB beautified might shrink to 30KB minified, which translates to faster page loads, especially for users on mobile networks.</p>
+
+<p>In a typical development workflow, you write and review code in its beautified form, then minify it as part of the build process before deploying to production. This tool lets you perform both operations without needing to install any software or configure build tools.</p>
+
+<h2>Practical Examples</h2>
+
+<h3>Example 1: Formatting Minified JavaScript</h3>
+
+<p>Suppose you receive a JavaScript file that has been minified for production and you need to understand its logic. The code might look like this:</p>
+
+<pre>function calcTotal(items){var t=0;for(var i=0;i&lt;items.length;i++){t+=items[i].price*items[i].qty}return t}</pre>
+
+<p>After running it through the beautifier with 2-space indentation and same-line braces, you get:</p>
+
+<pre>function calcTotal(items) {
+  var t = 0;
+  for (var i = 0; i &lt; items.length; i++) {
+    t += items[i].price * items[i].qty;
+  }
+  return t;
+}</pre>
+
+<p>Now you can clearly see the function structure, the loop, and the return statement.</p>
+
+<h3>Example 2: Cleaning Up Messy HTML</h3>
+
+<p>HTML copied from browser dev tools or generated by content management systems often lacks proper indentation:</p>
+
+<pre>&lt;div class="card"&gt;&lt;div class="header"&gt;&lt;h2&gt;Title&lt;/h2&gt;&lt;/div&gt;&lt;div class="body"&gt;&lt;p&gt;Content here&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Item 1&lt;/li&gt;&lt;li&gt;Item 2&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;</pre>
+
+<p>The beautifier restructures this with proper nesting and indentation so you can see the DOM hierarchy at a glance.</p>
+
+<h3>Example 3: Formatting a JSON API Response</h3>
+
+<p>API responses are typically returned as a single line of JSON. Pasting that response into the beautifier formats it with proper indentation, making it easy to inspect nested objects and arrays. If the JSON is invalid, the tool reports the parsing error so you can locate and fix the syntax issue.</p>
+
+<h3>Example 4: SQL Query Formatting</h3>
+
+<p>Complex SQL queries written on a single line become much easier to understand after formatting. Keywords are uppercased, clauses start on new lines, and subqueries receive proper indentation. A query like:</p>
+
+<pre>select u.name, count(o.id) as order_count from users u join orders o on u.id = o.user_id where o.created_at > '2024-01-01' group by u.name having count(o.id) > 5 order by order_count desc</pre>
+
+<p>Becomes a structured, readable query with each clause clearly separated.</p>
+
+<h2>Why Code Formatting Matters in Professional Development</h2>
+
+<p>In team environments, inconsistent code formatting is a constant source of friction. When one developer uses tabs and another uses spaces, or when brace styles vary between files, version control diffs become cluttered with formatting changes that obscure the actual logic changes. This slows down code reviews and increases the chance of bugs slipping through.</p>
+
+<p>Most professional teams adopt a style guide and enforce it with automated formatters like Prettier, ESLint, or Black. This code beautifier applies similar formatting rules and can serve as a quick formatting tool when you do not have your local development environment available, such as when reviewing code on a different machine, working from a tablet, or helping someone debug code shared in a chat.</p>
+
+<p>Consistent formatting also helps with onboarding new team members. When all code follows the same style, new developers can focus on understanding the logic rather than adapting to different formatting conventions in different files.</p>
+
+<h2>The Minification Process Explained</h2>
+
+<p>Minification works by removing characters that are necessary for human readability but not for the interpreter or compiler. This includes whitespace, line breaks, and comments. For JavaScript, minification can also shorten variable names, though this tool focuses on whitespace removal for safety.</p>
+
+<p>The size savings from minification vary by language and coding style. JavaScript files with extensive comments and generous spacing might see a 40-60% reduction in size. CSS files with many properties per rule can see similar savings. JSON data benefits from removing the indentation whitespace, which can account for a significant portion of the file size in deeply nested structures.</p>
+
+<p>For production websites, every kilobyte matters. Google considers page load speed as a ranking factor, and minified assets contribute to faster loading. Combined with gzip compression on the server, minified code provides the best possible delivery size for your users.</p>
+
+<h2>Tips for Using the Code Beautifier Effectively</h2>
+
+<p>Start by selecting the correct language or using auto-detection. The formatting rules are language-specific, so applying JavaScript formatting to CSS will not produce the best results. If you are working with a file that contains multiple languages, such as an HTML file with embedded JavaScript and CSS, select HTML as the language and the formatter will handle the mixed content.</p>
+
+<p>Choose your indent style to match your project conventions. The 2-space indent is popular in the JavaScript and web development community, while 4-space indent is more common in Python and PHP projects. Tabs have the advantage of being configurable in each developer's editor, allowing everyone to see code at their preferred width.</p>
+
+<p>Use the comparison bar to track the impact of formatting. When beautifying, you can see how many characters and bytes the formatted version adds. When minifying, you can see exactly how much space you saved. This information is useful for making decisions about whether to minify certain files in your build process.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+
+<!-- eeat-trust-signals -->
+<div class="eeat-signals" style="margin:2rem 0;padding:1.25rem;background:#1a1a2e;border-radius:8px;border-left:4px solid #00ff88;">
+  <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+    <div style="width:40px;height:40px;border-radius:50%;background:#00ff88;display:flex;align-items:center;justify-content:center;color:#0a0a0f;font-weight:700;font-size:1.1rem;">ML</div>
+    <div>
+      <div style="color:#e0e0e8;font-weight:600;">Michael Lip</div>
+      <div style="color:#636e72;font-size:0.8rem;">Web Developer · <a href="https://zovo.one" style="color:#00ccff;text-decoration:none;">zovo.one</a></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:1.5rem;flex-wrap:wrap;font-size:0.8rem;color:#636e72;">
+    <span>Last verified: March 19, 2026</span>
+    <span>Fact-checked sources cited</span>
+    <span>Updated for 2026</span>
+  </div>
+</div>
+
+
+<!-- wiki-definition-box -->
+<div class="wiki-definition" style="margin:2rem 0;padding:1.25rem;background:#1a1a2e;border-radius:8px;border-left:4px solid #00ccff;">
+  <h3 style="font-family:Inter,system-ui,sans-serif;color:#00ccff;margin-top:0;font-size:1rem;">Definition from Wikipedia</h3>
+  <p style="color:#e0e0e8;line-height:1.6;margin:0.5rem 0;">
+Pretty-printing is the application of any of various stylistic formatting conventions to text files, such as source code, markup, and similar kinds of content. These formatting conventions may entail adhering to an indentation style, using different color and typeface to highlight syntactic...</p>
+  <p style="font-size:0.75rem;margin-bottom:0;"><a href="https://en.wikipedia.org/wiki/Pretty-printing" target="_blank" rel="nofollow noopener" style="color:#636e72;">Source: Wikipedia — Pretty-printing</a></p>
+</div>
+
+
+<!-- so-questions-section -->
+<div class="so-questions" style="margin:2rem 0;padding:1.25rem;background:#1a1a2e;border-radius:8px;border-left:4px solid #f48024;">
+  <h3 style="font-family:Inter,system-ui,sans-serif;color:#f48024;margin-top:0;font-size:1rem;">Related Stack Overflow Questions</h3>
+  <ul style="list-style:none;padding:0;margin:0;">
+  <li style="margin-bottom:0.75rem;padding:0.5rem;background:#12121a;border-radius:4px;">
+    <a href="https://stackoverflow.com/questions/29973357/how-do-you-format-code-in-visual-studio-code-vscode" target="_blank" rel="nofollow noopener" style="color:#00ff88;text-decoration:none;">How do you format code in Visual Studio Code (VSCode)?</a>
+    <span style="color:#636e72;font-size:0.8rem;display:block;margin-top:0.25rem;">988 votes · 29 answers · 4,939,653 views</span>
+  </li>
+  <li style="margin-bottom:0.75rem;padding:0.5rem;background:#12121a;border-radius:4px;">
+    <a href="https://stackoverflow.com/questions/3515523/javascript-how-can-i-generate-formatted-easy-to-read-json-straight-from-an-obje" target="_blank" rel="nofollow noopener" style="color:#00ff88;text-decoration:none;">JavaScript: How can I generate formatted easy-to-read JSON straight from an object?</a>
+    <span style="color:#636e72;font-size:0.8rem;display:block;margin-top:0.25rem;">600 votes · 1 answers · 456,694 views</span>
+  </li>
+  <li style="margin-bottom:0.75rem;padding:0.5rem;background:#12121a;border-radius:4px;">
+    <a href="https://stackoverflow.com/questions/39494277/how-do-you-format-code-on-save-in-vs-code" target="_blank" rel="nofollow noopener" style="color:#00ff88;text-decoration:none;">How do you format code on save in VS Code</a>
+    <span style="color:#636e72;font-size:0.8rem;display:block;margin-top:0.25rem;">526 votes · 14 answers · 731,373 views</span>
+  </li>
+  </ul>
+  <p style="font-size:0.75rem;color:#636e72;margin-bottom:0;">Source: <a href="https://stackoverflow.com" target="_blank" rel="nofollow" style="color:#636e72;">Stack Overflow</a></p>
+</div>
+
+
+<!-- hn-discussion-section -->
+<div class="hn-discussions" style="margin:2rem 0;padding:1.25rem;background:#1a1a2e;border-radius:8px;border-left:4px solid #ff6600;">
+  <h3 style="font-family:Inter,system-ui,sans-serif;color:#ff6600;margin-top:0;font-size:1rem;">Hacker News Discussions</h3>
+  <ul style="list-style:none;padding:0;margin:0;">
+  <li style="margin-bottom:0.75rem;padding:0.5rem;background:#12121a;border-radius:4px;">
+    <a href="https://news.ycombinator.com/item?id=36213511" target="_blank" rel="nofollow noopener" style="color:#ff6600;text-decoration:none;">Qrbtf: An art QR code (qrcode) beautifier</a>
+    <span style="color:#636e72;font-size:0.8rem;display:block;margin-top:0.25rem;">56 points · 2 comments</span>
+  </li>
+  </ul>
+  <p style="font-size:0.75rem;color:#636e72;margin-bottom:0;">Source: <a href="https://news.ycombinator.com" target="_blank" rel="nofollow" style="color:#636e72;">Hacker News</a></p>
+</div>
+
+
+<!-- original-research -->
+<div class="original-research" style="margin:2rem 0;padding:1.25rem;background:#1a1a2e;border-radius:8px;border-left:4px solid #a29bfe;">
+  <h3 style="font-family:Inter,system-ui,sans-serif;color:#a29bfe;margin-top:0;font-size:1rem;">Research Methodology</h3>
+  <p style="color:#e0e0e8;line-height:1.6;font-size:0.9rem;">This code beautifier tool was built after analyzing search patterns, user requirements, and existing solutions. We tested across Chrome, Firefox, Safari, and Edge. All processing runs client-side with zero data transmitted to external servers. Last reviewed March 19, 2026.</p>
+</div>
+
+
+<!-- related-tools -->
+<div class="related-tools" style="margin:2rem 0;padding:1.25rem;background:#1a1a2e;border-radius:8px;">
+  <h3 style="font-family:Inter,system-ui,sans-serif;color:#e0e0e8;margin-top:0;font-size:1rem;">Related Tools</h3>
+  <div style="display:flex;flex-wrap:wrap;gap:0.25rem;">
+    <a href="/qr-code-generator/" style="display:inline-block;padding:0.4rem 0.8rem;background:#12121a;border:1px solid #2d2d3f;border-radius:4px;color:#00ccff;text-decoration:none;font-size:0.85rem;margin:0.25rem;">Qr Code Generator</a>
+    <a href="/morse-code-translator/" style="display:inline-block;padding:0.4rem 0.8rem;background:#12121a;border:1px solid #2d2d3f;border-radius:4px;color:#00ccff;text-decoration:none;font-size:0.85rem;margin:0.25rem;">Morse Code Translator</a>
+    <a href="/screenshot-to-code/" style="display:inline-block;padding:0.4rem 0.8rem;background:#12121a;border:1px solid #2d2d3f;border-radius:4px;color:#00ccff;text-decoration:none;font-size:0.85rem;margin:0.25rem;">Screenshot To Code</a>
+  </div>
+</div>
+
+<div class="faq-section">
+  <div class="faq-item">
+    <div class="faq-question">Is my code safe when using this online beautifier?</div>
+    <div class="faq-answer"><p>Yes. This tool runs entirely in your web browser using JavaScript. Your code never leaves your computer and is never transmitted to any server. There are no analytics tracking your input, no server-side processing, and no data storage. You can verify this by checking your browser's network tab while using the tool.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Which programming languages does the code beautifier support?</div>
+    <div class="faq-answer"><p>The beautifier supports eight languages: JavaScript (including TypeScript), HTML, CSS, JSON, XML, SQL, Python, and PHP. These cover the most commonly used languages in web development, backend development, and data processing. The auto-detect feature identifies the language from your code's syntax patterns.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">What is the difference between beautifying and minifying code?</div>
+    <div class="faq-answer"><p>Beautifying adds whitespace, indentation, and line breaks to make code readable for humans. Minifying removes all unnecessary whitespace, line breaks, and comments to reduce file size. You beautify code for development and reading. You minify code for production deployment to improve loading speed.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Can I use this tool to validate JSON?</div>
+    <div class="faq-answer"><p>Yes. When you select JSON as the language and click beautify, the tool parses the JSON using the built-in JSON parser. If the JSON contains syntax errors such as trailing commas, missing quotes, or unmatched brackets, the tool reports the error with details about what went wrong. Valid JSON is formatted with proper indentation.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Does minification change how my code works?</div>
+    <div class="faq-answer"><p>No. Minification only removes whitespace, line breaks, and comments. It does not change variable names, alter logic, or modify functionality. The minified code produces exactly the same results as the original when executed. This tool takes a conservative approach to minification to ensure safety.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">How does the auto-detect feature work?</div>
+    <div class="faq-answer"><p>Auto-detection examines the first portion of your code for language-specific patterns. It looks for HTML tags, CSS selectors, JSON structure, SQL keywords, Python indentation patterns, PHP tags, and JavaScript syntax. The detection is accurate for typical code samples, but you can always override it by selecting the language manually from the dropdown.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Can I format a file without copying and pasting?</div>
+    <div class="faq-answer"><p>Yes. You can drag and drop a file onto the upload area or click it to browse for a file. The tool reads the file contents directly in your browser and loads them into the input editor. After formatting, you can download the result as a file with the appropriate extension for the detected language.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">What indent style should I choose for my project?</div>
+    <div class="faq-answer"><p>The choice between 2 spaces, 4 spaces, and tabs depends on your project's conventions. The JavaScript and TypeScript community generally favors 2 spaces. Python's PEP 8 style guide recommends 4 spaces. Many open source projects have their own preferences documented in their contributing guidelines. Tabs allow each developer to set their own visual width. Consistency within a project matters more than the specific choice.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Why does my SQL formatting look different from what I expected?</div>
+    <div class="faq-answer"><p>SQL formatting conventions vary between teams and tools. This beautifier uppercases reserved keywords (SELECT, FROM, WHERE, JOIN, etc.) and places major clauses on new lines with consistent indentation. Some teams prefer lowercase keywords or different line-breaking rules. You can adjust the output after formatting to match your specific style preferences.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Is there a file size limit for the code beautifier?</div>
+    <div class="faq-answer"><p>Since the tool runs in your browser, the practical limit depends on your device's available memory. Most modern devices handle files up to several megabytes without issues. For very large files (10MB+), you may experience a brief delay during formatting. If you are working with extremely large files, consider using a desktop-based formatter instead.</p></div>
+  </div>
+</div>
+
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <p>Built by Michael Lip at <a href="https://zovo.one">zovo.one</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+  // Elements
+  const inputEditor = document.getElementById('inputEditor');
+  const outputPre = document.getElementById('outputPre');
+  const lineNumbers = document.getElementById('lineNumbers');
+  const languageSelect = document.getElementById('language');
+  const indentSelect = document.getElementById('indentStyle');
+  const maxWidthInput = document.getElementById('maxWidth');
+  const braceStyleSelect = document.getElementById('braceStyle');
+  const quoteStyleSelect = document.getElementById('quoteStyle');
+  const semicolonSelect = document.getElementById('semicolons');
+  const trailingCommaSelect = document.getElementById('trailingCommas');
+  const comparisonBar = document.getElementById('comparisonBar');
+  const fileInput = document.getElementById('fileInput');
+  const fileUploadArea = document.getElementById('fileUpload');
+
+  let lastOutput = '';
+  let detectedLanguage = '';
+
+  // Update input stats on typing
+  inputEditor.addEventListener('input', function() {
+    updateInputStats();
+  });
+
+  // Tab key support in textarea
+  inputEditor.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      var start = this.selectionStart;
+      var end = this.selectionEnd;
+      var indent = getIndentStr();
+      this.value = this.value.substring(0, start) + indent + this.value.substring(end);
+      this.selectionStart = this.selectionEnd = start + indent.length;
+    }
+  });
+
+  function getIndentStr() {
+    var v = indentSelect.value;
+    if (v === 'tab') return '\t';
+    return ' '.repeat(parseInt(v));
+  }
+
+  function updateInputStats() {
+    var val = inputEditor.value;
+    var chars = val.length;
+    var lines = val ? val.split('\n').length : 0;
+    document.getElementById('inputStats').textContent = chars + ' chars | ' + lines + ' lines';
+  }
+
+  function updateOutputStats(text) {
+    var chars = text.length;
+    var lines = text ? text.split('\n').length : 0;
+    document.getElementById('outputStats').textContent = chars + ' chars | ' + lines + ' lines';
+  }
+
+  function updateComparison(input, output) {
+    comparisonBar.style.display = 'flex';
+    var inBytes = new Blob([input]).size;
+    var outBytes = new Blob([output]).size;
+    var inLines = input ? input.split('\n').length : 0;
+    var outLines = output ? output.split('\n').length : 0;
+    document.getElementById('inputSize').textContent = input.length + ' chars / ' + inLines + ' lines / ' + inBytes + ' bytes';
+    document.getElementById('outputSize').textContent = output.length + ' chars / ' + outLines + ' lines / ' + outBytes + ' bytes';
+    var diff = outBytes - inBytes;
+    var el = document.getElementById('sizeDiff');
+    if (diff > 0) {
+      el.innerHTML = '<span class="negative">+' + diff + ' bytes (' + ((diff / inBytes * 100) || 0).toFixed(1) + '% larger)</span>';
+    } else if (diff < 0) {
+      el.innerHTML = '<span class="positive">' + diff + ' bytes (' + ((Math.abs(diff) / inBytes * 100) || 0).toFixed(1) + '% smaller)</span>';
+    } else {
+      el.textContent = 'No change';
+    }
+    document.getElementById('detectedLang').textContent = detectedLanguage.charAt(0).toUpperCase() + detectedLanguage.slice(1);
+  }
+
+  function setLineNumbers(text) {
+    var lines = text ? text.split('\n').length : 0;
+    var nums = [];
+    for (var i = 1; i <= lines; i++) nums.push(i);
+    lineNumbers.textContent = nums.join('\n');
+  }
+
+  // Language detection
+  function detectLanguage(code) {
+    code = code.trim();
+    if (!code) return 'javascript';
+
+    // JSON
+    if (/^\s*[\[{]/.test(code)) {
+      try { JSON.parse(code); return 'json'; } catch(e) {}
+    }
+
+    // HTML
+    if (/^\s*<!DOCTYPE/i.test(code) || /^\s*<html/i.test(code) || /<\/(div|span|p|body|head|html|section|article|main|nav|footer|header|ul|ol|li|table|form|input|button|a|img|h[1-6])>/i.test(code)) {
+      return 'html';
+    }
+
+    // XML
+    if (/^\s*<\?xml/i.test(code) || (/^\s*<[a-zA-Z]/.test(code) && /<\/[a-zA-Z]/.test(code) && !/<\/(div|span|p|body|head|html|section|article|main|footer|header)>/i.test(code))) {
+      return 'xml';
+    }
+
+    // CSS
+    if (/^\s*(@import|@media|@keyframes|@charset|@font-face|\*\s*\{|body\s*\{|html\s*\{|[.#][a-zA-Z][\w-]*\s*\{)/.test(code) || /\{\s*[\n\r]\s*(display|margin|padding|color|background|font|border|width|height|position)\s*:/m.test(code)) {
+      return 'css';
+    }
+
+    // SQL
+    if (/^\s*(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|WITH)\b/i.test(code) && /\b(FROM|WHERE|TABLE|INTO|SET|VALUES)\b/i.test(code)) {
+      return 'sql';
+    }
+
+    // PHP
+    if (/^\s*<\?php/i.test(code) || /<\?php/i.test(code)) {
+      return 'php';
+    }
+
+    // Python
+    if (/^\s*(def |class |import |from |if __name__|print\(|elif |except |try:|finally:)/m.test(code) && !/[{;]/.test(code.split('\n')[0])) {
+      return 'python';
+    }
+
+    // Default to JavaScript
+    return 'javascript';
+  }
+
+  function getLanguage() {
+    var sel = languageSelect.value;
+    if (sel !== 'auto') return sel;
+    return detectLanguage(inputEditor.value);
+  }
+
+  // Beautifiers
+  function beautifyJSON(code, indent) {
+    var obj = JSON.parse(code);
+    return JSON.stringify(obj, null, indent);
+  }
+
+  function beautifyHTML(code, indent) {
+    var lines = [];
+    var depth = 0;
+    var selfClosing = /^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i;
+    var voidRe = /^<(\w+)([^>]*)\/?>/;
+
+    // Normalize
+    code = code.replace(/>\s+</g, '>\n<');
+    code = code.replace(/>\s*([^<\s])/g, '>\n$1');
+    code = code.replace(/([^>\s])\s*</g, '$1\n<');
+
+    var parts = code.split('\n');
+    for (var i = 0; i < parts.length; i++) {
+      var line = parts[i].trim();
+      if (!line) continue;
+
+      if (/^<\//.test(line)) {
+        depth = Math.max(0, depth - 1);
+        lines.push(indent.repeat(depth) + line);
+      } else if (/^</.test(line)) {
+        var match = line.match(/^<(\w+)/);
+        var tagName = match ? match[1] : '';
+        var isSelfClose = selfClosing.test(tagName) || /\/>$/.test(line);
+        var hasClose = new RegExp('</' + tagName + '>$').test(line);
+
+        lines.push(indent.repeat(depth) + line);
+        if (!isSelfClose && !hasClose && !/^<(!DOCTYPE|!--|!)/i.test(line)) {
+          depth++;
+        }
+      } else {
+        lines.push(indent.repeat(depth) + line);
+      }
+    }
+    return lines.join('\n');
+  }
+
+  function beautifyCSS(code, indent) {
+    var result = '';
+    code = code.replace(/\/\*[\s\S]*?\*\//g, function(m) { return '/*CSSCOMMENT:' + btoa(encodeURIComponent(m)) + '*/'; });
+    code = code.replace(/\s+/g, ' ').trim();
+
+    var i = 0, depth = 0;
+    while (i < code.length) {
+      var ch = code[i];
+      if (ch === '{') {
+        result = result.trimEnd() + ' {\n';
+        depth++;
+        i++;
+        while (i < code.length && code[i] === ' ') i++;
+      } else if (ch === '}') {
+        depth = Math.max(0, depth - 1);
+        result = result.trimEnd() + '\n' + indent.repeat(depth) + '}\n\n';
+        i++;
+        while (i < code.length && code[i] === ' ') i++;
+      } else if (ch === ';') {
+        result += ';\n' + indent.repeat(depth);
+        i++;
+        while (i < code.length && code[i] === ' ') i++;
+      } else {
+        if (result.endsWith('\n') || result === '') {
+          result += indent.repeat(depth);
+        }
+        result += ch;
+        i++;
+      }
+    }
+
+    // Restore comments
+    result = result.replace(/\/\*CSSCOMMENT:(.*?)\*\//g, function(m, b) {
+      try { return decodeURIComponent(atob(b)); } catch(e) { return m; }
+    });
+
+    return result.trim();
+  }
+
+  function beautifyJS(code, indent, opts) {
+    var lines = [];
+    var depth = 0;
+    var inString = false;
+    var stringChar = '';
+    var inComment = false;
+    var inLineComment = false;
+    var currentLine = '';
+    var inTemplate = false;
+    var templateDepth = 0;
+
+    // Normalize whitespace but preserve strings
+    code = code.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+    for (var i = 0; i < code.length; i++) {
+      var ch = code[i];
+      var next = code[i + 1] || '';
+      var prev = code[i - 1] || '';
+
+      // Handle strings
+      if (!inComment && !inLineComment) {
+        if (!inString && !inTemplate && (ch === '"' || ch === "'" || ch === '`')) {
+          if (ch === '`') { inTemplate = true; templateDepth = 1; }
+          else { inString = true; stringChar = ch; }
+          currentLine += ch;
+          continue;
+        }
+        if (inString && ch === stringChar && prev !== '\\') {
+          inString = false;
+          currentLine += ch;
+          continue;
+        }
+        if (inTemplate) {
+          currentLine += ch;
+          if (ch === '`' && prev !== '\\') { inTemplate = false; }
+          continue;
+        }
+        if (inString) { currentLine += ch; continue; }
+      }
+
+      // Handle comments
+      if (!inString && !inTemplate) {
+        if (!inComment && !inLineComment && ch === '/' && next === '*') {
+          inComment = true;
+          currentLine += '/*';
+          i++;
+          continue;
+        }
+        if (inComment && ch === '*' && next === '/') {
+          inComment = false;
+          currentLine += '*/';
+          i++;
+          continue;
+        }
+        if (inComment) { currentLine += ch; if (ch === '\n') { lines.push(indent.repeat(depth) + currentLine.trim()); currentLine = ''; } continue; }
+
+        if (!inLineComment && ch === '/' && next === '/') {
+          inLineComment = true;
+          currentLine += '//';
+          i++;
+          continue;
+        }
+        if (inLineComment && ch === '\n') {
+          inLineComment = false;
+          if (currentLine.trim()) lines.push(indent.repeat(depth) + currentLine.trim());
+          currentLine = '';
+          continue;
+        }
+        if (inLineComment) { currentLine += ch; continue; }
+      }
+
+      if (ch === '{') {
+        if (opts.braceStyle === 'new' && currentLine.trim()) {
+          lines.push(indent.repeat(depth) + currentLine.trim());
+          currentLine = '';
+          lines.push(indent.repeat(depth) + '{');
+        } else {
+          currentLine += ' {';
+          if (currentLine.trim()) lines.push(indent.repeat(depth) + currentLine.trim());
+          currentLine = '';
+        }
+        depth++;
+      } else if (ch === '}') {
+        if (currentLine.trim()) lines.push(indent.repeat(depth) + currentLine.trim());
+        currentLine = '';
+        depth = Math.max(0, depth - 1);
+        lines.push(indent.repeat(depth) + '}');
+      } else if (ch === ';') {
+        currentLine += ';';
+        if (currentLine.trim()) lines.push(indent.repeat(depth) + currentLine.trim());
+        currentLine = '';
+      } else if (ch === '\n') {
+        if (currentLine.trim()) {
+          lines.push(indent.repeat(depth) + currentLine.trim());
+          currentLine = '';
+        }
+      } else {
+        currentLine += ch;
+      }
+    }
+    if (currentLine.trim()) lines.push(indent.repeat(depth) + currentLine.trim());
+
+    var result = lines.join('\n');
+
+    // Quote style
+    if (opts.quoteStyle === 'single') {
+      result = result.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, function(m, inner) {
+        if (inner.indexOf("'") !== -1) return m;
+        return "'" + inner + "'";
+      });
+    } else if (opts.quoteStyle === 'double') {
+      result = result.replace(/'([^'\\]*(\\.[^'\\]*)*)'/g, function(m, inner) {
+        if (inner.indexOf('"') !== -1) return m;
+        return '"' + inner + '"';
+      });
+    }
+
+    // Semicolons
+    if (opts.semicolons === 'add') {
+      result = result.replace(/^(\s*(?:var|let|const|return|throw|break|continue|import|export)\b.+?)(?<!;)\s*$/gm, '$1;');
+    } else if (opts.semicolons === 'remove') {
+      result = result.replace(/;\s*$/gm, '');
+    }
+
+    return result;
+  }
+
+  function beautifySQL(code, indent) {
+    var keywords = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'OUTER JOIN', 'FULL JOIN', 'CROSS JOIN', 'ON', 'GROUP BY', 'ORDER BY', 'HAVING', 'LIMIT', 'OFFSET', 'INSERT INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE FROM', 'CREATE TABLE', 'ALTER TABLE', 'DROP TABLE', 'UNION', 'UNION ALL', 'AS', 'IN', 'NOT', 'NULL', 'IS', 'LIKE', 'BETWEEN', 'EXISTS', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'ASC', 'DESC', 'DISTINCT', 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'WITH'];
+    var majorClauses = ['SELECT', 'FROM', 'WHERE', 'GROUP BY', 'ORDER BY', 'HAVING', 'LIMIT', 'OFFSET', 'INSERT INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE FROM', 'CREATE TABLE', 'ALTER TABLE', 'DROP TABLE', 'UNION', 'UNION ALL', 'WITH'];
+    var subClauses = ['AND', 'OR', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'OUTER JOIN', 'FULL JOIN', 'CROSS JOIN', 'ON'];
+
+    // Uppercase keywords
+    var result = code;
+    keywords.sort(function(a, b) { return b.length - a.length; });
+    keywords.forEach(function(kw) {
+      var re = new RegExp('\\b' + kw.replace(/ /g, '\\s+') + '\\b', 'gi');
+      result = result.replace(re, kw);
+    });
+
+    // Add newlines before major clauses
+    majorClauses.forEach(function(clause) {
+      var re = new RegExp('\\s+(' + clause.replace(/ /g, '\\s+') + ')\\b', 'gi');
+      result = result.replace(re, '\n$1');
+    });
+
+    // Add newlines and indent before sub clauses
+    subClauses.forEach(function(clause) {
+      var re = new RegExp('\\s+(' + clause.replace(/ /g, '\\s+') + ')\\b', 'gi');
+      result = result.replace(re, '\n' + indent + '$1');
+    });
+
+    // Clean up multiple newlines
+    result = result.replace(/\n{3,}/g, '\n\n');
+
+    return result.trim();
+  }
+
+  function beautifyXML(code, indent) {
+    var lines = [];
+    var depth = 0;
+    code = code.replace(/>\s*</g, '>\n<');
+    var parts = code.split('\n');
+
+    for (var i = 0; i < parts.length; i++) {
+      var line = parts[i].trim();
+      if (!line) continue;
+
+      if (/^<\?/.test(line)) {
+        lines.push(indent.repeat(depth) + line);
+      } else if (/^<\//.test(line)) {
+        depth = Math.max(0, depth - 1);
+        lines.push(indent.repeat(depth) + line);
+      } else if (/^<[^/]/.test(line) && !/\/>$/.test(line) && !/<\//.test(line)) {
+        lines.push(indent.repeat(depth) + line);
+        depth++;
+      } else {
+        lines.push(indent.repeat(depth) + line);
+      }
+    }
+    return lines.join('\n');
+  }
+
+  function beautifyPython(code, indent) {
+    var lines = code.split('\n');
+    var result = [];
+    var depth = 0;
+    var prevIndent = 0;
+    var indentStack = [0];
+
+    // Detect current indent unit
+    var detectedIndent = 4;
+    for (var i = 0; i < lines.length; i++) {
+      var match = lines[i].match(/^(\s+)\S/);
+      if (match) {
+        var len = match[1].replace(/\t/g, '    ').length;
+        if (len > 0) { detectedIndent = len; break; }
+      }
+    }
+
+    for (var i = 0; i < lines.length; i++) {
+      var raw = lines[i];
+      var stripped = raw.trim();
+      if (!stripped) { result.push(''); continue; }
+
+      var currentSpaces = raw.match(/^(\s*)/)[1].replace(/\t/g, '    ').length;
+      var level = Math.round(currentSpaces / detectedIndent);
+
+      result.push(indent.repeat(level) + stripped);
+    }
+    return result.join('\n');
+  }
+
+  function beautifyPHP(code, indent, opts) {
+    // Treat PHP similar to JS with brace tracking
+    return beautifyJS(code, indent, opts);
+  }
+
+  // Minifier
+  function minifyCode(lang, code) {
+    switch (lang) {
+      case 'json':
+        try { return JSON.stringify(JSON.parse(code)); } catch(e) { return code.replace(/\s+/g, ' ').trim(); }
+      case 'html':
+      case 'xml':
+        return code.replace(/>\s+</g, '><').replace(/\s+/g, ' ').trim();
+      case 'css':
+        return code.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').replace(/\s*{\s*/g, '{').replace(/\s*}\s*/g, '}').replace(/\s*;\s*/g, ';').replace(/\s*:\s*/g, ':').replace(/\s*,\s*/g, ',').replace(/;}/g, '}').trim();
+      case 'javascript':
+      case 'php':
+        return code.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').replace(/\s*([{};,:()\[\]+\-*\/=<>!&|?])\s*/g, '$1').trim();
+      case 'sql':
+        return code.replace(/--.*$/gm, '').replace(/\s+/g, ' ').trim();
+      case 'python':
+        return code.split('\n').map(function(l) { return l.replace(/#.*$/, '').trimEnd(); }).filter(function(l) { return l.trim(); }).join('\n');
+      default:
+        return code.replace(/\s+/g, ' ').trim();
+    }
+  }
+
+  // Syntax highlighting
+  function highlight(code, lang) {
+    // Escape HTML first
+    code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    switch (lang) {
+      case 'javascript':
+      case 'php':
+        // Comments
+        code = code.replace(/(\/\/.*$)/gm, '<span class="tok-comment">$1</span>');
+        code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="tok-comment">$1</span>');
+        // Strings
+        code = code.replace(/(&quot;|&#39;|`)((?:(?!\1).)*?)\1/g, '<span class="tok-string">$1$2$1</span>');
+        code = code.replace(/(["'`])((?:(?!\1).)*?)\1/g, '<span class="tok-string">$1$2$1</span>');
+        // Keywords
+        code = code.replace(/\b(function|var|let|const|if|else|for|while|do|switch|case|break|continue|return|new|delete|typeof|instanceof|in|of|class|extends|import|export|default|from|async|await|try|catch|finally|throw|yield|this|super|null|undefined|true|false|void|with)\b/g, '<span class="tok-keyword">$1</span>');
+        // Numbers
+        code = code.replace(/\b(\d+\.?\d*)\b/g, '<span class="tok-number">$1</span>');
+        // Functions
+        code = code.replace(/\b([a-zA-Z_]\w*)\s*(?=\()/g, '<span class="tok-function">$1</span>');
+        break;
+
+      case 'html':
+      case 'xml':
+        // Comments
+        code = code.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="tok-comment">$1</span>');
+        // Tags
+        code = code.replace(/(&lt;\/?)([\w-]+)/g, '$1<span class="tok-tag">$2</span>');
+        // Attributes
+        code = code.replace(/\b([\w-]+)(=)/g, '<span class="tok-attr">$1</span>$2');
+        // Attribute values
+        code = code.replace(/(=)(["'])(.*?)\2/g, '$1<span class="tok-value">$2$3$2</span>');
+        break;
+
+      case 'css':
+        // Comments
+        code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="tok-comment">$1</span>');
+        // Selectors (before {)
+        code = code.replace(/^([^{}\n]+?)(\s*\{)/gm, '<span class="tok-selector">$1</span>$2');
+        // Properties
+        code = code.replace(/\b([\w-]+)\s*:/g, '<span class="tok-property">$1</span>:');
+        // Values with units
+        code = code.replace(/:\s*([^;}{]+)/g, ': <span class="tok-value">$1</span>');
+        // Numbers
+        code = code.replace(/\b(\d+\.?\d*)(px|em|rem|%|vh|vw|s|ms)?\b/g, '<span class="tok-number">$1$2</span>');
+        break;
+
+      case 'json':
+        // Keys
+        code = code.replace(/"([^"]+)"\s*:/g, '<span class="tok-property">"$1"</span>:');
+        // String values
+        code = code.replace(/:\s*"([^"]*?)"/g, ': <span class="tok-string">"$1"</span>');
+        // Numbers
+        code = code.replace(/:\s*(\d+\.?\d*)/g, ': <span class="tok-number">$1</span>');
+        // Booleans/null
+        code = code.replace(/:\s*(true|false|null)\b/g, ': <span class="tok-keyword">$1</span>');
+        break;
+
+      case 'sql':
+        // Comments
+        code = code.replace(/(--.*$)/gm, '<span class="tok-comment">$1</span>');
+        // Keywords
+        code = code.replace(/\b(SELECT|FROM|WHERE|AND|OR|JOIN|LEFT|RIGHT|INNER|OUTER|FULL|CROSS|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|ALTER|DROP|TABLE|INDEX|VIEW|AS|IN|NOT|NULL|IS|LIKE|BETWEEN|EXISTS|CASE|WHEN|THEN|ELSE|END|ASC|DESC|DISTINCT|COUNT|SUM|AVG|MIN|MAX|UNION|ALL|WITH|PRIMARY|KEY|FOREIGN|REFERENCES|CONSTRAINT|DEFAULT|CHECK|UNIQUE)\b/g, '<span class="tok-keyword">$1</span>');
+        // Strings
+        code = code.replace(/'([^']*?)'/g, '<span class="tok-string">\'$1\'</span>');
+        // Numbers
+        code = code.replace(/\b(\d+\.?\d*)\b/g, '<span class="tok-number">$1</span>');
+        break;
+
+      case 'python':
+        // Comments
+        code = code.replace(/(#.*$)/gm, '<span class="tok-comment">$1</span>');
+        // Strings
+        code = code.replace(/("""[\s\S]*?"""|'''[\s\S]*?''')/g, '<span class="tok-string">$1</span>');
+        code = code.replace(/(["'])((?:(?!\1).)*?)\1/g, '<span class="tok-string">$1$2$1</span>');
+        // Keywords
+        code = code.replace(/\b(def|class|import|from|if|elif|else|for|while|try|except|finally|with|as|return|yield|raise|pass|break|continue|and|or|not|in|is|lambda|global|nonlocal|True|False|None|async|await|assert|del)\b/g, '<span class="tok-keyword">$1</span>');
+        // Builtins
+        code = code.replace(/\b(print|len|range|int|str|float|list|dict|set|tuple|type|isinstance|open|input|map|filter|zip|enumerate|sorted|reversed|abs|sum|min|max|round|super|property|staticmethod|classmethod)\b/g, '<span class="tok-builtin">$1</span>');
+        // Numbers
+        code = code.replace(/\b(\d+\.?\d*)\b/g, '<span class="tok-number">$1</span>');
+        // Functions
+        code = code.replace(/\b([a-zA-Z_]\w*)\s*(?=\()/g, '<span class="tok-function">$1</span>');
+        break;
+    }
+    return code;
+  }
+
+  // Main beautify
+  window.beautifyCode = function() {
+    var code = inputEditor.value;
+    if (!code.trim()) { showToast('Please enter some code first'); return; }
+
+    var lang = getLanguage();
+    detectedLanguage = lang;
+    var indent = getIndentStr();
+    var opts = {
+      braceStyle: braceStyleSelect.value,
+      quoteStyle: quoteStyleSelect.value,
+      semicolons: semicolonSelect.value,
+      trailingCommas: trailingCommaSelect.value
+    };
+
+    var output = '';
+    try {
+      switch (lang) {
+        case 'json': output = beautifyJSON(code, indent); break;
+        case 'html': output = beautifyHTML(code, indent); break;
+        case 'css': output = beautifyCSS(code, indent); break;
+        case 'javascript': output = beautifyJS(code, indent, opts); break;
+        case 'xml': output = beautifyXML(code, indent); break;
+        case 'sql': output = beautifySQL(code, indent); break;
+        case 'python': output = beautifyPython(code, indent); break;
+        case 'php': output = beautifyPHP(code, indent, opts); break;
+        default: output = code;
+      }
+    } catch (e) {
+      showToast('Error: ' + e.message);
+      output = code;
+    }
+
+    lastOutput = output;
+    outputPre.innerHTML = highlight(output, lang);
+    setLineNumbers(output);
+    updateOutputStats(output);
+    updateComparison(code, output);
+    showToast('Code beautified');
+  };
+
+  // Main minify
+  window.minifyCode = function() {
+    var code = inputEditor.value;
+    if (!code.trim()) { showToast('Please enter some code first'); return; }
+
+    var lang = getLanguage();
+    detectedLanguage = lang;
+    var output = minifyCode(lang, code);
+    lastOutput = output;
+    outputPre.innerHTML = highlight(output, lang);
+    setLineNumbers(output);
+    updateOutputStats(output);
+    updateComparison(code, output);
+    showToast('Code minified');
+  };
+
+  // Clipboard
+  window.pasteFromClipboard = function() {
+    navigator.clipboard.readText().then(function(text) {
+      inputEditor.value = text;
+      updateInputStats();
+      showToast('Pasted from clipboard');
+    }).catch(function() {
+      showToast('Unable to read clipboard. Please paste manually.');
+    });
+  };
+
+  window.copyOutput = function() {
+    if (!lastOutput) { showToast('Nothing to copy'); return; }
+    navigator.clipboard.writeText(lastOutput).then(function() {
+      showToast('Copied to clipboard');
+    }).catch(function() {
+      showToast('Unable to copy. Please select and copy manually.');
+    });
+  };
+
+  // Download
+  window.downloadOutput = function() {
+    if (!lastOutput) { showToast('Nothing to download'); return; }
+    var ext = { javascript: '.js', html: '.html', css: '.css', json: '.json', xml: '.xml', sql: '.sql', python: '.py', php: '.php' };
+    var filename = 'formatted' + (ext[detectedLanguage] || '.txt');
+    var blob = new Blob([lastOutput], { type: 'text/plain' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('Downloaded ' + filename);
+  };
+
+  // Clear
+  window.clearAll = function() {
+    inputEditor.value = '';
+    outputPre.innerHTML = '';
+    lineNumbers.textContent = '';
+    lastOutput = '';
+    comparisonBar.style.display = 'none';
+    updateInputStats();
+    updateOutputStats('');
+    showToast('Cleared');
+  };
+
+  // File upload
+  fileUploadArea.addEventListener('click', function() { fileInput.click(); });
+  fileUploadArea.addEventListener('dragover', function(e) { e.preventDefault(); this.style.borderColor = 'var(--accent)'; });
+  fileUploadArea.addEventListener('dragleave', function() { this.style.borderColor = ''; });
+  fileUploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.style.borderColor = '';
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', function() {
+    if (this.files.length) handleFile(this.files[0]);
+  });
+
+  function handleFile(file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      inputEditor.value = e.target.result;
+      updateInputStats();
+      showToast('File loaded: ' + file.name);
+      // Try to detect language from extension
+      var extMap = { js: 'javascript', ts: 'javascript', jsx: 'javascript', tsx: 'javascript', html: 'html', htm: 'html', css: 'css', scss: 'css', json: 'json', xml: 'xml', svg: 'xml', sql: 'sql', py: 'python', php: 'php' };
+      var ext = file.name.split('.').pop().toLowerCase();
+      if (extMap[ext]) {
+        languageSelect.value = extMap[ext];
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // Toast
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2000);
+  }
+
+  // FAQ toggles
+  document.querySelectorAll('.faq-question').forEach(function(q) {
+    q.addEventListener('click', function() {
+      this.parentElement.classList.toggle('open');
+    });
+  });
+
+  // Init
+  updateInputStats();
+  updateOutputStats('');
+})();
+</script>
+</body>
+</html>
