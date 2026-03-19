@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV to JSON Converter - Convert CSV to JSON Online | Free Tool</title>
+<meta name="description" content="Convert CSV to JSON and JSON to CSV online. Supports TSV, custom delimiters, file upload, drag & drop, table preview, and download. Free, private, runs entirely in your browser.">
+<meta name="keywords" content="CSV to JSON, JSON to CSV, CSV converter, TSV converter, CSV parser, JSON converter, delimiter, online tool, free converter">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/csv-to-json">
+
+<meta property="og:title" content="CSV to JSON Converter - Convert CSV/TSV to JSON Online | Zovo Tools">
+<meta property="og:description" content="Bidirectional CSV/JSON conversion with custom delimiters, file upload, table preview, and download. Free and private.">
+<meta property="og:url" content="https://tools.zovo.one/csv-to-json">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CSV to JSON Converter - Convert CSV/TSV to JSON Online | Zovo Tools">
+<meta name="twitter:description" content="Bidirectional CSV/JSON conversion with custom delimiters, table preview, and download. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CSV to JSON Converter",
+  "description": "Convert CSV to JSON and JSON to CSV online with custom delimiters, file upload, table preview, and download.",
+  "url": "https://tools.zovo.one/csv-to-json",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with JavaScript enabled"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How do I convert CSV to JSON?", "acceptedAnswer": {"@type": "Answer", "text": "Paste your CSV data or upload a CSV file, configure delimiter and header settings, then click Convert. The tool parses each row into a JSON object using the header row as keys."}},
+    {"@type": "Question", "name": "Can I convert JSON back to CSV?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Switch to the JSON to CSV tab, paste your JSON array of objects, and the tool will generate CSV output with headers derived from the object keys."}},
+    {"@type": "Question", "name": "What delimiters are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Comma, tab (TSV), semicolon, and pipe. You can select the appropriate delimiter for your data format."}},
+    {"@type": "Question", "name": "Does it handle quoted fields with commas?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The parser fully supports RFC 4180 quoted fields, including commas, newlines, and escaped quotes within quoted values."}},
+    {"@type": "Question", "name": "Is my data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All conversion happens entirely in your browser using JavaScript. No data is ever transmitted to any server."}},
+    {"@type": "Question", "name": "Can I upload files via drag and drop?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can drag and drop CSV, TSV, or JSON files directly onto the input area, or click to browse and select a file."}},
+    {"@type": "Question", "name": "What is TSV and how is it different from CSV?", "acceptedAnswer": {"@type": "Answer", "text": "TSV (Tab-Separated Values) uses tabs instead of commas as the delimiter. Select the Tab delimiter option to parse or generate TSV files."}},
+    {"@type": "Question", "name": "Can I preview the data as a table?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. After conversion, click the Table Preview button to see your data rendered as an interactive HTML table with sortable columns."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"], select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus, select:focus {
+  border-color: var(--accent);
+}
+textarea {
+  resize: vertical;
+  min-height: 160px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+/* Toggle */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle input:checked + .toggle-slider { background: var(--accent); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* Options row */
+.options-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  align-items: flex-end;
+}
+.options-row .option-group {
+  flex: 1;
+  min-width: 150px;
+}
+.options-row .option-group label {
+  margin-bottom: 6px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+
+/* File drop zone */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone-icon { font-size: 2rem; margin-bottom: 8px; }
+.drop-zone-text { color: var(--text-muted); font-size: 0.95rem; }
+.drop-zone-text span { color: var(--accent); font-weight: 500; }
+.file-input { display: none; }
+.file-info {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* Output area */
+.output-area {
+  position: relative;
+}
+.output-area textarea {
+  width: 100%;
+}
+.output-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* Table preview */
+.table-wrap {
+  overflow-x: auto;
+  margin-top: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.preview-table th {
+  background: var(--surface2);
+  color: var(--accent);
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.preview-table th:hover { background: #22223a; }
+.preview-table th .sort-arrow { font-size: 0.7rem; margin-left: 4px; opacity: 0.5; }
+.preview-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.preview-table tr:hover td { background: var(--surface2); }
+.preview-table tr:last-child td { border-bottom: none; }
+
+/* Status messages */
+.status {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 12px;
+}
+.status-success {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+.status-error {
+  background: rgba(255,68,102,0.1);
+  border: 1px solid var(--red);
+  color: var(--red);
+}
+
+/* Row counter */
+.row-count {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .options-row { flex-direction: column; gap: 12px; }
+  .tabs { flex-wrap: wrap; }
+  .tab-btn { font-size: 0.85rem; padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>CSV</span> to JSON Converter</h1>
+    <p>Convert CSV to JSON and JSON to CSV with custom delimiters, table preview, and file download &mdash; all running privately in your browser.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="csv-to-json">CSV to JSON</button>
+    <button class="tab-btn" data-tab="json-to-csv">JSON to CSV</button>
+  </div>
+
+  <!-- CSV to JSON Tab -->
+  <div id="csv-to-json" class="tab-panel active">
+    <div class="card">
+      <h3>CSV Input</h3>
+      <div class="drop-zone" id="csvDropZone">
+        <div class="drop-zone-icon">&#128196;</div>
+        <div class="drop-zone-text">Drag &amp; drop a CSV/TSV file here or <span>click to browse</span></div>
+        <input type="file" class="file-input" id="csvFileInput" accept=".csv,.tsv,.txt">
+      </div>
+      <div id="csvFileInfo" class="file-info"></div>
+      <textarea id="csvInput" placeholder="Paste your CSV data here...
+name,age,city
+Alice,30,New York
+Bob,25,London"></textarea>
+      <div class="row-count" id="csvRowCount"></div>
+    </div>
+
+    <div class="card">
+      <h3>Options</h3>
+      <div class="options-row">
+        <div class="option-group">
+          <label for="delimiterSelect">Delimiter</label>
+          <select id="delimiterSelect">
+            <option value="," selected>Comma (,)</option>
+            <option value="&#9;">Tab (TSV)</option>
+            <option value=";">Semicolon (;)</option>
+            <option value="|">Pipe (|)</option>
+          </select>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label class="toggle">
+          <input type="checkbox" id="headerToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span style="font-size:0.9rem;">First row is header</span>
+      </div>
+      <div class="toggle-row">
+        <label class="toggle">
+          <input type="checkbox" id="trimToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span style="font-size:0.9rem;">Trim whitespace</span>
+      </div>
+      <div class="toggle-row">
+        <label class="toggle">
+          <input type="checkbox" id="skipEmptyToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span style="font-size:0.9rem;">Skip empty rows</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="convertCsvBtn">Convert to JSON</button>
+        <button class="btn btn-secondary" id="clearCsvBtn">Clear</button>
+      </div>
+    </div>
+
+    <div id="csvStatus"></div>
+
+    <div id="csvOutputCard" class="card" style="display:none;">
+      <h3>JSON Output</h3>
+      <div class="output-area">
+        <textarea id="jsonOutput" readonly rows="12"></textarea>
+      </div>
+      <div class="output-actions">
+        <button class="btn btn-secondary btn-sm" id="copyJsonBtn">Copy to Clipboard</button>
+        <button class="btn btn-secondary btn-sm" id="downloadJsonBtn">Download .json</button>
+        <button class="btn btn-secondary btn-sm" id="previewTableBtn">Table Preview</button>
+      </div>
+    </div>
+
+    <div id="tablePreview"></div>
+  </div>
+
+  <!-- JSON to CSV Tab -->
+  <div id="json-to-csv" class="tab-panel">
+    <div class="card">
+      <h3>JSON Input</h3>
+      <div class="drop-zone" id="jsonDropZone">
+        <div class="drop-zone-icon">&#128196;</div>
+        <div class="drop-zone-text">Drag &amp; drop a JSON file here or <span>click to browse</span></div>
+        <input type="file" class="file-input" id="jsonFileInput" accept=".json,.txt">
+      </div>
+      <div id="jsonFileInfo" class="file-info"></div>
+      <textarea id="jsonInput" placeholder='Paste your JSON array here...
+[
+  {"name": "Alice", "age": 30, "city": "New York"},
+  {"name": "Bob", "age": 25, "city": "London"}
+]'></textarea>
+    </div>
+
+    <div class="card">
+      <h3>Options</h3>
+      <div class="options-row">
+        <div class="option-group">
+          <label for="outputDelimiterSelect">Delimiter</label>
+          <select id="outputDelimiterSelect">
+            <option value="," selected>Comma (,)</option>
+            <option value="&#9;">Tab (TSV)</option>
+            <option value=";">Semicolon (;)</option>
+            <option value="|">Pipe (|)</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="convertJsonBtn">Convert to CSV</button>
+        <button class="btn btn-secondary" id="clearJsonBtn">Clear</button>
+      </div>
+    </div>
+
+    <div id="jsonStatus"></div>
+
+    <div id="jsonOutputCard" class="card" style="display:none;">
+      <h3>CSV Output</h3>
+      <div class="output-area">
+        <textarea id="csvOutput" readonly rows="12"></textarea>
+      </div>
+      <div class="output-actions">
+        <button class="btn btn-secondary btn-sm" id="copyCsvBtn">Copy to Clipboard</button>
+        <button class="btn btn-secondary btn-sm" id="downloadCsvBtn">Download .csv</button>
+        <button class="btn btn-secondary btn-sm" id="previewTableBtn2">Table Preview</button>
+      </div>
+    </div>
+
+    <div id="tablePreview2"></div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <h2>Understanding CSV and JSON Data Formats</h2>
+    <p>CSV (Comma-Separated Values) and JSON (JavaScript Object Notation) are two of the most widely used data interchange formats. CSV has been the standard for tabular data exchange since the early days of computing, while JSON has become the dominant format for web APIs and modern data transfer. Converting between these formats is a routine task for developers, data analysts, and anyone working with structured data.</p>
+    <p>Our CSV to JSON Converter tool handles bidirectional conversion entirely in your browser. It supports the full RFC 4180 specification for CSV parsing, including quoted fields with embedded commas, newlines, and escaped quote characters. The tool processes your data locally using JavaScript, ensuring that sensitive information never leaves your device.</p>
+
+    <h3>CSV Format</h3>
+    <p>CSV files store tabular data in plain text, with each line representing a row and values separated by a delimiter character. While commas are the most common delimiter, tab-separated (TSV), semicolon-separated, and pipe-separated variants are also widely used. The first row typically contains column headers, though this is optional. Quoted fields allow values to contain delimiter characters, newlines, and literal quote characters (escaped by doubling them).</p>
+
+    <h3>JSON Format</h3>
+    <p>JSON represents structured data as key-value pairs and arrays. When converting from CSV, each row becomes a JSON object with the header values as keys. JSON supports nested data structures, multiple data types (strings, numbers, booleans, null), and is natively understood by JavaScript and most modern programming languages. Its human-readable format makes it ideal for configuration files, API responses, and data exchange between systems.</p>
+
+    <h3>Conversion Considerations</h3>
+    <p>When converting CSV to JSON, the tool maps each header to a key and each row to an object in a JSON array. Empty values become empty strings, and numeric strings remain as strings unless explicitly parsed. When converting JSON to CSV, nested objects and arrays are serialized as JSON strings within the CSV field. The tool handles edge cases like missing keys, inconsistent row lengths, and special characters to produce clean, valid output.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I convert CSV to JSON?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Paste your CSV data or upload a CSV file, configure the delimiter and header settings, then click Convert. The tool parses each row into a JSON object using the header row as keys, producing a JSON array of objects.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I convert JSON back to CSV?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. Switch to the JSON to CSV tab, paste your JSON array of objects, and the tool will generate CSV output with headers derived from the union of all object keys across the array.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What delimiters are supported?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Comma, tab (for TSV files), semicolon, and pipe characters. Select the appropriate delimiter from the dropdown to match your data format.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does it handle quoted fields with commas?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. The parser fully supports RFC 4180 quoted fields. Values enclosed in double quotes can contain commas, newlines, and literal quote characters (escaped as two consecutive quotes).</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my data sent to a server?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>No. All conversion happens entirely in your browser using JavaScript. No data is ever transmitted to any server. Your information remains completely private.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I upload files via drag and drop?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. You can drag and drop CSV, TSV, or JSON files directly onto the input area, or click to browse and select a file from your computer.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is TSV and how is it different from CSV?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>TSV (Tab-Separated Values) uses tab characters instead of commas as the delimiter between values. Select the Tab delimiter option to parse or generate TSV files. TSV is often preferred when values themselves may contain commas.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I preview the data as a table?<span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes. After conversion, click the Table Preview button to see your data rendered as an interactive HTML table. You can click column headers to sort the data ascending or descending.</p></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </div>
+</footer>
+
+<script>
+/* ===== Tabs ===== */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ===== FAQ ===== */
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+});
+
+/* ===== CSV Parser (RFC 4180 compliant) ===== */
+function parseCSV(text, delimiter, hasHeader, trimWs, skipEmpty) {
+  const rows = [];
+  let i = 0;
+  const len = text.length;
+
+  function parseField() {
+    if (i >= len) return '';
+    if (text[i] === '"') {
+      i++; // skip opening quote
+      let field = '';
+      while (i < len) {
+        if (text[i] === '"') {
+          if (i + 1 < len && text[i + 1] === '"') {
+            field += '"';
+            i += 2;
+          } else {
+            i++; // skip closing quote
+            break;
+          }
+        } else {
+          field += text[i];
+          i++;
+        }
+      }
+      return field;
+    } else {
+      let field = '';
+      while (i < len && text[i] !== delimiter && text[i] !== '\n' && text[i] !== '\r') {
+        field += text[i];
+        i++;
+      }
+      return trimWs ? field.trim() : field;
+    }
+  }
+
+  while (i < len) {
+    const row = [];
+    while (true) {
+      row.push(parseField());
+      if (i < len && text[i] === delimiter) {
+        i++; // skip delimiter
+        continue;
+      }
+      break;
+    }
+    // skip line ending
+    if (i < len && text[i] === '\r') i++;
+    if (i < len && text[i] === '\n') i++;
+
+    if (skipEmpty && row.length === 1 && row[0] === '') continue;
+    rows.push(row);
+  }
+
+  if (rows.length === 0) return { headers: [], data: [] };
+
+  if (hasHeader) {
+    const headers = rows[0].map(h => trimWs ? h.trim() : h);
+    const data = rows.slice(1).map(row => {
+      const obj = {};
+      headers.forEach((h, idx) => {
+        obj[h] = idx < row.length ? row[idx] : '';
+      });
+      return obj;
+    });
+    return { headers, data };
+  } else {
+    const headers = rows[0].map((_, idx) => `column_${idx + 1}`);
+    const data = rows.map(row => {
+      const obj = {};
+      headers.forEach((h, idx) => {
+        obj[h] = idx < row.length ? row[idx] : '';
+      });
+      return obj;
+    });
+    return { headers, data };
+  }
+}
+
+/* ===== JSON to CSV ===== */
+function jsonToCSV(data, delimiter) {
+  if (!Array.isArray(data) || data.length === 0) return '';
+
+  // Gather all unique keys
+  const keysSet = new Set();
+  data.forEach(obj => {
+    if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+      Object.keys(obj).forEach(k => keysSet.add(k));
+    }
+  });
+  const headers = Array.from(keysSet);
+
+  function escapeField(val, delim) {
+    if (val === null || val === undefined) return '';
+    let str = typeof val === 'object' ? JSON.stringify(val) : String(val);
+    if (str.includes(delim) || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+      str = '"' + str.replace(/"/g, '""') + '"';
+    }
+    return str;
+  }
+
+  const lines = [headers.map(h => escapeField(h, delimiter)).join(delimiter)];
+  data.forEach(obj => {
+    if (!obj || typeof obj !== 'object') return;
+    const row = headers.map(h => escapeField(obj[h], delimiter));
+    lines.push(row.join(delimiter));
+  });
+  return lines.join('\n');
+}
+
+/* ===== File drop zones ===== */
+function setupDropZone(zoneId, inputId, infoId, textareaId) {
+  const zone = document.getElementById(zoneId);
+  const input = document.getElementById(inputId);
+  const info = document.getElementById(infoId);
+  const textarea = document.getElementById(textareaId);
+
+  zone.addEventListener('click', () => input.click());
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+
+  input.addEventListener('change', () => { if (input.files.length) handleFile(input.files[0]); });
+
+  function handleFile(file) {
+    info.textContent = `${file.name} (${formatSize(file.size)})`;
+    const reader = new FileReader();
+    reader.onload = () => { textarea.value = reader.result; };
+    reader.readAsText(file);
+  }
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+setupDropZone('csvDropZone', 'csvFileInput', 'csvFileInfo', 'csvInput');
+setupDropZone('jsonDropZone', 'jsonFileInput', 'jsonFileInfo', 'jsonInput');
+
+/* ===== Status display ===== */
+function showStatus(elId, msg, isError) {
+  const el = document.getElementById(elId);
+  el.innerHTML = `<div class="status ${isError ? 'status-error' : 'status-success'}">${msg}</div>`;
+}
+
+function clearStatus(elId) {
+  document.getElementById(elId).innerHTML = '';
+}
+
+/* ===== CSV to JSON conversion ===== */
+let lastParsedData = null;
+let lastParsedHeaders = null;
+
+document.getElementById('convertCsvBtn').addEventListener('click', () => {
+  clearStatus('csvStatus');
+  const csv = document.getElementById('csvInput').value;
+  if (!csv.trim()) {
+    showStatus('csvStatus', 'Please enter or upload CSV data.', true);
+    return;
+  }
+
+  const delimiter = document.getElementById('delimiterSelect').value;
+  const hasHeader = document.getElementById('headerToggle').checked;
+  const trimWs = document.getElementById('trimToggle').checked;
+  const skipEmpty = document.getElementById('skipEmptyToggle').checked;
+
+  try {
+    const result = parseCSV(csv, delimiter, hasHeader, trimWs, skipEmpty);
+    lastParsedData = result.data;
+    lastParsedHeaders = result.headers;
+
+    const json = JSON.stringify(result.data, null, 2);
+    document.getElementById('jsonOutput').value = json;
+    document.getElementById('csvOutputCard').style.display = 'block';
+    document.getElementById('tablePreview').innerHTML = '';
+    showStatus('csvStatus', `Converted ${result.data.length} rows to JSON.`, false);
+    document.getElementById('csvRowCount').textContent = `${result.data.length} rows parsed`;
+  } catch (err) {
+    showStatus('csvStatus', `Parse error: ${err.message}`, true);
+  }
+});
+
+document.getElementById('clearCsvBtn').addEventListener('click', () => {
+  document.getElementById('csvInput').value = '';
+  document.getElementById('jsonOutput').value = '';
+  document.getElementById('csvOutputCard').style.display = 'none';
+  document.getElementById('tablePreview').innerHTML = '';
+  document.getElementById('csvFileInfo').textContent = '';
+  document.getElementById('csvRowCount').textContent = '';
+  clearStatus('csvStatus');
+  lastParsedData = null;
+  lastParsedHeaders = null;
+});
+
+/* ===== JSON to CSV conversion ===== */
+let lastCsvParsedData = null;
+let lastCsvParsedHeaders = null;
+
+document.getElementById('convertJsonBtn').addEventListener('click', () => {
+  clearStatus('jsonStatus');
+  const jsonStr = document.getElementById('jsonInput').value;
+  if (!jsonStr.trim()) {
+    showStatus('jsonStatus', 'Please enter or upload JSON data.', true);
+    return;
+  }
+
+  try {
+    let data = JSON.parse(jsonStr);
+    if (!Array.isArray(data)) {
+      if (typeof data === 'object' && data !== null) {
+        data = [data];
+      } else {
+        showStatus('jsonStatus', 'JSON must be an array of objects.', true);
+        return;
+      }
+    }
+
+    const delimiter = document.getElementById('outputDelimiterSelect').value;
+    const csv = jsonToCSV(data, delimiter);
+
+    // Gather headers for table preview
+    const keysSet = new Set();
+    data.forEach(obj => {
+      if (obj && typeof obj === 'object') Object.keys(obj).forEach(k => keysSet.add(k));
+    });
+    lastCsvParsedHeaders = Array.from(keysSet);
+    lastCsvParsedData = data;
+
+    document.getElementById('csvOutput').value = csv;
+    document.getElementById('jsonOutputCard').style.display = 'block';
+    document.getElementById('tablePreview2').innerHTML = '';
+    showStatus('jsonStatus', `Converted ${data.length} objects to CSV.`, false);
+  } catch (err) {
+    showStatus('jsonStatus', `JSON parse error: ${err.message}`, true);
+  }
+});
+
+document.getElementById('clearJsonBtn').addEventListener('click', () => {
+  document.getElementById('jsonInput').value = '';
+  document.getElementById('csvOutput').value = '';
+  document.getElementById('jsonOutputCard').style.display = 'none';
+  document.getElementById('tablePreview2').innerHTML = '';
+  document.getElementById('jsonFileInfo').textContent = '';
+  clearStatus('jsonStatus');
+  lastCsvParsedData = null;
+  lastCsvParsedHeaders = null;
+});
+
+/* ===== Copy to clipboard ===== */
+function copyToClipboard(textareaId, btnId) {
+  const text = document.getElementById(textareaId).value;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(btnId);
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+  });
+}
+
+document.getElementById('copyJsonBtn').addEventListener('click', () => copyToClipboard('jsonOutput', 'copyJsonBtn'));
+document.getElementById('copyCsvBtn').addEventListener('click', () => copyToClipboard('csvOutput', 'copyCsvBtn'));
+
+/* ===== Download files ===== */
+function downloadFile(content, filename, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('downloadJsonBtn').addEventListener('click', () => {
+  const content = document.getElementById('jsonOutput').value;
+  if (content) downloadFile(content, 'data.json', 'application/json');
+});
+
+document.getElementById('downloadCsvBtn').addEventListener('click', () => {
+  const content = document.getElementById('csvOutput').value;
+  const delim = document.getElementById('outputDelimiterSelect').value;
+  const ext = delim === '\t' ? 'tsv' : 'csv';
+  if (content) downloadFile(content, `data.${ext}`, 'text/csv');
+});
+
+/* ===== Table Preview ===== */
+function renderTable(headers, data, containerId) {
+  const container = document.getElementById(containerId);
+  if (!headers || !data || data.length === 0) {
+    container.innerHTML = '<div class="status status-error">No data to preview.</div>';
+    return;
+  }
+
+  const maxRows = Math.min(data.length, 500);
+  let sortCol = null;
+  let sortAsc = true;
+  let displayData = data.slice(0, maxRows);
+
+  function render() {
+    let html = '<div class="table-wrap"><table class="preview-table"><thead><tr>';
+    headers.forEach((h, idx) => {
+      const arrow = sortCol === idx ? (sortAsc ? ' &#9650;' : ' &#9660;') : '';
+      html += `<th data-col="${idx}">${escapeHtml(h)}<span class="sort-arrow">${arrow}</span></th>`;
+    });
+    html += '</tr></thead><tbody>';
+    displayData.forEach(row => {
+      html += '<tr>';
+      headers.forEach(h => {
+        const val = row[h] !== undefined && row[h] !== null ? String(row[h]) : '';
+        html += `<td title="${escapeHtml(val)}">${escapeHtml(val)}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    if (data.length > maxRows) {
+      html += `<div class="row-count">Showing ${maxRows} of ${data.length} rows</div>`;
+    }
+    container.innerHTML = html;
+
+    // sort handlers
+    container.querySelectorAll('th').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = parseInt(th.dataset.col);
+        if (sortCol === col) {
+          sortAsc = !sortAsc;
+        } else {
+          sortCol = col;
+          sortAsc = true;
+        }
+        const key = headers[col];
+        displayData.sort((a, b) => {
+          const va = a[key] || '';
+          const vb = b[key] || '';
+          const na = parseFloat(va);
+          const nb = parseFloat(vb);
+          if (!isNaN(na) && !isNaN(nb)) return sortAsc ? na - nb : nb - na;
+          return sortAsc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+        });
+        render();
+      });
+    });
+  }
+  render();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+document.getElementById('previewTableBtn').addEventListener('click', () => {
+  renderTable(lastParsedHeaders, lastParsedData, 'tablePreview');
+});
+
+document.getElementById('previewTableBtn2').addEventListener('click', () => {
+  renderTable(lastCsvParsedHeaders, lastCsvParsedData, 'tablePreview2');
+});
+
+/* ===== Live row count ===== */
+document.getElementById('csvInput').addEventListener('input', () => {
+  const val = document.getElementById('csvInput').value;
+  const lines = val.split('\n').filter(l => l.trim().length > 0);
+  document.getElementById('csvRowCount').textContent = lines.length > 0 ? `${lines.length} lines` : '';
+});
+</script>
+
+</body>
+</html>
