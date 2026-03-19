@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP Lookup - Find IP Address Details & Geolocation | Free Online Tool</title>
+<meta name="description" content="Look up any IP address to find its geolocation, ISP, organization, timezone, and more. Auto-detect your own IP. Bulk IP lookup supported. Free, private, no tracking.">
+<meta name="keywords" content="IP lookup, IP address, geolocation, ISP lookup, IP location, what is my IP, IP info, IP checker, bulk IP lookup, IPv4, IPv6">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.zovo.one/ip-lookup">
+
+<meta property="og:title" content="IP Lookup - Find IP Address Details & Geolocation | Zovo Tools">
+<meta property="og:description" content="Look up any IP address to find its geolocation, ISP, organization, timezone, and network details. Free, private, no tracking.">
+<meta property="og:url" content="https://tools.zovo.one/ip-lookup">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="IP Lookup - Find IP Address Details & Geolocation | Zovo Tools">
+<meta name="twitter:description" content="Look up any IP address to find geolocation, ISP, and network details. Free, private, no tracking.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "IP Lookup",
+  "description": "Look up any IP address to find its geolocation, ISP, organization, timezone, and network details. Auto-detect your own IP with bulk lookup support.",
+  "url": "https://tools.zovo.one/ip-lookup",
+  "applicationCategory": "NetworkingApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Fetch API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What information does an IP lookup reveal?", "acceptedAnswer": {"@type": "Answer", "text": "An IP lookup reveals the approximate geographic location (country, region, city), ISP (Internet Service Provider), organization name, timezone, AS number (Autonomous System), and whether the IP is IPv4 or IPv6."}},
+    {"@type": "Question", "name": "How accurate is IP geolocation?", "acceptedAnswer": {"@type": "Answer", "text": "IP geolocation is typically accurate to the city level for most broadband connections. Country-level accuracy is around 99%, while city-level accuracy varies between 50-80% depending on the ISP and region. VPNs and proxies will show the server's location instead of the user's actual location."}},
+    {"@type": "Question", "name": "What is the difference between IPv4 and IPv6?", "acceptedAnswer": {"@type": "Answer", "text": "IPv4 uses 32-bit addresses (e.g., 192.168.1.1) providing about 4.3 billion unique addresses. IPv6 uses 128-bit addresses (e.g., 2001:0db8::1) providing virtually unlimited addresses. IPv6 was developed to address the exhaustion of IPv4 addresses."}},
+    {"@type": "Question", "name": "Can I look up my own IP address?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The tool automatically detects your public IP address when you load the page. Click the 'Detect My IP' button to refresh your current IP information at any time."}},
+    {"@type": "Question", "name": "Is my IP lookup data stored or logged?", "acceptedAnswer": {"@type": "Answer", "text": "No. This tool uses third-party APIs to fetch IP data, but does not store, log, or track any of your queries. The results are displayed in your browser and are not saved anywhere on our servers."}},
+    {"@type": "Question", "name": "Can I look up multiple IPs at once?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The Bulk Lookup tab allows you to enter multiple IP addresses (one per line) and query them all simultaneously. Results are displayed in a table format for easy comparison."}},
+    {"@type": "Question", "name": "What is an ASN (Autonomous System Number)?", "acceptedAnswer": {"@type": "Answer", "text": "An ASN is a unique identifier assigned to a network or group of IP addresses managed by one or more network operators. It is used in BGP (Border Gateway Protocol) routing to identify networks on the internet. Large ISPs and organizations typically have their own ASN."}},
+    {"@type": "Question", "name": "Why does my IP location show a different city?", "acceptedAnswer": {"@type": "Answer", "text": "IP geolocation databases map IP addresses to locations based on ISP registration data, which may not match your exact physical location. Your ISP may route your traffic through a hub in another city, or the geolocation database may have outdated information for your IP range."}}
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #2a2a3a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --yellow: #ffaa00;
+  --blue: #4488ff;
+  --radius: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--accent); }
+header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+}
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+textarea, input[type="text"], input[type="url"], select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus, input[type="url"]:focus, select:focus {
+  border-color: var(--accent);
+}
+textarea { resize: vertical; min-height: 120px; }
+select { cursor: pointer; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Results */
+.results { margin-top: 20px; }
+.result-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+}
+.result-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.result-value {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.88rem;
+  word-break: break-all;
+  color: var(--text);
+  user-select: all;
+  line-height: 1.5;
+}
+.copy-btn {
+  float: right;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Info grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 600px) { .info-grid { grid-template-columns: 1fr; } }
+
+.info-cell {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.info-cell-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.info-cell-value {
+  font-size: 0.95rem;
+  color: var(--text);
+  word-break: break-all;
+}
+
+/* IP display */
+.ip-display {
+  text-align: center;
+  padding: 24px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+.ip-display .ip-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.ip-display .ip-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  user-select: all;
+}
+.ip-display .ip-type {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+/* Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+.data-table th, .data-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.data-table th {
+  background: var(--surface2);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+}
+.data-table td {
+  color: var(--text);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.84rem;
+}
+.data-table tr:hover td { background: var(--surface2); }
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Status badge */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font);
+}
+.badge-success { background: rgba(0,255,136,0.15); color: var(--green); }
+.badge-error { background: rgba(255,68,102,0.15); color: var(--red); }
+.badge-warning { background: rgba(255,170,0,0.15); color: var(--yellow); }
+
+/* Map placeholder */
+.map-container {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-top: 16px;
+  background: var(--bg);
+}
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Content section */
+.content-section {
+  margin-top: 64px;
+  padding-top: 32px;
+}
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.content-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-size: 0.97rem;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
+.content-section code {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-q:hover { background: var(--surface2); }
+.faq-arrow {
+  transition: transform 0.3s;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 20px 16px;
+}
+.faq-a p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* Footer */
+footer {
+  margin-top: 64px;
+  padding: 32px 0;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .ip-display .ip-value { font-size: 1.3rem; }
+  .tabs { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>IP</span> Lookup</h1>
+    <p>Look up any IP address to find its geolocation, ISP, organization, timezone, and network details. Auto-detect your own IP or look up multiple addresses at once &mdash; fast and free.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="single-lookup">Single Lookup</button>
+    <button class="tab-btn" data-tab="my-ip">My IP</button>
+    <button class="tab-btn" data-tab="bulk-lookup">Bulk Lookup</button>
+  </div>
+
+  <!-- Single Lookup -->
+  <div id="single-lookup" class="tab-panel active">
+    <div class="card">
+      <h3>Look Up an IP Address</h3>
+      <label for="ipInput">IP Address (IPv4 or IPv6)</label>
+      <input type="text" id="ipInput" placeholder="e.g., 8.8.8.8 or 2001:4860:4860::8888" autocomplete="off">
+      <div class="btn-row">
+        <button class="btn btn-primary" id="lookupBtn">Lookup IP</button>
+        <button class="btn btn-secondary" id="clearSingleBtn">Clear</button>
+      </div>
+    </div>
+    <div id="singleResults"></div>
+  </div>
+
+  <!-- My IP -->
+  <div id="my-ip" class="tab-panel">
+    <div class="card">
+      <h3>Your Public IP Address</h3>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;">Automatically detected from your internet connection. This is the IP address websites and services see when you connect.</p>
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn btn-primary" id="detectBtn">Detect My IP</button>
+      </div>
+    </div>
+    <div id="myIpResults"></div>
+  </div>
+
+  <!-- Bulk Lookup -->
+  <div id="bulk-lookup" class="tab-panel">
+    <div class="card">
+      <h3>Bulk IP Lookup</h3>
+      <label for="bulkInput">IP Addresses (one per line, max 20)</label>
+      <textarea id="bulkInput" placeholder="8.8.8.8&#10;1.1.1.1&#10;208.67.222.222&#10;9.9.9.9"></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="bulkLookupBtn">Lookup All</button>
+        <button class="btn btn-secondary" id="clearBulkBtn">Clear</button>
+      </div>
+    </div>
+    <div id="bulkResults"></div>
+  </div>
+
+  <section class="content-section">
+    <h2>Understanding IP Addresses and Geolocation</h2>
+    <p>An IP (Internet Protocol) address is a unique numerical identifier assigned to every device connected to a computer network that uses the Internet Protocol for communication. IP addresses serve two primary functions: host or network interface identification and location addressing. When you visit a website, send an email, or stream video, your device's IP address is used to route data packets between your device and the destination server. Understanding IP addresses is fundamental to networking, cybersecurity, and web development.</p>
+    <p>Our IP Lookup tool allows you to query any public IP address and retrieve detailed information including its geographic location, Internet Service Provider (ISP), organization, timezone, Autonomous System Number (ASN), and protocol version. The tool uses publicly available geolocation APIs to retrieve this data in real time. You can look up individual IPs, auto-detect your own public IP, or perform bulk lookups on multiple addresses simultaneously.</p>
+
+    <h3>IPv4 vs. IPv6</h3>
+    <p>IPv4 (Internet Protocol version 4) has been the dominant addressing system since the early 1980s. It uses 32-bit addresses, written as four decimal numbers separated by dots (e.g., <code>192.168.1.1</code>). This provides approximately 4.3 billion unique addresses, a number that seemed inexhaustible at the internet's inception but has since been nearly exhausted due to the explosive growth of connected devices.</p>
+    <p>IPv6 (Internet Protocol version 6) was developed to solve the address exhaustion problem. It uses 128-bit addresses, written as eight groups of four hexadecimal digits separated by colons (e.g., <code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code>). This provides approximately 340 undecillion (3.4 x 10^38) unique addresses &mdash; enough to assign a unique address to every atom on the surface of the Earth and still have addresses left over. IPv6 also introduces improvements in routing efficiency, security (mandatory IPsec support), and auto-configuration.</p>
+
+    <h3>How IP Geolocation Works</h3>
+    <p>IP geolocation maps an IP address to a physical location using databases maintained by organizations like MaxMind, IP2Location, and regional internet registries (RIRs). These databases are built from multiple data sources including ISP registration records, network infrastructure mapping, user-submitted data, and active network measurements. When an ISP is allocated a block of IP addresses, the registration information includes the organization's physical address, which serves as the initial location estimate.</p>
+    <p>Geolocation accuracy varies significantly depending on the type of connection. Broadband ISPs in developed countries typically have city-level accuracy of 70-80%. Mobile carriers may have lower accuracy because IP addresses can be shared across wide geographic areas through Carrier-Grade NAT. VPN and proxy services will show the location of the VPN server rather than the user's actual location, which is one of the primary privacy benefits of using a VPN.</p>
+
+    <h3>Autonomous System Numbers (ASN)</h3>
+    <p>An Autonomous System (AS) is a collection of IP address ranges under the control of a single organization that presents a clearly defined routing policy to the internet. Each AS is assigned a unique Autonomous System Number (ASN) used in BGP (Border Gateway Protocol) routing. Large organizations like Google (AS15169), Amazon (AS16509), and Cloudflare (AS13335) operate their own autonomous systems. ASN information is useful for network administrators, security researchers, and anyone investigating the ownership and routing path of internet traffic.</p>
+
+    <h3>Private vs. Public IP Addresses</h3>
+    <p>Not all IP addresses are routable on the public internet. RFC 1918 defines three ranges reserved for private use: <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, and <code>192.168.0.0/16</code>. These addresses are used within local networks (home routers, corporate networks) and cannot be looked up using geolocation services. When devices on a private network access the internet, they share the router's public IP address through Network Address Translation (NAT). This tool works exclusively with public IP addresses.</p>
+
+    <h3>Security and Privacy Considerations</h3>
+    <p>Your public IP address is visible to every website and service you connect to, which is why IP-based geolocation is commonly used for content localization, fraud detection, and access control. However, an IP address alone typically cannot identify an individual person &mdash; it identifies a network connection point. ISPs maintain logs that can link IP addresses to subscriber accounts, but this information is only available to law enforcement through legal processes. Using a VPN, Tor, or proxy service can mask your real IP address for enhanced privacy.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What information does an IP lookup reveal?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>An IP lookup reveals the approximate geographic location (country, region, city), Internet Service Provider (ISP), organization name, timezone, Autonomous System Number (ASN), and whether the IP is IPv4 or IPv6. It may also include the latitude and longitude coordinates associated with the IP's registered location. This information comes from publicly available geolocation databases and registration records maintained by regional internet registries.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How accurate is IP geolocation?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>IP geolocation accuracy depends on the type of connection and the quality of the geolocation database. Country-level accuracy is typically around 99%. City-level accuracy ranges from 50-80% for broadband connections in developed countries. Mobile and satellite connections tend to have lower accuracy. VPN and proxy users will see the server location rather than their actual location. Geolocation is an estimate based on registration data, not GPS-level precision.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between IPv4 and IPv6?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>IPv4 uses 32-bit addresses written as four decimal numbers (e.g., 192.168.1.1), providing about 4.3 billion unique addresses. IPv6 uses 128-bit addresses written as eight hexadecimal groups (e.g., 2001:0db8::8888), providing a virtually unlimited address space. IPv6 was developed because IPv4 addresses are nearly exhausted. Most modern networks support both protocols through dual-stack implementations.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I look up my own IP address?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. Click the "My IP" tab and then "Detect My IP" to automatically discover your public IP address and view its associated geolocation data. This is the IP address that websites and online services see when you connect to them. Note that this is your public IP, not your local/private IP address assigned by your home router.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is my IP lookup data stored or logged?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>No. This tool queries a third-party geolocation API in real time and displays the results directly in your browser. We do not store, log, or track any of the IP addresses you look up. The API provider may have their own logging policies, but no data is saved on our servers. For maximum privacy, you can use a VPN while performing lookups.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I look up multiple IPs at once?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>Yes. The Bulk Lookup tab lets you enter up to 20 IP addresses (one per line) and query them all simultaneously. Results are displayed in a sortable table with columns for IP address, country, city, ISP, and organization. This is useful for analyzing server logs, investigating network traffic, or comparing the origins of multiple connections.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is an ASN (Autonomous System Number)?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>An Autonomous System Number (ASN) is a unique identifier assigned to a network operator or organization that manages a range of IP addresses. ASNs are used in BGP (Border Gateway Protocol) to route traffic between networks on the internet. For example, Google operates AS15169 and Cloudflare operates AS13335. ASN information helps identify which organization controls a particular IP address and how traffic is routed to and from that network.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why does my IP location show a different city?<span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><p>IP geolocation databases map IP addresses to locations based on ISP registration records and network topology data, which may not correspond to your exact physical location. Common reasons include: your ISP may route traffic through a regional hub in another city, the geolocation database may have outdated information for your IP range, or you may be using a VPN or proxy that routes through a different location. Mobile carriers frequently show inaccurate city-level data because IP pools are shared across large geographic regions.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> &mdash; Free, private, no tracking.
+  </footer>
+</div>
+
+<script>
+// ========== Tab switching ==========
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ========== Utility ==========
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function copyToClipboard(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 1500);
+  });
+}
+
+function detectIpVersion(ip) {
+  if (ip.includes(':')) return 'IPv6';
+  if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(ip)) return 'IPv4';
+  return 'Unknown';
+}
+
+// ========== API Lookup ==========
+async function lookupIP(ip) {
+  const url = ip
+    ? `https://ipapi.co/${encodeURIComponent(ip)}/json/`
+    : `https://ipapi.co/json/`;
+
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`API returned ${response.status}`);
+  const data = await response.json();
+
+  if (data.error) {
+    throw new Error(data.reason || data.message || 'Lookup failed');
+  }
+
+  return data;
+}
+
+function renderIPResult(data, container) {
+  const ipVersion = detectIpVersion(data.ip);
+  const mapUrl = (data.latitude && data.longitude)
+    ? `https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude-0.05},${data.latitude-0.05},${data.longitude+0.05},${data.latitude+0.05}&layer=mapnik&marker=${data.latitude},${data.longitude}`
+    : null;
+
+  container.innerHTML = `
+    <div class="ip-display">
+      <div class="ip-label">IP Address</div>
+      <div class="ip-value">${escapeHtml(data.ip)}</div>
+      <span class="ip-type">${ipVersion}</span>
+      <button class="copy-btn" style="margin-top:12px;" onclick="copyToClipboard('${escapeHtml(data.ip)}', this)">Copy IP</button>
+    </div>
+
+    <div class="card">
+      <h3>Location & Network Details</h3>
+      <div class="info-grid">
+        <div class="info-cell">
+          <div class="info-cell-label">Country</div>
+          <div class="info-cell-value">${escapeHtml(data.country_name || 'N/A')} ${data.country_code ? '(' + escapeHtml(data.country_code) + ')' : ''}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Region</div>
+          <div class="info-cell-value">${escapeHtml(data.region || 'N/A')}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">City</div>
+          <div class="info-cell-value">${escapeHtml(data.city || 'N/A')}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Postal Code</div>
+          <div class="info-cell-value">${escapeHtml(data.postal || 'N/A')}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Latitude / Longitude</div>
+          <div class="info-cell-value">${data.latitude != null ? data.latitude + ', ' + data.longitude : 'N/A'}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Timezone</div>
+          <div class="info-cell-value">${escapeHtml(data.timezone || 'N/A')} ${data.utc_offset ? '(UTC' + escapeHtml(data.utc_offset) + ')' : ''}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">ISP / Organization</div>
+          <div class="info-cell-value">${escapeHtml(data.org || 'N/A')}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">ASN</div>
+          <div class="info-cell-value">${escapeHtml(data.asn || 'N/A')}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Network</div>
+          <div class="info-cell-value">${escapeHtml(data.network || 'N/A')}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Protocol Version</div>
+          <div class="info-cell-value">${escapeHtml(data.version || ipVersion)}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Country Calling Code</div>
+          <div class="info-cell-value">${escapeHtml(data.country_calling_code || 'N/A')}</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Currency</div>
+          <div class="info-cell-value">${escapeHtml(data.currency_name || 'N/A')} ${data.currency ? '(' + escapeHtml(data.currency) + ')' : ''}</div>
+        </div>
+      </div>
+      ${mapUrl ? `
+      <div class="map-container">
+        <iframe src="${mapUrl}" loading="lazy" title="IP Location Map"></iframe>
+      </div>` : ''}
+    </div>
+
+    <div class="card">
+      <h3>Raw JSON Response</h3>
+      <button class="copy-btn" onclick="copyToClipboard(document.getElementById('rawJson').textContent, this)">Copy JSON</button>
+      <pre id="rawJson" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;font-size:0.84rem;color:var(--text);font-family:'SF Mono','Fira Code',monospace;line-height:1.6;white-space:pre-wrap;word-break:break-all;">${escapeHtml(JSON.stringify(data, null, 2))}</pre>
+    </div>
+  `;
+}
+
+function renderError(message, container) {
+  container.innerHTML = `
+    <div class="card" style="border-color:var(--red);">
+      <p style="color:var(--red);font-weight:600;">Error: ${escapeHtml(message)}</p>
+    </div>
+  `;
+}
+
+function showLoading(container) {
+  container.innerHTML = `
+    <div class="card" style="text-align:center;padding:40px;">
+      <span class="spinner"></span>
+      <span style="color:var(--text-muted);">Looking up IP address...</span>
+    </div>
+  `;
+}
+
+// ========== Single Lookup ==========
+document.getElementById('lookupBtn').addEventListener('click', async () => {
+  const ip = document.getElementById('ipInput').value.trim();
+  if (!ip) { alert('Please enter an IP address.'); return; }
+
+  const resultsDiv = document.getElementById('singleResults');
+  showLoading(resultsDiv);
+
+  try {
+    const data = await lookupIP(ip);
+    renderIPResult(data, resultsDiv);
+  } catch (e) {
+    renderError(e.message, resultsDiv);
+  }
+});
+
+document.getElementById('ipInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('lookupBtn').click();
+});
+
+document.getElementById('clearSingleBtn').addEventListener('click', () => {
+  document.getElementById('ipInput').value = '';
+  document.getElementById('singleResults').innerHTML = '';
+});
+
+// ========== My IP ==========
+document.getElementById('detectBtn').addEventListener('click', async () => {
+  const resultsDiv = document.getElementById('myIpResults');
+  showLoading(resultsDiv);
+
+  try {
+    const data = await lookupIP(null);
+    renderIPResult(data, resultsDiv);
+  } catch (e) {
+    renderError(e.message, resultsDiv);
+  }
+});
+
+// ========== Bulk Lookup ==========
+document.getElementById('bulkLookupBtn').addEventListener('click', async () => {
+  const input = document.getElementById('bulkInput').value.trim();
+  if (!input) { alert('Please enter at least one IP address.'); return; }
+
+  const ips = input.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+  if (ips.length > 20) {
+    alert('Maximum 20 IP addresses per batch. Please reduce the list.');
+    return;
+  }
+
+  const resultsDiv = document.getElementById('bulkResults');
+  resultsDiv.innerHTML = `
+    <div class="card" style="text-align:center;padding:40px;">
+      <span class="spinner"></span>
+      <span style="color:var(--text-muted);">Looking up ${ips.length} IP address${ips.length > 1 ? 'es' : ''}...</span>
+    </div>
+  `;
+
+  const results = [];
+  for (const ip of ips) {
+    try {
+      const data = await lookupIP(ip);
+      results.push({ ip, data, error: null });
+    } catch (e) {
+      results.push({ ip, data: null, error: e.message });
+    }
+    // Small delay to respect rate limits
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  let tableRows = results.map(r => {
+    if (r.error) {
+      return `<tr>
+        <td>${escapeHtml(r.ip)}</td>
+        <td colspan="5" style="color:var(--red);">${escapeHtml(r.error)}</td>
+      </tr>`;
+    }
+    const d = r.data;
+    return `<tr>
+      <td>${escapeHtml(d.ip)}</td>
+      <td style="font-family:var(--font);">${escapeHtml(d.country_name || 'N/A')}</td>
+      <td style="font-family:var(--font);">${escapeHtml(d.city || 'N/A')}</td>
+      <td style="font-family:var(--font);">${escapeHtml(d.region || 'N/A')}</td>
+      <td style="font-family:var(--font);">${escapeHtml(d.org || 'N/A')}</td>
+      <td style="font-family:var(--font);">${escapeHtml(d.timezone || 'N/A')}</td>
+    </tr>`;
+  }).join('');
+
+  resultsDiv.innerHTML = `
+    <div class="card">
+      <h3>Bulk Results (${results.length} IP${results.length > 1 ? 's' : ''})</h3>
+      <button class="copy-btn" id="copyBulkBtn">Copy as CSV</button>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>IP Address</th>
+              <th>Country</th>
+              <th>City</th>
+              <th>Region</th>
+              <th>ISP / Org</th>
+              <th>Timezone</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('copyBulkBtn').addEventListener('click', function() {
+    const csv = ['IP Address,Country,City,Region,ISP/Org,Timezone'];
+    results.forEach(r => {
+      if (r.data) {
+        const d = r.data;
+        csv.push(`"${d.ip}","${d.country_name || ''}","${d.city || ''}","${d.region || ''}","${(d.org || '').replace(/"/g, '""')}","${d.timezone || ''}"`);
+      } else {
+        csv.push(`"${r.ip}","Error","${r.error}","","",""`);
+      }
+    });
+    copyToClipboard(csv.join('\n'), this);
+  });
+});
+
+document.getElementById('clearBulkBtn').addEventListener('click', () => {
+  document.getElementById('bulkInput').value = '';
+  document.getElementById('bulkResults').innerHTML = '';
+});
+
+// ========== FAQ Accordion ==========
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+</script>
+
+</body>
+</html>
