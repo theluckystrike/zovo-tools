@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentage Change Calculator - Free Online Tool | Zovo</title>
+<meta name="description" content="Calculate percent increase, decrease, difference, and reverse percentage between any two values. Batch mode for multiple calculations. Free browser-based tool.">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/percentage-change-calculator/">
+<meta property="og:title" content="Percentage Change Calculator - Free Online Tool">
+<meta property="og:description" content="Calculate percent increase, decrease, difference, and reverse percentage. Batch mode included.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/percentage-change-calculator/">
+<meta property="og:image" content="https://zovo.one/og-tools.png">
+<meta property="og:site_name" content="Zovo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Percentage Change Calculator - Free Online Tool">
+<meta name="twitter:description" content="Calculate percent increase, decrease, difference, and reverse percentage. Batch mode included.">
+<meta name="twitter:image" content="https://zovo.one/og-tools.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Percentage Change Calculator",
+  "description": "Calculate percent increase, decrease, percentage of a number, percentage difference, and reverse percentage with batch mode.",
+  "url": "https://zovo.one/free-tools/percentage-change-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you calculate percentage change?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Percentage change is calculated as: ((New Value - Old Value) / Old Value) × 100. A positive result indicates a percentage increase, while a negative result indicates a percentage decrease. For example, going from 50 to 75 is a 50% increase: ((75-50)/50) × 100 = 50%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is percentage difference vs percentage change?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Percentage difference compares two values without implying one is the 'original' - it uses the average of both values as the denominator: |V1-V2| / ((V1+V2)/2) × 100. Percentage change assumes one value is the starting point and measures how much it changed to reach the other value."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a reverse percentage calculation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A reverse percentage finds the original number before a percentage was applied. For example, if a price after a 20% discount is $80, the original price was $80 / (1 - 0.20) = $100. This calculator handles both reverse increase and reverse decrease scenarios."
+      }
+    }
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#e0e0e8;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh}
+a{color:#00ff88;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:1rem}
+header{text-align:center;padding:2rem 1rem;border-bottom:1px solid #1e1e2a}
+header h1{font-size:clamp(1.5rem,4vw,2.2rem);margin-bottom:.5rem}
+header p{color:#9090a0;font-size:.9rem}
+.reading-time{display:inline-block;background:#12121a;padding:.25rem .75rem;border-radius:1rem;font-size:.75rem;color:#9090a0;margin-top:.5rem}
+.privacy-note{text-align:center;background:#12121a;border:1px solid #1e1e2a;border-radius:.5rem;padding:.75rem;margin:1.5rem auto;font-size:.8rem;color:#9090a0;max-width:500px}
+.privacy-note span{color:#00ff88}
+.toc{background:#12121a;border:1px solid #1e1e2a;border-radius:.75rem;padding:1.25rem;margin:1.5rem 0}
+.toc h3{font-size:.95rem;margin-bottom:.75rem;color:#00ff88}
+.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem}
+.toc li a{display:inline-block;padding:.3rem .75rem;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:.4rem;font-size:.8rem;color:#9090a0;transition:all .2s}
+.toc li a:hover{border-color:#00ff88;color:#00ff88;text-decoration:none}
+section{margin:2rem 0}
+h2{font-size:1.4rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #1e1e2a}
+h2 .accent{color:#00ff88}
+.card{background:#12121a;border:1px solid #1e1e2a;border-radius:.75rem;padding:1.5rem;margin-bottom:1rem}
+.btn{background:#00ff88;color:#0a0a0f;border:none;padding:.6rem 1.2rem;border-radius:.5rem;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn:hover{background:#00cc6a;transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid #00ff88;color:#00ff88}
+.btn-outline:hover{background:#00ff8815}
+.btn-sm{padding:.4rem .8rem;font-size:.8rem}
+.btn-copy{background:#12121a;border:1px solid #1e1e2a;color:#9090a0;padding:.3rem .6rem;border-radius:.3rem;cursor:pointer;font-size:.75rem;font-family:inherit;transition:all .2s}
+.btn-copy:hover{border-color:#00ff88;color:#00ff88}
+.btn-copy.copied{background:#00ff8825;border-color:#00ff88;color:#00ff88}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1rem}
+label{display:block;font-size:.8rem;color:#9090a0;margin-bottom:.3rem}
+input,select,textarea{width:100%;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:.4rem;padding:.6rem .8rem;color:#e0e0e8;font-size:.95rem;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#00ff88}
+textarea{resize:vertical;min-height:80px}
+.result-box{background:#0a0a0f;border:2px solid #00ff88;border-radius:.75rem;padding:1.25rem;text-align:center;margin:1rem 0}
+.result-box .result-value{font-size:2rem;font-weight:700;color:#00ff88}
+.result-box .result-label{font-size:.85rem;color:#9090a0;margin-top:.25rem}
+.result-box .result-formula{font-size:.8rem;color:#9090a0;margin-top:.5rem;font-family:monospace;background:#12121a;padding:.4rem .8rem;border-radius:.3rem;display:inline-block}
+.result-inline{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.calc-tabs{display:flex;gap:0;margin-bottom:1.5rem;border-radius:.5rem;overflow:hidden;border:1px solid #1e1e2a;flex-wrap:wrap}
+.calc-tab{flex:1;min-width:120px;padding:.65rem .5rem;text-align:center;cursor:pointer;background:#0a0a0f;font-size:.8rem;color:#9090a0;transition:all .2s;border:none;font-family:inherit}
+.calc-tab.active{background:#00ff88;color:#0a0a0f;font-weight:600}
+.calc-panel{display:none}
+.calc-panel.active{display:block}
+.batch-results{margin-top:1rem}
+.batch-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #1e1e2a10;font-size:.85rem;align-items:center}
+.batch-header{color:#9090a0;font-weight:500;border-bottom:1px solid #1e1e2a;padding-bottom:.5rem;font-size:.8rem}
+.history-list{max-height:300px;overflow-y:auto}
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid #1e1e2a10;font-size:.85rem}
+.faq-item{background:#12121a;border:1px solid #1e1e2a;border-radius:.75rem;margin-bottom:.75rem;overflow:hidden}
+.faq-q{padding:1rem 1.25rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:500}
+.faq-q::after{content:'+';color:#00ff88;font-size:1.2rem;transition:transform .2s}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{padding:0 1.25rem;max-height:0;overflow:hidden;transition:all .3s;color:#9090a0;font-size:.9rem}
+.faq-item.open .faq-a{padding:.5rem 1.25rem 1rem;max-height:500px}
+.cross-links{background:#12121a;border:1px solid #1e1e2a;border-radius:.75rem;padding:1.25rem;margin:2rem 0}
+.cross-links h3{font-size:.95rem;margin-bottom:.75rem;color:#9090a0}
+.cross-links ul{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem}
+.cross-links li a{display:inline-block;padding:.4rem .8rem;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:.4rem;font-size:.85rem;transition:all .2s}
+.cross-links li a:hover{border-color:#00ff88;text-decoration:none}
+footer{text-align:center;padding:2rem 1rem;border-top:1px solid #1e1e2a;color:#9090a0;font-size:.8rem;margin-top:2rem}
+@media(max-width:600px){.form-row{grid-template-columns:1fr}.calc-tab{min-width:80px;font-size:.7rem;padding:.5rem .25rem}.batch-row{grid-template-columns:1fr 1fr;gap:.4rem}.container{padding:.75rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>Percentage Change Calculator</h1>
+<p>Calculate percent increase, decrease, difference, reverse percentage, and percent of a number</p>
+<span class="reading-time">3 min read · Free tool by Michael Lip</span>
+</header>
+
+<div class="privacy-note"><span>&#128274;</span> All calculations happen in your browser. No data is sent or stored.</div>
+
+<nav class="toc">
+<h3>Table of Contents</h3>
+<ul>
+<li><a href="#calculator">Calculator</a></li>
+<li><a href="#batch">Batch Mode</a></li>
+<li><a href="#history">History</a></li>
+<li><a href="#formulas">Formulas</a></li>
+<li><a href="#examples">Common Examples</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ul>
+</nav>
+
+<section id="calculator">
+<h2>Percentage <span class="accent">Calculator</span></h2>
+
+<div class="calc-tabs">
+<button class="calc-tab active" onclick="showTab('change',this)">% Change</button>
+<button class="calc-tab" onclick="showTab('of',this)">% of Number</button>
+<button class="calc-tab" onclick="showTab('diff',this)">% Difference</button>
+<button class="calc-tab" onclick="showTab('reverse',this)">Reverse %</button>
+</div>
+
+<!-- % Change Panel -->
+<div class="calc-panel active" id="panel-change">
+<div class="card">
+<p style="font-size:.85rem;color:#9090a0;margin-bottom:1rem">Calculate the percentage increase or decrease from one value to another.</p>
+<div class="form-row">
+<div><label>Original Value</label><input type="number" id="changeFrom" placeholder="e.g. 50" oninput="calcChange()" step="any"></div>
+<div><label>New Value</label><input type="number" id="changeTo" placeholder="e.g. 75" oninput="calcChange()" step="any"></div>
+</div>
+<div id="changeResult"></div>
+</div>
+</div>
+
+<!-- % of Number Panel -->
+<div class="calc-panel" id="panel-of">
+<div class="card">
+<p style="font-size:.85rem;color:#9090a0;margin-bottom:1rem">Find what percentage of a number equals, or what percent one number is of another.</p>
+<div class="form-row">
+<div><label>What is</label><input type="number" id="ofPercent" placeholder="e.g. 25" oninput="calcOf()" step="any"></div>
+<div><label>% of</label><input type="number" id="ofNumber" placeholder="e.g. 200" oninput="calcOf()" step="any"></div>
+</div>
+<div id="ofResult"></div>
+<hr style="border-color:#1e1e2a;margin:1.5rem 0">
+<p style="font-size:.85rem;color:#9090a0;margin-bottom:1rem">Or: What percent is one number of another?</p>
+<div class="form-row">
+<div><label>Number</label><input type="number" id="isWhatNum" placeholder="e.g. 25" oninput="calcIsWhat()" step="any"></div>
+<div><label>is what % of</label><input type="number" id="isWhatTotal" placeholder="e.g. 200" oninput="calcIsWhat()" step="any"></div>
+</div>
+<div id="isWhatResult"></div>
+</div>
+</div>
+
+<!-- % Difference Panel -->
+<div class="calc-panel" id="panel-diff">
+<div class="card">
+<p style="font-size:.85rem;color:#9090a0;margin-bottom:1rem">Calculate the percentage difference between two values (order does not matter).</p>
+<div class="form-row">
+<div><label>Value 1</label><input type="number" id="diffA" placeholder="e.g. 30" oninput="calcDiff()" step="any"></div>
+<div><label>Value 2</label><input type="number" id="diffB" placeholder="e.g. 40" oninput="calcDiff()" step="any"></div>
+</div>
+<div id="diffResult"></div>
+</div>
+</div>
+
+<!-- Reverse % Panel -->
+<div class="calc-panel" id="panel-reverse">
+<div class="card">
+<p style="font-size:.85rem;color:#9090a0;margin-bottom:1rem">Find the original number before a percentage increase or decrease was applied.</p>
+<div class="form-row">
+<div><label>Final Value</label><input type="number" id="revValue" placeholder="e.g. 80" oninput="calcReverse()" step="any"></div>
+<div><label>Percentage Applied (%)</label><input type="number" id="revPercent" placeholder="e.g. 20" oninput="calcReverse()" step="any"></div>
+<div><label>Type</label>
+<select id="revType" onchange="calcReverse()">
+<option value="increase">After Increase</option>
+<option value="decrease">After Decrease</option>
+</select></div>
+</div>
+<div id="revResult"></div>
+</div>
+</div>
+</section>
+
+<section id="batch">
+<h2>Batch <span class="accent">Mode</span></h2>
+<div class="card">
+<p style="font-size:.85rem;color:#9090a0;margin-bottom:.75rem">Enter pairs of values (one per line, separated by comma) to calculate percentage change for multiple pairs at once.</p>
+<textarea id="batchInput" placeholder="50, 75&#10;100, 85&#10;200, 250&#10;1000, 1500" rows="5"></textarea>
+<div style="margin-top:.75rem;display:flex;gap:.75rem;flex-wrap:wrap">
+<button class="btn" onclick="calcBatch()">Calculate All</button>
+<button class="btn btn-outline btn-sm" onclick="copyBatch()">Copy Results</button>
+</div>
+<div id="batchResults" class="batch-results"></div>
+</div>
+</section>
+
+<section id="history">
+<h2>Calculation <span class="accent">History</span></h2>
+<div class="card">
+<div class="history-list" id="historyList">
+<p style="text-align:center;color:#9090a0;font-size:.85rem">Your calculations will appear here.</p>
+</div>
+<button class="btn btn-outline btn-sm" onclick="clearHistory()" style="margin-top:.75rem">Clear History</button>
+</div>
+</section>
+
+<section id="formulas">
+<h2>Percentage <span class="accent">Formulas</span></h2>
+<div class="card">
+<p style="margin-bottom:1rem"><strong>Percentage Change:</strong></p>
+<p style="font-family:monospace;background:#0a0a0f;padding:.5rem .8rem;border-radius:.3rem;margin-bottom:1rem;font-size:.9rem">Change% = ((New - Old) / |Old|) x 100</p>
+
+<p style="margin-bottom:1rem"><strong>Percentage of a Number:</strong></p>
+<p style="font-family:monospace;background:#0a0a0f;padding:.5rem .8rem;border-radius:.3rem;margin-bottom:1rem;font-size:.9rem">Result = (Percentage / 100) x Number</p>
+
+<p style="margin-bottom:1rem"><strong>Percentage Difference:</strong></p>
+<p style="font-family:monospace;background:#0a0a0f;padding:.5rem .8rem;border-radius:.3rem;margin-bottom:1rem;font-size:.9rem">Diff% = (|V1 - V2| / ((V1 + V2) / 2)) x 100</p>
+
+<p style="margin-bottom:1rem"><strong>Reverse Percentage (after increase):</strong></p>
+<p style="font-family:monospace;background:#0a0a0f;padding:.5rem .8rem;border-radius:.3rem;margin-bottom:1rem;font-size:.9rem">Original = Final / (1 + Percentage/100)</p>
+
+<p style="margin-bottom:1rem"><strong>Reverse Percentage (after decrease):</strong></p>
+<p style="font-family:monospace;background:#0a0a0f;padding:.5rem .8rem;border-radius:.3rem;font-size:.9rem">Original = Final / (1 - Percentage/100)</p>
+</div>
+</section>
+
+<section id="examples">
+<h2>Common <span class="accent">Examples</span></h2>
+<div class="card">
+<table style="width:100%;border-collapse:collapse;font-size:.85rem">
+<thead><tr style="border-bottom:1px solid #1e1e2a"><th style="text-align:left;padding:.5rem;color:#9090a0">Scenario</th><th style="text-align:left;padding:.5rem;color:#9090a0">Calculation</th><th style="text-align:left;padding:.5rem;color:#9090a0">Result</th></tr></thead>
+<tbody>
+<tr><td style="padding:.4rem .5rem">Price went from $50 to $65</td><td style="padding:.4rem .5rem">((65-50)/50) x 100</td><td style="padding:.4rem .5rem;color:#00ff88">+30% increase</td></tr>
+<tr><td style="padding:.4rem .5rem">Stock dropped from $150 to $120</td><td style="padding:.4rem .5rem">((120-150)/150) x 100</td><td style="padding:.4rem .5rem;color:#ff4455">-20% decrease</td></tr>
+<tr><td style="padding:.4rem .5rem">25% of 480</td><td style="padding:.4rem .5rem">(25/100) x 480</td><td style="padding:.4rem .5rem">120</td></tr>
+<tr><td style="padding:.4rem .5rem">Sale price $80 after 20% off</td><td style="padding:.4rem .5rem">80 / (1 - 0.20)</td><td style="padding:.4rem .5rem">Original: $100</td></tr>
+<tr><td style="padding:.4rem .5rem">Difference between 30 and 50</td><td style="padding:.4rem .5rem">|30-50| / ((30+50)/2) x 100</td><td style="padding:.4rem .5rem">50% difference</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="faq">
+<h2>Frequently Asked <span class="accent">Questions</span></h2>
+<div class="faq-item open">
+<div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do you calculate percentage change?</div>
+<div class="faq-a">Percentage change is calculated as: ((New Value - Old Value) / |Old Value|) x 100. A positive result means a percentage increase, while a negative result means a percentage decrease. For example, going from 50 to 75: ((75-50)/50) x 100 = 50% increase.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is percentage difference vs percentage change?</div>
+<div class="faq-a">Percentage difference compares two values symmetrically, without treating either as the "original." It uses the average of both values as the denominator: |V1-V2| / ((V1+V2)/2) x 100. Percentage change, on the other hand, measures how much one specific value changed relative to its starting point.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is a reverse percentage calculation?</div>
+<div class="faq-a">A reverse percentage calculation finds the original number before a percentage was applied. For example, if a price after a 20% discount is $80, the original price was $80 / (1 - 0.20) = $100. Similarly, if a value after a 15% increase is $115, the original was $115 / (1 + 0.15) = $100.</div>
+</div>
+</section>
+
+<div class="cross-links">
+<h3>Related Tools</h3>
+<ul>
+<li><a href="/free-tools/percentage-calculator/">Percentage Calculator</a></li>
+<li><a href="/free-tools/discount-calculator/">Discount Calculator</a></li>
+<li><a href="/free-tools/markup-calculator/">Markup Calculator</a></li>
+</ul>
+</div>
+
+<footer>&copy; 2026 Zovo &middot; Free Browser Tools &middot; zovo.one</footer>
+</div>
+
+<script>
+let history = [];
+
+function showTab(id, el) {
+  document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function addHistory(type, input, result) {
+  history.unshift({ type, input, result, time: new Date().toLocaleTimeString() });
+  if (history.length > 50) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (history.length === 0) {
+    list.innerHTML = '<p style="text-align:center;color:#9090a0;font-size:.85rem">Your calculations will appear here.</p>';
+    return;
+  }
+  list.innerHTML = history.map(h => `
+    <div class="history-item">
+      <div><span style="color:#00ff88;font-size:.75rem">${h.type}</span> <span>${h.input}</span></div>
+      <div class="result-inline">
+        <strong>${h.result}</strong>
+        <button class="btn-copy" onclick="copyText('${h.result.replace(/'/g, "\\'")}',this)">Copy</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function clearHistory() {
+  history = [];
+  renderHistory();
+}
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    if (btn) {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+    }
+  });
+}
+
+function fmtNum(n) {
+  if (Number.isInteger(n)) return n.toLocaleString();
+  return parseFloat(n.toFixed(6)).toLocaleString(undefined, { maximumFractionDigits: 6 });
+}
+
+function calcChange() {
+  const from = parseFloat(document.getElementById('changeFrom').value);
+  const to = parseFloat(document.getElementById('changeTo').value);
+  if (isNaN(from) || isNaN(to)) { document.getElementById('changeResult').innerHTML = ''; return; }
+  if (from === 0) {
+    document.getElementById('changeResult').innerHTML = '<div class="result-box"><div class="result-value">Undefined</div><div class="result-label">Cannot calculate percentage change from zero</div></div>';
+    return;
+  }
+  const change = ((to - from) / Math.abs(from)) * 100;
+  const diff = to - from;
+  const direction = change >= 0 ? 'increase' : 'decrease';
+  const color = change >= 0 ? '#00ff88' : '#ff4455';
+  const arrow = change >= 0 ? '&#9650;' : '&#9660;';
+
+  document.getElementById('changeResult').innerHTML = `
+    <div class="result-box">
+      <div class="result-value" style="color:${color}">${arrow} ${Math.abs(change).toFixed(2)}%</div>
+      <div class="result-label">${fmtNum(from)} &rarr; ${fmtNum(to)} = ${change >= 0 ? '+' : ''}${fmtNum(diff)} (${Math.abs(change).toFixed(2)}% ${direction})</div>
+      <div class="result-formula">((${fmtNum(to)} - ${fmtNum(from)}) / |${fmtNum(from)}|) &times; 100 = ${change.toFixed(2)}%</div>
+      <div style="margin-top:.5rem"><button class="btn-copy" onclick="copyText('${Math.abs(change).toFixed(2)}%',this)">Copy Result</button></div>
+    </div>`;
+
+  addHistory('% Change', `${fmtNum(from)} → ${fmtNum(to)}`, `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`);
+}
+
+function calcOf() {
+  const pct = parseFloat(document.getElementById('ofPercent').value);
+  const num = parseFloat(document.getElementById('ofNumber').value);
+  if (isNaN(pct) || isNaN(num)) { document.getElementById('ofResult').innerHTML = ''; return; }
+  const result = (pct / 100) * num;
+
+  document.getElementById('ofResult').innerHTML = `
+    <div class="result-box">
+      <div class="result-value">${fmtNum(result)}</div>
+      <div class="result-label">${fmtNum(pct)}% of ${fmtNum(num)} = ${fmtNum(result)}</div>
+      <div class="result-formula">(${fmtNum(pct)} / 100) &times; ${fmtNum(num)} = ${fmtNum(result)}</div>
+      <div style="margin-top:.5rem"><button class="btn-copy" onclick="copyText('${result}',this)">Copy Result</button></div>
+    </div>`;
+
+  addHistory('% of', `${fmtNum(pct)}% of ${fmtNum(num)}`, fmtNum(result));
+}
+
+function calcIsWhat() {
+  const num = parseFloat(document.getElementById('isWhatNum').value);
+  const total = parseFloat(document.getElementById('isWhatTotal').value);
+  if (isNaN(num) || isNaN(total)) { document.getElementById('isWhatResult').innerHTML = ''; return; }
+  if (total === 0) {
+    document.getElementById('isWhatResult').innerHTML = '<div class="result-box"><div class="result-value">Undefined</div><div class="result-label">Cannot divide by zero</div></div>';
+    return;
+  }
+  const pct = (num / total) * 100;
+
+  document.getElementById('isWhatResult').innerHTML = `
+    <div class="result-box">
+      <div class="result-value">${pct.toFixed(2)}%</div>
+      <div class="result-label">${fmtNum(num)} is ${pct.toFixed(2)}% of ${fmtNum(total)}</div>
+      <div class="result-formula">(${fmtNum(num)} / ${fmtNum(total)}) &times; 100 = ${pct.toFixed(2)}%</div>
+      <div style="margin-top:.5rem"><button class="btn-copy" onclick="copyText('${pct.toFixed(2)}%',this)">Copy Result</button></div>
+    </div>`;
+
+  addHistory('is what %', `${fmtNum(num)} of ${fmtNum(total)}`, `${pct.toFixed(2)}%`);
+}
+
+function calcDiff() {
+  const a = parseFloat(document.getElementById('diffA').value);
+  const b = parseFloat(document.getElementById('diffB').value);
+  if (isNaN(a) || isNaN(b)) { document.getElementById('diffResult').innerHTML = ''; return; }
+  const avg = (a + b) / 2;
+  if (avg === 0) {
+    document.getElementById('diffResult').innerHTML = '<div class="result-box"><div class="result-value">0%</div><div class="result-label">Both values are zero</div></div>';
+    return;
+  }
+  const diff = (Math.abs(a - b) / avg) * 100;
+
+  document.getElementById('diffResult').innerHTML = `
+    <div class="result-box">
+      <div class="result-value">${diff.toFixed(2)}%</div>
+      <div class="result-label">Percentage difference between ${fmtNum(a)} and ${fmtNum(b)}</div>
+      <div class="result-formula">|${fmtNum(a)} - ${fmtNum(b)}| / ((${fmtNum(a)} + ${fmtNum(b)}) / 2) &times; 100 = ${diff.toFixed(2)}%</div>
+      <div style="margin-top:.5rem"><button class="btn-copy" onclick="copyText('${diff.toFixed(2)}%',this)">Copy Result</button></div>
+    </div>`;
+
+  addHistory('% Diff', `${fmtNum(a)} vs ${fmtNum(b)}`, `${diff.toFixed(2)}%`);
+}
+
+function calcReverse() {
+  const final = parseFloat(document.getElementById('revValue').value);
+  const pct = parseFloat(document.getElementById('revPercent').value);
+  const type = document.getElementById('revType').value;
+  if (isNaN(final) || isNaN(pct)) { document.getElementById('revResult').innerHTML = ''; return; }
+
+  let original, formula;
+  if (type === 'increase') {
+    if (1 + pct / 100 === 0) { document.getElementById('revResult').innerHTML = '<div class="result-box"><div class="result-value">Undefined</div></div>'; return; }
+    original = final / (1 + pct / 100);
+    formula = `${fmtNum(final)} / (1 + ${fmtNum(pct)}/100) = ${fmtNum(original)}`;
+  } else {
+    if (1 - pct / 100 === 0) { document.getElementById('revResult').innerHTML = '<div class="result-box"><div class="result-value">Undefined</div><div class="result-label">100% decrease means the original could be any value</div></div>'; return; }
+    original = final / (1 - pct / 100);
+    formula = `${fmtNum(final)} / (1 - ${fmtNum(pct)}/100) = ${fmtNum(original)}`;
+  }
+
+  document.getElementById('revResult').innerHTML = `
+    <div class="result-box">
+      <div class="result-value">${fmtNum(original)}</div>
+      <div class="result-label">Original value before ${pct}% ${type}: ${fmtNum(original)} &rarr; ${fmtNum(final)}</div>
+      <div class="result-formula">${formula}</div>
+      <div style="margin-top:.5rem"><button class="btn-copy" onclick="copyText('${original}',this)">Copy Result</button></div>
+    </div>`;
+
+  addHistory('Reverse %', `${fmtNum(final)} after ${pct}% ${type}`, fmtNum(original));
+}
+
+function calcBatch() {
+  const input = document.getElementById('batchInput').value.trim();
+  if (!input) return;
+  const lines = input.split('\n').filter(l => l.trim());
+
+  let html = '<div class="batch-row batch-header"><div>From</div><div>To</div><div>% Change</div><div></div></div>';
+  const results = [];
+
+  lines.forEach(line => {
+    const parts = line.split(/[,\t]+/).map(s => parseFloat(s.trim()));
+    if (parts.length < 2 || isNaN(parts[0]) || isNaN(parts[1])) return;
+    const from = parts[0], to = parts[1];
+    if (from === 0) {
+      html += `<div class="batch-row"><div>${fmtNum(from)}</div><div>${fmtNum(to)}</div><div>N/A</div><div></div></div>`;
+      results.push(`${from}, ${to}, N/A`);
+      return;
+    }
+    const change = ((to - from) / Math.abs(from)) * 100;
+    const color = change >= 0 ? '#00ff88' : '#ff4455';
+    const arrow = change >= 0 ? '&#9650;' : '&#9660;';
+    html += `<div class="batch-row"><div>${fmtNum(from)}</div><div>${fmtNum(to)}</div><div style="color:${color};font-weight:600">${arrow} ${Math.abs(change).toFixed(2)}%</div><div><button class="btn-copy" onclick="copyText('${change.toFixed(2)}%',this)">Copy</button></div></div>`;
+    results.push(`${from}, ${to}, ${change.toFixed(2)}%`);
+  });
+
+  document.getElementById('batchResults').innerHTML = html;
+  document.getElementById('batchResults').dataset.results = results.join('\n');
+}
+
+function copyBatch() {
+  const el = document.getElementById('batchResults');
+  const data = el.dataset.results;
+  if (data) {
+    copyText(data, event.target);
+  }
+}
+</script>
+</body>
+</html>
