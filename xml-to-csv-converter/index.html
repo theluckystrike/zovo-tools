@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XML to CSV Converter - Free Online Tool | Zovo</title>
+<meta name="description" content="Convert XML data to CSV format online. Auto-detects repeating elements, extracts attributes and child elements, handles namespaces. 100% free, runs in your b...">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/xml-to-csv-converter/">
+<meta property="og:title" content="XML to CSV Converter - Free Online Tool">
+<meta property="og:description" content="Convert XML documents to CSV format with automatic row detection, attribute extraction, and namespace handling.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/xml-to-csv-converter/">
+<meta property="og:image" content="https://zovo.one/xml-to-csv-converter/og-image.png">
+<meta property="og:site_name" content="Zovo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XML to CSV Converter - Free Online Tool">
+<meta name="twitter:description" content="Convert XML to CSV instantly. Auto-detect rows, extract attributes, handle namespaces, and download clean CSV files.">
+<meta name="twitter:image" content="https://zovo.one/xml-to-csv-converter/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "XML to CSV Converter",
+  "url": "https://zovo.one/xml-to-csv-converter/",
+  "description": "Convert XML data to CSV format with automatic row detection, element and attribute extraction, and configurable output options.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires a modern web browser with JavaScript enabled",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does the XML to CSV converter detect rows?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The converter scans the XML document for repeating elements at the same level. It counts occurrences of each element name and presents them in a dropdown so you can select which element represents a data row."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are XML attributes included in the CSV output?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Attributes are extracted alongside child elements and appear as columns prefixed with @ (e.g., @id, @type). You can rename or exclude any attribute column in the mapping panel."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the converter handle XML namespaces?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "By default, namespace prefixes are stripped from element names for cleaner column headers. You can toggle namespace preservation in the options if your workflow requires the full qualified names."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my XML data uploaded to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. All parsing and conversion happens entirely in your browser using the built-in DOMParser API. Your data never leaves your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert large XML files?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The converter handles files up to several megabytes comfortably in modern browsers. Performance depends on your device's memory and processing power. For very large files, consider splitting them first."
+      }
+    }
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#e0e0e8;font-family:system-ui,-apple-system,sans-serif;line-height:1.7;min-height:100vh}
+a{color:#00ff88;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:2.2rem;font-weight:700;margin-bottom:8px;color:#fff}
+h1 span{color:#00ff88}
+.subtitle{color:#b0b0c0;font-size:1.1rem;margin-bottom:24px}
+.reading-time{color:#b0b0c0;font-size:0.85rem;margin-bottom:20px;display:inline-block;background:#1a1a2e;padding:4px 12px;border-radius:20px}
+.toc{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px 0}
+.toc h3{color:#fff;font-size:1rem;margin-bottom:12px}
+.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px 16px}
+.toc li a{color:#00ff88;font-size:0.9rem}
+.card{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:20px}
+.card-title{font-size:1rem;font-weight:600;color:#fff;margin-bottom:12px}
+label{display:block;color:#b0b0c0;font-size:0.85rem;margin-bottom:6px;font-weight:500}
+textarea{width:100%;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;color:#e0e0e8;font-family:'Courier New',monospace;font-size:0.9rem;padding:14px;resize:vertical;min-height:200px;transition:border-color .2s}
+textarea:focus{outline:none;border-color:#00ff88}
+.drop-zone{border:2px dashed #1e1e2a;border-radius:12px;padding:40px 20px;text-align:center;color:#b0b0c0;cursor:pointer;transition:all .2s;margin-bottom:12px}
+.drop-zone:hover,.drop-zone.dragover{border-color:#00ff88;background:rgba(0,255,136,0.03);color:#00ff88}
+.btn{background:#00ff88;color:#0a0a0f;border:none;padding:10px 20px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn:hover{background:#00e07a;transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid #1e1e2a;color:#e0e0e8}
+.btn-outline:hover{border-color:#00ff88;color:#00ff88;background:transparent}
+.btn-sm{padding:6px 14px;font-size:0.8rem}
+.btn-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.options-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+select,input[type="text"]{background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;color:#e0e0e8;padding:8px 12px;font-size:0.85rem;width:100%}
+select:focus,input[type="text"]:focus{outline:none;border-color:#00ff88}
+.columns-list{max-height:300px;overflow-y:auto;border:1px solid #1e1e2a;border-radius:8px;background:#0a0a0f}
+.col-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid #1e1e2a;cursor:grab;transition:background .15s}
+.col-item:last-child{border-bottom:none}
+.col-item:hover{background:#1a1a2e}
+.col-item.dragging{opacity:0.4;background:#1a1a2e}
+.col-item input[type="checkbox"]{accent-color:#00ff88;width:16px;height:16px;cursor:pointer}
+.col-item .col-name{flex:1;font-size:0.85rem;color:#e0e0e8}
+.col-item input[type="text"]{width:140px;padding:4px 8px;font-size:0.8rem}
+.col-item .drag-handle{color:#555;font-size:1.1rem;cursor:grab}
+.stats{display:flex;gap:20px;flex-wrap:wrap;margin:12px 0}
+.stat{background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;padding:10px 16px;text-align:center}
+.stat-val{font-size:1.4rem;font-weight:700;color:#00ff88}
+.stat-label{font-size:0.75rem;color:#b0b0c0}
+.preview-wrap{overflow-x:auto;margin-top:12px}
+.preview-wrap table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.preview-wrap th{background:#1a1a2e;color:#00ff88;padding:8px 10px;text-align:left;white-space:nowrap;position:sticky;top:0}
+.preview-wrap td{padding:6px 10px;border-bottom:1px solid #1e1e2a;color:#e0e0e8;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.preview-wrap tr:hover td{background:#1a1a2e}
+.csv-output{width:100%;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;color:#e0e0e8;font-family:'Courier New',monospace;font-size:0.82rem;padding:14px;min-height:120px;resize:vertical}
+.success-msg{color:#00ff88;font-size:0.85rem;margin-top:8px;opacity:0;transition:opacity .3s}
+.success-msg.show{opacity:1}
+.error-msg{color:#ff4466;font-size:0.85rem;margin-top:8px}
+.hidden{display:none}
+.row-selector{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.row-selector select{width:auto;min-width:200px}
+.row-selector .elem-count{color:#00ff88;font-size:0.85rem}
+h2{font-size:1.5rem;font-weight:700;color:#fff;margin:48px 0 16px;padding-top:12px}
+h2:first-of-type{margin-top:32px}
+.content-section p{color:#b0b0c0;margin-bottom:16px;font-size:0.95rem}
+.content-section ul,.content-section ol{color:#b0b0c0;margin:0 0 16px 20px;font-size:0.95rem}
+.content-section li{margin-bottom:6px}
+.content-section code{background:#1a1a2e;padding:2px 6px;border-radius:4px;font-size:0.85rem;color:#00ff88}
+.faq-item{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin-bottom:12px}
+.faq-item h3{color:#fff;font-size:1rem;margin-bottom:8px}
+.faq-item p{color:#b0b0c0;font-size:0.9rem;margin:0}
+.privacy-note{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px 0}
+.privacy-note h3{color:#00ff88;margin-bottom:8px}
+.privacy-note p{color:#b0b0c0;font-size:0.9rem;margin:0}
+.related-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:20px 0}
+.related-tool{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:16px 20px;transition:border-color .2s}
+.related-tool:hover{border-color:#00ff88}
+.related-tool h4{color:#fff;margin-bottom:4px;font-size:0.95rem}
+.related-tool p{color:#b0b0c0;font-size:0.8rem;margin:0}
+footer{text-align:center;padding:40px 20px;color:#b0b0c0;font-size:0.85rem;border-top:1px solid #1e1e2a;margin-top:40px}
+footer a{color:#00ff88}
+@media(max-width:600px){
+  h1{font-size:1.6rem}
+  .options-grid{grid-template-columns:1fr}
+  .toc ul{flex-direction:column}
+  .stats{flex-direction:column}
+  .related-tools{grid-template-columns:1fr}
+  .row-selector{flex-direction:column;align-items:flex-start}
+}
+</style>
+<meta name="date" content="2026-03-20">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://zovo.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Free Tools",
+      "item": "https://zovo.one/free-tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "XML to CSV Converter",
+      "item": "https://zovo.one/free-tools/xml-to-csv-converter/"
+    }
+  ]
+}
+</script>
+
+<meta name="ai-generated" content="false">
+<meta name="human-authored" content="true">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+<h1>XML to <span>CSV</span> Converter</h1>
+
+<nav id="toc" style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px auto;max-width:600px;">
+  <h2 style="color:#00ff88;font-size:1rem;margin:0 0 12px 0;">Table of Contents</h2>
+  <ul style="list-style:none;padding:0;margin:0;">
+    <li style="margin:6px 0;"><a href="#converter-tool" style="color:#b0b0c0;text-decoration:none;">Converter Tool</a></li>
+    <li style="margin:6px 0;"><a href="#how-it-works" style="color:#b0b0c0;text-decoration:none;">How It Works</a></li>
+    <li style="margin:6px 0;"><a href="#xml-structure-guide" style="color:#b0b0c0;text-decoration:none;">XML Structure Guide</a></li>
+    <li style="margin:6px 0;"><a href="#row-detection" style="color:#b0b0c0;text-decoration:none;">Row Detection</a></li>
+    <li style="margin:6px 0;"><a href="#csv-output-options" style="color:#b0b0c0;text-decoration:none;">CSV Output Options</a></li>
+    <li style="margin:6px 0;"><a href="#common-use-cases" style="color:#b0b0c0;text-decoration:none;">Common Use Cases</a></li>
+    <li style="margin:6px 0;"><a href="#frequently-asked-questions" style="color:#b0b0c0;text-decoration:none;">Frequently Asked Questions</a></li>
+    <li style="margin:6px 0;"><a href="#browser-compatibility" style="color:#b0b0c0;text-decoration:none;">Browser Compatibility</a></li>
+    <li style="margin:6px 0;"><a href="#related-tools" style="color:#b0b0c0;text-decoration:none;">Related Tools</a></li>
+    <li style="margin:6px 0;"><a href="#about-this-tool" style="color:#b0b0c0;text-decoration:none;">About This Tool</a></li>
+  </ul>
+</nav>
+
+<p class="subtitle">Parse XML documents and export clean CSV files. Auto-detects repeating elements, extracts attributes, and handles namespaces.</p>
+<span class="reading-time">8 min read</span>
+
+<nav class="toc">
+<h3>On This Page</h3>
+<ul>
+<li><a href="#tool">Converter Tool</a></li>
+<li><a href="#how-it-works">How It Works</a></li>
+<li><a href="#xml-structure">XML Structure Guide</a></li>
+<li><a href="#row-detection">Row Detection</a></li>
+<li><a href="#csv-options">CSV Output Options</a></li>
+<li><a href="#use-cases">Common Use Cases</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#browser-support">Browser Support</a></li>
+</ul>
+</nav>
+
+<!-- TOOL SECTION -->
+<h2 id="tool">Converter Tool</h2>
+
+<div class="card">
+<div class="card-title">1. Input XML Data</div>
+<div class="drop-zone" id="dropZone">
+  Drop an .xml file here, or click to browse
+  <input type="file" id="fileInput" accept=".xml,.txt" style="display:none">
+</div>
+<label for="xmlInput">Or paste XML below:</label>
+<textarea id="xmlInput" placeholder='<employees>
+  <employee id="1">
+    <name>Alice</name>
+    <department>Engineering</department>
+  </employee>
+</employees>'></textarea>
+<div class="btn-group">
+  <button class="btn" onclick="parseXML()">Parse XML</button>
+  <button class="btn btn-outline" onclick="loadSample()">Load Sample</button>
+  <button class="btn btn-outline" onclick="clearAll()">Clear</button>
+</div>
+<div id="parseError" class="error-msg hidden"></div>
+</div>
+
+<div id="rowCard" class="card hidden">
+<div class="card-title">2. Select Row Element</div>
+<p style="color:#b0b0c0;font-size:0.85rem;margin-bottom:12px">Choose which repeating XML element represents a data row.</p>
+<div class="row-selector">
+  <select id="rowElement" onchange="onRowElementChange()"></select>
+  <span class="elem-count" id="elemCount"></span>
+</div>
+<label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:8px">
+  <input type="checkbox" id="stripNamespaces" checked style="accent-color:#00ff88;width:16px;height:16px" onchange="onRowElementChange()">
+  Strip namespace prefixes
+</label>
+</div>
+
+<div id="columnsCard" class="card hidden">
+<div class="card-title">3. Column Mapping</div>
+<p style="color:#b0b0c0;font-size:0.85rem;margin-bottom:12px">Drag to reorder. Uncheck to exclude. Rename headers inline.</p>
+<div class="columns-list" id="columnsList"></div>
+<div class="btn-group">
+  <button class="btn btn-sm btn-outline" onclick="selectAllCols(true)">Select All</button>
+  <button class="btn btn-sm btn-outline" onclick="selectAllCols(false)">Deselect All</button>
+</div>
+</div>
+
+<div id="optionsCard" class="card hidden">
+<div class="card-title">4. CSV Options</div>
+<div class="options-grid">
+  <div>
+    <label for="delimiter">Delimiter</label>
+    <select id="delimiter">
+      <option value=",">Comma (,)</option>
+      <option value=";">Semicolon (;)</option>
+      <option value="&#9;">Tab</option>
+      <option value="|">Pipe (|)</option>
+    </select>
+  </div>
+  <div>
+    <label for="quoteChar">Quote Character</label>
+    <select id="quoteChar">
+      <option value='"'>Double Quote (")</option>
+      <option value="'">Single Quote (')</option>
+    </select>
+  </div>
+  <div>
+    <label for="lineEnding">Line Ending</label>
+    <select id="lineEnding">
+      <option value="\r\n">CRLF (Windows)</option>
+      <option value="\n">LF (Unix/Mac)</option>
+    </select>
+  </div>
+  <div>
+    <label style="visibility:hidden">_</label>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+      <input type="checkbox" id="includeHeader" checked style="accent-color:#00ff88;width:16px;height:16px">
+      Include Header Row
+    </label>
+  </div>
+</div>
+<div class="btn-group" style="margin-top:16px">
+  <button class="btn" onclick="generateCSV()">Generate CSV</button>
+</div>
+</div>
+
+<div id="previewCard" class="card hidden">
+<div class="card-title">5. Preview</div>
+<div class="stats" id="statsBar"></div>
+<div class="preview-wrap" id="previewTable" style="max-height:360px;overflow-y:auto"></div>
+</div>
+
+<div id="outputCard" class="card hidden">
+<div class="card-title">6. CSV Output</div>
+<textarea class="csv-output" id="csvOutput" readonly></textarea>
+<div class="btn-group">
+  <button class="btn" onclick="downloadCSV()">Download .csv</button>
+  <button class="btn btn-outline" onclick="copyCSV()">Copy to Clipboard</button>
+</div>
+<div id="copyMsg" class="success-msg">Copied to clipboard!</div>
+</div>
+
+<!-- EDITORIAL CONTENT -->
+<div class="content-section">
+
+<h2 id="how-it-works">How It Works</h2>
+<p>This converter uses the browser's built-in <code>DOMParser</code> to read your XML input and build a document tree. It then scans the tree for repeating elements at the same depth, which typically represent data rows. Child elements and attributes within each repeating element are extracted as columns.</p>
+<p>The detection algorithm counts element occurrences by name, grouping them by parent. Elements that appear multiple times under the same parent are the strongest row candidates and appear first in the selection dropdown. Once you pick the row element, the tool walks each instance to discover all child elements (including nested paths) and attributes, building a complete column list.</p>
+<p>CDATA sections are unwrapped to plain text, XML entities are decoded automatically, and mixed content (text interleaved with child elements) is handled by concatenating all text nodes. The result is a clean, flat table that maps directly to CSV rows and columns.</p>
+
+<h2 id="xml-structure">XML Structure Guide</h2>
+<p>XML documents come in many shapes. Here are the patterns this converter handles well:</p>
+<ul>
+  <li><strong>Simple list</strong> &mdash; A root element containing repeated child elements, each with the same set of sub-elements. This is the most straightforward case.</li>
+  <li><strong>Attributes as data</strong> &mdash; Some XML schemas store values in attributes rather than child elements. Attributes are extracted with an <code>@</code> prefix (e.g., <code>@id</code>, <code>@type</code>).</li>
+  <li><strong>Nested elements</strong> &mdash; Child elements that contain further sub-elements are flattened using dot notation, like <code>address.city</code>. This keeps the hierarchy visible in column headers.</li>
+  <li><strong>Namespaced elements</strong> &mdash; XML namespaces add prefixes like <code>ns:</code> to element names. The converter strips these by default for cleaner headers, with an option to preserve them.</li>
+  <li><strong>CDATA and entities</strong> &mdash; Content wrapped in <code>&lt;![CDATA[...]]&gt;</code> is treated as plain text. Standard XML entities (<code>&amp;amp;</code>, <code>&amp;lt;</code>, etc.) are decoded automatically.</li>
+</ul>
+
+<h2 id="row-detection">Row Detection</h2>
+<p>The key challenge in XML-to-CSV conversion is identifying which element represents a "row." Unlike JSON arrays, XML does not have a built-in array type, so the tool relies on heuristics: elements that repeat at the same level under the same parent are likely rows.</p>
+<p>After parsing, the converter presents all detected repeating elements in a dropdown, sorted by count. The element with the most occurrences is pre-selected as the likely row candidate. You can change this selection at any time, and the column mapping updates instantly.</p>
+<p>This approach handles common formats like <a href="https://en.wikipedia.org/wiki/RSS" target="_blank" rel="noopener">RSS feeds</a> (where <code>&lt;item&gt;</code> elements are the rows), <a href="https://developer.mozilla.org/en-US/docs/Web/XML/XML_introduction" target="_blank" rel="noopener">XML data exports</a> from databases, SOAP responses, and custom application schemas.</p>
+
+<h2 id="csv-options">CSV Output Options</h2>
+<p>Fine-tune the CSV output to match your target application's expectations. The delimiter setting is the most important: commas are universal, but European spreadsheet software often expects semicolons because commas are used as decimal separators in those locales. Tab-delimited files sidestep delimiter conflicts, and pipe-delimited files integrate well with shell scripts and ETL pipelines.</p>
+<p>The quote character wraps any value that contains the delimiter character, newlines, or the quote character itself (which gets doubled per the <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank" rel="noopener">RFC 4180 standard</a>). Toggle the header row off when appending to existing files or feeding data into systems that expect raw values.</p>
+
+<h2 id="use-cases">Common Use Cases</h2>
+<ol>
+  <li><strong>RSS and Atom feeds</strong> &mdash; Pull article titles, links, dates, and descriptions from feed XML into a spreadsheet for content planning.</li>
+  <li><strong>SOAP API responses</strong> &mdash; Legacy web services return XML. Extract the data payload into CSV for analysis without writing a full parser.</li>
+  <li><strong>Database exports</strong> &mdash; SQL Server, Oracle, and other databases can export XML. Convert to CSV for import into different systems.</li>
+  <li><strong>Configuration audits</strong> &mdash; Server or application config files in XML format can be tabulated for review and comparison.</li>
+  <li><strong>Data migration</strong> &mdash; Move data between systems that speak different formats. XML in, CSV out, ready for import.</li>
+</ol>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="faq-item">
+<h3>How does the XML to CSV converter detect rows?</h3>
+<p>The converter scans the XML document for repeating elements at the same level. It counts occurrences of each element name and presents them in a dropdown so you can select which element represents a data row.</p>
+</div>
+<div class="faq-item">
+<h3>Are XML attributes included in the CSV output?</h3>
+<p>Yes. Attributes are extracted alongside child elements and appear as columns prefixed with @ (e.g., @id, @type). You can rename or exclude any attribute column in the mapping panel.</p>
+</div>
+<div class="faq-item">
+<h3>How does the converter handle XML namespaces?</h3>
+<p>By default, namespace prefixes are stripped from element names for cleaner column headers. You can toggle namespace preservation in the options if your workflow requires the full qualified names.</p>
+</div>
+<div class="faq-item">
+<h3>Is my XML data uploaded to a server?</h3>
+<p>No. All parsing and conversion happens entirely in your browser using the built-in DOMParser API. Your data never leaves your device.</p>
+</div>
+<div class="faq-item">
+<h3>Can I convert large XML files?</h3>
+<p>The converter handles files up to several megabytes comfortably in modern browsers. Performance depends on your device's memory and processing power. For very large files, consider splitting them first.</p>
+</div>
+
+<h2 id="browser-support">Browser Compatibility</h2>
+<p>This tool runs in all modern browsers: Chrome 80+, Firefox 78+, Safari 14+, and Edge 80+. It uses the native <code>DOMParser</code> API, <code>FileReader</code>, <code>Blob</code>, and the Clipboard API. No extensions, plugins, or server calls needed. Mobile browsers on iOS and Android are supported, though drag-and-drop file upload works best on desktop devices.</p>
+
+</div>
+
+<div class="privacy-note">
+<h3>Privacy Note</h3>
+<p>All XML parsing and CSV generation happens locally in your browser. No data is uploaded, stored, or transmitted to any server. You can disconnect from the internet and use this tool offline. Your data stays on your device at all times.</p>
+</div>
+
+<h2 id="related">Related Tools</h2>
+<div class="related-tools">
+<a href="/json-to-csv-converter" class="related-tool">
+  <h4>JSON to CSV Converter</h4>
+  <p>Convert JSON data to CSV with intelligent column mapping and nested object flattening.</p>
+</a>
+<a href="/csv-to-json-converter" class="related-tool">
+  <h4>CSV to JSON Converter</h4>
+  <p>Upload CSV files and get structured JSON output with type detection.</p>
+</a>
+<a href="/xml-formatter" class="related-tool">
+  <h4>XML Formatter</h4>
+  <p>Pretty-print, validate, and minify XML documents with syntax highlighting.</p>
+</a>
+</div>
+
+</div>
+
+<footer>
+Built by Michael Lip &middot; More free tools at <a href="https://zovo.one">zovo.one</a>
+</footer>
+
+<script>
+let xmlDoc = null;
+let detectedElements = [];
+let parsedRows = [];
+let allColumns = [];
+let columnOrder = [];
+let columnEnabled = {};
+let columnRenames = {};
+
+const $ = id => document.getElementById(id);
+
+// Drag and drop
+const dropZone = $('dropZone');
+const fileInput = $('fileInput');
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) readFile(file);
+});
+fileInput.addEventListener('change', e => {
+  if (e.target.files[0]) readFile(e.target.files[0]);
+});
+
+function readFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    $('xmlInput').value = e.target.result;
+    parseXML();
+  };
+  reader.readAsText(file);
+}
+
+function stripNS(name) {
+  if (!$('stripNamespaces').checked) return name;
+  const i = name.indexOf(':');
+  return i >= 0 ? name.substring(i + 1) : name;
+}
+
+function getMaxDepth(el, depth) {
+  depth = depth || 1;
+  let max = depth;
+  for (const child of el.children) {
+    const d = getMaxDepth(child, depth + 1);
+    if (d > max) max = d;
+  }
+  return max;
+}
+
+function scanElements(root) {
+  // Count element occurrences by name (only direct children of each parent)
+  const counts = {};
+  function walk(el) {
+    const childCounts = {};
+    for (const child of el.children) {
+      const name = stripNS(child.tagName);
+      childCounts[name] = (childCounts[name] || 0) + 1;
+    }
+    for (const [name, count] of Object.entries(childCounts)) {
+      if (count > 1 || (counts[name] && counts[name] > 0)) {
+        counts[name] = (counts[name] || 0) + count;
+      }
+    }
+    for (const child of el.children) walk(child);
+  }
+  // Also count top-level repeats
+  const topCounts = {};
+  for (const child of root.children) {
+    const name = stripNS(child.tagName);
+    topCounts[name] = (topCounts[name] || 0) + 1;
+  }
+  for (const [name, count] of Object.entries(topCounts)) {
+    counts[name] = (counts[name] || 0) + count;
+  }
+  walk(root);
+
+  // Also add any element that appears at least once (for single-row conversions)
+  function walkAll(el) {
+    for (const child of el.children) {
+      const name = stripNS(child.tagName);
+      if (!counts[name]) counts[name] = 1;
+      walkAll(child);
+    }
+  }
+  walkAll(root);
+
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, count]) => ({ name, count }));
+}
+
+function getAllElementsByName(root, targetName) {
+  const results = [];
+  function walk(el) {
+    if (stripNS(el.tagName) === targetName) {
+      results.push(el);
+    }
+    for (const child of el.children) walk(child);
+  }
+  walk(root);
+  return results;
+}
+
+function extractFields(el, prefix) {
+  prefix = prefix || '';
+  const fields = {};
+
+  // Attributes
+  for (const attr of el.attributes) {
+    const key = prefix + '@' + stripNS(attr.name);
+    fields[key] = attr.value;
+  }
+
+  // Check if this element has child elements
+  const childElements = [...el.children];
+  if (childElements.length === 0) {
+    // Leaf element - get text content
+    if (prefix) {
+      // Don't store at prefix level, caller handles
+    }
+    const text = el.textContent.trim();
+    if (prefix && text) fields[prefix] = text;
+    if (!prefix && text) fields['_text'] = text;
+    return fields;
+  }
+
+  // Group children by name to detect arrays
+  const childGroups = {};
+  for (const child of childElements) {
+    const name = stripNS(child.tagName);
+    if (!childGroups[name]) childGroups[name] = [];
+    childGroups[name].push(child);
+  }
+
+  for (const [name, children] of Object.entries(childGroups)) {
+    if (children.length === 1) {
+      const child = children[0];
+      const childPath = prefix ? prefix + '.' + name : name;
+      if (child.children.length === 0) {
+        // Leaf
+        fields[childPath] = child.textContent.trim();
+        // Also get attributes of leaf
+        for (const attr of child.attributes) {
+          fields[childPath + '.@' + stripNS(attr.name)] = attr.value;
+        }
+      } else {
+        // Nested
+        Object.assign(fields, extractFields(child, childPath));
+      }
+    } else {
+      // Multiple children with same name - index them
+      children.forEach((child, idx) => {
+        const childPath = (prefix ? prefix + '.' : '') + name + '.' + idx;
+        if (child.children.length === 0) {
+          fields[childPath] = child.textContent.trim();
+          for (const attr of child.attributes) {
+            fields[childPath + '.@' + stripNS(attr.name)] = attr.value;
+          }
+        } else {
+          Object.assign(fields, extractFields(child, childPath));
+        }
+      });
+    }
+  }
+
+  // Get direct text content (mixed content)
+  if (prefix) {
+    let directText = '';
+    for (const node of el.childNodes) {
+      if (node.nodeType === 3) directText += node.textContent.trim();
+    }
+    if (directText) fields[prefix + '._text'] = directText;
+  }
+
+  return fields;
+}
+
+function parseXML() {
+  const raw = $('xmlInput').value.trim();
+  const errEl = $('parseError');
+  errEl.classList.add('hidden');
+
+  if (!raw) {
+    errEl.textContent = 'Please enter some XML data.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  const parser = new DOMParser();
+  xmlDoc = parser.parseFromString(raw, 'text/xml');
+
+  const parseErr = xmlDoc.querySelector('parsererror');
+  if (parseErr) {
+    errEl.textContent = 'XML Parse Error: ' + parseErr.textContent.substring(0, 200);
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  const root = xmlDoc.documentElement;
+  detectedElements = scanElements(root);
+
+  if (!detectedElements.length) {
+    errEl.textContent = 'No elements found in the XML document.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  // Populate dropdown
+  const sel = $('rowElement');
+  sel.innerHTML = '';
+  detectedElements.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.name;
+    opt.textContent = '<' + e.name + '> (' + e.count + ' found)';
+    sel.appendChild(opt);
+  });
+
+  $('rowCard').classList.remove('hidden');
+  onRowElementChange();
+}
+
+function onRowElementChange() {
+  const targetName = $('rowElement').value;
+  if (!targetName || !xmlDoc) return;
+
+  // Re-scan with current namespace setting
+  const root = xmlDoc.documentElement;
+  const elements = getAllElementsByName(root, targetName);
+  $('elemCount').textContent = elements.length + ' element' + (elements.length !== 1 ? 's' : '') + ' found';
+
+  // Extract rows
+  parsedRows = elements.map(el => extractFields(el, ''));
+
+  // Collect all columns
+  const colSet = new Set();
+  parsedRows.forEach(row => Object.keys(row).forEach(k => colSet.add(k)));
+  allColumns = [...colSet];
+  columnOrder = [...allColumns];
+  columnEnabled = {};
+  columnRenames = {};
+  allColumns.forEach(c => { columnEnabled[c] = true; columnRenames[c] = c; });
+
+  renderColumns();
+  $('columnsCard').classList.remove('hidden');
+  $('optionsCard').classList.remove('hidden');
+  $('previewCard').classList.add('hidden');
+  $('outputCard').classList.add('hidden');
+
+  generateCSV();
+}
+
+function renderColumns() {
+  const list = $('columnsList');
+  list.innerHTML = '';
+  columnOrder.forEach((col, idx) => {
+    const div = document.createElement('div');
+    div.className = 'col-item';
+    div.draggable = true;
+    div.dataset.col = col;
+    div.innerHTML = `
+      <span class="drag-handle">&#9776;</span>
+      <input type="checkbox" ${columnEnabled[col] ? 'checked' : ''} data-col="${col}">
+      <span class="col-name" title="${col}">${col}</span>
+      <input type="text" value="${columnRenames[col]}" data-rename="${col}" placeholder="Header name">
+    `;
+    div.querySelector('input[type=checkbox]').addEventListener('change', e => {
+      columnEnabled[col] = e.target.checked;
+    });
+    div.querySelector('input[type=text]').addEventListener('input', e => {
+      columnRenames[col] = e.target.value;
+    });
+
+    div.addEventListener('dragstart', e => {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', idx);
+      div.classList.add('dragging');
+    });
+    div.addEventListener('dragend', () => div.classList.remove('dragging'));
+    div.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
+    div.addEventListener('drop', e => {
+      e.preventDefault();
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      const toIdx = idx;
+      if (fromIdx !== toIdx) {
+        const [moved] = columnOrder.splice(fromIdx, 1);
+        columnOrder.splice(toIdx, 0, moved);
+        renderColumns();
+      }
+    });
+
+    list.appendChild(div);
+  });
+}
+
+function selectAllCols(state) {
+  columnOrder.forEach(c => columnEnabled[c] = state);
+  renderColumns();
+}
+
+function escapeCSV(val, delim, quote) {
+  if (val === null || val === undefined) return '';
+  let s = String(val);
+  const needsQuote = s.includes(quote) || s.includes(delim) || s.includes('\n') || s.includes('\r');
+  if (needsQuote) {
+    s = quote + s.replace(new RegExp(quote.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), quote + quote) + quote;
+  }
+  return s;
+}
+
+function escapeHTML(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function generateCSV() {
+  if (!parsedRows.length) return;
+
+  const delim = $('delimiter').value;
+  const quote = $('quoteChar').value;
+  const le = $('lineEnding').value === '\\r\\n' ? '\r\n' : '\n';
+  const includeHeader = $('includeHeader').checked;
+
+  const activeCols = columnOrder.filter(c => columnEnabled[c]);
+  if (!activeCols.length) return;
+
+  const lines = [];
+  if (includeHeader) {
+    lines.push(activeCols.map(c => escapeCSV(columnRenames[c], delim, quote)).join(delim));
+  }
+  parsedRows.forEach(row => {
+    lines.push(activeCols.map(c => escapeCSV(row[c], delim, quote)).join(delim));
+  });
+
+  const csv = lines.join(le);
+  $('csvOutput').value = csv;
+
+  // Stats
+  const size = new Blob([csv]).size;
+  let sizeStr;
+  if (size > 1048576) sizeStr = (size / 1048576).toFixed(1) + ' MB';
+  else if (size > 1024) sizeStr = (size / 1024).toFixed(1) + ' KB';
+  else sizeStr = size + ' B';
+
+  const maxDepth = xmlDoc ? getMaxDepth(xmlDoc.documentElement) : 0;
+
+  $('statsBar').innerHTML = `
+    <div class="stat"><div class="stat-val">${parsedRows.length}</div><div class="stat-label">Rows</div></div>
+    <div class="stat"><div class="stat-val">${activeCols.length}</div><div class="stat-label">Columns</div></div>
+    <div class="stat"><div class="stat-val">${sizeStr}</div><div class="stat-label">File Size</div></div>
+    <div class="stat"><div class="stat-val">${maxDepth}</div><div class="stat-label">Element Depth</div></div>
+  `;
+
+  // Preview table
+  const previewRows = parsedRows.slice(0, 10);
+  let html = '<table><thead><tr>';
+  activeCols.forEach(c => { html += '<th>' + escapeHTML(columnRenames[c]) + '</th>'; });
+  html += '</tr></thead><tbody>';
+  previewRows.forEach(row => {
+    html += '<tr>';
+    activeCols.forEach(c => {
+      const v = row[c] !== undefined ? String(row[c]) : '';
+      html += '<td title="' + escapeHTML(v) + '">' + escapeHTML(v) + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  if (parsedRows.length > 10) html += '<p style="color:#b0b0c0;font-size:0.8rem;margin-top:8px">Showing first 10 of ' + parsedRows.length + ' rows</p>';
+  $('previewTable').innerHTML = html;
+
+  $('previewCard').classList.remove('hidden');
+  $('outputCard').classList.remove('hidden');
+}
+
+function downloadCSV() {
+  const csv = $('csvOutput').value;
+  if (!csv) return;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'data.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copyCSV() {
+  const csv = $('csvOutput').value;
+  if (!csv) return;
+  navigator.clipboard.writeText(csv).then(() => {
+    const msg = $('copyMsg');
+    msg.classList.add('show');
+    setTimeout(() => msg.classList.remove('show'), 2000);
+  });
+}
+
+function loadSample() {
+  $('xmlInput').value = `<?xml version="1.0" encoding="UTF-8"?>
+<company>
+  <employees>
+    <employee id="101" department="Engineering">
+      <name>Alice Johnson</name>
+      <email>alice@example.com</email>
+      <salary currency="USD">95000</salary>
+      <address>
+        <city>New York</city>
+        <state>NY</state>
+      </address>
+      <skills>
+        <skill>JavaScript</skill>
+        <skill>Python</skill>
+      </skills>
+    </employee>
+    <employee id="102" department="Marketing">
+      <name>Bob Smith</name>
+      <email>bob@example.com</email>
+      <salary currency="USD">82000</salary>
+      <address>
+        <city>Los Angeles</city>
+        <state>CA</state>
+      </address>
+      <skills>
+        <skill>SEO</skill>
+        <skill>Analytics</skill>
+      </skills>
+    </employee>
+    <employee id="103" department="Engineering">
+      <name>Carol White</name>
+      <email>carol@example.com</email>
+      <salary currency="USD">105000</salary>
+      <address>
+        <city>Chicago</city>
+        <state>IL</state>
+      </address>
+      <skills>
+        <skill>Rust</skill>
+        <skill>Go</skill>
+      </skills>
+    </employee>
+    <employee id="104" department="Sales">
+      <name>Dan Brown</name>
+      <email>dan@example.com</email>
+      <salary currency="USD">78000</salary>
+      <address>
+        <city>Houston</city>
+        <state>TX</state>
+      </address>
+      <skills>
+        <skill>CRM</skill>
+        <skill>Negotiation</skill>
+      </skills>
+    </employee>
+    <employee id="105" department="Engineering">
+      <name>Eve Davis</name>
+      <email>eve@example.com</email>
+      <salary currency="USD">98000</salary>
+      <address>
+        <city>Phoenix</city>
+        <state>AZ</state>
+      </address>
+      <skills>
+        <skill>TypeScript</skill>
+        <skill>React</skill>
+      </skills>
+    </employee>
+  </employees>
+</company>`;
+  parseXML();
+}
+
+function clearAll() {
+  $('xmlInput').value = '';
+  $('csvOutput').value = '';
+  $('parseError').classList.add('hidden');
+  $('rowCard').classList.add('hidden');
+  $('columnsCard').classList.add('hidden');
+  $('optionsCard').classList.add('hidden');
+  $('previewCard').classList.add('hidden');
+  $('outputCard').classList.add('hidden');
+  xmlDoc = null;
+  parsedRows = [];
+  allColumns = [];
+  columnOrder = [];
+}
+</script>
+<div style="max-width:800px;margin:2rem auto;padding:1.5rem;"><div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6C5CE7;margin-bottom:0.75rem;font-weight:500;">Related Tools</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><a href="/free-tools/json-formatter/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">JSON Formatter</a><a href="/free-tools/password-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Password Generator</a><a href="/free-tools/color-palette-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Color Palette Generator</a><a href="/free-tools/qr-code-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">QR Code Generator</a></div></div>
+
+<!-- About This Tool -->
+<div style="max-width:800px;margin:2rem auto;padding:1.5rem 1.5rem;background:#12121a;border:1px solid #1e1e2a;border-radius:12px;">
+  <h2 style="color:#00ff88;font-size:1.3rem;margin-top:0;">About This Tool</h2>
+  <p style="color:#b0b0c0;line-height:1.7;margin-bottom:0;">Built by Michael Lip, this tool runs 100% client-side in your browser. No data is ever uploaded to a server, no account is required, and it is completely free to use. Your privacy is guaranteed because everything happens locally on your device.</p>
+</div>
+<div style="max-width:800px;margin:1rem auto;padding:12px 16px;background:#12121a;border:1px solid #1e1e2a;border-radius:10px;">
+  <p style="color:#00ff88;font-size:0.8rem;font-weight:600;margin:0 0 10px;">Quick Facts</p>
+  <ul style="list-style:none;padding:0;margin:0;font-size:0.8rem;color:#b0b0c0;line-height:2;">
+    <li>Cost: Free, no sign-up required</li>
+    <li>Privacy: All processing happens in your browser</li>
+    <li>Author: Michael Lip</li>
+    <li>Last updated: 2026-03-20</li>
+  </ul>
+</div>
+<div style="max-width:800px;margin:2rem auto;padding:1.5rem;"><div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6C5CE7;margin-bottom:0.75rem;font-weight:500;">Related Tools</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><a href="/free-tools/json-formatter/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">JSON Formatter</a><a href="/free-tools/password-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Password Generator</a><a href="/free-tools/color-palette-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">Color Palette Generator</a><a href="/free-tools/qr-code-generator/" style="display:inline-block;padding:6px 14px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0e0;text-decoration:none;font-size:0.85rem;transition:border-color 0.2s;">QR Code Generator</a></div></div>
+</body>
+</html>
