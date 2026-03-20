@@ -1792,5 +1792,42 @@ document.getElementById('genPwAndHashBtn').addEventListener('click', () => {
 <p style="color:#c0c0d0;font-size:0.9rem;line-height:1.6;">I tested this bcrypt generator against five popular alternatives available online. In my testing across 40+ different input scenarios, this version handled edge cases that three out of five competitors failed on. The most common issue I found in other tools was incorrect handling of boundary values and missing input validation. This version addresses both with thorough error checking and clear feedback messages. All calculations run locally in your browser with zero server calls.</p>
 </div>
 
+
+<section id="faq" style="max-width:800px;margin:48px auto;padding:0 20px;">
+  <h2 style="color:#00ff88;font-size:1.5rem;margin-bottom:24px;">Frequently Asked Questions</h2>
+  <div style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:16px;">
+    <h3 style="color:#e0e0e8;font-size:1.1rem;margin:0 0 8px 0;">Q: What is bcrypt?</h3>
+    <p style="color:#b0b0c0;margin:0;line-height:1.6;">Bcrypt is a password hashing function designed by Niels Provos and David Mazieres in 1999, based on the Blowfish cipher. It incorporates a salt to protect against rainbow table attacks and an adjustable cost factor that makes it intentionally slow, defending against brute-force attacks even as hardware improves.</p>
+  </div>
+  <div style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:16px;">
+    <h3 style="color:#e0e0e8;font-size:1.1rem;margin:0 0 8px 0;">Q: Is my password sent to a server?</h3>
+    <p style="color:#b0b0c0;margin:0;line-height:1.6;">No. All bcrypt hashing and verification is performed entirely in your browser using a pure JavaScript implementation. No passwords, hashes, or any data ever leave your device.</p>
+  </div>
+  <div style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:16px;">
+    <h3 style="color:#e0e0e8;font-size:1.1rem;margin:0 0 8px 0;">Q: What cost factor should I use?</h3>
+    <p style="color:#b0b0c0;margin:0;line-height:1.6;">For most applications, a cost factor of 10-12 is recommended. Higher values are more secure but slower. The cost factor is logarithmic: each increment doubles the computation time. In production, choose the highest value that keeps hashing under 250ms on your server hardware.</p>
+  </div>
+  <div style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:16px;">
+    <h3 style="color:#e0e0e8;font-size:1.1rem;margin:0 0 8px 0;">Q: Why does bcrypt generate different hashes for the same password?</h3>
+    <p style="color:#b0b0c0;margin:0;line-height:1.6;">Bcrypt automatically generates a unique random salt for each hash operation. The salt is embedded in the output hash, so even identical passwords produce completely different hashes. This prevents attackers from using precomputed tables or identifying users who share the same password.</p>
+  </div>
+  <div style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:16px;">
+    <h3 style="color:#e0e0e8;font-size:1.1rem;margin:0 0 8px 0;">Q: What are the parts of a bcrypt hash?</h3>
+    <p style="color:#b0b0c0;margin:0;line-height:1.6;">A bcrypt hash has four parts: the algorithm identifier ($2a$, $2b$, or $2y$), the cost factor (two digits like 10 or 12), the 22-character Base64-encoded salt, and the 31-character Base64-encoded hash. The full string is always 60 characters long.</p>
+  </div>
+  <div style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:16px;">
+    <h3 style="color:#e0e0e8;font-size:1.1rem;margin:0 0 8px 0;">Q: Is bcrypt better than SHA-256 for passwords?</h3>
+    <p style="color:#b0b0c0;margin:0;line-height:1.6;">Yes. SHA-256 is a general-purpose hash function designed to be fast, which makes it vulnerable to brute-force attacks when used for passwords. Bcrypt is specifically designed for password hashing with an intentionally slow, adjustable work factor and built-in salting, making it far more resistant to cracking.</p>
+  </div>
+  <div style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:16px;">
+    <h3 style="color:#e0e0e8;font-size:1.1rem;margin:0 0 8px 0;">Q: What is the maximum password length for bcrypt?</h3>
+    <p style="color:#b0b0c0;margin:0;line-height:1.6;">Bcrypt has a maximum input length of 72 bytes. Characters beyond the 72-byte limit are silently truncated. For most passwords this is not an issue, but if you need to hash longer inputs, consider pre-hashing with SHA-256 before passing to bcrypt.</p>
+  </div>
+  <div style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:16px;">
+    <h3 style="color:#e0e0e8;font-size:1.1rem;margin:0 0 8px 0;">Q: How do I verify a bcrypt hash?</h3>
+    <p style="color:#b0b0c0;margin:0;line-height:1.6;">To verify a password against a bcrypt hash, the verification function extracts the salt and cost factor from the stored hash, re-hashes the provided password with the same parameters, and compares the results. Our Verify tab lets you do this instantly in your browser.</p>
+  </div>
+</section>
+
 </body>
 </html>
