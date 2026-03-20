@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Metadata Viewer — EXIF Data Reader & Privacy Tool | Zovo</title>
+<meta name="description" content="Free online image metadata viewer. Upload JPEG, PNG, WebP, or TIFF images to extract EXIF data including camera make/model, GPS coordinates, dates, lens info, and embedded thumbnails. Check for privacy-sensitive metadata and strip it before sharing. Runs entirely in your browser.">
+<meta name="keywords" content="image metadata viewer, exif viewer, exif data reader, photo metadata, camera settings viewer, gps data extractor, image privacy tool, strip exif data, photo metadata remover, image information">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/image-metadata-viewer/">
+
+<meta property="og:title" content="Image Metadata Viewer — EXIF Data Reader & Privacy Tool | Zovo">
+<meta property="og:description" content="Extract EXIF data, camera info, GPS coordinates from images. Check for privacy-sensitive metadata and strip it. Free, runs in your browser.">
+<meta property="og:url" content="https://zovo.one/free-tools/image-metadata-viewer/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo">
+<meta property="og:image" content="https://zovo.one/free-tools/image-metadata-viewer/og-image.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image Metadata Viewer — EXIF Data Reader & Privacy Tool | Zovo">
+<meta name="twitter:description" content="Extract EXIF data, camera info, GPS coordinates from images. Free, private, browser-based.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Image Metadata Viewer",
+  "description": "Upload images to extract and view EXIF metadata including camera settings, GPS coordinates, dates, and embedded thumbnails. Privacy checker highlights sensitive data. Strip metadata before sharing.",
+  "url": "https://zovo.one/free-tools/image-metadata-viewer/",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with JavaScript and File API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is EXIF data in an image?", "acceptedAnswer": {"@type": "Answer", "text": "EXIF (Exchangeable Image File Format) is a standard for storing metadata inside image files. It includes camera make and model, lens information, aperture, shutter speed, ISO, date and time the photo was taken, GPS coordinates, orientation, color space, and software used for processing. EXIF data is embedded directly in JPEG, TIFF, and some other image formats."}},
+    {"@type": "Question", "name": "Does this tool upload my images to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All image processing happens entirely in your browser using JavaScript. Your images never leave your device. The EXIF parser reads the binary file data locally using the File API. You can verify this by disconnecting from the internet — the tool continues to work."}},
+    {"@type": "Question", "name": "Why should I strip metadata before sharing photos?", "acceptedAnswer": {"@type": "Answer", "text": "Image metadata can contain sensitive information including GPS coordinates (revealing where the photo was taken), camera serial numbers (linking photos to a specific device), dates and times, and software details. Stripping this data before sharing photos online protects your privacy and location information."}},
+    {"@type": "Question", "name": "What image formats are supported?", "acceptedAnswer": {"@type": "Answer", "text": "This tool supports JPEG (full EXIF parsing including GPS, camera, lens, and thumbnail data), PNG (basic file metadata), WebP (basic metadata), and TIFF (EXIF data). JPEG files contain the richest metadata because the EXIF standard was designed primarily for JPEG and TIFF formats."}},
+    {"@type": "Question", "name": "How do I view GPS coordinates from a photo?", "acceptedAnswer": {"@type": "Answer", "text": "Upload a JPEG photo that was taken with GPS/location services enabled. If GPS data is present, this tool displays the latitude and longitude in the GPS section, along with a direct link to view the location on OpenStreetMap. The tool also flags GPS data with a privacy warning."}},
+    {"@type": "Question", "name": "Can I compare metadata from two different images?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Use the comparison feature to upload two images side by side. The tool displays metadata from both images in parallel columns, making it easy to compare camera settings, dates, GPS locations, and other EXIF fields between photos."}}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Zovo Tools", "item": "https://zovo.one/free-tools/"},
+    {"@type": "ListItem", "position": 2, "name": "Image Metadata Viewer", "item": "https://zovo.one/free-tools/image-metadata-viewer/"}
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #1e1e2a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --blue: #6cb4ff;
+  --yellow: #ffd666;
+  --orange: #ff9f43;
+  --radius: 10px;
+  --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 940px; margin: 0 auto; padding: 0 20px; }
+
+header { padding: 48px 0 16px; text-align: center; }
+header h1 { font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
+header h1 span { color: var(--accent); }
+header p { font-size: 1.05rem; color: var(--text-muted); max-width: 660px; margin: 0 auto; }
+.reading-time {
+  display: inline-block; margin-top: 10px; font-size: 0.82rem;
+  color: var(--text-muted); background: var(--surface); padding: 4px 12px;
+  border-radius: 20px; border: 1px solid var(--border);
+}
+.privacy-badge {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+  padding: 6px 14px; background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.2); border-radius: 20px;
+  font-size: 0.82rem; color: var(--accent);
+}
+
+nav#toc {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 24px; margin: 24px 0 32px;
+}
+nav#toc h2 {
+  font-size: 0.9rem; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;
+}
+nav#toc ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; }
+nav#toc a { font-size: 0.9rem; color: var(--text); padding: 4px 0; display: block; }
+nav#toc a:hover { color: var(--accent); text-decoration: none; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px; margin-bottom: 24px;
+}
+.card h3 { font-size: 1.05rem; font-weight: 600; color: #fff; margin-bottom: 16px; }
+
+h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin: 48px 0 20px; padding-top: 12px; }
+
+label {
+  display: block; font-size: 0.82rem; font-weight: 500; color: var(--text-muted);
+  margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px;
+  border: none; border-radius: 8px; font-family: var(--font); font-size: 0.9rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-primary { background: var(--accent); color: #0a0a0f; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.btn-danger { background: rgba(255,68,102,0.15); color: var(--red); border: 1px solid rgba(255,68,102,0.3); }
+.btn-danger:hover { background: rgba(255,68,102,0.25); }
+.btn-sm { padding: 6px 12px; font-size: 0.82rem; }
+
+/* Drop zone */
+.drop-zone {
+  border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 48px 24px; text-align: center; cursor: pointer;
+  transition: all 0.3s; background: var(--surface);
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent); background: rgba(0,255,136,0.04);
+}
+.drop-zone h3 { color: #fff; margin-bottom: 8px; font-size: 1.1rem; }
+.drop-zone p { color: var(--text-muted); font-size: 0.9rem; }
+.drop-zone .formats { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+.drop-zone input { display: none; }
+
+/* Preview */
+.preview-area {
+  display: none; margin-top: 20px; text-align: center;
+}
+.preview-area img {
+  max-width: 100%; max-height: 300px; border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* File info bar */
+.file-info {
+  display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 16px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  margin-top: 16px; font-size: 0.85rem;
+}
+.file-info-item { display: flex; gap: 6px; }
+.file-info-item .label { color: var(--text-muted); }
+.file-info-item .value { color: #fff; font-weight: 500; }
+
+/* Metadata sections */
+.meta-section { margin-top: 16px; }
+.meta-section h4 {
+  font-size: 0.88rem; font-weight: 600; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--border);
+}
+.meta-table { width: 100%; border-collapse: collapse; }
+.meta-table tr { border-bottom: 1px solid rgba(30,30,42,0.6); }
+.meta-table tr:last-child { border-bottom: none; }
+.meta-table td { padding: 8px 12px; font-size: 0.88rem; vertical-align: top; }
+.meta-table td:first-child {
+  color: var(--text-muted); white-space: nowrap; width: 40%; font-weight: 500;
+}
+.meta-table td:last-child { color: var(--text); word-break: break-word; }
+
+/* Privacy alert */
+.privacy-alert {
+  background: rgba(255,68,102,0.08); border: 1px solid rgba(255,68,102,0.25);
+  border-radius: 8px; padding: 14px 18px; margin-top: 16px; font-size: 0.9rem;
+}
+.privacy-alert h4 { color: var(--red); font-size: 0.92rem; margin-bottom: 8px; }
+.privacy-alert ul { list-style: none; }
+.privacy-alert li { padding: 4px 0; color: var(--text-muted); }
+.privacy-alert li::before { content: '!'; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; background: rgba(255,68,102,0.2); color: var(--red); border-radius: 50%; font-size: 0.7rem; font-weight: 700; margin-right: 8px; }
+
+/* Hex dump */
+.hex-dump {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; font-family: var(--mono); font-size: 0.78rem; line-height: 1.5;
+  max-height: 300px; overflow: auto; color: var(--text-muted);
+}
+.hex-offset { color: var(--blue); }
+.hex-byte { color: var(--text); }
+.hex-ascii { color: var(--accent); }
+
+/* Thumbnail */
+.thumb-area { text-align: center; margin-top: 12px; }
+.thumb-area img {
+  max-width: 200px; border-radius: 6px; border: 1px solid var(--border);
+}
+
+/* Compare */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.compare-col .drop-zone { padding: 24px 16px; }
+.compare-col .drop-zone h3 { font-size: 0.95rem; }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab {
+  padding: 8px 16px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text-muted); font-size: 0.85rem;
+  font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: var(--font);
+}
+.tab:hover { color: var(--text); border-color: var(--text-muted); }
+.tab.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 6px;
+  font-size: 0.78rem; font-weight: 600;
+}
+.tag-pass { background: rgba(0,255,136,0.12); color: var(--green); }
+.tag-fail { background: rgba(255,68,102,0.12); color: var(--red); }
+.tag-warn { background: rgba(255,214,102,0.12); color: var(--yellow); }
+.tag-info { background: rgba(108,180,255,0.12); color: var(--blue); }
+
+.faq-item { border-bottom: 1px solid var(--border); padding: 18px 0; }
+.faq-item:last-child { border-bottom: none; }
+.faq-q {
+  font-weight: 600; color: #fff; font-size: 1rem; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.faq-q::after { content: '+'; font-size: 1.3rem; color: var(--accent); transition: transform 0.2s; }
+.faq-q.open::after { content: '\2212'; }
+.faq-a {
+  color: var(--text-muted); font-size: 0.92rem; line-height: 1.7;
+  max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s;
+}
+.faq-a.open { max-height: 500px; padding-top: 10px; }
+
+.cross-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+.cross-link {
+  display: block; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px; text-decoration: none; transition: border-color 0.2s;
+}
+.cross-link:hover { border-color: var(--accent); text-decoration: none; }
+.cross-link .name { color: #fff; font-weight: 600; font-size: 0.92rem; }
+.cross-link .desc { color: var(--text-muted); font-size: 0.82rem; margin-top: 4px; }
+
+footer {
+  margin-top: 60px; padding: 32px 0; border-top: 1px solid var(--border);
+  text-align: center; color: var(--text-muted); font-size: 0.84rem;
+}
+footer a { color: var(--text-muted); }
+footer a:hover { color: var(--accent); }
+
+@media (max-width: 700px) {
+  header h1 { font-size: 1.6rem; }
+  nav#toc ul { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .cross-links { grid-template-columns: 1fr; }
+  .card { padding: 18px; }
+  .meta-table td:first-child { width: 35%; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Image Metadata <span>Viewer</span></h1>
+  <p>Upload any image to extract and view EXIF data, camera settings, GPS coordinates, dates, and embedded thumbnails. Check for privacy-sensitive metadata and strip it before sharing.</p>
+  <div><span class="reading-time">8 min read</span></div>
+  <div><span class="privacy-badge">&#128274; Your images never leave your browser &mdash; all processing is local</span></div>
+</header>
+
+<nav id="toc">
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><a href="#upload">Upload &amp; Analyze Image</a></li>
+    <li><a href="#metadata-results">Metadata Results</a></li>
+    <li><a href="#privacy-check">Privacy Checker</a></li>
+    <li><a href="#strip-metadata">Strip Metadata</a></li>
+    <li><a href="#hex-dump">Raw Hex Dump</a></li>
+    <li><a href="#thumbnail">Embedded Thumbnail</a></li>
+    <li><a href="#compare">Compare Two Images</a></li>
+    <li><a href="#about-exif">About EXIF Data</a></li>
+    <li><a href="#compatibility">Browser Compatibility</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ul>
+</nav>
+
+<!-- ======== SECTION 1: Upload ======== -->
+<h2 id="upload">Upload &amp; Analyze Image</h2>
+
+<div class="card">
+  <div class="drop-zone" id="main-dropzone" onclick="document.getElementById('file-input').click()">
+    <h3>Drop an image here or click to browse</h3>
+    <p>Drag and drop a file, or click to select from your device</p>
+    <div class="formats">Supports JPEG, PNG, WebP, TIFF &mdash; max 50 MB</div>
+    <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,image/tiff,.jpg,.jpeg,.png,.webp,.tiff,.tif">
+  </div>
+  <div class="preview-area" id="preview-area">
+    <img id="preview-img" alt="Uploaded image preview">
+  </div>
+  <div class="file-info" id="file-info" style="display:none;"></div>
+</div>
+
+<!-- ======== SECTION 2: Metadata Results ======== -->
+<h2 id="metadata-results">Metadata Results</h2>
+
+<div class="card" id="results-card" style="display:none;">
+  <div class="tabs" id="meta-tabs">
+    <button class="tab active" onclick="switchMetaTab('camera',this)">Camera</button>
+    <button class="tab" onclick="switchMetaTab('image',this)">Image</button>
+    <button class="tab" onclick="switchMetaTab('gps',this)">GPS</button>
+    <button class="tab" onclick="switchMetaTab('date',this)">Date &amp; Time</button>
+    <button class="tab" onclick="switchMetaTab('software',this)">Software</button>
+    <button class="tab" onclick="switchMetaTab('all',this)">All Fields</button>
+  </div>
+  <div id="meta-camera" class="meta-section"></div>
+  <div id="meta-image" class="meta-section" style="display:none;"></div>
+  <div id="meta-gps" class="meta-section" style="display:none;"></div>
+  <div id="meta-date" class="meta-section" style="display:none;"></div>
+  <div id="meta-software" class="meta-section" style="display:none;"></div>
+  <div id="meta-all" class="meta-section" style="display:none;"></div>
+</div>
+
+<div id="no-metadata-msg" style="display:none;" class="card">
+  <p style="color:var(--text-muted);text-align:center;">No EXIF metadata found in this image. This can happen with PNG/WebP files, screenshots, or images that have already been stripped of metadata.</p>
+</div>
+
+<!-- ======== SECTION 3: Privacy Checker ======== -->
+<h2 id="privacy-check">Privacy Checker</h2>
+
+<div class="card" id="privacy-card" style="display:none;">
+  <div id="privacy-results"></div>
+</div>
+
+<div id="privacy-placeholder" class="card">
+  <p style="color:var(--text-muted);text-align:center;">Upload an image above to check for privacy-sensitive metadata.</p>
+</div>
+
+<!-- ======== SECTION 4: Strip Metadata ======== -->
+<h2 id="strip-metadata">Strip Metadata</h2>
+
+<div class="card">
+  <p style="color:var(--text-muted);margin-bottom:16px;">Re-export your image with all metadata removed. The image is redrawn through an HTML Canvas element, which discards all EXIF data including GPS, camera serial numbers, and timestamps.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+    <button class="btn btn-danger" id="strip-btn" disabled onclick="stripMetadata()">Strip Metadata &amp; Download</button>
+    <select id="strip-format" style="padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font);font-size:0.88rem;">
+      <option value="image/jpeg">JPEG (smaller file)</option>
+      <option value="image/png">PNG (lossless)</option>
+      <option value="image/webp">WebP (modern)</option>
+    </select>
+    <select id="strip-quality" style="padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font);font-size:0.88rem;">
+      <option value="0.95">Quality: 95%</option>
+      <option value="0.90" selected>Quality: 90%</option>
+      <option value="0.80">Quality: 80%</option>
+      <option value="0.70">Quality: 70%</option>
+    </select>
+  </div>
+</div>
+
+<!-- ======== SECTION 5: Hex Dump ======== -->
+<h2 id="hex-dump">Raw Hex Dump</h2>
+
+<div class="card">
+  <p style="color:var(--text-muted);margin-bottom:16px;">First 2 KB of raw EXIF data in hexadecimal. Useful for debugging or verifying EXIF structure manually.</p>
+  <div class="hex-dump" id="hex-output">Upload an image to view the hex dump of its EXIF data.</div>
+</div>
+
+<!-- ======== SECTION 6: Thumbnail ======== -->
+<h2 id="thumbnail">Embedded Thumbnail</h2>
+
+<div class="card" id="thumb-card">
+  <p style="color:var(--text-muted);margin-bottom:12px;">Many JPEG cameras embed a small preview thumbnail inside the EXIF data. If found, it is extracted and displayed below.</p>
+  <div class="thumb-area" id="thumb-area">
+    <p style="color:var(--text-muted);">Upload a JPEG image to check for an embedded thumbnail.</p>
+  </div>
+</div>
+
+<!-- ======== SECTION 7: Compare Two Images ======== -->
+<h2 id="compare">Compare Two Images</h2>
+<p style="color:var(--text-muted);margin-bottom:20px;">Upload two images to compare their metadata side by side.</p>
+
+<div class="card">
+  <div class="compare-grid">
+    <div class="compare-col">
+      <div class="drop-zone" id="compare-drop-a" onclick="document.getElementById('compare-file-a').click()" style="padding:24px 16px;">
+        <h3 style="font-size:0.95rem;">Image A</h3>
+        <p style="font-size:0.82rem;">Drop or click to select</p>
+        <input type="file" id="compare-file-a" accept="image/jpeg,image/png,image/webp,image/tiff,.jpg,.jpeg,.png,.webp,.tiff,.tif" style="display:none;">
+      </div>
+      <div id="compare-result-a" style="margin-top:12px;"></div>
+    </div>
+    <div class="compare-col">
+      <div class="drop-zone" id="compare-drop-b" onclick="document.getElementById('compare-file-b').click()" style="padding:24px 16px;">
+        <h3 style="font-size:0.95rem;">Image B</h3>
+        <p style="font-size:0.82rem;">Drop or click to select</p>
+        <input type="file" id="compare-file-b" accept="image/jpeg,image/png,image/webp,image/tiff,.jpg,.jpeg,.png,.webp,.tiff,.tif" style="display:none;">
+      </div>
+      <div id="compare-result-b" style="margin-top:12px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SECTION 8: About EXIF ======== -->
+<h2 id="about-exif">About EXIF Data</h2>
+
+<div class="card">
+  <p style="margin-bottom:12px;">EXIF (Exchangeable Image File Format) is a standard originally defined by the Japan Electronic Industries Development Association (JEIDA) for storing metadata in image files. The current version is EXIF 2.32, maintained by CIPA.</p>
+  <p style="margin-bottom:12px;">When a camera takes a photo, it embeds metadata in the file header. This includes the camera make and model, lens used, exposure settings (aperture, shutter speed, ISO), focal length, date/time, orientation, color space, and optionally GPS coordinates if location services are enabled.</p>
+  <p style="margin-bottom:12px;">EXIF data is stored in the APP1 marker segment of JPEG files, using a TIFF-based structure of Image File Directories (IFDs). Each IFD contains a series of tagged entries, where each tag has a numeric ID, data type, count, and value.</p>
+  <p>For the full specification details, see the <a href="https://en.wikipedia.org/wiki/Exif" target="_blank" rel="noopener">Wikipedia article on EXIF</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types#jpeg" target="_blank" rel="noopener">MDN JPEG format reference</a>.</p>
+</div>
+
+<!-- ======== SECTION 9: Browser Compatibility ======== -->
+<h2 id="compatibility">Browser Compatibility</h2>
+
+<div class="card">
+  <p style="margin-bottom:12px;">This tool uses the File API and Canvas API, which are supported in all modern browsers:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;">
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;font-size:0.88rem;">Chrome 6+</div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;font-size:0.88rem;">Firefox 3.6+</div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;font-size:0.88rem;">Safari 6+</div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;font-size:0.88rem;">Edge 12+</div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;font-size:0.88rem;">Opera 11.5+</div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;font-size:0.88rem;">iOS Safari 6+</div>
+  </div>
+  <p style="margin-top:12px;font-size:0.85rem;color:var(--text-muted);">The metadata stripping feature uses Canvas.toBlob(), which requires Chrome 50+, Firefox 19+, or Safari 11+. Internet Explorer is not supported.</p>
+</div>
+
+<!-- ======== SECTION 10: FAQ ======== -->
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="card">
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What is EXIF data in an image?</div>
+    <div class="faq-a">EXIF (Exchangeable Image File Format) is a standard for storing metadata inside image files. It includes camera make and model, lens information, aperture, shutter speed, ISO, date and time the photo was taken, GPS coordinates, orientation, color space, and software used for processing. EXIF data is embedded directly in JPEG, TIFF, and some other formats by the camera or phone at the moment the photo is captured.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Does this tool upload my images to a server?</div>
+    <div class="faq-a">No. All image processing happens entirely in your browser using JavaScript and the File API. Your images never leave your device. The EXIF parser reads the binary data locally. You can verify this by disconnecting from the internet and confirming the tool continues to work normally.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Why should I strip metadata before sharing photos?</div>
+    <div class="faq-a">Image metadata can contain GPS coordinates (revealing where the photo was taken), camera serial numbers (linking photos to a specific device), timestamps, and software details. Stripping this data before sharing photos online helps protect your privacy and prevents unintentional disclosure of your location or equipment.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What image formats are supported?</div>
+    <div class="faq-a">This tool supports JPEG (full EXIF parsing including GPS, camera, lens, and thumbnail extraction), PNG (file-level metadata), WebP (basic metadata), and TIFF (EXIF data). JPEG files contain the richest metadata because the EXIF standard was designed primarily for JPEG and TIFF formats. PNG and WebP typically contain much less embedded information.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">How do I view GPS coordinates from a photo?</div>
+    <div class="faq-a">Upload a JPEG photo that was taken with GPS or location services enabled on the camera or phone. If GPS data is present, this tool displays the latitude and longitude in the GPS tab, along with a direct link to view the location on OpenStreetMap. A privacy warning is also shown to alert you that location data is embedded in the file.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Can I compare metadata from two different images?</div>
+    <div class="faq-a">Yes. Scroll down to the Compare section and upload two images. The tool displays metadata from both in parallel columns, making it straightforward to compare camera settings, dates, GPS locations, and other EXIF fields between the two photos.</div>
+  </div>
+</div>
+
+<!-- Related Tools -->
+<h2 style="font-size:1.1rem;margin-top:36px;">Related Tools</h2>
+<div class="cross-links">
+  <a class="cross-link" href="/free-tools/image-resizer/">
+    <div class="name">Image Resizer</div>
+    <div class="desc">Resize images to any dimension online</div>
+  </a>
+  <a class="cross-link" href="/free-tools/image-compressor/">
+    <div class="name">Image Compressor</div>
+    <div class="desc">Reduce file size while preserving quality</div>
+  </a>
+  <a class="cross-link" href="/free-tools/image-to-base64/">
+    <div class="name">Image to Base64</div>
+    <div class="desc">Convert images to Base64 encoded strings</div>
+  </a>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p style="margin-bottom:8px;">&copy; 2026 Zovo &middot; Free Browser Tools &middot; <a href="https://zovo.one">zovo.one</a></p>
+  <p style="margin-bottom:12px;">Built by <a href="https://zovo.one">Michael Lip</a>. All tools are free, private, and run entirely in your browser.</p>
+  <p style="font-size:0.78rem;color:#555;">Last updated: March 2026 &middot; EXIF specification: <a href="https://en.wikipedia.org/wiki/Exif" target="_blank" rel="noopener">Wikipedia</a> &middot; <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types" target="_blank" rel="noopener">MDN Image Formats</a></p>
+</footer>
+
+</div>
+
+<script>
+/* ====================================================================
+   INLINE EXIF PARSER — reads APP1 marker, parses IFD entries
+   ==================================================================== */
+
+var EXIF_TAGS = {
+  // IFD0 (main image)
+  0x010E: 'ImageDescription', 0x010F: 'Make', 0x0110: 'Model',
+  0x0112: 'Orientation', 0x011A: 'XResolution', 0x011B: 'YResolution',
+  0x0128: 'ResolutionUnit', 0x0131: 'Software', 0x0132: 'DateTime',
+  0x013B: 'Artist', 0x0213: 'YCbCrPositioning', 0x8298: 'Copyright',
+  0x8769: 'ExifIFDPointer', 0x8825: 'GPSInfoIFDPointer',
+  // EXIF SubIFD
+  0x829A: 'ExposureTime', 0x829D: 'FNumber', 0x8822: 'ExposureProgram',
+  0x8827: 'ISOSpeedRatings', 0x9000: 'ExifVersion',
+  0x9003: 'DateTimeOriginal', 0x9004: 'DateTimeDigitized',
+  0x9101: 'ComponentsConfiguration', 0x9102: 'CompressedBitsPerPixel',
+  0x9201: 'ShutterSpeedValue', 0x9202: 'ApertureValue',
+  0x9203: 'BrightnessValue', 0x9204: 'ExposureBiasValue',
+  0x9205: 'MaxApertureValue', 0x9206: 'SubjectDistance',
+  0x9207: 'MeteringMode', 0x9208: 'LightSource', 0x9209: 'Flash',
+  0x920A: 'FocalLength', 0x927C: 'MakerNote', 0x9286: 'UserComment',
+  0xA000: 'FlashpixVersion', 0xA001: 'ColorSpace',
+  0xA002: 'PixelXDimension', 0xA003: 'PixelYDimension',
+  0xA005: 'InteroperabilityIFDPointer',
+  0xA20E: 'FocalPlaneXResolution', 0xA20F: 'FocalPlaneYResolution',
+  0xA210: 'FocalPlaneResolutionUnit', 0xA217: 'SensingMethod',
+  0xA300: 'FileSource', 0xA301: 'SceneType',
+  0xA401: 'CustomRendered', 0xA402: 'ExposureMode',
+  0xA403: 'WhiteBalance', 0xA404: 'DigitalZoomRatio',
+  0xA405: 'FocalLengthIn35mmFilm', 0xA406: 'SceneCaptureType',
+  0xA407: 'GainControl', 0xA408: 'Contrast',
+  0xA409: 'Saturation', 0xA40A: 'Sharpness',
+  0xA420: 'ImageUniqueID', 0xA431: 'BodySerialNumber',
+  0xA432: 'LensSpecification', 0xA433: 'LensMake',
+  0xA434: 'LensModel', 0xA435: 'LensSerialNumber',
+  // GPS
+  0x0000: 'GPSVersionID', 0x0001: 'GPSLatitudeRef', 0x0002: 'GPSLatitude',
+  0x0003: 'GPSLongitudeRef', 0x0004: 'GPSLongitude',
+  0x0005: 'GPSAltitudeRef', 0x0006: 'GPSAltitude',
+  0x0007: 'GPSTimeStamp', 0x0008: 'GPSSatellites',
+  0x0009: 'GPSStatus', 0x000A: 'GPSMeasureMode',
+  0x000B: 'GPSDOP', 0x000C: 'GPSSpeedRef', 0x000D: 'GPSSpeed',
+  0x000E: 'GPSTrackRef', 0x000F: 'GPSTrack',
+  0x0010: 'GPSImgDirectionRef', 0x0011: 'GPSImgDirection',
+  0x0012: 'GPSMapDatum', 0x001D: 'GPSDateStamp'
+};
+
+var GPS_TAGS = {
+  0x0000: 'GPSVersionID', 0x0001: 'GPSLatitudeRef', 0x0002: 'GPSLatitude',
+  0x0003: 'GPSLongitudeRef', 0x0004: 'GPSLongitude',
+  0x0005: 'GPSAltitudeRef', 0x0006: 'GPSAltitude',
+  0x0007: 'GPSTimeStamp', 0x001D: 'GPSDateStamp'
+};
+
+function parseExif(buffer) {
+  var dv = new DataView(buffer);
+  var result = { tags: {}, gps: {}, thumbnail: null, rawExifOffset: -1, rawExifLength: 0 };
+
+  // Find APP1 marker (0xFFE1)
+  var offset = 2; // skip SOI (0xFFD8)
+  if (dv.getUint16(0) !== 0xFFD8) return result; // not JPEG
+
+  while (offset < dv.byteLength - 4) {
+    var marker = dv.getUint16(offset);
+    if (marker === 0xFFE1) { // APP1
+      var length = dv.getUint16(offset + 2);
+      result.rawExifOffset = offset;
+      result.rawExifLength = length + 2;
+
+      // Check for "Exif\0\0"
+      if (dv.getUint32(offset + 4) === 0x45786966 && dv.getUint16(offset + 8) === 0x0000) {
+        var tiffStart = offset + 10;
+        var byteOrder = dv.getUint16(tiffStart);
+        var littleEndian = byteOrder === 0x4949; // II = little-endian
+
+        var getU16 = function(o) { return dv.getUint16(tiffStart + o, littleEndian); };
+        var getU32 = function(o) { return dv.getUint32(tiffStart + o, littleEndian); };
+        var getS32 = function(o) { return dv.getInt32(tiffStart + o, littleEndian); };
+
+        // Verify TIFF magic
+        if (getU16(2) !== 0x002A) return result;
+
+        var ifd0Offset = getU32(4);
+
+        // Parse IFD0
+        parseIFD(result.tags, tiffStart, ifd0Offset, dv, littleEndian, false);
+
+        // Parse ExifIFD
+        if (result.tags['ExifIFDPointer']) {
+          parseIFD(result.tags, tiffStart, result.tags['ExifIFDPointer'], dv, littleEndian, false);
+        }
+
+        // Parse GPS IFD
+        if (result.tags['GPSInfoIFDPointer']) {
+          parseIFD(result.gps, tiffStart, result.tags['GPSInfoIFDPointer'], dv, littleEndian, true);
+        }
+
+        // Check for IFD1 (thumbnail)
+        var entryCount = getU16(ifd0Offset);
+        var ifd1Ptr = getU32(ifd0Offset + 2 + entryCount * 12);
+        if (ifd1Ptr > 0 && tiffStart + ifd1Ptr < dv.byteLength) {
+          var thumbTags = {};
+          parseIFD(thumbTags, tiffStart, ifd1Ptr, dv, littleEndian, false);
+          if (thumbTags['JPEGInterchangeFormat'] && thumbTags['JPEGInterchangeFormatLength']) {
+            var thumbOffset = tiffStart + thumbTags['JPEGInterchangeFormat'];
+            var thumbLength = thumbTags['JPEGInterchangeFormatLength'];
+            if (thumbOffset + thumbLength <= dv.byteLength) {
+              result.thumbnail = buffer.slice(thumbOffset, thumbOffset + thumbLength);
+            }
+          }
+        }
+      }
+      break;
+    }
+    // Move to next marker
+    if ((marker & 0xFF00) !== 0xFF00) break;
+    var segLen = dv.getUint16(offset + 2);
+    offset += 2 + segLen;
+  }
+
+  return result;
+}
+
+function parseIFD(target, tiffStart, ifdOffset, dv, littleEndian, isGps) {
+  var getU16 = function(o) { return dv.getUint16(tiffStart + o, littleEndian); };
+  var getU32 = function(o) { return dv.getUint32(tiffStart + o, littleEndian); };
+  var getS32 = function(o) { return dv.getInt32(tiffStart + o, littleEndian); };
+
+  if (tiffStart + ifdOffset + 2 > dv.byteLength) return;
+  var entries = getU16(ifdOffset);
+
+  for (var i = 0; i < entries; i++) {
+    var entryOffset = ifdOffset + 2 + i * 12;
+    if (tiffStart + entryOffset + 12 > dv.byteLength) break;
+
+    var tag = getU16(entryOffset);
+    var type = getU16(entryOffset + 2);
+    var count = getU32(entryOffset + 4);
+    var valueOffset = entryOffset + 8;
+
+    var tagName = isGps ? (GPS_TAGS[tag] || EXIF_TAGS[tag] || ('Tag_0x' + tag.toString(16).toUpperCase())) : (EXIF_TAGS[tag] || ('Tag_0x' + tag.toString(16).toUpperCase()));
+
+    // Calculate data size
+    var typeSizes = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 7: 1, 9: 4, 10: 8 };
+    var typeSize = typeSizes[type] || 1;
+    var totalSize = typeSize * count;
+
+    var dataOffset = totalSize > 4 ? getU32(entryOffset + 8) : (entryOffset + 8);
+
+    var value;
+    try {
+      switch (type) {
+        case 1: // BYTE
+        case 7: // UNDEFINED
+          if (count <= 4) {
+            value = [];
+            for (var j = 0; j < count; j++) value.push(dv.getUint8(tiffStart + valueOffset + j));
+          } else {
+            value = [];
+            for (var j = 0; j < Math.min(count, 256); j++) value.push(dv.getUint8(tiffStart + dataOffset + j));
+          }
+          break;
+        case 2: // ASCII
+          var str = '';
+          for (var j = 0; j < count - 1; j++) {
+            var ch = dv.getUint8(tiffStart + dataOffset + j);
+            if (ch === 0) break;
+            str += String.fromCharCode(ch);
+          }
+          value = str.trim();
+          break;
+        case 3: // SHORT
+          if (count === 1) {
+            value = getU16(dataOffset);
+          } else {
+            value = [];
+            for (var j = 0; j < count; j++) value.push(getU16(dataOffset + j * 2));
+          }
+          break;
+        case 4: // LONG
+          if (count === 1) {
+            value = getU32(dataOffset);
+          } else {
+            value = [];
+            for (var j = 0; j < count; j++) value.push(getU32(dataOffset + j * 4));
+          }
+          break;
+        case 5: // RATIONAL (unsigned)
+          if (count === 1) {
+            var num = getU32(dataOffset);
+            var den = getU32(dataOffset + 4);
+            value = den ? num / den : 0;
+            value = { num: num, den: den, val: value };
+          } else {
+            value = [];
+            for (var j = 0; j < count; j++) {
+              var n = getU32(dataOffset + j * 8);
+              var d = getU32(dataOffset + j * 8 + 4);
+              value.push({ num: n, den: d, val: d ? n / d : 0 });
+            }
+          }
+          break;
+        case 9: // SLONG
+          value = getS32(dataOffset);
+          break;
+        case 10: // SRATIONAL
+          if (count === 1) {
+            var sn = getS32(dataOffset);
+            var sd = getS32(dataOffset + 4);
+            value = { num: sn, den: sd, val: sd ? sn / sd : 0 };
+          } else {
+            value = [];
+            for (var j = 0; j < count; j++) {
+              var sn2 = getS32(dataOffset + j * 8);
+              var sd2 = getS32(dataOffset + j * 8 + 4);
+              value.push({ num: sn2, den: sd2, val: sd2 ? sn2 / sd2 : 0 });
+            }
+          }
+          break;
+        default:
+          value = '(type ' + type + ', count ' + count + ')';
+      }
+    } catch (e) {
+      value = '(parse error)';
+    }
+
+    target[tagName] = value;
+  }
+}
+
+/* ====================================================================
+   HELPERS
+   ==================================================================== */
+
+function formatExposureTime(val) {
+  if (!val) return '';
+  var v = typeof val === 'object' ? val.val : val;
+  if (v >= 1) return v + 's';
+  if (v > 0) return '1/' + Math.round(1 / v) + 's';
+  return v + 's';
+}
+
+function formatFNumber(val) {
+  if (!val) return '';
+  var v = typeof val === 'object' ? val.val : val;
+  return 'f/' + v.toFixed(1);
+}
+
+function formatFocalLength(val) {
+  if (!val) return '';
+  var v = typeof val === 'object' ? val.val : val;
+  return v.toFixed(1) + ' mm';
+}
+
+function formatRational(val) {
+  if (!val) return '';
+  if (typeof val === 'object' && val.val !== undefined) return val.val.toFixed(2);
+  return String(val);
+}
+
+function gpsToDecimal(coord, ref) {
+  if (!coord || !Array.isArray(coord) || coord.length < 3) return null;
+  var d = coord[0].val || 0;
+  var m = coord[1].val || 0;
+  var s = coord[2].val || 0;
+  var dec = d + m / 60 + s / 3600;
+  if (ref === 'S' || ref === 'W') dec = -dec;
+  return dec;
+}
+
+function formatGpsCoord(dec, isLat) {
+  var abs = Math.abs(dec);
+  var d = Math.floor(abs);
+  var mf = (abs - d) * 60;
+  var m = Math.floor(mf);
+  var s = ((mf - m) * 60).toFixed(2);
+  var dir = isLat ? (dec >= 0 ? 'N' : 'S') : (dec >= 0 ? 'E' : 'W');
+  return d + '\u00b0 ' + m + "' " + s + '" ' + dir;
+}
+
+function formatOrientation(val) {
+  var orientations = {
+    1: 'Normal (0\u00b0)', 2: 'Mirrored', 3: 'Rotated 180\u00b0',
+    4: 'Mirrored + 180\u00b0', 5: 'Mirrored + 270\u00b0 CW',
+    6: 'Rotated 90\u00b0 CW', 7: 'Mirrored + 90\u00b0 CW', 8: 'Rotated 270\u00b0 CW'
+  };
+  return orientations[val] || String(val);
+}
+
+function formatColorSpace(val) {
+  if (val === 1) return 'sRGB';
+  if (val === 65535) return 'Uncalibrated';
+  return String(val);
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(2) + ' MB';
+}
+
+function makeTable(rows) {
+  if (rows.length === 0) return '<p style="color:var(--text-muted);font-size:0.88rem;">No data available for this category.</p>';
+  var html = '<table class="meta-table">';
+  rows.forEach(function(r) {
+    html += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+  });
+  return html + '</table>';
+}
+
+/* ====================================================================
+   MAIN ANALYSIS
+   ==================================================================== */
+
+var currentFile = null;
+var currentExif = null;
+
+function analyzeImage(file) {
+  currentFile = file;
+  document.getElementById('strip-btn').disabled = false;
+
+  // Preview
+  var previewArea = document.getElementById('preview-area');
+  var previewImg = document.getElementById('preview-img');
+  var url = URL.createObjectURL(file);
+  previewImg.src = url;
+  previewArea.style.display = '';
+
+  // File info
+  var fileInfo = document.getElementById('file-info');
+  fileInfo.style.display = '';
+  fileInfo.innerHTML =
+    '<div class="file-info-item"><span class="label">Name:</span><span class="value">' + escH(file.name) + '</span></div>' +
+    '<div class="file-info-item"><span class="label">Size:</span><span class="value">' + formatFileSize(file.size) + '</span></div>' +
+    '<div class="file-info-item"><span class="label">Type:</span><span class="value">' + (file.type || 'unknown') + '</span></div>' +
+    '<div class="file-info-item"><span class="label">Last Modified:</span><span class="value">' + new Date(file.lastModified).toLocaleString() + '</span></div>';
+
+  // Read file
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var buffer = e.target.result;
+    currentExif = parseExif(buffer);
+
+    var hasTags = Object.keys(currentExif.tags).length > 2; // more than just pointers
+    var hasGps = Object.keys(currentExif.gps).length > 0;
+
+    if (hasTags || hasGps) {
+      document.getElementById('results-card').style.display = '';
+      document.getElementById('no-metadata-msg').style.display = 'none';
+      renderMetadata(currentExif);
+    } else {
+      document.getElementById('results-card').style.display = 'none';
+      document.getElementById('no-metadata-msg').style.display = '';
+    }
+
+    renderPrivacy(currentExif, file);
+    renderHexDump(buffer, currentExif);
+    renderThumbnail(currentExif);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function renderMetadata(exif) {
+  var t = exif.tags;
+  var g = exif.gps;
+
+  // Camera tab
+  var cameraRows = [];
+  if (t.Make) cameraRows.push(['Make', escH(String(t.Make))]);
+  if (t.Model) cameraRows.push(['Model', escH(String(t.Model))]);
+  if (t.LensMake) cameraRows.push(['Lens Make', escH(String(t.LensMake))]);
+  if (t.LensModel) cameraRows.push(['Lens Model', escH(String(t.LensModel))]);
+  if (t.FocalLength) cameraRows.push(['Focal Length', formatFocalLength(t.FocalLength)]);
+  if (t.FocalLengthIn35mmFilm) cameraRows.push(['35mm Equivalent', t.FocalLengthIn35mmFilm + ' mm']);
+  if (t.FNumber) cameraRows.push(['Aperture', formatFNumber(t.FNumber)]);
+  if (t.ExposureTime) cameraRows.push(['Shutter Speed', formatExposureTime(t.ExposureTime)]);
+  if (t.ISOSpeedRatings) cameraRows.push(['ISO', String(t.ISOSpeedRatings)]);
+  if (t.ExposureProgram !== undefined) cameraRows.push(['Exposure Program', formatExposureProgram(t.ExposureProgram)]);
+  if (t.MeteringMode !== undefined) cameraRows.push(['Metering Mode', formatMeteringMode(t.MeteringMode)]);
+  if (t.Flash !== undefined) cameraRows.push(['Flash', formatFlash(t.Flash)]);
+  if (t.WhiteBalance !== undefined) cameraRows.push(['White Balance', t.WhiteBalance === 0 ? 'Auto' : 'Manual']);
+  if (t.ExposureBiasValue) cameraRows.push(['Exposure Bias', formatRational(t.ExposureBiasValue) + ' EV']);
+  if (t.MaxApertureValue) cameraRows.push(['Max Aperture', formatFNumber(t.MaxApertureValue)]);
+  if (t.BodySerialNumber) cameraRows.push(['Body Serial Number', escH(String(t.BodySerialNumber))]);
+  if (t.LensSerialNumber) cameraRows.push(['Lens Serial Number', escH(String(t.LensSerialNumber))]);
+  document.getElementById('meta-camera').innerHTML = '<h4>Camera Information</h4>' + makeTable(cameraRows);
+
+  // Image tab
+  var imgRows = [];
+  if (t.PixelXDimension) imgRows.push(['Width', t.PixelXDimension + ' px']);
+  if (t.PixelYDimension) imgRows.push(['Height', t.PixelYDimension + ' px']);
+  if (t.Orientation !== undefined) imgRows.push(['Orientation', formatOrientation(t.Orientation)]);
+  if (t.ColorSpace !== undefined) imgRows.push(['Color Space', formatColorSpace(t.ColorSpace)]);
+  if (t.XResolution) imgRows.push(['X Resolution', formatRational(t.XResolution) + ' DPI']);
+  if (t.YResolution) imgRows.push(['Y Resolution', formatRational(t.YResolution) + ' DPI']);
+  if (t.CompressedBitsPerPixel) imgRows.push(['Compressed BPP', formatRational(t.CompressedBitsPerPixel)]);
+  if (t.ExifVersion) imgRows.push(['EXIF Version', formatExifVersion(t.ExifVersion)]);
+  if (t.ImageUniqueID) imgRows.push(['Unique Image ID', escH(String(t.ImageUniqueID))]);
+  document.getElementById('meta-image').innerHTML = '<h4>Image Information</h4>' + makeTable(imgRows);
+
+  // GPS tab
+  var gpsRows = [];
+  var lat = null, lng = null;
+  if (g.GPSLatitude && g.GPSLatitudeRef) {
+    lat = gpsToDecimal(g.GPSLatitude, g.GPSLatitudeRef);
+    gpsRows.push(['Latitude', formatGpsCoord(lat, true) + ' (' + lat.toFixed(6) + ')']);
+  }
+  if (g.GPSLongitude && g.GPSLongitudeRef) {
+    lng = gpsToDecimal(g.GPSLongitude, g.GPSLongitudeRef);
+    gpsRows.push(['Longitude', formatGpsCoord(lng, false) + ' (' + lng.toFixed(6) + ')']);
+  }
+  if (g.GPSAltitude) gpsRows.push(['Altitude', formatRational(g.GPSAltitude) + ' m' + (g.GPSAltitudeRef === 1 ? ' (below sea level)' : '')]);
+  if (g.GPSTimeStamp && Array.isArray(g.GPSTimeStamp)) {
+    var h = Math.floor(g.GPSTimeStamp[0].val || 0);
+    var m = Math.floor(g.GPSTimeStamp[1].val || 0);
+    var s = Math.floor(g.GPSTimeStamp[2].val || 0);
+    gpsRows.push(['GPS Time (UTC)', h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0')]);
+  }
+  if (g.GPSDateStamp) gpsRows.push(['GPS Date', escH(String(g.GPSDateStamp))]);
+
+  var gpsHtml = '<h4>GPS Location</h4>';
+  if (lat !== null && lng !== null) {
+    gpsHtml += '<div style="margin-bottom:12px;padding:10px 14px;background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.25);border-radius:8px;font-size:0.88rem;"><strong style="color:var(--red);">Privacy Warning:</strong> <span style="color:var(--text-muted);">This image contains GPS coordinates that reveal where the photo was taken.</span></div>';
+    gpsHtml += '<div style="margin-bottom:12px;"><a href="https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=15/' + lat + '/' + lng + '" target="_blank" rel="noopener" class="btn btn-sm btn-secondary">View on OpenStreetMap</a> <a href="https://maps.google.com/?q=' + lat + ',' + lng + '" target="_blank" rel="noopener" class="btn btn-sm btn-secondary" style="margin-left:8px;">View on Google Maps</a></div>';
+  }
+  gpsHtml += makeTable(gpsRows);
+  document.getElementById('meta-gps').innerHTML = gpsHtml;
+
+  // Date tab
+  var dateRows = [];
+  if (t.DateTimeOriginal) dateRows.push(['Date/Time Original', escH(String(t.DateTimeOriginal))]);
+  if (t.DateTimeDigitized) dateRows.push(['Date/Time Digitized', escH(String(t.DateTimeDigitized))]);
+  if (t.DateTime) dateRows.push(['Modified Date', escH(String(t.DateTime))]);
+  document.getElementById('meta-date').innerHTML = '<h4>Date &amp; Time</h4>' + makeTable(dateRows);
+
+  // Software tab
+  var swRows = [];
+  if (t.Software) swRows.push(['Software', escH(String(t.Software))]);
+  if (t.Artist) swRows.push(['Artist', escH(String(t.Artist))]);
+  if (t.Copyright) swRows.push(['Copyright', escH(String(t.Copyright))]);
+  if (t.ImageDescription) swRows.push(['Description', escH(String(t.ImageDescription))]);
+  document.getElementById('meta-software').innerHTML = '<h4>Software &amp; Author</h4>' + makeTable(swRows);
+
+  // All fields tab
+  var allRows = [];
+  var allKeys = Object.keys(t).filter(function(k) { return k !== 'ExifIFDPointer' && k !== 'GPSInfoIFDPointer'; });
+  allKeys.sort();
+  allKeys.forEach(function(k) {
+    var val = t[k];
+    allRows.push([k, escH(formatValue(val))]);
+  });
+  var gpsKeys = Object.keys(g);
+  gpsKeys.sort();
+  gpsKeys.forEach(function(k) {
+    allRows.push(['GPS: ' + k, escH(formatValue(g[k]))]);
+  });
+  document.getElementById('meta-all').innerHTML = '<h4>All EXIF Fields (' + allRows.length + ')</h4>' + makeTable(allRows);
+}
+
+function formatValue(val) {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number') return String(val);
+  if (Array.isArray(val)) {
+    return val.map(function(v) {
+      if (typeof v === 'object' && v.val !== undefined) return v.val.toFixed(4);
+      return String(v);
+    }).join(', ');
+  }
+  if (typeof val === 'object' && val.val !== undefined) return val.val.toFixed(4) + ' (' + val.num + '/' + val.den + ')';
+  return String(val);
+}
+
+function formatExposureProgram(v) {
+  var p = { 0: 'Not Defined', 1: 'Manual', 2: 'Program AE', 3: 'Aperture Priority', 4: 'Shutter Priority', 5: 'Creative', 6: 'Action', 7: 'Portrait', 8: 'Landscape' };
+  return p[v] || String(v);
+}
+
+function formatMeteringMode(v) {
+  var m = { 0: 'Unknown', 1: 'Average', 2: 'Center-Weighted', 3: 'Spot', 4: 'Multi-Spot', 5: 'Multi-Segment', 6: 'Partial', 255: 'Other' };
+  return m[v] || String(v);
+}
+
+function formatFlash(v) {
+  var fired = (v & 1) ? 'Fired' : 'Did not fire';
+  return fired + ' (' + v + ')';
+}
+
+function formatExifVersion(val) {
+  if (Array.isArray(val)) return val.map(function(v) { return String.fromCharCode(v); }).join('');
+  return String(val);
+}
+
+function escH(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/* ====================================================================
+   PRIVACY CHECKER
+   ==================================================================== */
+
+function renderPrivacy(exif, file) {
+  var t = exif.tags;
+  var g = exif.gps;
+  var issues = [];
+
+  if (g.GPSLatitude || g.GPSLongitude) {
+    issues.push({ severity: 'high', text: 'GPS coordinates found — reveals the photo location' });
+  }
+  if (t.BodySerialNumber) {
+    issues.push({ severity: 'high', text: 'Camera body serial number: ' + String(t.BodySerialNumber) });
+  }
+  if (t.LensSerialNumber) {
+    issues.push({ severity: 'medium', text: 'Lens serial number: ' + String(t.LensSerialNumber) });
+  }
+  if (t.ImageUniqueID) {
+    issues.push({ severity: 'medium', text: 'Unique Image ID: can link this image to a camera' });
+  }
+  if (t.Artist) {
+    issues.push({ severity: 'medium', text: 'Artist/Author name: ' + String(t.Artist) });
+  }
+  if (t.Copyright) {
+    issues.push({ severity: 'low', text: 'Copyright information: ' + String(t.Copyright) });
+  }
+  if (t.Software) {
+    issues.push({ severity: 'low', text: 'Software used: ' + String(t.Software) });
+  }
+  if (t.DateTimeOriginal) {
+    issues.push({ severity: 'low', text: 'Original date/time: ' + String(t.DateTimeOriginal) });
+  }
+  if (t.Make || t.Model) {
+    issues.push({ severity: 'low', text: 'Camera model: ' + (t.Make ? String(t.Make) + ' ' : '') + (t.Model ? String(t.Model) : '') });
+  }
+
+  var container = document.getElementById('privacy-results');
+  document.getElementById('privacy-card').style.display = '';
+  document.getElementById('privacy-placeholder').style.display = 'none';
+
+  if (issues.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:16px;"><span class="tag tag-pass" style="font-size:0.92rem;padding:6px 16px;">No sensitive metadata found</span><p style="color:var(--text-muted);margin-top:8px;">This image does not appear to contain GPS coordinates, serial numbers, or personal information in its metadata.</p></div>';
+    return;
+  }
+
+  var highCount = issues.filter(function(i) { return i.severity === 'high'; }).length;
+  var statusTag = highCount > 0 ? '<span class="tag tag-fail" style="font-size:0.92rem;padding:6px 16px;">' + issues.length + ' privacy concern' + (issues.length > 1 ? 's' : '') + ' found</span>' : '<span class="tag tag-warn" style="font-size:0.92rem;padding:6px 16px;">' + issues.length + ' metadata item' + (issues.length > 1 ? 's' : '') + ' found</span>';
+
+  var html = '<div style="text-align:center;margin-bottom:16px;">' + statusTag + '</div>';
+  html += '<div class="privacy-alert"><h4>Sensitive metadata detected</h4><ul>';
+  issues.forEach(function(issue) {
+    html += '<li>' + escH(issue.text) + '</li>';
+  });
+  html += '</ul></div>';
+  html += '<p style="margin-top:12px;font-size:0.88rem;color:var(--text-muted);">Use the <a href="#strip-metadata">Strip Metadata</a> tool above to remove all metadata before sharing this image.</p>';
+
+  container.innerHTML = html;
+}
+
+/* ====================================================================
+   HEX DUMP
+   ==================================================================== */
+
+function renderHexDump(buffer, exif) {
+  var el = document.getElementById('hex-output');
+  var start = exif.rawExifOffset >= 0 ? exif.rawExifOffset : 0;
+  var end = Math.min(start + 2048, buffer.byteLength);
+  var dv = new DataView(buffer);
+  var lines = [];
+
+  for (var i = start; i < end; i += 16) {
+    var hex = '';
+    var ascii = '';
+    for (var j = 0; j < 16; j++) {
+      if (i + j < end) {
+        var b = dv.getUint8(i + j);
+        hex += b.toString(16).toUpperCase().padStart(2, '0') + ' ';
+        ascii += (b >= 32 && b < 127) ? String.fromCharCode(b) : '.';
+      } else {
+        hex += '   ';
+        ascii += ' ';
+      }
+    }
+    lines.push('<span class="hex-offset">' + (i).toString(16).toUpperCase().padStart(8, '0') + '</span>  <span class="hex-byte">' + hex + '</span> <span class="hex-ascii">' + escH(ascii) + '</span>');
+  }
+
+  el.innerHTML = lines.join('\n');
+}
+
+/* ====================================================================
+   THUMBNAIL
+   ==================================================================== */
+
+function renderThumbnail(exif) {
+  var area = document.getElementById('thumb-area');
+  if (exif.thumbnail) {
+    var blob = new Blob([exif.thumbnail], { type: 'image/jpeg' });
+    var url = URL.createObjectURL(blob);
+    area.innerHTML = '<p style="color:var(--text-muted);margin-bottom:8px;">Embedded JPEG thumbnail (' + formatFileSize(exif.thumbnail.byteLength) + '):</p><img src="' + url + '" alt="Embedded EXIF thumbnail">';
+  } else {
+    area.innerHTML = '<p style="color:var(--text-muted);">No embedded thumbnail found in this image.</p>';
+  }
+}
+
+/* ====================================================================
+   STRIP METADATA
+   ==================================================================== */
+
+function stripMetadata() {
+  if (!currentFile) return;
+  var img = new Image();
+  img.onload = function() {
+    var canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    var format = document.getElementById('strip-format').value;
+    var quality = parseFloat(document.getElementById('strip-quality').value);
+
+    canvas.toBlob(function(blob) {
+      if (!blob) return;
+      var a = document.createElement('a');
+      var ext = format === 'image/png' ? '.png' : format === 'image/webp' ? '.webp' : '.jpg';
+      var baseName = currentFile.name.replace(/\.[^.]+$/, '');
+      a.download = baseName + '_stripped' + ext;
+      a.href = URL.createObjectURL(blob);
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }, format, quality);
+  };
+  img.src = URL.createObjectURL(currentFile);
+}
+
+/* ====================================================================
+   COMPARE
+   ==================================================================== */
+
+function analyzeForCompare(file, targetId) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var exif = parseExif(e.target.result);
+    var t = exif.tags;
+    var g = exif.gps;
+    var rows = [];
+
+    rows.push(['File', escH(file.name)]);
+    rows.push(['Size', formatFileSize(file.size)]);
+    if (t.Make) rows.push(['Make', escH(String(t.Make))]);
+    if (t.Model) rows.push(['Model', escH(String(t.Model))]);
+    if (t.LensModel) rows.push(['Lens', escH(String(t.LensModel))]);
+    if (t.FocalLength) rows.push(['Focal Length', formatFocalLength(t.FocalLength)]);
+    if (t.FNumber) rows.push(['Aperture', formatFNumber(t.FNumber)]);
+    if (t.ExposureTime) rows.push(['Shutter', formatExposureTime(t.ExposureTime)]);
+    if (t.ISOSpeedRatings) rows.push(['ISO', String(t.ISOSpeedRatings)]);
+    if (t.PixelXDimension && t.PixelYDimension) rows.push(['Dimensions', t.PixelXDimension + ' x ' + t.PixelYDimension + ' px']);
+    if (t.DateTimeOriginal) rows.push(['Date Original', escH(String(t.DateTimeOriginal))]);
+    if (t.Software) rows.push(['Software', escH(String(t.Software))]);
+    if (g.GPSLatitude) {
+      var lat = gpsToDecimal(g.GPSLatitude, g.GPSLatitudeRef);
+      var lng = gpsToDecimal(g.GPSLongitude, g.GPSLongitudeRef);
+      if (lat !== null && lng !== null) rows.push(['GPS', lat.toFixed(6) + ', ' + lng.toFixed(6)]);
+    }
+
+    if (rows.length <= 2) {
+      document.getElementById(targetId).innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">No EXIF metadata found.</p>';
+    } else {
+      document.getElementById(targetId).innerHTML = makeTable(rows);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ====================================================================
+   META TABS
+   ==================================================================== */
+
+function switchMetaTab(tab, btn) {
+  var tabs = ['camera', 'image', 'gps', 'date', 'software', 'all'];
+  tabs.forEach(function(t) {
+    var el = document.getElementById('meta-' + t);
+    if (el) el.style.display = t === tab ? '' : 'none';
+  });
+  document.querySelectorAll('#meta-tabs .tab').forEach(function(t) { t.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+}
+
+/* ====================================================================
+   FAQ
+   ==================================================================== */
+
+function toggleFaq(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+/* ====================================================================
+   FILE INPUT & DROP ZONE
+   ==================================================================== */
+
+function setupDropZone(zoneId, inputId, callback) {
+  var zone = document.getElementById(zoneId);
+  var input = document.getElementById(inputId);
+
+  zone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    zone.classList.add('dragover');
+  });
+  zone.addEventListener('dragleave', function() {
+    zone.classList.remove('dragover');
+  });
+  zone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) callback(e.dataTransfer.files[0]);
+  });
+  input.addEventListener('change', function() {
+    if (input.files.length) callback(input.files[0]);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  setupDropZone('main-dropzone', 'file-input', analyzeImage);
+  setupDropZone('compare-drop-a', 'compare-file-a', function(f) { analyzeForCompare(f, 'compare-result-a'); });
+  setupDropZone('compare-drop-b', 'compare-file-b', function(f) { analyzeForCompare(f, 'compare-result-b'); });
+});
+</script>
+</body>
+</html>
