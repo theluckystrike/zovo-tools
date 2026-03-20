@@ -256,20 +256,20 @@ select { cursor: pointer; }
 .score-label { margin-top: 12px; font-size: 0.9rem; font-weight: 600; }
 .score-details { margin-top: 8px; font-size: 0.82rem; color: var(--text-muted); }
 
-/* Validation Messages */
+/* Validation */
 .validation-list { list-style: none; margin-top: 12px; }
-.validation-list li { padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 0.85rem; display: flex; align-items: flex-start; gap: 8px; }
-.validation-list li.pass { background: rgba(0, 255, 136, 0.06); color: var(--accent); }
-.validation-list li.warn { background: var(--warning-dim); color: var(--warning); }
-.validation-list li.fail { background: var(--danger-dim); color: var(--danger); }
+.validation-list li { padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 0.85rem; display: flex; gap: 8px; }
+.validation-list li.pass { color: var(--accent); }
+.validation-list li.warn { color: var(--warning); }
+.validation-list li.fail { color: var(--danger); }
 .validation-list li .icon { font-weight: 800; min-width: 16px; }
 
-/* CDN Suggestions */
+/* CDN */
 .cdn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 16px; }
 .cdn-item { padding: 10px 14px; background: rgba(10,10,15,0.4); border: 1px solid var(--border); border-radius: 8px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
-.cdn-item:hover { border-color: var(--secondary); background: var(--secondary-dim); }
+.cdn-item:hover { border-color: var(--secondary); }
 .cdn-item code { color: var(--secondary); font-size: 0.8rem; }
-.cdn-item .cdn-name { font-weight: 600; margin-bottom: 2px; }
+.cdn-item .cdn-name { font-weight: 600; }
 
 /* Section Headers */
 .section-header { margin-bottom: 32px; }
@@ -468,16 +468,14 @@ select { cursor: pointer; }
     <h2>Your Content Security Policy</h2>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; align-items: start;">
-    <!-- Security Score -->
-    <div class="score-container" style="background: rgba(10,10,15,0.4); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 24px;">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+    <div class="score-container" style="background: rgba(10,10,15,0.4); border: 1px solid var(--border); border-radius: var(--radius-sm);">
       <div id="scoreDisplay" class="score-badge score-f">F</div>
       <div class="score-label" id="scoreLabel">No policy configured</div>
       <div class="score-details" id="scoreDetails">Add directives to generate a score</div>
     </div>
-    <!-- Validation -->
     <div style="background: rgba(10,10,15,0.4); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 24px;">
-      <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 12px;">Policy Validation</div>
+      <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 12px;">Validation</div>
       <ul class="validation-list" id="validationList"></ul>
     </div>
   </div>
@@ -647,7 +645,7 @@ select { cursor: pointer; }
 
   <h2>Performance Impact and PageSpeed Considerations</h2>
 
-  <p>A well-configured CSP has minimal performance impact. The browser's CSP evaluation is extremely fast &mdash; it's a simple string matching operation performed before each resource request. In our benchmarks, CSP evaluation adds less than 0.1ms of overhead per resource request, which is negligible.</p>
+  <p>A well-configured CSP has minimal performance impact &mdash; less than 0.1ms overhead per resource request in our benchmarks.</p>
 
   <p>CSP can indirectly affect PageSpeed scores if it accidentally blocks critical resources (CSS, fonts), affecting Core Web Vitals. Always test in report-only mode first. Server-side nonce generation adds negligible overhead but makes the CSP header non-cacheable at CDN edges.</p>
 
@@ -1027,62 +1025,22 @@ function switchOutput(format) {
 
 // ---- Security Score ----
 function calculateScore(policy) {
-  if (!policy) {
-    updateScoreDisplay('F', 'No policy configured', 'Add directives to generate a score', 0);
-    return;
-  }
-
-  var score = 0;
-  var details = [];
-
-  // default-src
-  if (policy.includes('default-src')) {
-    score += 15;
-    if (policy.match(/default-src[^;]*'none'/)) { score += 10; details.push('+10: default-src set to none'); }
-    else if (policy.match(/default-src[^;]*'self'/)) { score += 5; details.push('+5: default-src set to self'); }
-  }
-
-  // script-src
-  if (policy.includes('script-src')) {
-    score += 15;
-    if (!policy.match(/script-src[^;]*'unsafe-inline'/)) { score += 15; details.push('+15: No unsafe-inline in script-src'); }
-    if (!policy.match(/script-src[^;]*'unsafe-eval'/)) { score += 10; details.push('+10: No unsafe-eval in script-src'); }
-  }
-
-  // object-src none
-  if (policy.match(/object-src[^;]*'none'/)) { score += 10; details.push('+10: object-src set to none'); }
-
-  // frame-ancestors
-  if (policy.includes('frame-ancestors')) { score += 10; details.push('+10: frame-ancestors defined'); }
-
-  // base-uri
-  if (policy.includes('base-uri')) { score += 5; details.push('+5: base-uri defined'); }
-
-  // form-action
-  if (policy.includes('form-action')) { score += 5; details.push('+5: form-action defined'); }
-
-  // upgrade-insecure-requests
-  if (policy.includes('upgrade-insecure-requests')) { score += 5; details.push('+5: upgrade-insecure-requests enabled'); }
-
-  // Penalty for unsafe-inline in script-src
-  if (policy.match(/script-src[^;]*'unsafe-inline'/)) { score -= 20; details.push('-20: unsafe-inline in script-src'); }
-
-  // Penalty for unsafe-eval in script-src
-  if (policy.match(/script-src[^;]*'unsafe-eval'/)) { score -= 10; details.push('-10: unsafe-eval in script-src'); }
-
-  // Penalty for wildcards
-  if (policy.match(/(?:script|default)-src[^;]*\*/)) { score -= 15; details.push('-15: Wildcard in script/default-src'); }
-
-  score = Math.max(0, Math.min(100, score));
-
-  var grade, label;
-  if (score >= 90) { grade = 'A'; label = 'Excellent security posture'; }
-  else if (score >= 70) { grade = 'B'; label = 'Good security with minor gaps'; }
-  else if (score >= 50) { grade = 'C'; label = 'Moderate security, room for improvement'; }
-  else if (score >= 30) { grade = 'D'; label = 'Weak security, significant gaps'; }
-  else { grade = 'F'; label = 'Ineffective or minimal policy'; }
-
-  updateScoreDisplay(grade, label, details.join(' | '), score);
+  if (!policy) { updateScoreDisplay('F','No policy configured','Add directives to generate a score',0); return; }
+  var s=0,d=[];
+  if(policy.includes('default-src')){s+=15;if(policy.match(/default-src[^;]*'none'/)){s+=10;d.push('+10: default-src none');}else if(policy.match(/default-src[^;]*'self'/)){s+=5;d.push('+5: default-src self');}}
+  if(policy.includes('script-src')){s+=15;if(!policy.match(/script-src[^;]*'unsafe-inline'/)){s+=15;d.push('+15: No unsafe-inline');}if(!policy.match(/script-src[^;]*'unsafe-eval'/)){s+=10;d.push('+10: No unsafe-eval');}}
+  if(policy.match(/object-src[^;]*'none'/)){s+=10;d.push('+10: object-src none');}
+  if(policy.includes('frame-ancestors')){s+=10;d.push('+10: frame-ancestors');}
+  if(policy.includes('base-uri')){s+=5;d.push('+5: base-uri');}
+  if(policy.includes('form-action')){s+=5;d.push('+5: form-action');}
+  if(policy.includes('upgrade-insecure-requests')){s+=5;d.push('+5: upgrade-insecure');}
+  if(policy.match(/script-src[^;]*'unsafe-inline'/)){s-=20;d.push('-20: unsafe-inline');}
+  if(policy.match(/script-src[^;]*'unsafe-eval'/)){s-=10;d.push('-10: unsafe-eval');}
+  if(policy.match(/(?:script|default)-src[^;]*\*/)){s-=15;d.push('-15: wildcard');}
+  s=Math.max(0,Math.min(100,s));
+  var g,l;
+  if(s>=90){g='A';l='Excellent security posture';}else if(s>=70){g='B';l='Good security with minor gaps';}else if(s>=50){g='C';l='Moderate, room for improvement';}else if(s>=30){g='D';l='Weak, significant gaps';}else{g='F';l='Ineffective policy';}
+  updateScoreDisplay(g,l,d.join(' | '),s);
 }
 
 function updateScoreDisplay(grade, label, details, score) {
@@ -1097,62 +1055,18 @@ function updateScoreDisplay(grade, label, details, score) {
 function validatePolicy(policy) {
   var list = document.getElementById('validationList');
   list.innerHTML = '';
-
-  if (!policy) {
-    addValidation('fail', 'No policy configured. Add directives to create a CSP.');
-    return;
-  }
-
-  // Check for default-src
-  if (policy.includes('default-src')) {
-    addValidation('pass', 'default-src is defined (provides fallback for unspecified directives)');
-  } else {
-    addValidation('warn', 'No default-src defined. Unspecified resource types will be unrestricted.');
-  }
-
-  // Check for script-src
+  if (!policy) { addValidation('fail','No policy configured.'); return; }
+  policy.includes('default-src') ? addValidation('pass','default-src defined') : addValidation('warn','No default-src. Unspecified types unrestricted.');
   if (policy.includes('script-src')) {
-    addValidation('pass', 'script-src is defined (primary XSS protection directive)');
-    if (policy.match(/script-src[^;]*'unsafe-inline'/)) {
-      addValidation('fail', 'script-src contains unsafe-inline, which weakens XSS protection significantly');
-    }
-    if (policy.match(/script-src[^;]*'unsafe-eval'/)) {
-      addValidation('warn', 'script-src contains unsafe-eval. Avoid unless required by a framework.');
-    }
-  } else if (!policy.includes('default-src')) {
-    addValidation('fail', 'No script-src or default-src: scripts from any origin will be allowed');
-  }
-
-  // Check for object-src
-  if (policy.match(/object-src[^;]*'none'/)) {
-    addValidation('pass', 'object-src is set to none (blocks plugin-based attacks)');
-  } else if (!policy.includes('object-src')) {
-    addValidation('warn', 'No object-src defined. Consider setting it to none to block plugins.');
-  }
-
-  // Check for frame-ancestors
-  if (policy.includes('frame-ancestors')) {
-    addValidation('pass', 'frame-ancestors is defined (prevents clickjacking attacks)');
-  } else {
-    addValidation('warn', 'No frame-ancestors directive. Your page could be embedded in malicious iframes.');
-  }
-
-  // Check for base-uri
-  if (policy.includes('base-uri')) {
-    addValidation('pass', 'base-uri is defined (prevents base tag injection)');
-  } else {
-    addValidation('warn', 'No base-uri defined. Attackers could inject a base tag to redirect relative URLs.');
-  }
-
-  // Check for form-action
-  if (policy.includes('form-action')) {
-    addValidation('pass', 'form-action is defined (restricts form submission targets)');
-  }
-
-  // Wildcard checks
-  if (policy.match(/(?:script|default)-src[^;]*\*/)) {
-    addValidation('fail', 'Wildcard (*) in script/default-src effectively disables CSP protection');
-  }
+    addValidation('pass','script-src defined (XSS protection)');
+    if (policy.match(/script-src[^;]*'unsafe-inline'/)) addValidation('fail','unsafe-inline in script-src weakens XSS protection');
+    if (policy.match(/script-src[^;]*'unsafe-eval'/)) addValidation('warn','unsafe-eval in script-src');
+  } else if (!policy.includes('default-src')) { addValidation('fail','No script-src or default-src'); }
+  policy.match(/object-src[^;]*'none'/) ? addValidation('pass','object-src none') : (!policy.includes('object-src') && addValidation('warn','No object-src. Set to none.'));
+  policy.includes('frame-ancestors') ? addValidation('pass','frame-ancestors defined') : addValidation('warn','No frame-ancestors (clickjacking risk)');
+  policy.includes('base-uri') ? addValidation('pass','base-uri defined') : addValidation('warn','No base-uri defined');
+  if (policy.includes('form-action')) addValidation('pass','form-action defined');
+  if (policy.match(/(?:script|default)-src[^;]*\*/)) addValidation('fail','Wildcard disables CSP protection');
 }
 
 function addValidation(type, message) {
@@ -1175,74 +1089,13 @@ function loadPreset(preset) {
     directiveState[d.name].custom = '';
   });
 
+  var S="'self'",N="'none'",UI="'unsafe-inline'",UE="'unsafe-eval'",DA="data:",BL="blob:",HT="https:",UP=true;
   var configs = {
-    strict: {
-      'default-src': ["'none'"],
-      'script-src': ["'self'"],
-      'style-src': ["'self'"],
-      'img-src': ["'self'"],
-      'font-src': ["'self'"],
-      'connect-src': ["'self'"],
-      'object-src': ["'none'"],
-      'frame-ancestors': ["'none'"],
-      'base-uri': ["'self'"],
-      'form-action': ["'self'"],
-      'upgrade-insecure-requests': true
-    },
-    moderate: {
-      'default-src': ["'self'"],
-      'script-src': ["'self'"],
-      'style-src': ["'self'", "'unsafe-inline'"],
-      'img-src': ["'self'", "data:", "https:"],
-      'font-src': ["'self'", "data:"],
-      'connect-src': ["'self'"],
-      'object-src': ["'none'"],
-      'frame-ancestors': ["'self'"],
-      'base-uri': ["'self'"],
-      'form-action': ["'self'"],
-      'upgrade-insecure-requests': true
-    },
-    relaxed: {
-      'default-src': ["'self'"],
-      'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      'style-src': ["'self'", "'unsafe-inline'"],
-      'img-src': ["'self'", "data:", "blob:", "https:"],
-      'font-src': ["'self'", "data:"],
-      'connect-src': ["'self'", "https:"],
-      'object-src': ["'none'"],
-      'frame-ancestors': ["'self'"],
-      'upgrade-insecure-requests': true
-    },
-    wordpress: {
-      'default-src': ["'self'"],
-      'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      'style-src': ["'self'", "'unsafe-inline'"],
-      'img-src': ["'self'", "data:", "blob:", "https:"],
-      'font-src': ["'self'", "data:"],
-      'connect-src': ["'self'", "https:"],
-      'media-src': ["'self'"],
-      'object-src': ["'none'"],
-      'frame-src': ["'self'", "https:"],
-      'frame-ancestors': ["'self'"],
-      'base-uri': ["'self'"],
-      'form-action': ["'self'"],
-      'upgrade-insecure-requests': true
-    },
-    react: {
-      'default-src': ["'self'"],
-      'script-src': ["'self'"],
-      'style-src': ["'self'", "'unsafe-inline'"],
-      'img-src': ["'self'", "data:", "blob:"],
-      'font-src': ["'self'"],
-      'connect-src': ["'self'"],
-      'worker-src': ["'self'", "blob:"],
-      'child-src': ["'self'", "blob:"],
-      'object-src': ["'none'"],
-      'frame-ancestors': ["'none'"],
-      'base-uri': ["'self'"],
-      'form-action': ["'self'"],
-      'upgrade-insecure-requests': true
-    }
+    strict: {'default-src':[N],'script-src':[S],'style-src':[S],'img-src':[S],'font-src':[S],'connect-src':[S],'object-src':[N],'frame-ancestors':[N],'base-uri':[S],'form-action':[S],'upgrade-insecure-requests':UP},
+    moderate: {'default-src':[S],'script-src':[S],'style-src':[S,UI],'img-src':[S,DA,HT],'font-src':[S,DA],'connect-src':[S],'object-src':[N],'frame-ancestors':[S],'base-uri':[S],'form-action':[S],'upgrade-insecure-requests':UP},
+    relaxed: {'default-src':[S],'script-src':[S,UI,UE],'style-src':[S,UI],'img-src':[S,DA,BL,HT],'font-src':[S,DA],'connect-src':[S,HT],'object-src':[N],'frame-ancestors':[S],'upgrade-insecure-requests':UP},
+    wordpress: {'default-src':[S],'script-src':[S,UI,UE],'style-src':[S,UI],'img-src':[S,DA,BL,HT],'font-src':[S,DA],'connect-src':[S,HT],'media-src':[S],'object-src':[N],'frame-src':[S,HT],'frame-ancestors':[S],'base-uri':[S],'form-action':[S],'upgrade-insecure-requests':UP},
+    react: {'default-src':[S],'script-src':[S],'style-src':[S,UI],'img-src':[S,DA,BL],'font-src':[S],'connect-src':[S],'worker-src':[S,BL],'child-src':[S,BL],'object-src':[N],'frame-ancestors':[N],'base-uri':[S],'form-action':[S],'upgrade-insecure-requests':UP}
   };
 
   if (preset === 'clear') {
