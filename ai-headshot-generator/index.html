@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Headshot Generator — Professional Photo Editor Free | Zovo</title>
+<meta name="description" content="Create professional headshots from any photo. Crop, adjust lighting, apply filters, remove backgrounds, and export in LinkedIn, resume, and passport sizes. Free, private, no uploads.">
+<meta name="keywords" content="ai headshot generator, professional headshot maker, headshot editor, linkedin photo editor, passport photo maker, resume photo, professional portrait editor, headshot crop tool, photo enhancer, free headshot tool">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/ai-headshot-generator/">
+
+<meta property="og:title" content="AI Headshot Generator — Professional Photo Editor Free | Zovo">
+<meta property="og:description" content="Create professional headshots from any photo. Crop, adjust, apply filters, export for LinkedIn, resume, passport. Free and private.">
+<meta property="og:url" content="https://zovo.one/free-tools/ai-headshot-generator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo">
+<meta property="og:image" content="https://zovo.one/free-tools/ai-headshot-generator/og-image.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Headshot Generator — Professional Photo Editor Free | Zovo">
+<meta name="twitter:description" content="Professional headshot editor. Crop, enhance, apply filters, export for LinkedIn/resume/passport. Free, private, browser-based.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "AI Headshot Generator",
+  "description": "Create professional headshots from any photo with cropping, lighting adjustments, filter presets, background options, and multi-size export for LinkedIn, resume, and passport photos.",
+  "url": "https://zovo.one/free-tools/ai-headshot-generator/",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Canvas API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "Is this really free and private?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. All image processing happens entirely in your browser using the Canvas API. Your photos are never uploaded to any server. There are no hidden costs, watermarks, or sign-up requirements."}},
+    {"@type": "Question", "name": "What photo sizes can I export?", "acceptedAnswer": {"@type": "Answer", "text": "You can export in three preset sizes: LinkedIn profile photo (400x400 pixels, 1:1 square), resume headshot (2x2.5 inches at 300 DPI, which is 600x750 pixels), and passport photo (2x2 inches at 300 DPI, which is 600x600 pixels). You can also set custom dimensions."}},
+    {"@type": "Question", "name": "What image adjustments are available?", "acceptedAnswer": {"@type": "Answer", "text": "You can adjust brightness, contrast, saturation, and sharpness using slider controls. Five filter presets are included: Professional (balanced enhancement), Warm (golden tones), Cool (blue tones), Black & White, and High Contrast. You can also change the background color."}},
+    {"@type": "Question", "name": "How should I position my face for a professional headshot?", "acceptedAnswer": {"@type": "Answer", "text": "For a professional headshot, your face should occupy roughly 60-70% of the frame height. Eyes should be positioned at approximately one-third from the top. The face should be centered horizontally. Enable the positioning guide overlay in the tool to see these guidelines while cropping."}},
+    {"@type": "Question", "name": "Can I change the background color?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The tool offers solid background color options including white, light gray, dark gray, navy blue, and a professional gradient. Note that background replacement works best with photos that have a clean, uniform original background. For complex backgrounds, consider taking the photo against a plain wall first."}},
+    {"@type": "Question", "name": "What file formats are supported for upload?", "acceptedAnswer": {"@type": "Answer", "text": "You can upload JPEG, PNG, WebP, and BMP images. The exported headshot is saved as a high-quality PNG file, which preserves detail without compression artifacts."}}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Zovo Tools", "item": "https://zovo.one/free-tools/"},
+    {"@type": "ListItem", "position": 2, "name": "AI Headshot Generator", "item": "https://zovo.one/free-tools/ai-headshot-generator/"}
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #1e1e2a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+header { padding: 48px 0 12px; text-align: center; }
+header h1 { font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.2; }
+header h1 span { color: var(--accent); }
+header .subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 660px; margin: 0 auto 8px; }
+.reading-time { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 24px; }
+
+/* TOC */
+#toc {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px 24px; margin-bottom: 32px;
+}
+#toc h2 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 12px; }
+#toc ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; }
+#toc li a { font-size: 0.88rem; color: var(--text-muted); transition: color 0.2s; }
+#toc li a:hover { color: var(--accent); text-decoration: none; }
+
+/* Cards */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
+}
+.card h3 { font-size: 1.05rem; font-weight: 600; color: #fff; margin-bottom: 16px; }
+
+/* Forms */
+label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+input[type="number"], select {
+  width: 100%; padding: 10px 12px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+  font-family: var(--font); font-size: 0.9rem; outline: none;
+}
+input:focus, select:focus { border-color: var(--accent); }
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-group { margin-bottom: 16px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;
+  background: var(--accent); color: #0a0a0f; font-family: var(--font);
+  font-size: 0.95rem; font-weight: 600; border: none; border-radius: 8px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-outline {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+}
+.btn-outline:hover { background: var(--accent-dim); }
+.btn-sm { padding: 8px 16px; font-size: 0.85rem; }
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-group-center { justify-content: center; }
+
+/* Upload Area */
+.upload-area {
+  border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 48px 24px; text-align: center; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: var(--surface);
+}
+.upload-area:hover, .upload-area.dragover {
+  border-color: var(--accent); background: var(--accent-dim);
+}
+.upload-area svg { margin-bottom: 12px; }
+.upload-area p { color: var(--text-muted); font-size: 0.95rem; }
+.upload-area .formats { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+
+/* Editor */
+.editor-layout {
+  display: grid; grid-template-columns: 1fr 320px; gap: 20px;
+  margin-bottom: 24px;
+}
+.editor-canvas-wrap {
+  position: relative; background: #1a1a26; border-radius: var(--radius);
+  overflow: hidden; display: flex; align-items: center; justify-content: center;
+  min-height: 400px; border: 1px solid var(--border);
+}
+.editor-canvas-wrap canvas {
+  max-width: 100%; max-height: 500px; display: block;
+}
+
+/* Sidebar */
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+.sidebar .card { margin-bottom: 0; padding: 16px; }
+.sidebar .card h3 { font-size: 0.95rem; margin-bottom: 12px; }
+
+.slider-group { margin-bottom: 14px; }
+.slider-group .slider-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 4px;
+}
+.slider-group .slider-label { font-size: 0.82rem; color: var(--text-muted); }
+.slider-group .slider-value { font-size: 0.82rem; color: var(--accent); font-weight: 600; font-family: monospace; }
+
+/* Preset filters */
+.filter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.filter-btn {
+  padding: 8px 4px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text-muted); font-family: var(--font);
+  font-size: 0.72rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  text-align: center;
+}
+.filter-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.filter-btn:hover { border-color: var(--accent); }
+
+/* Background colors */
+.bg-color-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+.bg-color-btn {
+  width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+  cursor: pointer; transition: border-color 0.2s;
+}
+.bg-color-btn.active, .bg-color-btn:hover { border-color: var(--accent); }
+
+/* Size presets */
+.size-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.size-btn {
+  padding: 8px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text-muted); font-family: var(--font);
+  font-size: 0.78rem; cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.size-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.size-btn:hover { border-color: var(--accent); }
+.size-btn .size-name { font-weight: 600; display: block; }
+.size-btn .size-dim { font-size: 0.7rem; }
+
+/* Before/After */
+.compare-wrap {
+  position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  background: var(--border); border-radius: var(--radius); overflow: hidden;
+  margin-bottom: 20px;
+}
+.compare-side {
+  background: #1a1a26; display: flex; flex-direction: column;
+  align-items: center; padding: 12px;
+}
+.compare-side canvas { max-width: 100%; max-height: 300px; }
+.compare-label {
+  font-size: 0.78rem; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+}
+
+/* Content sections */
+.content-section { margin-bottom: 48px; }
+.content-section h2 {
+  font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 16px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.content-section p { margin-bottom: 14px; }
+.content-section ul, .content-section ol { margin: 0 0 14px 24px; }
+.content-section li { margin-bottom: 6px; }
+
+/* Tips grid */
+.tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.tip-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px;
+}
+.tip-card h4 { color: #fff; font-size: 0.95rem; margin-bottom: 8px; }
+.tip-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0; }
+
+/* Privacy note */
+.privacy-note {
+  display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+  background: var(--accent-dim); border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 8px; margin: 24px 0; font-size: 0.88rem; color: var(--accent);
+}
+
+/* FAQ */
+#faq .faq-item { border-bottom: 1px solid var(--border); }
+#faq .faq-q {
+  width: 100%; text-align: left; background: none; border: none; color: #fff;
+  font-family: var(--font); font-size: 1rem; font-weight: 600; padding: 18px 0;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+}
+#faq .faq-q::after { content: '+'; font-size: 1.3rem; color: var(--accent); transition: transform 0.2s; }
+#faq .faq-q.open::after { content: '\2212'; }
+#faq .faq-a { padding: 0 0 18px; color: var(--text-muted); font-size: 0.92rem; display: none; line-height: 1.7; }
+#faq .faq-a.open { display: block; }
+
+/* Related tools */
+.related-tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.related-tool {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; text-align: center; transition: border-color 0.2s;
+}
+.related-tool:hover { border-color: var(--accent); text-decoration: none; }
+.related-tool .rt-name { font-weight: 600; color: #fff; font-size: 0.92rem; }
+.related-tool .rt-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+/* Compat note */
+.compat-note {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 18px; font-size: 0.82rem; color: var(--text-muted); margin: 16px 0;
+}
+
+/* Footer */
+footer {
+  margin-top: 60px; padding: 32px 0; border-top: 1px solid var(--border);
+  text-align: center; color: var(--text-muted); font-size: 0.82rem;
+}
+footer a { color: var(--text-muted); }
+footer a:hover { color: var(--accent); }
+.update-history { margin-top: 12px; font-size: 0.78rem; }
+
+/* Guide overlay toggle */
+.toggle-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.toggle-switch {
+  position: relative; width: 40px; height: 22px; background: var(--border);
+  border-radius: 11px; cursor: pointer; transition: background 0.2s;
+}
+.toggle-switch.active { background: var(--accent); }
+.toggle-switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; border-radius: 50%; background: #fff;
+  transition: transform 0.2s;
+}
+.toggle-switch.active::after { transform: translateX(18px); }
+.toggle-label { font-size: 0.82rem; color: var(--text-muted); }
+
+/* Crop handles */
+.crop-container {
+  position: relative; display: inline-block; cursor: crosshair;
+}
+.crop-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .editor-layout { grid-template-columns: 1fr; }
+  .compare-wrap { grid-template-columns: 1fr; }
+  .tips-grid { grid-template-columns: 1fr; }
+  .related-tools { grid-template-columns: 1fr; }
+  #toc ul { grid-template-columns: 1fr; }
+  .filter-grid { grid-template-columns: repeat(3, 1fr); }
+  header h1 { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <h1><span>AI Headshot</span> Generator</h1>
+  <p class="subtitle">Turn any photo into a professional headshot. Crop to standard sizes, adjust lighting, apply filters, and export for LinkedIn, resumes, and passports. Everything runs in your browser.</p>
+  <p class="reading-time">7 min read &middot; Last updated March 2026</p>
+</header>
+
+<nav id="toc">
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><a href="#editor">Headshot Editor</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#headshot-tips">Tips for Professional Headshots</a></li>
+    <li><a href="#size-guide">Photo Size Guide</a></li>
+    <li><a href="#lighting-guide">Lighting and Adjustments</a></li>
+    <li><a href="#use-cases">Common Use Cases</a></li>
+    <li><a href="#related-tools">Related Tools</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ul>
+</nav>
+
+<!-- EDITOR SECTION -->
+<section id="editor" class="content-section">
+<h2>Headshot Editor</h2>
+
+<!-- Upload -->
+<div id="uploadSection">
+  <div class="upload-area" id="uploadArea">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#8888a0" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <p>Drop a photo here or click to upload</p>
+    <p class="formats">JPEG, PNG, WebP, BMP &middot; Max 20 MB</p>
+    <input type="file" id="fileInput" accept="image/*" style="display:none;">
+  </div>
+</div>
+
+<!-- Editor (hidden until upload) -->
+<div id="editorSection" style="display:none;">
+
+<div class="editor-layout">
+  <!-- Main canvas -->
+  <div class="editor-canvas-wrap" id="canvasWrap">
+    <canvas id="mainCanvas"></canvas>
+    <canvas id="guideCanvas" style="position:absolute;top:0;left:0;pointer-events:none;"></canvas>
+  </div>
+
+  <!-- Sidebar controls -->
+  <div class="sidebar">
+
+    <!-- Crop / Size -->
+    <div class="card">
+      <h3>Output Size</h3>
+      <div class="size-grid">
+        <button class="size-btn active" data-size="linkedin" onclick="setSize(this,'linkedin')">
+          <span class="size-name">LinkedIn</span>
+          <span class="size-dim">400 x 400 px</span>
+        </button>
+        <button class="size-btn" data-size="resume" onclick="setSize(this,'resume')">
+          <span class="size-name">Resume</span>
+          <span class="size-dim">600 x 750 px</span>
+        </button>
+        <button class="size-btn" data-size="passport" onclick="setSize(this,'passport')">
+          <span class="size-name">Passport</span>
+          <span class="size-dim">600 x 600 px</span>
+        </button>
+        <button class="size-btn" data-size="custom" onclick="setSize(this,'custom')">
+          <span class="size-name">Custom</span>
+          <span class="size-dim">Any size</span>
+        </button>
+      </div>
+      <div id="customSizeRow" style="display:none;margin-top:12px;">
+        <div class="form-row">
+          <div><label>Width (px)</label><input type="number" id="customW" value="800" min="50" max="4000"></div>
+          <div><label>Height (px)</label><input type="number" id="customH" value="800" min="50" max="4000"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adjustments -->
+    <div class="card">
+      <h3>Adjustments</h3>
+      <div class="slider-group">
+        <div class="slider-header"><span class="slider-label">Brightness</span><span class="slider-value" id="brightnessVal">0</span></div>
+        <input type="range" id="brightness" min="-100" max="100" value="0" oninput="updateSlider(this,'brightnessVal');applyEdits();">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header"><span class="slider-label">Contrast</span><span class="slider-value" id="contrastVal">0</span></div>
+        <input type="range" id="contrast" min="-100" max="100" value="0" oninput="updateSlider(this,'contrastVal');applyEdits();">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header"><span class="slider-label">Saturation</span><span class="slider-value" id="saturationVal">0</span></div>
+        <input type="range" id="saturation" min="-100" max="100" value="0" oninput="updateSlider(this,'saturationVal');applyEdits();">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header"><span class="slider-label">Warmth</span><span class="slider-value" id="warmthVal">0</span></div>
+        <input type="range" id="warmth" min="-50" max="50" value="0" oninput="updateSlider(this,'warmthVal');applyEdits();">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header"><span class="slider-label">Sharpness</span><span class="slider-value" id="sharpnessVal">0</span></div>
+        <input type="range" id="sharpness" min="0" max="100" value="0" oninput="updateSlider(this,'sharpnessVal');applyEdits();">
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card">
+      <h3>Filter Presets</h3>
+      <div class="filter-grid">
+        <button class="filter-btn active" onclick="applyFilter(this,'none')">None</button>
+        <button class="filter-btn" onclick="applyFilter(this,'professional')">Pro</button>
+        <button class="filter-btn" onclick="applyFilter(this,'warm')">Warm</button>
+        <button class="filter-btn" onclick="applyFilter(this,'cool')">Cool</button>
+        <button class="filter-btn" onclick="applyFilter(this,'bw')">B&W</button>
+      </div>
+    </div>
+
+    <!-- Background -->
+    <div class="card">
+      <h3>Background Color</h3>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">Applied behind image edges when cropping.</p>
+      <div class="bg-color-grid">
+        <div class="bg-color-btn active" style="background:#ffffff;" data-color="#ffffff" onclick="setBgColor(this)"></div>
+        <div class="bg-color-btn" style="background:#d0d0d0;" data-color="#d0d0d0" onclick="setBgColor(this)"></div>
+        <div class="bg-color-btn" style="background:#404050;" data-color="#404050" onclick="setBgColor(this)"></div>
+        <div class="bg-color-btn" style="background:#1a3a5c;" data-color="#1a3a5c" onclick="setBgColor(this)"></div>
+        <div class="bg-color-btn" style="background:linear-gradient(180deg,#e8e8f0,#c0c0d0);" data-color="gradient" onclick="setBgColor(this)"></div>
+      </div>
+    </div>
+
+    <!-- Guide overlay -->
+    <div class="card">
+      <h3>Positioning Guide</h3>
+      <div class="toggle-row">
+        <div class="toggle-switch" id="guideToggle" onclick="toggleGuide()"></div>
+        <span class="toggle-label">Show face positioning overlay</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Crop area (drag to reposition) -->
+<div class="card" style="text-align:center;">
+  <h3>Position &amp; Zoom</h3>
+  <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px;">Click and drag on the preview to reposition. Use the zoom slider to adjust framing.</p>
+  <div class="slider-group" style="max-width:400px;margin:0 auto;">
+    <div class="slider-header"><span class="slider-label">Zoom</span><span class="slider-value" id="zoomVal">100%</span></div>
+    <input type="range" id="zoom" min="50" max="300" value="100" oninput="updateZoom();applyEdits();">
+  </div>
+  <div class="btn-group btn-group-center" style="margin-top:16px;">
+    <button class="btn btn-sm" onclick="resetEdits()">Reset All</button>
+    <button class="btn btn-sm btn-outline" onclick="loadNewPhoto()">New Photo</button>
+  </div>
+</div>
+
+<!-- Before/After -->
+<div id="compareSection" class="card">
+  <h3>Before &amp; After</h3>
+  <div class="compare-wrap">
+    <div class="compare-side">
+      <span class="compare-label">Original</span>
+      <canvas id="beforeCanvas"></canvas>
+    </div>
+    <div class="compare-side">
+      <span class="compare-label">Enhanced</span>
+      <canvas id="afterCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Export -->
+<div class="card" style="text-align:center;">
+  <h3>Export Headshot</h3>
+  <div class="btn-group btn-group-center">
+    <button class="btn" onclick="exportHeadshot('png')">Download PNG</button>
+    <button class="btn btn-outline" onclick="exportHeadshot('jpeg')">Download JPEG</button>
+    <button class="btn btn-outline" onclick="printHeadshot()">Print</button>
+  </div>
+</div>
+
+</div><!-- end editorSection -->
+</section>
+
+<div class="privacy-note">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+  All processing happens in your browser. Your photos are never uploaded to any server.
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works" class="content-section">
+<h2>How It Works</h2>
+<p>This headshot editor runs entirely in your web browser using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noopener">HTML5 Canvas API</a>. When you upload a photo, it is loaded into memory on your device. No data is sent to any external server at any point.</p>
+<p>The editing pipeline works as follows:</p>
+<ol>
+  <li><strong>Upload and decode.</strong> Your image file is read using the FileReader API and decoded into a bitmap that the Canvas API can manipulate.</li>
+  <li><strong>Crop and position.</strong> You select an output size (LinkedIn, resume, passport, or custom). The tool calculates the crop region based on your zoom and pan settings, maintaining the correct aspect ratio.</li>
+  <li><strong>Pixel-level adjustments.</strong> Brightness, contrast, saturation, warmth, and sharpness are applied by reading and modifying individual pixel values in the ImageData buffer. This is the same approach used by desktop photo editors.</li>
+  <li><strong>Filter presets.</strong> Each filter preset applies a specific combination of adjustments. For example, the "Professional" preset adds subtle contrast, slight desaturation, and mild sharpening.</li>
+  <li><strong>Export.</strong> The final image is rendered at the target resolution and encoded as PNG or JPEG for download.</li>
+</ol>
+</section>
+
+<!-- HEADSHOT TIPS -->
+<section id="headshot-tips" class="content-section">
+<h2>Tips for Professional Headshots</h2>
+<p>A professional headshot conveys competence and approachability. According to <a href="https://en.wikipedia.org/wiki/Portrait_photography" target="_blank" rel="noopener">portrait photography</a> best practices, several factors determine whether a headshot looks professional:</p>
+<div class="tips-grid">
+  <div class="tip-card">
+    <h4>Lighting</h4>
+    <p>Natural window light produces the most flattering results. Position yourself facing a large window with the light source at a 30-45 degree angle. Avoid overhead fluorescent lighting, which creates unflattering shadows under the eyes.</p>
+  </div>
+  <div class="tip-card">
+    <h4>Background</h4>
+    <p>A plain, uncluttered background keeps the focus on your face. White, light gray, or muted blue backgrounds are standard for corporate headshots. Avoid busy patterns or distracting elements.</p>
+  </div>
+  <div class="tip-card">
+    <h4>Framing</h4>
+    <p>Crop from mid-chest up. Your face should fill 60-70% of the vertical frame. Eyes should sit at roughly the upper third of the image. Leave a small margin of space above the head.</p>
+  </div>
+  <div class="tip-card">
+    <h4>Expression</h4>
+    <p>A genuine, relaxed smile with a slight squint of the eyes (known as a "Duchenne smile") reads as authentic and approachable. Practice in a mirror before the shoot. Avoid forced grins.</p>
+  </div>
+  <div class="tip-card">
+    <h4>Clothing</h4>
+    <p>Wear solid, neutral colors. Dark blues, grays, and blacks are safe choices. Avoid loud patterns, logos, and bright whites, which can cause overexposure in photos.</p>
+  </div>
+  <div class="tip-card">
+    <h4>Camera Settings</h4>
+    <p>If using a phone, hold it at eye level and use the rear camera for better quality. Use portrait mode if available. If using a DSLR, an 85mm lens at f/2.8 produces flattering compression and background blur.</p>
+  </div>
+</div>
+</section>
+
+<!-- SIZE GUIDE -->
+<section id="size-guide" class="content-section">
+<h2>Photo Size Guide</h2>
+<p>Different platforms and documents require specific photo dimensions. Here are the most common requirements:</p>
+<table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
+  <thead>
+    <tr style="background:var(--surface);"><th style="padding:10px 14px;text-align:left;border:1px solid var(--border);color:#fff;font-weight:600;">Purpose</th><th style="padding:10px 14px;text-align:left;border:1px solid var(--border);color:#fff;font-weight:600;">Dimensions</th><th style="padding:10px 14px;text-align:left;border:1px solid var(--border);color:#fff;font-weight:600;">Aspect Ratio</th><th style="padding:10px 14px;text-align:left;border:1px solid var(--border);color:#fff;font-weight:600;">Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">LinkedIn Profile</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">400 x 400 px</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">1:1</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">Displays as circle; keep face centered</td></tr>
+    <tr><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">Resume / CV</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">600 x 750 px (2 x 2.5 in)</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">4:5</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">Standard for print resumes at 300 DPI</td></tr>
+    <tr><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">US Passport</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">600 x 600 px (2 x 2 in)</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">1:1</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);"><a href="https://travel.state.gov/content/travel/en/passports/how-apply/photos.html" target="_blank" rel="noopener">US State Dept requirements</a></td></tr>
+    <tr><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">Corporate Badge</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">300 x 400 px</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">3:4</td><td style="padding:10px 14px;border:1px solid var(--border);background:var(--surface2);">Common ID card size</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- LIGHTING GUIDE -->
+<section id="lighting-guide" class="content-section">
+<h2>Lighting and Adjustments</h2>
+<p>Good lighting is the single most important factor in headshot photography. Here is what each adjustment in the editor does and when to use it:</p>
+<ul>
+  <li><strong>Brightness:</strong> Increases or decreases the overall luminance of the image. Use it when the original photo is too dark (underexposed) or too bright (overexposed). Keep adjustments moderate; values beyond +/- 30 often look unnatural.</li>
+  <li><strong>Contrast:</strong> Controls the difference between light and dark areas. Increasing contrast makes shadows deeper and highlights brighter, which adds visual punch. A small boost (+10 to +20) is common for professional headshots.</li>
+  <li><strong>Saturation:</strong> Adjusts color intensity. Corporate headshots typically look best with neutral to slightly reduced saturation (-10 to 0). Avoid oversaturating, which makes skin tones look unnatural.</li>
+  <li><strong>Warmth:</strong> Shifts the color temperature. Positive values add warm (golden/amber) tones; negative values add cool (blue) tones. A slight warm shift (+5 to +15) can make skin look healthier.</li>
+  <li><strong>Sharpness:</strong> Applies an unsharp mask to enhance edge detail. Use moderately (20-40) to make the image crisper without creating visible halos around edges.</li>
+</ul>
+</section>
+
+<!-- USE CASES -->
+<section id="use-cases" class="content-section">
+<h2>Common Use Cases</h2>
+<p>Professional headshots are used across many contexts. Here are the most common scenarios where this tool helps:</p>
+<ul>
+  <li><strong>LinkedIn and professional networking:</strong> A high-quality profile photo increases profile views by up to 21 times and connection requests by 36 times, according to LinkedIn's own data.</li>
+  <li><strong>Job applications and resumes:</strong> In regions where resume photos are standard (most of Europe, Asia, and Latin America), a polished headshot sets a strong first impression.</li>
+  <li><strong>Company websites and directories:</strong> Consistent, well-lit team headshots with uniform backgrounds create a cohesive and trustworthy brand image.</li>
+  <li><strong>Conference speaker profiles:</strong> Event organizers typically require a square headshot at minimum 400x400 px resolution.</li>
+  <li><strong>Real estate and consulting:</strong> Agents and consultants use professional headshots on business cards, yard signs, and marketing materials.</li>
+</ul>
+</section>
+
+<!-- RELATED TOOLS -->
+<section id="related-tools" class="content-section">
+<h2>Related Tools</h2>
+<div class="related-tools">
+  <a href="/free-tools/background-remover/" class="related-tool">
+    <div class="rt-name">Background Remover</div>
+    <div class="rt-desc">Remove image backgrounds instantly</div>
+  </a>
+  <a href="/free-tools/image-resizer/" class="related-tool">
+    <div class="rt-name">Image Resizer</div>
+    <div class="rt-desc">Resize images to exact dimensions</div>
+  </a>
+  <a href="/free-tools/photo-editor/" class="related-tool">
+    <div class="rt-name">Photo Editor</div>
+    <div class="rt-desc">Full-featured online photo editor</div>
+  </a>
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">Is this really free and private?</button>
+  <div class="faq-a">Yes. All image processing happens entirely in your browser using the Canvas API. Your photos are never uploaded to any server. There are no hidden costs, watermarks, or sign-up requirements.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">What photo sizes can I export?</button>
+  <div class="faq-a">You can export in three preset sizes: LinkedIn profile photo (400x400 pixels, 1:1 square), resume headshot (2x2.5 inches at 300 DPI, which is 600x750 pixels), and passport photo (2x2 inches at 300 DPI, which is 600x600 pixels). You can also set custom dimensions.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">What image adjustments are available?</button>
+  <div class="faq-a">You can adjust brightness, contrast, saturation, warmth, and sharpness using slider controls. Five filter presets are included: None (original), Professional (balanced enhancement), Warm (golden tones), Cool (blue tones), and Black &amp; White.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">How should I position my face for a professional headshot?</button>
+  <div class="faq-a">Your face should occupy roughly 60-70% of the frame height. Eyes should be positioned at approximately one-third from the top. Center the face horizontally. Enable the positioning guide overlay in the tool to see these guidelines while editing.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">Can I change the background color?</button>
+  <div class="faq-a">Yes. The tool offers solid background color options including white, light gray, dark gray, navy blue, and a professional gradient. The background color fills the output canvas behind the cropped image area, which is useful when zooming out or when the photo doesn't fully cover the output dimensions.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">What file formats are supported for upload?</button>
+  <div class="faq-a">You can upload JPEG, PNG, WebP, and BMP images. Export is available as PNG (lossless, best quality) or JPEG (smaller file size). PNG is recommended for professional use.</div>
+</div>
+</section>
+
+<div class="compat-note">
+  <strong>Browser Compatibility:</strong> This tool uses the Canvas API and is compatible with Chrome 60+, Firefox 55+, Safari 11+, Edge 79+, and all modern mobile browsers. Internet Explorer is not supported.
+</div>
+
+<footer>
+  <p>Built by <strong>Michael Lip</strong> &middot; Photo processing uses the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noopener">Canvas API</a> for pixel-level image manipulation. Headshot guidelines based on <a href="https://en.wikipedia.org/wiki/Portrait_photography" target="_blank" rel="noopener">portrait photography standards</a>.</p>
+  <p style="margin-top:8px;">&copy; 2026 Zovo &middot; Free Browser Tools &middot; <a href="https://zovo.one">zovo.one</a></p>
+  <div class="update-history">
+    <strong>Update History:</strong> March 2026 &mdash; Initial release with crop, adjustments, filter presets, positioning guide, multi-size export, and before/after comparison.
+  </div>
+</footer>
+
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+let originalImage = null; // HTMLImageElement
+let imgData = null; // original ImageData (full res)
+let panX = 0, panY = 0;
+let isDragging = false, dragStartX = 0, dragStartY = 0, panStartX = 0, panStartY = 0;
+let currentBgColor = '#ffffff';
+let showGuide = false;
+let currentFilter = 'none';
+
+const SIZE_PRESETS = {
+  linkedin: { w: 400, h: 400, label: 'LinkedIn (400x400)' },
+  resume: { w: 600, h: 750, label: 'Resume (600x750)' },
+  passport: { w: 600, h: 600, label: 'Passport (600x600)' },
+  custom: { w: 800, h: 800, label: 'Custom' }
+};
+let currentSize = 'linkedin';
+
+// ============================================================
+// FAQ
+// ============================================================
+function toggleFaq(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+// ============================================================
+// FILE UPLOAD
+// ============================================================
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+
+uploadArea.addEventListener('click', () => fileInput.click());
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault(); uploadArea.classList.remove('dragover');
+  if (e.dataTransfer.files.length) loadImage(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if (e.target.files.length) loadImage(e.target.files[0]); });
+
+function loadImage(file) {
+  if (!file.type.startsWith('image/')) { alert('Please upload an image file.'); return; }
+  if (file.size > 20 * 1024 * 1024) { alert('File size must be under 20 MB.'); return; }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      originalImage = img;
+      panX = 0; panY = 0;
+      resetSliders();
+      currentFilter = 'none';
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.filter-btn').classList.add('active');
+      document.getElementById('uploadSection').style.display = 'none';
+      document.getElementById('editorSection').style.display = 'block';
+      renderBeforeCanvas();
+      applyEdits();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function loadNewPhoto() {
+  document.getElementById('uploadSection').style.display = 'block';
+  document.getElementById('editorSection').style.display = 'none';
+  fileInput.value = '';
+}
+
+// ============================================================
+// CANVAS PAN (DRAG)
+// ============================================================
+const canvasWrap = document.getElementById('canvasWrap');
+canvasWrap.addEventListener('mousedown', e => {
+  isDragging = true; dragStartX = e.clientX; dragStartY = e.clientY;
+  panStartX = panX; panStartY = panY; canvasWrap.style.cursor = 'grabbing';
+});
+canvasWrap.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  panX = panStartX + (e.clientX - dragStartX);
+  panY = panStartY + (e.clientY - dragStartY);
+  applyEdits();
+});
+canvasWrap.addEventListener('mouseup', () => { isDragging = false; canvasWrap.style.cursor = 'crosshair'; });
+canvasWrap.addEventListener('mouseleave', () => { isDragging = false; canvasWrap.style.cursor = 'crosshair'; });
+
+// Touch support
+canvasWrap.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) {
+    isDragging = true; dragStartX = e.touches[0].clientX; dragStartY = e.touches[0].clientY;
+    panStartX = panX; panStartY = panY;
+  }
+}, { passive: true });
+canvasWrap.addEventListener('touchmove', e => {
+  if (!isDragging || e.touches.length !== 1) return;
+  panX = panStartX + (e.touches[0].clientX - dragStartX);
+  panY = panStartY + (e.touches[0].clientY - dragStartY);
+  applyEdits();
+}, { passive: true });
+canvasWrap.addEventListener('touchend', () => { isDragging = false; });
+
+// ============================================================
+// SLIDERS
+// ============================================================
+function updateSlider(el, valId) {
+  document.getElementById(valId).textContent = el.value;
+}
+
+function updateZoom() {
+  document.getElementById('zoomVal').textContent = document.getElementById('zoom').value + '%';
+}
+
+function resetSliders() {
+  ['brightness','contrast','saturation','warmth','sharpness'].forEach(id => {
+    document.getElementById(id).value = id === 'sharpness' ? 0 : 0;
+  });
+  document.getElementById('zoom').value = 100;
+  ['brightnessVal','contrastVal','saturationVal','warmthVal','sharpnessVal'].forEach(id => {
+    document.getElementById(id).textContent = '0';
+  });
+  document.getElementById('zoomVal').textContent = '100%';
+  panX = 0; panY = 0;
+}
+
+function resetEdits() {
+  resetSliders();
+  currentFilter = 'none';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  applyEdits();
+}
+
+// ============================================================
+// SIZE
+// ============================================================
+function setSize(btn, size) {
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSize = size;
+  document.getElementById('customSizeRow').style.display = size === 'custom' ? 'block' : 'none';
+  if (originalImage) applyEdits();
+}
+
+function getOutputSize() {
+  if (currentSize === 'custom') {
+    return {
+      w: parseInt(document.getElementById('customW').value) || 800,
+      h: parseInt(document.getElementById('customH').value) || 800
+    };
+  }
+  return SIZE_PRESETS[currentSize];
+}
+
+// ============================================================
+// BACKGROUND COLOR
+// ============================================================
+function setBgColor(el) {
+  document.querySelectorAll('.bg-color-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentBgColor = el.dataset.color;
+  if (originalImage) applyEdits();
+}
+
+// ============================================================
+// GUIDE OVERLAY
+// ============================================================
+function toggleGuide() {
+  showGuide = !showGuide;
+  document.getElementById('guideToggle').classList.toggle('active', showGuide);
+  drawGuide();
+}
+
+function drawGuide() {
+  const canvas = document.getElementById('guideCanvas');
+  const main = document.getElementById('mainCanvas');
+  canvas.width = main.width;
+  canvas.height = main.height;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (!showGuide) return;
+
+  const w = canvas.width, h = canvas.height;
+  ctx.strokeStyle = 'rgba(0,255,136,0.5)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([6, 4]);
+
+  // Rule of thirds
+  ctx.beginPath();
+  ctx.moveTo(w/3, 0); ctx.lineTo(w/3, h);
+  ctx.moveTo(2*w/3, 0); ctx.lineTo(2*w/3, h);
+  ctx.moveTo(0, h/3); ctx.lineTo(w, h/3);
+  ctx.moveTo(0, 2*h/3); ctx.lineTo(w, 2*h/3);
+  ctx.stroke();
+
+  // Center crosshair
+  ctx.setLineDash([]);
+  ctx.strokeStyle = 'rgba(0,255,136,0.3)';
+  ctx.beginPath();
+  ctx.moveTo(w/2, h*0.1); ctx.lineTo(w/2, h*0.9);
+  ctx.moveTo(w*0.2, h/2); ctx.lineTo(w*0.8, h/2);
+  ctx.stroke();
+
+  // Face oval guide
+  ctx.strokeStyle = 'rgba(0,255,136,0.35)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([8, 6]);
+  const ovalW = w * 0.28;
+  const ovalH = h * 0.38;
+  ctx.beginPath();
+  ctx.ellipse(w/2, h * 0.38, ovalW, ovalH, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Eye line label
+  ctx.fillStyle = 'rgba(0,255,136,0.6)';
+  ctx.font = '11px system-ui';
+  ctx.fillText('Eye line', 8, h/3 - 4);
+  ctx.fillText('Face center', w/2 + 4, h * 0.38 - ovalH - 4);
+}
+
+// ============================================================
+// FILTERS
+// ============================================================
+const FILTER_PRESETS = {
+  none: { brightness: 0, contrast: 0, saturation: 0, warmth: 0, sharpness: 0 },
+  professional: { brightness: 5, contrast: 12, saturation: -8, warmth: 3, sharpness: 25 },
+  warm: { brightness: 8, contrast: 8, saturation: 10, warmth: 25, sharpness: 15 },
+  cool: { brightness: 3, contrast: 10, saturation: -5, warmth: -20, sharpness: 20 },
+  bw: { brightness: 5, contrast: 15, saturation: -100, warmth: 0, sharpness: 20 }
+};
+
+function applyFilter(btn, filterName) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = filterName;
+
+  const preset = FILTER_PRESETS[filterName];
+  document.getElementById('brightness').value = preset.brightness;
+  document.getElementById('contrast').value = preset.contrast;
+  document.getElementById('saturation').value = preset.saturation;
+  document.getElementById('warmth').value = preset.warmth;
+  document.getElementById('sharpness').value = preset.sharpness;
+  document.getElementById('brightnessVal').textContent = preset.brightness;
+  document.getElementById('contrastVal').textContent = preset.contrast;
+  document.getElementById('saturationVal').textContent = preset.saturation;
+  document.getElementById('warmthVal').textContent = preset.warmth;
+  document.getElementById('sharpnessVal').textContent = preset.sharpness;
+
+  applyEdits();
+}
+
+// ============================================================
+// IMAGE PROCESSING
+// ============================================================
+function applyEdits() {
+  if (!originalImage) return;
+
+  const size = getOutputSize();
+  const outW = size.w;
+  const outH = size.h;
+  const zoom = parseInt(document.getElementById('zoom').value) / 100;
+  const brightness = parseInt(document.getElementById('brightness').value);
+  const contrast = parseInt(document.getElementById('contrast').value);
+  const saturation = parseInt(document.getElementById('saturation').value);
+  const warmth = parseInt(document.getElementById('warmth').value);
+  const sharpness = parseInt(document.getElementById('sharpness').value);
+
+  // Display canvas (scaled down for preview)
+  const maxDisplay = 480;
+  const displayScale = Math.min(maxDisplay / outW, maxDisplay / outH, 1);
+  const displayW = Math.round(outW * displayScale);
+  const displayH = Math.round(outH * displayScale);
+
+  const canvas = document.getElementById('mainCanvas');
+  canvas.width = displayW;
+  canvas.height = displayH;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  if (currentBgColor === 'gradient') {
+    const grad = ctx.createLinearGradient(0, 0, 0, displayH);
+    grad.addColorStop(0, '#e8e8f0');
+    grad.addColorStop(1, '#c0c0d0');
+    ctx.fillStyle = grad;
+  } else {
+    ctx.fillStyle = currentBgColor;
+  }
+  ctx.fillRect(0, 0, displayW, displayH);
+
+  // Calculate image draw region
+  const imgAspect = originalImage.width / originalImage.height;
+  const outAspect = outW / outH;
+  let drawW, drawH;
+  if (imgAspect > outAspect) {
+    drawH = displayH * zoom;
+    drawW = drawH * imgAspect;
+  } else {
+    drawW = displayW * zoom;
+    drawH = drawW / imgAspect;
+  }
+  const drawX = (displayW - drawW) / 2 + panX * displayScale;
+  const drawY = (displayH - drawH) / 2 + panY * displayScale;
+
+  ctx.drawImage(originalImage, drawX, drawY, drawW, drawH);
+
+  // Apply pixel adjustments
+  const imageData = ctx.getImageData(0, 0, displayW, displayH);
+  const data = imageData.data;
+
+  const contrastFactor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+  for (let i = 0; i < data.length; i += 4) {
+    let r = data[i], g = data[i+1], b = data[i+2];
+
+    // Brightness
+    r += brightness * 2.55;
+    g += brightness * 2.55;
+    b += brightness * 2.55;
+
+    // Contrast
+    r = contrastFactor * (r - 128) + 128;
+    g = contrastFactor * (g - 128) + 128;
+    b = contrastFactor * (b - 128) + 128;
+
+    // Saturation
+    const gray = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    const satFactor = 1 + saturation / 100;
+    r = gray + satFactor * (r - gray);
+    g = gray + satFactor * (g - gray);
+    b = gray + satFactor * (b - gray);
+
+    // Warmth
+    if (warmth !== 0) {
+      r += warmth * 0.8;
+      b -= warmth * 0.6;
+    }
+
+    data[i] = Math.max(0, Math.min(255, r));
+    data[i+1] = Math.max(0, Math.min(255, g));
+    data[i+2] = Math.max(0, Math.min(255, b));
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+
+  // Simple sharpness (unsharp mask approximation)
+  if (sharpness > 0) {
+    const amount = sharpness / 100;
+    // Create blurred version
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = displayW; tempCanvas.height = displayH;
+    const tCtx = tempCanvas.getContext('2d');
+    tCtx.putImageData(imageData, 0, 0);
+    tCtx.filter = `blur(1px)`;
+    tCtx.drawImage(tempCanvas, 0, 0);
+    const blurData = tCtx.getImageData(0, 0, displayW, displayH).data;
+
+    const sharpData = ctx.getImageData(0, 0, displayW, displayH);
+    const sd = sharpData.data;
+    for (let i = 0; i < sd.length; i += 4) {
+      sd[i] = Math.max(0, Math.min(255, sd[i] + (sd[i] - blurData[i]) * amount));
+      sd[i+1] = Math.max(0, Math.min(255, sd[i+1] + (sd[i+1] - blurData[i+1]) * amount));
+      sd[i+2] = Math.max(0, Math.min(255, sd[i+2] + (sd[i+2] - blurData[i+2]) * amount));
+    }
+    ctx.putImageData(sharpData, 0, 0);
+  }
+
+  drawGuide();
+  renderAfterCanvas();
+}
+
+// ============================================================
+// BEFORE / AFTER
+// ============================================================
+function renderBeforeCanvas() {
+  if (!originalImage) return;
+  const canvas = document.getElementById('beforeCanvas');
+  const maxW = 300, maxH = 240;
+  const scale = Math.min(maxW / originalImage.width, maxH / originalImage.height);
+  canvas.width = Math.round(originalImage.width * scale);
+  canvas.height = Math.round(originalImage.height * scale);
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+}
+
+function renderAfterCanvas() {
+  const main = document.getElementById('mainCanvas');
+  const canvas = document.getElementById('afterCanvas');
+  const maxW = 300, maxH = 240;
+  const scale = Math.min(maxW / main.width, maxH / main.height);
+  canvas.width = Math.round(main.width * scale);
+  canvas.height = Math.round(main.height * scale);
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(main, 0, 0, canvas.width, canvas.height);
+}
+
+// ============================================================
+// EXPORT
+// ============================================================
+function renderFullResolution() {
+  const size = getOutputSize();
+  const outW = size.w;
+  const outH = size.h;
+  const zoom = parseInt(document.getElementById('zoom').value) / 100;
+  const brightness = parseInt(document.getElementById('brightness').value);
+  const contrast = parseInt(document.getElementById('contrast').value);
+  const saturation = parseInt(document.getElementById('saturation').value);
+  const warmth = parseInt(document.getElementById('warmth').value);
+  const sharpness = parseInt(document.getElementById('sharpness').value);
+
+  const canvas = document.createElement('canvas');
+  canvas.width = outW;
+  canvas.height = outH;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  if (currentBgColor === 'gradient') {
+    const grad = ctx.createLinearGradient(0, 0, 0, outH);
+    grad.addColorStop(0, '#e8e8f0');
+    grad.addColorStop(1, '#c0c0d0');
+    ctx.fillStyle = grad;
+  } else {
+    ctx.fillStyle = currentBgColor;
+  }
+  ctx.fillRect(0, 0, outW, outH);
+
+  // Image
+  const imgAspect = originalImage.width / originalImage.height;
+  const outAspect = outW / outH;
+  let drawW, drawH;
+  if (imgAspect > outAspect) {
+    drawH = outH * zoom;
+    drawW = drawH * imgAspect;
+  } else {
+    drawW = outW * zoom;
+    drawH = drawW / imgAspect;
+  }
+
+  // Scale panX/panY from preview to full res
+  const maxDisplay = 480;
+  const displayScale = Math.min(maxDisplay / outW, maxDisplay / outH, 1);
+  const drawX = (outW - drawW) / 2 + panX;
+  const drawY = (outH - drawH) / 2 + panY;
+
+  ctx.drawImage(originalImage, drawX, drawY, drawW, drawH);
+
+  // Pixel adjustments
+  const imageData = ctx.getImageData(0, 0, outW, outH);
+  const data = imageData.data;
+  const contrastFactor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+  for (let i = 0; i < data.length; i += 4) {
+    let r = data[i], g = data[i+1], b = data[i+2];
+    r += brightness * 2.55;
+    g += brightness * 2.55;
+    b += brightness * 2.55;
+    r = contrastFactor * (r - 128) + 128;
+    g = contrastFactor * (g - 128) + 128;
+    b = contrastFactor * (b - 128) + 128;
+    const gray = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    const satFactor = 1 + saturation / 100;
+    r = gray + satFactor * (r - gray);
+    g = gray + satFactor * (g - gray);
+    b = gray + satFactor * (b - gray);
+    if (warmth !== 0) { r += warmth * 0.8; b -= warmth * 0.6; }
+    data[i] = Math.max(0, Math.min(255, r));
+    data[i+1] = Math.max(0, Math.min(255, g));
+    data[i+2] = Math.max(0, Math.min(255, b));
+  }
+  ctx.putImageData(imageData, 0, 0);
+
+  if (sharpness > 0) {
+    const amount = sharpness / 100;
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = outW; tempCanvas.height = outH;
+    const tCtx = tempCanvas.getContext('2d');
+    tCtx.putImageData(imageData, 0, 0);
+    tCtx.filter = 'blur(1px)';
+    tCtx.drawImage(tempCanvas, 0, 0);
+    const blurData = tCtx.getImageData(0, 0, outW, outH).data;
+    const sharpData = ctx.getImageData(0, 0, outW, outH);
+    const sd = sharpData.data;
+    for (let i = 0; i < sd.length; i += 4) {
+      sd[i] = Math.max(0, Math.min(255, sd[i] + (sd[i] - blurData[i]) * amount));
+      sd[i+1] = Math.max(0, Math.min(255, sd[i+1] + (sd[i+1] - blurData[i+1]) * amount));
+      sd[i+2] = Math.max(0, Math.min(255, sd[i+2] + (sd[i+2] - blurData[i+2]) * amount));
+    }
+    ctx.putImageData(sharpData, 0, 0);
+  }
+
+  return canvas;
+}
+
+function exportHeadshot(format) {
+  if (!originalImage) { alert('Upload a photo first.'); return; }
+  const canvas = renderFullResolution();
+  const link = document.createElement('a');
+  const ext = format === 'jpeg' ? 'jpg' : 'png';
+  link.download = `headshot-${currentSize}.${ext}`;
+  link.href = canvas.toDataURL(`image/${format}`, format === 'jpeg' ? 0.92 : undefined);
+  link.click();
+}
+
+function printHeadshot() {
+  if (!originalImage) { alert('Upload a photo first.'); return; }
+  const canvas = renderFullResolution();
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>Print Headshot</title><style>body{display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#fff;}@media print{body{padding:0;}}</style></head><body><img src="${canvas.toDataURL('image/png')}" style="max-width:100%;max-height:100vh;"></body></html>`);
+  win.document.close();
+  win.onload = () => { win.print(); };
+}
+</script>
+
+</body>
+</html>

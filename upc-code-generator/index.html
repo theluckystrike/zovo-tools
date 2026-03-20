@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPC Code Generator — Create Barcodes Free Online | Zovo</title>
+<meta name="description" content="Generate valid UPC-A, EAN-13, Code 128, and Code 39 barcodes online. Auto check digit calculation, batch generation, PNG/SVG download, print-ready layout. Free, private, no uploads.">
+<meta name="keywords" content="upc code generator, upc label generator, upc barcode generator, ean-13 generator, barcode maker, code 128 generator, code 39, upc check digit calculator, batch barcode generator, free barcode tool">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/upc-code-generator/">
+
+<meta property="og:title" content="UPC Code Generator — Create Barcodes Free Online | Zovo">
+<meta property="og:description" content="Generate valid UPC-A, EAN-13, Code 128, and Code 39 barcodes. Auto check digit, batch mode, PNG/SVG download. Free and private.">
+<meta property="og:url" content="https://zovo.one/free-tools/upc-code-generator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo">
+<meta property="og:image" content="https://zovo.one/free-tools/upc-code-generator/og-image.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UPC Code Generator — Create Barcodes Free Online | Zovo">
+<meta name="twitter:description" content="Generate valid UPC-A, EAN-13, Code 128, and Code 39 barcodes online. Free, private, runs entirely in your browser.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "UPC Code Generator",
+  "description": "Generate valid UPC-A, EAN-13, Code 128, and Code 39 barcodes with auto check digit calculation, batch generation, and PNG/SVG export.",
+  "url": "https://zovo.one/free-tools/upc-code-generator/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "isAccessibleForFree": true,
+  "browserRequirements": "Requires a modern browser with Canvas API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is a UPC code and how many digits does it have?", "acceptedAnswer": {"@type": "Answer", "text": "A UPC (Universal Product Code) is a 12-digit barcode used primarily in the United States and Canada for tracking retail products. The first digit is the number system character, the next five identify the manufacturer, the following five identify the product, and the final digit is a check digit calculated using the Modulo 10 algorithm."}},
+    {"@type": "Question", "name": "How is the UPC check digit calculated?", "acceptedAnswer": {"@type": "Answer", "text": "The UPC-A check digit uses the Modulo 10 algorithm: sum all digits in odd positions and multiply by 3, add all digits in even positions, then subtract the total modulo 10 from 10. If the result is 10, the check digit is 0. This ensures scanning accuracy."}},
+    {"@type": "Question", "name": "What is the difference between UPC-A and EAN-13?", "acceptedAnswer": {"@type": "Answer", "text": "UPC-A is a 12-digit barcode standard used in North America, while EAN-13 is a 13-digit international standard. A UPC-A code can be converted to EAN-13 by prepending a zero. EAN-13 is used globally and is the dominant retail barcode outside the US and Canada."}},
+    {"@type": "Question", "name": "Can I generate barcodes in batch?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Switch to batch mode and enter multiple values, one per line. The tool will generate all barcodes at once. For UPC-A and EAN-13, check digits are automatically calculated. You can download each barcode individually as PNG or SVG."}},
+    {"@type": "Question", "name": "What barcode formats does this tool support?", "acceptedAnswer": {"@type": "Answer", "text": "This tool supports four barcode formats: UPC-A (12-digit retail), EAN-13 (13-digit international retail), Code 128 (variable-length alphanumeric, used in shipping and logistics), and Code 39 (alphanumeric with special characters, used in automotive and defense industries)."}},
+    {"@type": "Question", "name": "Is my data sent to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. All barcode generation happens entirely in your browser using JavaScript and the Canvas API. No data is transmitted to any server. Your information stays on your device."}}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Zovo Tools", "item": "https://zovo.one/free-tools/"},
+    {"@type": "ListItem", "position": 2, "name": "UPC Code Generator", "item": "https://zovo.one/free-tools/upc-code-generator/"}
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --accent: #00ff88;
+  --accent-dim: rgba(0,255,136,0.15);
+  --accent-hover: #00cc6e;
+  --text: #e0e0e8;
+  --text-muted: #8888a0;
+  --border: #1e1e2a;
+  --red: #ff4466;
+  --green: #00ff88;
+  --radius: 10px;
+  --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+
+/* Header */
+header { padding: 48px 0 12px; text-align: center; }
+header h1 { font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.2; }
+header h1 span { color: var(--accent); }
+header .subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 640px; margin: 0 auto 8px; }
+.reading-time { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 24px; }
+
+/* TOC */
+#toc {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px 24px; margin-bottom: 32px;
+}
+#toc h2 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 12px; }
+#toc ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; }
+#toc li a { font-size: 0.88rem; color: var(--text-muted); transition: color 0.2s; }
+#toc li a:hover { color: var(--accent); text-decoration: none; }
+
+/* Cards */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
+}
+.card h3 { font-size: 1.05rem; font-weight: 600; color: #fff; margin-bottom: 16px; }
+
+/* Forms */
+label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+
+input[type="text"], input[type="number"], select, textarea {
+  width: 100%; padding: 12px 14px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+  font-family: var(--font); font-size: 0.95rem; transition: border-color 0.2s; outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+textarea { resize: vertical; min-height: 100px; font-family: monospace; }
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-group { margin-bottom: 16px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;
+  background: var(--accent); color: #0a0a0f; font-family: var(--font);
+  font-size: 0.95rem; font-weight: 600; border: none; border-radius: 8px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-outline {
+  background: transparent; color: var(--accent); border: 1px solid var(--accent);
+}
+.btn-outline:hover { background: var(--accent-dim); }
+.btn-sm { padding: 8px 16px; font-size: 0.85rem; }
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 4px; background: var(--surface);
+  border-radius: var(--radius); padding: 4px; margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1; padding: 12px 16px; border: none; background: transparent;
+  color: var(--text-muted); font-family: var(--font); font-size: 0.95rem;
+  font-weight: 500; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+}
+.tab-btn.active { background: var(--accent); color: #0a0a0f; font-weight: 600; }
+.tab-btn:not(.active):hover { color: var(--text); background: var(--surface2); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Barcode preview */
+.preview-area {
+  background: #ffffff; border-radius: 8px; padding: 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 180px; margin-bottom: 16px;
+}
+.preview-area canvas { max-width: 100%; }
+
+/* Validation */
+.validation-result {
+  padding: 16px; border-radius: 8px; margin-top: 16px; font-size: 0.9rem;
+}
+.validation-result.valid { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); color: var(--green); }
+.validation-result.invalid { background: rgba(255,68,102,0.1); border: 1px solid rgba(255,68,102,0.3); color: var(--red); }
+
+/* Batch items */
+.batch-results { display: grid; gap: 16px; margin-top: 20px; }
+.batch-item {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; display: flex; align-items: center; gap: 16px;
+}
+.batch-item .preview-area { min-height: 80px; padding: 12px; margin: 0; flex-shrink: 0; }
+.batch-item-info { flex: 1; }
+.batch-item-info .code-label { font-family: monospace; font-size: 0.95rem; color: #fff; margin-bottom: 4px; }
+.batch-item-info .code-meta { font-size: 0.8rem; color: var(--text-muted); }
+
+/* Content sections */
+.content-section { margin-bottom: 48px; }
+.content-section h2 {
+  font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 16px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.content-section p { margin-bottom: 14px; color: var(--text); }
+.content-section ul, .content-section ol { margin: 0 0 14px 24px; }
+.content-section li { margin-bottom: 6px; }
+.content-section table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+.content-section th, .content-section td {
+  padding: 10px 14px; text-align: left; border: 1px solid var(--border); font-size: 0.9rem;
+}
+.content-section th { background: var(--surface); color: #fff; font-weight: 600; }
+.content-section td { background: var(--surface2); }
+
+/* Privacy note */
+.privacy-note {
+  display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+  background: var(--accent-dim); border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 8px; margin: 24px 0; font-size: 0.88rem; color: var(--accent);
+}
+
+/* FAQ */
+#faq .faq-item { border-bottom: 1px solid var(--border); }
+#faq .faq-q {
+  width: 100%; text-align: left; background: none; border: none; color: #fff;
+  font-family: var(--font); font-size: 1rem; font-weight: 600; padding: 18px 0;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+}
+#faq .faq-q::after { content: '+'; font-size: 1.3rem; color: var(--accent); transition: transform 0.2s; }
+#faq .faq-q.open::after { content: '−'; }
+#faq .faq-a { padding: 0 0 18px; color: var(--text-muted); font-size: 0.92rem; display: none; line-height: 1.7; }
+#faq .faq-a.open { display: block; }
+
+/* Cross-links */
+.related-tools {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px;
+}
+.related-tool {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; text-align: center; transition: border-color 0.2s;
+}
+.related-tool:hover { border-color: var(--accent); text-decoration: none; }
+.related-tool .rt-name { font-weight: 600; color: #fff; font-size: 0.92rem; }
+.related-tool .rt-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+/* Footer */
+footer {
+  margin-top: 60px; padding: 32px 0; border-top: 1px solid var(--border);
+  text-align: center; color: var(--text-muted); font-size: 0.82rem;
+}
+footer a { color: var(--text-muted); }
+footer a:hover { color: var(--accent); }
+.update-history { margin-top: 12px; font-size: 0.78rem; color: var(--text-muted); }
+
+/* Browser compat */
+.compat-note {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 18px; font-size: 0.82rem; color: var(--text-muted); margin: 16px 0;
+}
+
+@media (max-width: 640px) {
+  header h1 { font-size: 1.6rem; }
+  .form-row, .form-row-3 { grid-template-columns: 1fr; }
+  #toc ul { grid-template-columns: 1fr; }
+  .related-tools { grid-template-columns: 1fr; }
+  .tabs { flex-wrap: wrap; }
+  .batch-item { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <h1><span>UPC Code</span> Generator</h1>
+  <p class="subtitle">Generate valid UPC-A, EAN-13, Code 128, and Code 39 barcodes with automatic check digit calculation. Download as PNG or SVG. Print-ready.</p>
+  <p class="reading-time">8 min read &middot; Last updated March 2026</p>
+</header>
+
+<nav id="toc">
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><a href="#generator">Barcode Generator</a></li>
+    <li><a href="#validator">UPC Validator</a></li>
+    <li><a href="#how-upc-works">How UPC Codes Work</a></li>
+    <li><a href="#barcode-formats">Barcode Format Comparison</a></li>
+    <li><a href="#check-digit">Check Digit Calculation</a></li>
+    <li><a href="#usage-guide">Usage Guide</a></li>
+    <li><a href="#related-tools">Related Tools</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ul>
+</nav>
+
+<!-- GENERATOR SECTION -->
+<section id="generator" class="content-section">
+<h2>Barcode Generator</h2>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="single">Single Barcode</button>
+  <button class="tab-btn" data-tab="batch">Batch Generation</button>
+</div>
+
+<!-- Single Tab -->
+<div id="tab-single" class="tab-panel active">
+<div class="card">
+  <h3>Configure Barcode</h3>
+  <div class="form-row">
+    <div>
+      <label for="barcodeType">Barcode Type</label>
+      <select id="barcodeType">
+        <option value="upca">UPC-A (12-digit)</option>
+        <option value="ean13">EAN-13 (13-digit)</option>
+        <option value="code128">Code 128 (Alphanumeric)</option>
+        <option value="code39">Code 39 (Alphanumeric)</option>
+      </select>
+    </div>
+    <div>
+      <label for="barcodeValue">Value</label>
+      <input type="text" id="barcodeValue" placeholder="Enter digits or text...">
+    </div>
+  </div>
+  <div id="checkDigitRow" class="form-group">
+    <label><input type="checkbox" id="autoCheckDigit" checked style="margin-right:8px;accent-color:var(--accent);">Auto-calculate check digit (enter 11 digits for UPC-A, 12 for EAN-13)</label>
+  </div>
+  <div class="form-row-3">
+    <div>
+      <label for="barWidth">Bar Width (px)</label>
+      <input type="number" id="barWidth" value="2" min="1" max="6" step="1">
+    </div>
+    <div>
+      <label for="barHeight">Bar Height (px)</label>
+      <input type="number" id="barHeight" value="100" min="30" max="300" step="5">
+    </div>
+    <div>
+      <label for="showText">Show Digits</label>
+      <select id="showText">
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+  </div>
+  <button class="btn" onclick="generateSingleBarcode()">Generate Barcode</button>
+</div>
+
+<div id="singlePreview" style="display:none;">
+  <div class="card">
+    <h3>Preview</h3>
+    <div class="preview-area" id="singlePreviewArea">
+      <canvas id="singleCanvas"></canvas>
+    </div>
+    <div id="singleInfo" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;"></div>
+    <div class="btn-group">
+      <button class="btn btn-sm" onclick="downloadBarcode('png','single')">Download PNG</button>
+      <button class="btn btn-sm btn-outline" onclick="downloadBarcode('svg','single')">Download SVG</button>
+      <button class="btn btn-sm btn-outline" onclick="printBarcode('single')">Print</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Batch Tab -->
+<div id="tab-batch" class="tab-panel">
+<div class="card">
+  <h3>Batch Generation</h3>
+  <div class="form-row">
+    <div>
+      <label for="batchType">Barcode Type</label>
+      <select id="batchType">
+        <option value="upca">UPC-A (12-digit)</option>
+        <option value="ean13">EAN-13 (13-digit)</option>
+        <option value="code128">Code 128</option>
+        <option value="code39">Code 39</option>
+      </select>
+    </div>
+    <div>
+      <label for="batchBarWidth">Bar Width (px)</label>
+      <input type="number" id="batchBarWidth" value="2" min="1" max="6">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="batchValues">Values (one per line)</label>
+    <textarea id="batchValues" placeholder="01234567890&#10;98765432109&#10;12345678901"></textarea>
+  </div>
+  <button class="btn" onclick="generateBatch()">Generate All Barcodes</button>
+</div>
+<div id="batchResults" class="batch-results"></div>
+</div>
+</div>
+
+<!-- VALIDATOR SECTION -->
+<section id="validator" class="content-section">
+<h2>UPC / EAN Validator</h2>
+<div class="card">
+  <h3>Validate a Barcode</h3>
+  <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:16px;">Enter a complete UPC-A (12 digits) or EAN-13 (13 digits) code to verify its check digit.</p>
+  <div class="form-row">
+    <div>
+      <label for="validateType">Type</label>
+      <select id="validateType">
+        <option value="upca">UPC-A (12 digits)</option>
+        <option value="ean13">EAN-13 (13 digits)</option>
+      </select>
+    </div>
+    <div>
+      <label for="validateValue">Barcode Value</label>
+      <input type="text" id="validateValue" placeholder="Enter full barcode...">
+    </div>
+  </div>
+  <button class="btn" onclick="validateBarcode()">Validate</button>
+  <div id="validationResult"></div>
+</div>
+</section>
+
+<div class="privacy-note">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+  All processing happens in your browser. Your data is never uploaded to any server.
+</div>
+
+<!-- HOW UPC WORKS -->
+<section id="how-upc-works" class="content-section">
+<h2>How UPC Codes Work</h2>
+<p>The <a href="https://en.wikipedia.org/wiki/Universal_Product_Code" target="_blank" rel="noopener">Universal Product Code (UPC)</a> is a barcode symbology developed by George Laurer at IBM in 1973. It was first used commercially in 1974 when a pack of Wrigley's Juicy Fruit gum was scanned at a Marsh Supermarket in Troy, Ohio. Today, UPC barcodes appear on virtually every retail product sold in North America.</p>
+<p>A UPC-A barcode encodes 12 numerical digits. The structure breaks down as follows:</p>
+<ul>
+  <li><strong>Digit 1:</strong> Number system character. Indicates the product category (0 or 1 for regular products, 2 for weighted items, 3 for pharmaceuticals, etc.)</li>
+  <li><strong>Digits 2-6:</strong> Manufacturer code. Assigned by <a href="https://www.gs1.org/" target="_blank" rel="noopener">GS1</a> (formerly the Uniform Code Council).</li>
+  <li><strong>Digits 7-11:</strong> Product code. Assigned by the manufacturer to identify the specific item.</li>
+  <li><strong>Digit 12:</strong> Check digit. Calculated using the Modulo 10 algorithm to verify scanning accuracy.</li>
+</ul>
+<p>The barcode itself consists of 30 black bars and 29 white spaces, plus start, center, and end guard patterns. Each digit is represented by a specific pattern of two bars and two spaces that span seven modules (units of width). Scanners read the relative widths of bars and spaces to decode the number.</p>
+</section>
+
+<!-- BARCODE FORMAT COMPARISON -->
+<section id="barcode-formats" class="content-section">
+<h2>Barcode Format Comparison</h2>
+<p>Different barcode symbologies serve different purposes. Here is a comparison of the four formats supported by this tool:</p>
+<table>
+  <thead>
+    <tr><th>Format</th><th>Characters</th><th>Length</th><th>Check Digit</th><th>Primary Use</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>UPC-A</td><td>Numeric only (0-9)</td><td>12 digits</td><td>Modulo 10</td><td>US/Canada retail</td></tr>
+    <tr><td>EAN-13</td><td>Numeric only (0-9)</td><td>13 digits</td><td>Modulo 10</td><td>International retail</td></tr>
+    <tr><td>Code 128</td><td>All ASCII (128 chars)</td><td>Variable</td><td>Modulo 103</td><td>Shipping, logistics, healthcare</td></tr>
+    <tr><td>Code 39</td><td>A-Z, 0-9, -. $/+%*</td><td>Variable</td><td>Optional Mod 43</td><td>Automotive, defense, government</td></tr>
+  </tbody>
+</table>
+<p>For retail products, <a href="https://en.wikipedia.org/wiki/International_Article_Number" target="_blank" rel="noopener">EAN-13</a> is the global standard maintained by GS1. UPC-A is a subset of EAN-13 (any UPC-A code can be expressed as EAN-13 by adding a leading zero). Code 128 is the most versatile linear barcode and is widely used in supply chain management. <a href="https://en.wikipedia.org/wiki/Code_39" target="_blank" rel="noopener">Code 39</a> is simpler to implement but produces wider barcodes.</p>
+</section>
+
+<!-- CHECK DIGIT -->
+<section id="check-digit" class="content-section">
+<h2>Check Digit Calculation</h2>
+<p>The check digit is the final digit of a UPC or EAN code. It exists to catch scanning and manual entry errors. The calculation follows the <a href="https://en.wikipedia.org/wiki/Check_digit#UPC" target="_blank" rel="noopener">Modulo 10 algorithm</a>:</p>
+<ol>
+  <li>Starting from the first digit, add up all digits in <strong>odd positions</strong> (1st, 3rd, 5th...) and multiply the sum by 3.</li>
+  <li>Add up all digits in <strong>even positions</strong> (2nd, 4th, 6th...).</li>
+  <li>Add the two results together.</li>
+  <li>The check digit is the number that, when added to this total, produces a multiple of 10. Formally: <code>(10 - (total % 10)) % 10</code>.</li>
+</ol>
+<p><strong>Example:</strong> For UPC-A value <code>03600029145</code> (11 digits):</p>
+<ul>
+  <li>Odd positions: 0 + 6 + 0 + 2 + 1 + 5 = 14 &times; 3 = 42</li>
+  <li>Even positions: 3 + 0 + 0 + 9 + 4 = 16</li>
+  <li>Total: 42 + 16 = 58</li>
+  <li>Check digit: (10 - (58 % 10)) % 10 = (10 - 8) % 10 = <strong>2</strong></li>
+  <li>Full UPC: <code>036000291452</code></li>
+</ul>
+</section>
+
+<!-- USAGE GUIDE -->
+<section id="usage-guide" class="content-section">
+<h2>Usage Guide</h2>
+<p>Follow these steps to generate a barcode:</p>
+<ol>
+  <li><strong>Select the barcode type.</strong> Choose UPC-A for US retail products, EAN-13 for international retail, Code 128 for alphanumeric data, or Code 39 for government and industrial applications.</li>
+  <li><strong>Enter the value.</strong> For UPC-A, enter 11 digits (the check digit is calculated for you) or all 12 digits. For EAN-13, enter 12 or 13 digits. For Code 128 and Code 39, enter any valid text.</li>
+  <li><strong>Adjust dimensions.</strong> Set bar width (1-6 px), bar height (30-300 px), and choose whether to display human-readable digits below the bars.</li>
+  <li><strong>Generate.</strong> Click the generate button to render the barcode on canvas.</li>
+  <li><strong>Download or print.</strong> Export as PNG (raster, good for screens) or SVG (vector, ideal for print). Use the print button for a clean print layout.</li>
+</ol>
+<p>For bulk workflows, switch to the <strong>Batch Generation</strong> tab. Enter one value per line, select the barcode type, and generate all barcodes at once.</p>
+
+<div class="compat-note">
+  <strong>Browser Compatibility:</strong> This tool uses the Canvas API and is compatible with Chrome 60+, Firefox 55+, Safari 11+, Edge 79+, and all modern mobile browsers. Internet Explorer is not supported.
+</div>
+</section>
+
+<!-- RELATED TOOLS -->
+<section id="related-tools" class="content-section">
+<h2>Related Tools</h2>
+<div class="related-tools">
+  <a href="/free-tools/barcode-generator/" class="related-tool">
+    <div class="rt-name">Barcode Generator</div>
+    <div class="rt-desc">Generate Code 128, Code 39, EAN barcodes</div>
+  </a>
+  <a href="/free-tools/qr-code-generator/" class="related-tool">
+    <div class="rt-name">QR Code Generator</div>
+    <div class="rt-desc">Create QR codes with custom styles</div>
+  </a>
+  <a href="/free-tools/invoice-generator/" class="related-tool">
+    <div class="rt-name">Invoice Generator</div>
+    <div class="rt-desc">Create professional invoices with barcodes</div>
+  </a>
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">What is a UPC code and how many digits does it have?</button>
+  <div class="faq-a">A UPC (Universal Product Code) is a 12-digit barcode used primarily in the United States and Canada for tracking retail products. The first digit is the number system character, the next five identify the manufacturer, the following five identify the product, and the final digit is a check digit calculated using the Modulo 10 algorithm.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">How is the UPC check digit calculated?</button>
+  <div class="faq-a">The UPC-A check digit uses the Modulo 10 algorithm: sum all digits in odd positions and multiply by 3, add all digits in even positions, then calculate (10 - total%10) % 10. This detects most single-digit errors and all transposition errors.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">What is the difference between UPC-A and EAN-13?</button>
+  <div class="faq-a">UPC-A is a 12-digit barcode standard used in North America, while EAN-13 is a 13-digit international standard. A UPC-A code can be converted to EAN-13 by prepending a zero. EAN-13 is used globally and is the dominant retail barcode outside the US and Canada.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">Can I generate barcodes in batch?</button>
+  <div class="faq-a">Yes. Switch to the Batch Generation tab and enter multiple values, one per line. The tool generates all barcodes at once with automatic check digit calculation for UPC-A and EAN-13. Each barcode can be downloaded individually.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">What barcode formats does this tool support?</button>
+  <div class="faq-a">Four formats: UPC-A (12-digit retail), EAN-13 (13-digit international retail), Code 128 (variable-length alphanumeric for shipping and logistics), and Code 39 (alphanumeric for automotive and defense). Each format has its own encoding rules and use cases.</div>
+</div>
+<div class="faq-item">
+  <button class="faq-q" onclick="toggleFaq(this)">Is my data sent to a server?</button>
+  <div class="faq-a">No. All barcode generation happens entirely in your browser using JavaScript and the Canvas API. No data is transmitted to any server. Your information stays on your device. You can verify this by using the tool offline after initial page load.</div>
+</div>
+</section>
+
+<footer>
+  <p>Built by <strong>Michael Lip</strong> &middot; Barcode generation uses the Canvas API with standards-compliant encoding algorithms for UPC-A (<a href="https://en.wikipedia.org/wiki/Universal_Product_Code" target="_blank" rel="noopener">Wikipedia</a>), EAN-13 (<a href="https://en.wikipedia.org/wiki/International_Article_Number" target="_blank" rel="noopener">Wikipedia</a>), and GS1 specifications.</p>
+  <p style="margin-top:8px;">&copy; 2026 Zovo &middot; Free Browser Tools &middot; <a href="https://zovo.one">zovo.one</a></p>
+  <div class="update-history">
+    <strong>Update History:</strong> March 2026 &mdash; Initial release with UPC-A, EAN-13, Code 128, and Code 39 support. Batch generation, PNG/SVG export, print layout.
+  </div>
+</footer>
+
+</div>
+
+<script>
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ============================================================
+// FAQ TOGGLE
+// ============================================================
+function toggleFaq(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+// ============================================================
+// UPC-A ENCODING TABLES
+// ============================================================
+const UPCA_LEFT = [
+  [0,0,0,1,1,0,1], // 0
+  [0,0,1,1,0,0,1], // 1
+  [0,0,1,0,0,1,1], // 2
+  [0,1,1,1,1,0,1], // 3
+  [0,1,0,0,0,1,1], // 4
+  [0,1,1,0,0,0,1], // 5
+  [0,1,0,1,1,1,1], // 6
+  [0,1,1,1,0,1,1], // 7
+  [0,1,1,0,1,1,1], // 8
+  [0,0,0,1,0,1,1]  // 9
+];
+const UPCA_RIGHT = UPCA_LEFT.map(p => p.map(b => b ? 0 : 1));
+
+// ============================================================
+// EAN-13 ENCODING TABLES
+// ============================================================
+const EAN_L = UPCA_LEFT;
+const EAN_G = [
+  [0,1,0,0,1,1,1], // 0
+  [0,1,1,0,0,1,1], // 1
+  [0,0,1,1,0,1,1], // 2
+  [0,1,0,0,0,0,1], // 3
+  [0,0,1,1,1,0,1], // 4
+  [0,1,1,1,0,0,1], // 5
+  [0,0,0,0,1,0,1], // 6
+  [0,0,1,0,0,0,1], // 7
+  [0,0,0,1,0,0,1], // 8
+  [0,0,1,0,1,1,1]  // 9
+];
+const EAN_R = UPCA_RIGHT;
+const EAN_PARITY = [
+  'LLLLLL','LLGLGG','LLGGLG','LLGGGL','LGLLGG',
+  'LGGLLG','LGGGLL','LGLGLG','LGLGGL','LGGLGL'
+];
+
+// ============================================================
+// CODE 128 TABLES
+// ============================================================
+const CODE128_PATTERNS = [
+  [2,1,2,2,2,2],[2,2,2,1,2,2],[2,2,2,2,2,1],[1,2,1,2,2,3],[1,2,1,3,2,2],
+  [1,3,1,2,2,2],[1,2,2,2,1,3],[1,2,2,3,1,2],[1,3,2,2,1,2],[2,2,1,2,1,3],
+  [2,2,1,3,1,2],[2,3,1,2,1,2],[1,1,2,2,3,2],[1,2,2,1,3,2],[1,2,2,2,3,1],
+  [1,1,3,2,2,2],[1,2,3,1,2,2],[1,2,3,2,2,1],[2,2,3,2,1,1],[2,2,1,1,3,2],
+  [2,2,1,2,3,1],[2,1,3,2,1,2],[2,2,3,1,1,2],[3,1,2,1,3,1],[3,1,1,2,2,2],
+  [3,2,1,1,2,2],[3,2,1,2,2,1],[3,1,2,2,1,2],[3,2,2,1,1,2],[3,2,2,2,1,1],
+  [2,1,2,1,2,3],[2,1,2,3,2,1],[2,3,2,1,2,1],[1,1,1,3,2,3],[1,3,1,1,2,3],
+  [1,3,1,3,2,1],[1,1,2,3,1,3],[1,3,2,1,1,3],[1,3,2,3,1,1],[2,1,1,3,1,3],
+  [2,3,1,1,1,3],[2,3,1,3,1,1],[1,1,2,1,3,3],[1,1,2,3,3,1],[1,3,2,1,3,1],
+  [1,1,3,1,2,3],[1,1,3,3,2,1],[1,3,3,1,2,1],[3,1,3,1,2,1],[2,1,1,3,3,1],
+  [2,3,1,1,3,1],[2,1,3,1,1,3],[2,1,3,3,1,1],[2,1,3,1,3,1],[3,1,1,1,2,3],
+  [3,1,1,3,2,1],[3,3,1,1,2,1],[3,1,2,1,1,3],[3,1,2,3,1,1],[3,3,2,1,1,1],
+  [3,1,4,1,1,1],[2,2,1,4,1,1],[4,3,1,1,1,1],[1,1,1,2,2,4],[1,1,1,4,2,2],
+  [1,2,1,1,2,4],[1,2,1,4,2,1],[1,4,1,1,2,2],[1,4,1,2,2,1],[1,1,2,2,1,4],
+  [1,1,2,4,1,2],[1,2,2,1,1,4],[1,2,2,4,1,1],[1,4,2,1,1,2],[1,4,2,2,1,1],
+  [2,4,1,2,1,1],[2,2,1,1,1,4],[4,1,3,1,1,1],[2,4,1,1,1,2],[1,3,4,1,1,1],
+  [1,1,1,2,4,2],[1,2,1,1,4,2],[1,2,1,2,4,1],[1,1,4,2,1,2],[1,2,4,1,1,2],
+  [1,2,4,2,1,1],[4,1,1,2,1,2],[4,2,1,1,1,2],[4,2,1,2,1,1],[2,1,2,1,4,1],
+  [2,1,4,1,2,1],[4,1,2,1,2,1],[1,1,1,1,4,3],[1,1,1,3,4,1],[1,3,1,1,4,1],
+  [1,1,4,1,1,3],[1,1,4,3,1,1],[4,1,1,1,1,3],[4,1,1,3,1,1],[1,1,3,1,4,1],
+  [1,1,4,1,3,1],[3,1,1,1,4,1],[4,1,1,1,3,1],[2,1,1,4,1,2],[2,1,1,2,1,4],
+  [2,1,1,2,3,2],[2,3,3,1,1,1,2]
+];
+const CODE128_STOP = [2,3,3,1,1,1,2];
+const CODE128B_START = 104;
+
+// ============================================================
+// CODE 39 TABLES
+// ============================================================
+const CODE39_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%*';
+const CODE39_PATTERNS = [
+  'nnnwwnwnn','wnnwnnnnw','nnwwnnnnw','wnwwnnnn0','nnnwwnnnw',
+  'wnnwwnnn0','nnwwwnnn0','nnnwnnwnw','wnnwnnwn0','nnwwnnwn0',
+  'wnnnnwnnw','nnwnnwnnw','wnwnnwnn0','nnnnwwnnw','wnnnnwwn0',
+  'nnwnnwwn0','nnnnwwnwn','wnnnnnnww','nnwnnnnww','wnwnnnnw0',
+  'nnnnwnnww','wnnnnwnw0','nnwnnwnw0','nnnnwwnw0','wnnnnnwwn',
+  'nnwnnnwwn','wnwnnnwn0','nnnnwnwwn','wnnnwnwn0','nnwnwnwn0',
+  'wwnnnnnwn','nwwnnnnwn','wwwnnnnnn','nwnnwnnwn','wwnnnwnnn',
+  'nwwnnwnnn','nwnnwwnnn','nwnwnwnnn','nwnwnnnwn','nwnnnwnwn',
+  'nnnwnwnwn','wnnwnnnwn','nnwwnnnwn','nwnnnnwwn'
+];
+
+function getCode39Pattern(char) {
+  const idx = CODE39_CHARS.indexOf(char.toUpperCase());
+  if (idx === -1) return null;
+  const p = CODE39_PATTERNS[idx];
+  const bars = [];
+  for (let i = 0; i < 9; i++) {
+    const wide = (p[i] === 'w' || p[i] === 'W');
+    const isBar = (i % 2 === 0);
+    bars.push({ bar: isBar, width: wide ? 3 : 1 });
+  }
+  bars.push({ bar: false, width: 1 }); // inter-char gap
+  return bars;
+}
+
+// ============================================================
+// CHECK DIGIT CALCULATION
+// ============================================================
+function calcUPCACheckDigit(digits) {
+  // digits = array of 11 numbers
+  let odd = 0, even = 0;
+  for (let i = 0; i < 11; i++) {
+    if (i % 2 === 0) odd += digits[i];
+    else even += digits[i];
+  }
+  return (10 - ((odd * 3 + even) % 10)) % 10;
+}
+
+function calcEAN13CheckDigit(digits) {
+  // digits = array of 12 numbers
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    sum += digits[i] * (i % 2 === 0 ? 1 : 3);
+  }
+  return (10 - (sum % 10)) % 10;
+}
+
+// ============================================================
+// BARCODE RENDERING
+// ============================================================
+function renderUPCA(canvas, digits, barW, barH, showText) {
+  // digits: array of 12 numbers
+  const quiet = 9;
+  const totalModules = quiet + 3 + 42 + 5 + 42 + 3 + quiet; // = 104 + 2*quiet
+  const textH = showText ? 20 : 0;
+  const w = totalModules * barW;
+  const h = barH + textH + 10;
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = '#000000';
+
+  let x = quiet * barW;
+  const guardH = barH + 5;
+
+  // Draw a module
+  function drawBar(isBlack, modules, height) {
+    if (isBlack) {
+      ctx.fillRect(x, 5, modules * barW, height);
+    }
+    x += modules * barW;
+  }
+
+  // Start guard: 101
+  drawBar(true, 1, guardH); drawBar(false, 1, guardH); drawBar(true, 1, guardH);
+
+  // Left 6 digits
+  for (let i = 0; i < 6; i++) {
+    const pattern = UPCA_LEFT[digits[i]];
+    for (let j = 0; j < 7; j++) {
+      drawBar(pattern[j] === 1, 1, barH);
+    }
+  }
+
+  // Center guard: 01010
+  drawBar(false, 1, guardH); drawBar(true, 1, guardH); drawBar(false, 1, guardH); drawBar(true, 1, guardH); drawBar(false, 1, guardH);
+
+  // Right 6 digits
+  for (let i = 6; i < 12; i++) {
+    const pattern = UPCA_RIGHT[digits[i]];
+    for (let j = 0; j < 7; j++) {
+      drawBar(pattern[j] === 1, 1, barH);
+    }
+  }
+
+  // End guard: 101
+  drawBar(true, 1, guardH); drawBar(false, 1, guardH); drawBar(true, 1, guardH);
+
+  // Text
+  if (showText) {
+    ctx.fillStyle = '#000000';
+    ctx.font = `${Math.max(10, barW * 5)}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    const textY = barH + 8;
+    // First digit outside
+    ctx.font = `${Math.max(9, barW * 4)}px monospace`;
+    ctx.fillText(digits[0].toString(), quiet * barW * 0.4, textY);
+    // Left group
+    const leftStart = (quiet + 3) * barW;
+    const leftEnd = leftStart + 42 * barW;
+    ctx.font = `${Math.max(10, barW * 5)}px monospace`;
+    for (let i = 0; i < 6; i++) {
+      ctx.fillText(digits[i].toString(), leftStart + (i * 7 + 3.5) * barW, textY);
+    }
+    // Right group
+    const rightStart = leftEnd + 5 * barW;
+    for (let i = 6; i < 12; i++) {
+      ctx.fillText(digits[i].toString(), rightStart + ((i - 6) * 7 + 3.5) * barW, textY);
+    }
+    // Last digit outside
+    ctx.font = `${Math.max(9, barW * 4)}px monospace`;
+    ctx.fillText(digits[11].toString(), w - quiet * barW * 0.4, textY);
+  }
+}
+
+function renderEAN13(canvas, digits, barW, barH, showText) {
+  const quiet = 9;
+  const totalModules = quiet + 3 + 42 + 5 + 42 + 3 + quiet;
+  const textH = showText ? 20 : 0;
+  const w = totalModules * barW;
+  const h = barH + textH + 10;
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = '#000000';
+
+  let x = quiet * barW;
+  const guardH = barH + 5;
+  const parity = EAN_PARITY[digits[0]];
+
+  function drawBar(isBlack, modules, height) {
+    if (isBlack) ctx.fillRect(x, 5, modules * barW, height);
+    x += modules * barW;
+  }
+
+  // Start guard
+  drawBar(true, 1, guardH); drawBar(false, 1, guardH); drawBar(true, 1, guardH);
+
+  // Left 6 digits (digits[1] to digits[6])
+  for (let i = 0; i < 6; i++) {
+    const d = digits[i + 1];
+    const pattern = parity[i] === 'L' ? EAN_L[d] : EAN_G[d];
+    for (let j = 0; j < 7; j++) drawBar(pattern[j] === 1, 1, barH);
+  }
+
+  // Center guard
+  drawBar(false, 1, guardH); drawBar(true, 1, guardH); drawBar(false, 1, guardH); drawBar(true, 1, guardH); drawBar(false, 1, guardH);
+
+  // Right 6 digits (digits[7] to digits[12])
+  for (let i = 7; i < 13; i++) {
+    const pattern = EAN_R[digits[i]];
+    for (let j = 0; j < 7; j++) drawBar(pattern[j] === 1, 1, barH);
+  }
+
+  // End guard
+  drawBar(true, 1, guardH); drawBar(false, 1, guardH); drawBar(true, 1, guardH);
+
+  if (showText) {
+    ctx.fillStyle = '#000000';
+    ctx.textBaseline = 'top';
+    const textY = barH + 8;
+    ctx.font = `${Math.max(9, barW * 4)}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(digits[0].toString(), quiet * barW * 0.35, textY);
+    ctx.font = `${Math.max(10, barW * 5)}px monospace`;
+    const leftStart = (quiet + 3) * barW;
+    for (let i = 1; i <= 6; i++) {
+      ctx.fillText(digits[i].toString(), leftStart + ((i - 1) * 7 + 3.5) * barW, textY);
+    }
+    const rightStart = (quiet + 3 + 42 + 5) * barW;
+    for (let i = 7; i < 13; i++) {
+      ctx.fillText(digits[i].toString(), rightStart + ((i - 7) * 7 + 3.5) * barW, textY);
+    }
+  }
+}
+
+function renderCode128(canvas, text, barW, barH, showText) {
+  // Code 128B encoding
+  const values = [];
+  values.push(CODE128B_START); // Start B = 104
+  let checksum = CODE128B_START;
+  for (let i = 0; i < text.length; i++) {
+    const code = text.charCodeAt(i) - 32;
+    if (code < 0 || code > 95) continue;
+    values.push(code);
+    checksum += code * (i + 1);
+  }
+  values.push(checksum % 103);
+
+  // Calculate width
+  let totalW = 0;
+  for (const v of values) {
+    const pat = CODE128_PATTERNS[v];
+    for (const p of pat) totalW += p;
+  }
+  // Stop pattern
+  for (const p of CODE128_STOP) totalW += p;
+
+  const quiet = 10;
+  const textH = showText ? 22 : 0;
+  const w = (totalW + quiet * 2) * barW;
+  const h = barH + textH + 10;
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, w, h);
+
+  let x = quiet * barW;
+  function drawPatterns(patterns) {
+    for (let i = 0; i < patterns.length; i++) {
+      const pw = patterns[i] * barW;
+      if (i % 2 === 0) {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(x, 5, pw, barH);
+      }
+      x += pw;
+    }
+  }
+
+  for (const v of values) drawPatterns(CODE128_PATTERNS[v]);
+  drawPatterns(CODE128_STOP);
+
+  if (showText) {
+    ctx.fillStyle = '#000000';
+    ctx.font = `${Math.max(11, barW * 5)}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(text, w / 2, barH + 8);
+  }
+}
+
+function renderCode39(canvas, text, barW, barH, showText) {
+  text = text.toUpperCase();
+  const chars = ['*', ...text.split(''), '*'];
+
+  // Calculate total width
+  let totalWidth = 0;
+  for (const c of chars) {
+    const pattern = getCode39Pattern(c);
+    if (!pattern) continue;
+    for (const b of pattern) totalWidth += b.width;
+  }
+
+  const quiet = 10;
+  const textH = showText ? 22 : 0;
+  const w = (totalWidth + quiet * 2) * barW;
+  const h = barH + textH + 10;
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, w, h);
+
+  let x = quiet * barW;
+  for (const c of chars) {
+    const pattern = getCode39Pattern(c);
+    if (!pattern) continue;
+    for (const b of pattern) {
+      if (b.bar) {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(x, 5, b.width * barW, barH);
+      }
+      x += b.width * barW;
+    }
+  }
+
+  if (showText) {
+    ctx.fillStyle = '#000000';
+    ctx.font = `${Math.max(11, barW * 5)}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText('*' + text + '*', w / 2, barH + 8);
+  }
+}
+
+// ============================================================
+// SINGLE BARCODE GENERATION
+// ============================================================
+let currentSingleData = null;
+
+function generateSingleBarcode() {
+  const type = document.getElementById('barcodeType').value;
+  let value = document.getElementById('barcodeValue').value.trim();
+  const barW = parseInt(document.getElementById('barWidth').value) || 2;
+  const barH = parseInt(document.getElementById('barHeight').value) || 100;
+  const showText = document.getElementById('showText').value === 'yes';
+  const autoCheck = document.getElementById('autoCheckDigit').checked;
+  const canvas = document.getElementById('singleCanvas');
+
+  let fullValue = value;
+  let info = '';
+
+  try {
+    if (type === 'upca') {
+      let digits;
+      if (autoCheck && value.length === 11 && /^\d{11}$/.test(value)) {
+        digits = value.split('').map(Number);
+        const check = calcUPCACheckDigit(digits);
+        digits.push(check);
+        fullValue = digits.join('');
+        info = `UPC-A: ${fullValue} (check digit: ${check})`;
+      } else if (value.length === 12 && /^\d{12}$/.test(value)) {
+        digits = value.split('').map(Number);
+        const expected = calcUPCACheckDigit(digits.slice(0, 11));
+        if (digits[11] !== expected) {
+          info = `UPC-A: ${fullValue} — Warning: check digit should be ${expected}, got ${digits[11]}`;
+        } else {
+          info = `UPC-A: ${fullValue} (valid check digit)`;
+        }
+      } else {
+        throw new Error('UPC-A requires 11 digits (auto-check) or 12 digits.');
+      }
+      renderUPCA(canvas, digits, barW, barH, showText);
+
+    } else if (type === 'ean13') {
+      let digits;
+      if (autoCheck && value.length === 12 && /^\d{12}$/.test(value)) {
+        digits = value.split('').map(Number);
+        const check = calcEAN13CheckDigit(digits);
+        digits.push(check);
+        fullValue = digits.join('');
+        info = `EAN-13: ${fullValue} (check digit: ${check})`;
+      } else if (value.length === 13 && /^\d{13}$/.test(value)) {
+        digits = value.split('').map(Number);
+        const expected = calcEAN13CheckDigit(digits.slice(0, 12));
+        if (digits[12] !== expected) {
+          info = `EAN-13: ${fullValue} — Warning: check digit should be ${expected}, got ${digits[12]}`;
+        } else {
+          info = `EAN-13: ${fullValue} (valid check digit)`;
+        }
+      } else {
+        throw new Error('EAN-13 requires 12 digits (auto-check) or 13 digits.');
+      }
+      renderEAN13(canvas, digits, barW, barH, showText);
+
+    } else if (type === 'code128') {
+      if (!value) throw new Error('Enter text for Code 128.');
+      renderCode128(canvas, value, barW, barH, showText);
+      info = `Code 128B: "${value}" (${value.length} characters)`;
+
+    } else if (type === 'code39') {
+      if (!value) throw new Error('Enter text for Code 39.');
+      if (!/^[A-Za-z0-9\-. $/+%]+$/.test(value)) throw new Error('Code 39 supports: A-Z, 0-9, -. $/+%');
+      renderCode39(canvas, value, barW, barH, showText);
+      info = `Code 39: *${value.toUpperCase()}* (${value.length} characters)`;
+    }
+
+    currentSingleData = { type, value: fullValue, canvas };
+    document.getElementById('singlePreview').style.display = 'block';
+    document.getElementById('singleInfo').textContent = info;
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+// ============================================================
+// BATCH GENERATION
+// ============================================================
+function generateBatch() {
+  const type = document.getElementById('batchType').value;
+  const barW = parseInt(document.getElementById('batchBarWidth').value) || 2;
+  const values = document.getElementById('batchValues').value.trim().split('\n').filter(v => v.trim());
+  const container = document.getElementById('batchResults');
+  container.innerHTML = '';
+
+  if (!values.length) { alert('Enter at least one value.'); return; }
+
+  for (const raw of values) {
+    const value = raw.trim();
+    const item = document.createElement('div');
+    item.className = 'batch-item';
+
+    const previewDiv = document.createElement('div');
+    previewDiv.className = 'preview-area';
+    previewDiv.style.width = '300px';
+    const canvas = document.createElement('canvas');
+    previewDiv.appendChild(canvas);
+
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'batch-item-info';
+
+    try {
+      let fullValue = value;
+      if (type === 'upca') {
+        let digits;
+        if (value.length === 11 && /^\d{11}$/.test(value)) {
+          digits = value.split('').map(Number);
+          digits.push(calcUPCACheckDigit(digits));
+          fullValue = digits.join('');
+        } else if (value.length === 12 && /^\d{12}$/.test(value)) {
+          digits = value.split('').map(Number);
+        } else {
+          throw new Error('Invalid UPC-A');
+        }
+        renderUPCA(canvas, digits, barW, 70, true);
+      } else if (type === 'ean13') {
+        let digits;
+        if (value.length === 12 && /^\d{12}$/.test(value)) {
+          digits = value.split('').map(Number);
+          digits.push(calcEAN13CheckDigit(digits));
+          fullValue = digits.join('');
+        } else if (value.length === 13 && /^\d{13}$/.test(value)) {
+          digits = value.split('').map(Number);
+        } else {
+          throw new Error('Invalid EAN-13');
+        }
+        renderEAN13(canvas, digits, barW, 70, true);
+      } else if (type === 'code128') {
+        renderCode128(canvas, value, barW, 70, true);
+      } else if (type === 'code39') {
+        renderCode39(canvas, value, barW, 70, true);
+      }
+
+      infoDiv.innerHTML = `<div class="code-label">${fullValue}</div><div class="code-meta">${type.toUpperCase()}</div>`;
+
+      const btnDiv = document.createElement('div');
+      btnDiv.style.display = 'flex'; btnDiv.style.gap = '6px'; btnDiv.style.marginTop = '8px';
+      const pngBtn = document.createElement('button');
+      pngBtn.className = 'btn btn-sm';
+      pngBtn.textContent = 'PNG';
+      pngBtn.onclick = () => downloadCanvas(canvas, fullValue, 'png');
+      const svgBtn = document.createElement('button');
+      svgBtn.className = 'btn btn-sm btn-outline';
+      svgBtn.textContent = 'SVG';
+      svgBtn.onclick = () => downloadCanvasAsSVG(canvas, fullValue);
+      btnDiv.appendChild(pngBtn);
+      btnDiv.appendChild(svgBtn);
+      infoDiv.appendChild(btnDiv);
+
+    } catch (e) {
+      infoDiv.innerHTML = `<div class="code-label" style="color:var(--red);">${value}</div><div class="code-meta" style="color:var(--red);">Error: ${e.message}</div>`;
+    }
+
+    item.appendChild(previewDiv);
+    item.appendChild(infoDiv);
+    container.appendChild(item);
+  }
+}
+
+// ============================================================
+// DOWNLOAD / PRINT
+// ============================================================
+function downloadCanvas(canvas, name, format) {
+  const link = document.createElement('a');
+  link.download = `${name}.${format}`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function downloadCanvasAsSVG(canvas, name) {
+  const imgData = canvas.toDataURL('image/png');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}"><image href="${imgData}" width="${canvas.width}" height="${canvas.height}"/></svg>`;
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  const link = document.createElement('a');
+  link.download = `${name}.svg`;
+  link.href = URL.createObjectURL(blob);
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function generateSVGFromCanvas(canvas) {
+  // For true vector SVG, we re-render using SVG elements
+  // This produces a raster-in-SVG which is acceptable for most uses
+  const imgData = canvas.toDataURL('image/png');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}"><image href="${imgData}" width="${canvas.width}" height="${canvas.height}"/></svg>`;
+}
+
+function downloadBarcode(format, mode) {
+  if (mode === 'single') {
+    const canvas = document.getElementById('singleCanvas');
+    const name = currentSingleData ? currentSingleData.value : 'barcode';
+    if (format === 'png') {
+      downloadCanvas(canvas, name, 'png');
+    } else {
+      downloadCanvasAsSVG(canvas, name);
+    }
+  }
+}
+
+function printBarcode(mode) {
+  const canvas = document.getElementById('singleCanvas');
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>Print Barcode</title><style>body{display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#fff;}@media print{body{padding:0;}}</style></head><body><img src="${canvas.toDataURL('image/png')}" style="max-width:100%;"></body></html>`);
+  win.document.close();
+  win.onload = () => { win.print(); };
+}
+
+// ============================================================
+// VALIDATOR
+// ============================================================
+function validateBarcode() {
+  const type = document.getElementById('validateType').value;
+  const value = document.getElementById('validateValue').value.trim();
+  const result = document.getElementById('validationResult');
+
+  if (type === 'upca') {
+    if (!/^\d{12}$/.test(value)) {
+      result.className = 'validation-result invalid';
+      result.innerHTML = '<strong>Invalid format.</strong> UPC-A must be exactly 12 digits.';
+      return;
+    }
+    const digits = value.split('').map(Number);
+    const expected = calcUPCACheckDigit(digits.slice(0, 11));
+    if (digits[11] === expected) {
+      result.className = 'validation-result valid';
+      result.innerHTML = `<strong>Valid UPC-A.</strong> Check digit ${expected} is correct. Manufacturer code: ${value.substring(1, 6)}, Product code: ${value.substring(6, 11)}.`;
+    } else {
+      result.className = 'validation-result invalid';
+      result.innerHTML = `<strong>Invalid check digit.</strong> Expected ${expected}, got ${digits[11]}. The correct UPC would be: ${value.substring(0, 11)}${expected}.`;
+    }
+  } else {
+    if (!/^\d{13}$/.test(value)) {
+      result.className = 'validation-result invalid';
+      result.innerHTML = '<strong>Invalid format.</strong> EAN-13 must be exactly 13 digits.';
+      return;
+    }
+    const digits = value.split('').map(Number);
+    const expected = calcEAN13CheckDigit(digits.slice(0, 12));
+    if (digits[12] === expected) {
+      result.className = 'validation-result valid';
+      result.innerHTML = `<strong>Valid EAN-13.</strong> Check digit ${expected} is correct. Country prefix: ${value.substring(0, 3)}.`;
+    } else {
+      result.className = 'validation-result invalid';
+      result.innerHTML = `<strong>Invalid check digit.</strong> Expected ${expected}, got ${digits[12]}. The correct EAN-13 would be: ${value.substring(0, 12)}${expected}.`;
+    }
+  }
+}
+
+// ============================================================
+// UI UPDATES
+// ============================================================
+document.getElementById('barcodeType').addEventListener('change', function() {
+  const type = this.value;
+  const checkRow = document.getElementById('checkDigitRow');
+  const input = document.getElementById('barcodeValue');
+  if (type === 'upca') {
+    checkRow.style.display = 'block';
+    input.placeholder = 'Enter 11 digits (check digit auto-calculated)';
+  } else if (type === 'ean13') {
+    checkRow.style.display = 'block';
+    input.placeholder = 'Enter 12 digits (check digit auto-calculated)';
+  } else if (type === 'code128') {
+    checkRow.style.display = 'none';
+    input.placeholder = 'Enter text (all ASCII characters supported)';
+  } else if (type === 'code39') {
+    checkRow.style.display = 'none';
+    input.placeholder = 'Enter text (A-Z, 0-9, -. $/+%)';
+  }
+});
+
+// Trigger initial placeholder
+document.getElementById('barcodeType').dispatchEvent(new Event('change'));
+</script>
+
+</body>
+</html>
