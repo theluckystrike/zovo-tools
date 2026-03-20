@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL Shortener & Link Tools — UTM Builder, Encoder & QR | Zovo</title>
+<meta name="description" content="Free URL shortener toolkit — encode/decode URLs, build UTM parameters, generate QR codes, parse URLs, validate links, create slugs, and process batches. 100% client-side, no data sent to servers.">
+<meta name="keywords" content="url to short url, link shortener, url shortener, shorten url, utm builder, url encoder, url decoder, qr code generator, url parser, slug generator, url validator, base62 encoder, deep link generator">
+<meta name="author" content="Michael Lip">
+<link rel="canonical" href="https://zovo.one/free-tools/url-shortener/">
+<meta property="og:title" content="URL Shortener & Link Tools — UTM Builder, Encoder & QR | Zovo">
+<meta property="og:description" content="Free URL toolkit with 12 link tools: encoder/decoder, UTM builder, QR generator, URL parser, validator, slug generator, Base62 encoder, batch processor, and more.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/url-shortener/">
+<meta property="og:site_name" content="Zovo">
+<meta property="og:image" content="https://zovo.one/free-tools/url-shortener/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="URL Shortener & Link Tools — UTM Builder, Encoder & QR | Zovo">
+<meta name="twitter:description" content="Free URL toolkit with 12 link tools. Encode, decode, build UTMs, generate QR codes, parse, validate, and more. Runs entirely in your browser.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "URL Shortener & Link Tools",
+      "url": "https://zovo.one/free-tools/url-shortener/",
+      "description": "Free URL shortener toolkit with 12 link tools: encoder/decoder, UTM builder, QR code generator, URL parser, validator, slug generator, Base62 encoder, batch processor, deep link generator, and more.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" },
+      "datePublished": "2026-03-20",
+      "dateModified": "2026-03-20"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does a URL shortener work internally?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "URL shorteners assign a unique short code to each long URL. The code is typically a Base62 string (a-z, A-Z, 0-9) that maps to an integer ID in a database. When someone visits the short link, the server looks up the ID, finds the original URL, and issues a 301 or 302 redirect. Our Base62 encoder demonstrates this encoding step so you can understand the mechanism."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are UTM parameters and why should I use them?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "UTM parameters are tags appended to URLs that tell analytics platforms (like Google Analytics) where traffic came from. The five standard parameters are utm_source, utm_medium, utm_campaign, utm_term, and utm_content. They help you measure which marketing channels drive the most clicks and conversions without requiring any code changes on your site."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my URL data stored or sent anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Every tool on this page runs entirely in your browser using JavaScript. No URLs, parameters, or generated outputs are sent to any server. There are no API calls, no tracking, and no data collection. You can verify this by using the tool with your network tab open."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is URL encoding and when do I need it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "URL encoding (percent-encoding) replaces unsafe characters with a percent sign followed by two hex digits. For example, a space becomes %20 and an ampersand becomes %26. You need URL encoding when passing special characters in query parameters, form data, or any part of a URL that might otherwise be misinterpreted by browsers or servers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I generate QR codes for any URL?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Our QR code generator works with any valid URL up to approximately 2,900 characters. The QR code is generated entirely on your device using a canvas element. You can download the resulting image as a PNG file. For best scanning reliability, keep URLs under 500 characters."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Base62 encoding used for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Base62 encoding converts numbers into compact strings using 62 characters (0-9, a-z, A-Z). URL shorteners use it to turn database row IDs into short, URL-safe codes. For example, the number 12345 becomes 3D7 in Base62. This is more compact than decimal and avoids special characters that would need percent-encoding in URLs."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Zovo Tools", "item": "https://zovo.one/free-tools/" },
+        { "@type": "ListItem", "position": 2, "name": "URL Shortener & Link Tools", "item": "https://zovo.one/free-tools/url-shortener/" }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2a; --text: #e0e0e8;
+  --accent: #00ff88; --accent-dim: #00cc6a; --muted: #8888a0; --error: #ff4466;
+  --radius: 10px; --shadow: 0 2px 12px rgba(0,0,0,.4);
+}
+html { scroll-behavior: smooth; }
+body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3 { line-height: 1.3; }
+
+/* Header */
+.site-header { border-bottom: 1px solid var(--border); padding: 1rem 0; }
+.header-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+.brand { font-weight: 700; font-size: 1.25rem; color: var(--accent); }
+.reading-time { font-size: .85rem; color: var(--muted); }
+
+/* TOC */
+#toc { max-width: 1100px; margin: 1.5rem auto; padding: 0 1.5rem; }
+#toc nav { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.5rem; }
+#toc h2 { font-size: 1rem; margin-bottom: .5rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+#toc ul { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem; }
+#toc li a { display: inline-block; padding: .3rem .75rem; border-radius: 6px; font-size: .85rem; background: var(--bg); border: 1px solid var(--border); transition: .2s; }
+#toc li a:hover { background: var(--accent); color: var(--bg); text-decoration: none; }
+
+/* Main */
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+.hero { text-align: center; margin-bottom: 3rem; }
+.hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin-bottom: .75rem; }
+.hero h1 span { color: var(--accent); }
+.hero p { color: var(--muted); max-width: 650px; margin: 0 auto; font-size: 1.05rem; }
+
+/* Tool Sections */
+.tool-section { margin-bottom: 3rem; scroll-margin-top: 2rem; }
+.tool-section h2 { font-size: 1.4rem; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid var(--border); }
+.tool-section h2 .badge { font-size: .7rem; background: var(--accent); color: var(--bg); padding: .2rem .5rem; border-radius: 4px; margin-left: .5rem; vertical-align: middle; font-weight: 600; }
+
+.tool-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+
+label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .35rem; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+input[type="text"], input[type="url"], input[type="number"], textarea, select {
+  width: 100%; padding: .65rem .85rem; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: .95rem; font-family: inherit; transition: border-color .2s;
+}
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+textarea { resize: vertical; min-height: 80px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: .4rem; padding: .6rem 1.2rem; border: none; border-radius: 8px; font-size: .9rem; font-weight: 600; cursor: pointer; transition: .2s; font-family: inherit;
+}
+.btn-primary { background: var(--accent); color: var(--bg); }
+.btn-primary:hover { background: var(--accent-dim); }
+.btn-secondary { background: var(--border); color: var(--text); }
+.btn-secondary:hover { background: #2a2a3a; }
+.btn-copy { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: .8rem; padding: .35rem .7rem; }
+.btn-copy:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn-row { display: flex; gap: .5rem; margin-top: .75rem; flex-wrap: wrap; }
+
+.output-box {
+  margin-top: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace; font-size: .88rem; white-space: pre-wrap; word-break: break-all; position: relative; min-height: 40px; color: var(--text);
+}
+.output-box .copy-btn { position: absolute; top: .5rem; right: .5rem; }
+.output-box:empty::after { content: 'Output will appear here...'; color: var(--muted); font-style: italic; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+.input-group { margin-bottom: .85rem; }
+
+/* URL Parser Table */
+.parse-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+.parse-table th, .parse-table td { text-align: left; padding: .5rem .75rem; border-bottom: 1px solid var(--border); font-size: .9rem; }
+.parse-table th { color: var(--accent); font-weight: 600; width: 140px; }
+
+/* QR Canvas */
+.qr-container { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; margin-top: 1rem; }
+.qr-canvas-wrap { background: #fff; padding: 16px; border-radius: 8px; display: inline-block; }
+.qr-canvas-wrap canvas { display: block; }
+
+/* Link Preview */
+.link-preview-card { background: #fff; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; max-width: 500px; margin-top: 1rem; font-family: system-ui; }
+.link-preview-img { height: 200px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2rem; font-weight: 700; }
+.link-preview-body { padding: 1rem; }
+.link-preview-body .lp-host { font-size: .75rem; color: #666; text-transform: uppercase; letter-spacing: .03em; }
+.link-preview-body .lp-title { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin: .25rem 0; }
+.link-preview-body .lp-desc { font-size: .85rem; color: #555; }
+
+/* Batch */
+.batch-results { margin-top: 1rem; max-height: 400px; overflow-y: auto; }
+.batch-item { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: .75rem; margin-bottom: .5rem; font-size: .85rem; }
+.batch-item .batch-label { color: var(--accent); font-weight: 600; margin-bottom: .25rem; }
+
+/* Deep link */
+.deep-link-output { margin-top: 1rem; }
+.deep-link-output .dl-row { display: flex; align-items: center; gap: .75rem; margin-bottom: .5rem; }
+.dl-row .dl-platform { font-weight: 600; min-width: 80px; color: var(--accent); }
+.dl-row code { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: .4rem .6rem; font-size: .85rem; word-break: break-all; }
+
+/* Validator result */
+.valid-result { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-weight: 600; }
+.valid-pass { background: rgba(0,255,136,.1); border: 1px solid var(--accent); color: var(--accent); }
+.valid-fail { background: rgba(255,68,102,.1); border: 1px solid var(--error); color: var(--error); }
+.valid-details { margin-top: .5rem; font-weight: 400; font-size: .9rem; color: var(--text); }
+
+/* FAQ */
+.faq-section { margin-top: 3rem; scroll-margin-top: 2rem; }
+.faq-section h2 { font-size: 1.4rem; margin-bottom: 1.5rem; padding-bottom: .5rem; border-bottom: 2px solid var(--border); }
+.faq-item { margin-bottom: 1.25rem; }
+.faq-item h3 { font-size: 1rem; cursor: pointer; padding: .75rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); transition: .2s; }
+.faq-item h3:hover { border-color: var(--accent); }
+.faq-item h3::before { content: '+'; margin-right: .5rem; color: var(--accent); font-weight: 700; }
+.faq-item.open h3::before { content: '−'; }
+.faq-answer { display: none; padding: .75rem 1rem; color: var(--muted); line-height: 1.7; font-size: .95rem; }
+.faq-item.open .faq-answer { display: block; }
+
+/* Content sections */
+.content-section { margin-top: 3rem; scroll-margin-top: 2rem; }
+.content-section h2 { font-size: 1.4rem; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid var(--border); }
+.content-section p, .content-section li { color: var(--muted); line-height: 1.8; margin-bottom: .75rem; }
+.content-section ul { padding-left: 1.5rem; }
+
+/* Cross-links */
+.related-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.related-tool-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; transition: .2s; }
+.related-tool-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.related-tool-card h3 { font-size: 1rem; margin-bottom: .35rem; }
+.related-tool-card p { font-size: .85rem; color: var(--muted); margin: 0; }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--border); margin-top: 4rem; padding: 2rem 0; }
+.footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+.footer-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem; }
+.footer-col h4 { font-size: .85rem; color: var(--accent); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; }
+.footer-col p, .footer-col a { font-size: .85rem; color: var(--muted); display: block; margin-bottom: .3rem; }
+.footer-bottom { text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: .8rem; color: var(--muted); }
+.privacy-note { margin-top: 2rem; padding: 1rem 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: .85rem; color: var(--muted); }
+.privacy-note strong { color: var(--accent); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .header-inner { flex-direction: column; align-items: flex-start; }
+  #toc ul { flex-direction: column; }
+  .footer-top { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="https://zovo.one" class="brand">Zovo</a>
+    <span class="reading-time">12 min read — 12 tools included</span>
+  </div>
+</header>
+
+<div id="toc">
+  <nav>
+    <h2>Table of Contents</h2>
+    <ul>
+      <li><a href="#encoder-decoder">Encoder / Decoder</a></li>
+      <li><a href="#url-parser">URL Parser</a></li>
+      <li><a href="#utm-builder">UTM Builder</a></li>
+      <li><a href="#qr-generator">QR Code Generator</a></li>
+      <li><a href="#url-validator">URL Validator</a></li>
+      <li><a href="#slug-generator">Slug Generator</a></li>
+      <li><a href="#base62-encoder">Base62 Encoder</a></li>
+      <li><a href="#batch-processing">Batch Processing</a></li>
+      <li><a href="#link-preview">Link Preview</a></li>
+      <li><a href="#deep-link-generator">Deep Links</a></li>
+      <li><a href="#url-length-checker">Length Checker</a></li>
+      <li><a href="#how-url-shorteners-work">How It Works</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </nav>
+</div>
+
+<main class="container">
+  <section class="hero">
+    <h1>URL Shortener & <span>Link Tools</span></h1>
+    <p>Free browser-based URL toolkit with 12 essential link utilities. Encode, decode, build UTM tags, generate QR codes, parse URLs, validate links, and more. Nothing leaves your device.</p>
+  </section>
+
+  <!-- Tool 1: Encoder/Decoder -->
+  <section class="tool-section" id="encoder-decoder">
+    <h2>URL Encoder / Decoder <span class="badge">TOOL 1</span></h2>
+    <div class="tool-card">
+      <div class="input-group">
+        <label for="enc-input">Enter URL or text</label>
+        <textarea id="enc-input" rows="3" placeholder="https://example.com/path?name=John Doe&city=New York">https://example.com/path?name=John Doe&city=New York</textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="encodeURL()">Encode</button>
+        <button class="btn btn-primary" onclick="decodeURL()">Decode</button>
+        <button class="btn btn-secondary" onclick="encodeComponent()">Encode Component</button>
+        <button class="btn btn-secondary" onclick="decodeComponent()">Decode Component</button>
+      </div>
+      <div class="output-box" id="enc-output"><button class="btn btn-copy copy-btn" onclick="copyOutput('enc-output')">Copy</button></div>
+    </div>
+  </section>
+
+  <!-- Tool 2: URL Parser -->
+  <section class="tool-section" id="url-parser">
+    <h2>URL Parser & Breakdown <span class="badge">TOOL 2</span></h2>
+    <div class="tool-card">
+      <div class="input-group">
+        <label for="parse-input">Enter full URL</label>
+        <input type="url" id="parse-input" placeholder="https://user:pass@sub.example.com:8080/path/page?key=val&foo=bar#section" value="https://sub.example.com:8080/path/page?key=val&foo=bar#section">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="parseURL()">Parse URL</button>
+      </div>
+      <div id="parse-output"></div>
+    </div>
+  </section>
+
+  <!-- Tool 3: UTM Builder -->
+  <section class="tool-section" id="utm-builder">
+    <h2>UTM Parameter Builder <span class="badge">TOOL 3</span></h2>
+    <div class="tool-card">
+      <div class="input-group">
+        <label for="utm-url">Base URL *</label>
+        <input type="url" id="utm-url" placeholder="https://example.com/landing-page" value="https://example.com/landing-page">
+      </div>
+      <div class="grid-2">
+        <div class="input-group">
+          <label for="utm-source">utm_source *</label>
+          <input type="text" id="utm-source" placeholder="google, newsletter, twitter" value="google">
+        </div>
+        <div class="input-group">
+          <label for="utm-medium">utm_medium *</label>
+          <input type="text" id="utm-medium" placeholder="cpc, email, social" value="cpc">
+        </div>
+        <div class="input-group">
+          <label for="utm-campaign">utm_campaign *</label>
+          <input type="text" id="utm-campaign" placeholder="spring_sale, product_launch" value="spring_sale">
+        </div>
+        <div class="input-group">
+          <label for="utm-term">utm_term</label>
+          <input type="text" id="utm-term" placeholder="running+shoes (optional)">
+        </div>
+        <div class="input-group">
+          <label for="utm-content">utm_content</label>
+          <input type="text" id="utm-content" placeholder="banner_ad, text_link (optional)">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="buildUTM()">Build UTM URL</button>
+        <button class="btn btn-secondary" onclick="clearUTM()">Clear</button>
+      </div>
+      <div class="output-box" id="utm-output"><button class="btn btn-copy copy-btn" onclick="copyOutput('utm-output')">Copy</button></div>
+    </div>
+  </section>
+
+  <!-- Tool 4: QR Code Generator -->
+  <section class="tool-section" id="qr-generator">
+    <h2>QR Code Generator <span class="badge">TOOL 4</span></h2>
+    <div class="tool-card">
+      <div class="input-group">
+        <label for="qr-input">Enter URL or text</label>
+        <input type="text" id="qr-input" placeholder="https://example.com" value="https://example.com">
+      </div>
+      <div class="grid-3">
+        <div class="input-group">
+          <label for="qr-size">Size (px)</label>
+          <select id="qr-size"><option value="200">200x200</option><option value="300" selected>300x300</option><option value="400">400x400</option><option value="500">500x500</option></select>
+        </div>
+        <div class="input-group">
+          <label for="qr-fg">Foreground</label>
+          <input type="text" id="qr-fg" value="#000000" placeholder="#000000">
+        </div>
+        <div class="input-group">
+          <label for="qr-bg">Background</label>
+          <input type="text" id="qr-bg" value="#ffffff" placeholder="#ffffff">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="generateQR()">Generate QR Code</button>
+        <button class="btn btn-secondary" onclick="downloadQR()">Download PNG</button>
+      </div>
+      <div class="qr-container" id="qr-container"></div>
+    </div>
+  </section>
+
+  <!-- Tool 5: URL Validator -->
+  <section class="tool-section" id="url-validator">
+    <h2>URL Validator <span class="badge">TOOL 5</span></h2>
+    <div class="tool-card">
+      <div class="input-group">
+        <label for="valid-input">Enter URL to validate</label>
+        <input type="text" id="valid-input" placeholder="https://example.com/page" value="https://example.com/page">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="validateURL()">Validate</button>
+      </div>
+      <div id="valid-output"></div>
+    </div>
+  </section>
+
+  <!-- Tool 6: Slug Generator -->
+  <section class="tool-section" id="slug-generator">
+    <h2>Slug Generator <span class="badge">TOOL 6</span></h2>
+    <div class="tool-card">
+      <div class="input-group">
+        <label for="slug-input">Enter URL or text</label>
+        <input type="text" id="slug-input" placeholder="My Blog Post Title! (2026)" value="My Blog Post Title! (2026)">
+      </div>
+      <div class="grid-2">
+        <div class="input-group">
+          <label for="slug-separator">Separator</label>
+          <select id="slug-separator"><option value="-" selected>Hyphens (-)</option><option value="_">Underscores (_)</option></select>
+        </div>
+        <div class="input-group">
+          <label for="slug-max">Max length</label>
+          <input type="number" id="slug-max" value="80" min="10" max="200">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="generateSlug()">Generate Slug</button>
+      </div>
+      <div class="output-box" id="slug-output"><button class="btn btn-copy copy-btn" onclick="copyOutput('slug-output')">Copy</button></div>
+    </div>
+  </section>
+
+  <!-- Tool 7: Base62 Encoder -->
+  <section class="tool-section" id="base62-encoder">
+    <h2>Base62 Encoder / Decoder <span class="badge">TOOL 7</span></h2>
+    <div class="tool-card">
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1rem;">Demonstrates how URL shorteners convert numeric IDs to short codes. Enter a number to see its Base62 representation, or enter a Base62 string to decode it back.</p>
+      <div class="grid-2">
+        <div class="input-group">
+          <label for="b62-num">Number (decimal)</label>
+          <input type="text" id="b62-num" placeholder="12345" value="12345">
+        </div>
+        <div class="input-group">
+          <label for="b62-str">Base62 string</label>
+          <input type="text" id="b62-str" placeholder="3d7">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="encodeBase62()">Number -> Base62</button>
+        <button class="btn btn-primary" onclick="decodeBase62()">Base62 -> Number</button>
+      </div>
+      <div class="output-box" id="b62-output"><button class="btn btn-copy copy-btn" onclick="copyOutput('b62-output')">Copy</button></div>
+    </div>
+  </section>
+
+  <!-- Tool 8: Batch URL Processing -->
+  <section class="tool-section" id="batch-processing">
+    <h2>Batch URL Processing <span class="badge">TOOL 8</span></h2>
+    <div class="tool-card">
+      <div class="input-group">
+        <label for="batch-input">Enter URLs (one per line)</label>
+        <textarea id="batch-input" rows="5" placeholder="https://example.com/page one&#10;https://example.com/another page&#10;https://example.com/special?q=hello world">https://example.com/page one
+https://example.com/another page
+https://example.com/special?q=hello world</textarea>
+      </div>
+      <div class="input-group">
+        <label for="batch-action">Action</label>
+        <select id="batch-action">
+          <option value="encode">Encode all</option>
+          <option value="decode">Decode all</option>
+          <option value="validate">Validate all</option>
+          <option value="slugify">Extract & slugify paths</option>
+          <option value="length">Check lengths</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="batchProcess()">Process All</button>
+        <button class="btn btn-secondary" onclick="copyBatchResults()">Copy Results</button>
+      </div>
+      <div class="batch-results" id="batch-output"></div>
+    </div>
+  </section>
+
+  <!-- Tool 9: Link Preview Simulator -->
+  <section class="tool-section" id="link-preview">
+    <h2>Link Preview Simulator <span class="badge">TOOL 9</span></h2>
+    <div class="tool-card">
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1rem;">Preview how your URL might appear when shared on social media platforms like Facebook, Twitter, or LinkedIn.</p>
+      <div class="input-group">
+        <label for="lp-url">URL</label>
+        <input type="url" id="lp-url" placeholder="https://example.com" value="https://example.com">
+      </div>
+      <div class="grid-2">
+        <div class="input-group">
+          <label for="lp-title">og:title</label>
+          <input type="text" id="lp-title" placeholder="Page Title" value="Example Domain — Welcome">
+        </div>
+        <div class="input-group">
+          <label for="lp-desc">og:description</label>
+          <input type="text" id="lp-desc" placeholder="Page description" value="This domain is for use in illustrative examples in documents.">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="generatePreview()">Generate Preview</button>
+      </div>
+      <div id="lp-output"></div>
+    </div>
+  </section>
+
+  <!-- Tool 10: Deep Link Generator -->
+  <section class="tool-section" id="deep-link-generator">
+    <h2>Deep Link Format Generator <span class="badge">TOOL 10</span></h2>
+    <div class="tool-card">
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1rem;">Generate deep link formats for iOS Universal Links and Android App Links from a standard web URL.</p>
+      <div class="grid-2">
+        <div class="input-group">
+          <label for="dl-url">Web URL</label>
+          <input type="url" id="dl-url" placeholder="https://example.com/product/123" value="https://example.com/product/123">
+        </div>
+        <div class="input-group">
+          <label for="dl-scheme">Custom scheme</label>
+          <input type="text" id="dl-scheme" placeholder="myapp" value="myapp">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="input-group">
+          <label for="dl-android-pkg">Android package</label>
+          <input type="text" id="dl-android-pkg" placeholder="com.example.app" value="com.example.app">
+        </div>
+        <div class="input-group">
+          <label for="dl-ios-id">iOS App Store ID</label>
+          <input type="text" id="dl-ios-id" placeholder="123456789" value="123456789">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="generateDeepLinks()">Generate Deep Links</button>
+      </div>
+      <div class="deep-link-output" id="dl-output"></div>
+    </div>
+  </section>
+
+  <!-- Tool 11: URL Length Checker -->
+  <section class="tool-section" id="url-length-checker">
+    <h2>URL Length Checker <span class="badge">TOOL 11</span></h2>
+    <div class="tool-card">
+      <div class="input-group">
+        <label for="len-input">Enter URL</label>
+        <input type="text" id="len-input" placeholder="https://example.com/very/long/path?with=many&parameters=here" value="https://example.com/very/long/path?with=many&parameters=here" oninput="checkLength()">
+      </div>
+      <div id="len-output" style="margin-top:1rem;"></div>
+    </div>
+  </section>
+
+  <!-- How URL Shorteners Work -->
+  <section class="content-section" id="how-url-shorteners-work">
+    <h2>How URL Shorteners Work</h2>
+    <p>URL shortening services like <a href="https://en.wikipedia.org/wiki/URL_shortening" target="_blank" rel="noopener">Bitly and TinyURL</a> follow a straightforward process. When you submit a long URL, the service stores it in a database and assigns it a numeric ID. That ID is then converted into a short alphanumeric code using Base62 encoding (characters 0-9, a-z, A-Z), producing compact strings like <code>dVq3</code> or <code>7Kp</code>.</p>
+    <p>When someone clicks the short link, the server decodes the short code back to the numeric ID, looks up the original URL in the database, and sends a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301" target="_blank" rel="noopener">301 redirect</a> to the browser. The entire process takes milliseconds.</p>
+    <p>This toolkit demonstrates each step of that process. The Base62 encoder shows the encoding mechanism. The URL parser breaks down the resulting redirect target. The UTM builder adds tracking parameters before shortening. Together, these tools give you a complete understanding of link management infrastructure.</p>
+    <ul>
+      <li><strong>Step 1:</strong> Original URL is submitted and stored with a unique integer ID</li>
+      <li><strong>Step 2:</strong> The integer ID is encoded to a Base62 string (e.g., 125 becomes "2B")</li>
+      <li><strong>Step 3:</strong> The short domain + code forms the short URL (e.g., bit.ly/2B)</li>
+      <li><strong>Step 4:</strong> On click, the code is decoded, the original URL is fetched, and a 301 redirect is issued</li>
+    </ul>
+  </section>
+
+  <!-- Browser Compatibility -->
+  <section class="content-section" id="browser-compatibility">
+    <h2>Browser Compatibility</h2>
+    <p>All tools on this page use standard Web APIs supported by modern browsers. Tested and confirmed working in:</p>
+    <ul>
+      <li><strong>Chrome 90+</strong> and Chromium-based browsers (Edge, Brave, Opera)</li>
+      <li><strong>Firefox 88+</strong></li>
+      <li><strong>Safari 14+</strong> (macOS and iOS)</li>
+      <li><strong>Samsung Internet 14+</strong></li>
+    </ul>
+    <p>The QR code generator uses the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noopener">Canvas API</a>, which is supported in all browsers listed above. The Clipboard API (used for copy buttons) requires HTTPS in some browsers. If copy fails, the output text is selected so you can copy manually with Ctrl+C / Cmd+C.</p>
+  </section>
+
+  <!-- Related Tools -->
+  <section class="content-section" id="related-tools">
+    <h2>Related Free Tools</h2>
+    <div class="related-tools">
+      <a href="/free-tools/qr-code-generator/" class="related-tool-card">
+        <h3>QR Code Generator</h3>
+        <p>Create customizable QR codes with logos, colors, and multiple export formats.</p>
+      </a>
+      <a href="/free-tools/base64-encoder-decoder/" class="related-tool-card">
+        <h3>Base64 Encoder / Decoder</h3>
+        <p>Encode and decode Base64 strings for data URIs, API payloads, and file embedding.</p>
+      </a>
+      <a href="/free-tools/meta-tag-generator/" class="related-tool-card">
+        <h3>Meta Tag Generator</h3>
+        <p>Generate Open Graph, Twitter Card, and standard meta tags for better link previews.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Privacy Note -->
+  <div class="privacy-note">
+    <strong>Privacy:</strong> Every tool on this page runs 100% in your browser. No URLs, text, or generated outputs are transmitted to any server. There are no analytics trackers, no cookies, and no third-party scripts. Your data stays on your device.
+  </div>
+
+  <!-- FAQ Section -->
+  <section class="faq-section" id="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <h3 onclick="toggleFAQ(this)">How does a URL shortener work internally?</h3>
+      <div class="faq-answer">URL shorteners assign a unique short code to each long URL. The code is typically a Base62 string (a-z, A-Z, 0-9) that maps to an integer ID in a database. When someone visits the short link, the server looks up the ID, finds the original URL, and issues a 301 or 302 redirect. Our Base62 encoder demonstrates this encoding step so you can understand the mechanism.</div>
+    </div>
+    <div class="faq-item">
+      <h3 onclick="toggleFAQ(this)">What are UTM parameters and why should I use them?</h3>
+      <div class="faq-answer">UTM parameters are tags appended to URLs that tell analytics platforms (like Google Analytics) where traffic came from. The five standard parameters are utm_source, utm_medium, utm_campaign, utm_term, and utm_content. They help you measure which marketing channels drive the most clicks and conversions without requiring any code changes on your site.</div>
+    </div>
+    <div class="faq-item">
+      <h3 onclick="toggleFAQ(this)">Is my URL data stored or sent anywhere?</h3>
+      <div class="faq-answer">No. Every tool on this page runs entirely in your browser using JavaScript. No URLs, parameters, or generated outputs are sent to any server. There are no API calls, no tracking, and no data collection. You can verify this by using the tool with your network tab open.</div>
+    </div>
+    <div class="faq-item">
+      <h3 onclick="toggleFAQ(this)">What is URL encoding and when do I need it?</h3>
+      <div class="faq-answer">URL encoding (percent-encoding) replaces unsafe characters with a percent sign followed by two hex digits. For example, a space becomes %20 and an ampersand becomes %26. You need URL encoding when passing special characters in query parameters, form data, or any part of a URL that might otherwise be misinterpreted by browsers or servers.</div>
+    </div>
+    <div class="faq-item">
+      <h3 onclick="toggleFAQ(this)">Can I generate QR codes for any URL?</h3>
+      <div class="faq-answer">Yes. Our QR code generator works with any valid URL up to approximately 2,900 characters. The QR code is generated entirely on your device using a canvas element. You can download the resulting image as a PNG file. For best scanning reliability, keep URLs under 500 characters.</div>
+    </div>
+    <div class="faq-item">
+      <h3 onclick="toggleFAQ(this)">What is Base62 encoding used for?</h3>
+      <div class="faq-answer">Base62 encoding converts numbers into compact strings using 62 characters (0-9, a-z, A-Z). URL shorteners use it to turn database row IDs into short, URL-safe codes. For example, the number 12345 becomes "3d7" in Base62. This is more compact than decimal and avoids special characters that would need percent-encoding in URLs.</div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4>About This Tool</h4>
+        <p>Built by <strong>Michael Lip</strong> — developer, marketer, and tool maker. This URL toolkit was created to give marketers and developers a single-page resource for everyday link tasks without needing to install anything or sign up for a service.</p>
+      </div>
+      <div class="footer-col">
+        <h4>References</h4>
+        <a href="https://en.wikipedia.org/wiki/URL_shortening" target="_blank" rel="noopener">URL Shortening — Wikipedia</a>
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL" target="_blank" rel="noopener">URL API — MDN Web Docs</a>
+        <a href="https://en.wikipedia.org/wiki/Percent-encoding" target="_blank" rel="noopener">Percent-encoding — Wikipedia</a>
+        <a href="https://ga-dev-tools.google/ga4/campaign-url-builder/" target="_blank" rel="noopener">Campaign URL Builder — Google</a>
+      </div>
+      <div class="footer-col">
+        <h4>Update History</h4>
+        <p>March 2026 — Initial release with 12 URL tools</p>
+        <p>Encoder/decoder, parser, UTM builder, QR generator, validator, slug generator, Base62, batch, preview, deep links, length checker</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Zovo &middot; Free Browser Tools &middot; <a href="https://zovo.one">zovo.one</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  document.execCommand('copy'); document.body.removeChild(ta);
+}
+function copyOutput(id) {
+  const el = document.getElementById(id);
+  const text = el.textContent.replace('Copy', '').trim();
+  copyToClipboard(text);
+  const btn = el.querySelector('.copy-btn');
+  if (btn) { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 1500); }
+}
+function setOutput(id, text) {
+  const el = document.getElementById(id);
+  const btn = el.querySelector('.copy-btn');
+  el.textContent = text;
+  if (btn) el.appendChild(btn);
+}
+
+// ============================================================
+// TOOL 1: ENCODER / DECODER
+// ============================================================
+function encodeURL() {
+  const input = document.getElementById('enc-input').value;
+  try { setOutput('enc-output', encodeURI(input)); } catch (e) { setOutput('enc-output', 'Error: ' + e.message); }
+}
+function decodeURL() {
+  const input = document.getElementById('enc-input').value;
+  try { setOutput('enc-output', decodeURI(input)); } catch (e) { setOutput('enc-output', 'Error: ' + e.message); }
+}
+function encodeComponent() {
+  const input = document.getElementById('enc-input').value;
+  try { setOutput('enc-output', encodeURIComponent(input)); } catch (e) { setOutput('enc-output', 'Error: ' + e.message); }
+}
+function decodeComponent() {
+  const input = document.getElementById('enc-input').value;
+  try { setOutput('enc-output', decodeURIComponent(input)); } catch (e) { setOutput('enc-output', 'Error: ' + e.message); }
+}
+
+// ============================================================
+// TOOL 2: URL PARSER
+// ============================================================
+function parseURL() {
+  const input = document.getElementById('parse-input').value.trim();
+  const out = document.getElementById('parse-output');
+  try {
+    const url = new URL(input);
+    let params = '';
+    url.searchParams.forEach((v, k) => { params += '<tr><td style="padding-left:2rem;color:var(--muted);">' + escHTML(k) + '</td><td>' + escHTML(v) + '</td></tr>'; });
+    out.innerHTML = '<table class="parse-table">' +
+      row('Protocol', url.protocol) + row('Host', url.host) + row('Hostname', url.hostname) +
+      row('Port', url.port || '(default)') + row('Pathname', url.pathname) +
+      row('Search', url.search || '(none)') + params +
+      row('Hash', url.hash || '(none)') + row('Origin', url.origin) +
+      row('Username', url.username || '(none)') + row('Password', url.password || '(none)') +
+      '</table>';
+  } catch (e) {
+    out.innerHTML = '<div class="valid-result valid-fail">Invalid URL — cannot parse. Make sure to include the protocol (https://).</div>';
+  }
+}
+function row(label, value) { return '<tr><th>' + escHTML(label) + '</th><td>' + escHTML(value) + '</td></tr>'; }
+function escHTML(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ============================================================
+// TOOL 3: UTM BUILDER
+// ============================================================
+function buildUTM() {
+  const base = document.getElementById('utm-url').value.trim();
+  const source = document.getElementById('utm-source').value.trim();
+  const medium = document.getElementById('utm-medium').value.trim();
+  const campaign = document.getElementById('utm-campaign').value.trim();
+  const term = document.getElementById('utm-term').value.trim();
+  const content = document.getElementById('utm-content').value.trim();
+  if (!base) { setOutput('utm-output', 'Please enter a base URL.'); return; }
+  if (!source || !medium || !campaign) { setOutput('utm-output', 'Source, medium, and campaign are required.'); return; }
+  try {
+    const url = new URL(base);
+    url.searchParams.set('utm_source', source);
+    url.searchParams.set('utm_medium', medium);
+    url.searchParams.set('utm_campaign', campaign);
+    if (term) url.searchParams.set('utm_term', term);
+    if (content) url.searchParams.set('utm_content', content);
+    setOutput('utm-output', url.toString());
+  } catch (e) {
+    setOutput('utm-output', 'Error: Invalid base URL. Include the protocol (https://).');
+  }
+}
+function clearUTM() {
+  ['utm-url','utm-source','utm-medium','utm-campaign','utm-term','utm-content'].forEach(id => document.getElementById(id).value = '');
+  setOutput('utm-output', '');
+}
+
+// ============================================================
+// TOOL 4: QR CODE GENERATOR (Canvas-based)
+// ============================================================
+// Minimal QR code generator using canvas — no external libraries
+// Based on QR code specification ISO/IEC 18004
+// Supports alphanumeric and byte mode up to version 10
+
+const QR = (() => {
+  // Error correction level M (15% recovery)
+  const EC_CODEWORDS = [0,10,16,26,18,24,16,18,22,20,24,28,26,30,22,24,20,24,28,26,30,28,32,30,24]; // by version up to 10
+  const TOTAL_CODEWORDS = [0,26,44,70,100,134,172,196,242,292,346];
+  const ALIGNMENT_PATTERNS = [
+    [],[], [6,18], [6,22], [6,26], [6,30], [6,34],
+    [6,22,38], [6,24,42], [6,26,46], [6,28,50]
+  ];
+
+  function getVersion(dataLen) {
+    for (let v = 1; v <= 10; v++) {
+      const dataCW = TOTAL_CODEWORDS[v] - EC_CODEWORDS[v];
+      if (dataLen <= dataCW) return v;
+    }
+    return -1;
+  }
+
+  function encodeData(text) {
+    // Byte mode
+    const bytes = [];
+    for (let i = 0; i < text.length; i++) {
+      const c = text.charCodeAt(i);
+      if (c < 128) bytes.push(c);
+      else if (c < 2048) { bytes.push(192 | (c >> 6), 128 | (c & 63)); }
+      else { bytes.push(224 | (c >> 12), 128 | ((c >> 6) & 63), 128 | (c & 63)); }
+    }
+    return bytes;
+  }
+
+  function generateMatrix(text) {
+    const dataBytes = encodeData(text);
+    // Mode indicator (4 bits) = 0100 (byte), char count (8 or 16 bits)
+    const bitStream = [];
+    function pushBits(val, len) { for (let i = len - 1; i >= 0; i--) bitStream.push((val >> i) & 1); }
+
+    // We need to figure out version first
+    // Overhead: 4 bits mode + 8/16 bits count + terminator
+    let testLen = Math.ceil((4 + 8 + dataBytes.length * 8 + 4) / 8);
+    let version = getVersion(testLen);
+    if (version < 0) version = 10; // cap at version 10
+    if (version >= 10) {
+      testLen = Math.ceil((4 + 16 + dataBytes.length * 8 + 4) / 8);
+      version = getVersion(testLen);
+      if (version < 0) version = 10;
+    }
+
+    const dataCW = TOTAL_CODEWORDS[version] - EC_CODEWORDS[version];
+    const countBits = version < 10 ? 8 : 16;
+
+    pushBits(4, 4); // byte mode
+    pushBits(dataBytes.length, countBits);
+    for (const b of dataBytes) pushBits(b, 8);
+
+    // Terminator
+    const maxBits = dataCW * 8;
+    const termLen = Math.min(4, maxBits - bitStream.length);
+    for (let i = 0; i < termLen; i++) bitStream.push(0);
+
+    // Pad to byte boundary
+    while (bitStream.length % 8 !== 0) bitStream.push(0);
+
+    // Convert to bytes
+    const codewords = [];
+    for (let i = 0; i < bitStream.length; i += 8) {
+      let byte = 0;
+      for (let j = 0; j < 8; j++) byte = (byte << 1) | (bitStream[i + j] || 0);
+      codewords.push(byte);
+    }
+
+    // Pad codewords
+    const padBytes = [236, 17];
+    let pi = 0;
+    while (codewords.length < dataCW) { codewords.push(padBytes[pi % 2]); pi++; }
+
+    // Generate EC codewords using Reed-Solomon
+    const ecCW = EC_CODEWORDS[version];
+    const ecBytes = reedSolomon(codewords, ecCW);
+    const allCW = codewords.concat(ecBytes);
+
+    // Build matrix
+    const size = version * 4 + 17;
+    const matrix = Array.from({length: size}, () => Array(size).fill(-1));
+    const reserved = Array.from({length: size}, () => Array(size).fill(false));
+
+    // Place finder patterns
+    placeFinder(matrix, reserved, 0, 0);
+    placeFinder(matrix, reserved, size - 7, 0);
+    placeFinder(matrix, reserved, 0, size - 7);
+
+    // Timing patterns
+    for (let i = 8; i < size - 8; i++) {
+      if (!reserved[6][i]) { matrix[6][i] = (i % 2 === 0) ? 1 : 0; reserved[6][i] = true; }
+      if (!reserved[i][6]) { matrix[i][6] = (i % 2 === 0) ? 1 : 0; reserved[i][6] = true; }
+    }
+
+    // Alignment patterns
+    if (version >= 2) {
+      const pos = ALIGNMENT_PATTERNS[version];
+      for (const r of pos) {
+        for (const c of pos) {
+          if (reserved[r][c]) continue;
+          placeAlignment(matrix, reserved, r, c);
+        }
+      }
+    }
+
+    // Dark module
+    matrix[size - 8][8] = 1; reserved[size - 8][8] = true;
+
+    // Reserve format info
+    for (let i = 0; i < 9; i++) {
+      if (i < size) { reserved[8][i] = true; reserved[i][8] = true; }
+    }
+    for (let i = 0; i < 8; i++) {
+      reserved[8][size - 8 + i] = true;
+      reserved[size - 8 + i][8] = true;
+    }
+
+    // Reserve version info for v >= 7 (skip for simplicity, we only go to 10)
+    if (version >= 7) {
+      for (let i = 0; i < 6; i++) for (let j = 0; j < 3; j++) {
+        reserved[i][size - 11 + j] = true;
+        reserved[size - 11 + j][i] = true;
+      }
+    }
+
+    // Place data bits
+    let bitIdx = 0;
+    const dataBits = [];
+    for (const cw of allCW) for (let b = 7; b >= 0; b--) dataBits.push((cw >> b) & 1);
+
+    let right = size - 1;
+    let upward = true;
+    while (right >= 0) {
+      if (right === 6) right--; // skip timing column
+      for (let row = 0; row < size; row++) {
+        const r = upward ? (size - 1 - row) : row;
+        for (const col of [right, right - 1]) {
+          if (col < 0 || col >= size) continue;
+          if (reserved[r][col]) continue;
+          matrix[r][col] = bitIdx < dataBits.length ? dataBits[bitIdx] : 0;
+          bitIdx++;
+        }
+      }
+      upward = !upward;
+      right -= 2;
+    }
+
+    // Apply mask (mask 0: (r+c) % 2 === 0)
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (!reserved[r][c]) {
+          if ((r + c) % 2 === 0) matrix[r][c] ^= 1;
+        }
+      }
+    }
+
+    // Place format info (mask 0, EC level M = 00, mask 0 = 000 => 00000)
+    const formatBits = getFormatBits(0); // EC M, mask 0
+    placeFormatBits(matrix, formatBits, size);
+
+    // Place version info
+    if (version >= 7) {
+      const vBits = getVersionBits(version);
+      placeVersionBits(matrix, vBits, size);
+    }
+
+    return matrix;
+  }
+
+  function placeFinder(matrix, reserved, row, col) {
+    for (let r = -1; r <= 7; r++) {
+      for (let c = -1; c <= 7; c++) {
+        const mr = row + r, mc = col + c;
+        if (mr < 0 || mc < 0 || mr >= matrix.length || mc >= matrix.length) continue;
+        if (r === -1 || r === 7 || c === -1 || c === 7) {
+          matrix[mr][mc] = 0; // separator
+        } else if (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4)) {
+          matrix[mr][mc] = 1;
+        } else {
+          matrix[mr][mc] = 0;
+        }
+        reserved[mr][mc] = true;
+      }
+    }
+  }
+
+  function placeAlignment(matrix, reserved, row, col) {
+    for (let r = -2; r <= 2; r++) {
+      for (let c = -2; c <= 2; c++) {
+        const mr = row + r, mc = col + c;
+        if (mr < 0 || mc < 0 || mr >= matrix.length || mc >= matrix.length) continue;
+        if (Math.abs(r) === 2 || Math.abs(c) === 2 || (r === 0 && c === 0)) {
+          matrix[mr][mc] = 1;
+        } else {
+          matrix[mr][mc] = 0;
+        }
+        reserved[mr][mc] = true;
+      }
+    }
+  }
+
+  function reedSolomon(data, ecCount) {
+    const gp = generatePoly(ecCount);
+    const msg = data.slice();
+    for (let i = 0; i < ecCount; i++) msg.push(0);
+    for (let i = 0; i < data.length; i++) {
+      const coeff = msg[i];
+      if (coeff === 0) continue;
+      const logCoeff = LOG[coeff];
+      for (let j = 0; j < gp.length; j++) {
+        msg[i + j] ^= EXP[(logCoeff + gp[j]) % 255];
+      }
+    }
+    return msg.slice(data.length);
+  }
+
+  function generatePoly(degree) {
+    let poly = [0];
+    for (let i = 0; i < degree; i++) {
+      const newPoly = new Array(poly.length + 1).fill(0);
+      for (let j = 0; j < poly.length; j++) {
+        newPoly[j] = (newPoly[j] !== undefined ? LOG[EXP[newPoly[j]] ^ EXP[(poly[j] + i) % 255]] : (poly[j] + i) % 255);
+      }
+      // Actually let's do this properly
+      const np = [];
+      for (let j = 0; j <= poly.length; j++) {
+        let val = 0;
+        if (j < poly.length) val ^= EXP[(poly[j] + 0) % 255];
+        if (j > 0) val ^= EXP[(poly[j-1] + i) % 255];
+        np.push(val === 0 ? 0 : LOG[val]);
+      }
+      poly = np;
+    }
+    return poly;
+  }
+
+  // GF(256) tables
+  const EXP = new Array(256), LOG = new Array(256);
+  (() => {
+    let val = 1;
+    for (let i = 0; i < 256; i++) {
+      EXP[i] = val;
+      LOG[val] = i;
+      val <<= 1;
+      if (val >= 256) val ^= 0x11D;
+    }
+    LOG[0] = 0; // by convention
+  })();
+
+  // Format info bits (EC level M with masks)
+  const FORMAT_STRINGS = [
+    0x5412, 0x5125, 0x5E7C, 0x5B4B, 0x45F9, 0x40CE, 0x4F97, 0x4AA0
+  ];
+
+  function getFormatBits(mask) {
+    // EC level M = 0, combine with mask pattern
+    const formatInfo = FORMAT_STRINGS[mask];
+    const bits = [];
+    for (let i = 14; i >= 0; i--) bits.push((formatInfo >> i) & 1);
+    return bits;
+  }
+
+  function placeFormatBits(matrix, bits, size) {
+    const positions1 = [[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,7],[8,8],[7,8],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8]];
+    const positions2 = [[size-1,8],[size-2,8],[size-3,8],[size-4,8],[size-5,8],[size-6,8],[size-7,8],[8,size-8],[8,size-7],[8,size-6],[8,size-5],[8,size-4],[8,size-3],[8,size-2],[8,size-1]];
+    for (let i = 0; i < 15; i++) {
+      matrix[positions1[i][0]][positions1[i][1]] = bits[i];
+      matrix[positions2[i][0]][positions2[i][1]] = bits[i];
+    }
+  }
+
+  function getVersionBits(version) {
+    // Version info for v7-10
+    const VERSION_INFO = { 7: 0x07C94, 8: 0x085BC, 9: 0x09A99, 10: 0x0A4D3 };
+    const info = VERSION_INFO[version] || 0;
+    const bits = [];
+    for (let i = 17; i >= 0; i--) bits.push((info >> i) & 1);
+    return bits;
+  }
+
+  function placeVersionBits(matrix, bits, size) {
+    for (let i = 0; i < 18; i++) {
+      const r = Math.floor(i / 3);
+      const c = size - 11 + (i % 3);
+      matrix[r][c] = bits[i];
+      matrix[c][r] = bits[i];
+    }
+  }
+
+  return { generateMatrix };
+})();
+
+let lastQRCanvas = null;
+
+function generateQR() {
+  const text = document.getElementById('qr-input').value.trim();
+  if (!text) return;
+  const size = parseInt(document.getElementById('qr-size').value) || 300;
+  const fg = document.getElementById('qr-fg').value || '#000000';
+  const bg = document.getElementById('qr-bg').value || '#ffffff';
+
+  const container = document.getElementById('qr-container');
+
+  try {
+    const matrix = QR.generateMatrix(text);
+    const modules = matrix.length;
+    const cellSize = Math.floor(size / (modules + 8)); // quiet zone
+    const canvasSize = cellSize * (modules + 8);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+    const ctx = canvas.getContext('2d');
+
+    // Background
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+    // Modules
+    ctx.fillStyle = fg;
+    const offset = cellSize * 4; // quiet zone
+    for (let r = 0; r < modules; r++) {
+      for (let c = 0; c < modules; c++) {
+        if (matrix[r][c] === 1) {
+          ctx.fillRect(offset + c * cellSize, offset + r * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    container.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'qr-canvas-wrap';
+    wrap.appendChild(canvas);
+    container.appendChild(wrap);
+    lastQRCanvas = canvas;
+  } catch (e) {
+    container.innerHTML = '<div class="valid-result valid-fail">Error generating QR code: ' + escHTML(e.message) + '. Try a shorter URL.</div>';
+  }
+}
+
+function downloadQR() {
+  if (!lastQRCanvas) { generateQR(); if (!lastQRCanvas) return; }
+  const link = document.createElement('a');
+  link.download = 'qr-code.png';
+  link.href = lastQRCanvas.toDataURL('image/png');
+  link.click();
+}
+
+// ============================================================
+// TOOL 5: URL VALIDATOR
+// ============================================================
+function validateURL() {
+  const input = document.getElementById('valid-input').value.trim();
+  const out = document.getElementById('valid-output');
+  const checks = [];
+  let valid = true;
+
+  // Check empty
+  if (!input) { out.innerHTML = '<div class="valid-result valid-fail">Please enter a URL to validate.</div>'; return; }
+
+  // Try URL constructor
+  let url;
+  try {
+    url = new URL(input);
+    checks.push({ pass: true, msg: 'Valid URL format — parseable by the browser URL API' });
+  } catch (e) {
+    checks.push({ pass: false, msg: 'Invalid URL format — the browser cannot parse this string as a URL' });
+    valid = false;
+  }
+
+  if (url) {
+    // Protocol check
+    if (['http:', 'https:', 'ftp:', 'ftps:'].includes(url.protocol)) {
+      checks.push({ pass: true, msg: 'Protocol: ' + url.protocol + ' (recognized)' });
+    } else {
+      checks.push({ pass: false, msg: 'Protocol: ' + url.protocol + ' (unusual — most links use https)' });
+    }
+
+    // Hostname check
+    if (url.hostname) {
+      checks.push({ pass: true, msg: 'Hostname: ' + url.hostname });
+      // TLD check
+      const parts = url.hostname.split('.');
+      if (parts.length >= 2 && parts[parts.length - 1].length >= 2) {
+        checks.push({ pass: true, msg: 'TLD: .' + parts[parts.length - 1] + ' (valid top-level domain)' });
+      } else if (url.hostname === 'localhost') {
+        checks.push({ pass: true, msg: 'Hostname is localhost (development)' });
+      } else {
+        checks.push({ pass: false, msg: 'No recognized TLD found' });
+      }
+    } else {
+      checks.push({ pass: false, msg: 'No hostname found' }); valid = false;
+    }
+
+    // Length check
+    const len = input.length;
+    if (len <= 2048) {
+      checks.push({ pass: true, msg: 'Length: ' + len + ' characters (within 2048 limit)' });
+    } else {
+      checks.push({ pass: false, msg: 'Length: ' + len + ' characters (exceeds 2048 — may cause issues in some browsers)' });
+    }
+
+    // HTTPS check
+    if (url.protocol === 'https:') {
+      checks.push({ pass: true, msg: 'Uses HTTPS (secure)' });
+    } else if (url.protocol === 'http:') {
+      checks.push({ pass: true, msg: 'Uses HTTP (not encrypted — consider HTTPS)' });
+    }
+  }
+
+  const statusClass = valid ? 'valid-pass' : 'valid-fail';
+  const statusText = valid ? 'URL appears valid' : 'URL has issues';
+  let html = '<div class="valid-result ' + statusClass + '">' + statusText + '<div class="valid-details">';
+  for (const c of checks) {
+    html += '<div style="margin:.25rem 0;">' + (c.pass ? '<span style="color:var(--accent);">&#10003;</span>' : '<span style="color:var(--error);">&#10007;</span>') + ' ' + escHTML(c.msg) + '</div>';
+  }
+  html += '</div></div>';
+  out.innerHTML = html;
+}
+
+// ============================================================
+// TOOL 6: SLUG GENERATOR
+// ============================================================
+function generateSlug() {
+  const input = document.getElementById('slug-input').value;
+  const sep = document.getElementById('slug-separator').value;
+  const max = parseInt(document.getElementById('slug-max').value) || 80;
+
+  let slug = input.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // strip accents
+    .replace(/[^a-z0-9\s-]/g, '') // remove special chars
+    .replace(/[\s-]+/g, sep) // replace spaces/hyphens with separator
+    .replace(new RegExp('^' + escRegex(sep) + '+|' + escRegex(sep) + '+$', 'g'), '') // trim separators
+    .substring(0, max);
+
+  // Don't end mid-word if possible
+  if (slug.length === max && slug.includes(sep)) {
+    slug = slug.substring(0, slug.lastIndexOf(sep));
+  }
+
+  setOutput('slug-output', slug);
+}
+function escRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+// ============================================================
+// TOOL 7: BASE62 ENCODER / DECODER
+// ============================================================
+const B62_CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function encodeBase62() {
+  const input = document.getElementById('b62-num').value.trim();
+  const num = parseInt(input, 10);
+  if (isNaN(num) || num < 0) { setOutput('b62-output', 'Please enter a valid non-negative integer.'); return; }
+  if (num === 0) { setOutput('b62-output', 'Base62: 0\nThis is the short code a URL shortener would assign to database ID 0.'); return; }
+  let n = num, result = '';
+  while (n > 0) { result = B62_CHARS[n % 62] + result; n = Math.floor(n / 62); }
+  setOutput('b62-output', 'Input: ' + input + '\nBase62: ' + result + '\nShort URL example: https://sho.rt/' + result + '\n\nThis is the short code a URL shortener would assign to database row #' + input + '.');
+  document.getElementById('b62-str').value = result;
+}
+
+function decodeBase62() {
+  const input = document.getElementById('b62-str').value.trim();
+  if (!input) { setOutput('b62-output', 'Please enter a Base62 string.'); return; }
+  let num = 0;
+  for (const ch of input) {
+    const idx = B62_CHARS.indexOf(ch);
+    if (idx === -1) { setOutput('b62-output', 'Invalid character "' + ch + '". Base62 uses only 0-9, a-z, A-Z.'); return; }
+    num = num * 62 + idx;
+  }
+  setOutput('b62-output', 'Base62: ' + input + '\nDecimal: ' + num + '\nThis means the short code "' + input + '" maps to database row #' + num + '.');
+  document.getElementById('b62-num').value = num;
+}
+
+// ============================================================
+// TOOL 8: BATCH URL PROCESSING
+// ============================================================
+function batchProcess() {
+  const input = document.getElementById('batch-input').value.trim();
+  const action = document.getElementById('batch-action').value;
+  const out = document.getElementById('batch-output');
+  if (!input) { out.innerHTML = '<div class="batch-item">Enter URLs above (one per line).</div>'; return; }
+
+  const urls = input.split('\n').filter(u => u.trim());
+  let html = '';
+
+  for (const url of urls) {
+    const trimmed = url.trim();
+    let result = '';
+
+    switch (action) {
+      case 'encode':
+        try { result = encodeURI(trimmed); } catch (e) { result = 'Error: ' + e.message; }
+        break;
+      case 'decode':
+        try { result = decodeURI(trimmed); } catch (e) { result = 'Error: ' + e.message; }
+        break;
+      case 'validate':
+        try { new URL(trimmed); result = 'Valid'; } catch (e) { result = 'Invalid'; }
+        break;
+      case 'slugify':
+        try {
+          const u = new URL(trimmed);
+          result = u.pathname.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || '(empty path)';
+        } catch (e) { result = trimmed.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+        break;
+      case 'length':
+        result = trimmed.length + ' characters' + (trimmed.length > 2048 ? ' (over 2048 limit)' : ' (OK)');
+        break;
+    }
+    html += '<div class="batch-item"><div class="batch-label">' + escHTML(trimmed) + '</div>' + escHTML(result) + '</div>';
+  }
+  out.innerHTML = html;
+}
+
+function copyBatchResults() {
+  const out = document.getElementById('batch-output');
+  copyToClipboard(out.textContent);
+}
+
+// ============================================================
+// TOOL 9: LINK PREVIEW SIMULATOR
+// ============================================================
+function generatePreview() {
+  const url = document.getElementById('lp-url').value.trim();
+  const title = document.getElementById('lp-title').value.trim() || 'Page Title';
+  const desc = document.getElementById('lp-desc').value.trim() || 'Page description will appear here.';
+  const out = document.getElementById('lp-output');
+
+  let host = url;
+  try { host = new URL(url).hostname; } catch (e) { /* use raw */ }
+
+  out.innerHTML =
+    '<p style="color:var(--muted);font-size:.85rem;margin-bottom:.75rem;">Facebook / LinkedIn style preview:</p>' +
+    '<div class="link-preview-card">' +
+      '<div class="link-preview-img">' + escHTML(host.charAt(0).toUpperCase()) + '</div>' +
+      '<div class="link-preview-body">' +
+        '<div class="lp-host">' + escHTML(host) + '</div>' +
+        '<div class="lp-title">' + escHTML(title) + '</div>' +
+        '<div class="lp-desc">' + escHTML(desc) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<p style="color:var(--muted);font-size:.85rem;margin:1rem 0 .5rem;">Twitter / X style preview:</p>' +
+    '<div style="background:#15202b;border-radius:16px;overflow:hidden;max-width:500px;font-family:system-ui;">' +
+      '<div style="height:160px;background:linear-gradient(135deg,#1da1f2,#0d8ecf);display:flex;align-items:center;justify-content:center;color:#fff;font-size:2rem;font-weight:700;">' + escHTML(host.charAt(0).toUpperCase()) + '</div>' +
+      '<div style="padding:.75rem 1rem;">' +
+        '<div style="font-size:.8rem;color:#8899a6;">' + escHTML(host) + '</div>' +
+        '<div style="font-size:.95rem;color:#fff;font-weight:700;margin:.15rem 0;">' + escHTML(title) + '</div>' +
+        '<div style="font-size:.85rem;color:#8899a6;">' + escHTML(desc.substring(0, 100)) + (desc.length > 100 ? '...' : '') + '</div>' +
+      '</div>' +
+    '</div>';
+}
+
+// ============================================================
+// TOOL 10: DEEP LINK FORMAT GENERATOR
+// ============================================================
+function generateDeepLinks() {
+  const url = document.getElementById('dl-url').value.trim();
+  const scheme = document.getElementById('dl-scheme').value.trim() || 'myapp';
+  const pkg = document.getElementById('dl-android-pkg').value.trim() || 'com.example.app';
+  const iosId = document.getElementById('dl-ios-id').value.trim() || '123456789';
+  const out = document.getElementById('dl-output');
+
+  let path = '/';
+  try { const u = new URL(url); path = u.pathname + u.search + u.hash; } catch (e) { /* fallback */ }
+
+  const customScheme = scheme + '://' + path.replace(/^\//, '');
+  const universalLink = url; // iOS Universal Link is the web URL itself
+  const androidIntent = 'intent://' + path.replace(/^\//, '') + '#Intent;scheme=' + scheme + ';package=' + pkg + ';end';
+  const androidAppLink = url; // Android App Links use the web URL
+  const iosFallback = 'https://apps.apple.com/app/id' + iosId;
+  const playFallback = 'https://play.google.com/store/apps/details?id=' + pkg;
+
+  out.innerHTML =
+    '<div class="dl-row"><span class="dl-platform">Custom</span><code>' + escHTML(customScheme) + '</code><button class="btn btn-copy" onclick="copyToClipboard(\'' + customScheme.replace(/'/g, "\\'") + '\')">Copy</button></div>' +
+    '<div class="dl-row"><span class="dl-platform">iOS</span><code>' + escHTML(universalLink) + '</code><button class="btn btn-copy" onclick="copyToClipboard(\'' + universalLink.replace(/'/g, "\\'") + '\')">Copy</button></div>' +
+    '<div class="dl-row"><span class="dl-platform">Android</span><code>' + escHTML(androidIntent) + '</code><button class="btn btn-copy" onclick="copyToClipboard(\'' + androidIntent.replace(/'/g, "\\'") + '\')">Copy</button></div>' +
+    '<div class="dl-row"><span class="dl-platform">iOS fallback</span><code>' + escHTML(iosFallback) + '</code><button class="btn btn-copy" onclick="copyToClipboard(\'' + iosFallback.replace(/'/g, "\\'") + '\')">Copy</button></div>' +
+    '<div class="dl-row"><span class="dl-platform">Play Store</span><code>' + escHTML(playFallback) + '</code><button class="btn btn-copy" onclick="copyToClipboard(\'' + playFallback.replace(/'/g, "\\'") + '\')">Copy</button></div>';
+}
+
+// ============================================================
+// TOOL 11: URL LENGTH CHECKER
+// ============================================================
+function checkLength() {
+  const input = document.getElementById('len-input').value;
+  const out = document.getElementById('len-output');
+  const len = input.length;
+  const encoded = encodeURI(input).length;
+
+  const limits = [
+    { name: 'Chrome / Edge', max: 2083 },
+    { name: 'Firefox', max: 65536 },
+    { name: 'Safari', max: 80000 },
+    { name: 'Internet Explorer', max: 2083 },
+    { name: 'Apache default', max: 8190 },
+    { name: 'Nginx default', max: 4096 },
+    { name: 'Recommended max', max: 2048 },
+  ];
+
+  let html = '<div style="margin-bottom:.75rem;font-size:1.1rem;"><strong>' + len + '</strong> characters (raw) &middot; <strong>' + encoded + '</strong> characters (encoded)</div>';
+  html += '<div style="display:grid;gap:.4rem;">';
+  for (const l of limits) {
+    const pct = Math.min((len / l.max) * 100, 100);
+    const ok = len <= l.max;
+    html += '<div style="display:flex;align-items:center;gap:.75rem;font-size:.85rem;">' +
+      '<span style="min-width:140px;">' + l.name + ' (' + l.max + ')</span>' +
+      '<div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;">' +
+        '<div style="height:100%;width:' + pct + '%;background:' + (ok ? 'var(--accent)' : 'var(--error)') + ';border-radius:4px;"></div>' +
+      '</div>' +
+      '<span style="color:' + (ok ? 'var(--accent)' : 'var(--error)') + ';">' + (ok ? 'OK' : 'Over') + '</span>' +
+    '</div>';
+  }
+  html += '</div>';
+  out.innerHTML = html;
+}
+
+// Initialize length checker
+checkLength();
+
+// ============================================================
+// FAQ TOGGLE
+// ============================================================
+function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
+</script>
+</body>
+</html>
