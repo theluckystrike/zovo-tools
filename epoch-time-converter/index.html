@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epoch Time Converter — Unix Timestamp to Date & Time | Zovo</title>
+<meta name="description" content="Convert epoch time to human-readable date and vice versa. Live Unix timestamp, batch conversion, timezone support, millisecond toggle, relative time display, and code snippets in 6 languages.">
+<meta name="author" content="Michael Lip">
+<link rel="canonical" href="https://zovo.one/free-tools/epoch-time-converter/">
+<meta property="og:title" content="Epoch Time Converter — Unix Timestamp to Date & Time | Zovo">
+<meta property="og:description" content="Convert epoch/Unix timestamps to human-readable dates and back. Live clock, batch conversion, timezone selector, and code snippets for JS, Python, PHP, Java, Go, Rust.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/epoch-time-converter/">
+<meta property="og:site_name" content="Zovo">
+<meta property="og:image" content="https://zovo.one/og-tools.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Epoch Time Converter — Unix Timestamp to Date & Time | Zovo">
+<meta name="twitter:description" content="Convert Unix timestamps to dates instantly. Free, private, no sign-up required.">
+<meta name="keywords" content="convert epoch time, unix timestamp converter, epoch converter, unix time converter, epoch to date, timestamp to date, unix time to human readable">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Epoch Time Converter",
+  "url": "https://zovo.one/free-tools/epoch-time-converter/",
+  "description": "Convert epoch/Unix timestamps to human-readable dates and vice versa. Supports batch conversion, timezone selection, milliseconds, relative time, and code snippets.",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zovo.one" },
+    { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://zovo.one/free-tools" },
+    { "@type": "ListItem", "position": 3, "name": "Epoch Time Converter", "item": "https://zovo.one/free-tools/epoch-time-converter/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is epoch time (Unix time)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Epoch time (also called Unix time or POSIX time) counts the number of seconds that have elapsed since January 1, 1970 00:00:00 UTC, not counting leap seconds. It is the standard way computers store and compare dates internally. For example, epoch 1700000000 represents November 14, 2023 at 22:13:20 UTC."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert epoch time to a human-readable date?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter the epoch timestamp (in seconds or milliseconds) into the converter above and select your timezone. The tool will instantly show the corresponding date and time in human-readable format, including ISO 8601. In code: JavaScript uses new Date(epoch * 1000), Python uses datetime.fromtimestamp(epoch), and most languages have built-in functions for this."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between epoch seconds and milliseconds?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standard Unix epoch time is measured in seconds (10 digits, e.g., 1700000000). Many programming languages and APIs (especially JavaScript's Date.now()) use milliseconds (13 digits, e.g., 1700000000000). If your timestamp has 13 digits, it's in milliseconds. Divide by 1000 to get seconds."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens in 2038 with Unix timestamps?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Year 2038 problem occurs because 32-bit systems store Unix time as a signed 32-bit integer, which overflows on January 19, 2038 at 03:14:07 UTC. Modern 64-bit systems use 64-bit integers and are not affected — they can represent dates billions of years into the future. Most current operating systems and software have already migrated to 64-bit time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is epoch time affected by timezones or daylight saving time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Epoch time is always based on UTC (Coordinated Universal Time) and is timezone-agnostic. The same epoch value represents the same absolute moment everywhere in the world. Timezone differences only matter when converting epoch time to a local human-readable date and time."
+      }
+    }
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2a; --text: #e0e0e8;
+  --accent: #00ff88; --accent-dim: #00cc6e; --muted: #b0b0c0; --subtle: #8888a0;
+  --danger: #ff4466; --warn: #ffaa33; --info: #4488ff;
+}
+html { scroll-behavior: smooth; }
+body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+header { border-bottom: 1px solid var(--border); padding: 16px 0; }
+header .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.logo { font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+.logo span { color: var(--text); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
+.breadcrumb { font-size: 0.8rem; color: var(--muted); }
+.breadcrumb a { color: var(--muted); }
+.hero { text-align: center; padding: 48px 0 32px; }
+.hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700; margin-bottom: 12px; line-height: 1.25; }
+.hero h1 .accent { color: var(--accent); }
+.hero p { color: var(--muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto 12px; }
+.reading-time { display: inline-block; background: var(--surface); border: 1px solid var(--border); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; color: var(--subtle); margin-top: 6px; }
+#toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin: 0 auto 40px; max-width: 900px; }
+#toc h2 { color: var(--accent); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600; }
+#toc ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
+#toc li a { color: var(--muted); font-size: 0.88rem; display: block; padding: 4px 0; transition: color 0.2s; }
+#toc li a:hover { color: var(--accent); text-decoration: none; }
+.privacy-note { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 18px; text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 40px; }
+.privacy-note svg { vertical-align: middle; margin-right: 6px; }
+section { margin-bottom: 56px; }
+section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+section h2 .accent { color: var(--accent); }
+
+/* Live Clock */
+.live-clock { text-align: center; padding: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 20px; }
+.live-epoch { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 700; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; color: var(--accent); letter-spacing: 2px; cursor: pointer; transition: color 0.2s; }
+.live-epoch:hover { color: #33ffaa; }
+.live-human { color: var(--muted); font-size: 1rem; margin-top: 8px; }
+.live-iso { color: var(--subtle); font-size: 0.85rem; margin-top: 4px; font-family: monospace; }
+.live-label { color: var(--subtle); font-size: 0.78rem; margin-top: 10px; }
+.copied-toast { display: inline-block; background: var(--accent); color: #0a0a0f; padding: 3px 12px; border-radius: 4px; font-size: 0.78rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; margin-left: 8px; }
+.copied-toast.show { opacity: 1; }
+
+/* Calc Card */
+.calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+.calc-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.calc-group { flex: 1; min-width: 180px; }
+.calc-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+.calc-group input, .calc-group select, .calc-group textarea {
+  width: 100%; padding: 12px 14px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-size: 1rem; font-family: inherit;
+  transition: border-color 0.2s;
+}
+.calc-group textarea { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; }
+.calc-group input:focus, .calc-group select:focus, .calc-group textarea:focus { outline: none; border-color: var(--accent); }
+.calc-group select option { background: var(--bg); color: var(--text); }
+
+.toggle-row { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
+.toggle-pill { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.toggle-pill button {
+  padding: 8px 18px; background: var(--bg); border: none; color: var(--muted);
+  font-size: 0.85rem; cursor: pointer; font-family: inherit; transition: all 0.2s;
+}
+.toggle-pill button.active { background: var(--accent); color: #0a0a0f; font-weight: 600; }
+.toggle-label { font-size: 0.82rem; color: var(--subtle); }
+
+/* Result Display */
+.result-box {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  margin-top: 16px;
+}
+.result-box .main-result { font-size: 1.2rem; font-weight: 600; color: var(--text); margin-bottom: 8px; word-break: break-all; }
+.result-box .sub-result { font-size: 0.88rem; color: var(--muted); margin-bottom: 4px; }
+.result-box .mono { font-family: 'SF Mono', 'Fira Code', monospace; }
+.result-box .relative { color: var(--accent); font-weight: 500; }
+
+/* Batch */
+.batch-results { margin-top: 16px; }
+.batch-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 0.88rem; flex-wrap: wrap; gap: 6px; }
+.batch-row:last-child { border-bottom: none; }
+.batch-row .ts { font-family: monospace; color: var(--accent); min-width: 140px; }
+.batch-row .hr { color: var(--text); }
+.batch-row .rel { color: var(--subtle); font-size: 0.8rem; }
+.batch-row.error { color: var(--danger); }
+
+/* Reference Table */
+.ref-table { width: 100%; border-collapse: collapse; }
+.ref-table th, .ref-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+.ref-table th { color: var(--accent); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; background: var(--surface); position: sticky; top: 0; }
+.ref-table tr:hover td { background: rgba(0,255,136,0.03); }
+.ref-table td:first-child { font-family: monospace; font-weight: 500; }
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+
+/* Code Snippets */
+.code-tabs { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+.code-tab {
+  padding: 10px 18px; background: none; border: none; color: var(--muted); font-size: 0.85rem;
+  cursor: pointer; font-family: inherit; transition: all 0.2s; border-bottom: 2px solid transparent;
+}
+.code-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.code-block {
+  background: var(--bg); border: 1px solid var(--border); border-top: none; border-radius: 0 0 12px 12px;
+  padding: 18px; overflow-x: auto; position: relative;
+}
+.code-block pre { margin: 0; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 0.85rem; line-height: 1.6; color: var(--text); white-space: pre; }
+.code-block .copy-btn {
+  position: absolute; top: 10px; right: 10px; background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted); padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;
+  font-family: inherit; transition: all 0.2s;
+}
+.code-block .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* FAQ */
+#faq .faq-grid { display: grid; gap: 14px; }
+#faq .faq-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+#faq .faq-card h3 { color: var(--text); font-size: 1rem; margin-bottom: 10px; font-weight: 600; }
+#faq .faq-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+
+/* Related */
+.related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.related-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; display: block; transition: border-color 0.2s, transform 0.2s; }
+.related-card:hover { border-color: var(--accent); transform: translateY(-2px); text-decoration: none; }
+.related-card h3 { font-size: 0.95rem; color: var(--text); margin-bottom: 4px; }
+.related-card p { font-size: 0.82rem; color: var(--muted); }
+
+/* Footer */
+footer { border-top: 1px solid var(--border); padding: 32px 0; margin-top: 60px; }
+.footer-inner { text-align: center; }
+.footer-inner .copy { color: var(--muted); font-size: 0.85rem; margin-bottom: 10px; }
+.footer-inner .verified { font-size: 0.78rem; color: var(--subtle); margin-top: 8px; }
+.footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 10px; }
+.footer-links a { color: var(--subtle); font-size: 0.8rem; }
+.update-history { margin-top: 16px; font-size: 0.75rem; color: var(--subtle); }
+.browsers { font-size: 0.78rem; color: var(--subtle); margin-top: 10px; }
+.ext-ref { font-size: 0.85rem; color: var(--muted); margin-top: 16px; }
+.ext-ref a { color: var(--accent); }
+.content-block { color: var(--muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 20px; }
+.content-block strong { color: var(--text); }
+
+.btn-action {
+  padding: 10px 20px; background: var(--accent); color: #0a0a0f; border: none;
+  border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: inherit;
+  transition: background 0.2s;
+}
+.btn-action:hover { background: var(--accent-dim); }
+.btn-secondary {
+  padding: 10px 20px; background: var(--surface); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--accent); }
+
+@media (max-width: 600px) {
+  .calc-row { flex-direction: column; }
+  .hero h1 { font-size: 1.5rem; }
+  #toc ul { grid-template-columns: 1fr; }
+  .code-tabs { gap: 0; }
+  .code-tab { padding: 8px 12px; font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">Zovo <span>Free Tools</span></div>
+    <nav class="breadcrumb"><a href="https://zovo.one">Home</a> / <a href="https://zovo.one/free-tools">Tools</a> / Epoch Time Converter</nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="hero">
+    <h1>Epoch Time <span class="accent">Converter</span></h1>
+    <p>Convert Unix timestamps to human-readable dates and vice versa. Live clock, batch conversion, timezone support, and ready-to-use code snippets in 6 languages.</p>
+    <span class="reading-time">7 min read</span>
+  </div>
+
+  <nav id="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+      <li><a href="#live-clock">Live Epoch Clock</a></li>
+      <li><a href="#epoch-to-human">Epoch to Human Readable</a></li>
+      <li><a href="#human-to-epoch">Human Readable to Epoch</a></li>
+      <li><a href="#batch">Batch Conversion</a></li>
+      <li><a href="#reference">Common Epoch Values</a></li>
+      <li><a href="#code-snippets">Code Snippets</a></li>
+      <li><a href="#how-epoch-works">How Epoch Time Works</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+      <li><a href="#related">Related Tools</a></li>
+    </ul>
+  </nav>
+
+  <div class="privacy-note">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L2 4v4c0 3.5 2.6 6.4 6 7 3.4-.6 6-3.5 6-7V4L8 1z" stroke="#00ff88" stroke-width="1.5" fill="none"/><path d="M5.5 8L7 9.5 10.5 6" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    All calculations happen in your browser. No data is sent to any server.
+  </div>
+
+  <!-- Section 1: Live Clock -->
+  <section id="live-clock">
+    <h2><span class="accent">Live Epoch</span> Clock</h2>
+    <div class="live-clock">
+      <div class="live-epoch" id="live-epoch" title="Click to copy" onclick="copyLiveEpoch()">-</div>
+      <span class="copied-toast" id="copy-toast">Copied!</span>
+      <div class="live-human" id="live-human">-</div>
+      <div class="live-iso" id="live-iso">-</div>
+      <div class="live-label">Click the timestamp to copy &middot; Updates every second</div>
+    </div>
+  </section>
+
+  <!-- Section 2: Epoch to Human -->
+  <section id="epoch-to-human">
+    <h2><span class="accent">Epoch</span> to Human Readable</h2>
+    <div class="calc-card">
+      <div class="toggle-row">
+        <span class="toggle-label">Format:</span>
+        <div class="toggle-pill">
+          <button class="active" onclick="setUnit('sec', this)" data-group="e2h">Seconds</button>
+          <button onclick="setUnit('ms', this)" data-group="e2h">Milliseconds</button>
+        </div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-group">
+          <label>Epoch Timestamp</label>
+          <input type="text" id="e2h-input" placeholder="e.g., 1700000000" oninput="convertE2H()">
+        </div>
+        <div class="calc-group">
+          <label>Timezone</label>
+          <select id="e2h-tz" onchange="convertE2H()"></select>
+        </div>
+      </div>
+      <div class="calc-row" style="gap:10px;">
+        <button class="btn-action" onclick="document.getElementById('e2h-input').value=Math.floor(Date.now()/(e2hUnit==='ms'?1:1000));convertE2H();">Use Current Time</button>
+        <button class="btn-secondary" onclick="document.getElementById('e2h-input').value='';document.getElementById('e2h-result').innerHTML='';">Clear</button>
+      </div>
+      <div class="result-box" id="e2h-result"></div>
+    </div>
+  </section>
+
+  <!-- Section 3: Human to Epoch -->
+  <section id="human-to-epoch">
+    <h2><span class="accent">Human Readable</span> to Epoch</h2>
+    <div class="calc-card">
+      <div class="calc-row">
+        <div class="calc-group">
+          <label>Date</label>
+          <input type="date" id="h2e-date" onchange="convertH2E()">
+        </div>
+        <div class="calc-group">
+          <label>Time</label>
+          <input type="time" id="h2e-time" step="1" value="00:00:00" onchange="convertH2E()">
+        </div>
+        <div class="calc-group">
+          <label>Timezone</label>
+          <select id="h2e-tz" onchange="convertH2E()"></select>
+        </div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-group" style="flex:2;">
+          <label>Or paste a date string (ISO 8601, RFC 2822, etc.)</label>
+          <input type="text" id="h2e-string" placeholder='e.g., "2026-03-20T12:00:00Z" or "March 20, 2026 3:00 PM"' oninput="convertH2EFromString()">
+        </div>
+      </div>
+      <div class="result-box" id="h2e-result"></div>
+    </div>
+  </section>
+
+  <!-- Section 4: Batch Conversion -->
+  <section id="batch">
+    <h2><span class="accent">Batch</span> Conversion</h2>
+    <p class="content-block">Paste multiple timestamps (one per line) and convert them all at once. The tool auto-detects whether each value is in seconds or milliseconds.</p>
+    <div class="calc-card">
+      <div class="calc-row">
+        <div class="calc-group">
+          <label>Timestamps (one per line)</label>
+          <textarea id="batch-input" rows="6" placeholder="1700000000&#10;1672531200000&#10;1609459200&#10;1735689600"></textarea>
+        </div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-group">
+          <label>Timezone</label>
+          <select id="batch-tz"></select>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn-action" onclick="batchConvert()">Convert All</button>
+        <button class="btn-secondary" onclick="document.getElementById('batch-input').value='';document.getElementById('batch-results').innerHTML='';">Clear</button>
+        <button class="btn-secondary" onclick="copyBatchResults()">Copy Results</button>
+      </div>
+      <div class="batch-results" id="batch-results"></div>
+    </div>
+  </section>
+
+  <!-- Section 5: Reference Table -->
+  <section id="reference">
+    <h2><span class="accent">Common Epoch</span> Values</h2>
+    <p class="content-block">Handy reference for notable timestamps. All values in seconds (standard Unix epoch format).</p>
+    <div class="table-wrap">
+      <table class="ref-table">
+        <thead>
+          <tr><th>Epoch (seconds)</th><th>Date (UTC)</th><th>Description</th></tr>
+        </thead>
+        <tbody id="ref-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Section 6: Code Snippets -->
+  <section id="code-snippets">
+    <h2><span class="accent">Code</span> Snippets</h2>
+    <p class="content-block">Get the current Unix timestamp or convert between epoch and human-readable formats in your language of choice.</p>
+    <div class="calc-card" style="padding:0;overflow:hidden;">
+      <div class="code-tabs" id="code-tabs"></div>
+      <div class="code-block" id="code-content"></div>
+    </div>
+  </section>
+
+  <!-- Section 7: How It Works -->
+  <section id="how-epoch-works">
+    <h2><span class="accent">How Epoch</span> Time Works</h2>
+    <div class="content-block">
+      <p><strong>Unix epoch time</strong> is a system for tracking time as a running count of seconds. The count starts at the "Unix Epoch" — January 1, 1970 at 00:00:00 UTC. Every second after that point adds 1 to the counter. Right now, we are well past 1.7 billion seconds since that starting point.</p>
+      <p style="margin-top:14px;"><strong>Why use epoch time?</strong> Computers find it much simpler to store and compare a single integer than a formatted date string. There are no timezone ambiguities, no daylight saving complications, and sorting by time is just sorting numbers. Databases, APIs, log files, and operating systems all use epoch time internally.</p>
+      <p style="margin-top:14px;"><strong>Seconds vs. Milliseconds:</strong> The original Unix specification uses seconds, giving 10-digit numbers for current dates. However, many modern systems (JavaScript, Java, some APIs) use milliseconds for finer precision, producing 13-digit numbers. If you see a 13-digit timestamp, divide by 1,000 to get standard seconds.</p>
+      <p style="margin-top:14px;"><strong>The Year 2038 Problem:</strong> Systems that store epoch time as a signed 32-bit integer will overflow on January 19, 2038 at 03:14:07 UTC. The maximum value is 2,147,483,647 (2^31 - 1). After that, the number wraps to negative, which could be interpreted as December 1901. Modern 64-bit systems have already solved this by using 64-bit integers, which will not overflow for another 292 billion years.</p>
+      <p style="margin-top:14px;"><strong>Leap seconds</strong> are not counted in Unix time. When a leap second is added (as occasionally determined by the IERS), the Unix timestamp either repeats a second or skips ahead, depending on the implementation. POSIX specifies that each day is treated as exactly 86,400 seconds.</p>
+      <p style="margin-top:14px;">For a thorough explanation, see the <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank" rel="noopener">Wikipedia article on Unix time</a>.</p>
+    </div>
+  </section>
+
+  <!-- Section 8: FAQ -->
+  <section id="faq">
+    <h2>Frequently Asked <span class="accent">Questions</span></h2>
+    <div class="faq-grid">
+      <div class="faq-card">
+        <h3>What is epoch time (Unix time)?</h3>
+        <p>Epoch time counts the number of seconds since January 1, 1970 00:00:00 UTC. It is the standard way computers store and compare time internally. The value is always in UTC and is not affected by timezones or daylight saving changes.</p>
+      </div>
+      <div class="faq-card">
+        <h3>How do I convert epoch time to a human-readable date?</h3>
+        <p>Enter the epoch timestamp in the converter above, select your timezone, and the result appears instantly. In code: JavaScript uses <code>new Date(epoch * 1000)</code>, Python uses <code>datetime.fromtimestamp(epoch)</code>, and most languages have similar built-in functions.</p>
+      </div>
+      <div class="faq-card">
+        <h3>What is the difference between epoch seconds and milliseconds?</h3>
+        <p>Standard Unix time uses seconds (10 digits for current dates). Many APIs and languages like JavaScript use milliseconds (13 digits). If your timestamp is 13 digits, it is in milliseconds — divide by 1,000 to get seconds. This tool supports both formats and can auto-detect.</p>
+      </div>
+      <div class="faq-card">
+        <h3>What happens in 2038?</h3>
+        <p>32-bit systems storing Unix time as a signed integer will overflow on January 19, 2038 at 03:14:07 UTC. Modern 64-bit systems are not affected. Most current software and operating systems have already migrated to 64-bit time representations.</p>
+      </div>
+      <div class="faq-card">
+        <h3>Is epoch time affected by timezones?</h3>
+        <p>No. Epoch time is always based on UTC and represents a single absolute moment in time. Timezone differences only come into play when you convert the epoch value to a local date and time string for display purposes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Tools -->
+  <section id="related">
+    <h2>Related <span class="accent">Tools</span></h2>
+    <div class="related-grid">
+      <a href="/free-tools/timestamp-converter/" class="related-card">
+        <h3>Timestamp Converter</h3>
+        <p>Convert between different timestamp formats including ISO 8601, RFC 2822, and Unix time.</p>
+      </a>
+      <a href="/free-tools/timezone-converter/" class="related-card">
+        <h3>Timezone Converter</h3>
+        <p>Convert time between any two timezones worldwide with daylight saving time support.</p>
+      </a>
+      <a href="/free-tools/date-calculator/" class="related-card">
+        <h3>Date Calculator</h3>
+        <p>Calculate the difference between dates, add or subtract days, and find day-of-week for any date.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- External References -->
+  <div class="ext-ref">
+    <strong>External References:</strong>
+    <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank" rel="noopener">Wikipedia: Unix time</a> ·
+    <a href="https://stackoverflow.com/questions/tagged/epoch" target="_blank" rel="noopener">Stack Overflow: Epoch</a>
+  </div>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="copy">&copy; 2026 Zovo &middot; Free Browser Tools &middot; <a href="https://zovo.one">zovo.one</a></div>
+    <div class="footer-links">
+      <a href="https://zovo.one/free-tools">All Tools</a>
+      <a href="https://zovo.one">Home</a>
+    </div>
+    <div class="verified">Last verified working: March 2026 by Michael Lip</div>
+    <div class="update-history">
+      <strong>Update History:</strong> March 2026 — Initial release with live clock, batch conversion, 6-language code snippets, and timezone support.
+    </div>
+    <div class="browsers">Supported browsers: Chrome, Firefox, Safari, Edge (latest versions)</div>
+  </div>
+</footer>
+
+<script>
+// === TIMEZONE LIST ===
+const commonTZ = [
+  'UTC','America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
+  'America/Anchorage','Pacific/Honolulu','America/Toronto','America/Vancouver',
+  'Europe/London','Europe/Berlin','Europe/Paris','Europe/Moscow',
+  'Asia/Tokyo','Asia/Shanghai','Asia/Kolkata','Asia/Dubai','Asia/Singapore',
+  'Australia/Sydney','Australia/Perth','Pacific/Auckland',
+  'America/Sao_Paulo','Africa/Cairo','Africa/Johannesburg'
+];
+
+function populateTZ(selectId) {
+  const sel = document.getElementById(selectId);
+  const localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  commonTZ.forEach(tz => {
+    const opt = document.createElement('option');
+    opt.value = tz;
+    opt.textContent = tz.replace(/_/g, ' ');
+    if (tz === localTZ) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  // If local TZ not in list, add it
+  if (!commonTZ.includes(localTZ)) {
+    const opt = document.createElement('option');
+    opt.value = localTZ;
+    opt.textContent = localTZ.replace(/_/g, ' ') + ' (Local)';
+    opt.selected = true;
+    sel.prepend(opt);
+  }
+}
+populateTZ('e2h-tz');
+populateTZ('h2e-tz');
+populateTZ('batch-tz');
+
+// === LIVE CLOCK ===
+function updateLiveClock() {
+  const now = Date.now();
+  const sec = Math.floor(now / 1000);
+  const d = new Date(now);
+  document.getElementById('live-epoch').textContent = sec;
+  document.getElementById('live-human').textContent = d.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'long' });
+  document.getElementById('live-iso').textContent = d.toISOString();
+}
+setInterval(updateLiveClock, 1000);
+updateLiveClock();
+
+function copyLiveEpoch() {
+  const text = document.getElementById('live-epoch').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('copy-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1500);
+  });
+}
+
+// === EPOCH TO HUMAN ===
+let e2hUnit = 'sec';
+function setUnit(unit, btn) {
+  const group = btn.getAttribute('data-group');
+  e2hUnit = unit;
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (group === 'e2h') convertE2H();
+}
+
+function relativeTime(date) {
+  const now = Date.now();
+  const diff = date.getTime() - now;
+  const absDiff = Math.abs(diff);
+  const past = diff < 0;
+
+  if (absDiff < 60000) return past ? 'just now' : 'in a few seconds';
+  if (absDiff < 3600000) {
+    const mins = Math.floor(absDiff / 60000);
+    return past ? `${mins} minute${mins !== 1 ? 's' : ''} ago` : `in ${mins} minute${mins !== 1 ? 's' : ''}`;
+  }
+  if (absDiff < 86400000) {
+    const hrs = Math.floor(absDiff / 3600000);
+    return past ? `${hrs} hour${hrs !== 1 ? 's' : ''} ago` : `in ${hrs} hour${hrs !== 1 ? 's' : ''}`;
+  }
+  if (absDiff < 2592000000) {
+    const days = Math.floor(absDiff / 86400000);
+    return past ? `${days} day${days !== 1 ? 's' : ''} ago` : `in ${days} day${days !== 1 ? 's' : ''}`;
+  }
+  if (absDiff < 31536000000) {
+    const months = Math.floor(absDiff / 2592000000);
+    return past ? `${months} month${months !== 1 ? 's' : ''} ago` : `in ${months} month${months !== 1 ? 's' : ''}`;
+  }
+  const years = Math.floor(absDiff / 31536000000);
+  return past ? `${years} year${years !== 1 ? 's' : ''} ago` : `in ${years} year${years !== 1 ? 's' : ''}`;
+}
+
+function formatInTZ(date, tz) {
+  try {
+    return {
+      full: date.toLocaleString('en-US', { timeZone: tz, dateStyle: 'full', timeStyle: 'long' }),
+      short: date.toLocaleString('en-US', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }),
+      iso: date.toISOString()
+    };
+  } catch {
+    return { full: 'Invalid timezone', short: '', iso: '' };
+  }
+}
+
+function convertE2H() {
+  const raw = document.getElementById('e2h-input').value.trim();
+  const tz = document.getElementById('e2h-tz').value;
+  const box = document.getElementById('e2h-result');
+  if (!raw) { box.innerHTML = ''; return; }
+
+  let ts = parseInt(raw, 10);
+  if (isNaN(ts)) { box.innerHTML = '<div class="main-result" style="color:var(--danger);">Invalid timestamp</div>'; return; }
+
+  let ms = e2hUnit === 'ms' ? ts : ts * 1000;
+  const d = new Date(ms);
+  if (isNaN(d.getTime())) { box.innerHTML = '<div class="main-result" style="color:var(--danger);">Invalid timestamp</div>'; return; }
+
+  const f = formatInTZ(d, tz);
+  const rel = relativeTime(d);
+  const epochSec = Math.floor(ms / 1000);
+  const epochMs = ms;
+
+  box.innerHTML = `
+    <div class="main-result">${f.full}</div>
+    <div class="sub-result mono">ISO 8601: ${f.iso}</div>
+    <div class="sub-result mono">Epoch (sec): ${epochSec}</div>
+    <div class="sub-result mono">Epoch (ms): ${epochMs}</div>
+    <div class="sub-result relative">${rel}</div>
+    <div class="sub-result" style="margin-top:8px;font-size:0.8rem;color:var(--subtle);">Day of year: ${dayOfYear(d)} &middot; Week: ${weekOfYear(d)} &middot; ${isLeapYear(d.getUTCFullYear()) ? 'Leap year' : 'Not a leap year'}</div>
+  `;
+}
+
+function dayOfYear(d) {
+  const start = new Date(d.getUTCFullYear(), 0, 0);
+  const diff = d - start;
+  return Math.floor(diff / 86400000);
+}
+function weekOfYear(d) {
+  const start = new Date(d.getUTCFullYear(), 0, 1);
+  const days = Math.floor((d - start) / 86400000);
+  return Math.ceil((days + start.getDay() + 1) / 7);
+}
+function isLeapYear(y) { return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0; }
+
+// === HUMAN TO EPOCH ===
+function convertH2E() {
+  const dateStr = document.getElementById('h2e-date').value;
+  const timeStr = document.getElementById('h2e-time').value || '00:00:00';
+  const tz = document.getElementById('h2e-tz').value;
+  const box = document.getElementById('h2e-result');
+
+  if (!dateStr) { box.innerHTML = ''; return; }
+
+  // Build a date in the selected timezone
+  const combined = `${dateStr}T${timeStr}`;
+  let d;
+  try {
+    // Try creating with timezone
+    const formatter = new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    // Simple approach: parse as local then adjust
+    d = new Date(combined);
+    // Get offset for target timezone
+    const utcDate = new Date(combined + 'Z');
+    const tzOffset = getTimezoneOffset(tz, utcDate);
+    d = new Date(utcDate.getTime() + tzOffset * 60000);
+    // Actually, simpler: just parse and convert
+    d = parseDateInTZ(dateStr, timeStr, tz);
+  } catch {
+    d = new Date(combined);
+  }
+
+  if (isNaN(d.getTime())) { box.innerHTML = '<div class="main-result" style="color:var(--danger);">Invalid date</div>'; return; }
+
+  const epochSec = Math.floor(d.getTime() / 1000);
+  const epochMs = d.getTime();
+  const rel = relativeTime(d);
+
+  box.innerHTML = `
+    <div class="main-result mono" style="font-size:1.5rem;color:var(--accent);">${epochSec}</div>
+    <div class="sub-result mono">Milliseconds: ${epochMs}</div>
+    <div class="sub-result mono">ISO 8601: ${d.toISOString()}</div>
+    <div class="sub-result relative">${rel}</div>
+  `;
+}
+
+function parseDateInTZ(dateStr, timeStr, tz) {
+  // Create the date assuming UTC, then figure out the TZ offset
+  const utcDate = new Date(`${dateStr}T${timeStr}Z`);
+  // Get what the clock reads in `tz` at this UTC moment
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  }).formatToParts(utcDate);
+  const get = (type) => parts.find(p => p.type === type)?.value || '0';
+  const localInTZ = new Date(`${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}:${get('second')}Z`);
+  const offset = localInTZ.getTime() - utcDate.getTime();
+  // The user entered dateStr+timeStr as local time in `tz`, so we need to subtract offset
+  return new Date(utcDate.getTime() - offset);
+}
+
+function getTimezoneOffset(tz, date) {
+  const utcStr = date.toLocaleString('en-US', { timeZone: 'UTC' });
+  const tzStr = date.toLocaleString('en-US', { timeZone: tz });
+  return (new Date(tzStr) - new Date(utcStr)) / 60000;
+}
+
+function convertH2EFromString() {
+  const str = document.getElementById('h2e-string').value.trim();
+  const box = document.getElementById('h2e-result');
+  if (!str) { box.innerHTML = ''; return; }
+
+  const d = new Date(str);
+  if (isNaN(d.getTime())) { box.innerHTML = '<div class="main-result" style="color:var(--danger);">Could not parse date string. Try ISO 8601 format: 2026-03-20T12:00:00Z</div>'; return; }
+
+  const epochSec = Math.floor(d.getTime() / 1000);
+  const epochMs = d.getTime();
+  const rel = relativeTime(d);
+
+  box.innerHTML = `
+    <div class="main-result mono" style="font-size:1.5rem;color:var(--accent);">${epochSec}</div>
+    <div class="sub-result mono">Milliseconds: ${epochMs}</div>
+    <div class="sub-result mono">ISO 8601: ${d.toISOString()}</div>
+    <div class="sub-result">Parsed as: ${d.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'long' })}</div>
+    <div class="sub-result relative">${rel}</div>
+  `;
+}
+
+// Set default date to today
+document.getElementById('h2e-date').value = new Date().toISOString().split('T')[0];
+
+// === BATCH CONVERSION ===
+let batchResultsData = [];
+function batchConvert() {
+  const raw = document.getElementById('batch-input').value.trim();
+  const tz = document.getElementById('batch-tz').value;
+  const box = document.getElementById('batch-results');
+  if (!raw) { box.innerHTML = ''; return; }
+
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l);
+  batchResultsData = [];
+  let html = '';
+
+  for (const line of lines) {
+    const ts = parseInt(line, 10);
+    if (isNaN(ts)) {
+      html += `<div class="batch-row error">Invalid: ${line}</div>`;
+      continue;
+    }
+    // Auto-detect: > 10 digits = milliseconds
+    const ms = line.length > 12 ? ts : ts * 1000;
+    const d = new Date(ms);
+    if (isNaN(d.getTime())) {
+      html += `<div class="batch-row error">Invalid: ${line}</div>`;
+      continue;
+    }
+    const f = formatInTZ(d, tz);
+    const rel = relativeTime(d);
+    const unit = line.length > 12 ? '(ms)' : '(sec)';
+    batchResultsData.push({ ts: line, date: f.full, iso: f.iso, rel });
+    html += `<div class="batch-row"><span class="ts">${line} ${unit}</span><span class="hr">${f.full}</span><span class="rel">${rel}</span></div>`;
+  }
+
+  box.innerHTML = html;
+}
+
+function copyBatchResults() {
+  if (!batchResultsData.length) return;
+  const text = batchResultsData.map(r => `${r.ts}\t${r.date}\t${r.iso}\t${r.rel}`).join('\n');
+  navigator.clipboard.writeText(text);
+}
+
+// === REFERENCE TABLE ===
+const refData = [
+  [0, '1970-01-01 00:00:00', 'Unix Epoch (the beginning)'],
+  [86400, '1970-01-02 00:00:00', 'One day after epoch'],
+  [946684800, '2000-01-01 00:00:00', 'Y2K / Start of 2000'],
+  [1000000000, '2001-09-09 01:46:40', 'One billionth second'],
+  [1234567890, '2009-02-13 23:31:30', 'Sequential digits timestamp'],
+  [1500000000, '2017-07-14 02:40:00', '1.5 billion seconds'],
+  [1609459200, '2021-01-01 00:00:00', 'Start of 2021'],
+  [1672531200, '2023-01-01 00:00:00', 'Start of 2023'],
+  [1700000000, '2023-11-14 22:13:20', '1.7 billion seconds'],
+  [1735689600, '2025-01-01 00:00:00', 'Start of 2025'],
+  [1767225600, '2026-01-01 00:00:00', 'Start of 2026'],
+  [1800000000, '2027-01-15 08:00:00', '1.8 billion seconds'],
+  [2000000000, '2033-05-18 03:33:20', 'Two billionth second'],
+  [2147483647, '2038-01-19 03:14:07', 'Max 32-bit signed int (Y2038)'],
+  [4102444800, '2100-01-01 00:00:00', 'Start of 2100']
+];
+
+document.getElementById('ref-body').innerHTML = refData.map(([epoch, date, desc]) =>
+  `<tr><td>${epoch.toLocaleString()}</td><td>${date} UTC</td><td>${desc}</td></tr>`
+).join('');
+
+// === CODE SNIPPETS ===
+const codeSnippets = {
+  JavaScript: `// Get current epoch timestamp (seconds)
+const epochSeconds = Math.floor(Date.now() / 1000);
+console.log(epochSeconds); // e.g., 1742486400
+
+// Get current epoch timestamp (milliseconds)
+const epochMs = Date.now();
+console.log(epochMs); // e.g., 1742486400000
+
+// Epoch to Date
+const date = new Date(epochSeconds * 1000);
+console.log(date.toISOString());
+// "2026-03-20T12:00:00.000Z"
+console.log(date.toLocaleString());
+// "3/20/2026, 12:00:00 PM"
+
+// Date to Epoch
+const epoch = Math.floor(new Date('2026-03-20').getTime() / 1000);
+console.log(epoch); // 1742428800`,
+
+  Python: `import time
+from datetime import datetime, timezone
+
+# Get current epoch timestamp
+epoch_now = int(time.time())
+print(epoch_now)  # e.g., 1742486400
+
+# Epoch to datetime
+dt = datetime.fromtimestamp(1742486400, tz=timezone.utc)
+print(dt.isoformat())
+# "2026-03-20T12:00:00+00:00"
+print(dt.strftime("%B %d, %Y %H:%M:%S"))
+# "March 20, 2026 12:00:00"
+
+# Datetime to epoch
+epoch = int(datetime(2026, 3, 20, tzinfo=timezone.utc).timestamp())
+print(epoch)  # 1742428800`,
+
+  PHP: `<?php
+// Get current epoch timestamp
+$epoch = time();
+echo $epoch; // e.g., 1742486400
+
+// Get with milliseconds
+$epochMs = round(microtime(true) * 1000);
+
+// Epoch to date string
+$date = date('Y-m-d H:i:s', 1742486400);
+echo $date; // "2026-03-20 12:00:00"
+
+// ISO 8601 format
+echo date('c', 1742486400);
+// "2026-03-20T12:00:00+00:00"
+
+// Date string to epoch
+$epoch = strtotime('2026-03-20 12:00:00');
+echo $epoch; // 1742486400
+
+// Using DateTime object
+$dt = new DateTime('@1742486400');
+echo $dt->format('F j, Y g:i A');
+// "March 20, 2026 12:00 PM"
+?>`,
+
+  Java: `import java.time.*;
+import java.time.format.DateTimeFormatter;
+
+public class EpochConverter {
+    public static void main(String[] args) {
+        // Get current epoch timestamp (seconds)
+        long epochSec = Instant.now().getEpochSecond();
+        System.out.println(epochSec);
+
+        // Get with milliseconds
+        long epochMs = System.currentTimeMillis();
+
+        // Epoch to date
+        Instant instant = Instant.ofEpochSecond(1742486400L);
+        ZonedDateTime zdt = instant.atZone(ZoneId.of("UTC"));
+        System.out.println(zdt);
+        // 2026-03-20T12:00:00Z[UTC]
+
+        // Formatted output
+        String formatted = zdt.format(
+            DateTimeFormatter.ofPattern("MMMM dd, yyyy HH:mm:ss z")
+        );
+        System.out.println(formatted);
+        // March 20, 2026 12:00:00 UTC
+
+        // Date to epoch
+        long epoch = LocalDateTime.of(2026, 3, 20, 12, 0)
+            .toEpochSecond(ZoneOffset.UTC);
+        System.out.println(epoch); // 1742486400
+    }
+}`,
+
+  Go: `package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    // Get current epoch timestamp
+    epochSec := time.Now().Unix()
+    epochMs := time.Now().UnixMilli()
+    fmt.Println("Seconds:", epochSec)
+    fmt.Println("Milliseconds:", epochMs)
+
+    // Epoch to time.Time
+    t := time.Unix(1742486400, 0).UTC()
+    fmt.Println(t)
+    // 2026-03-20 12:00:00 +0000 UTC
+
+    // Formatted output
+    fmt.Println(t.Format("January 02, 2006 15:04:05 MST"))
+    // March 20, 2026 12:00:00 UTC
+
+    // ISO 8601
+    fmt.Println(t.Format(time.RFC3339))
+    // 2026-03-20T12:00:00Z
+
+    // Date to epoch
+    parsed, _ := time.Parse("2006-01-02", "2026-03-20")
+    fmt.Println(parsed.Unix()) // 1742428800
+}`,
+
+  Rust: `use std::time::{SystemTime, UNIX_EPOCH};
+
+fn main() {
+    // Get current epoch timestamp
+    let epoch = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap();
+
+    println!("Seconds: {}", epoch.as_secs());
+    println!("Milliseconds: {}", epoch.as_millis());
+
+    // With chrono crate (add to Cargo.toml):
+    // chrono = "0.4"
+    //
+    // use chrono::{DateTime, NaiveDateTime, Utc, TimeZone};
+    //
+    // // Epoch to DateTime
+    // let dt = DateTime::from_timestamp(1742486400, 0).unwrap();
+    // println!("{}", dt.format("%B %d, %Y %H:%M:%S UTC"));
+    // // March 20, 2026 12:00:00 UTC
+    //
+    // println!("{}", dt.to_rfc3339());
+    // // 2026-03-20T12:00:00+00:00
+    //
+    // // Date to epoch
+    // let dt2 = Utc.with_ymd_and_hms(2026, 3, 20, 12, 0, 0)
+    //     .unwrap();
+    // println!("{}", dt2.timestamp()); // 1742486400
+}`
+};
+
+let activeCodeTab = 'JavaScript';
+function buildCodeTabs() {
+  const tabsEl = document.getElementById('code-tabs');
+  const contentEl = document.getElementById('code-content');
+  tabsEl.innerHTML = Object.keys(codeSnippets).map(lang =>
+    `<button class="code-tab${lang === activeCodeTab ? ' active' : ''}" onclick="showCodeTab('${lang}')">${lang}</button>`
+  ).join('');
+  showCodeContent();
+}
+
+function showCodeTab(lang) {
+  activeCodeTab = lang;
+  document.querySelectorAll('.code-tab').forEach(t => t.classList.toggle('active', t.textContent === lang));
+  showCodeContent();
+}
+
+function showCodeContent() {
+  const contentEl = document.getElementById('code-content');
+  const code = codeSnippets[activeCodeTab];
+  contentEl.innerHTML = `<button class="copy-btn" onclick="copyCode()">Copy</button><pre>${escapeHTML(code)}</pre>`;
+}
+
+function escapeHTML(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(codeSnippets[activeCodeTab]).then(() => {
+    const btn = document.querySelector('.code-block .copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+  });
+}
+
+buildCodeTabs();
+
+// Prefill epoch-to-human with current time
+document.getElementById('e2h-input').value = Math.floor(Date.now() / 1000);
+convertE2H();
+</script>
+</body>
+</html>
