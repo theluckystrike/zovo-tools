@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Text Summarizer — Extractive Summarization Tool | Zovo</title>
+<meta name="description" content="Free online text summarizer using extractive summarization. No AI API calls — pure algorithmic sentence scoring, word frequency analysis, and key phrase extraction. 100% client-side.">
+<meta name="author" content="Michael Lip">
+<meta property="og:title" content="Free Text Summarizer — Extractive Summarization Tool">
+<meta property="og:description" content="Summarize any text using algorithmic extractive summarization. TF scoring, sentence ranking, key phrase extraction. No data leaves your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/text-summarizer/">
+<meta property="og:image" content="https://zovo.one/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Text Summarizer — Extractive Summarization Tool">
+<meta name="twitter:description" content="Summarize any text using algorithmic extractive summarization. TF scoring, sentence ranking, key phrase extraction. No data leaves your browser.">
+<meta name="twitter:image" content="https://zovo.one/og-image.png">
+<link rel="canonical" href="https://zovo.one/free-tools/text-summarizer/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Text Summarizer",
+  "description": "Extractive text summarization tool using algorithmic sentence scoring, word frequency analysis, and key phrase extraction. No AI API calls.",
+  "url": "https://zovo.one/free-tools/text-summarizer/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is extractive text summarization?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Extractive summarization selects the most important sentences from the original text and presents them as a summary. Unlike abstractive summarization, it does not generate new sentences — every sentence in the summary appears verbatim in the source text."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the scoring algorithm work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each sentence receives a score based on multiple factors: term frequency of its words (with stop words removed), its position in the text (first and last sentences are weighted higher), sentence length (very short or very long sentences are penalized), and the presence of title keywords if a title is provided."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this tool use any AI or external APIs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. This tool uses a pure algorithmic approach built from scratch in JavaScript. There are no API calls, no machine learning models, and no data transmission. Everything runs locally in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my text stored or sent anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. All processing happens entirely in your browser. Your text is never uploaded to any server, stored in any database, or transmitted over the network."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is extractive summarization compared to AI summarization?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Extractive summarization produces reliable summaries because it uses actual sentences from the text, so there is no risk of hallucination or factual errors. However, the summaries may read less fluently than those produced by large language models, since sentences are selected rather than generated."
+      }
+    }
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#e0e0e8;font-family:system-ui,-apple-system,sans-serif;line-height:1.7;min-height:100vh}
+.container{max-width:960px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:2rem;margin-bottom:8px;color:#fff}
+h2{font-size:1.5rem;margin:40px 0 16px;color:#fff}
+h3{font-size:1.15rem;margin:20px 0 8px;color:#e0e0e8}
+p,.secondary{color:#b0b0c0;margin-bottom:14px}
+a{color:#00ff88;text-decoration:none}
+a:hover{text-decoration:underline}
+.reading-time{color:#b0b0c0;font-size:.85rem;margin-bottom:20px;display:inline-block;background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:4px 12px}
+.toc{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px 0}
+.toc h3{margin-top:0;color:#fff;font-size:1rem}
+.toc ul{list-style:none;padding-left:0}
+.toc li{margin:6px 0}
+.toc a{font-size:.92rem}
+.card{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin:20px 0}
+.privacy-note{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:16px 20px;margin:20px 0;font-size:.9rem;color:#b0b0c0}
+.privacy-note::before{content:"🔒 ";font-size:1rem}
+textarea{width:100%;min-height:200px;background:#0a0a0f;color:#e0e0e8;border:1px solid #1e1e2a;border-radius:8px;padding:14px;font-family:system-ui,-apple-system,sans-serif;font-size:.92rem;resize:vertical;line-height:1.6}
+textarea:focus{outline:none;border-color:#00ff88}
+input[type="text"]{width:100%;background:#0a0a0f;color:#e0e0e8;border:1px solid #1e1e2a;border-radius:8px;padding:10px 14px;font-size:.92rem}
+input[type="text"]:focus{outline:none;border-color:#00ff88}
+.btn{background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;padding:10px 22px;font-size:.95rem;font-weight:600;cursor:pointer;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-outline{background:transparent;color:#00ff88;border:1px solid #00ff88;border-radius:8px;padding:8px 18px;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .2s,color .2s}
+.btn-outline:hover{background:#00ff88;color:#0a0a0f}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.btn-sm{padding:6px 14px;font-size:.82rem}
+.slider-row{display:flex;align-items:center;gap:14px;margin:14px 0;flex-wrap:wrap}
+.slider-row label{font-size:.9rem;color:#b0b0c0;white-space:nowrap}
+.slider-row input[type="range"]{flex:1;min-width:150px;accent-color:#00ff88}
+.slider-row .slider-val{color:#00ff88;font-weight:600;min-width:40px;text-align:center}
+.mode-toggle{display:flex;gap:0;margin:14px 0}
+.mode-toggle button{background:#12121a;border:1px solid #1e1e2a;color:#b0b0c0;padding:8px 18px;font-size:.88rem;cursor:pointer;transition:all .2s}
+.mode-toggle button:first-child{border-radius:8px 0 0 8px}
+.mode-toggle button:last-child{border-radius:0 8px 8px 0}
+.mode-toggle button.active{background:#00ff88;color:#0a0a0f;border-color:#00ff88;font-weight:600}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:18px 0}
+.stat-card{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:16px;text-align:center}
+.stat-card .value{font-size:1.6rem;font-weight:700;color:#00ff88}
+.stat-card .label{font-size:.82rem;color:#b0b0c0;margin-top:4px}
+.summary-output{background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;padding:16px;min-height:100px;line-height:1.7;color:#e0e0e8;font-size:.94rem;margin:10px 0}
+.summary-output ul{padding-left:20px;margin:0}
+.summary-output li{margin:6px 0}
+.key-phrases{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.key-phrases .phrase{background:#00ff8815;border:1px solid #00ff8840;border-radius:20px;padding:4px 14px;font-size:.85rem;color:#00ff88}
+.highlight-view{background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;padding:16px;max-height:400px;overflow-y:auto;line-height:1.8;font-size:.92rem;margin:10px 0;color:#b0b0c0}
+.highlight-view .hl{background:#00ff8825;color:#e0e0e8;border-radius:3px;padding:1px 0}
+.hidden{display:none}
+.faq-item{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:18px 22px;margin:12px 0}
+.faq-item h3{color:#fff;margin:0 0 8px}
+.faq-item p{margin:0;color:#b0b0c0}
+.footer{text-align:center;margin-top:50px;padding-top:24px;border-top:1px solid #1e1e2a;color:#b0b0c0;font-size:.85rem}
+.compat{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:16px 20px;margin:24px 0;font-size:.88rem;color:#b0b0c0}
+.copy-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#00ff88;color:#0a0a0f;padding:10px 24px;border-radius:8px;font-weight:600;font-size:.9rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100}
+.copy-toast.show{opacity:1}
+@media(max-width:600px){
+  h1{font-size:1.5rem}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .container{padding:16px 12px 40px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Text Summarizer</h1>
+<p>Extract the most important sentences from any text using algorithmic scoring. No external APIs, no machine learning models — pure term frequency analysis and sentence ranking, all running in your browser.</p>
+<span class="reading-time">9 min read</span>
+
+<nav class="toc" aria-label="Table of Contents">
+<h3>Table of Contents</h3>
+<ul>
+<li><a href="#tool">Text Summarizer Tool</a></li>
+<li><a href="#how-it-works">How Extractive Summarization Works</a></li>
+<li><a href="#algorithm">The Scoring Algorithm Explained</a></li>
+<li><a href="#use-cases">When to Use Extractive Summarization</a></li>
+<li><a href="#tips">Getting Better Summaries</a></li>
+<li><a href="#limitations">Limitations of This Approach</a></li>
+<li><a href="#comparison">Extractive vs. Abstractive Summarization</a></li>
+<li><a href="#faq">Frequently Asked Questions</a></li>
+</ul>
+</nav>
+
+<h2 id="tool">Text Summarizer Tool</h2>
+
+<div class="privacy-note">All processing happens in your browser. No data is uploaded to any server.</div>
+
+<div class="card">
+<label for="titleInput" style="font-size:.9rem;color:#b0b0c0;display:block;margin-bottom:6px">Title or topic (optional — improves scoring):</label>
+<input type="text" id="titleInput" placeholder="e.g. Climate Change Effects on Agriculture">
+
+<label for="textInput" style="font-size:.9rem;color:#b0b0c0;display:block;margin:16px 0 6px">Paste your text below:</label>
+<textarea id="textInput" placeholder="Paste the article, essay, report, or any text you want to summarize here..." spellcheck="false"></textarea>
+
+<div class="slider-row">
+<label for="lengthSlider">Summary length:</label>
+<input type="range" id="lengthSlider" min="10" max="50" value="25" step="5">
+<span class="slider-val" id="lengthVal">25%</span>
+</div>
+
+<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:10px 0">
+<span style="font-size:.9rem;color:#b0b0c0">Output mode:</span>
+<div class="mode-toggle">
+<button id="modeParagraph" class="active" onclick="setMode('paragraph')">Paragraph</button>
+<button id="modeBullets" onclick="setMode('bullets')">Bullet Points</button>
+</div>
+</div>
+
+<div class="btn-row">
+<button class="btn" onclick="summarize()">Summarize</button>
+<button class="btn-outline" onclick="loadSample()">Load Sample</button>
+<button class="btn-outline" onclick="clearAll()">Clear</button>
+</div>
+</div>
+
+<div id="resultsArea" class="hidden">
+<h3 style="margin-top:24px">Summary</h3>
+<div id="statsGrid" class="stats-grid"></div>
+<div id="summaryOutput" class="summary-output"></div>
+<div class="btn-row">
+<button class="btn-outline btn-sm" onclick="copySummary()">Copy Summary</button>
+<button class="btn-outline btn-sm" id="highlightBtn" onclick="toggleHighlight()">Show Highlighted Text</button>
+</div>
+
+<div id="highlightSection" class="hidden">
+<h3>Original Text with Key Sentences Highlighted</h3>
+<div id="highlightView" class="highlight-view"></div>
+</div>
+
+<h3 style="margin-top:20px">Key Phrases</h3>
+<div id="keyPhrases" class="key-phrases"></div>
+</div>
+
+<h2 id="how-it-works">How Extractive Summarization Works</h2>
+<p>Extractive summarization is a technique that identifies the most important sentences in a document and pulls them out to form a summary. Unlike abstractive methods that generate new text, extractive methods preserve the original wording exactly. The summary is a subset of the original sentences, selected by importance.</p>
+<p>This approach dates back to the 1950s, when Hans Peter Luhn at IBM proposed using word frequency as a proxy for sentence importance. The core idea remains sound: sentences containing frequently used meaningful words are likely to be about the main topics of the text.</p>
+<p>Modern extractive summarization adds several refinements. Position-based scoring recognizes that introductory and concluding sentences often carry key information. Length normalization prevents very long sentences from dominating purely because they contain more words. Stop word filtering ensures that common function words like "the," "is," and "of" don't inflate importance scores.</p>
+
+<h2 id="algorithm">The Scoring Algorithm Explained</h2>
+<p>This tool implements a multi-factor scoring system. Here is how each sentence in your text gets evaluated:</p>
+<p><strong>Term frequency (TF):</strong> After removing stop words, the tool counts how often each word appears across the entire document. Each sentence's score starts as the sum of its words' frequencies, normalized by the total word count. This captures what the text is primarily about.</p>
+<p><strong>Position weighting:</strong> The first 15% and last 10% of sentences get a score boost. In most writing, the opening sentences introduce the topic and the closing sentences wrap up key points. This heuristic works especially well with news articles and academic papers.</p>
+<p><strong>Length penalty:</strong> Sentences that are extremely short (under 5 words) or very long (over 40 words) are penalized. Very short sentences often lack substance, while extremely long ones may be run-on constructions that are hard to read out of context.</p>
+<p><strong>Title keyword boost:</strong> If you provide a title or topic, the tool identifies keywords from it and gives bonus weight to sentences containing those terms. This helps focus the summary on the intended subject, especially useful for long documents that cover multiple subtopics.</p>
+<p><strong>Final selection:</strong> Sentences are ranked by their combined score, and the top N% are selected (based on your slider setting). The selected sentences are then re-ordered to match their original position in the text, preserving the logical flow.</p>
+
+<h2 id="use-cases">When to Use Extractive Summarization</h2>
+<p><strong>Research and study:</strong> When reading academic papers or lengthy reports, an extractive summary gives you the key points without any risk of misrepresentation. Every sentence comes directly from the source.</p>
+<p><strong>Content curation:</strong> If you need to preview or vet articles before reading them in full, a quick extractive summary shows you the substance without the filler.</p>
+<p><strong>Meeting notes and emails:</strong> Long email threads and meeting transcripts often bury important decisions in walls of text. Extractive summarization surfaces the most information-dense sentences.</p>
+<p><strong>Writing feedback:</strong> Running your own writing through an extractive summarizer shows you which sentences the algorithm considers most important. If the summary misses your main point, your emphasis may need work.</p>
+
+<h2 id="tips">Getting Better Summaries</h2>
+<p><strong>Provide a title.</strong> The optional title field significantly improves results. It tells the algorithm which terms matter most, so the summary focuses on sentences relevant to your topic of interest.</p>
+<p><strong>Use the right summary length.</strong> For dense, technical text, a longer summary (35-50%) preserves more nuance. For straightforward articles, 15-25% usually captures the gist effectively.</p>
+<p><strong>Clean your input.</strong> Remove headers, footers, navigation text, image captions, and other boilerplate before summarizing. These fragments can confuse the frequency analysis and dilute your results.</p>
+<p><strong>Longer inputs work better.</strong> Extractive summarization needs enough text to identify patterns. A paragraph won't give meaningful results. Aim for at least 300-500 words of input for useful output.</p>
+
+<h2 id="limitations">Limitations of This Approach</h2>
+<p>Extractive summarization has clear boundaries. It cannot paraphrase, generalize, or combine ideas from multiple sentences. The summary is always a subset of original sentences, which means it can occasionally feel disjointed — two selected sentences might refer to concepts explained in sentences that were not selected.</p>
+<p>The term frequency approach works best with expository text — articles, reports, essays, documentation. It performs less well with narrative fiction, poetry, dialogue-heavy text, or highly technical material where jargon frequency doesn't map to importance.</p>
+<p>This tool processes English text. The built-in stop word list, abbreviation handling, and sentence tokenization are optimized for English. Other languages may produce less accurate results.</p>
+
+<h2 id="comparison">Extractive vs. Abstractive Summarization</h2>
+<p>Abstractive summarization, used by large language models, generates entirely new sentences that capture the meaning of the source text. It can paraphrase, combine ideas, and produce more fluid summaries. However, it can also introduce errors — sometimes called hallucinations — where the summary states something the original text never said.</p>
+<p>Extractive summarization avoids this problem entirely. Every sentence in the output exists verbatim in the input. For applications where accuracy and traceability matter — legal documents, medical texts, academic research — extractive methods offer a reliability advantage.</p>
+<p>The two approaches are not mutually exclusive. Many production summarization systems use extractive methods as a first pass to identify important content, then apply abstractive techniques to polish the output. This tool focuses on the extractive step, giving you a faithful representation of the source material's key sentences.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-item">
+<h3>What is extractive text summarization?</h3>
+<p>Extractive summarization selects the most important sentences from the original text and presents them as a summary. Unlike abstractive summarization, it does not generate new sentences — every sentence in the summary appears verbatim in the source text.</p>
+</div>
+<div class="faq-item">
+<h3>How does the scoring algorithm work?</h3>
+<p>Each sentence receives a score based on multiple factors: term frequency of its words (with stop words removed), its position in the text (first and last sentences are weighted higher), sentence length (very short or very long sentences are penalized), and the presence of title keywords if a title is provided.</p>
+</div>
+<div class="faq-item">
+<h3>Does this tool use any AI or external APIs?</h3>
+<p>No. This tool uses a pure algorithmic approach built from scratch in JavaScript. There are no API calls, no machine learning models, and no data transmission. Everything runs locally in your browser.</p>
+</div>
+<div class="faq-item">
+<h3>Is my text stored or sent anywhere?</h3>
+<p>No. All processing happens entirely in your browser. Your text is never uploaded to any server, stored in any database, or transmitted over the network.</p>
+</div>
+<div class="faq-item">
+<h3>How accurate is extractive summarization compared to AI summarization?</h3>
+<p>Extractive summarization produces reliable summaries because it uses actual sentences from the text, so there is no risk of hallucination or factual errors. However, the summaries may read less fluently than those produced by large language models, since sentences are selected rather than generated.</p>
+</div>
+
+<h2>Related Tools</h2>
+<p>You might also find these tools useful:</p>
+<ul style="padding-left:20px;color:#b0b0c0">
+<li><a href="/free-tools/word-counter/">Word Counter</a> — Count words, characters, sentences, and paragraphs in your text.</li>
+<li><a href="/free-tools/readability-checker/">Readability Checker</a> — Analyze reading level and text complexity.</li>
+<li><a href="/free-tools/paraphrase-tool/">Paraphrase Tool</a> — Rewrite text while preserving meaning.</li>
+</ul>
+
+<div class="compat">
+<strong>Browser Compatibility:</strong> This tool works in all modern browsers including Chrome 60+, Firefox 55+, Safari 11+, and Edge 79+. JavaScript must be enabled. No plugins or extensions required.
+</div>
+
+<div class="footer">
+Built by Michael Lip · More free tools at <a href="https://zovo.one">zovo.one</a>
+</div>
+
+</div>
+
+<div class="copy-toast" id="copyToast">Copied to clipboard!</div>
+
+<script>
+// ============================================================
+// STOP WORDS (200+ common English words)
+// ============================================================
+var STOP_WORDS = new Set([
+"a","about","above","after","again","against","all","am","an","and","any","are","aren't","as","at",
+"be","because","been","before","being","below","between","both","but","by",
+"can","can't","cannot","could","couldn't",
+"did","didn't","do","does","doesn't","doing","don't","down","during",
+"each","either","else","ever","every",
+"few","for","from","further",
+"get","gets","getting","got",
+"had","hadn't","has","hasn't","have","haven't","having","he","he'd","he'll","he's","her","here",
+"here's","hers","herself","him","himself","his","how","how's",
+"i","i'd","i'll","i'm","i've","if","in","into","is","isn't","it","it's","its","itself",
+"just",
+"know",
+"let","let's","like",
+"made","make","may","me","might","more","most","much","must","mustn't","my","myself",
+"need","no","nor","not","now",
+"of","off","often","on","once","only","or","other","ought","our","ours","ourselves","out","over","own",
+"people",
+"really","right",
+"said","same","say","she","she'd","she'll","she's","should","shouldn't","since","so","some","such",
+"take","than","that","that's","the","their","theirs","them","themselves","then","there","there's",
+"these","they","they'd","they'll","they're","they've","think","this","those","through","time","to",
+"too","two",
+"under","until","up","upon","us","use","used","using",
+"very",
+"want","was","wasn't","way","we","we'd","we'll","we're","we've","well","were","weren't","what",
+"what's","when","when's","where","where's","which","while","who","who's","whom","why","why's",
+"will","with","won't","would","wouldn't",
+"year","yes","yet","you","you'd","you'll","you're","you've","your","yours","yourself","yourselves",
+"also","another","back","because","come","day","even","find","first","give","go","good","great",
+"help","here","high","however","keep","know","last","long","look","many","may","most","new","next",
+"now","number","old","one","only","open","part","place","point","put","read","run","see","seem",
+"set","show","small","start","still","still","tell","thing","three","turn","us","want","will","work","world"
+]);
+
+var outputMode = 'paragraph';
+var summarySentences = [];
+var allSentences = [];
+var lastText = '';
+
+// ============================================================
+// SENTENCE TOKENIZER
+// ============================================================
+function tokenizeSentences(text) {
+  // Handle common abbreviations to avoid false splits
+  var abbrevs = ['Mr.','Mrs.','Ms.','Dr.','Prof.','Sr.','Jr.','St.','Ave.','vs.','etc.','i.e.','e.g.','a.m.','p.m.','U.S.','U.K.','U.N.'];
+  var placeholder = '\x00ABBR\x00';
+  var abbrevMap = {};
+  var processed = text;
+
+  abbrevs.forEach(function(ab, idx) {
+    var token = placeholder + idx + '\x00';
+    abbrevMap[token] = ab;
+    // escape dots for regex
+    var escaped = ab.replace(/\./g, '\\.');
+    processed = processed.replace(new RegExp(escaped.replace(/\s/g,'\\s'), 'g'), token);
+  });
+
+  // Handle decimal numbers like 3.14
+  processed = processed.replace(/(\d+)\.(\d+)/g, '$1\x00DEC\x00$2');
+
+  // Split on sentence-ending punctuation followed by space or end of string
+  var raw = processed.split(/(?<=[.!?])\s+/);
+
+  // Restore abbreviations and decimals, trim
+  var sentences = [];
+  raw.forEach(function(s) {
+    var restored = s;
+    Object.keys(abbrevMap).forEach(function(token) {
+      restored = restored.split(token).join(abbrevMap[token]);
+    });
+    restored = restored.split('\x00DEC\x00').join('.');
+    restored = restored.trim();
+    if (restored.length > 0) {
+      sentences.push(restored);
+    }
+  });
+
+  return sentences;
+}
+
+// ============================================================
+// WORD TOKENIZER
+// ============================================================
+function tokenizeWords(text) {
+  return text.toLowerCase().replace(/[^a-z0-9'-]/g, ' ').split(/\s+/).filter(function(w) { return w.length > 1; });
+}
+
+function countWords(text) {
+  return text.split(/\s+/).filter(function(w) { return w.length > 0; }).length;
+}
+
+// ============================================================
+// TERM FREQUENCY
+// ============================================================
+function computeTF(words) {
+  var freq = {};
+  words.forEach(function(w) {
+    if (!STOP_WORDS.has(w)) {
+      freq[w] = (freq[w] || 0) + 1;
+    }
+  });
+  return freq;
+}
+
+// ============================================================
+// SENTENCE SCORING
+// ============================================================
+function scoreSentences(sentences, tf, titleKeywords) {
+  var totalSentences = sentences.length;
+  var maxFreq = 1;
+  var freqValues = Object.values(tf);
+  if (freqValues.length > 0) maxFreq = Math.max.apply(null, freqValues);
+
+  return sentences.map(function(sent, idx) {
+    var words = tokenizeWords(sent);
+    var contentWords = words.filter(function(w) { return !STOP_WORDS.has(w); });
+
+    // 1. TF score: sum of normalized term frequencies for content words
+    var tfScore = 0;
+    contentWords.forEach(function(w) {
+      if (tf[w]) {
+        tfScore += tf[w] / maxFreq;
+      }
+    });
+    // Normalize by content word count to avoid bias toward long sentences
+    if (contentWords.length > 0) tfScore = tfScore / contentWords.length;
+
+    // 2. Position score
+    var posScore = 0;
+    var relPos = idx / Math.max(totalSentences - 1, 1);
+    if (relPos <= 0.15) {
+      posScore = 0.3 * (1 - relPos / 0.15); // strongest at very beginning
+    }
+    if (relPos >= 0.90) {
+      posScore = Math.max(posScore, 0.15 * ((relPos - 0.90) / 0.10));
+    }
+    // First sentence gets extra boost
+    if (idx === 0) posScore += 0.15;
+
+    // 3. Length penalty
+    var wordCount = words.length;
+    var lengthScore = 0;
+    if (wordCount >= 8 && wordCount <= 35) {
+      lengthScore = 0.1; // ideal range
+    } else if (wordCount >= 5 && wordCount < 8) {
+      lengthScore = 0.03;
+    } else if (wordCount > 35 && wordCount <= 50) {
+      lengthScore = 0.05;
+    } else {
+      lengthScore = -0.1; // penalize very short or very long
+    }
+
+    // 4. Title keyword boost
+    var titleScore = 0;
+    if (titleKeywords && titleKeywords.length > 0) {
+      var matchCount = 0;
+      words.forEach(function(w) {
+        if (titleKeywords.indexOf(w) !== -1) matchCount++;
+      });
+      titleScore = (matchCount / titleKeywords.length) * 0.3;
+    }
+
+    var totalScore = tfScore + posScore + lengthScore + titleScore;
+    return {
+      index: idx,
+      text: sent,
+      score: totalScore,
+      wordCount: wordCount
+    };
+  });
+}
+
+// ============================================================
+// KEY PHRASES EXTRACTION
+// ============================================================
+function extractKeyPhrases(tf, count) {
+  var entries = Object.entries(tf);
+  entries.sort(function(a, b) { return b[1] - a[1]; });
+  return entries.slice(0, count).map(function(e) { return e[0]; });
+}
+
+// ============================================================
+// BIGRAM KEY PHRASES
+// ============================================================
+function extractBigrams(text, tf, count) {
+  var words = tokenizeWords(text);
+  var bigrams = {};
+  for (var i = 0; i < words.length - 1; i++) {
+    if (!STOP_WORDS.has(words[i]) && !STOP_WORDS.has(words[i+1])) {
+      var bg = words[i] + ' ' + words[i+1];
+      bigrams[bg] = (bigrams[bg] || 0) + 1;
+    }
+  }
+  // Only keep bigrams that appear 2+ times
+  var entries = Object.entries(bigrams).filter(function(e) { return e[1] >= 2; });
+  entries.sort(function(a, b) { return b[1] - a[1]; });
+  return entries.slice(0, count).map(function(e) { return e[0]; });
+}
+
+// ============================================================
+// MAIN SUMMARIZE FUNCTION
+// ============================================================
+function summarize() {
+  var text = document.getElementById('textInput').value.trim();
+  if (!text) {
+    alert('Please paste some text to summarize.');
+    return;
+  }
+  lastText = text;
+
+  var title = document.getElementById('titleInput').value.trim();
+  var lengthPct = parseInt(document.getElementById('lengthSlider').value) / 100;
+
+  // Tokenize
+  allSentences = tokenizeSentences(text);
+  if (allSentences.length < 2) {
+    alert('Please provide text with at least 2 sentences for meaningful summarization.');
+    return;
+  }
+
+  var allWords = tokenizeWords(text);
+  var tf = computeTF(allWords);
+
+  // Title keywords
+  var titleKeywords = null;
+  if (title) {
+    titleKeywords = tokenizeWords(title).filter(function(w) { return !STOP_WORDS.has(w); });
+  }
+
+  // Score sentences
+  var scored = scoreSentences(allSentences, tf, titleKeywords);
+
+  // Select top N
+  var selectCount = Math.max(1, Math.round(allSentences.length * lengthPct));
+  var ranked = scored.slice().sort(function(a, b) { return b.score - a.score; });
+  var selected = ranked.slice(0, selectCount);
+
+  // Re-order by original position
+  selected.sort(function(a, b) { return a.index - b.index; });
+  summarySentences = selected;
+
+  // Statistics
+  var originalWordCount = countWords(text);
+  var summaryText = selected.map(function(s) { return s.text; }).join(' ');
+  var summaryWordCount = countWords(summaryText);
+  var compressionRatio = ((1 - summaryWordCount / originalWordCount) * 100).toFixed(1);
+  var originalReadTime = Math.ceil(originalWordCount / 230);
+  var summaryReadTime = Math.ceil(summaryWordCount / 230);
+  var timeSaved = Math.max(0, originalReadTime - summaryReadTime);
+
+  // Show results
+  document.getElementById('resultsArea').classList.remove('hidden');
+
+  document.getElementById('statsGrid').innerHTML =
+    '<div class="stat-card"><div class="value">' + originalWordCount.toLocaleString() + '</div><div class="label">Original Words</div></div>' +
+    '<div class="stat-card"><div class="value">' + summaryWordCount.toLocaleString() + '</div><div class="label">Summary Words</div></div>' +
+    '<div class="stat-card"><div class="value">' + compressionRatio + '%</div><div class="label">Compression</div></div>' +
+    '<div class="stat-card"><div class="value">' + timeSaved + ' min</div><div class="label">Reading Time Saved</div></div>';
+
+  renderSummary();
+
+  // Key phrases: mix of unigrams and bigrams
+  var bigrams = extractBigrams(text, tf, 5);
+  var unigrams = extractKeyPhrases(tf, 10);
+  // Combine: bigrams first, then fill with unigrams not in bigrams
+  var phrases = bigrams.slice();
+  unigrams.forEach(function(u) {
+    if (phrases.length >= 10) return;
+    var inBigram = bigrams.some(function(b) { return b.indexOf(u) !== -1; });
+    if (!inBigram) phrases.push(u);
+  });
+  phrases = phrases.slice(0, 10);
+
+  document.getElementById('keyPhrases').innerHTML = phrases.map(function(p) {
+    return '<span class="phrase">' + escapeHtml(p) + '</span>';
+  }).join('');
+
+  // Reset highlight view
+  document.getElementById('highlightSection').classList.add('hidden');
+  document.getElementById('highlightBtn').textContent = 'Show Highlighted Text';
+
+  document.getElementById('resultsArea').scrollIntoView({behavior: 'smooth'});
+}
+
+function renderSummary() {
+  var output = document.getElementById('summaryOutput');
+  if (outputMode === 'bullets') {
+    output.innerHTML = '<ul>' + summarySentences.map(function(s) {
+      return '<li>' + escapeHtml(s.text) + '</li>';
+    }).join('') + '</ul>';
+  } else {
+    output.innerHTML = '<p>' + summarySentences.map(function(s) {
+      return escapeHtml(s.text);
+    }).join(' ') + '</p>';
+  }
+}
+
+function setMode(mode) {
+  outputMode = mode;
+  document.getElementById('modeParagraph').classList.toggle('active', mode === 'paragraph');
+  document.getElementById('modeBullets').classList.toggle('active', mode === 'bullets');
+  if (summarySentences.length > 0) renderSummary();
+}
+
+function toggleHighlight() {
+  var section = document.getElementById('highlightSection');
+  var btn = document.getElementById('highlightBtn');
+  if (section.classList.contains('hidden')) {
+    section.classList.remove('hidden');
+    btn.textContent = 'Hide Highlighted Text';
+
+    var selectedIndices = new Set(summarySentences.map(function(s) { return s.index; }));
+    var html = allSentences.map(function(sent, idx) {
+      if (selectedIndices.has(idx)) {
+        return '<span class="hl">' + escapeHtml(sent) + '</span>';
+      }
+      return escapeHtml(sent);
+    }).join(' ');
+    document.getElementById('highlightView').innerHTML = html;
+  } else {
+    section.classList.add('hidden');
+    btn.textContent = 'Show Highlighted Text';
+  }
+}
+
+function copySummary() {
+  var text = summarySentences.map(function(s) { return s.text; });
+  var copyText = outputMode === 'bullets' ? text.map(function(t) { return '- ' + t; }).join('\n') : text.join(' ');
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(copyText).then(showToast);
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = copyText;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast();
+  }
+}
+
+function showToast() {
+  var toast = document.getElementById('copyToast');
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 1800);
+}
+
+function escapeHtml(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Slider update
+document.getElementById('lengthSlider').addEventListener('input', function() {
+  document.getElementById('lengthVal').textContent = this.value + '%';
+});
+
+function loadSample() {
+  document.getElementById('titleInput').value = 'The History and Impact of the Internet';
+  document.getElementById('textInput').value = "The internet has fundamentally transformed how humans communicate, work, and access information. What began as a military research project in the late 1960s has evolved into a global network connecting billions of people across every continent. The original ARPANET, funded by the United States Department of Defense, linked just four university computers in 1969. By the mid-1980s, the National Science Foundation had expanded the network backbone, and academic institutions were the primary users.\n\nThe invention of the World Wide Web by Tim Berners-Lee in 1989 marked a turning point. Berners-Lee, working at CERN in Switzerland, proposed a system of hyperlinked documents accessible via the internet. His creation of HTML, HTTP, and the first web browser made it possible for non-technical users to navigate and publish information online. The first website went live in 1991, and within a few years, commercial interest in the web exploded.\n\nThe dot-com boom of the late 1990s saw massive investment in internet-based companies. Startups with little revenue but grand visions attracted billions in venture capital. Companies like Amazon, eBay, and Google emerged during this period and survived the subsequent bust in 2000-2001, which wiped out hundreds of less viable businesses. The survivors went on to become some of the most valuable companies in history.\n\nSocial media platforms appeared in the mid-2000s and changed the nature of online interaction. Facebook launched in 2004, Twitter in 2006, and Instagram in 2010. These platforms gave ordinary people the ability to broadcast their thoughts, photos, and videos to a global audience. The implications for politics, journalism, mental health, and social movements have been profound and are still being studied.\n\nE-commerce has reshaped retail in ways few predicted. Online shopping now accounts for a significant percentage of total retail sales in most developed countries. The convenience of browsing products, comparing prices, reading reviews, and having items delivered to your door has permanently altered consumer expectations. Small businesses can now reach customers worldwide without the overhead of physical storefronts.\n\nThe internet has also democratized education. Massive open online courses, tutorial videos, and digital libraries have made knowledge accessible to anyone with a connection. Students in remote areas can access the same lectures as those at prestigious universities. However, the digital divide remains a concern — millions of people worldwide still lack reliable internet access, creating inequalities in educational and economic opportunity.\n\nPrivacy and security concerns have grown alongside the internet's expansion. Data breaches, identity theft, surveillance, and the commodification of personal information are ongoing challenges. Governments around the world are grappling with how to regulate technology companies while preserving the open nature of the internet. The European Union's General Data Protection Regulation, enacted in 2018, represented one of the most significant attempts at comprehensive data privacy legislation.\n\nLooking ahead, the internet continues to evolve. The proliferation of mobile devices has made connectivity nearly ubiquitous in many regions. The Internet of Things connects everyday objects to the network, from thermostats to automobiles. Advances in bandwidth and satellite technology promise to extend coverage to the most remote areas of the planet. The internet's next chapter is being written now, and its impact on society will only continue to grow.";
+}
+
+function clearAll() {
+  document.getElementById('textInput').value = '';
+  document.getElementById('titleInput').value = '';
+  document.getElementById('resultsArea').classList.add('hidden');
+  summarySentences = [];
+  allSentences = [];
+  lastText = '';
+}
+</script>
+</body>
+</html>
