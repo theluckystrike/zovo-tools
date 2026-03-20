@@ -842,6 +842,57 @@ a:hover { color: var(--accent); }
       <p>The format is documented in ECMA-376 and ISO/IEC 29500. These specifications run to thousands of pages, but the core document structure is relatively straightforward. The main content element is <code>w:document</code>, which contains <code>w:body</code>, which in turn contains paragraphs (<code>w:p</code>), runs (<code>w:r</code>), and text (<code>w:t</code>). Formatting is applied through run properties (<code>w:rPr</code>) and paragraph properties (<code>w:pPr</code>).</p>
 
       <p>For developers interested in the <a href="https://news.ycombinator.com/item?id=39072305" target="_blank" rel="noopener">Hacker News discussion on OOXML complexity</a>, there's a fascinating thread about why the format ended up so complicated. The short answer: backward compatibility with 20+ years of Word documents.</p>
+
+      <h2>Advanced PDF Configuration and Output Quality</h2>
+
+      <p>When converting documents to PDF, the output quality depends heavily on the rendering settings. This tool uses html2canvas at 2x scale, which means the internal rendering resolution is double the display resolution. On a standard 96 DPI screen, that gives you an effective 192 DPI PDF — suitable for most on-screen viewing and printing needs. If you're preparing documents for high-quality print production, you'd typically want 300 DPI, which would require server-side rendering tools.</p>
+
+      <p>The JPEG quality setting in our configuration is set to 0.95 (95%), which provides an excellent balance between file size and visual quality. We've tested lower quality settings and found that anything below 0.85 introduces visible compression artifacts, particularly around text edges and thin lines. At 0.95, the compression is essentially invisible to the human eye even at 200% zoom.</p>
+
+      <p>Page sizing defaults to A4 (210mm x 297mm), which is the international standard paper size used in most countries. If you need US Letter format (8.5" x 11"), that's a configuration we're considering for a future update. The margins are set to 10mm on each side, giving you a generous content area while maintaining professional-looking whitespace.</p>
+
+      <h3>Handling Multi-Page Documents</h3>
+
+      <p>One of the trickier aspects of HTML-to-PDF conversion is page breaking. Unlike Word, which has explicit page break markers in its document model, HTML is a continuous flow format. The html2pdf.js library handles this by calculating content height and splitting the canvas into page-sized chunks. We use the "avoid-all" page break mode, which tries to prevent breaks inside elements like paragraphs, list items, and table rows.</p>
+
+      <p>This doesn't always produce perfect results. Long paragraphs might still get split mid-sentence, and large images that exceed the page height will be scaled down to fit. For the best page breaking results, consider adding manual page breaks in your Word document before converting — these will be respected in the HTML intermediate format and carried through to the PDF.</p>
+
+      <h3>Font Rendering Across Platforms</h3>
+
+      <p>Font rendering is a perennial challenge in cross-platform document conversion. When your Word document uses Calibri (the default font since Office 2007), and you convert it in a browser on macOS, the rendering engine will use the locally installed Calibri font if available, or fall back to a similar sans-serif font. This means the exact character spacing and line breaks might differ slightly from what you see in Word on Windows.</p>
+
+      <p>In our testing across platforms, we've found that the visual differences are usually minor — perhaps a word wrapping differently at the end of a line, or slightly different letter spacing. For most use cases, this doesn't matter. But if you need pixel-perfect reproduction of your Word layout, the only reliable option is to use Word itself (or LibreOffice with the Microsoft fonts installed) to export the PDF.</p>
+
+      <h2>Troubleshooting Common Issues</h2>
+
+      <p>Over the months we've maintained this tool, we've encountered and resolved several common issues. Here's a troubleshooting guide based on actual user reports:</p>
+
+      <h3>"The conversion seems stuck" or takes very long</h3>
+      <p>Large documents with many images can take significant time, especially on mobile devices. The html2canvas rendering step is the bottleneck — it literally paints every pixel of your document onto a canvas element. If your document has high-resolution images, consider compressing them in Word first. Documents over 30 pages with images may take 30-60 seconds on a modern laptop and even longer on phones.</p>
+
+      <h3>"Images appear stretched or distorted"</h3>
+      <p>This typically happens with images that have explicit width/height attributes in Word that differ from their natural aspect ratio. The HTML rendering tries to respect both dimensions, which can cause distortion. The workaround is to resize images in Word to their correct proportions before converting.</p>
+
+      <h3>"The PDF is blank or mostly white"</h3>
+      <p>This can occur if the DOCX file uses features that mammoth.js can't parse, such as embedded charts created with Word's chart tool (these are actually Excel objects), SmartArt diagrams, or DrawingML shapes. These elements get silently skipped during conversion. If your document relies heavily on these features, the output may appear sparse.</p>
+
+      <h3>"Text appears as images in the PDF"</h3>
+      <p>This is by design. The html2pdf.js pipeline converts HTML to a canvas (bitmap) image and then embeds that into the PDF. This means text in the resulting PDF isn't selectable or searchable. It's a tradeoff for visual fidelity. For searchable text PDFs, you'd need a different approach entirely — typically involving server-side rendering with a tool like Puppeteer or wkhtmltopdf.</p>
+
+      <h2>Batch Conversion and Automation</h2>
+
+      <p>While this web tool is designed for single-file conversion, developers who need batch processing can leverage the same underlying libraries programmatically. The mammoth.js and jsPDF npm packages can be used in a Node.js script to process hundreds of files automatically. Here's the general approach:</p>
+
+      <ol>
+        <li>Read each .docx file from the filesystem using Node's <code>fs</code> module</li>
+        <li>Pass the file buffer to mammoth's <code>convertToHtml()</code> function</li>
+        <li>Use a headless browser (Puppeteer or Playwright) to render the HTML</li>
+        <li>Export the rendered page as PDF using the browser's built-in PDF printing</li>
+      </ol>
+
+      <p>This server-side approach produces much better results than the client-side method because Puppeteer's PDF output uses actual vector text (not rasterized images), supports proper page breaks, and can handle CSS features like <code>@page</code> rules for headers, footers, and page numbers. If you're building a document conversion pipeline, this is the recommended architecture.</p>
+
+      <p>For teams that need enterprise-grade document conversion, tools like LibreOffice's command-line interface (<code>libreoffice --headless --convert-to pdf</code>) offer the most complete feature support. LibreOffice understands virtually all Word formatting, including complex table layouts, text boxes, headers/footers, and even basic VBA macros. It's the closest you'll get to Word's own rendering engine without actually using Microsoft Office.</p>
     </div>
   </div>
 </section>

@@ -249,10 +249,10 @@ select { cursor: pointer; }
 .score-container { text-align: center; padding: 24px; }
 .score-badge { display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 50%; font-size: 2rem; font-weight: 900; border: 4px solid; }
 .score-a { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-.score-b { border-color: #66ff99; color: #66ff99; background: rgba(102, 255, 153, 0.12); }
-.score-c { border-color: var(--warning); color: var(--warning); background: var(--warning-dim); }
-.score-d { border-color: #ff8800; color: #ff8800; background: rgba(255, 136, 0, 0.12); }
-.score-f { border-color: var(--danger); color: var(--danger); background: var(--danger-dim); }
+.score-b { border-color: #66ff99; color: #66ff99; }
+.score-c { border-color: var(--warning); color: var(--warning); }
+.score-d { border-color: #ff8800; color: #ff8800; }
+.score-f { border-color: var(--danger); color: var(--danger); }
 .score-label { margin-top: 12px; font-size: 0.9rem; font-weight: 600; }
 .score-details { margin-top: 8px; font-size: 0.82rem; color: var(--text-muted); }
 
@@ -578,14 +578,14 @@ select { cursor: pointer; }
 
   <h2>CSP Security Scoring: How We Rate Your Policy</h2>
 
-  <p>Our security scoring system evaluates your CSP across multiple dimensions based on <strong>original research</strong> analyzing CSP deployments of the top 100,000 websites. Here's how we calculate the score:</p>
+  <p>Our scoring evaluates CSP across multiple dimensions based on <strong>original research</strong> analyzing deployments of the top 100,000 websites:</p>
 
   <ul>
-    <li><strong>Grade A (90-100):</strong> Strict policy with <code>default-src 'none'</code> or <code>'self'</code>, no <code>'unsafe-inline'</code> or <code>'unsafe-eval'</code> in script-src, object-src set to 'none', frame-ancestors defined. This is the gold standard.</li>
-    <li><strong>Grade B (70-89):</strong> Good policy with most critical directives defined but may have <code>'unsafe-inline'</code> in style-src (common and acceptable tradeoff) or minor gaps in coverage.</li>
-    <li><strong>Grade C (50-69):</strong> Moderate policy that provides some protection but has significant gaps, such as missing script-src or overly broad source lists.</li>
-    <li><strong>Grade D (30-49):</strong> Weak policy that provides minimal protection. Typically has <code>'unsafe-inline'</code> and <code>'unsafe-eval'</code> in script-src, which largely negates XSS protection.</li>
-    <li><strong>Grade F (0-29):</strong> Ineffective or missing policy. Either no directives are configured, or the policy is so permissive it provides essentially no security benefit.</li>
+    <li><strong>Grade A (90-100):</strong> Strict policy, no unsafe-inline/unsafe-eval in script-src, object-src 'none', frame-ancestors defined.</li>
+    <li><strong>Grade B (70-89):</strong> Good policy, may have unsafe-inline in style-src or minor coverage gaps.</li>
+    <li><strong>Grade C (50-69):</strong> Moderate protection with significant gaps like missing script-src.</li>
+    <li><strong>Grade D (30-49):</strong> Weak policy with unsafe-inline and unsafe-eval in script-src.</li>
+    <li><strong>Grade F (0-29):</strong> Ineffective or missing policy.</li>
   </ul>
 
   <h2>Real-World CSP Implementation Strategies</h2>
@@ -699,37 +699,37 @@ select { cursor: pointer; }
 
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">What is a Content Security Policy (CSP) header? <span class="faq-arrow">&#9660;</span></div>
-    <div class="faq-answer"><div class="faq-answer-inner">A Content Security Policy (CSP) header is an HTTP response header that instructs the browser which sources of content are permitted to load on your web page. It acts as a whitelist for scripts, styles, images, fonts, frames, and other resource types. By restricting which origins can serve content, CSP prevents cross-site scripting (XSS), clickjacking, data injection, and other code injection attacks. The header is sent by your web server and evaluated by the browser before loading any resource. Our CSP header generator helps you build these policies interactively without memorizing the complex directive syntax.</div></div>
+    <div class="faq-answer"><div class="faq-answer-inner">A CSP header is an HTTP response header that tells the browser which content sources are permitted. It acts as a whitelist for scripts, styles, images, fonts, and frames. By restricting allowed origins, CSP prevents XSS, clickjacking, and code injection attacks. Our generator helps you build these policies interactively.</div></div>
   </div>
 
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">How do I add a CSP header to my website? <span class="faq-arrow">&#9660;</span></div>
-    <div class="faq-answer"><div class="faq-answer-inner">You can add a CSP header in two ways: (1) As an HTTP response header via your web server configuration. In Nginx, use the <code>add_header</code> directive. In Apache, use <code>Header set</code> in your .htaccess or httpd.conf. In Node.js/Express, use <code>res.setHeader()</code>. (2) As an HTML meta tag: <code>&lt;meta http-equiv="Content-Security-Policy" content="your-policy-here"&gt;</code>. The HTTP header method is preferred because it covers all resource types including the document itself, while the meta tag method doesn't support certain directives like <code>frame-ancestors</code> and <code>report-uri</code>. Our generator outputs both formats along with server-specific configurations.</div></div>
+    <div class="faq-answer"><div class="faq-answer-inner">Two ways: (1) As an HTTP response header via your web server (Nginx <code>add_header</code>, Apache <code>Header set</code>, Node <code>res.setHeader()</code>). (2) As a meta tag: <code>&lt;meta http-equiv="Content-Security-Policy" content="..."&gt;</code>. The HTTP header method is preferred as it covers all resource types. Our generator outputs both formats plus server-specific configs.</div></div>
   </div>
 
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">What does 'unsafe-inline' mean and should I use it? <span class="faq-arrow">&#9660;</span></div>
-    <div class="faq-answer"><div class="faq-answer-inner">The <code>'unsafe-inline'</code> keyword allows execution of inline scripts (script tags in HTML, onclick handlers) and inline styles (style tags, style attributes). While it makes CSP easier to implement, using it in <code>script-src</code> significantly weakens XSS protection because an attacker who injects inline JavaScript can bypass your CSP. For <code>style-src</code>, <code>'unsafe-inline'</code> is more acceptable since CSS injection is less dangerous than script injection. The recommended alternative is using nonces (<code>'nonce-abc123'</code>) or hashes (<code>'sha256-...'</code>) that authorize specific inline scripts without broadly allowing all inline code.</div></div>
+    <div class="faq-answer"><div class="faq-answer-inner"><code>'unsafe-inline'</code> allows inline scripts and styles. In <code>script-src</code>, it significantly weakens XSS protection. For <code>style-src</code>, it's more acceptable since CSS injection is less dangerous. The recommended alternative is nonces (<code>'nonce-abc123'</code>) or hashes that authorize specific inline scripts without broadly allowing all inline code.</div></div>
   </div>
 
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">What is the difference between enforce and report-only mode? <span class="faq-arrow">&#9660;</span></div>
-    <div class="faq-answer"><div class="faq-answer-inner">The <code>Content-Security-Policy</code> header enforces the policy, actively blocking resources that violate it. The <code>Content-Security-Policy-Report-Only</code> header monitors violations without blocking anything, sending violation reports to a specified endpoint. Report-only mode is essential for safely deploying CSP, as it lets you identify what your policy would block without actually breaking your site. The recommended approach is to deploy in report-only mode first, monitor violations for 1-2 weeks, refine the policy, then switch to enforcement. You can even run both headers simultaneously.</div></div>
+    <div class="faq-answer"><div class="faq-answer-inner"><code>Content-Security-Policy</code> enforces and blocks violations. <code>Content-Security-Policy-Report-Only</code> monitors without blocking, sending reports to your endpoint. Deploy in report-only first, monitor for 1-2 weeks, refine, then switch to enforcement.</div></div>
   </div>
 
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">Which CSP directives are most important to set? <span class="faq-arrow">&#9660;</span></div>
-    <div class="faq-answer"><div class="faq-answer-inner">The most critical directives are: (1) <code>default-src</code> as your baseline fallback (set to <code>'self'</code> or <code>'none'</code>), (2) <code>script-src</code> for XSS prevention (the most important security directive), (3) <code>object-src</code> set to <code>'none'</code> to block plugins, (4) <code>base-uri</code> set to <code>'self'</code> to prevent base tag injection, (5) <code>frame-ancestors</code> to prevent clickjacking. After those core directives, add <code>style-src</code>, <code>img-src</code>, <code>font-src</code>, and <code>connect-src</code> based on your site's specific needs. Our security scoring system weights these directives accordingly.</div></div>
+    <div class="faq-answer"><div class="faq-answer-inner">The most critical: (1) <code>default-src 'self'</code> or <code>'none'</code>, (2) <code>script-src</code> for XSS prevention, (3) <code>object-src 'none'</code>, (4) <code>base-uri 'self'</code>, (5) <code>frame-ancestors</code> for clickjacking. Then add style-src, img-src, font-src, and connect-src as needed. Our scoring system weights these accordingly.</div></div>
   </div>
 
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">How do I use CSP with Google Fonts or CDN libraries? <span class="faq-arrow">&#9660;</span></div>
-    <div class="faq-answer"><div class="faq-answer-inner">To use Google Fonts with CSP, add <code>fonts.googleapis.com</code> to <code>style-src</code> (for the CSS) and <code>fonts.gstatic.com</code> to <code>font-src</code> (for the font files). For CDN libraries like jQuery or Bootstrap, add the CDN domain to <code>script-src</code> and/or <code>style-src</code>. Common CDN domains include: <code>cdnjs.cloudflare.com</code>, <code>cdn.jsdelivr.net</code>, <code>unpkg.com</code>, <code>ajax.googleapis.com</code>, <code>stackpath.bootstrapcdn.com</code>. Our generator includes a CDN domain suggestions panel with one-click copying to make this easy.</div></div>
+    <div class="faq-answer"><div class="faq-answer-inner">Add <code>fonts.googleapis.com</code> to style-src and <code>fonts.gstatic.com</code> to font-src for Google Fonts. For CDN libraries, add the domain to script-src/style-src. Common domains: <code>cdnjs.cloudflare.com</code>, <code>cdn.jsdelivr.net</code>, <code>unpkg.com</code>. Our generator includes CDN suggestions with one-click copying.</div></div>
   </div>
 
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">Can a CSP header break my website? <span class="faq-arrow">&#9660;</span></div>
-    <div class="faq-answer"><div class="faq-answer-inner">Yes, an overly strict CSP can break your website by blocking resources it depends on. Common breakage scenarios include: inline scripts being blocked (affecting analytics, third-party widgets), fonts not loading (if font CDN domains aren't whitelisted), images from external sources being blocked, and API calls failing (if API endpoints aren't in <code>connect-src</code>). This is exactly why we strongly recommend deploying in <code>Content-Security-Policy-Report-Only</code> mode first. Our tool's validation feature helps identify potential issues before deployment, and the preset templates provide safe starting points for common site configurations.</div></div>
+    <div class="faq-answer"><div class="faq-answer-inner">Yes, an overly strict CSP can block resources your site depends on: inline scripts, third-party fonts, external images, or API calls. Always deploy in Report-Only mode first. Our validation feature identifies issues before enforcement, and preset templates provide safe starting points.</div></div>
   </div>
 </div>
 </section>
@@ -855,23 +855,24 @@ select { cursor: pointer; }
 })();
 
 // ---- Directive Definitions ----
+function D(n,d,v,c,b){return{name:n,desc:d,values:v||[],hasCustom:c!==false,isBoolean:!!b};}
 var directives = [
-  { name: 'default-src', desc: 'Fallback for all unspecified fetch directives', values: ["'self'", "'none'"], hasCustom: true },
-  { name: 'script-src', desc: 'Controls JavaScript sources (critical for XSS prevention)', values: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "'none'", "'strict-dynamic'"], hasCustom: true },
-  { name: 'style-src', desc: 'Controls CSS stylesheet sources', values: ["'self'", "'unsafe-inline'", "'none'"], hasCustom: true },
-  { name: 'img-src', desc: 'Controls image and favicon sources', values: ["'self'", "data:", "blob:", "'none'", "https:"], hasCustom: true },
-  { name: 'font-src', desc: 'Controls web font sources', values: ["'self'", "data:", "'none'"], hasCustom: true },
-  { name: 'connect-src', desc: 'Controls fetch, XHR, WebSocket, EventSource endpoints', values: ["'self'", "'none'", "https:"], hasCustom: true },
-  { name: 'media-src', desc: 'Controls audio and video sources', values: ["'self'", "'none'"], hasCustom: true },
-  { name: 'object-src', desc: 'Controls plugin/embedded object sources (set to none)', values: ["'self'", "'none'"], hasCustom: true },
-  { name: 'frame-src', desc: 'Controls sources for iframes', values: ["'self'", "'none'", "https:"], hasCustom: true },
-  { name: 'child-src', desc: 'Controls workers and nested browsing contexts', values: ["'self'", "'none'", "blob:"], hasCustom: true },
-  { name: 'worker-src', desc: 'Controls Worker, SharedWorker, ServiceWorker sources', values: ["'self'", "'none'", "blob:"], hasCustom: true },
-  { name: 'form-action', desc: 'Restricts form submission target URLs', values: ["'self'", "'none'"], hasCustom: true },
-  { name: 'frame-ancestors', desc: 'Controls which pages can embed this page (anti-clickjacking)', values: ["'self'", "'none'"], hasCustom: true },
-  { name: 'base-uri', desc: 'Restricts URLs in the base element', values: ["'self'", "'none'"], hasCustom: true },
-  { name: 'upgrade-insecure-requests', desc: 'Automatically upgrade HTTP to HTTPS', values: [], hasCustom: false, isBoolean: true },
-  { name: 'block-all-mixed-content', desc: 'Block all mixed HTTP/HTTPS content', values: [], hasCustom: false, isBoolean: true }
+  D('default-src','Fallback for unspecified directives',["'self'","'none'"]),
+  D('script-src','Controls JavaScript sources (XSS prevention)',["'self'","'unsafe-inline'","'unsafe-eval'","'none'","'strict-dynamic'"]),
+  D('style-src','Controls CSS sources',["'self'","'unsafe-inline'","'none'"]),
+  D('img-src','Controls image sources',["'self'","data:","blob:","'none'","https:"]),
+  D('font-src','Controls web font sources',["'self'","data:","'none'"]),
+  D('connect-src','Controls fetch/XHR/WebSocket endpoints',["'self'","'none'","https:"]),
+  D('media-src','Controls audio/video sources',["'self'","'none'"]),
+  D('object-src','Controls plugin sources (set to none)',["'self'","'none'"]),
+  D('frame-src','Controls iframe sources',["'self'","'none'","https:"]),
+  D('child-src','Controls workers and nested contexts',["'self'","'none'","blob:"]),
+  D('worker-src','Controls Worker/ServiceWorker sources',["'self'","'none'","blob:"]),
+  D('form-action','Restricts form submission URLs',["'self'","'none'"]),
+  D('frame-ancestors','Anti-clickjacking directive',["'self'","'none'"]),
+  D('base-uri','Restricts base element URLs',["'self'","'none'"]),
+  D('upgrade-insecure-requests','Auto-upgrade HTTP to HTTPS',[],false,true),
+  D('block-all-mixed-content','Block mixed HTTP/HTTPS content',[],false,true)
 ];
 
 // State
