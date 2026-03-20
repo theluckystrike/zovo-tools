@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Sitemap Validator — Validate XML Sitemaps Online | Zovo</title>
+<meta name="description" content="Free online sitemap validator. Check your XML sitemap against the sitemaps.org protocol specification. Detect errors, duplicate URLs, missing tags, and more. 100% client-side.">
+<meta name="author" content="Michael Lip">
+<meta property="og:title" content="Free Sitemap Validator — Validate XML Sitemaps Online">
+<meta property="og:description" content="Validate XML sitemaps against the sitemaps.org protocol. Find errors, duplicate URLs, and missing required elements instantly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/sitemap-validator/">
+<meta property="og:image" content="https://zovo.one/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Sitemap Validator — Validate XML Sitemaps Online">
+<meta name="twitter:description" content="Validate XML sitemaps against the sitemaps.org protocol. Find errors, duplicate URLs, and missing required elements instantly.">
+<meta name="twitter:image" content="https://zovo.one/og-image.png">
+<link rel="canonical" href="https://zovo.one/free-tools/sitemap-validator/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Sitemap Validator",
+  "description": "Validate XML sitemaps against the sitemaps.org protocol specification. Check structure, required elements, URL limits, and more.",
+  "url": "https://zovo.one/free-tools/sitemap-validator/",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a sitemap and why does it need validation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A sitemap is an XML file that lists the URLs on your website so search engines can crawl them efficiently. Validation ensures the file follows the sitemaps.org protocol, which means search engines can parse it without errors."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the limits for a single sitemap file?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "According to the sitemaps.org protocol, a single sitemap file can contain a maximum of 50,000 URLs and must not exceed 50MB uncompressed. If you exceed these limits, you should split your sitemap into multiple files and use a sitemap index."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a sitemap index file?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A sitemap index file lists multiple sitemap files. It uses the <sitemapindex> root element instead of <urlset> and contains <sitemap> entries each with a <loc> pointing to an individual sitemap file."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my sitemap data sent to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. All validation happens entirely in your browser using JavaScript. Your sitemap data never leaves your device and is not uploaded to any server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What elements are required in a sitemap?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The root element must be <urlset> with the proper xmlns attribute. Each <url> entry must contain a <loc> element with a valid URL. Optional elements include <lastmod>, <changefreq>, and <priority>."
+      }
+    }
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#e0e0e8;font-family:system-ui,-apple-system,sans-serif;line-height:1.7;min-height:100vh}
+.container{max-width:960px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:2rem;margin-bottom:8px;color:#fff}
+h2{font-size:1.5rem;margin:40px 0 16px;color:#fff}
+h3{font-size:1.15rem;margin:20px 0 8px;color:#e0e0e8}
+p,.secondary{color:#b0b0c0;margin-bottom:14px}
+a{color:#00ff88;text-decoration:none}
+a:hover{text-decoration:underline}
+.reading-time{color:#b0b0c0;font-size:.85rem;margin-bottom:20px;display:inline-block;background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:4px 12px}
+.toc{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px 0}
+.toc h3{margin-top:0;color:#fff;font-size:1rem}
+.toc ul{list-style:none;padding-left:0}
+.toc li{margin:6px 0}
+.toc a{font-size:.92rem}
+.card{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin:20px 0}
+.privacy-note{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:16px 20px;margin:20px 0;font-size:.9rem;color:#b0b0c0}
+.privacy-note::before{content:"🔒 ";font-size:1rem}
+textarea{width:100%;min-height:220px;background:#0a0a0f;color:#e0e0e8;border:1px solid #1e1e2a;border-radius:8px;padding:14px;font-family:'Courier New',monospace;font-size:.88rem;resize:vertical}
+textarea:focus{outline:none;border-color:#00ff88}
+.btn{background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;padding:10px 22px;font-size:.95rem;font-weight:600;cursor:pointer;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-outline{background:transparent;color:#00ff88;border:1px solid #00ff88;border-radius:8px;padding:8px 18px;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .2s,color .2s}
+.btn-outline:hover{background:#00ff88;color:#0a0a0f}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.file-input-wrap{position:relative;display:inline-block}
+.file-input-wrap input[type="file"]{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+.stat-card{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:16px;text-align:center}
+.stat-card .value{font-size:1.8rem;font-weight:700;color:#fff}
+.stat-card .label{font-size:.82rem;color:#b0b0c0;margin-top:4px}
+.stat-card.pass .value{color:#00ff88}
+.stat-card.warn .value{color:#ffb800}
+.stat-card.fail .value{color:#ff4466}
+.results-section{margin-top:20px}
+.error-list,.warning-list{max-height:300px;overflow-y:auto;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;padding:12px;margin:10px 0}
+.error-item{padding:6px 0;border-bottom:1px solid #1e1e2a;font-size:.88rem}
+.error-item:last-child{border-bottom:none}
+.error-item .tag{display:inline-block;border-radius:4px;padding:1px 7px;font-size:.75rem;font-weight:600;margin-right:6px}
+.tag-error{background:#ff446633;color:#ff4466}
+.tag-warn{background:#ffb80033;color:#ffb800}
+.tag-pass{background:#00ff8833;color:#00ff88}
+table{width:100%;border-collapse:collapse;font-size:.88rem;margin:10px 0}
+th{background:#1a1a26;color:#b0b0c0;text-align:left;padding:10px 12px;cursor:pointer;user-select:none;white-space:nowrap;border-bottom:1px solid #1e1e2a}
+th:hover{color:#00ff88}
+td{padding:8px 12px;border-bottom:1px solid #1e1e2a;word-break:break-all}
+.table-wrap{max-height:400px;overflow:auto;border:1px solid #1e1e2a;border-radius:8px}
+.hidden{display:none}
+.faq-item{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:18px 22px;margin:12px 0}
+.faq-item h3{color:#fff;margin:0 0 8px}
+.faq-item p{margin:0;color:#b0b0c0}
+.footer{text-align:center;margin-top:50px;padding-top:24px;border-top:1px solid #1e1e2a;color:#b0b0c0;font-size:.85rem}
+.compat{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:16px 20px;margin:24px 0;font-size:.88rem;color:#b0b0c0}
+@media(max-width:600px){
+  h1{font-size:1.5rem}
+  .dashboard{grid-template-columns:1fr 1fr}
+  .container{padding:16px 12px 40px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Sitemap Validator</h1>
+<p>Validate your XML sitemap against the <a href="https://www.sitemaps.org/protocol.html" target="_blank" rel="noopener">sitemaps.org protocol specification</a>. Catch errors before search engines do.</p>
+<span class="reading-time">10 min read</span>
+
+<nav class="toc" aria-label="Table of Contents">
+<h3>Table of Contents</h3>
+<ul>
+<li><a href="#tool">Sitemap Validator Tool</a></li>
+<li><a href="#what-is">What Is a Sitemap?</a></li>
+<li><a href="#why-validate">Why You Should Validate Your Sitemap</a></li>
+<li><a href="#protocol">The Sitemaps.org Protocol Explained</a></li>
+<li><a href="#common-errors">Common Sitemap Errors and How to Fix Them</a></li>
+<li><a href="#sitemap-index">Working with Sitemap Index Files</a></li>
+<li><a href="#best-practices">Sitemap Best Practices for SEO</a></li>
+<li><a href="#faq">Frequently Asked Questions</a></li>
+</ul>
+</nav>
+
+<h2 id="tool">Sitemap Validator Tool</h2>
+
+<div class="privacy-note">All processing happens in your browser. No data is uploaded to any server.</div>
+
+<div class="card">
+<p style="margin-bottom:10px;color:#e0e0e8;font-weight:600">Paste your sitemap XML below or upload a file:</p>
+<textarea id="xmlInput" placeholder="<?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
+<urlset xmlns=&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;>
+  <url>
+    <loc>https://example.com/</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>" spellcheck="false"></textarea>
+<div class="btn-row">
+<button class="btn" onclick="validateSitemap()">Validate Sitemap</button>
+<div class="file-input-wrap">
+<button class="btn-outline">Upload .xml File</button>
+<input type="file" accept=".xml,text/xml,application/xml" onchange="handleFileUpload(event)">
+</div>
+<button class="btn-outline" onclick="loadSample()">Load Sample</button>
+<button class="btn-outline" onclick="clearAll()">Clear</button>
+</div>
+</div>
+
+<div id="resultsArea" class="hidden">
+<h3 style="margin-top:24px">Validation Results</h3>
+<div id="dashboard" class="dashboard"></div>
+<div id="errorsSection" class="results-section hidden">
+<h3>Errors</h3>
+<div id="errorsList" class="error-list"></div>
+</div>
+<div id="warningsSection" class="results-section hidden">
+<h3>Warnings</h3>
+<div id="warningsList" class="warning-list"></div>
+</div>
+<div id="urlTableSection" class="results-section hidden">
+<h3>URL List <span id="urlTableCount" style="color:#b0b0c0;font-size:.85rem"></span></h3>
+<div class="table-wrap">
+<table id="urlTable">
+<thead><tr>
+<th onclick="sortTable(0)">loc</th>
+<th onclick="sortTable(1)">lastmod</th>
+<th onclick="sortTable(2)">changefreq</th>
+<th onclick="sortTable(3)">priority</th>
+</tr></thead>
+<tbody id="urlTableBody"></tbody>
+</table>
+</div>
+</div>
+<div class="btn-row" style="margin-top:16px">
+<button class="btn-outline" onclick="exportJSON()">Export JSON Report</button>
+<button class="btn-outline" onclick="exportCSV()">Export CSV</button>
+</div>
+</div>
+
+<h2 id="what-is">What Is a Sitemap?</h2>
+<p>A sitemap is an XML file hosted on your website that provides search engines with a structured list of every page you want indexed. Think of it as a roadmap — it tells crawlers like Googlebot, Bingbot, and others exactly where to look and how often those pages change.</p>
+<p>The sitemap protocol was jointly developed by Google, Yahoo, and Microsoft in 2006 and later standardized at <a href="https://www.sitemaps.org/protocol.html" target="_blank" rel="noopener">sitemaps.org</a>. It supports two root formats: <code>&lt;urlset&gt;</code> for regular sitemaps and <code>&lt;sitemapindex&gt;</code> for sitemap index files that reference multiple sitemaps.</p>
+<p>Every URL entry in a sitemap can include optional metadata like the last modification date (<code>&lt;lastmod&gt;</code>), change frequency (<code>&lt;changefreq&gt;</code>), and a priority value (<code>&lt;priority&gt;</code>) between 0.0 and 1.0. While these optional fields don't guarantee anything about crawl behavior, they give search engines useful hints.</p>
+
+<h2 id="why-validate">Why You Should Validate Your Sitemap</h2>
+<p>A broken sitemap is worse than no sitemap at all. If your XML is malformed, search engines will simply ignore it — and you won't get an error message about it in most cases. This means pages you care about might not get discovered or re-crawled on a useful schedule.</p>
+<p>Common issues include missing the required XML namespace declaration, forgetting the <code>&lt;loc&gt;</code> tag inside a URL entry, or using invalid date formats in <code>&lt;lastmod&gt;</code>. Some CMS plugins generate sitemaps automatically but produce subtly broken output — an unclosed tag here, a malformed URL there.</p>
+<p>Validation catches these problems before they affect your search visibility. Run your sitemap through a validator after every significant change to your site structure, and especially after switching CMS platforms, migrating domains, or updating sitemap generation plugins.</p>
+
+<h2 id="protocol">The Sitemaps.org Protocol Explained</h2>
+<p>The protocol defines a strict XML schema. The root element must be <code>&lt;urlset&gt;</code> with the namespace <code>xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"</code>. Inside it, each page is wrapped in a <code>&lt;url&gt;</code> element.</p>
+<h3>Required Elements</h3>
+<p><strong>&lt;loc&gt;</strong> — The full URL of the page. This is the only required child element of <code>&lt;url&gt;</code>. It must be a properly encoded absolute URL starting with http:// or https://.</p>
+<h3>Optional Elements</h3>
+<p><strong>&lt;lastmod&gt;</strong> — The date the page was last modified, in <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener">ISO 8601</a> format. Acceptable formats include <code>YYYY-MM-DD</code>, <code>YYYY-MM-DDThh:mmTZD</code>, and full datetime with seconds.</p>
+<p><strong>&lt;changefreq&gt;</strong> — A hint about how frequently the page changes. Valid values are: <code>always</code>, <code>hourly</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>yearly</code>, <code>never</code>. Google has publicly stated they largely ignore this field, but other engines may still use it.</p>
+<p><strong>&lt;priority&gt;</strong> — A value between 0.0 and 1.0 indicating the relative importance of a URL compared to other URLs on the same site. The default is 0.5. This is a suggestion, not a directive.</p>
+
+<h2 id="common-errors">Common Sitemap Errors and How to Fix Them</h2>
+<p><strong>Missing XML declaration or namespace:</strong> Always start your sitemap with <code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</code> and include the correct xmlns attribute on the root element.</p>
+<p><strong>Invalid lastmod dates:</strong> Use ISO 8601 format. A common mistake is writing <code>01/15/2024</code> instead of <code>2024-01-15</code>. Timestamps with timezone offsets like <code>2024-01-15T09:30:00+00:00</code> are also valid.</p>
+<p><strong>Exceeding the 50,000 URL limit:</strong> A single sitemap file can contain at most 50,000 URLs. For larger sites, split into multiple sitemap files and reference them from a sitemap index file.</p>
+<p><strong>Relative URLs in loc:</strong> The <code>&lt;loc&gt;</code> element must contain a full absolute URL including the protocol. Writing <code>/page.html</code> instead of <code>https://example.com/page.html</code> will cause validation failures.</p>
+<p><strong>Duplicate URLs:</strong> Each URL should appear only once in a sitemap. Duplicates waste your URL budget and can confuse crawlers about which entry's metadata to trust.</p>
+<p><strong>Priority values out of range:</strong> Priority must be a decimal between 0.0 and 1.0 inclusive. Values like <code>2</code> or <code>-0.5</code> are invalid.</p>
+
+<h2 id="sitemap-index">Working with Sitemap Index Files</h2>
+<p>When your site has more than 50,000 URLs — or when you want to organize sitemaps by content type — a sitemap index file is the solution. Instead of <code>&lt;urlset&gt;</code>, the root element is <code>&lt;sitemapindex&gt;</code>, and each entry uses <code>&lt;sitemap&gt;</code> instead of <code>&lt;url&gt;</code>.</p>
+<p>Each <code>&lt;sitemap&gt;</code> entry requires a <code>&lt;loc&gt;</code> pointing to the individual sitemap file and optionally a <code>&lt;lastmod&gt;</code> date. The index file itself must also respect the 50MB size limit and should be referenced in your robots.txt file.</p>
+<p>This validator handles both formats. It detects whether your XML uses <code>&lt;urlset&gt;</code> or <code>&lt;sitemapindex&gt;</code> as the root element and applies the appropriate validation rules for each.</p>
+
+<h2 id="best-practices">Sitemap Best Practices for SEO</h2>
+<p><strong>Keep it current.</strong> Update your sitemap whenever you add, remove, or significantly modify pages. Stale sitemaps with outdated lastmod dates can reduce crawl efficiency.</p>
+<p><strong>Only include canonical URLs.</strong> Every URL in your sitemap should be the canonical version of that page. Don't list URLs that redirect, return 404, or have a different canonical tag.</p>
+<p><strong>Reference it in robots.txt.</strong> Add a <code>Sitemap: https://yoursite.com/sitemap.xml</code> directive to your robots.txt file so crawlers can find it automatically.</p>
+<p><strong>Use UTF-8 encoding.</strong> The XML declaration should specify UTF-8, and all URLs should be properly entity-encoded. Ampersands become <code>&amp;amp;</code>, for example.</p>
+<p><strong>Submit to Google Search Console.</strong> While Google can discover your sitemap from robots.txt, manually submitting it through Search Console confirms Google has received it and lets you monitor its processing status.</p>
+<p><strong>Monitor regularly.</strong> Automated sitemap generation can break silently. Schedule periodic validation checks — monthly at minimum — to catch issues before they affect your indexing.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-item">
+<h3>What is a sitemap and why does it need validation?</h3>
+<p>A sitemap is an XML file that lists the URLs on your website so search engines can crawl them efficiently. Validation confirms the file follows the sitemaps.org protocol, meaning search engines can parse it without errors. A malformed sitemap may be silently ignored.</p>
+</div>
+<div class="faq-item">
+<h3>What are the limits for a single sitemap file?</h3>
+<p>According to the sitemaps.org protocol, a single sitemap file can contain a maximum of 50,000 URLs and must not exceed 50MB uncompressed. If you exceed these limits, split your sitemap into multiple files and use a sitemap index.</p>
+</div>
+<div class="faq-item">
+<h3>What is a sitemap index file?</h3>
+<p>A sitemap index file lists multiple sitemap files. It uses the &lt;sitemapindex&gt; root element instead of &lt;urlset&gt; and contains &lt;sitemap&gt; entries each with a &lt;loc&gt; pointing to an individual sitemap file.</p>
+</div>
+<div class="faq-item">
+<h3>Is my sitemap data sent to a server?</h3>
+<p>No. All validation happens entirely in your browser using JavaScript. Your sitemap data never leaves your device and is not uploaded to any server.</p>
+</div>
+<div class="faq-item">
+<h3>What elements are required in a sitemap?</h3>
+<p>The root element must be &lt;urlset&gt; with the proper xmlns attribute. Each &lt;url&gt; entry must contain a &lt;loc&gt; element with a valid URL. Optional elements include &lt;lastmod&gt;, &lt;changefreq&gt;, and &lt;priority&gt;.</p>
+</div>
+
+<h2>Related Tools</h2>
+<p>You might also find these tools useful:</p>
+<ul style="padding-left:20px;color:#b0b0c0">
+<li><a href="/free-tools/robots-txt-generator/">Robots.txt Generator</a> — Create and validate your robots.txt file.</li>
+<li><a href="/free-tools/xml-formatter/">XML Formatter</a> — Pretty-print and format XML documents for readability.</li>
+<li><a href="/free-tools/schema-generator/">Schema Generator</a> — Generate structured data markup for your pages.</li>
+</ul>
+
+<div class="compat">
+<strong>Browser Compatibility:</strong> This tool works in all modern browsers including Chrome 60+, Firefox 55+, Safari 11+, and Edge 79+. JavaScript must be enabled. No plugins or extensions required.
+</div>
+
+<div class="footer">
+Built by Michael Lip · More free tools at <a href="https://zovo.one">zovo.one</a>
+</div>
+
+</div>
+
+<script>
+var validationReport = null;
+var parsedUrls = [];
+var sortCol = -1;
+var sortAsc = true;
+
+function getTextContent(el, tag) {
+  var child = el.getElementsByTagName(tag);
+  if (child.length > 0 && child[0].textContent) return child[0].textContent.trim();
+  return '';
+}
+
+function isValidISO8601(s) {
+  if (!s) return true;
+  // YYYY, YYYY-MM, YYYY-MM-DD, YYYY-MM-DDThh:mm, YYYY-MM-DDThh:mm:ss, with optional timezone
+  var patterns = [
+    /^\d{4}$/,
+    /^\d{4}-\d{2}$/,
+    /^\d{4}-\d{2}-\d{2}$/,
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(\.\d+)?(Z|[+-]\d{2}:\d{2})?$/
+  ];
+  for (var i = 0; i < patterns.length; i++) {
+    if (patterns[i].test(s)) return true;
+  }
+  return false;
+}
+
+var validChangefreqs = ['always','hourly','daily','weekly','monthly','yearly','never'];
+
+function isValidPriority(s) {
+  if (!s) return true;
+  var n = parseFloat(s);
+  if (isNaN(n)) return false;
+  if (n < 0 || n > 1) return false;
+  // must be a valid decimal representation
+  if (!/^\d(\.\d{1,2})?$/.test(s) && !/^[01](\.\d{1,2})?$/.test(s)) return false;
+  return true;
+}
+
+function isValidUrl(s) {
+  if (!s) return false;
+  return /^https?:\/\/.+/.test(s);
+}
+
+function estimateByteSize(str) {
+  // rough byte estimate for UTF-8
+  var bytes = 0;
+  for (var i = 0; i < str.length; i++) {
+    var c = str.charCodeAt(i);
+    if (c <= 0x7f) bytes++;
+    else if (c <= 0x7ff) bytes += 2;
+    else if (c <= 0xffff) bytes += 3;
+    else bytes += 4;
+  }
+  return bytes;
+}
+
+function findLineNumber(xmlStr, searchStr) {
+  if (!searchStr) return null;
+  var idx = xmlStr.indexOf(searchStr);
+  if (idx === -1) return null;
+  var lines = xmlStr.substring(0, idx).split('\n');
+  return lines.length;
+}
+
+function validateSitemap() {
+  var xmlStr = document.getElementById('xmlInput').value.trim();
+  if (!xmlStr) {
+    alert('Please paste sitemap XML or upload a file.');
+    return;
+  }
+
+  var errors = [];
+  var warnings = [];
+  parsedUrls = [];
+  var isSitemapIndex = false;
+
+  // Check file size
+  var byteSize = estimateByteSize(xmlStr);
+  var mbSize = byteSize / (1024 * 1024);
+  if (mbSize > 50) {
+    errors.push({line: null, msg: 'File size exceeds 50MB limit (' + mbSize.toFixed(2) + 'MB). Sitemaps must be under 50MB uncompressed.'});
+  }
+
+  // Parse XML
+  var parser = new DOMParser();
+  var xmlDoc = parser.parseFromString(xmlStr, 'text/xml');
+
+  // Check for parse errors
+  var parseError = xmlDoc.getElementsByTagName('parsererror');
+  if (parseError.length > 0) {
+    var errText = parseError[0].textContent || 'Unknown XML parse error';
+    errors.push({line: null, msg: 'XML parse error: ' + errText.substring(0, 200)});
+    showResults(0, 0, errors, warnings, []);
+    return;
+  }
+
+  var root = xmlDoc.documentElement;
+  var rootName = root.localName || root.nodeName;
+
+  // Determine type
+  if (rootName === 'sitemapindex') {
+    isSitemapIndex = true;
+  } else if (rootName === 'urlset') {
+    isSitemapIndex = false;
+  } else {
+    errors.push({line: 1, msg: 'Invalid root element <' + rootName + '>. Expected <urlset> or <sitemapindex>.'});
+    showResults(0, 0, errors, warnings, []);
+    return;
+  }
+
+  // Check namespace
+  var ns = root.getAttribute('xmlns');
+  if (ns !== 'http://www.sitemaps.org/schemas/sitemap/0.9') {
+    if (!ns) {
+      errors.push({line: 1, msg: 'Missing required xmlns namespace on root element. Expected xmlns="http://www.sitemaps.org/schemas/sitemap/0.9".'});
+    } else {
+      errors.push({line: 1, msg: 'Invalid namespace "' + ns + '". Expected "http://www.sitemaps.org/schemas/sitemap/0.9".'});
+    }
+  }
+
+  if (isSitemapIndex) {
+    // Validate sitemap index
+    var sitemaps = root.getElementsByTagName('sitemap');
+    var totalEntries = sitemaps.length;
+
+    if (totalEntries === 0) {
+      errors.push({line: null, msg: 'Sitemap index contains no <sitemap> entries.'});
+    }
+
+    var seenLocs = {};
+    var validCount = 0;
+    var invalidCount = 0;
+
+    for (var i = 0; i < sitemaps.length; i++) {
+      var sm = sitemaps[i];
+      var loc = getTextContent(sm, 'loc');
+      var lastmod = getTextContent(sm, 'lastmod');
+      var entry = {loc: loc, lastmod: lastmod, changefreq: '', priority: ''};
+      parsedUrls.push(entry);
+
+      var hasError = false;
+
+      if (!loc) {
+        errors.push({line: findLineNumber(xmlStr, '<sitemap'), msg: 'Sitemap entry #' + (i+1) + ' missing required <loc> element.'});
+        hasError = true;
+      } else if (!isValidUrl(loc)) {
+        errors.push({line: findLineNumber(xmlStr, loc), msg: 'Sitemap entry #' + (i+1) + ' has invalid URL in <loc>: "' + loc + '"'});
+        hasError = true;
+      }
+
+      if (lastmod && !isValidISO8601(lastmod)) {
+        errors.push({line: findLineNumber(xmlStr, lastmod), msg: 'Sitemap entry #' + (i+1) + ' has invalid <lastmod> date: "' + lastmod + '". Must be ISO 8601.'});
+        hasError = true;
+      }
+
+      if (loc && seenLocs[loc]) {
+        warnings.push({line: findLineNumber(xmlStr, loc), msg: 'Duplicate sitemap URL: "' + loc + '"'});
+      }
+      if (loc) seenLocs[loc] = true;
+
+      if (hasError) invalidCount++; else validCount++;
+    }
+
+    showResults(totalEntries, invalidCount, errors, warnings, parsedUrls, true);
+
+  } else {
+    // Validate urlset
+    var urls = root.getElementsByTagName('url');
+    var totalUrls = urls.length;
+
+    if (totalUrls === 0) {
+      warnings.push({line: null, msg: 'Sitemap contains no <url> entries.'});
+    }
+
+    if (totalUrls > 50000) {
+      errors.push({line: null, msg: 'Sitemap contains ' + totalUrls.toLocaleString() + ' URLs. Maximum allowed is 50,000 per sitemap file.'});
+    }
+
+    var seenLocs = {};
+    var validCount = 0;
+    var invalidCount = 0;
+    var missingLastmod = 0;
+    var missingChangefreq = 0;
+    var missingPriority = 0;
+
+    for (var i = 0; i < urls.length; i++) {
+      var u = urls[i];
+      var loc = getTextContent(u, 'loc');
+      var lastmod = getTextContent(u, 'lastmod');
+      var changefreq = getTextContent(u, 'changefreq');
+      var priority = getTextContent(u, 'priority');
+      var entry = {loc: loc, lastmod: lastmod, changefreq: changefreq, priority: priority};
+      parsedUrls.push(entry);
+
+      var hasError = false;
+
+      // Required: loc
+      if (!loc) {
+        errors.push({line: findLineNumber(xmlStr, '<url'), msg: 'URL entry #' + (i+1) + ' missing required <loc> element.'});
+        hasError = true;
+      } else if (!isValidUrl(loc)) {
+        errors.push({line: findLineNumber(xmlStr, loc), msg: 'URL entry #' + (i+1) + ' has invalid URL: "' + loc.substring(0, 100) + '". Must start with http:// or https://.'});
+        hasError = true;
+      }
+
+      // Optional: lastmod
+      if (lastmod) {
+        if (!isValidISO8601(lastmod)) {
+          errors.push({line: findLineNumber(xmlStr, lastmod), msg: 'URL entry #' + (i+1) + ' has invalid <lastmod>: "' + lastmod + '". Must be ISO 8601 format.'});
+          hasError = true;
+        }
+      } else {
+        missingLastmod++;
+      }
+
+      // Optional: changefreq
+      if (changefreq) {
+        if (validChangefreqs.indexOf(changefreq.toLowerCase()) === -1) {
+          errors.push({line: findLineNumber(xmlStr, changefreq), msg: 'URL entry #' + (i+1) + ' has invalid <changefreq>: "' + changefreq + '". Valid values: ' + validChangefreqs.join(', ') + '.'});
+          hasError = true;
+        }
+      } else {
+        missingChangefreq++;
+      }
+
+      // Optional: priority
+      if (priority) {
+        if (!isValidPriority(priority)) {
+          var pVal = parseFloat(priority);
+          if (isNaN(pVal) || pVal < 0 || pVal > 1) {
+            errors.push({line: findLineNumber(xmlStr, '<priority>' + priority), msg: 'URL entry #' + (i+1) + ' has invalid <priority>: "' + priority + '". Must be between 0.0 and 1.0.'});
+          } else {
+            warnings.push({line: findLineNumber(xmlStr, '<priority>' + priority), msg: 'URL entry #' + (i+1) + ' has unusual <priority> format: "' + priority + '". Recommended format: 0.0 to 1.0 with one decimal.'});
+          }
+          hasError = true;
+        }
+      } else {
+        missingPriority++;
+      }
+
+      // Duplicate check
+      if (loc && seenLocs[loc]) {
+        warnings.push({line: findLineNumber(xmlStr, loc), msg: 'Duplicate URL found: "' + loc + '"'});
+      }
+      if (loc) seenLocs[loc] = true;
+
+      if (hasError) invalidCount++; else validCount++;
+    }
+
+    // Optional field warnings
+    if (totalUrls > 0 && missingLastmod > 0) {
+      warnings.push({line: null, msg: missingLastmod + ' of ' + totalUrls + ' URLs missing optional <lastmod> element.'});
+    }
+    if (totalUrls > 0 && missingChangefreq > 0) {
+      warnings.push({line: null, msg: missingChangefreq + ' of ' + totalUrls + ' URLs missing optional <changefreq> element.'});
+    }
+    if (totalUrls > 0 && missingPriority > 0) {
+      warnings.push({line: null, msg: missingPriority + ' of ' + totalUrls + ' URLs missing optional <priority> element.'});
+    }
+
+    showResults(totalUrls, invalidCount, errors, warnings, parsedUrls, false);
+  }
+}
+
+function showResults(total, invalid, errors, warnings, urls, isIndex) {
+  var valid = total - invalid;
+  var area = document.getElementById('resultsArea');
+  area.classList.remove('hidden');
+
+  // Dashboard
+  var dash = document.getElementById('dashboard');
+  var statusClass = errors.length === 0 ? 'pass' : 'fail';
+  var statusLabel = errors.length === 0 ? (warnings.length > 0 ? 'Pass with Warnings' : 'All Checks Passed') : 'Errors Found';
+  if (errors.length === 0 && warnings.length > 0) statusClass = 'warn';
+
+  dash.innerHTML =
+    '<div class="stat-card ' + statusClass + '"><div class="value">' + (errors.length === 0 ? (warnings.length > 0 ? '⚠' : '✓') : '✗') + '</div><div class="label">' + statusLabel + '</div></div>' +
+    '<div class="stat-card"><div class="value">' + total.toLocaleString() + '</div><div class="label">Total ' + (isIndex ? 'Sitemaps' : 'URLs') + '</div></div>' +
+    '<div class="stat-card pass"><div class="value">' + valid + '</div><div class="label">Valid</div></div>' +
+    (invalid > 0 ? '<div class="stat-card fail"><div class="value">' + invalid + '</div><div class="label">Invalid</div></div>' : '') +
+    '<div class="stat-card ' + (errors.length > 0 ? 'fail' : 'pass') + '"><div class="value">' + errors.length + '</div><div class="label">Errors</div></div>' +
+    '<div class="stat-card ' + (warnings.length > 0 ? 'warn' : 'pass') + '"><div class="value">' + warnings.length + '</div><div class="label">Warnings</div></div>';
+
+  // Errors
+  var errSection = document.getElementById('errorsSection');
+  var errList = document.getElementById('errorsList');
+  if (errors.length > 0) {
+    errSection.classList.remove('hidden');
+    errList.innerHTML = errors.map(function(e) {
+      return '<div class="error-item"><span class="tag tag-error">ERROR</span>' + (e.line ? '<strong>Line ' + e.line + ':</strong> ' : '') + escapeHtml(e.msg) + '</div>';
+    }).join('');
+  } else {
+    errSection.classList.add('hidden');
+  }
+
+  // Warnings
+  var warnSection = document.getElementById('warningsSection');
+  var warnList = document.getElementById('warningsList');
+  if (warnings.length > 0) {
+    warnSection.classList.remove('hidden');
+    warnList.innerHTML = warnings.map(function(w) {
+      return '<div class="error-item"><span class="tag tag-warn">WARN</span>' + (w.line ? '<strong>Line ' + w.line + ':</strong> ' : '') + escapeHtml(w.msg) + '</div>';
+    }).join('');
+  } else {
+    warnSection.classList.add('hidden');
+  }
+
+  // URL table
+  var tableSection = document.getElementById('urlTableSection');
+  if (urls.length > 0 && urls.length <= 5000) {
+    tableSection.classList.remove('hidden');
+    document.getElementById('urlTableCount').textContent = '(' + urls.length + ' entries)';
+    renderUrlTable(urls);
+  } else if (urls.length > 5000) {
+    tableSection.classList.remove('hidden');
+    document.getElementById('urlTableCount').textContent = '(showing first 5,000 of ' + urls.length.toLocaleString() + ')';
+    renderUrlTable(urls.slice(0, 5000));
+  } else {
+    tableSection.classList.add('hidden');
+  }
+
+  // Store report
+  validationReport = {
+    timestamp: new Date().toISOString(),
+    type: isIndex ? 'sitemapindex' : 'urlset',
+    totalEntries: total,
+    validEntries: valid,
+    invalidEntries: invalid,
+    errorCount: errors.length,
+    warningCount: warnings.length,
+    errors: errors,
+    warnings: warnings,
+    urls: urls
+  };
+
+  area.scrollIntoView({behavior:'smooth'});
+}
+
+function renderUrlTable(urls) {
+  var tbody = document.getElementById('urlTableBody');
+  tbody.innerHTML = urls.map(function(u) {
+    return '<tr><td>' + escapeHtml(u.loc || '—') + '</td><td>' + escapeHtml(u.lastmod || '—') + '</td><td>' + escapeHtml(u.changefreq || '—') + '</td><td>' + escapeHtml(u.priority || '—') + '</td></tr>';
+  }).join('');
+}
+
+function sortTable(col) {
+  if (sortCol === col) {
+    sortAsc = !sortAsc;
+  } else {
+    sortCol = col;
+    sortAsc = true;
+  }
+  var keys = ['loc','lastmod','changefreq','priority'];
+  var key = keys[col];
+  var sorted = parsedUrls.slice().sort(function(a, b) {
+    var va = a[key] || '';
+    var vb = b[key] || '';
+    if (col === 3) {
+      va = parseFloat(va) || 0;
+      vb = parseFloat(vb) || 0;
+      return sortAsc ? va - vb : vb - va;
+    }
+    return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+  renderUrlTable(sorted.length > 5000 ? sorted.slice(0, 5000) : sorted);
+}
+
+function escapeHtml(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function handleFileUpload(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    document.getElementById('xmlInput').value = ev.target.result;
+    validateSitemap();
+  };
+  reader.readAsText(file);
+}
+
+function loadSample() {
+  document.getElementById('xmlInput').value = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>https://example.com/</loc>\n    <lastmod>2024-01-15</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>https://example.com/about</loc>\n    <lastmod>2024-01-10</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>https://example.com/blog</loc>\n    <lastmod>2024-01-14</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>\n  <url>\n    <loc>https://example.com/contact</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.5</priority>\n  </url>\n  <url>\n    <loc>https://example.com/products</loc>\n    <lastmod>2024-01-12</lastmod>\n    <priority>0.7</priority>\n  </url>\n</urlset>';
+}
+
+function clearAll() {
+  document.getElementById('xmlInput').value = '';
+  document.getElementById('resultsArea').classList.add('hidden');
+  validationReport = null;
+  parsedUrls = [];
+}
+
+function exportJSON() {
+  if (!validationReport) return;
+  var blob = new Blob([JSON.stringify(validationReport, null, 2)], {type: 'application/json'});
+  downloadBlob(blob, 'sitemap-validation-report.json');
+}
+
+function exportCSV() {
+  if (!validationReport || !validationReport.urls.length) return;
+  var lines = ['loc,lastmod,changefreq,priority'];
+  validationReport.urls.forEach(function(u) {
+    lines.push('"' + (u.loc || '').replace(/"/g, '""') + '","' + (u.lastmod || '') + '","' + (u.changefreq || '') + '","' + (u.priority || '') + '"');
+  });
+  var blob = new Blob([lines.join('\n')], {type: 'text/csv'});
+  downloadBlob(blob, 'sitemap-urls.csv');
+}
+
+function downloadBlob(blob, filename) {
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

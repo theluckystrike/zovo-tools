@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watermark Maker - Free Online Photo Watermark Tool | Zovo</title>
+<meta name="description" content="Add text or image watermarks to your photos for free. Custom fonts, tiled patterns, adjustable opacity, batch processing. 100% client-side, no uploads.">
+<meta name="keywords" content="watermark maker, add watermark to photo, photo watermark tool, text watermark, image watermark, watermark generator, batch watermark, free watermark tool">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/watermark-maker/">
+
+<meta property="og:title" content="Watermark Maker - Free Online Photo Watermark Tool | Zovo">
+<meta property="og:description" content="Add text or image watermarks to photos directly in your browser. Free, private, no server uploads.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/watermark-maker/">
+<meta property="og:image" content="https://zovo.one/og-image.png">
+<meta property="og:site_name" content="Zovo Tools">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Watermark Maker - Free Online Photo Watermark Tool | Zovo">
+<meta name="twitter:description" content="Add text or image watermarks to photos client-side. Free, fast, private.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Watermark Maker",
+      "url": "https://zovo.one/free-tools/watermark-maker/",
+      "description": "Add text or image watermarks to photos directly in your browser. Supports tiled patterns, batch processing, and custom fonts.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "browserRequirements": "Requires a modern browser with JavaScript and Canvas API support",
+      "softwareVersion": "1.0.0",
+      "author": {
+        "@type": "Person",
+        "name": "Michael Lip",
+        "url": "https://zovo.one"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is this watermark maker free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, completely free with no limits. All processing uses your browser's Canvas API so there are no server costs or usage caps."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my photos uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Your photos never leave your device. The watermark is applied using the HTML5 Canvas API entirely in your browser. No data is transmitted anywhere."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I add a logo watermark instead of text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. You can upload any PNG or JPEG image as a watermark overlay. Adjust the size, opacity, position, and rotation of the logo watermark to suit your needs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is tiled watermark mode?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tiled mode repeats the watermark across the entire image in a grid pattern with configurable spacing. This is commonly used by photographers to protect proof images from unauthorized use."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I watermark multiple photos at once?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Batch mode lets you apply the same watermark settings to multiple images simultaneously. Select multiple files, configure your watermark once, and export all of them with a single click."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-body: #0a0a0f;
+  --bg-card: #12121a;
+  --border: #1e1e2a;
+  --text: #e0e0e8;
+  --text-dim: #b0b0c0;
+  --accent: #00ff88;
+  --accent-dim: rgba(0, 255, 136, 0.15);
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg-body);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+header {
+  text-align: center;
+  padding: 48px 0 32px;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent), #00ccff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+header p { color: var(--text-dim); font-size: 1.1rem; max-width: 680px; margin: 0 auto; }
+
+.reading-time {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin-bottom: 24px;
+}
+
+.privacy-note {
+  text-align: center;
+  background: var(--accent-dim);
+  color: var(--accent);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 32px;
+  display: inline-block;
+}
+
+.toc {
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+.toc h3 { font-size: 1rem; margin-bottom: 12px; color: var(--accent); }
+.toc ul { list-style: none; }
+.toc li { margin: 6px 0; }
+.toc a { color: var(--text-dim); font-size: 0.95rem; }
+.toc a:hover { color: var(--accent); }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.tool-area {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 800px) {
+  .tool-area { grid-template-columns: 1fr; }
+}
+
+.sidebar h3 {
+  font-size: 1rem;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="color"],
+.form-group select {
+  width: 100%;
+  padding: 8px 12px;
+  background: #0d0d14;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+}
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+}
+.form-group input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+.form-group input[type="color"] {
+  height: 36px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 8px;
+  background: #0d0d14;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: var(--text-dim);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone svg { margin-bottom: 12px; }
+
+.preview-area {
+  position: relative;
+  background: #080810;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+.preview-area canvas {
+  max-width: 100%;
+  max-height: 600px;
+  display: block;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.btn-secondary {
+  background: #1e1e2a;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.batch-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 12px;
+}
+.batch-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: #0d0d14;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+}
+.batch-item .remove {
+  color: #ff4466;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1rem;
+}
+
+.export-section {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 48px 0 16px;
+  color: var(--text);
+}
+
+.content-section {
+  margin-bottom: 24px;
+}
+.content-section p {
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+.content-section ul, .content-section ol {
+  color: var(--text-dim);
+  margin: 0 0 12px 24px;
+}
+.content-section li { margin-bottom: 6px; }
+
+.faq-section { margin: 48px 0; }
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.faq-item h3 {
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.faq-item p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.related-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.related-tool-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+.related-tool-card:hover { border-color: var(--accent); }
+.related-tool-card h4 { margin-bottom: 6px; }
+.related-tool-card p { color: var(--text-dim); font-size: 0.9rem; }
+
+.compat-note {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin: 24px 0;
+}
+
+footer {
+  text-align: center;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-top: 48px;
+}
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Watermark Maker</h1>
+    <p>Add text or image watermarks to your photos entirely in your browser. Supports tiled patterns, batch processing, and full customization. No data leaves your device.</p>
+  </header>
+
+  <div class="reading-time">12 min read</div>
+
+  <div style="text-align:center;margin-bottom:32px;">
+    <span class="privacy-note">All processing happens in your browser. No data is uploaded to any server.</span>
+  </div>
+
+  <nav class="toc">
+    <h3>Table of Contents</h3>
+    <ul>
+      <li><a href="#tool">Watermark Tool</a></li>
+      <li><a href="#how-it-works">How the Watermark Maker Works</a></li>
+      <li><a href="#text-watermarks">Using Text Watermarks</a></li>
+      <li><a href="#image-watermarks">Using Image Watermarks</a></li>
+      <li><a href="#tiled-patterns">Tiled Pattern Watermarks</a></li>
+      <li><a href="#batch-processing">Batch Watermarking</a></li>
+      <li><a href="#export-options">Export Options and Quality</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+    </ul>
+  </nav>
+
+  <!-- === TOOL SECTION === -->
+  <div id="tool">
+    <div class="tool-area">
+      <div class="sidebar card">
+        <h3>Watermark Settings</h3>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('text')">Text</button>
+          <button class="tab-btn" onclick="switchTab('image')">Image</button>
+        </div>
+
+        <!-- Text Tab -->
+        <div id="tab-text">
+          <div class="form-group">
+            <label>Watermark Text</label>
+            <input type="text" id="wmText" value="Sample Watermark" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Font Family</label>
+            <select id="wmFont" onchange="updatePreview()">
+              <option value="system-ui">System UI</option>
+              <option value="Arial">Arial</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Trebuchet MS">Trebuchet MS</option>
+              <option value="Impact">Impact</option>
+              <option value="Comic Sans MS">Comic Sans MS</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Font Size: <span id="fontSizeVal">48</span>px</label>
+            <input type="range" id="wmFontSize" min="8" max="200" value="48" oninput="document.getElementById('fontSizeVal').textContent=this.value;updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Text Color</label>
+            <input type="color" id="wmColor" value="#ffffff" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <!-- Image Tab -->
+        <div id="tab-image" class="hidden">
+          <div class="form-group">
+            <label>Upload Watermark Image</label>
+            <input type="file" id="wmImageInput" accept="image/*" onchange="loadWatermarkImage(this)" style="color:var(--text-dim);font-size:0.85rem;">
+          </div>
+          <div class="form-group">
+            <label>Watermark Size: <span id="wmImgSizeVal">30</span>%</label>
+            <input type="range" id="wmImgSize" min="5" max="100" value="30" oninput="document.getElementById('wmImgSizeVal').textContent=this.value;updatePreview()">
+          </div>
+        </div>
+
+        <!-- Common Controls -->
+        <div class="form-group">
+          <label>Opacity: <span id="opacityVal">50</span>%</label>
+          <input type="range" id="wmOpacity" min="0" max="100" value="50" oninput="document.getElementById('opacityVal').textContent=this.value;updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Rotation: <span id="rotationVal">-30</span>&deg;</label>
+          <input type="range" id="wmRotation" min="-180" max="180" value="-30" oninput="document.getElementById('rotationVal').textContent=this.value;updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Position</label>
+          <select id="wmPosition" onchange="updatePreview()">
+            <option value="center">Center</option>
+            <option value="top-left">Top Left</option>
+            <option value="top-right">Top Right</option>
+            <option value="bottom-left">Bottom Left</option>
+            <option value="bottom-right">Bottom Right</option>
+            <option value="tiled" selected>Tiled / Repeat</option>
+          </select>
+        </div>
+        <div id="tiledOptions">
+          <div class="form-group">
+            <label>Tile Spacing: <span id="spacingVal">120</span>px</label>
+            <input type="range" id="wmSpacing" min="20" max="500" value="120" oninput="document.getElementById('spacingVal').textContent=this.value;updatePreview()">
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+
+        <h3>Export</h3>
+        <div class="form-group">
+          <label>Format</label>
+          <select id="exportFormat">
+            <option value="png">PNG</option>
+            <option value="jpeg">JPEG</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>JPEG Quality: <span id="qualityVal">92</span>%</label>
+          <input type="range" id="exportQuality" min="10" max="100" value="92" oninput="document.getElementById('qualityVal').textContent=this.value">
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="exportSingle()">Export Image</button>
+          <button class="btn btn-secondary" onclick="resetAll()">Reset</button>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+
+        <h3>Batch Mode</h3>
+        <div class="form-group">
+          <label>Select Multiple Images</label>
+          <input type="file" id="batchInput" accept="image/*" multiple onchange="addBatchFiles(this)" style="color:var(--text-dim);font-size:0.85rem;">
+        </div>
+        <div class="batch-list" id="batchList"></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="exportBatch()">Export All</button>
+          <button class="btn btn-secondary" onclick="clearBatch()">Clear Batch</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('mainFileInput').click()">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#b0b0c0" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p>Drag &amp; drop a photo here or click to browse</p>
+          <p style="font-size:0.8rem;margin-top:6px;">Supports PNG, JPEG, WebP, BMP</p>
+          <input type="file" id="mainFileInput" accept="image/*" onchange="loadMainImage(this)" style="display:none;">
+        </div>
+        <div class="preview-area hidden" id="previewArea">
+          <canvas id="previewCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === EDITORIAL CONTENT === -->
+
+  <h2 id="how-it-works">How the Watermark Maker Works</h2>
+  <div class="content-section">
+    <p>This watermark tool runs entirely inside your browser using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noopener">HTML5 Canvas API</a>. When you upload a photo, it is loaded into memory as a bitmap using the Image object. The Canvas API then provides a 2D rendering context that supports drawing text, images, and shapes with full control over transformations like rotation, scaling, and alpha compositing.</p>
+    <p>The watermarking process works in three stages. First, the original photo is drawn onto the canvas at its native resolution. Second, the watermark (either text or an overlay image) is composited on top with the specified opacity, position, rotation, and scale. Third, the final composited canvas is exported as a PNG or JPEG file using the <code>canvas.toBlob()</code> method.</p>
+    <p>Because everything happens on the canvas element, there is no quality loss beyond the inherent compression of your chosen export format. PNG exports are lossless. JPEG exports use configurable quality, and you can dial it anywhere from 10% to 100% depending on your file size requirements.</p>
+  </div>
+
+  <h2 id="text-watermarks">Using Text Watermarks</h2>
+  <div class="content-section">
+    <p>Text watermarks are the most common type used by photographers, designers, and content creators. This tool gives you full control over the typographic properties of your watermark text:</p>
+    <ul>
+      <li><strong>Font selection</strong> from common system fonts including Arial, Georgia, Times New Roman, Verdana, and more.</li>
+      <li><strong>Font size</strong> adjustable from 8px to 200px using a slider for precision control.</li>
+      <li><strong>Color picker</strong> with full hex color support so you can match your brand colors exactly.</li>
+      <li><strong>Opacity control</strong> from 0% (invisible) to 100% (fully opaque). Most photographers use 30-50% for a subtle but visible mark.</li>
+      <li><strong>Rotation angle</strong> from -180 to +180 degrees. A diagonal angle like -30 or -45 degrees is traditional for watermarks.</li>
+    </ul>
+    <p>For best results with text watermarks, choose a font size proportional to your image dimensions. On a 4000px wide photo, a font size of 80-120px typically works well. For social media images around 1200px wide, 40-60px is usually appropriate.</p>
+  </div>
+
+  <h2 id="image-watermarks">Using Image Watermarks</h2>
+  <div class="content-section">
+    <p>Image watermarks let you overlay a logo, signature, or any graphic on top of your photos. This is commonly used by businesses that want their logo visible on product photos, event photography, and marketing materials.</p>
+    <p>To use an image watermark, switch to the "Image" tab in the settings panel and upload your logo file. PNG files with transparent backgrounds work best because the transparent areas will let the underlying photo show through naturally.</p>
+    <p>The size slider controls how large the watermark image appears relative to the base photo. At 30%, the watermark will be 30% of the base image width. Opacity and rotation controls work the same way as text watermarks, giving you consistent control regardless of watermark type.</p>
+    <p>If your logo is dark, place it on lighter areas of the photo. If it is light or white, it works well on darker regions. The tiled mode distributes the watermark evenly across the entire image, which eliminates the need to worry about placement on varying backgrounds.</p>
+  </div>
+
+  <h2 id="tiled-patterns">Tiled Pattern Watermarks</h2>
+  <div class="content-section">
+    <p>Tiled (or repeat) watermarking covers the entire image with a repeating pattern of your watermark. This is the most secure method for protecting proof images because it makes it extremely difficult to crop out or clone-stamp away the watermark.</p>
+    <p>When you select "Tiled / Repeat" from the position dropdown, the tool draws the watermark at regular intervals across the full canvas. The spacing slider controls the distance between repetitions, measured in pixels. Smaller spacing creates a denser pattern that is harder to remove; larger spacing is more subtle and less intrusive on the viewing experience.</p>
+    <p>The rotation angle is applied to each individual tile, so a -30 degree rotation creates a classic diagonal watermark pattern that professional stock photo agencies commonly use. Combined with low opacity (20-40%), tiled watermarks protect your work while still allowing clients to evaluate the composition and quality of the image.</p>
+  </div>
+
+  <h2 id="batch-processing">Batch Watermarking</h2>
+  <div class="content-section">
+    <p>The batch mode feature lets you apply identical watermark settings to multiple images in a single operation. This is particularly useful after a photo shoot when you need to watermark dozens or hundreds of proof images before sending them to a client.</p>
+    <p>To use batch mode, configure your watermark settings using a single image as a reference, then scroll down to the batch section in the sidebar. Select multiple image files using the file picker (hold Ctrl or Cmd to select multiple files). Each file appears in the batch list where you can remove individual items if needed.</p>
+    <p>When you click "Export All," the tool processes each image sequentially, applying the current watermark settings and triggering a download for each result. The processing happens entirely in your browser, so large batches may take a few moments depending on image sizes and your device performance.</p>
+    <p>Batch processing maintains the original resolution of each image. If you have a mix of portrait and landscape images, the watermark scales and positions relative to each individual image's dimensions.</p>
+  </div>
+
+  <h2 id="export-options">Export Options and Quality</h2>
+  <div class="content-section">
+    <p>After applying your watermark, you can export the result in two formats:</p>
+    <ul>
+      <li><strong>PNG:</strong> Lossless compression that preserves every pixel exactly. Best for graphics, screenshots, and images with text or sharp edges. File sizes are larger than JPEG.</li>
+      <li><strong>JPEG:</strong> Lossy compression with adjustable quality from 10% to 100%. Best for photographs where slight compression artifacts are invisible. At 90-95% quality, JPEG files are significantly smaller than PNG with no visible quality difference for most photos.</li>
+    </ul>
+    <p>The quality slider only affects JPEG exports. For web use, 80-85% quality provides an excellent balance between file size and visual quality. For print or archival purposes, use 95-100% or export as PNG.</p>
+    <p>The Canvas API's <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob" target="_blank" rel="noopener">toBlob method</a> handles the encoding natively in the browser, ensuring fast export times even for high-resolution images.</p>
+  </div>
+
+  <!-- FAQ Section -->
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq-section">
+    <div class="faq-item">
+      <h3>Is this watermark maker free?</h3>
+      <p>Yes, it is completely free with no usage limits. There are no accounts, no subscriptions, and no hidden costs. The tool runs in your browser using the Canvas API, so there is no server infrastructure to pay for.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Are my photos uploaded to a server?</h3>
+      <p>No. Your photos never leave your device. All watermark processing uses the HTML5 Canvas API directly in your browser. No data is transmitted to any server. Your images remain completely private.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I use a logo image as a watermark?</h3>
+      <p>Yes. Switch to the "Image" tab in the settings panel and upload any PNG or JPEG image as your watermark overlay. PNG images with transparent backgrounds work best. You can adjust the size, opacity, rotation, and position of the logo.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What is tiled watermark mode?</h3>
+      <p>Tiled mode repeats the watermark in a grid pattern across the entire image with configurable spacing. This is the most secure watermarking approach because it prevents cropping or retouching to remove the mark. Professional stock photo agencies use this technique for preview images.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I watermark multiple photos at once?</h3>
+      <p>Yes. The batch mode feature lets you select multiple images and apply the same watermark settings to all of them simultaneously. Each watermarked image is exported as a separate file download.</p>
+    </div>
+  </div>
+
+  <!-- Related Tools -->
+  <h2>Related Tools</h2>
+  <div class="related-tools">
+    <a href="/free-tools/image-compressor/" class="related-tool-card">
+      <h4>Image Compressor</h4>
+      <p>Reduce image file sizes while maintaining quality. Perfect for optimizing watermarked photos for web use.</p>
+    </a>
+    <a href="/free-tools/image-resizer/" class="related-tool-card">
+      <h4>Image Resizer</h4>
+      <p>Resize images to specific dimensions before or after watermarking. Supports batch resizing.</p>
+    </a>
+    <a href="/free-tools/background-remover/" class="related-tool-card">
+      <h4>Background Remover</h4>
+      <p>Remove image backgrounds to create transparent PNG logos for use as image watermarks.</p>
+    </a>
+  </div>
+
+  <!-- Compatibility -->
+  <div class="compat-note">
+    <strong>Browser Compatibility:</strong> This tool works in all modern browsers including Chrome 90+, Firefox 90+, Safari 15+, and Edge 90+. It requires the HTML5 Canvas API and File API, which are supported in all current browsers. Internet Explorer is not supported.
+  </div>
+
+  <!-- External References -->
+  <div class="content-section" style="margin-top:24px;">
+    <p><strong>Technical References:</strong>
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noopener">MDN: Canvas API</a> &middot;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha" target="_blank" rel="noopener">MDN: globalAlpha</a> &middot;
+      <a href="https://en.wikipedia.org/wiki/Digital_watermarking" target="_blank" rel="noopener">Wikipedia: Digital Watermarking</a>
+    </p>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    Built by Michael Lip &middot; More free tools at <a href="https://zovo.one">zovo.one</a>
+  </div>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  var mainImage = null;
+  var wmImage = null;
+  var activeTab = 'text';
+  var batchFiles = [];
+
+  var canvas = document.getElementById('previewCanvas');
+  var ctx = canvas.getContext('2d');
+
+  // Drag and drop
+  var dropZone = document.getElementById('dropZone');
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+  dropZone.addEventListener('dragleave', function() {
+    dropZone.classList.remove('dragover');
+  });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+      loadImageFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  window.loadMainImage = function(input) {
+    if (input.files && input.files[0]) {
+      loadImageFile(input.files[0]);
+    }
+  };
+
+  function loadImageFile(file) {
+    if (!file.type.startsWith('image/')) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        mainImage = img;
+        document.getElementById('dropZone').classList.add('hidden');
+        document.getElementById('previewArea').classList.remove('hidden');
+        updatePreview();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  window.loadWatermarkImage = function(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          wmImage = img;
+          updatePreview();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  };
+
+  window.switchTab = function(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(function(btn) { btn.classList.remove('active'); });
+    if (tab === 'text') {
+      document.querySelectorAll('.tab-btn')[0].classList.add('active');
+      document.getElementById('tab-text').classList.remove('hidden');
+      document.getElementById('tab-image').classList.add('hidden');
+    } else {
+      document.querySelectorAll('.tab-btn')[1].classList.add('active');
+      document.getElementById('tab-text').classList.add('hidden');
+      document.getElementById('tab-image').classList.remove('hidden');
+    }
+    updatePreview();
+  };
+
+  window.updatePreview = function() {
+    if (!mainImage) return;
+
+    // Show/hide tiled options
+    var pos = document.getElementById('wmPosition').value;
+    document.getElementById('tiledOptions').style.display = pos === 'tiled' ? 'block' : 'none';
+
+    canvas.width = mainImage.width;
+    canvas.height = mainImage.height;
+
+    // Draw base image
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(mainImage, 0, 0);
+
+    // Watermark settings
+    var opacity = parseInt(document.getElementById('wmOpacity').value) / 100;
+    var rotation = parseInt(document.getElementById('wmRotation').value) * Math.PI / 180;
+    var position = document.getElementById('wmPosition').value;
+
+    ctx.save();
+    ctx.globalAlpha = opacity;
+
+    if (position === 'tiled') {
+      drawTiledWatermark(rotation);
+    } else {
+      var coords = getPositionCoords(position, canvas.width, canvas.height);
+      drawSingleWatermark(coords.x, coords.y, rotation);
+    }
+
+    ctx.restore();
+  };
+
+  function getWatermarkDimensions() {
+    if (activeTab === 'text') {
+      var fontSize = parseInt(document.getElementById('wmFontSize').value);
+      var font = document.getElementById('wmFont').value;
+      var text = document.getElementById('wmText').value || 'Watermark';
+      ctx.save();
+      ctx.font = fontSize + 'px "' + font + '"';
+      var metrics = ctx.measureText(text);
+      ctx.restore();
+      return { w: metrics.width, h: fontSize };
+    } else if (wmImage) {
+      var pct = parseInt(document.getElementById('wmImgSize').value) / 100;
+      var w = canvas.width * pct;
+      var h = (wmImage.height / wmImage.width) * w;
+      return { w: w, h: h };
+    }
+    return { w: 0, h: 0 };
+  }
+
+  function getPositionCoords(position, cw, ch) {
+    var dim = getWatermarkDimensions();
+    var pad = 40;
+    switch(position) {
+      case 'top-left': return { x: pad, y: pad + dim.h };
+      case 'top-right': return { x: cw - dim.w - pad, y: pad + dim.h };
+      case 'bottom-left': return { x: pad, y: ch - pad };
+      case 'bottom-right': return { x: cw - dim.w - pad, y: ch - pad };
+      case 'center':
+      default:
+        return { x: (cw - dim.w) / 2, y: (ch + dim.h) / 2 };
+    }
+  }
+
+  function drawSingleWatermark(x, y, rotation) {
+    ctx.save();
+    var dim = getWatermarkDimensions();
+    var cx = x + dim.w / 2;
+    var cy = y - dim.h / 2;
+
+    ctx.translate(cx, cy);
+    ctx.rotate(rotation);
+    ctx.translate(-cx, -cy);
+
+    if (activeTab === 'text') {
+      var fontSize = parseInt(document.getElementById('wmFontSize').value);
+      var font = document.getElementById('wmFont').value;
+      var text = document.getElementById('wmText').value || 'Watermark';
+      var color = document.getElementById('wmColor').value;
+      ctx.font = fontSize + 'px "' + font + '"';
+      ctx.fillStyle = color;
+      ctx.fillText(text, x, y);
+    } else if (wmImage) {
+      ctx.drawImage(wmImage, x, y - dim.h, dim.w, dim.h);
+    }
+
+    ctx.restore();
+  }
+
+  function drawTiledWatermark(rotation) {
+    var spacing = parseInt(document.getElementById('wmSpacing').value);
+    var dim = getWatermarkDimensions();
+    if (dim.w === 0) return;
+
+    var stepX = dim.w + spacing;
+    var stepY = dim.h + spacing;
+
+    // Extend beyond canvas bounds so rotated tiles still cover edges
+    var diag = Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height);
+    var startX = -diag / 2;
+    var startY = -diag / 2;
+    var endX = canvas.width + diag / 2;
+    var endY = canvas.height + diag / 2;
+
+    if (activeTab === 'text') {
+      var fontSize = parseInt(document.getElementById('wmFontSize').value);
+      var font = document.getElementById('wmFont').value;
+      var text = document.getElementById('wmText').value || 'Watermark';
+      var color = document.getElementById('wmColor').value;
+      ctx.font = fontSize + 'px "' + font + '"';
+      ctx.fillStyle = color;
+
+      for (var ty = startY; ty < endY; ty += stepY) {
+        for (var tx = startX; tx < endX; tx += stepX) {
+          ctx.save();
+          ctx.translate(tx + dim.w / 2, ty + dim.h / 2);
+          ctx.rotate(rotation);
+          ctx.fillText(text, -dim.w / 2, dim.h / 2);
+          ctx.restore();
+        }
+      }
+    } else if (wmImage) {
+      for (var iy = startY; iy < endY; iy += stepY) {
+        for (var ix = startX; ix < endX; ix += stepX) {
+          ctx.save();
+          ctx.translate(ix + dim.w / 2, iy + dim.h / 2);
+          ctx.rotate(rotation);
+          ctx.drawImage(wmImage, -dim.w / 2, -dim.h / 2, dim.w, dim.h);
+          ctx.restore();
+        }
+      }
+    }
+  }
+
+  function applyWatermarkToImage(img, callback) {
+    var offCanvas = document.createElement('canvas');
+    var offCtx = offCanvas.getContext('2d');
+    offCanvas.width = img.width;
+    offCanvas.height = img.height;
+
+    offCtx.drawImage(img, 0, 0);
+
+    var opacity = parseInt(document.getElementById('wmOpacity').value) / 100;
+    var rotation = parseInt(document.getElementById('wmRotation').value) * Math.PI / 180;
+    var position = document.getElementById('wmPosition').value;
+
+    offCtx.save();
+    offCtx.globalAlpha = opacity;
+
+    // Temporarily swap canvas/ctx for helper functions
+    var origCanvas = canvas;
+    var origCtx = ctx;
+    canvas = offCanvas;
+    ctx = offCtx;
+
+    if (position === 'tiled') {
+      drawTiledWatermark(rotation);
+    } else {
+      var coords = getPositionCoords(position, offCanvas.width, offCanvas.height);
+      drawSingleWatermark(coords.x, coords.y, rotation);
+    }
+
+    canvas = origCanvas;
+    ctx = origCtx;
+
+    offCtx.restore();
+
+    var format = document.getElementById('exportFormat').value;
+    var quality = parseInt(document.getElementById('exportQuality').value) / 100;
+    var mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+
+    offCanvas.toBlob(function(blob) {
+      callback(blob, format);
+    }, mimeType, quality);
+  }
+
+  function downloadBlob(blob, filename) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  window.exportSingle = function() {
+    if (!mainImage) { alert('Please upload an image first.'); return; }
+    applyWatermarkToImage(mainImage, function(blob, format) {
+      downloadBlob(blob, 'watermarked.' + format);
+    });
+  };
+
+  window.resetAll = function() {
+    mainImage = null;
+    wmImage = null;
+    document.getElementById('previewArea').classList.add('hidden');
+    document.getElementById('dropZone').classList.remove('hidden');
+    document.getElementById('mainFileInput').value = '';
+    document.getElementById('wmImageInput').value = '';
+    document.getElementById('wmText').value = 'Sample Watermark';
+    document.getElementById('wmFontSize').value = 48;
+    document.getElementById('fontSizeVal').textContent = '48';
+    document.getElementById('wmOpacity').value = 50;
+    document.getElementById('opacityVal').textContent = '50';
+    document.getElementById('wmRotation').value = -30;
+    document.getElementById('rotationVal').textContent = '-30';
+    document.getElementById('wmPosition').value = 'tiled';
+    document.getElementById('wmSpacing').value = 120;
+    document.getElementById('spacingVal').textContent = '120';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  // Batch mode
+  window.addBatchFiles = function(input) {
+    if (!input.files) return;
+    for (var i = 0; i < input.files.length; i++) {
+      if (input.files[i].type.startsWith('image/')) {
+        batchFiles.push(input.files[i]);
+      }
+    }
+    renderBatchList();
+  };
+
+  function renderBatchList() {
+    var html = '';
+    batchFiles.forEach(function(f, idx) {
+      html += '<div class="batch-item"><span>' + f.name + ' (' + (f.size / 1024).toFixed(1) + ' KB)</span><button class="remove" onclick="removeBatchItem(' + idx + ')">&times;</button></div>';
+    });
+    document.getElementById('batchList').innerHTML = html;
+  }
+
+  window.removeBatchItem = function(idx) {
+    batchFiles.splice(idx, 1);
+    renderBatchList();
+  };
+
+  window.clearBatch = function() {
+    batchFiles = [];
+    document.getElementById('batchInput').value = '';
+    renderBatchList();
+  };
+
+  window.exportBatch = function() {
+    if (batchFiles.length === 0) { alert('No files in batch. Add images first.'); return; }
+    var idx = 0;
+    function processNext() {
+      if (idx >= batchFiles.length) return;
+      var file = batchFiles[idx];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          applyWatermarkToImage(img, function(blob, format) {
+            var name = file.name.replace(/\.[^.]+$/, '') + '-watermarked.' + format;
+            downloadBlob(blob, name);
+            idx++;
+            setTimeout(processNext, 300);
+          });
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    processNext();
+  };
+
+  // Smooth scroll for TOC links
+  document.querySelectorAll('.toc a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
