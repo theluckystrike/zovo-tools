@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Counter - Number Generator, Dice Roller, Coin Flipper & List Picker | Zovo Tools</title>
+<meta name="description" content="Free random counter with configurable min/max ranges, dice roller (D4-D20), coin flipper, lottery number generator, and random list picker. History log, sound effects, CSV export.">
+<meta name="author" content="Michael Lip">
+<meta name="keywords" content="random counter, random number generator, dice roller, coin flipper, random list picker, lottery number generator, counter tool">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/random-counter/">
+<meta property="og:title" content="Random Counter - Number Generator, Dice Roller & More | Zovo Tools">
+<meta property="og:description" content="Generate random numbers with configurable ranges, roll D&D dice, flip coins, pick from lists, and generate lottery numbers. Free, private, no tracking.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/random-counter/">
+<meta property="og:site_name" content="Zovo">
+<meta property="og:image" content="https://zovo.one/free-tools/random-counter/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Random Counter - Number Generator, Dice Roller & More | Zovo Tools">
+<meta name="twitter:description" content="Generate random numbers with configurable ranges, roll D&D dice, flip coins, pick from lists, and generate lottery numbers.">
+<meta name="twitter:image" content="https://zovo.one/free-tools/random-counter/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Random Counter",
+  "url": "https://zovo.one/free-tools/random-counter",
+  "description": "Free random counter tool with number generator, dice roller, coin flipper, lottery generator, and random list picker. Full history log with CSV export.",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zovo.one" },
+    { "@type": "ListItem", "position": 2, "name": "Free Tools", "item": "https://zovo.one/free-tools/" },
+    { "@type": "ListItem", "position": 3, "name": "Random Counter", "item": "https://zovo.one/free-tools/random-counter/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does the random counter generate numbers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The random counter uses the Web Crypto API (crypto.getRandomValues()) to generate cryptographically secure random numbers. This draws entropy from your operating system's hardware random number source, producing numbers that are statistically uniform and computationally unpredictable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use the dice roller for tabletop RPGs like D&D?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The dice roller supports all standard tabletop RPG dice: D4, D6, D8, D10, D12, and D20. You can roll 1 to 10 dice simultaneously and see individual results plus the total. The rolls use cryptographically secure randomness for fair results."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my data private when using this random counter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All random number generation and data processing happens entirely in your browser. No data is sent to any server. The history log is stored only in your browser's memory during the session. There are no analytics, cookies, or tracking scripts on this page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is counter mode and how does it work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Counter mode starts at a value you specify and counts up or down using random increments within a range you define. For example, starting at 0 and counting up with random increments between 1 and 5 will add a random value from that range each time you click. This is useful for simulations, games, and randomized counting exercises."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I export my random number history?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The history log records every generated number, dice roll, coin flip, and lottery draw with timestamps. You can copy individual results to your clipboard or export the entire history as a CSV file for use in spreadsheets or data analysis tools."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+html{scroll-behavior:smooth}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--border:#1e1e2a;
+  --accent:#00ff88;--accent-dim:rgba(0,255,136,0.15);
+  --text:#e0e0e8;--text-muted:#b0b0c0;--radius-card:12px;--radius-input:8px;
+}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+header{padding:30px 0 10px;text-align:center}
+header h1{font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:8px}
+header h1 span{color:var(--accent)}
+header p.sub{color:var(--text-muted);font-size:1.05rem;max-width:640px;margin:0 auto}
+.reading-time{text-align:center;color:var(--text-muted);font-size:0.85rem;margin:8px 0 16px}
+
+/* TOC */
+nav.toc{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px 0}
+nav.toc h2{font-size:1rem;color:#fff;margin-bottom:12px}
+nav.toc ul{list-style:none;padding:0}
+nav.toc li{margin:6px 0}
+nav.toc a{color:var(--accent);font-size:0.92rem}
+
+/* Tabs */
+.main-tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:24px 0}
+.main-tab{background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:9px 18px;border-radius:var(--radius-input);cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:500;transition:all .2s}
+.main-tab:hover{border-color:var(--accent);color:var(--text)}
+.main-tab.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+
+.tool-panel{display:none}.tool-panel.active{display:block}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card);padding:24px;margin-bottom:20px}
+.panel h2,.panel h3{font-size:1.15rem;color:#fff;margin-bottom:14px}
+
+label{display:block;font-size:0.85rem;color:var(--text-muted);margin-bottom:4px;margin-top:12px}
+label:first-child{margin-top:0}
+input[type="number"],input[type="text"],textarea,select{
+  width:100%;padding:10px 14px;background:#0d0d14;border:1px solid var(--border);
+  border-radius:var(--radius-input);color:var(--text);font-family:inherit;font-size:0.95rem;outline:none;transition:border-color .2s
+}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:100px}
+select{cursor:pointer}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border:none;border-radius:var(--radius-input);cursor:pointer;font-family:inherit;font-size:0.95rem;font-weight:600;transition:all .2s}
+.btn-primary{background:var(--accent);color:#0a0a0f}.btn-primary:hover{filter:brightness(1.15)}
+.btn-secondary{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent)}.btn-secondary:hover{background:rgba(0,255,136,0.25)}
+.btn-small{padding:6px 14px;font-size:0.82rem}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+
+/* Big display */
+.big-display{
+  text-align:center;padding:40px 20px;margin:16px 0;
+  background:linear-gradient(135deg,rgba(0,255,136,0.05),rgba(0,255,136,0.02));
+  border:1px solid var(--border);border-radius:var(--radius-card);position:relative;overflow:hidden
+}
+.big-number{font-size:5rem;font-weight:800;color:var(--accent);line-height:1;transition:transform .15s}
+.big-number.pop{transform:scale(1.15)}
+.big-label{font-size:0.9rem;color:var(--text-muted);margin-top:8px}
+
+/* Dice visual */
+.dice-tray{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:16px 0}
+.die{
+  width:60px;height:60px;display:flex;align-items:center;justify-content:center;
+  background:var(--accent-dim);border:2px solid var(--accent);border-radius:10px;
+  font-size:1.5rem;font-weight:700;color:var(--accent);transition:transform .3s
+}
+.die.rolling{animation:diceRoll .4s ease-out}
+@keyframes diceRoll{
+  0%{transform:rotate(0) scale(0.6)}
+  50%{transform:rotate(180deg) scale(1.1)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+
+/* Coin */
+.coin-container{text-align:center;margin:20px 0}
+.coin{
+  width:120px;height:120px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  font-size:1.6rem;font-weight:700;border:3px solid var(--accent);
+  background:linear-gradient(135deg,var(--accent-dim),rgba(0,255,136,0.05));color:var(--accent);
+  transition:transform .5s
+}
+.coin.flipping{animation:coinFlip .6s ease-out}
+@keyframes coinFlip{
+  0%{transform:rotateY(0)}
+  50%{transform:rotateY(900deg) scale(0.8)}
+  100%{transform:rotateY(1800deg) scale(1)}
+}
+
+/* History */
+.history-log{max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-input);padding:12px;background:#0d0d14;font-size:0.85rem}
+.history-item{padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.history-item:last-child{border-bottom:none}
+.history-time{color:var(--text-muted);font-size:0.78rem}
+.history-val{color:var(--accent);font-weight:600}
+
+/* Sound toggle */
+.sound-toggle{display:flex;align-items:center;gap:8px;margin:12px 0}
+.toggle-switch{width:44px;height:24px;background:var(--border);border-radius:12px;position:relative;cursor:pointer;transition:background .2s}
+.toggle-switch.on{background:var(--accent)}
+.toggle-knob{width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .2s}
+.toggle-switch.on .toggle-knob{left:22px}
+
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.row{grid-template-columns:1fr}.big-number{font-size:3.5rem}}
+
+/* Lottery balls */
+.lottery-balls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0}
+.lotto-ball{
+  width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--accent);color:#0a0a0f;font-weight:800;font-size:1.1rem;
+  animation:ballPop .3s ease-out
+}
+@keyframes ballPop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+/* Content sections */
+.content-section{margin:32px 0}
+.content-section h2{font-size:1.4rem;color:#fff;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.content-section p,.content-section li{color:var(--text-muted);line-height:1.8}
+.content-section ul{margin:12px 0 12px 24px}
+
+/* FAQ */
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card);margin-bottom:10px;overflow:hidden}
+.faq-q{padding:16px 20px;cursor:pointer;font-weight:600;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.faq-q:hover{background:rgba(0,255,136,0.03)}
+.faq-a{padding:0 20px 16px;color:var(--text-muted);display:none;line-height:1.8}
+.faq-item.open .faq-a{display:block}
+.faq-arrow{transition:transform .2s;color:var(--accent)}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+
+footer{border-top:1px solid var(--border);padding:30px 0;margin-top:40px;text-align:center;color:var(--text-muted);font-size:0.85rem}
+footer a{color:var(--accent)}
+.cross-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:16px 0}
+.cross-link{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-input);padding:8px 16px;color:var(--accent);font-size:0.88rem;transition:border-color .2s}
+.cross-link:hover{border-color:var(--accent);text-decoration:none}
+.privacy-note{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card);padding:16px 20px;margin:20px 0;font-size:0.85rem;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Random <span>Counter</span></h1>
+  <p class="sub">Generate random numbers, roll dice, flip coins, pick from lists, and create lottery numbers. All results logged with export options.</p>
+</header>
+<p class="reading-time">Reading time: 7 min</p>
+
+<nav class="toc" style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px 0;">
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><a href="#random-number-generator">Random Number Generator</a></li>
+    <li><a href="#counter-mode">Counter Mode</a></li>
+    <li><a href="#dice-roller">Dice Roller</a></li>
+    <li><a href="#coin-flipper">Coin Flipper</a></li>
+    <li><a href="#list-picker">Random List Picker</a></li>
+    <li><a href="#lottery-generator">Lottery Number Generator</a></li>
+    <li><a href="#how-random-counters-work">How Random Counters Work</a></li>
+    <li><a href="#use-cases">Practical Use Cases</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ul>
+</nav>
+
+<!-- Sound Toggle & History Controls -->
+<div class="panel" style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center">
+  <div class="sound-toggle">
+    <div class="toggle-switch" id="soundToggle" onclick="toggleSound()"><div class="toggle-knob"></div></div>
+    <span style="font-size:0.9rem;color:var(--text-muted)">Sound effects</span>
+  </div>
+  <div class="btn-row" style="margin-top:0">
+    <button class="btn btn-secondary btn-small" onclick="clearHistory()">Clear History</button>
+    <button class="btn btn-secondary btn-small" onclick="exportCSV()">Export CSV</button>
+  </div>
+</div>
+
+<!-- Tab Navigation -->
+<div class="main-tabs">
+  <button class="main-tab active" onclick="switchTab('gen')">Number Generator</button>
+  <button class="main-tab" onclick="switchTab('counter')">Counter Mode</button>
+  <button class="main-tab" onclick="switchTab('dice')">Dice Roller</button>
+  <button class="main-tab" onclick="switchTab('coin')">Coin Flipper</button>
+  <button class="main-tab" onclick="switchTab('list')">List Picker</button>
+  <button class="main-tab" onclick="switchTab('lottery')">Lottery</button>
+</div>
+
+<!-- Big Display -->
+<div class="big-display">
+  <div class="big-number" id="bigNumber">--</div>
+  <div class="big-label" id="bigLabel">Generate a number to begin</div>
+</div>
+
+<!-- Panel: Random Number Generator -->
+<div class="tool-panel active" id="panel-gen">
+  <div class="panel">
+    <h2 id="random-number-generator">Random Number Generator</h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:12px">Generate one or more random numbers within your specified range.</p>
+    <div class="row">
+      <div><label>Minimum</label><input type="number" id="genMin" value="1"></div>
+      <div><label>Maximum</label><input type="number" id="genMax" value="100"></div>
+    </div>
+    <label>Quantity</label>
+    <input type="number" id="genQty" value="1" min="1" max="1000">
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generateNumbers()">Generate</button>
+      <button class="btn btn-secondary" onclick="copyResult()">Copy Result</button>
+    </div>
+    <div id="genResults" style="margin-top:12px;font-size:0.95rem;color:var(--accent);word-break:break-all"></div>
+  </div>
+</div>
+
+<!-- Panel: Counter Mode -->
+<div class="tool-panel" id="panel-counter">
+  <div class="panel">
+    <h2 id="counter-mode">Counter Mode</h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:12px">Count up or down with random increments each step.</p>
+    <div class="row">
+      <div><label>Start Value</label><input type="number" id="cntStart" value="0"></div>
+      <div>
+        <label>Direction</label>
+        <select id="cntDir"><option value="up">Count Up</option><option value="down">Count Down</option></select>
+      </div>
+    </div>
+    <div class="row">
+      <div><label>Min Increment</label><input type="number" id="cntIncMin" value="1" min="1"></div>
+      <div><label>Max Increment</label><input type="number" id="cntIncMax" value="5" min="1"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="counterReset()">Reset</button>
+      <button class="btn btn-primary" onclick="counterStep()">Step</button>
+      <button class="btn btn-secondary" onclick="counterAuto()">Auto (10 steps)</button>
+    </div>
+  </div>
+</div>
+
+<!-- Panel: Dice Roller -->
+<div class="tool-panel" id="panel-dice">
+  <div class="panel">
+    <h2 id="dice-roller">Dice Roller</h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:12px">Roll standard tabletop RPG dice with animated results.</p>
+    <div class="row">
+      <div>
+        <label>Number of Dice</label>
+        <select id="diceCount">
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+          <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </div>
+      <div>
+        <label>Sides</label>
+        <select id="diceSides">
+          <option value="4">D4</option><option value="6" selected>D6</option><option value="8">D8</option>
+          <option value="10">D10</option><option value="12">D12</option><option value="20">D20</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="rollDice()">Roll Dice</button>
+    </div>
+    <div class="dice-tray" id="diceTray"></div>
+    <div id="diceTotal" style="text-align:center;font-size:1.1rem;color:var(--text-muted)"></div>
+  </div>
+</div>
+
+<!-- Panel: Coin Flipper -->
+<div class="tool-panel" id="panel-coin">
+  <div class="panel">
+    <h2 id="coin-flipper">Coin Flipper</h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:12px">Flip a fair coin with animation. Uses cryptographic randomness.</p>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-primary" onclick="flipCoin()" style="font-size:1.1rem;padding:14px 36px">Flip Coin</button>
+    </div>
+    <div class="coin-container">
+      <div class="coin" id="coinFace">?</div>
+    </div>
+    <div id="coinStats" style="text-align:center;color:var(--text-muted);font-size:0.9rem"></div>
+  </div>
+</div>
+
+<!-- Panel: List Picker -->
+<div class="tool-panel" id="panel-list">
+  <div class="panel">
+    <h2 id="list-picker">Random List Picker</h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:12px">Paste a list (one item per line) and pick random entries.</p>
+    <label>Your List</label>
+    <textarea id="listInput" placeholder="Enter items, one per line&#10;Apple&#10;Banana&#10;Cherry&#10;Date"></textarea>
+    <label>Number of Picks</label>
+    <input type="number" id="listPicks" value="1" min="1">
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="pickFromList()">Pick Random</button>
+      <button class="btn btn-secondary" onclick="shuffleList()">Shuffle All</button>
+    </div>
+    <div id="listResults" style="margin-top:12px;font-size:1rem;color:var(--accent)"></div>
+  </div>
+</div>
+
+<!-- Panel: Lottery -->
+<div class="tool-panel" id="panel-lottery">
+  <div class="panel">
+    <h2 id="lottery-generator">Lottery Number Generator</h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:12px">Generate a set of unique lottery numbers.</p>
+    <div class="row">
+      <div><label>Pick how many numbers</label><input type="number" id="lotPick" value="6" min="1" max="50"></div>
+      <div><label>From 1 to...</label><input type="number" id="lotMax" value="49" min="2" max="999"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generateLottery()">Generate Numbers</button>
+    </div>
+    <div class="lottery-balls" id="lotteryBalls"></div>
+  </div>
+</div>
+
+<!-- History Log -->
+<div class="panel">
+  <h3>History Log</h3>
+  <div class="history-log" id="historyLog">
+    <div style="text-align:center;color:var(--text-muted);padding:20px">No history yet. Generate some numbers to begin.</div>
+  </div>
+</div>
+
+<!-- Editorial Content -->
+<div class="content-section">
+  <h2 id="how-random-counters-work">How Random Counters Work</h2>
+  <p>A random counter generates numbers using algorithms that draw from entropy sources within your computer's hardware. Modern browsers provide the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues" rel="noopener" target="_blank">Web Crypto API</a>, which accesses a cryptographically secure pseudorandom number generator (CSPRNG). This means the numbers produced are computationally unpredictable and statistically uniform across the specified range.</p>
+  <p style="margin-top:12px">Unlike simple counters that increment by fixed values, a random counter uses variable step sizes drawn from a random distribution. This makes them useful for simulations, game mechanics, educational demonstrations, and any scenario where deterministic counting would introduce unwanted bias.</p>
+  <p style="margin-top:12px">The underlying principle comes from <a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator" rel="noopener" target="_blank">pseudorandom number generation</a>, a well-studied area of computer science and cryptography. CSPRNGs like the one used in this tool satisfy the "next-bit test," meaning no polynomial-time algorithm can predict the next output bit with probability significantly better than 50%.</p>
+</div>
+
+<div class="content-section">
+  <h2 id="use-cases">Practical Use Cases for Random Counters</h2>
+  <ul>
+    <li><strong>Board games and tabletop RPGs:</strong> Roll dice for D&D, Pathfinder, Warhammer, and other systems. The D4 through D20 dice cover all standard tabletop needs.</li>
+    <li><strong>Classroom and education:</strong> Teachers use random number generators to call on students fairly, assign groups, or generate practice problems.</li>
+    <li><strong>Decision making:</strong> Coin flips and random picks from lists help resolve ties and make impartial decisions when multiple options are equally valid.</li>
+    <li><strong>Lottery and raffle drawings:</strong> Generate unique number sets for informal raffles, prize drawings, and personal lottery number selection.</li>
+    <li><strong>Software testing:</strong> Developers use random counters to generate test data, seed fuzzing inputs, and simulate variable conditions.</li>
+    <li><strong>Statistics and probability:</strong> Run experiments to demonstrate the <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers" rel="noopener" target="_blank">law of large numbers</a>, central limit theorem, and other statistical concepts.</li>
+  </ul>
+</div>
+
+<div class="content-section">
+  <h2 id="dice-types">Understanding Dice Types and Probability</h2>
+  <p>Standard tabletop dice come in several shapes, each corresponding to a <a href="https://en.wikipedia.org/wiki/Platonic_solid" rel="noopener" target="_blank">Platonic solid</a> or fair die geometry. The D4 (tetrahedron), D6 (cube), D8 (octahedron), D12 (dodecahedron), and D20 (icosahedron) are the five Platonic solids. The D10 uses a pentagonal trapezohedron, which is not a Platonic solid but is still a fair die.</p>
+  <p style="margin-top:12px">When rolling multiple dice and summing the results, the distribution follows a pattern described by convolution. Two D6 dice produce a triangular distribution centered on 7, while larger pools approach a bell curve as predicted by the central limit theorem. This is why many RPG systems use multiple dice: the averaging effect creates more predictable results with dramatic outliers becoming rarer.</p>
+</div>
+
+<div class="content-section">
+  <h2 id="counter-modes-explained">Counter Modes Explained</h2>
+  <p>The counter mode in this tool adds a random increment (within your specified range) to a running total each time you step. This creates a <a href="https://en.wikipedia.org/wiki/Random_walk" rel="noopener" target="_blank">random walk</a> pattern where the value drifts in one direction but with unpredictable speed.</p>
+  <p style="margin-top:12px">Random walks have applications across fields: modeling stock prices (geometric Brownian motion), simulating particle diffusion, and generating procedural content in games. The counter mode here gives you a hands-on way to observe random walks in real time.</p>
+  <p style="margin-top:12px">You can configure the direction (up or down) and the range of increments. A narrow increment range (e.g., 1-2) produces a smooth progression, while a wide range (e.g., 1-100) creates dramatic jumps.</p>
+</div>
+
+<div class="content-section">
+  <h2 id="cryptographic-randomness">Cryptographic Randomness vs. Math.random()</h2>
+  <p>JavaScript provides two ways to generate random numbers: <code>Math.random()</code> and <code>crypto.getRandomValues()</code>. This tool uses exclusively the latter. <code>Math.random()</code> is a fast PRNG typically using the xorshift128+ algorithm, but its internal state can be reconstructed from its output, making it unsuitable for security applications.</p>
+  <p style="margin-top:12px">The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API" rel="noopener" target="_blank">Web Crypto API</a>, available in all modern browsers, accesses the operating system's entropy pool. On Linux this comes from <code>/dev/urandom</code>, on Windows from <code>BCryptGenRandom</code>, and on macOS from <code>SecRandomCopyBytes</code>. These sources collect hardware entropy from timing jitter, interrupt timing, and other physical phenomena.</p>
+</div>
+
+<div class="content-section">
+  <h2 id="export-and-history">Exporting Results and History Tracking</h2>
+  <p>Every number generated during your session is logged to the history panel with a timestamp and the tool that generated it. This lets you review past results, verify fairness, and maintain records for games or experiments.</p>
+  <p style="margin-top:12px">The CSV export function downloads your complete history as a comma-separated values file compatible with Microsoft Excel, Google Sheets, LibreOffice Calc, and any other spreadsheet application. Each row contains the timestamp, tool used, and generated value(s). You can also copy individual results to your clipboard with a single click.</p>
+</div>
+
+<!-- FAQ -->
+<div class="content-section">
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <div class="faq-item open">
+    <div class="faq-q" onclick="toggleFaq(this)">How does the random counter generate numbers?<span class="faq-arrow">&#9660;</span></div>
+    <div class="faq-a">The random counter uses the Web Crypto API (<code>crypto.getRandomValues()</code>) to generate cryptographically secure random numbers. This draws entropy from your operating system's hardware random number source, producing numbers that are statistically uniform and computationally unpredictable.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Can I use the dice roller for tabletop RPGs like D&D?<span class="faq-arrow">&#9660;</span></div>
+    <div class="faq-a">Yes. The dice roller supports all standard tabletop RPG dice: D4, D6, D8, D10, D12, and D20. You can roll 1 to 10 dice simultaneously and see individual results plus the total. The rolls use cryptographically secure randomness for fair results.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Is my data private when using this random counter?<span class="faq-arrow">&#9660;</span></div>
+    <div class="faq-a">All random number generation and data processing happens entirely in your browser. No data is sent to any server. The history log is stored only in your browser's memory during the session. There are no analytics, cookies, or tracking scripts on this page.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What is counter mode and how does it work?<span class="faq-arrow">&#9660;</span></div>
+    <div class="faq-a">Counter mode starts at a value you specify and counts up or down using random increments within a range you define. For example, starting at 0 and counting up with random increments between 1 and 5 will add a random value from that range each time you click. This is useful for simulations, games, and randomized counting exercises.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Can I export my random number history?<span class="faq-arrow">&#9660;</span></div>
+    <div class="faq-a">Yes. The history log records every generated number, dice roll, coin flip, and lottery draw with timestamps. You can copy individual results to your clipboard or export the entire history as a CSV file for use in spreadsheets or data analysis tools.</div>
+  </div>
+</div>
+
+<!-- Privacy Note -->
+<div class="privacy-note">
+  <strong>Privacy Note:</strong> This tool runs entirely in your browser. No data is collected, stored on servers, or shared with third parties. All random number generation uses your device's built-in cryptographic engine. No cookies, no analytics, no tracking.
+</div>
+
+<!-- Cross Links -->
+<div style="text-align:center;margin:24px 0">
+  <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:12px">Related Tools</p>
+  <div class="cross-links">
+    <a class="cross-link" href="/free-tools/random-number-generator/">Random Number Generator</a>
+    <a class="cross-link" href="/free-tools/random-picker/">Random Picker</a>
+    <a class="cross-link" href="/free-tools/number-generator/">Number Generator</a>
+  </div>
+</div>
+
+<footer>
+  <p>Built by <strong>Michael Lip</strong> &middot; <a href="https://zovo.one">Zovo</a></p>
+  <p style="margin-top:6px">Free, open, and private. No sign-up required.</p>
+  <p style="margin-top:10px;font-size:0.78rem">
+    References:
+    <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues" rel="noopener" target="_blank">MDN Web Crypto API</a> &middot;
+    <a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator" rel="noopener" target="_blank">Wikipedia: PRNG</a> &middot;
+    <a href="https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle" rel="noopener" target="_blank">Wikipedia: Fisher-Yates Shuffle</a>
+  </p>
+  <p style="margin-top:8px;font-size:0.78rem">Compatible with Chrome, Firefox, Safari, Edge, and all modern browsers.</p>
+</footer>
+</div>
+
+<script>
+// ===== State =====
+let history = [];
+let soundEnabled = false;
+let counterValue = 0;
+let coinHeads = 0, coinTails = 0;
+let audioCtx = null;
+let lastResult = '';
+
+// ===== Utility =====
+function secureRandom(min, max) {
+  const range = max - min + 1;
+  const bytesNeeded = Math.ceil(Math.log2(range) / 8) || 1;
+  const maxValid = Math.floor(256 ** bytesNeeded / range) * range - 1;
+  let val;
+  do {
+    const arr = new Uint8Array(bytesNeeded);
+    crypto.getRandomValues(arr);
+    val = 0;
+    for (let i = 0; i < bytesNeeded; i++) val = val * 256 + arr[i];
+  } while (val > maxValid);
+  return min + (val % range);
+}
+
+function playSound(type) {
+  if (!soundEnabled) return;
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  if (type === 'click') {
+    osc.frequency.value = 800;
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.08);
+  } else if (type === 'ding') {
+    osc.frequency.value = 1200;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.3);
+  } else if (type === 'roll') {
+    osc.frequency.value = 400;
+    osc.type = 'triangle';
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.15);
+  }
+}
+
+function updateBigDisplay(value, label) {
+  const el = document.getElementById('bigNumber');
+  el.textContent = value;
+  document.getElementById('bigLabel').textContent = label;
+  el.classList.add('pop');
+  setTimeout(() => el.classList.remove('pop'), 150);
+  lastResult = String(value);
+}
+
+function addHistory(tool, value) {
+  const now = new Date();
+  const ts = now.toLocaleTimeString();
+  history.push({ time: ts, tool, value: String(value), date: now.toLocaleDateString() });
+  renderHistory();
+}
+
+function renderHistory() {
+  const log = document.getElementById('historyLog');
+  if (history.length === 0) {
+    log.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px">No history yet.</div>';
+    return;
+  }
+  let html = '';
+  for (let i = history.length - 1; i >= 0; i--) {
+    const h = history[i];
+    html += '<div class="history-item"><span class="history-time">' + h.time + ' &middot; ' + h.tool + '</span><span class="history-val">' + h.value + '</span></div>';
+  }
+  log.innerHTML = html;
+}
+
+// ===== Tab Switching =====
+function switchTab(id) {
+  document.querySelectorAll('.main-tab').forEach((t, i) => {
+    const tabs = ['gen','counter','dice','coin','list','lottery'];
+    t.classList.toggle('active', tabs[i] === id);
+  });
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+// ===== Sound Toggle =====
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('soundToggle').classList.toggle('on', soundEnabled);
+  if (soundEnabled) playSound('ding');
+}
+
+// ===== Random Number Generator =====
+function generateNumbers() {
+  const min = parseInt(document.getElementById('genMin').value) || 0;
+  const max = parseInt(document.getElementById('genMax').value) || 100;
+  const qty = Math.min(Math.max(parseInt(document.getElementById('genQty').value) || 1, 1), 1000);
+  if (min > max) { alert('Minimum must be less than or equal to maximum.'); return; }
+  const results = [];
+  for (let i = 0; i < qty; i++) results.push(secureRandom(min, max));
+  const display = results.join(', ');
+  document.getElementById('genResults').textContent = display;
+  updateBigDisplay(qty === 1 ? results[0] : results[0] + '...', qty === 1 ? 'Random number (' + min + '-' + max + ')' : qty + ' numbers (' + min + '-' + max + ')');
+  addHistory('Generator', display);
+  playSound('ding');
+}
+
+// ===== Counter Mode =====
+function counterReset() {
+  counterValue = parseInt(document.getElementById('cntStart').value) || 0;
+  updateBigDisplay(counterValue, 'Counter reset');
+  addHistory('Counter', 'Reset to ' + counterValue);
+  playSound('click');
+}
+function counterStep() {
+  const incMin = Math.max(parseInt(document.getElementById('cntIncMin').value) || 1, 1);
+  const incMax = Math.max(parseInt(document.getElementById('cntIncMax').value) || 5, incMin);
+  const dir = document.getElementById('cntDir').value;
+  const inc = secureRandom(incMin, incMax);
+  counterValue += dir === 'up' ? inc : -inc;
+  updateBigDisplay(counterValue, (dir === 'up' ? '+' : '-') + inc + ' (counter)');
+  addHistory('Counter', counterValue + ' (' + (dir === 'up' ? '+' : '-') + inc + ')');
+  playSound('click');
+}
+function counterAuto() {
+  let i = 0;
+  const interval = setInterval(() => {
+    counterStep();
+    i++;
+    if (i >= 10) clearInterval(interval);
+  }, 250);
+}
+
+// ===== Dice Roller =====
+function rollDice() {
+  const count = parseInt(document.getElementById('diceCount').value);
+  const sides = parseInt(document.getElementById('diceSides').value);
+  const tray = document.getElementById('diceTray');
+  tray.innerHTML = '';
+  const results = [];
+  for (let i = 0; i < count; i++) {
+    const val = secureRandom(1, sides);
+    results.push(val);
+    const die = document.createElement('div');
+    die.className = 'die rolling';
+    die.textContent = val;
+    die.style.animationDelay = (i * 0.08) + 's';
+    tray.appendChild(die);
+  }
+  const total = results.reduce((a, b) => a + b, 0);
+  document.getElementById('diceTotal').textContent = count > 1 ? 'Total: ' + total + ' (' + results.join(' + ') + ')' : '';
+  updateBigDisplay(count === 1 ? results[0] : total, count + 'D' + sides + (count > 1 ? ' = ' + results.join('+') : ''));
+  addHistory('Dice', count + 'D' + sides + ': ' + results.join(', ') + (count > 1 ? ' = ' + total : ''));
+  playSound('roll');
+}
+
+// ===== Coin Flipper =====
+function flipCoin() {
+  const coin = document.getElementById('coinFace');
+  const result = secureRandom(0, 1) === 0 ? 'Heads' : 'Tails';
+  coin.classList.add('flipping');
+  setTimeout(() => {
+    coin.textContent = result === 'Heads' ? 'H' : 'T';
+    coin.classList.remove('flipping');
+  }, 600);
+  if (result === 'Heads') coinHeads++; else coinTails++;
+  const total = coinHeads + coinTails;
+  document.getElementById('coinStats').textContent = 'Heads: ' + coinHeads + ' (' + (coinHeads/total*100).toFixed(1) + '%) | Tails: ' + coinTails + ' (' + (coinTails/total*100).toFixed(1) + '%) | Total: ' + total;
+  updateBigDisplay(result, 'Coin flip #' + total);
+  addHistory('Coin', result);
+  playSound('ding');
+}
+
+// ===== List Picker =====
+function pickFromList() {
+  const text = document.getElementById('listInput').value.trim();
+  if (!text) { alert('Enter a list first.'); return; }
+  const items = text.split('\n').map(s => s.trim()).filter(Boolean);
+  if (items.length === 0) return;
+  const picks = Math.min(parseInt(document.getElementById('listPicks').value) || 1, items.length);
+  const chosen = [];
+  const pool = [...items];
+  for (let i = 0; i < picks; i++) {
+    const idx = secureRandom(0, pool.length - 1);
+    chosen.push(pool.splice(idx, 1)[0]);
+  }
+  document.getElementById('listResults').innerHTML = chosen.map(c => '<div style="margin:4px 0">&bull; ' + c + '</div>').join('');
+  updateBigDisplay(picks === 1 ? chosen[0] : picks + ' picks', 'Random pick from ' + items.length + ' items');
+  addHistory('List Picker', chosen.join(', '));
+  playSound('ding');
+}
+function shuffleList() {
+  const text = document.getElementById('listInput').value.trim();
+  if (!text) return;
+  const items = text.split('\n').map(s => s.trim()).filter(Boolean);
+  // Fisher-Yates shuffle
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = secureRandom(0, i);
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+  document.getElementById('listInput').value = items.join('\n');
+  document.getElementById('listResults').innerHTML = '<div style="color:var(--text-muted)">List shuffled.</div>';
+  addHistory('Shuffle', items.length + ' items shuffled');
+  playSound('click');
+}
+
+// ===== Lottery Generator =====
+function generateLottery() {
+  const pick = Math.min(parseInt(document.getElementById('lotPick').value) || 6, 50);
+  const max = Math.max(parseInt(document.getElementById('lotMax').value) || 49, pick);
+  const numbers = [];
+  const pool = [];
+  for (let i = 1; i <= max; i++) pool.push(i);
+  for (let i = 0; i < pick; i++) {
+    const idx = secureRandom(0, pool.length - 1);
+    numbers.push(pool.splice(idx, 1)[0]);
+  }
+  numbers.sort((a, b) => a - b);
+  const container = document.getElementById('lotteryBalls');
+  container.innerHTML = '';
+  numbers.forEach((n, i) => {
+    const ball = document.createElement('div');
+    ball.className = 'lotto-ball';
+    ball.textContent = n;
+    ball.style.animationDelay = (i * 0.1) + 's';
+    container.appendChild(ball);
+  });
+  updateBigDisplay(numbers.join(' - '), 'Pick ' + pick + ' from ' + max);
+  addHistory('Lottery', numbers.join(', '));
+  playSound('ding');
+}
+
+// ===== History Management =====
+function clearHistory() {
+  history = [];
+  coinHeads = 0;
+  coinTails = 0;
+  document.getElementById('coinStats').textContent = '';
+  renderHistory();
+}
+function exportCSV() {
+  if (history.length === 0) { alert('No history to export.'); return; }
+  let csv = 'Date,Time,Tool,Value\n';
+  history.forEach(h => {
+    csv += '"' + h.date + '","' + h.time + '","' + h.tool + '","' + h.value.replace(/"/g, '""') + '"\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'random-counter-history.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function copyResult() {
+  if (!lastResult) return;
+  navigator.clipboard.writeText(lastResult).then(() => {
+    const btn = document.querySelector('#panel-gen .btn-secondary');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1200);
+  });
+}
+
+// ===== FAQ Toggle =====
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// ===== Init =====
+counterValue = parseInt(document.getElementById('cntStart').value) || 0;
+</script>
+</body>
+</html>
