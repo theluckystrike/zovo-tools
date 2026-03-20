@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIF to Video Converter - Free Online Tool | Convert GIF to MP4/WebM</title>
+<meta name="description" content="Convert animated GIFs to MP4 or WebM video free in your browser. No upload, no server — 100% client-side GIF to video conversion with adjustable settings.">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/gif-to-video/">
+<meta property="og:title" content="GIF to Video Converter - Free Online Tool">
+<meta property="og:description" content="Convert animated GIFs to MP4 or WebM video free in your browser. No upload needed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/gif-to-video/">
+<meta property="og:image" content="https://zovo.one/free-tools/gif-to-video/og-image.png">
+<meta property="og:site_name" content="Zovo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="GIF to Video Converter - Free Online Tool">
+<meta name="twitter:description" content="Convert animated GIFs to MP4 or WebM video free in your browser. No upload needed.">
+<meta name="twitter:image" content="https://zovo.one/free-tools/gif-to-video/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "GIF to Video Converter",
+  "description": "Convert animated GIFs to MP4 or WebM video free in your browser. No upload, no server — 100% client-side conversion.",
+  "url": "https://zovo.one/free-tools/gif-to-video/",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "browserRequirements": "Requires a modern browser with MediaRecorder API support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Can I convert a GIF to MP4 without uploading it?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. This tool runs entirely in your browser. Your GIF file never leaves your device — the parsing, rendering, and encoding all happen client-side using JavaScript and the Canvas API." }},
+    { "@type": "Question", "name": "What video formats are supported?", "acceptedAnswer": { "@type": "Answer", "text": "WebM is supported in all modern browsers. MP4 output depends on your browser's MediaRecorder codec support — Chrome and Edge typically support it, while Firefox outputs WebM." }},
+    { "@type": "Question", "name": "Why is my output video larger than the GIF?", "acceptedAnswer": { "@type": "Answer", "text": "GIF uses LZW compression optimized for indexed-color images. Video codecs like VP8/VP9 are designed for photographic content. For simple animations, the video file may be slightly larger, but it plays far more efficiently on the web." }},
+    { "@type": "Question", "name": "Does this tool support transparent GIFs?", "acceptedAnswer": { "@type": "Answer", "text": "The GIF parser fully handles transparency indices from Graphic Control Extensions. However, most video formats do not support transparency, so transparent areas are rendered with a white background in the output video." }},
+    { "@type": "Question", "name": "What is the maximum GIF file size I can convert?", "acceptedAnswer": { "@type": "Answer", "text": "There is no hard limit — it depends on your device's available memory. GIFs under 50 MB typically convert without issues. Very large GIFs with hundreds of frames may take longer to process." }}
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#e0e0e8;font-family:system-ui,-apple-system,sans-serif;line-height:1.7;min-height:100vh}
+a{color:#00ff88;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:2rem;font-weight:700;margin-bottom:8px;color:#fff}
+h1 span{color:#00ff88}
+.subtitle{color:#b0b0c0;font-size:1.05rem;margin-bottom:6px}
+.reading-time{color:#b0b0c0;font-size:0.85rem;margin-bottom:24px}
+.privacy-note{background:#0d1f15;border:1px solid #1a3d2a;border-radius:8px;padding:10px 16px;font-size:0.9rem;color:#7fdfaa;margin-bottom:24px}
+.toc{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px 0}
+.toc h2{font-size:1.1rem;margin-bottom:12px;color:#fff}
+.toc ul{list-style:none;padding:0}
+.toc li{margin-bottom:6px}
+.toc a{font-size:0.95rem;color:#00ff88}
+.tool-area{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:28px;margin-bottom:32px}
+.drop-zone{border:2px dashed #2a2a3a;border-radius:12px;padding:48px 24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:20px}
+.drop-zone:hover,.drop-zone.dragover{border-color:#00ff88;background:#0a1f14}
+.drop-zone p{color:#b0b0c0;font-size:1rem;margin-bottom:8px}
+.drop-zone .accent{color:#00ff88;font-weight:600}
+input[type="file"]{display:none}
+.gif-info{background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;padding:14px 18px;margin-bottom:20px;display:none}
+.gif-info .row{display:flex;flex-wrap:wrap;gap:16px}
+.gif-info .item{font-size:0.9rem;color:#b0b0c0}
+.gif-info .item strong{color:#e0e0e8}
+.settings{display:none;margin-bottom:20px}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.field label{display:block;font-size:0.85rem;color:#b0b0c0;margin-bottom:4px}
+.field select,.field input[type="range"]{width:100%;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;color:#e0e0e8;padding:8px 12px;font-size:0.9rem}
+.field select{cursor:pointer}
+.field input[type="range"]{padding:4px 0;cursor:pointer;accent-color:#00ff88}
+.field .range-val{font-size:0.8rem;color:#00ff88;float:right}
+.preview-area{display:none;margin-bottom:20px}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.preview-grid{grid-template-columns:1fr}}
+.preview-box{text-align:center}
+.preview-box h3{font-size:0.9rem;color:#b0b0c0;margin-bottom:8px}
+.preview-box img,.preview-box video{max-width:100%;border-radius:8px;background:#0a0a0f}
+.preview-box canvas{max-width:100%;border-radius:8px;display:none}
+.btn{display:inline-flex;align-items:center;gap:8px;background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;padding:12px 24px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:opacity .2s}
+.btn:hover{opacity:0.85}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.progress-bar{width:100%;height:6px;background:#1e1e2a;border-radius:3px;overflow:hidden;margin-top:12px;display:none}
+.progress-bar .fill{height:100%;background:#00ff88;width:0;transition:width .15s}
+.status{font-size:0.9rem;color:#b0b0c0;margin-top:8px;display:none}
+article h2{font-size:1.5rem;font-weight:700;color:#fff;margin-top:48px;margin-bottom:14px;padding-top:12px;border-top:1px solid #1e1e2a}
+article p{color:#ccc;margin-bottom:14px;font-size:1rem}
+article ul,article ol{color:#ccc;margin-bottom:14px;padding-left:24px}
+article li{margin-bottom:6px}
+.faq-section{margin-top:48px}
+.faq-item{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:18px 22px;margin-bottom:14px}
+.faq-item h3{font-size:1.05rem;color:#fff;margin-bottom:8px}
+.faq-item p{color:#b0b0c0;font-size:0.95rem;margin-bottom:0}
+.related-tools{margin-top:32px;padding:20px;background:#12121a;border:1px solid #1e1e2a;border-radius:12px}
+.related-tools h3{font-size:1rem;margin-bottom:10px;color:#fff}
+.related-tools ul{list-style:none;padding:0}
+.related-tools li{margin-bottom:6px}
+.compat-note{margin-top:24px;background:#1a1a10;border:1px solid #2a2a1a;border-radius:8px;padding:14px 18px;font-size:0.9rem;color:#d0d0a0}
+.ext-refs{margin-top:18px;font-size:0.9rem;color:#b0b0c0}
+.ext-refs a{color:#00ff88}
+footer{text-align:center;padding:32px 20px;color:#b0b0c0;font-size:0.85rem;border-top:1px solid #1e1e2a;margin-top:48px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>GIF to <span>Video</span> Converter</h1>
+<p class="subtitle">Convert animated GIFs to MP4 or WebM video — free, private, and instant.</p>
+<p class="reading-time">8 min read</p>
+<p class="privacy-note">All processing happens in your browser. No data is uploaded to any server.</p>
+
+<nav class="toc">
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#how-it-works">How It Works</a></li>
+<li><a href="#gif-format-explained">The GIF Format Explained</a></li>
+<li><a href="#lzw-compression">LZW Compression in GIFs</a></li>
+<li><a href="#video-encoding">Browser-Based Video Encoding</a></li>
+<li><a href="#when-to-convert">When to Convert GIF to Video</a></li>
+<li><a href="#tips">Tips for Best Results</a></li>
+<li><a href="#faq">Frequently Asked Questions</a></li>
+</ul>
+</nav>
+
+<div class="tool-area">
+<div class="drop-zone" id="dropZone">
+<p class="accent">Drop your GIF here</p>
+<p>or click to select a file</p>
+</div>
+<input type="file" id="fileInput" accept="image/gif,.gif">
+
+<div class="gif-info" id="gifInfo">
+<div class="row">
+<div class="item"><strong>Dimensions:</strong> <span id="infoDim">-</span></div>
+<div class="item"><strong>Frames:</strong> <span id="infoFrames">-</span></div>
+<div class="item"><strong>Duration:</strong> <span id="infoDuration">-</span></div>
+<div class="item"><strong>File size:</strong> <span id="infoSize">-</span></div>
+</div>
+</div>
+
+<div class="settings" id="settings">
+<div class="settings-grid">
+<div class="field">
+<label>Output Format</label>
+<select id="formatSelect">
+<option value="webm">WebM (VP8)</option>
+<option value="mp4">MP4 (if supported)</option>
+</select>
+</div>
+<div class="field">
+<label>Frame Rate Override <span class="range-val" id="fpsVal">Original</span></label>
+<select id="fpsSelect">
+<option value="0">Original timing</option>
+<option value="10">10 fps</option>
+<option value="15">15 fps</option>
+<option value="20">20 fps</option>
+<option value="24">24 fps</option>
+<option value="30">30 fps</option>
+<option value="60">60 fps</option>
+</select>
+</div>
+<div class="field">
+<label>Scale Factor</label>
+<select id="scaleSelect">
+<option value="0.5">0.5x</option>
+<option value="1" selected>1x</option>
+<option value="2">2x</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="preview-area" id="previewArea">
+<div class="preview-grid">
+<div class="preview-box">
+<h3>Original GIF</h3>
+<img id="origPreview" src="" alt="Original GIF preview">
+</div>
+<div class="preview-box">
+<h3>Converted Video</h3>
+<video id="videoPreview" controls loop style="display:none"></video>
+<canvas id="renderCanvas"></canvas>
+</div>
+</div>
+</div>
+
+<div class="btn-row">
+<button class="btn" id="convertBtn" disabled>Convert to Video</button>
+<button class="btn" id="downloadBtn" style="display:none">Download Video</button>
+</div>
+<div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
+<div class="status" id="status"></div>
+</div>
+
+<article>
+<h2 id="how-it-works">How It Works</h2>
+<p>This tool reads the raw binary data of your animated GIF file directly in JavaScript. It parses every byte — from the GIF header and logical screen descriptor to each image frame's local color table and compressed pixel data. Every frame is decoded using the LZW decompression algorithm, rendered onto an HTML Canvas element, and then captured by the browser's MediaRecorder API to produce a video file.</p>
+<p>The entire pipeline runs on your machine. Your GIF data never touches a remote server. Once conversion finishes, you can download the resulting WebM or MP4 file instantly.</p>
+
+<h2 id="gif-format-explained">The GIF Format Explained</h2>
+<p>The Graphics Interchange Format (GIF) was introduced by CompuServe in 1987. The original GIF87a specification supported basic image display, while the 1989 GIF89a revision added animation support through Graphic Control Extensions, which define frame delays, disposal methods, and transparency.</p>
+<p>A GIF file is structured as a sequence of blocks:</p>
+<ul>
+<li><strong>Header:</strong> 6 bytes identifying the format (GIF87a or GIF89a).</li>
+<li><strong>Logical Screen Descriptor:</strong> 7 bytes defining the canvas width, height, background color index, and the presence of a Global Color Table.</li>
+<li><strong>Global Color Table:</strong> An optional palette of up to 256 RGB entries shared across frames.</li>
+<li><strong>Extension blocks:</strong> Including Graphic Control Extensions (frame delay, disposal, transparency), Comment Extensions, and Application Extensions (e.g., NETSCAPE2.0 for looping).</li>
+<li><strong>Image Descriptors:</strong> Each frame has a descriptor specifying its position, size, optional local color table, and LZW-compressed pixel data.</li>
+<li><strong>Trailer:</strong> A single 0x3B byte marking the end of the file.</li>
+</ul>
+
+<h2 id="lzw-compression">LZW Compression in GIFs</h2>
+<p>GIF uses the Lempel-Ziv-Welch (LZW) algorithm to compress pixel index data. Each frame's pixel indices — references into either the global or local color table — are compressed into variable-length codes packed into sub-blocks of up to 255 bytes.</p>
+<p>The decompression process builds a code table dynamically. It starts with initial entries for each possible color index plus a Clear Code and an End-of-Information code. As codes are read from the bitstream, the table grows with new entries formed by combining previously seen patterns. When the table reaches a size threshold, the code width increases by one bit, up to a maximum of 12 bits.</p>
+<p>Implementing this from scratch in JavaScript requires careful handling of the bitstream — reading codes across byte boundaries and managing the growing code table without exceeding memory. This tool performs all of that parsing in pure JavaScript with no external libraries.</p>
+
+<h2 id="video-encoding">Browser-Based Video Encoding</h2>
+<p>Modern browsers provide the <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder" target="_blank" rel="noopener">MediaRecorder API</a>, which can capture a media stream from a Canvas element and encode it into a video format. The tool draws each decoded GIF frame onto a Canvas at the correct timing, and MediaRecorder captures this sequence as a video.</p>
+<p>WebM with the VP8 or VP9 codec is universally supported across browsers that implement MediaRecorder. MP4 (H.264) support varies — Chrome and Edge generally support it, while Firefox currently outputs only WebM containers. The tool detects which codecs your browser supports and adjusts the available options accordingly.</p>
+
+<h2 id="when-to-convert">When to Convert GIF to Video</h2>
+<p>GIF files are often significantly larger than equivalent video files for photographic or complex animated content. A 10 MB GIF might become a 1-2 MB WebM file. Converting GIFs to video is useful for:</p>
+<ul>
+<li><strong>Web performance:</strong> Video files load faster and use less bandwidth than GIFs, especially on mobile connections.</li>
+<li><strong>Social media:</strong> Many platforms prefer video uploads and will re-encode GIFs anyway.</li>
+<li><strong>Email-friendly:</strong> Embedded video thumbnails are lighter than inline GIF animations.</li>
+<li><strong>Quality:</strong> Video codecs handle gradients and photographic content without the 256-color limitation of GIF.</li>
+</ul>
+
+<h2 id="tips">Tips for Best Results</h2>
+<p>To get the best output from this converter, keep a few things in mind:</p>
+<ul>
+<li>Use the <strong>Original timing</strong> frame rate setting unless you specifically need a different rate. GIF frame delays are often irregular, and overriding them can produce choppy results.</li>
+<li>If the output video looks pixelated, try the <strong>2x scale factor</strong> to upscale the resolution.</li>
+<li>WebM is the most reliable output format. If you need MP4, check that your browser supports it — Chrome and Edge are your best bet.</li>
+<li>For very large GIFs (50+ MB), give the browser a moment. Processing hundreds of frames through LZW decompression takes time.</li>
+<li>If the GIF has transparency, note that the transparent regions will be rendered as white in the video, since most video codecs do not support alpha channels.</li>
+</ul>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-section">
+<div class="faq-item">
+<h3>Can I convert a GIF to MP4 without uploading it?</h3>
+<p>Yes. This tool runs entirely in your browser. Your GIF file never leaves your device — the parsing, rendering, and encoding all happen client-side using JavaScript and the Canvas API.</p>
+</div>
+<div class="faq-item">
+<h3>What video formats are supported?</h3>
+<p>WebM is supported in all modern browsers. MP4 output depends on your browser's MediaRecorder codec support — Chrome and Edge typically support it, while Firefox outputs WebM.</p>
+</div>
+<div class="faq-item">
+<h3>Why is my output video larger than the GIF?</h3>
+<p>GIF uses LZW compression optimized for indexed-color images with limited palettes. Video codecs are designed for photographic content. For very simple animations with few colors, the video file may end up slightly larger, but it plays far more efficiently on the web.</p>
+</div>
+<div class="faq-item">
+<h3>Does this tool support transparent GIFs?</h3>
+<p>The GIF parser fully handles transparency indices from Graphic Control Extensions. However, most video formats do not support alpha channels, so transparent areas are rendered with a white background.</p>
+</div>
+<div class="faq-item">
+<h3>What is the maximum GIF file size I can convert?</h3>
+<p>There is no hard limit — it depends on your device's available memory. GIFs under 50 MB typically convert without issues. Very large GIFs with hundreds of frames may take longer to process.</p>
+</div>
+</div>
+</article>
+
+<div class="related-tools">
+<h3>Related Tools</h3>
+<ul>
+<li><a href="/free-tools/video-to-gif/">Video to GIF Converter</a></li>
+<li><a href="/free-tools/image-compressor/">Image Compressor</a></li>
+<li><a href="/free-tools/video-compressor/">Video Compressor</a></li>
+</ul>
+</div>
+
+<div class="compat-note">
+<strong>Browser Compatibility:</strong> This tool requires a modern browser with support for the Canvas API, MediaRecorder API, and Blob URLs. Chrome 49+, Firefox 29+, Edge 79+, and Safari 14.1+ are supported. MP4 output requires browser-level H.264 MediaRecorder support (Chrome/Edge).
+</div>
+
+<div class="ext-refs">
+<strong>References:</strong>
+<a href="https://en.wikipedia.org/wiki/GIF" target="_blank" rel="noopener">GIF — Wikipedia</a> ·
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder" target="_blank" rel="noopener">MediaRecorder API — MDN</a> ·
+<a href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch" target="_blank" rel="noopener">LZW — Wikipedia</a>
+</div>
+
+</div>
+
+<footer>
+Built by Michael Lip · More free tools at <a href="https://zovo.one">zovo.one</a>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+// DOM elements
+const dropZone=document.getElementById("dropZone");
+const fileInput=document.getElementById("fileInput");
+const gifInfo=document.getElementById("gifInfo");
+const infoDim=document.getElementById("infoDim");
+const infoFrames=document.getElementById("infoFrames");
+const infoDuration=document.getElementById("infoDuration");
+const infoSize=document.getElementById("infoSize");
+const settingsEl=document.getElementById("settings");
+const formatSelect=document.getElementById("formatSelect");
+const fpsSelect=document.getElementById("fpsSelect");
+const scaleSelect=document.getElementById("scaleSelect");
+const previewArea=document.getElementById("previewArea");
+const origPreview=document.getElementById("origPreview");
+const videoPreview=document.getElementById("videoPreview");
+const renderCanvas=document.getElementById("renderCanvas");
+const convertBtn=document.getElementById("convertBtn");
+const downloadBtn=document.getElementById("downloadBtn");
+const progressBar=document.getElementById("progressBar");
+const progressFill=document.getElementById("progressFill");
+const statusEl=document.getElementById("status");
+
+let parsedGif=null;
+let videoBlob=null;
+
+// Drag & drop
+dropZone.addEventListener("click",()=>fileInput.click());
+dropZone.addEventListener("dragover",e=>{e.preventDefault();dropZone.classList.add("dragover")});
+dropZone.addEventListener("dragleave",()=>dropZone.classList.remove("dragover"));
+dropZone.addEventListener("drop",e=>{e.preventDefault();dropZone.classList.remove("dragover");if(e.dataTransfer.files.length)handleFile(e.dataTransfer.files[0])});
+fileInput.addEventListener("change",()=>{if(fileInput.files.length)handleFile(fileInput.files[0])});
+
+function handleFile(file){
+  if(!file.type.match(/image\/gif/)&&!file.name.toLowerCase().endsWith(".gif")){
+    showStatus("Please select a GIF file.");return;
+  }
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const buf=e.target.result;
+    try{
+      parsedGif=parseGIF(new Uint8Array(buf));
+    }catch(err){
+      showStatus("Error parsing GIF: "+err.message);return;
+    }
+    // Show info
+    const totalDelay=parsedGif.frames.reduce((s,f)=>s+f.delay,0);
+    infoDim.textContent=parsedGif.width+"×"+parsedGif.height+"px";
+    infoFrames.textContent=parsedGif.frames.length;
+    infoDuration.textContent=(totalDelay/1000).toFixed(2)+"s";
+    infoSize.textContent=formatBytes(file.size);
+    gifInfo.style.display="block";
+    settingsEl.style.display="block";
+    previewArea.style.display="block";
+    origPreview.src=URL.createObjectURL(file);
+    videoPreview.style.display="none";
+    downloadBtn.style.display="none";
+    convertBtn.disabled=false;
+    showStatus("");
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+convertBtn.addEventListener("click",doConvert);
+
+async function doConvert(){
+  if(!parsedGif)return;
+  convertBtn.disabled=true;
+  downloadBtn.style.display="none";
+  videoPreview.style.display="none";
+  progressBar.style.display="block";
+  progressFill.style.width="0%";
+  showStatus("Rendering frames...");
+
+  const scale=parseFloat(scaleSelect.value);
+  const w=Math.round(parsedGif.width*scale);
+  const h=Math.round(parsedGif.height*scale);
+  // Ensure even dimensions for video codec
+  const vw=w%2===0?w:w+1;
+  const vh=h%2===0?h:h+1;
+
+  renderCanvas.width=vw;
+  renderCanvas.height=vh;
+  renderCanvas.style.display="none";
+  const ctx=renderCanvas.getContext("2d");
+
+  // Determine mime type
+  let mimeType="video/webm;codecs=vp8";
+  if(formatSelect.value==="mp4"){
+    if(MediaRecorder.isTypeSupported("video/mp4;codecs=avc1")){
+      mimeType="video/mp4;codecs=avc1";
+    }else if(MediaRecorder.isTypeSupported("video/mp4")){
+      mimeType="video/mp4";
+    }else{
+      mimeType="video/webm;codecs=vp8";
+      showStatus("MP4 not supported in this browser. Using WebM.");
+    }
+  }
+
+  const fpsOverride=parseInt(fpsSelect.value);
+  const frames=parsedGif.frames;
+  const totalFrames=frames.length;
+
+  // We will manually draw frames and use MediaRecorder
+  const stream=renderCanvas.captureStream(0); // 0 = manual frame requests
+  const recorder=new MediaRecorder(stream,{mimeType:mimeType.split(";")[0],videoBitsPerSecond:5000000});
+  const chunks=[];
+  recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};
+
+  // Build full frames from gif data
+  // We need a compositing canvas to handle disposal methods
+  const compCanvas=document.createElement("canvas");
+  compCanvas.width=parsedGif.width;
+  compCanvas.height=parsedGif.height;
+  const compCtx=compCanvas.getContext("2d");
+  // Previous frame backup for dispose=3
+  const prevCanvas=document.createElement("canvas");
+  prevCanvas.width=parsedGif.width;
+  prevCanvas.height=parsedGif.height;
+  const prevCtx=prevCanvas.getContext("2d");
+
+  // Initial background = white (for transparency)
+  compCtx.fillStyle="#ffffff";
+  compCtx.fillRect(0,0,parsedGif.width,parsedGif.height);
+
+  const renderedFrames=[];
+  for(let i=0;i<totalFrames;i++){
+    const frame=frames[i];
+    const disposal=frame.disposalMethod||0;
+
+    // Before drawing, save state if disposal is "restore to previous"
+    if(disposal===3){
+      prevCtx.clearRect(0,0,parsedGif.width,parsedGif.height);
+      prevCtx.drawImage(compCanvas,0,0);
+    }
+
+    // Draw frame pixels onto compositing canvas
+    const imgData=compCtx.createImageData(frame.width,frame.height);
+    const pixels=frame.pixels;
+    const ct=frame.colorTable;
+    for(let p=0;p<pixels.length;p++){
+      const idx=pixels[p];
+      if(frame.hasTransparency&&idx===frame.transparentIndex){
+        imgData.data[p*4]=0;
+        imgData.data[p*4+1]=0;
+        imgData.data[p*4+2]=0;
+        imgData.data[p*4+3]=0;
+      }else{
+        const ci=idx*3;
+        imgData.data[p*4]=ct[ci];
+        imgData.data[p*4+1]=ct[ci+1];
+        imgData.data[p*4+2]=ct[ci+2];
+        imgData.data[p*4+3]=255;
+      }
+    }
+    // Create temp canvas for frame
+    const tmpC=document.createElement("canvas");
+    tmpC.width=frame.width;
+    tmpC.height=frame.height;
+    tmpC.getContext("2d").putImageData(imgData,0,0);
+    compCtx.drawImage(tmpC,frame.left,frame.top);
+
+    // Capture composited frame
+    const snapC=document.createElement("canvas");
+    snapC.width=parsedGif.width;
+    snapC.height=parsedGif.height;
+    snapC.getContext("2d").drawImage(compCanvas,0,0);
+    renderedFrames.push({canvas:snapC,delay:frame.delay});
+
+    // Apply disposal
+    if(disposal===2){
+      // Restore to background
+      compCtx.fillStyle="#ffffff";
+      compCtx.fillRect(frame.left,frame.top,frame.width,frame.height);
+    }else if(disposal===3){
+      // Restore to previous
+      compCtx.clearRect(0,0,parsedGif.width,parsedGif.height);
+      compCtx.drawImage(prevCanvas,0,0);
+    }
+
+    progressFill.style.width=((i+1)/totalFrames*50)+"%";
+  }
+
+  showStatus("Encoding video...");
+
+  recorder.start();
+  const canvasStream=renderCanvas.captureStream(0);
+  const track=canvasStream.getVideoTracks()[0];
+
+  for(let i=0;i<renderedFrames.length;i++){
+    const rf=renderedFrames[i];
+    ctx.fillStyle="#ffffff";
+    ctx.fillRect(0,0,vw,vh);
+    ctx.drawImage(rf.canvas,0,0,parsedGif.width,parsedGif.height,0,0,vw,vh);
+    if(track.requestFrame)track.requestFrame();
+
+    const delay=fpsOverride>0?(1000/fpsOverride):Math.max(rf.delay,20);
+    await sleep(delay);
+    progressFill.style.width=(50+(i+1)/renderedFrames.length*50)+"%";
+  }
+
+  recorder.stop();
+  await new Promise(r=>{recorder.onstop=r});
+
+  const ext=mimeType.startsWith("video/mp4")?"mp4":"webm";
+  videoBlob=new Blob(chunks,{type:mimeType.split(";")[0]});
+  const url=URL.createObjectURL(videoBlob);
+  videoPreview.src=url;
+  videoPreview.style.display="block";
+  progressBar.style.display="none";
+  showStatus("Done! Video size: "+formatBytes(videoBlob.size));
+  convertBtn.disabled=false;
+  downloadBtn.style.display="inline-flex";
+  downloadBtn.onclick=function(){
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="converted."+ext;
+    a.click();
+  };
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+function showStatus(msg){
+  statusEl.style.display=msg?"block":"none";
+  statusEl.textContent=msg;
+}
+
+function formatBytes(b){
+  if(b<1024)return b+" B";
+  if(b<1048576)return(b/1024).toFixed(1)+" KB";
+  return(b/1048576).toFixed(2)+" MB";
+}
+
+// =========== GIF PARSER (from scratch) ===========
+
+function parseGIF(data){
+  let pos=0;
+  const len=data.length;
+
+  function readByte(){if(pos>=len)throw new Error("Unexpected end of data");return data[pos++]}
+  function readUint16(){const lo=readByte();return lo|readByte()<<8}
+  function readBytes(n){if(pos+n>len)throw new Error("Unexpected end of data");const s=data.subarray(pos,pos+n);pos+=n;return s}
+  function readString(n){const b=readBytes(n);let s="";for(let i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return s}
+
+  // Header
+  const sig=readString(3);
+  const ver=readString(3);
+  if(sig!=="GIF"||(ver!=="87a"&&ver!=="89a"))throw new Error("Not a valid GIF file");
+
+  // Logical Screen Descriptor
+  const width=readUint16();
+  const height=readUint16();
+  const packed=readByte();
+  const bgIndex=readByte();
+  const pixelAspect=readByte();
+
+  const gctFlag=(packed>>7)&1;
+  const gctSize=2<<(packed&7);
+  let globalColorTable=null;
+  if(gctFlag){
+    globalColorTable=readBytes(gctSize*3);
+  }
+
+  const frames=[];
+  let gce=null; // current graphic control extension
+
+  // Parse blocks
+  while(pos<len){
+    const intro=readByte();
+    if(intro===0x3B){break} // Trailer
+    if(intro===0x21){ // Extension
+      const label=readByte();
+      if(label===0xF9){ // Graphic Control Extension
+        const blockSize=readByte(); // always 4
+        const gcPacked=readByte();
+        const delayTime=readUint16();
+        const transIndex=readByte();
+        readByte(); // terminator
+        gce={
+          disposalMethod:(gcPacked>>2)&7,
+          hasTransparency:(gcPacked&1)===1,
+          delay:delayTime*10, // convert centiseconds to ms
+          transparentIndex:transIndex
+        };
+      }else{
+        // Skip other extensions (application, comment, plain text)
+        skipSubBlocks();
+      }
+    }else if(intro===0x2C){ // Image Descriptor
+      const left=readUint16();
+      const top=readUint16();
+      const fw=readUint16();
+      const fh=readUint16();
+      const imgPacked=readByte();
+      const lctFlag=(imgPacked>>7)&1;
+      const interlaceFlag=(imgPacked>>6)&1;
+      const lctSize=2<<(imgPacked&7);
+      let localColorTable=null;
+      if(lctFlag){
+        localColorTable=readBytes(lctSize*3);
+      }
+
+      const minCodeSize=readByte();
+      // Read all sub-blocks of LZW data
+      const lzwData=readSubBlocks();
+
+      // Decompress LZW
+      const pixels=decompressLZW(lzwData,minCodeSize,fw*fh);
+
+      // Handle interlacing
+      let finalPixels=pixels;
+      if(interlaceFlag){
+        finalPixels=deinterlace(pixels,fw,fh);
+      }
+
+      const frame={
+        left:left,
+        top:top,
+        width:fw,
+        height:fh,
+        pixels:finalPixels,
+        colorTable:localColorTable||globalColorTable,
+        disposalMethod:gce?gce.disposalMethod:0,
+        hasTransparency:gce?gce.hasTransparency:false,
+        transparentIndex:gce?gce.transparentIndex:0,
+        delay:gce?Math.max(gce.delay,10):100
+      };
+      frames.push(frame);
+      gce=null;
+    }else{
+      // Unknown block, try to skip
+      // Could be a stray byte; skip sub-blocks if any
+      // Actually, just break if unknown
+      break;
+    }
+  }
+
+  function skipSubBlocks(){
+    while(true){
+      const size=readByte();
+      if(size===0)break;
+      pos+=size;
+      if(pos>len)break;
+    }
+  }
+
+  function readSubBlocks(){
+    const parts=[];
+    let totalLen=0;
+    while(true){
+      const size=readByte();
+      if(size===0)break;
+      parts.push(readBytes(size));
+      totalLen+=size;
+    }
+    const result=new Uint8Array(totalLen);
+    let offset=0;
+    for(const p of parts){
+      result.set(p,offset);
+      offset+=p.length;
+    }
+    return result;
+  }
+
+  return {width,height,frames};
+}
+
+function decompressLZW(data,minCodeSize,pixelCount){
+  const clearCode=1<<minCodeSize;
+  const eoiCode=clearCode+1;
+  const output=new Uint8Array(pixelCount);
+  let outPos=0;
+
+  let codeSize=minCodeSize+1;
+  let codeMask=(1<<codeSize)-1;
+  let nextCode=eoiCode+1;
+  const MAX_CODE=4096;
+
+  // Code table: each entry is [prefix, suffix] or a single value
+  // For efficiency, store as arrays of Uint8Arrays or linked structure
+  // We use a flat approach: table[code] = array of pixel indices
+  let table=new Array(MAX_CODE);
+  function initTable(){
+    table=new Array(MAX_CODE);
+    for(let i=0;i<clearCode;i++){
+      table[i]=[i];
+    }
+    table[clearCode]=[];
+    table[eoiCode]=[];
+    nextCode=eoiCode+1;
+    codeSize=minCodeSize+1;
+    codeMask=(1<<codeSize)-1;
+  }
+  initTable();
+
+  // Bitstream reader
+  let bytePos=0;
+  let bitPos=0;
+  let datum=0;
+  let bits=0;
+
+  function readCode(){
+    while(bits<codeSize){
+      if(bytePos>=data.length)return -1;
+      datum|=data[bytePos++]<<bits;
+      bits+=8;
+    }
+    const code=datum&codeMask;
+    datum>>=codeSize;
+    bits-=codeSize;
+    return code;
+  }
+
+  let prevCode=-1;
+
+  while(outPos<pixelCount){
+    const code=readCode();
+    if(code===-1||code===eoiCode)break;
+    if(code===clearCode){
+      initTable();
+      prevCode=-1;
+      continue;
+    }
+
+    let entry;
+    if(code<nextCode){
+      entry=table[code];
+    }else if(code===nextCode){
+      // Special case: code not yet in table
+      entry=table[prevCode].concat(table[prevCode][0]);
+    }else{
+      // Error in data, try to recover
+      break;
+    }
+
+    // Output
+    for(let i=0;i<entry.length&&outPos<pixelCount;i++){
+      output[outPos++]=entry[i];
+    }
+
+    // Add to table
+    if(prevCode!==-1&&nextCode<MAX_CODE){
+      table[nextCode]=table[prevCode].concat(entry[0]);
+      nextCode++;
+      if(nextCode>codeMask&&codeSize<12){
+        codeSize++;
+        codeMask=(1<<codeSize)-1;
+      }
+    }
+
+    prevCode=code;
+  }
+
+  return output;
+}
+
+function deinterlace(pixels,w,h){
+  const result=new Uint8Array(w*h);
+  const passes=[
+    {start:0,step:8},
+    {start:4,step:8},
+    {start:2,step:4},
+    {start:1,step:2}
+  ];
+  let srcPos=0;
+  for(const pass of passes){
+    for(let y=pass.start;y<h;y+=pass.step){
+      for(let x=0;x<w;x++){
+        result[y*w+x]=pixels[srcPos++];
+      }
+    }
+  }
+  return result;
+}
+
+// Smooth scroll for TOC
+document.querySelectorAll('.toc a[href^="#"]').forEach(a=>{
+  a.addEventListener("click",function(e){
+    e.preventDefault();
+    const t=document.querySelector(this.getAttribute("href"));
+    if(t)t.scrollIntoView({behavior:"smooth"});
+  });
+});
+
+})();
+</script>
+</body>
+</html>
