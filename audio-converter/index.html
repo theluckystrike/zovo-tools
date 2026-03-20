@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Audio Converter Online - Convert MP3, WAV, OGG, WebM in Browser | Zovo</title>
+<meta name="description" content="Convert audio files between formats directly in your browser. Supports MP3, WAV, OGG, FLAC, M4A, and WebM. Adjust sample rate and channels. Free, private, no uploads.">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/audio-converter/">
+<meta property="og:title" content="Free Audio Converter Online - Convert Audio Formats in Browser">
+<meta property="og:description" content="Convert between audio formats in your browser. WAV, OGG, WebM output. Adjust sample rate and channels. 100% client-side.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/audio-converter/">
+<meta property="og:image" content="https://zovo.one/og-image.png">
+<meta property="og:site_name" content="Zovo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Audio Converter Online - Convert Audio Formats in Browser">
+<meta name="twitter:description" content="Convert between audio formats in your browser. WAV, OGG, WebM output. Adjust sample rate and channels. 100% client-side.">
+<meta name="twitter:image" content="https://zovo.one/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Free Audio Converter Online",
+  "url": "https://zovo.one/free-tools/audio-converter/",
+  "description": "Convert audio files between formats directly in your browser. Supports MP3, WAV, OGG, FLAC, M4A, and WebM input with WAV, OGG, and WebM output.",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "browserRequirements": "Requires a modern browser with Web Audio API and MediaRecorder support"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this audio converter free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, this tool is completely free with no file size limits, no watermarks, and no sign-up required." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this tool upload my files to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. All conversion happens locally in your browser using the Web Audio API and MediaRecorder API. Your audio files never leave your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "What input formats are supported?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The tool accepts any format your browser can decode, including MP3, WAV, OGG, FLAC, M4A, AAC, and WebM audio." }
+    },
+    {
+      "@type": "Question",
+      "name": "What output formats are available?",
+      "acceptedAnswer": { "@type": "Answer", "text": "You can export to WAV (uncompressed, universal compatibility), OGG Vorbis (compressed, good quality), and WebM Opus (compressed, modern format). These are the formats browsers can natively encode without external libraries." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why can't I convert to MP3?",
+      "acceptedAnswer": { "@type": "Answer", "text": "MP3 encoding requires a specialized codec (like LAME) that browsers do not include natively. To keep this tool dependency-free and fully client-side, only browser-native encoding formats are offered: WAV, OGG, and WebM." }
+    }
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0a0a0f;
+  color: #e0e0e8;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+a { color: #00ff88; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+h2 { font-size: 1.5rem; font-weight: 600; margin: 48px 0 16px; color: #e0e0e8; scroll-margin-top: 24px; }
+h3 { font-size: 1.15rem; font-weight: 600; margin: 20px 0 8px; color: #e0e0e8; }
+p, li { color: #b0b0c0; margin-bottom: 12px; }
+ul, ol { padding-left: 24px; margin-bottom: 16px; }
+.reading-time { color: #b0b0c0; font-size: 0.85rem; margin-bottom: 20px; }
+.privacy-note {
+  background: rgba(0,255,136,0.06);
+  border: 1px solid rgba(0,255,136,0.15);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  color: #b0b0c0;
+  margin-bottom: 24px;
+}
+.privacy-note strong { color: #00ff88; }
+.toc {
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+.toc h3 { margin-top: 0; color: #e0e0e8; font-size: 1rem; }
+.toc ul { list-style: none; padding: 0; margin: 0; }
+.toc li { margin: 6px 0; }
+.toc a { font-size: 0.92rem; }
+.card {
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 12px;
+  padding: 28px;
+  margin: 24px 0;
+}
+.drop-zone {
+  border: 2px dashed #1e1e2a;
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: #0a0a0f;
+}
+.drop-zone.drag-over { border-color: #00ff88; background: rgba(0,255,136,0.04); }
+.drop-zone p { color: #b0b0c0; margin-bottom: 12px; font-size: 1.1rem; }
+.drop-zone .icon { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+.btn {
+  background: #00ff88;
+  color: #0a0a0f;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-family: inherit;
+}
+.btn:hover { opacity: 0.85; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid #1e1e2a;
+  color: #e0e0e8;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+.btn-outline:hover { border-color: #00ff88; }
+.file-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.file-info-item {
+  background: #0a0a0f;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+.file-info-item .label { font-size: 0.78rem; color: #b0b0c0; text-transform: uppercase; letter-spacing: 0.04em; }
+.file-info-item .value { font-size: 1.1rem; color: #e0e0e8; font-weight: 600; margin-top: 2px; }
+.settings-section { display: none; }
+.form-group { margin: 16px 0; }
+.form-group label { display: block; font-size: 0.9rem; color: #b0b0c0; margin-bottom: 6px; font-weight: 500; }
+.form-group select {
+  width: 100%;
+  max-width: 320px;
+  background: #0a0a0f;
+  border: 1px solid #1e1e2a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #e0e0e8;
+  font-size: 0.95rem;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b0b0c0' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+}
+.form-group select:focus { outline: none; border-color: #00ff88; }
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 20px 0 16px;
+}
+.progress-bar-wrap {
+  width: 100%;
+  background: #0a0a0f;
+  border-radius: 8px;
+  height: 8px;
+  margin: 12px 0;
+  overflow: hidden;
+  display: none;
+}
+.progress-bar {
+  height: 100%;
+  background: #00ff88;
+  border-radius: 8px;
+  transition: width 0.2s;
+  width: 0%;
+}
+.status-msg { font-size: 0.9rem; color: #b0b0c0; margin: 8px 0; min-height: 1.4em; }
+.output-section { display: none; margin-top: 20px; }
+.output-section h3 { margin-top: 0; }
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+.comparison .col { background: #0a0a0f; border-radius: 8px; padding: 16px; }
+.comparison .col h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; color: #b0b0c0; margin-bottom: 10px; font-weight: 600; }
+.comparison .col .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.9rem; }
+.comparison .col .row .k { color: #b0b0c0; }
+.comparison .col .row .v { color: #e0e0e8; font-weight: 600; }
+.faq-item {
+  background: #0a0a0f;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 12px 0;
+}
+.faq-item h3 { margin: 0 0 6px; font-size: 1rem; color: #e0e0e8; }
+.faq-item p { margin: 0; font-size: 0.92rem; }
+.related-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.related-tools a {
+  display: block;
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 8px;
+  padding: 16px;
+  transition: border-color 0.2s;
+}
+.related-tools a:hover { border-color: #00ff88; text-decoration: none; }
+footer {
+  border-top: 1px solid #1e1e2a;
+  margin-top: 48px;
+  padding-top: 24px;
+  text-align: center;
+  color: #b0b0c0;
+  font-size: 0.85rem;
+}
+.compat-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+.compat-table th, .compat-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #1e1e2a;
+  font-size: 0.9rem;
+}
+.compat-table th { color: #e0e0e8; font-weight: 600; }
+.compat-table td { color: #b0b0c0; }
+@media (max-width: 600px) {
+  .container { padding: 16px 14px 40px; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  .card { padding: 18px; }
+  .drop-zone { padding: 32px 16px; }
+  .comparison { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Free Audio Converter Online</h1>
+<p class="reading-time">5 min read</p>
+<p>Convert audio files between formats directly in your browser. Upload MP3, WAV, OGG, FLAC, M4A, or WebM files and convert to WAV, OGG, or WebM with custom sample rate and channel settings.</p>
+
+<div class="privacy-note"><strong>Privacy:</strong> All processing happens in your browser. No data is uploaded to any server.</div>
+
+<nav class="toc">
+<h3>Table of Contents</h3>
+<ul>
+<li><a href="#tool">Audio Converter Tool</a></li>
+<li><a href="#how-to-use">How to Convert Audio Files</a></li>
+<li><a href="#output-formats">Understanding Output Formats</a></li>
+<li><a href="#sample-rates">Sample Rates Explained</a></li>
+<li><a href="#mono-vs-stereo">Mono vs. Stereo</a></li>
+<li><a href="#browser-encoding">How Browser-Based Audio Encoding Works</a></li>
+<li><a href="#faq">Frequently Asked Questions</a></li>
+<li><a href="#related">Related Tools</a></li>
+</ul>
+</nav>
+
+<!-- TOOL SECTION -->
+<h2 id="tool">Audio Converter Tool</h2>
+<div class="card">
+<div class="drop-zone" id="drop-zone">
+<span class="icon">&#127926;</span>
+<p>Drag &amp; drop your audio file here</p>
+<p style="font-size:0.85rem;">or click to browse &middot; MP3, WAV, OGG, FLAC, M4A, WebM supported</p>
+<input type="file" id="file-input" accept="audio/*" style="display:none;">
+</div>
+
+<div class="settings-section" id="settings-section">
+<h3>Source File Info</h3>
+<div class="file-info" id="source-info"></div>
+
+<h3 style="margin-top:24px;">Conversion Settings</h3>
+<div class="form-group">
+<label for="format-select">Output Format</label>
+<select id="format-select">
+<option value="wav">WAV (uncompressed, universal)</option>
+<option value="ogg">OGG Vorbis (compressed)</option>
+<option value="webm">WebM Opus (compressed, modern)</option>
+</select>
+</div>
+<div class="form-group">
+<label for="samplerate-select">Sample Rate</label>
+<select id="samplerate-select">
+<option value="0">Keep original</option>
+<option value="8000">8,000 Hz (telephone)</option>
+<option value="16000">16,000 Hz (voice)</option>
+<option value="22050">22,050 Hz (FM radio)</option>
+<option value="44100">44,100 Hz (CD quality)</option>
+<option value="48000">48,000 Hz (professional)</option>
+</select>
+</div>
+<div class="form-group">
+<label for="channels-select">Channels</label>
+<select id="channels-select">
+<option value="0">Keep original</option>
+<option value="1">Mono (1 channel)</option>
+<option value="2">Stereo (2 channels)</option>
+</select>
+</div>
+
+<div class="controls">
+<button class="btn" id="btn-convert">Convert</button>
+<button class="btn-outline" id="btn-reset">Reset</button>
+</div>
+
+<div class="progress-bar-wrap" id="progress-wrap">
+<div class="progress-bar" id="progress-bar"></div>
+</div>
+<div class="status-msg" id="status-msg"></div>
+
+<div class="output-section" id="output-section">
+<h3>Conversion Complete</h3>
+<div class="comparison">
+<div class="col">
+<h4>Before</h4>
+<div id="before-info"></div>
+</div>
+<div class="col">
+<h4>After</h4>
+<div id="after-info"></div>
+</div>
+</div>
+<div class="controls">
+<button class="btn" id="btn-download">Download Converted File</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- EDITORIAL CONTENT -->
+<h2 id="how-to-use">How to Convert Audio Files</h2>
+<ol>
+<li><strong>Upload your audio.</strong> Drag and drop a file onto the upload area, or click to browse. The tool accepts MP3, WAV, OGG, FLAC, M4A, WebM, and other browser-supported formats.</li>
+<li><strong>Review source info.</strong> Once loaded, you will see the file name, duration, sample rate, and channel count of your original file.</li>
+<li><strong>Choose settings.</strong> Select your desired output format (WAV, OGG, or WebM), sample rate, and channel configuration. Use "Keep original" to preserve the source settings.</li>
+<li><strong>Convert.</strong> Click the "Convert" button and wait for the process to finish. A progress indicator shows the encoding status.</li>
+<li><strong>Download.</strong> Compare the before and after file details, then click "Download Converted File" to save the result.</li>
+</ol>
+
+<h2 id="output-formats">Understanding Output Formats</h2>
+<p>This tool offers three output formats, each with distinct advantages. The choice depends on your use case:</p>
+<h3>WAV (Waveform Audio File Format)</h3>
+<p>WAV is an uncompressed audio format that preserves every sample of the original audio without any loss. This makes it the best choice when quality is the top priority, such as professional music production, sound design, or archival storage. The trade-off is file size: a 3-minute stereo file at 44.1 kHz will be roughly 30 MB. WAV files work on virtually every device and operating system. Learn more about WAV on <a href="https://en.wikipedia.org/wiki/WAV" target="_blank" rel="noopener">Wikipedia</a>.</p>
+<h3>OGG Vorbis</h3>
+<p>OGG Vorbis is a free, open-source compressed audio format that offers quality comparable to MP3 at similar bitrates but without licensing restrictions. It is widely supported on Android, Linux, and most desktop browsers. Safari support on iOS and macOS was added in version 17. OGG is a solid choice for web audio, game assets, and general-purpose compressed audio.</p>
+<h3>WebM Opus</h3>
+<p>WebM with Opus encoding is a modern format designed for the web. Opus delivers excellent quality at low bitrates, making it particularly strong for voice and speech content but equally capable with music. It is the default format for WebRTC and is supported in Chrome, Firefox, and Edge. Safari support has been growing since version 15.</p>
+
+<h2 id="sample-rates">Sample Rates Explained</h2>
+<p>The sample rate determines how many times per second the audio signal is measured. Higher sample rates capture more detail but produce larger files. Here is a practical guide to common sample rates:</p>
+<ul>
+<li><strong>8,000 Hz</strong> &mdash; Telephone quality. Adequate for basic speech but sounds tinny and muffled for music.</li>
+<li><strong>16,000 Hz</strong> &mdash; Wideband voice. Used for voice assistants, podcasts where bandwidth is limited, and VoIP calls.</li>
+<li><strong>22,050 Hz</strong> &mdash; Half of CD quality. Suitable for AM radio-style content or sound effects where file size matters.</li>
+<li><strong>44,100 Hz</strong> &mdash; CD quality. The standard for music distribution. Captures frequencies up to 22 kHz, covering the full range of human hearing.</li>
+<li><strong>48,000 Hz</strong> &mdash; Professional audio and video standard. Used in film, television, and professional recording studios. Learn more about sample rates on <a href="https://en.wikipedia.org/wiki/Sampling_(signal_processing)" target="_blank" rel="noopener">Wikipedia</a>.</li>
+</ul>
+
+<h2 id="mono-vs-stereo">Mono vs. Stereo</h2>
+<p>Audio channels determine the spatial dimension of sound. Mono uses a single channel, meaning the same audio plays from all speakers. Stereo uses two channels (left and right), creating a sense of width and positioning.</p>
+<p>Converting from stereo to mono halves the file size and is often the right move for spoken content, phone recordings, or any audio that does not benefit from stereo separation. Podcasts, voice memos, and audiobooks are common examples where mono is preferable.</p>
+<p>Converting from mono to stereo duplicates the single channel into both left and right. This does not add spatial information but ensures compatibility with systems that expect stereo input.</p>
+
+<h2 id="browser-encoding">How Browser-Based Audio Encoding Works</h2>
+<p>This converter uses two browser-native APIs to handle the entire conversion pipeline without any server involvement or external libraries.</p>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API" target="_blank" rel="noopener">Web Audio API</a> handles decoding. When you upload a file, the browser reads the raw bytes and decodes them into PCM sample data (an AudioBuffer). This decoded buffer can be resampled to a different sample rate using an OfflineAudioContext, which processes audio offline (not in real time) at the target sample rate.</p>
+<p>For WAV output, the tool writes the PCM samples directly into a WAV file structure (a RIFF header followed by raw sample data). For OGG and WebM output, the tool uses the <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder" target="_blank" rel="noopener">MediaRecorder API</a>, which encodes audio through the browser's built-in codecs. The audio buffer is played through an OfflineAudioContext connected to a MediaStream destination, and MediaRecorder captures the encoded output.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="faq-item">
+<h3>Is this audio converter free?</h3>
+<p>Yes, this tool is completely free with no file size limits, no watermarks, and no sign-up required.</p>
+</div>
+
+<div class="faq-item">
+<h3>Does this tool upload my files to a server?</h3>
+<p>No. All conversion happens locally in your browser using the Web Audio API and MediaRecorder API. Your audio files never leave your device.</p>
+</div>
+
+<div class="faq-item">
+<h3>What input formats are supported?</h3>
+<p>The tool accepts any format your browser can decode, including MP3, WAV, OGG, FLAC, M4A, AAC, and WebM audio.</p>
+</div>
+
+<div class="faq-item">
+<h3>What output formats are available?</h3>
+<p>You can export to WAV (uncompressed, universal compatibility), OGG Vorbis (compressed, good quality), and WebM Opus (compressed, modern format). These are the formats browsers can natively encode without external libraries.</p>
+</div>
+
+<div class="faq-item">
+<h3>Why can't I convert to MP3?</h3>
+<p>MP3 encoding requires a specialized codec (like LAME) that browsers do not include natively. To keep this tool dependency-free and fully client-side, only browser-native encoding formats are offered: WAV, OGG, and WebM.</p>
+</div>
+
+<h2 id="related">Related Tools</h2>
+<div class="related-tools">
+<a href="/free-tools/mp3-cutter/">MP3 Cutter</a>
+<a href="/free-tools/audio-trimmer/">Audio Trimmer</a>
+<a href="/free-tools/text-to-speech/">Text to Speech</a>
+</div>
+
+<p style="margin-top:24px;"><strong>Browser compatibility:</strong> This tool requires a modern browser with <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API" target="_blank" rel="noopener">Web Audio API</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder" target="_blank" rel="noopener">MediaRecorder API</a> support. Chrome 49+, Firefox 29+, Safari 14.1+, and Edge 79+ are all supported. OGG and WebM encoding may not be available in Safari. Internet Explorer is not supported.</p>
+
+<footer>
+Built by Michael Lip &middot; More free tools at <a href="https://zovo.one">zovo.one</a>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+  const settingsSection = document.getElementById('settings-section');
+  const sourceInfoEl = document.getElementById('source-info');
+  const formatSelect = document.getElementById('format-select');
+  const srSelect = document.getElementById('samplerate-select');
+  const chSelect = document.getElementById('channels-select');
+  const btnConvert = document.getElementById('btn-convert');
+  const btnReset = document.getElementById('btn-reset');
+  const btnDownload = document.getElementById('btn-download');
+  const progressWrap = document.getElementById('progress-wrap');
+  const progressBar = document.getElementById('progress-bar');
+  const statusMsg = document.getElementById('status-msg');
+  const outputSection = document.getElementById('output-section');
+  const beforeInfoEl = document.getElementById('before-info');
+  const afterInfoEl = document.getElementById('after-info');
+
+  let audioBuffer = null;
+  let fileName = '';
+  let fileSize = 0;
+  let outputBlob = null;
+  let outputFileName = '';
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    const ms = Math.floor((s % 1) * 1000);
+    return m + ':' + String(sec).padStart(2, '0') + '.' + String(ms).padStart(3, '0');
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(2) + ' MB';
+  }
+
+  function infoHTML(data) {
+    return data.map(function(d) {
+      return '<div class="row"><span class="k">' + d[0] + '</span><span class="v">' + d[1] + '</span></div>';
+    }).join('');
+  }
+
+  // DROP ZONE
+  dropZone.addEventListener('click', function() { fileInput.click(); });
+  dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('drag-over'); });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', function() { if (fileInput.files.length) loadFile(fileInput.files[0]); });
+
+  function loadFile(file) {
+    fileName = file.name;
+    fileSize = file.size;
+    statusMsg.textContent = 'Decoding audio...';
+    outputSection.style.display = 'none';
+    progressWrap.style.display = 'none';
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const actx = new (window.AudioContext || window.webkitAudioContext)();
+      actx.decodeAudioData(e.target.result, function(buf) {
+        audioBuffer = buf;
+        actx.close();
+        showSourceInfo();
+        settingsSection.style.display = 'block';
+        statusMsg.textContent = '';
+      }, function() {
+        statusMsg.textContent = 'Could not decode audio file. Check that it is a valid format.';
+        actx.close();
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function showSourceInfo() {
+    sourceInfoEl.innerHTML =
+      '<div class="file-info-item"><div class="label">File</div><div class="value">' + fileName + '</div></div>' +
+      '<div class="file-info-item"><div class="label">Duration</div><div class="value">' + formatTime(audioBuffer.duration) + '</div></div>' +
+      '<div class="file-info-item"><div class="label">Size</div><div class="value">' + formatFileSize(fileSize) + '</div></div>' +
+      '<div class="file-info-item"><div class="label">Sample Rate</div><div class="value">' + audioBuffer.sampleRate + ' Hz</div></div>' +
+      '<div class="file-info-item"><div class="label">Channels</div><div class="value">' + audioBuffer.numberOfChannels + '</div></div>';
+  }
+
+  btnReset.addEventListener('click', function() {
+    audioBuffer = null;
+    outputBlob = null;
+    settingsSection.style.display = 'none';
+    outputSection.style.display = 'none';
+    progressWrap.style.display = 'none';
+    statusMsg.textContent = '';
+    fileInput.value = '';
+  });
+
+  // CONVERT
+  btnConvert.addEventListener('click', function() {
+    if (!audioBuffer) return;
+    btnConvert.disabled = true;
+    outputSection.style.display = 'none';
+    statusMsg.textContent = 'Converting...';
+    progressWrap.style.display = 'block';
+    progressBar.style.width = '10%';
+
+    const format = formatSelect.value;
+    const targetSR = parseInt(srSelect.value) || audioBuffer.sampleRate;
+    const targetCh = parseInt(chSelect.value) || audioBuffer.numberOfChannels;
+
+    // Resample using OfflineAudioContext
+    const duration = audioBuffer.duration;
+    const targetLength = Math.ceil(duration * targetSR);
+    const offline = new OfflineAudioContext(targetCh, targetLength, targetSR);
+    const source = offline.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(offline.destination);
+    source.start(0);
+
+    progressBar.style.width = '30%';
+
+    offline.startRendering().then(function(renderedBuffer) {
+      progressBar.style.width = '60%';
+
+      if (format === 'wav') {
+        exportWAV(renderedBuffer, targetSR, targetCh);
+      } else {
+        exportEncoded(renderedBuffer, targetSR, targetCh, format);
+      }
+    }).catch(function(err) {
+      statusMsg.textContent = 'Conversion failed: ' + err.message;
+      btnConvert.disabled = false;
+      progressWrap.style.display = 'none';
+    });
+  });
+
+  function exportWAV(buffer, sampleRate, channels) {
+    const length = buffer.length;
+    const wavBuffer = new ArrayBuffer(44 + length * channels * 2);
+    const view = new DataView(wavBuffer);
+
+    function writeString(offset, str) {
+      for (var i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+    }
+
+    writeString(0, 'RIFF');
+    view.setUint32(4, 36 + length * channels * 2, true);
+    writeString(8, 'WAVE');
+    writeString(12, 'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, channels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * channels * 2, true);
+    view.setUint16(32, channels * 2, true);
+    view.setUint16(34, 16, true);
+    writeString(36, 'data');
+    view.setUint32(40, length * channels * 2, true);
+
+    var offset = 44;
+    for (var i = 0; i < length; i++) {
+      for (var ch = 0; ch < channels; ch++) {
+        var sample = buffer.getChannelData(ch)[i];
+        var clamped = Math.max(-1, Math.min(1, sample));
+        view.setInt16(offset, clamped < 0 ? clamped * 0x8000 : clamped * 0x7FFF, true);
+        offset += 2;
+      }
+    }
+
+    outputBlob = new Blob([wavBuffer], { type: 'audio/wav' });
+    finishConversion('wav', buffer, sampleRate, channels);
+  }
+
+  function exportEncoded(buffer, sampleRate, channels, format) {
+    // Use MediaRecorder via AudioContext + MediaStreamDestination
+    var actx = new AudioContext({ sampleRate: sampleRate });
+
+    var mimeType;
+    if (format === 'ogg') {
+      if (MediaRecorder.isTypeSupported('audio/ogg;codecs=vorbis')) {
+        mimeType = 'audio/ogg;codecs=vorbis';
+      } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+        mimeType = 'audio/ogg;codecs=opus';
+      } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+        mimeType = 'audio/ogg';
+      } else {
+        statusMsg.textContent = 'OGG encoding is not supported in this browser. Try WAV or WebM instead.';
+        btnConvert.disabled = false;
+        progressWrap.style.display = 'none';
+        actx.close();
+        return;
+      }
+    } else {
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        mimeType = 'audio/webm;codecs=opus';
+      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+        mimeType = 'audio/webm';
+      } else {
+        statusMsg.textContent = 'WebM encoding is not supported in this browser. Try WAV or OGG instead.';
+        btnConvert.disabled = false;
+        progressWrap.style.display = 'none';
+        actx.close();
+        return;
+      }
+    }
+
+    var dest = actx.createMediaStreamDestination();
+    var source = actx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(dest);
+    source.connect(actx.destination); // needed for timing in some browsers
+
+    var chunks = [];
+    var recorder = new MediaRecorder(dest.stream, { mimeType: mimeType });
+
+    recorder.ondataavailable = function(e) {
+      if (e.data.size > 0) chunks.push(e.data);
+    };
+
+    recorder.onstop = function() {
+      var ext = format === 'ogg' ? 'ogg' : 'webm';
+      var blobType = format === 'ogg' ? 'audio/ogg' : 'audio/webm';
+      outputBlob = new Blob(chunks, { type: blobType });
+      actx.close();
+      finishConversion(ext, buffer, sampleRate, channels);
+    };
+
+    recorder.start();
+    source.start(0);
+
+    progressBar.style.width = '70%';
+
+    source.onended = function() {
+      setTimeout(function() { recorder.stop(); }, 100);
+    };
+  }
+
+  function finishConversion(ext, buffer, sampleRate, channels) {
+    progressBar.style.width = '100%';
+    statusMsg.textContent = 'Done!';
+    btnConvert.disabled = false;
+
+    var baseName = fileName.replace(/\.[^.]+$/, '');
+    outputFileName = baseName + '_converted.' + ext;
+
+    beforeInfoEl.innerHTML = infoHTML([
+      ['Format', fileName.split('.').pop().toUpperCase()],
+      ['Size', formatFileSize(fileSize)],
+      ['Sample Rate', audioBuffer.sampleRate + ' Hz'],
+      ['Channels', audioBuffer.numberOfChannels],
+      ['Duration', formatTime(audioBuffer.duration)]
+    ]);
+
+    afterInfoEl.innerHTML = infoHTML([
+      ['Format', ext.toUpperCase()],
+      ['Size', formatFileSize(outputBlob.size)],
+      ['Sample Rate', sampleRate + ' Hz'],
+      ['Channels', channels],
+      ['Duration', formatTime(buffer.duration)]
+    ]);
+
+    outputSection.style.display = 'block';
+  }
+
+  // DOWNLOAD
+  btnDownload.addEventListener('click', function() {
+    if (!outputBlob) return;
+    var url = URL.createObjectURL(outputBlob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = outputFileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // Smooth scrolling for TOC
+  document.querySelectorAll('.toc a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+})();
+</script>
+</body>
+</html>
