@@ -121,6 +121,8 @@
 </script>
 
 <style>
+html{scroll-behavior:smooth}
+
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f0f0f;--card:#1a1a2e;--accent:#6C5CE7;--secondary:#00ff88;--text:#e0e0e0;--text-muted:#888;--border:#2a2a3e;--card-hover:#22223a}
 body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
@@ -209,6 +211,23 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </div>
 </header>
 
+
+<nav id="toc" style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px auto;max-width:600px;">
+  <h2 style="color:#00ff88;font-size:1rem;margin:0 0 12px 0;">Table of Contents</h2>
+  <ul style="list-style:none;padding:0;margin:0;">
+    <li style="margin:6px 0;"><a href="#generate-your-nginx-configuration" style="color:#b0b0c0;text-decoration:none;">Generate Your Nginx Configuration</a></li>
+    <li style="margin:6px 0;"><a href="#understanding-nginx-configuration" style="color:#b0b0c0;text-decoration:none;">Understanding Nginx Configuration</a></li>
+    <li style="margin:6px 0;"><a href="#server-blocks-explained" style="color:#b0b0c0;text-decoration:none;">Server Blocks Explained</a></li>
+    <li style="margin:6px 0;"><a href="#ssl-and-https-setup" style="color:#b0b0c0;text-decoration:none;">SSL and HTTPS Setup</a></li>
+    <li style="margin:6px 0;"><a href="#reverse-proxy-configuration" style="color:#b0b0c0;text-decoration:none;">Reverse Proxy Configuration</a></li>
+    <li style="margin:6px 0;"><a href="#performance-optimization" style="color:#b0b0c0;text-decoration:none;">Performance Optimization</a></li>
+    <li style="margin:6px 0;"><a href="#community-questions" style="color:#b0b0c0;text-decoration:none;">Community Questions</a></li>
+    <li style="margin:6px 0;"><a href="#video-tutorials" style="color:#b0b0c0;text-decoration:none;">Video Tutorials</a></li>
+    <li style="margin:6px 0;"><a href="#frequently-asked-questions" style="color:#b0b0c0;text-decoration:none;">Frequently Asked Questions</a></li>
+    <li style="margin:6px 0;"><a href="#related-tools" style="color:#b0b0c0;text-decoration:none;">Related Tools</a></li>
+    <li style="margin:6px 0;"><a href="#sources-and-references" style="color:#b0b0c0;text-decoration:none;">Sources and References</a></li>
+  </ul>
+</nav>
 <main class="container">
 
 <section class="hero">
@@ -217,25 +236,9 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 <div class="reading-time">14 min read</div>
 </section>
 
-<nav class="toc">
-<h3>Table of Contents</h3>
-<ul>
-<li><a href="#generator">Config Generator</a></li>
-<li><a href="#understanding-nginx">Understanding Nginx Configuration</a></li>
-<li><a href="#server-blocks">Server Blocks Explained</a></li>
-<li><a href="#ssl-setup">SSL and HTTPS Setup</a></li>
-<li><a href="#reverse-proxy">Reverse Proxy Configuration</a></li>
-<li><a href="#performance">Performance Optimization</a></li>
-<li><a href="#community">Community Questions</a></li>
-<li><a href="#videos">Video Tutorials</a></li>
-<li><a href="#faq">Frequently Asked Questions</a></li>
-<li><a href="#related">Related Tools</a></li>
-</ul>
-</nav>
-
 <section id="generator">
 <div class="tool-card">
-<h2 style="color:#fff;margin-bottom:20px;font-size:1.3rem">Generate Your Nginx Configuration</h2>
+<h2 style="color:#fff;margin-bottom:20px;font-size:1.3rem" id="generate-your-nginx-configuration">Generate Your Nginx Configuration</h2>
 
 <div class="section-label">Server Basics</div>
 <div class="form-row">
@@ -363,7 +366,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </section>
 
 <section id="understanding-nginx" class="content-section">
-<h2>Understanding Nginx Configuration</h2>
+<h2 id="understanding-nginx-configuration">Understanding Nginx Configuration</h2>
 <p>Nginx (pronounced "engine X") is one of the most widely used web servers in the world. As of early 2026, it powers a significant portion of all websites on the internet, serving as both a web server and a reverse proxy. The nginx configuration file follows a hierarchical structure based on directives and contexts (blocks), with the main contexts being http, server, and location (<a href="https://en.wikipedia.org/wiki/Nginx" target="_blank" rel="noopener">Wikipedia: Nginx</a>).</p>
 <p>The main configuration file is typically located at /etc/nginx/nginx.conf on Linux systems. This file contains global settings in the main context, then an http block that contains server blocks. Each server block represents a virtual host, handling requests for a specific domain or IP address. Inside server blocks, location blocks define how specific URL paths should be handled.</p>
 <p>A key concept in nginx configuration is directive inheritance. Directives set in an outer context (like http) are inherited by inner contexts (like server and location) unless they are explicitly overridden. This means you can set gzip compression once in the http block and it applies to all server blocks, or you can override it in a specific location block that should not use compression.</p>
@@ -371,7 +374,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </section>
 
 <section id="server-blocks" class="content-section">
-<h2>Server Blocks Explained</h2>
+<h2 id="server-blocks-explained">Server Blocks Explained</h2>
 <p>Server blocks (sometimes called virtual hosts by people coming from Apache) are the fundamental building blocks of nginx configuration. Each server block tells nginx how to handle requests for a particular domain name or IP address combination. You can have multiple server blocks in a single nginx installation, allowing one server to host many different websites.</p>
 <p>A minimal server block needs three things: a listen directive specifying the port, a server_name directive specifying the domain, and either a root directive (for serving static files) or a proxy_pass directive (for reverse proxying). The listen directive usually specifies port 80 for HTTP or 443 for HTTPS. You can listen on multiple ports by including multiple listen directives.</p>
 <p>The server_name directive accepts exact names, wildcard names, and regular expressions. The order of precedence is: exact name match, wildcard name starting with an asterisk, wildcard name ending with an asterisk, then regular expression match. If no server block matches the requested domain, nginx uses the default server, which is the first server block in the configuration unless one is explicitly marked with the default_server parameter.</p>
@@ -379,7 +382,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </section>
 
 <section id="ssl-setup" class="content-section">
-<h2>SSL and HTTPS Setup</h2>
+<h2 id="ssl-and-https-setup">SSL and HTTPS Setup</h2>
 <p>Configuring SSL on nginx has become straightforward thanks to Let's Encrypt, which provides free TLS certificates with automated renewal. The recommended approach is to use Certbot, the official Let's Encrypt client, which can automatically configure nginx for you. On Ubuntu 22.04 or later, install it with: sudo apt install certbot python3-certbot-nginx, then run: sudo certbot --nginx -d yourdomain.com.</p>
 <p>For manual configuration, you need the ssl_certificate and ssl_certificate_key directives pointing to your certificate and private key files. With Let's Encrypt, these are typically at /etc/letsencrypt/live/yourdomain.com/fullchain.pem and /etc/letsencrypt/live/yourdomain.com/privkey.pem respectively.</p>
 <p>Modern SSL configuration should only allow TLS 1.2 and TLS 1.3, as older versions (TLS 1.0 and 1.1) have known vulnerabilities and have been deprecated by all major browsers. The ssl_protocols directive controls this. For cipher suites, the recommended approach in 2026 is to use ssl_ciphers with a modern cipher string that prioritizes ECDHE key exchange and AES-GCM or ChaCha20 encryption, or to let the server select the strongest cipher the client supports by enabling ssl_prefer_server_ciphers (<a href="https://ssl-config.mozilla.org/" target="_blank" rel="noopener">Mozilla SSL Configuration Generator</a>).</p>
@@ -387,7 +390,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </section>
 
 <section id="reverse-proxy" class="content-section">
-<h2>Reverse Proxy Configuration</h2>
+<h2 id="reverse-proxy-configuration">Reverse Proxy Configuration</h2>
 <p>Using nginx as a reverse proxy is one of its most common deployment patterns. In this setup, nginx sits in front of one or more backend application servers (Node.js, Python, Ruby, Java, Go, etc.) and handles incoming HTTP/HTTPS connections on their behalf. This architecture provides several advantages: SSL termination at the nginx layer, load balancing across multiple backend instances, static file serving without hitting the application server, and connection management that protects backends from slow clients.</p>
 <p>The core directive for reverse proxying is proxy_pass, which specifies the address of the backend server. Along with proxy_pass, you should always include several proxy_set_header directives to pass important information to the backend. The Host header tells the backend which domain was requested. X-Real-IP passes the client's IP address, since without it the backend only sees nginx's IP. X-Forwarded-For provides the full chain of proxy addresses. X-Forwarded-Proto tells the backend whether the original request was HTTP or HTTPS.</p>
 <p>For applications that use WebSockets (chat applications, real-time dashboards, collaborative editors), you need additional proxy headers: proxy_http_version 1.1, proxy_set_header Upgrade $http_upgrade, and proxy_set_header Connection "upgrade". Without these, WebSocket connections will fail because HTTP/1.0 (the default proxy protocol) does not support the connection upgrade mechanism that WebSockets require.</p>
@@ -395,7 +398,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </section>
 
 <section id="performance" class="content-section">
-<h2>Performance Optimization</h2>
+<h2 id="performance-optimization">Performance Optimization</h2>
 <p>Nginx is fast out of the box, but several configuration tweaks can significantly improve performance for high-traffic sites. The most impactful optimizations are gzip compression, static asset caching, and connection handling tuning.</p>
 
 <h3>Gzip Compression</h3>
@@ -409,7 +412,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </section>
 
 <section id="community" class="content-section">
-<h2>Community Questions</h2>
+<h2 id="community-questions">Community Questions</h2>
 
 <div class="so-card">
 <h4>How to configure nginx to proxy WebSocket connections?</h4>
@@ -431,7 +434,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </section>
 
 <section id="videos" class="content-section">
-<h2>Video Tutorials</h2>
+<h2 id="video-tutorials">Video Tutorials</h2>
 <div class="video-section">
 <h3>Helpful Videos on Nginx Configuration</h3>
 <div class="video-link">
@@ -459,7 +462,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </section>
 
 <section id="faq" class="content-section">
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 
 <div class="faq-item">
 <div class="faq-q" onclick="toggleFaq(this)">How do I set up nginx as a reverse proxy?<span>+</span></div>
@@ -503,7 +506,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </section>
 
 <section id="related" class="content-section">
-<h2>Related Tools</h2>
+<h2 id="related-tools">Related Tools</h2>
 <div class="related-tools">
 <a href="https://zovo.one/free-tools/docker-compose-generator" class="related-tool">
 <h4>Docker Compose Generator</h4>
@@ -543,7 +546,7 @@ footer p{font-size:0.85rem;color:var(--text-muted)}
 </div>
 
 <section class="content-section">
-<h2>Sources and References</h2>
+<h2 id="sources-and-references">Sources and References</h2>
 <div class="citation"><a href="https://en.wikipedia.org/wiki/Nginx" target="_blank" rel="noopener">Wikipedia: Nginx</a> - Overview and history of the nginx web server.</div>
 <div class="citation"><a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html" target="_blank" rel="noopener">Nginx proxy module documentation</a> - Official reference for nginx reverse proxy directives.</div>
 <div class="citation"><a href="https://ssl-config.mozilla.org/" target="_blank" rel="noopener">Mozilla SSL Configuration Generator</a> - Recommended SSL/TLS settings from Mozilla.</div>

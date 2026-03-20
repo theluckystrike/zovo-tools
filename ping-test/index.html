@@ -40,6 +40,8 @@
 }
 </script>
 <style>
+html{scroll-behavior:smooth}
+
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#0a0a0f;color:#e0e0e8;font-family:'Inter',sans-serif;line-height:1.7;min-height:100vh;}
 a{color:#00ff88;text-decoration:none;}
@@ -141,6 +143,23 @@ h2{font-size:1.35rem;}
   </nav>
 </header>
 
+
+<nav id="toc" style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px auto;max-width:600px;">
+  <h2 style="color:#00ff88;font-size:1rem;margin:0 0 12px 0;">Table of Contents</h2>
+  <ul style="list-style:none;padding:0;margin:0;">
+    <li style="margin:6px 0;"><a href="#ping-results" style="color:#b0b0c0;text-decoration:none;">Ping Results</a></li>
+    <li style="margin:6px 0;"><a href="#what-is-ping-and-latency" style="color:#b0b0c0;text-decoration:none;">What is Ping and Latency</a></li>
+    <li style="margin:6px 0;"><a href="#how-ping-tests-work" style="color:#b0b0c0;text-decoration:none;">How Ping Tests Work</a></li>
+    <li style="margin:6px 0;"><a href="#understanding-jitter-and-packet-loss" style="color:#b0b0c0;text-decoration:none;">Understanding Jitter and Packet Loss</a></li>
+    <li style="margin:6px 0;"><a href="#what-is-a-good-ping-for-gaming" style="color:#b0b0c0;text-decoration:none;">What is a Good Ping for Gaming</a></li>
+    <li style="margin:6px 0;"><a href="#how-to-reduce-ping-and-latency" style="color:#b0b0c0;text-decoration:none;">How to Reduce Ping and Latency</a></li>
+    <li style="margin:6px 0;"><a href="#network-troubleshooting-guide" style="color:#b0b0c0;text-decoration:none;">Network Troubleshooting Guide</a></li>
+    <li style="margin:6px 0;"><a href="#ping-vs-speed-test-differences" style="color:#b0b0c0;text-decoration:none;">Ping vs Speed Test Differences</a></li>
+    <li style="margin:6px 0;"><a href="#cdn-and-server-location-effects-on-ping" style="color:#b0b0c0;text-decoration:none;">CDN and Server Location Effects on Ping</a></li>
+    <li style="margin:6px 0;"><a href="#browser-compatibility" style="color:#b0b0c0;text-decoration:none;">Browser Compatibility</a></li>
+    <li style="margin:6px 0;"><a href="#frequently-asked-questions" style="color:#b0b0c0;text-decoration:none;">Frequently Asked Questions</a></li>
+  </ul>
+</nav>
 <main>
 <section class="hero">
 <div class="container">
@@ -159,7 +178,7 @@ h2{font-size:1.35rem;}
 <div class="container">
 
 <div class="glass-card">
-<h2 style="margin-top:0;">Ping Results</h2>
+<h2 style="margin-top:0;" id="ping-results">Ping Results</h2>
 <div class="ping-display">
 <div class="stat-card">
 <div class="label">Current Ping</div>
@@ -248,7 +267,7 @@ h2{font-size:1.35rem;}
 <section class="content-section">
 <div class="container">
 
-<h2>What is Ping and Latency</h2>
+<h2 id="what-is-ping-and-latency">What is Ping and Latency</h2>
 <p>If you've ever played an online game and felt that frustrating delay between clicking and seeing your character respond, you've experienced high ping firsthand. Ping measures the round-trip time it takes for a small packet of data to travel from your device to a server and back again. It's measured in milliseconds (ms), and lower numbers are always better.</p>
 <p>The word "ping" comes from sonar technology used in submarines. A sub sends out an acoustic pulse and listens for the echo bouncing off objects underwater. Network engineers borrowed the concept back in the early 1980s. Mike Muuss wrote the original <code>ping</code> utility in December 1983, and it used ICMP echo request packets to test connectivity between hosts on ARPANET. You can read the full history and technical breakdown on the <a href="https://en.wikipedia.org/wiki/Ping_(networking_utility)" target="_blank" rel="noopener">Wikipedia article for the ping utility</a>.</p>
 
@@ -261,14 +280,14 @@ h2{font-size:1.35rem;}
 <p>I've found that most people don't think about ping until something goes wrong. Browsing the web with 100ms of latency doesn't feel noticeably different from 20ms for everyday tasks like reading articles or checking email. But the moment you try to play a competitive shooter, join a video call, or trade on a financial platform, that difference becomes painfully obvious. This tool helps you understand exactly where your connection stands so you can troubleshoot problems before they ruin your experience.</p>
 <p>Several factors affect your ping. Physical distance to the server is the biggest one, since data can only travel so fast through fiber optic cables (roughly 200,000 km/s, about two-thirds the speed of light in a vacuum). Then there's your ISP's routing efficiency, network congestion at various hops, your local network setup, and whether you're on WiFi or ethernet. Each hop between routers adds a small amount of latency, and those milliseconds add up quickly across a dozen or more intermediate nodes.</p>
 
-<h2>How Ping Tests Work</h2>
+<h2 id="how-ping-tests-work">How Ping Tests Work</h2>
 <p>Traditional ping tests use ICMP (Internet Control Message Protocol) packets. When you open a terminal and type <code>ping google.com</code>, your operating system sends ICMP echo request packets and waits for echo replies. This is the most accurate way to measure raw network latency because ICMP packets are small and handled at a low level by networking hardware. Many sysadmins and network engineers still rely on command-line ICMP ping as their go-to diagnostic tool.</p>
 <p>Browser-based ping tests like this one can't use ICMP directly because web browsers don't have access to raw sockets. That's a security restriction that isn't going away anytime soon. Instead, I've built this tool using the Performance API and Resource Timing API. Here's how it works: the tool fetches a tiny resource (like a favicon or a small JavaScript file) from a known fast CDN, and measures exactly how long the request takes using <code>performance.now()</code>, which provides sub-millisecond timing precision.</p>
 <p>The Performance API gives us high-resolution timestamps that aren't affected by system clock adjustments or NTP corrections. When we fetch a resource, the browser records detailed timing information including DNS lookup time, TCP connection time, TLS negotiation time, and the actual request/response cycle. By issuing requests to endpoints that are already DNS-cached and using keep-alive connections, we can isolate the network round-trip time with reasonable accuracy.</p>
 <p>There's a well-known discussion about browser-based ping accuracy over on <a href="https://stackoverflow.com/questions/4282151/is-it-possible-to-ping-a-server-from-javascript" target="_blank" rel="noopener">Stack Overflow</a> that covers the trade-offs between ICMP and HTTP-based measurement approaches. The short version is that HTTP-based tests add some overhead from HTTP headers and TLS, but they're still very useful for relative comparisons and trend monitoring. If your HTTP-based ping doubles from one day to the next, your actual ICMP ping almost certainly did too.</p>
 <p>Our testing methodology involves fetching small resources from multiple CDN endpoints simultaneously. We discard the very first request to each endpoint because it includes DNS resolution and TCP/TLS setup time, which aren't part of ongoing latency. All subsequent measurements reflect the actual network round-trip time over established connections. We also calculate jitter by looking at the variation between consecutive ping measurements, which tells you how stable your connection is over time.</p>
 
-<h2>Understanding Jitter and Packet Loss</h2>
+<h2 id="understanding-jitter-and-packet-loss">Understanding Jitter and Packet Loss</h2>
 <p>Jitter is the variation in ping times between consecutive measurements. If your ping alternates between 20ms and 80ms, you've got high jitter even though your average ping might look fine at 50ms. Jitter is actually more disruptive than consistently high ping for many applications. A steady 80ms connection is more usable for gaming than one that bounces between 20ms and 140ms, because game engines and audio systems can compensate for a fixed delay but struggle with unpredictable changes.</p>
 <p>I've tested hundreds of connections over the years, and jitter is often the hidden culprit behind laggy video calls and stuttery game sessions. Your average ping might show 35ms, which looks great on paper. But if your jitter is 40ms or higher, you're going to have problems. VoIP applications and real-time games use jitter buffers to smooth out these variations, but there's only so much buffering can do before it adds its own noticeable delay. Too little buffering means glitches, too much means added latency. It's a balancing act that doesn't work well when jitter is extreme.</p>
 <p>Packet loss is another critical metric that this tool helps contextualize. When packets don't arrive at their destination, they either need to be retransmitted (for TCP connections) or they're simply lost forever (for UDP applications like games, voice calls, and video streams). Even 1% packet loss can make a connection feel terrible. At 3-5% packet loss, most real-time applications become functionally unusable. While this browser-based tool can't measure packet loss directly (we're using HTTP which runs over TCP, so lost packets get retransmitted automatically), unusually high ping spikes in your results often indicate that retransmissions are happening under the hood.</p>
@@ -279,7 +298,7 @@ h2{font-size:1.35rem;}
 <iframe src="https://www.youtube.com/embed/Hi0T4dJzHJU" title="Understanding Network Latency and Ping" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
 </div>
 
-<h2>What is a Good Ping for Gaming</h2>
+<h2 id="what-is-a-good-ping-for-gaming">What is a Good Ping for Gaming</h2>
 <p>This is probably the most common question people have when they run a ping test. The answer depends heavily on what type of game you're playing, but here are the general thresholds that I've established through our testing over the past two years:</p>
 <ul>
 <li>0-20ms: Excellent. You won't notice any delay at all. This is what competitive esports players aim for, and it usually requires being geographically close to the game server while on a wired ethernet connection. If you're getting sub-20ms ping, don't change anything in your setup.</li>
@@ -293,7 +312,7 @@ h2{font-size:1.35rem;}
 
 <img class="chart-img" src="https://quickchart.io/chart?c={type:'bar',data:{labels:['Excellent (0-20ms)','Good (20-50ms)','Fair (50-100ms)','Poor (100-150ms)','Bad (150ms%2B)'],datasets:[{label:'Ping Range Distribution Among Gamers',data:[12,35,28,18,7],backgroundColor:['rgba(0,255,136,0.7)','rgba(0,204,255,0.7)','rgba(255,204,0,0.7)','rgba(255,136,0,0.7)','rgba(255,68,68,0.7)'],borderColor:['#00ff88','#00ccff','#ffcc00','#ff8800','#ff4444'],borderWidth:2}]},options:{plugins:{title:{display:true,text:'Typical Ping Distribution for Online Gamers',color:'%23e0e0e8'},legend:{labels:{color:'%23c0c0d0'}}},scales:{y:{ticks:{color:'%23888'},grid:{color:'%231a1a24'}},x:{ticks:{color:'%23888',maxRotation:45},grid:{color:'%231a1a24'}}}}}&backgroundColor=%230a0a0f&width=700&height=350" alt="Bar chart showing typical ping distribution among online gamers" loading="lazy">
 
-<h2>How to Reduce Ping and Latency</h2>
+<h2 id="how-to-reduce-ping-and-latency">How to Reduce Ping and Latency</h2>
 <p>I've spent years troubleshooting network issues for myself and others, and here are the most effective steps you can take to lower your ping. I'm listing them in order of impact, from the changes that make the biggest difference down to the smaller optimizations that might shave off a few extra milliseconds.</p>
 
 <h3>Use a Wired Ethernet Connection</h3>
@@ -311,7 +330,7 @@ h2{font-size:1.35rem;}
 <h3>Use DNS Optimization</h3>
 <p>While DNS resolution doesn't affect your ping during gameplay (DNS lookups happen once when you first connect to a server), using a fast, well-peered DNS resolver like Cloudflare (1.1.1.1) or Google (8.8.8.8) can improve your overall internet experience and speed up initial connections to new services. The default DNS servers provided by most ISPs tend to be slower and less reliable than dedicated DNS providers. Changing your DNS takes about 30 seconds and costs nothing.</p>
 
-<h2>Network Troubleshooting Guide</h2>
+<h2 id="network-troubleshooting-guide">Network Troubleshooting Guide</h2>
 <p>When your ping test shows unexpected results, here's a systematic approach to diagnosing the issue. I've used this exact process dozens of times when helping people figure out what's wrong with their connections.</p>
 <p>First, establish a baseline. Run this ping test several times throughout the day and note the results. Ping often varies by time of day due to network congestion patterns. If your ping is fine at 2 AM but terrible at 8 PM, ISP congestion during peak usage hours is very likely the culprit. Document the pattern so you have data to share with your ISP if needed.</p>
 <p>Second, isolate where the problem lives. Connect directly to your modem with an ethernet cable, bypassing your router entirely. If your ping improves dramatically, your router is the bottleneck. If it stays the same, the issue is upstream with your ISP or beyond your local network. This single test can save you hours of chasing the wrong problem.</p>
@@ -320,7 +339,7 @@ h2{font-size:1.35rem;}
 <p>Fifth, check your pagespeed and overall connection health beyond just ping. Sometimes high ping is a symptom of a larger connectivity issue like a degraded line or a failing modem. Run a full speed test to check your download and upload speeds. If those are also well below what you're paying for, you likely have a physical infrastructure problem that your ISP needs to investigate. Bad coaxial connectors, corroded copper lines, and failing fiber terminals are more common than you'd think.</p>
 <p>For deeper discussions about network diagnostics, bufferbloat, and ISP peering issues, the community at <a href="https://news.ycombinator.com" target="_blank" rel="noopener">Hacker News</a> regularly shares useful insights and links to diagnostic tools. It's a great resource for the technically inclined. Searching their archives for terms like "bufferbloat" or "latency optimization" will turn up years of detailed discussions from engineers who work on this stuff daily.</p>
 
-<h2>Ping vs Speed Test Differences</h2>
+<h2 id="ping-vs-speed-test-differences">Ping vs Speed Test Differences</h2>
 <p>I can't count how many times I've seen people confuse ping tests with speed tests. They measure fundamentally different properties of your network connection, and understanding the distinction is important for diagnosing problems correctly.</p>
 <p>A speed test measures throughput: how much data your connection can transfer per second. It's measured in megabits per second (Mbps) or gigabits per second (Gbps). Think of it like the width of a highway. More lanes means more cars can travel at the same time, increasing total capacity.</p>
 <p>A ping test measures latency: how long it takes for a single piece of data to make a round trip. Think of this as the distance to your destination. Even if you have a 10-lane superhighway, driving from New York to Los Angeles still takes a certain amount of time. A wider highway doesn't make the trip shorter for any individual vehicle.</p>
@@ -334,14 +353,14 @@ h2{font-size:1.35rem;}
 <li>File downloads and uploads: Bandwidth is what counts here. Latency affects the initial connection setup but barely impacts large file transfers once the TCP congestion window has ramped up to full size.</li>
 </ul>
 
-<h2>CDN and Server Location Effects on Ping</h2>
+<h2 id="cdn-and-server-location-effects-on-ping">CDN and Server Location Effects on Ping</h2>
 <p>Content Delivery Networks are one of the most important technologies behind low-latency internet experiences. Instead of serving all content from a single origin server in one data center, CDNs distribute copies of content to edge servers in dozens or hundreds of locations around the world. When you request a resource, the CDN routes you to the nearest edge location, dramatically reducing the physical distance your data needs to travel.</p>
 <p>This ping test uses CDN endpoints specifically because they represent the best-case latency achievable from your location. If your ping to Cloudflare or Google's global CDN is high, your ping to anything else will be at least as high, and probably higher. CDN endpoints are also the most consistent targets for measurement because they're engineered to handle millions of requests per second with minimal processing variation.</p>
 <p>Major CDN providers like Cloudflare, Google Cloud CDN, AWS CloudFront, Fastly, and Akamai each maintain hundreds of Points of Presence (PoPs) worldwide. Cloudflare alone operates in over 310 cities across 120+ countries as of early 2026. When I test from most locations in North America or Europe, I typically see 5-15ms to major CDN endpoints because there's almost certainly a PoP within a few hundred miles of wherever I'm sitting.</p>
 <p>Server location doesn't just affect ping through physical distance, though. It also matters because of how internet traffic gets routed between autonomous systems. Your data doesn't take a straight-line path from your device to the destination server. It follows routes established by peering agreements between ISPs, Internet Exchange Points (IXPs), and transit providers. Sometimes traffic between two cities 200 miles apart might get routed through a hub 1,000 miles away because that's how the network topology and business relationships work. This is why you might see very different ping times to two servers that are geographically the same distance from you but served by different networks.</p>
 <p>For developers interested in implementing similar CDN-based latency measurements in their own applications, the <a href="https://www.npmjs.com/package/web-vitals" target="_blank" rel="noopener">web-vitals package on npm</a> provides standardized performance measurement utilities that align with Google's Core Web Vitals metrics. It doesn't do ping testing directly, but it's an excellent foundation for understanding browser-based performance measurement and the Performance API that powers tools like this one.</p>
 
-<h2>Browser Compatibility</h2>
+<h2 id="browser-compatibility">Browser Compatibility</h2>
 <p>This ping test works across all modern browsers. I've tested it personally on the following configurations during our original research and verification phase:</p>
 <ul>
 <li>Chrome 130 and later versions on Windows, macOS, and Linux. Chrome's Performance API implementation is the most complete and gives us the most accurate, high-resolution timing data. If you're not sure which browser to use for testing, Chrome is the safe choice.</li>
@@ -370,7 +389,7 @@ h2{font-size:1.35rem;}
 <a href="https://news.ycombinator.com" target="_blank" rel="noopener">Hacker News</a>
 </div>
 
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 
 <details class="faq-item">
 <summary>What is a good ping speed</summary>

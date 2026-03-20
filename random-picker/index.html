@@ -61,6 +61,8 @@
 }
 </script>
 <style>
+html{scroll-behavior:smooth}
+
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0f;color:#e0e0e8;font-family:Inter,sans-serif;line-height:1.7;min-height:100vh}
 a{color:#00ff88;text-decoration:none}
@@ -165,7 +167,31 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
 <div class="container">
   <h1>Random Picker Online for Numbers, Names, Wheels and Teams</h1>
 <p style="color:#8888a0;font-size:0.8rem;">12 min read</p>
-  <p>Pick a number, spin a wheel, draw a random name, or split people into teams. Everything runs locally in your browser with cryptographic randomness. Nothing is sent anywhere.</p>
+  
+<nav id="toc" style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px auto;max-width:600px;">
+  <h2 style="color:#00ff88;font-size:1rem;margin:0 0 12px 0;">Table of Contents</h2>
+  <ul style="list-style:none;padding:0;margin:0;">
+    <li style="margin:6px 0;"><a href="#number-picker" style="color:#b0b0c0;text-decoration:none;">Number Picker</a></li>
+    <li style="margin:6px 0;"><a href="#spinner-wheel" style="color:#b0b0c0;text-decoration:none;">Spinner Wheel</a></li>
+    <li style="margin:6px 0;"><a href="#name-picker" style="color:#b0b0c0;text-decoration:none;">Name Picker</a></li>
+    <li style="margin:6px 0;"><a href="#team-generator" style="color:#b0b0c0;text-decoration:none;">Team Generator</a></li>
+    <li style="margin:6px 0;"><a href="#how-random-number-generation-actually-works" style="color:#b0b0c0;text-decoration:none;">How Random Number Generation Actually Works</a></li>
+    <li style="margin:6px 0;"><a href="#5-practical-uses-for-a-random-selector" style="color:#b0b0c0;text-decoration:none;">5 Practical Uses for a Random Selector</a></li>
+    <li style="margin:6px 0;"><a href="#history-of-random-number-generation" style="color:#b0b0c0;text-decoration:none;">History of Random Number Generation</a></li>
+    <li style="margin:6px 0;"><a href="#why-cryptogetrandomvalues-is-better-than-mathrandom" style="color:#b0b0c0;text-decoration:none;">Why crypto.getRandomValues Is Better Than Math.random</a></li>
+    <li style="margin:6px 0;"><a href="#distribution-of-10000-dice-rolls-using-cryptogetrandomvalues" style="color:#b0b0c0;text-decoration:none;">Distribution of 10,000 Dice Rolls Using crypto.getRandomValues</a></li>
+    <li style="margin:6px 0;"><a href="#video-tutorial" style="color:#b0b0c0;text-decoration:none;">Video Tutorial</a></li>
+    <li style="margin:6px 0;"><a href="#our-testing-and-original-research" style="color:#b0b0c0;text-decoration:none;">Our Testing and Original Research</a></li>
+    <li style="margin:6px 0;"><a href="#browser-compatibility" style="color:#b0b0c0;text-decoration:none;">Browser Compatibility</a></li>
+    <li style="margin:6px 0;"><a href="#related-stack-overflow-discussions" style="color:#b0b0c0;text-decoration:none;">Related Stack Overflow Discussions</a></li>
+    <li style="margin:6px 0;"><a href="#hacker-news-discussions-on-randomness" style="color:#b0b0c0;text-decoration:none;">Hacker News Discussions on Randomness</a></li>
+    <li style="margin:6px 0;"><a href="#npm-packages-for-random-number-generation" style="color:#b0b0c0;text-decoration:none;">npm Packages for Random Number Generation</a></li>
+    <li style="margin:6px 0;"><a href="#frequently-asked-questions" style="color:#b0b0c0;text-decoration:none;">Frequently Asked Questions</a></li>
+    <li style="margin:6px 0;"><a href="#related-tools" style="color:#b0b0c0;text-decoration:none;">Related Tools</a></li>
+    <li style="margin:6px 0;"><a href="#frequently-asked-questions-2" style="color:#b0b0c0;text-decoration:none;">Frequently Asked Questions</a></li>
+  </ul>
+</nav>
+<p>Pick a number, spin a wheel, draw a random name, or split people into teams. Everything runs locally in your browser with cryptographic randomness. Nothing is sent anywhere.</p>
 
   <div class="badge-row">
     <img src="https://img.shields.io/badge/runs_in-browser-00ff88?style=flat-square&labelColor=1a1a2a" alt="Runs in browser">
@@ -186,7 +212,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
   <!-- NUMBER PICKER -->
   <div class="mode-panel active" id="panel-number">
     <div class="card">
-      <h2 style="margin-top:0">Number Picker</h2>
+      <h2 style="margin-top:0" id="number-picker">Number Picker</h2>
       <p>Generate random numbers within your chosen range. Great as a lottery number picker or for any situation where you need to pick a number.</p>
       <div class="row">
         <div>
@@ -224,7 +250,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
   <!-- SPINNER WHEEL -->
   <div class="mode-panel" id="panel-wheel">
     <div class="card">
-      <h2 style="margin-top:0">Spinner Wheel</h2>
+      <h2 style="margin-top:0" id="spinner-wheel">Spinner Wheel</h2>
       <p>Add entries and spin the wheel. This name picker wheel is perfect for raffle drawings, making decisions, or just having fun with random selection.</p>
       <div class="preset-btns">
         <button class="btn btn-secondary btn-sm" onclick="loadPreset('yesno')">Yes / No</button>
@@ -250,7 +276,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
   <!-- NAME PICKER -->
   <div class="mode-panel" id="panel-name">
     <div class="card">
-      <h2 style="margin-top:0">Name Picker</h2>
+      <h2 style="margin-top:0" id="name-picker">Name Picker</h2>
       <p>Paste a list of names, one per line, and pick at random. Use elimination mode for raffle-style drawings where each name can only be picked once.</p>
       <label for="nameList">Names (one per line)</label>
       <textarea id="nameList" placeholder="Alice&#10;Bob&#10;Charlie&#10;Diana&#10;Eve"></textarea>
@@ -276,7 +302,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
   <!-- TEAM GENERATOR -->
   <div class="mode-panel" id="panel-team">
     <div class="card">
-      <h2 style="margin-top:0">Team Generator</h2>
+      <h2 style="margin-top:0" id="team-generator">Team Generator</h2>
       <p>Paste names and split them into balanced teams randomly. Perfect for classroom groups, sports drafts, or project team assignments.</p>
       <label for="teamNames">Names (one per line)</label>
       <textarea id="teamNames" placeholder="Alice&#10;Bob&#10;Charlie&#10;Diana&#10;Eve&#10;Frank&#10;Grace&#10;Hank"></textarea>
@@ -305,7 +331,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
   <hr class="section-divider">
 
   <article>
-    <h2>How Random Number Generation Actually Works</h2>
+    <h2 id="how-random-number-generation-actually-works">How Random Number Generation Actually Works</h2>
     <p>When you click "pick a number" on any random picker online, there's a lot happening behind that single button press. Computers are deterministic machines. They don't have dice inside. So how do they produce randomness?</p>
     <p>Most programming languages offer a basic random function. JavaScript has <code>Math.random()</code>, Python has its <code>random</code> module, and C has <code>rand()</code>. These all use what's called a Pseudorandom Number Generator, or PRNG. A PRNG takes a starting value called a seed and applies a mathematical formula to produce a sequence of numbers that look random but aren't truly unpredictable. If you know the seed, you can reproduce the entire sequence.</p>
     <p>That's fine for video games or shuffling a playlist. It's not fine for cryptography, gambling, or any situation where predictability could be exploited. That's where CSPRNGs come in.</p>
@@ -322,7 +348,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
       <p><span style="font-weight:600;color:#e0e0e8">Random number generation</span> is the process of generating a sequence of numbers or symbols that cannot be reasonably predicted better than by random chance. Various applications of randomness have led to the development of different methods for generating random data. These methods may vary in how unpredictable or statistically random they are. <a href="https://en.wikipedia.org/wiki/Random_number_generation" target="_blank" rel="noopener">Wikipedia</a></p>
     </div>
 
-    <h2>5 Practical Uses for a Random Selector</h2>
+    <h2 id="5-practical-uses-for-a-random-selector">5 Practical Uses for a Random Selector</h2>
 
     <h3>1. Classroom Name Picking</h3>
     <p>Teachers have been drawing names from hats for decades. A digital random selector does the same thing without the folded paper scraps. Students can see the screen and trust the process. The elimination mode in our name picker ensures every student gets a turn before anyone is picked twice. It's faster, fairer, and you won't lose the slips of paper between classes.</p>
@@ -339,25 +365,25 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
     <h3>5. Everyday Decision Making</h3>
     <p>Can't decide where to eat? Stuck choosing between two job offers? Sometimes externalizing a decision to a random picker online helps you realize what you actually want. If the spinner lands on Option A and you feel disappointed, that tells you something. The randomness becomes a mirror for your preferences rather than the final word.</p>
 
-    <h2>History of Random Number Generation</h2>
+    <h2 id="history-of-random-number-generation">History of Random Number Generation</h2>
     <p>Humans have used randomness for thousands of years. Dice made from animal bones date back at least 5,000 years. The Romans used a device called a tali for games and divination. In the 1920s, statisticians began producing books of random number tables. The RAND Corporation published "A Million Random Digits with 100,000 Normal Deviates" in 1955, generated using an electronic roulette wheel.</p>
     <p>The first computer-based random number generator was created by John von Neumann in 1946. His "middle-square method" was simple but flawed. It could fall into short loops. Better algorithms followed, with the Mersenne Twister (1997) becoming the standard PRNG for decades. Today, hardware random number generators in Intel and AMD processors use thermal noise to produce entropy, feeding the CSPRNGs that tools like this one rely on.</p>
     <p>The transition from physical randomness to computational randomness hasn't been seamless. In 2008, Debian's OpenSSL package was discovered to have a bug that reduced its random number generator's entropy to just 32,768 possible values. Keys generated during the two-year window were trivially crackable. It's a reminder that getting randomness right matters.</p>
 
-    <h2>Why crypto.getRandomValues Is Better Than Math.random</h2>
+    <h2 id="why-cryptogetrandomvalues-is-better-than-mathrandom">Why crypto.getRandomValues Is Better Than Math.random</h2>
     <p>JavaScript's <code>Math.random()</code> returns a floating-point number between 0 and 1. Under the hood, V8 (Chrome's engine) uses the xorshift128+ algorithm. It's fast and has good statistical properties for general use. But it's not cryptographically secure. If an attacker observes enough outputs, they can reconstruct the internal state and predict future values.</p>
     <p>The <code>crypto.getRandomValues()</code> method fills a typed array with random bytes from the operating system's entropy source. You can't predict the output from previous outputs. You can't reconstruct the internal state. It's slightly slower than <code>Math.random()</code>, but we're talking microseconds versus nanoseconds. For a tool like this, the difference is invisible to the user, while the security improvement is substantial.</p>
     <p>There's a practical consideration too. Some browsers have been found to produce poor randomness from <code>Math.random()</code> under specific conditions, particularly in older mobile browsers. <code>crypto.getRandomValues()</code> is required to meet a higher standard by specification, so you don't have to worry about browser-specific quirks.</p>
 
     <hr class="section-divider">
 
-    <h2>Distribution of 10,000 Dice Rolls Using crypto.getRandomValues</h2>
+    <h2 id="distribution-of-10000-dice-rolls-using-cryptogetrandomvalues">Distribution of 10,000 Dice Rolls Using crypto.getRandomValues</h2>
     <p>We ran 10,000 simulated dice rolls using the same algorithm this tool uses. The chart below shows the resulting distribution. Each face appeared within 1% of the expected 16.67%, confirming the uniformity of the output.</p>
     <img src="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%271%27%2C%272%27%2C%273%27%2C%274%27%2C%275%27%2C%276%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Frequency%20out%20of%2010%2C000%20rolls%27%2Cdata%3A%5B1672%2C1658%2C1683%2C1641%2C1669%2C1677%5D%2CbackgroundColor%3A%5B%27%2300ff88%27%2C%27%2300ccff%27%2C%27%2300ff88%27%2C%27%2300ccff%27%2C%27%2300ff88%27%2C%27%2300ccff%27%5D%7D%5D%7D%2Coptions%3A%7Bplugins%3A%7Blegend%3A%7Blabels%3A%7BfontColor%3A%27%23e0e0e8%27%7D%7D%7D%2Cscales%3A%7BxAxes%3A%5B%7Bticks%3A%7BfontColor%3A%27%23e0e0e8%27%7D%7D%5D%2CyAxes%3A%5B%7Bticks%3A%7BfontColor%3A%27%23e0e0e8%27%2Cmin%3A1500%7D%7D%5D%7D%7D%7D&w=600&h=300&bkg=%23111118" alt="Bar chart showing distribution of 10,000 dice rolls, each face appearing approximately 1,667 times" style="width:100%;max-width:600px;border-radius:8px;margin:1rem 0">
 
     <hr class="section-divider">
 
-    <h2>Video Tutorial</h2>
+    <h2 id="video-tutorial">Video Tutorial</h2>
     <p>This video covers the fundamentals of random number generation, including how computers produce randomness and why it matters for security and fairness.</p>
     <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;margin:1rem 0">
       <iframe src="https://www.youtube.com/embed/GtOt7EBNEwQ" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" title="How Computers Generate Random Numbers" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>
@@ -365,7 +391,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
 
     <hr class="section-divider">
 
-    <h2>Our Testing and Original Research</h2>
+    <h2 id="our-testing-and-original-research">Our Testing and Original Research</h2>
     <p>We ran extensive tests on this tool's randomness output to verify it meets statistical standards. Here's what we found.</p>
     <p>We generated 1,000,000 random integers between 1 and 100 and applied a chi-squared goodness-of-fit test. The resulting p-value was 0.47, well above the 0.05 threshold, meaning we can't reject the null hypothesis of uniform distribution. Each number appeared within 0.3% of the expected 10,000 count.</p>
     <p>For the spinner wheel, we simulated 50,000 spins with 8 segments and measured the landing distribution. The maximum deviation from expected was 0.8%, which falls within normal statistical variation. We also confirmed that consecutive spins show no serial correlation by computing the autocorrelation function across 10,000 sequential results.</p>
@@ -374,7 +400,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
 
     <hr class="section-divider">
 
-    <h2>Browser Compatibility</h2>
+    <h2 id="browser-compatibility">Browser Compatibility</h2>
     <table class="compat-table">
       <thead><tr><th>Browser</th><th>Version</th><th>crypto.getRandomValues</th><th>Canvas Wheel</th><th>Status</th></tr></thead>
       <tbody>
@@ -389,7 +415,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
 
     <hr class="section-divider">
 
-    <h2>Related Stack Overflow Discussions</h2>
+    <h2 id="related-stack-overflow-discussions">Related Stack Overflow Discussions</h2>
     <ul style="list-style:none;padding:0">
       <li style="padding:0.5rem 0;border-bottom:1px solid #2a2a3a"><a href="https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript" target="_blank" rel="noopener">Seeding the random number generator in JavaScript</a></li>
       <li style="padding:0.5rem 0;border-bottom:1px solid #2a2a3a"><a href="https://stackoverflow.com/questions/41437492/how-to-use-window-crypto-getrandomvalues-to-get-random-values-in-a-specific-rang" target="_blank" rel="noopener">How to use crypto.getRandomValues for a specific range</a></li>
@@ -399,7 +425,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
 
     <hr class="section-divider">
 
-    <h2>Hacker News Discussions on Randomness</h2>
+    <h2 id="hacker-news-discussions-on-randomness">Hacker News Discussions on Randomness</h2>
     <ul style="list-style:none;padding:0">
       <li style="padding:0.5rem 0;border-bottom:1px solid #2a2a3a"><a href="https://news.ycombinator.com/item?id=27783406" target="_blank" rel="noopener">Myths about /dev/urandom</a></li>
       <li style="padding:0.5rem 0;border-bottom:1px solid #2a2a3a"><a href="https://news.ycombinator.com/item?id=25331074" target="_blank" rel="noopener">How random is JavaScript's Math.random?</a></li>
@@ -408,7 +434,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
 
     <hr class="section-divider">
 
-    <h2>npm Packages for Random Number Generation</h2>
+    <h2 id="npm-packages-for-random-number-generation">npm Packages for Random Number Generation</h2>
     <p>If you're building your own random picker and want a solid foundation, these npm packages are worth evaluating. They don't replace the browser's built-in <code>crypto.getRandomValues()</code>, but they provide convenient wrappers and additional functionality.</p>
     <ul style="list-style:none;padding:0">
       <li style="padding:0.5rem 0;border-bottom:1px solid #2a2a3a"><a href="https://www.npmjs.com/package/random-js" target="_blank" rel="noopener">random-js</a> - A mathematically correct random number generator library for JavaScript</li>
@@ -419,7 +445,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
 
     <hr class="section-divider">
 
-    <h2>Frequently Asked Questions</h2>
+    <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 
     <div class="faq-item">
       <h3>Is this random picker truly random?</h3>
@@ -487,7 +513,7 @@ footer{text-align:center;padding:2rem 1rem;color:#8888a0;font-size:0.8rem;border
 
   <hr class="section-divider">
 
-  <h2>Related Tools</h2>
+  <h2 id="related-tools">Related Tools</h2>
   <div class="related-grid">
     <a href="/free-tools/password-generator/" class="related-card">
       <h4>Password Generator</h4>
@@ -927,7 +953,7 @@ drawWheel();
 </script>
 
 <section id="faq" style="max-width:800px;margin:48px auto;padding:0 20px;">
-  <h2 style="color:#00ff88;font-size:1.5rem;margin-bottom:24px;">Frequently Asked Questions</h2>
+  <h2 style="color:#00ff88;font-size:1.5rem;margin-bottom:24px;" id="frequently-asked-questions-2">Frequently Asked Questions</h2>
   <div style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin-bottom:16px;">
     <h3 style="color:#e0e0e8;font-size:1.1rem;margin:0 0 8px 0;">Q: Is this random picker truly random?</h3>
     <p style="color:#b0b0c0;margin:0;line-height:1.6;">Yes. This tool uses crypto.getRandomValues(), a cryptographically secure pseudorandom number generator built into modern browsers. It produces results suitable for security-sensitive applications.</p>

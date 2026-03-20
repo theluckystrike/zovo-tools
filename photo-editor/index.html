@@ -40,6 +40,8 @@
 }
 </script>
 <style>
+html{scroll-behavior:smooth}
+
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#0a0a0f;color:#e0e0e8;font-family:'Inter',sans-serif;line-height:1.7;min-height:100vh;}
 a{color:#00ff88;text-decoration:none;}
@@ -135,6 +137,22 @@ h2{font-size:1.35rem;}
   </nav>
 </header>
 
+
+<nav id="toc" style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px auto;max-width:600px;">
+  <h2 style="color:#00ff88;font-size:1rem;margin:0 0 12px 0;">Table of Contents</h2>
+  <ul style="list-style:none;padding:0;margin:0;">
+    <li style="margin:6px 0;"><a href="#how-online-photo-editors-work" style="color:#b0b0c0;text-decoration:none;">How Online Photo Editors Work</a></li>
+    <li style="margin:6px 0;"><a href="#understanding-image-formats" style="color:#b0b0c0;text-decoration:none;">Understanding Image Formats</a></li>
+    <li style="margin:6px 0;"><a href="#color-theory-basics-for-photo-editing" style="color:#b0b0c0;text-decoration:none;">Color Theory Basics for Photo Editing</a></li>
+    <li style="margin:6px 0;"><a href="#canvas-api-and-browser-based-image-processing" style="color:#b0b0c0;text-decoration:none;">Canvas API and Browser-Based Image Processing</a></li>
+    <li style="margin:6px 0;"><a href="#photo-editing-tips-for-beginners" style="color:#b0b0c0;text-decoration:none;">Photo Editing Tips for Beginners</a></li>
+    <li style="margin:6px 0;"><a href="#cropping-and-composition-rules" style="color:#b0b0c0;text-decoration:none;">Cropping and Composition Rules</a></li>
+    <li style="margin:6px 0;"><a href="#understanding-image-resolution-and-dpi" style="color:#b0b0c0;text-decoration:none;">Understanding Image Resolution and DPI</a></li>
+    <li style="margin:6px 0;"><a href="#photo-editing-workflow-best-practices" style="color:#b0b0c0;text-decoration:none;">Photo Editing Workflow Best Practices</a></li>
+    <li style="margin:6px 0;"><a href="#browser-compatibility" style="color:#b0b0c0;text-decoration:none;">Browser Compatibility</a></li>
+    <li style="margin:6px 0;"><a href="#frequently-asked-questions" style="color:#b0b0c0;text-decoration:none;">Frequently Asked Questions</a></li>
+  </ul>
+</nav>
 <main>
 <section class="hero">
 <div class="container">
@@ -284,7 +302,7 @@ h2{font-size:1.35rem;}
 <section class="content-section">
 <div class="container">
 
-<h2>How Online Photo Editors Work</h2>
+<h2 id="how-online-photo-editors-work">How Online Photo Editors Work</h2>
 <p>When I first started building browser-based image tools, most people assumed you needed a desktop application like Photoshop to do any serious photo editing. That's changed dramatically. Modern browsers ship with the HTML5 Canvas API, which gives JavaScript full pixel-level control over images. This editor you're using right now doesn't upload your photos anywhere. Every crop, filter, rotation, and text overlay happens directly on an HTML canvas element inside your browser tab.</p>
 <p>The Canvas API works by creating a 2D drawing context that acts like a virtual bitmap. When you load an image, the browser decodes it into raw pixel data and draws it onto the canvas. From there, JavaScript can read and modify every single pixel through the <code>getImageData()</code> and <code>putImageData()</code> methods. For operations like brightness adjustment, the code loops through every pixel and adjusts the RGB values mathematically. For filters like blur, it applies convolution matrices that average neighboring pixels together.</p>
 <p>CSS filters provide another layer of image manipulation that I've integrated into this editor. Properties like <code>filter: brightness() contrast() saturate()</code> are hardware-accelerated by the GPU, which means they run fast even on large images. The browser composites these filter effects in real time as you drag the sliders. When you're happy with the result, I "bake" those CSS filters into the canvas by redrawing the filtered image onto a fresh canvas, converting the visual effect into permanent pixel changes.</p>
@@ -296,7 +314,7 @@ h2{font-size:1.35rem;}
 <cite>Source: <a href="https://en.wikipedia.org/wiki/Canvas_element" target="_blank" rel="noopener">Wikipedia - Canvas element</a></cite>
 </div>
 
-<h2>Understanding Image Formats</h2>
+<h2 id="understanding-image-formats">Understanding Image Formats</h2>
 <p>One of the most common questions I get about photo editing is when to use PNG versus JPEG versus WebP. Each format has distinct strengths, and choosing the right one can make a big difference in file size and image quality. Here's what I've learned from years of working with images on the web.</p>
 <p>JPEG (Joint Photographic Experts Group) is the workhorse of photography. It uses lossy compression, meaning it permanently discards some image data to achieve smaller file sizes. For photographs with complex color gradients and millions of colors, JPEG is still the best choice in most situations. The quality slider in this editor lets you control the compression level: higher quality means larger files, lower quality means smaller files with more visible compression artifacts. I've found that 85-92% quality is the sweet spot for most photos, giving you significant file size reduction with nearly imperceptible quality loss.</p>
 <p>PNG (Portable Network Graphics) uses lossless compression, preserving every pixel perfectly. It's ideal for images with sharp edges, text, transparency, logos, screenshots, and graphics with flat colors. PNG files tend to be much larger than JPEGs for photographs because the lossless algorithm can't take advantage of the "close enough" approximations that make JPEG compression so effective on natural images. If you need transparency (alpha channel), PNG is your go-to format. This editor supports PNG export by default.</p>
@@ -304,7 +322,7 @@ h2{font-size:1.35rem;}
 
 <img class="chart-img" src="https://quickchart.io/chart?c={type:'bar',data:{labels:['JPEG (photo)','PNG (photo)','WebP (photo)','JPEG (graphic)','PNG (graphic)','WebP (graphic)'],datasets:[{label:'Typical File Size (KB) for 1920x1080',data:[250,2400,190,180,85,60],backgroundColor:['rgba(0,255,136,0.7)','rgba(255,136,0,0.7)','rgba(0,204,255,0.7)','rgba(0,255,136,0.5)','rgba(255,136,0,0.5)','rgba(0,204,255,0.5)'],borderColor:['#00ff88','#ff8800','#00ccff','#00ff88','#ff8800','#00ccff'],borderWidth:2}]},options:{plugins:{title:{display:true,text:'File Size Comparison Across Image Formats',color:'%23e0e0e8'},legend:{labels:{color:'%23c0c0d0'}}},scales:{y:{title:{display:true,text:'File Size (KB)',color:'%23888'},ticks:{color:'%23888'},grid:{color:'%231a1a24'}},x:{ticks:{color:'%23888',maxRotation:45},grid:{color:'%231a1a24'}}}}}&backgroundColor=%230a0a0f&width=700&height=350" alt="Bar chart comparing file sizes across JPEG, PNG, and WebP formats" loading="lazy">
 
-<h2>Color Theory Basics for Photo Editing</h2>
+<h2 id="color-theory-basics-for-photo-editing">Color Theory Basics for Photo Editing</h2>
 <p>Understanding a few fundamentals of color theory can dramatically improve your photo editing results. You don't need to be an artist to grasp these concepts, and they'll help you make better decisions when adjusting brightness, contrast, saturation, and other settings in this editor.</p>
 <p>Digital images use the RGB color model, where every pixel is defined by three values: Red, Green, and Blue. Each channel ranges from 0 to 255, giving roughly 16.7 million possible color combinations. When all three channels are at 255, you get pure white. When all are at 0, you get pure black. Equal values across all three channels produce neutral grays. Understanding this helps explain why the grayscale filter works: it calculates a weighted average of the three channels (typically 0.299R + 0.587G + 0.114B, following the ITU-R BT.601 standard) and sets all three channels to that value.</p>
 <p>Brightness adjustment is straightforward: it adds or subtracts a fixed value from every color channel in every pixel. If you increase brightness by 30, a pixel that was (100, 150, 200) becomes (130, 180, 230). The problem with simple brightness adjustment is that it can wash out highlights (pushing values above 255, which clips to white) or crush shadows (pushing values below 0, which clips to black).</p>
@@ -312,7 +330,7 @@ h2{font-size:1.35rem;}
 <p>Saturation controls the intensity of colors. Increasing saturation makes colors more vivid and vibrant. Decreasing it moves colors toward gray. The sepia filter in this editor works by first desaturating the image (removing color information) and then applying a warm brownish-yellow tint by adjusting the red and green channels upward relative to blue. It simulates the look of old photographs that have yellowed with age.</p>
 <p>For a much deeper exploration of digital color theory and image processing algorithms, there's a great resource on <a href="https://stackoverflow.com/questions/3733227/image-processing-algorithm-improvement-for-coca-cola-can-recognition" target="_blank" rel="noopener">Stack Overflow discussing image processing algorithms</a> that goes into real-world applications of these concepts. The thread is about object recognition, but the underlying color manipulation techniques apply directly to photo editing.</p>
 
-<h2>Canvas API and Browser-Based Image Processing</h2>
+<h2 id="canvas-api-and-browser-based-image-processing">Canvas API and Browser-Based Image Processing</h2>
 <p>The Canvas API is what makes this entire editor possible without any server-side processing. I've worked extensively with canvas for image manipulation, and it's genuinely impressive how capable modern browsers are at handling pixel-level operations. Here's a look at the key APIs this editor relies on.</p>
 <p>The <code>CanvasRenderingContext2D</code> interface provides the drawing methods. <code>drawImage()</code> is the foundation: it takes an image source and renders it onto the canvas at specified coordinates and dimensions. This single method handles loading images, scaling them during resize operations, and compositing layers. For rotation and flipping, I use <code>translate()</code> and <code>rotate()</code> or <code>scale(-1, 1)</code> to transform the coordinate system before drawing.</p>
 <p>For pixel-level filters like sharpen and custom color adjustments, <code>getImageData()</code> returns an array of raw pixel values (RGBA for each pixel). The code can then modify these values directly. For a 1920x1080 image, that's 8,294,400 individual color values to process. Modern JavaScript engines handle this surprisingly well, but it's still the most performance-intensive part of the editor. This is why the sharpen filter in this editor applies only when you commit changes, rather than updating in real time as you drag the slider.</p>
@@ -323,7 +341,7 @@ h2{font-size:1.35rem;}
 <iframe src="https://www.youtube.com/embed/Yvz_axxWG4Y" title="HTML5 Canvas Tutorial for Image Editing" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
 </div>
 
-<h2>Photo Editing Tips for Beginners</h2>
+<h2 id="photo-editing-tips-for-beginners">Photo Editing Tips for Beginners</h2>
 <p>When I started editing photos, I made every mistake in the book. Over-saturated colors, aggressive sharpening, heavy-handed contrast adjustments that looked impressive on my screen but terrible everywhere else. Here are the practical tips I wish someone had told me from the start.</p>
 <p>First, less is more. The most common beginner mistake is pushing every slider too far. A subtle brightness bump of +10 to +20 makes a bigger positive difference than cranking it to +80. The same goes for contrast and saturation. Professional photo editors typically make small, targeted adjustments. If you can clearly see the effect of a filter just by looking at the image, you've probably gone too far. Train your eye by making adjustments, then looking away from the screen for 10 seconds before looking back. That fresh perspective helps you judge whether the edit looks natural.</p>
 <p>Second, always work on a copy. This editor has undo/redo, but it's still good practice to keep your original image untouched. If you want to try different edits, you can always reload the original. I've seen too many people overwrite their only copy of a photo with an edit they later regretted.</p>
@@ -331,21 +349,21 @@ h2{font-size:1.35rem;}
 <p>Fourth, crop intentionally. Don't just crop to remove distracting elements. Think about the composition rules like the rule of thirds (placing subjects at the intersection of imaginary lines dividing the image into thirds both horizontally and vertically) and leading lines. A well-composed crop can transform an average photo into a great one. This editor's crop tool lets you draw the exact rectangle you want, giving you complete control over framing.</p>
 <p>Fifth, monitor calibration matters. The colors you see depend entirely on your screen's calibration. A photo that looks perfect on your laptop might look too dark or too warm on someone else's phone. If color accuracy matters to you (for product photography or professional work), consider calibrating your monitor with a colorimeter device. For casual editing, just be aware that what you see isn't necessarily what others will see.</p>
 
-<h2>Cropping and Composition Rules</h2>
+<h2 id="cropping-and-composition-rules">Cropping and Composition Rules</h2>
 <p>Cropping is the most powerful yet underused editing tool available. A good crop can salvage a poorly framed shot, draw attention to your subject, remove distractions, and completely change the feel of an image. I've rescued dozens of photos that I initially thought were unusable just by finding the right crop.</p>
 <p>The Rule of Thirds is the most well-known composition guideline. Imagine dividing your image into a 3x3 grid with two horizontal and two vertical lines. The theory says that placing important elements along these lines or at their intersections creates more visually engaging compositions than centering everything. While it's not a hard rule (centered compositions work great for symmetrical subjects), it's a useful default when you're not sure how to crop.</p>
 <p>Leading lines are another powerful composition technique. These are lines within the image that guide the viewer's eye toward the subject. Roads, fences, rivers, architectural elements, and even shadows can serve as leading lines. When cropping, try to preserve and emphasize these natural guides rather than cutting them off.</p>
 <p>Aspect ratio matters more than most people realize. A square crop (1:1) feels modern and works great for social media profiles and product shots. A 4:3 crop is the traditional photo ratio. A 16:9 crop is cinematic and works well for landscapes and dramatic scenes. A 3:2 crop is what most DSLR cameras produce natively. Think about where the image will be displayed when choosing your crop ratio. This editor lets you freely draw your crop area without locking to a specific ratio, giving you maximum flexibility.</p>
 <p>When cropping portraits, leave space in the direction the subject is looking. If someone is facing left, leave more space on the left side of the frame. This creates a sense of direction and prevents the composition from feeling cramped. Similarly, leave some headroom above the subject rather than cropping too tightly at the top of their head, unless you're going for an intentionally tight, dramatic headshot.</p>
 
-<h2>Understanding Image Resolution and DPI</h2>
+<h2 id="understanding-image-resolution-and-dpi">Understanding Image Resolution and DPI</h2>
 <p>Resolution and DPI (dots per inch) are concepts that confuse a lot of people, and honestly, they're more confusing than they need to be because the terms get used interchangeably when they shouldn't be. Let me break it down based on what I've found actually matters in practice.</p>
 <p>Image resolution is simply the total number of pixels in your image, expressed as width x height. A 4000x3000 image has 12 million pixels (12 megapixels). This is a fixed property of the digital file. More pixels means more detail and the ability to print larger or crop more aggressively without losing quality. When you resize an image in this editor, you're changing the resolution by either adding pixels (upscaling, which the browser interpolates from existing data) or removing them (downscaling, which discards information).</p>
 <p>DPI (or PPI, pixels per inch) describes how densely those pixels are mapped to physical space. It's only relevant for printing. A 3000-pixel-wide image printed at 300 DPI will be 10 inches wide. The same image printed at 150 DPI will be 20 inches wide but with half the detail density. For screens, DPI is largely irrelevant because monitors have their own fixed pixel density. A modern smartphone might have a 460 PPI display, while a 27-inch 4K monitor runs at about 163 PPI. The image file itself doesn't change; only how it's mapped to physical dots varies.</p>
 <p>For web use, resolution is all that matters. A 1920x1080 image will display the same regardless of what DPI value is embedded in the file's metadata. For print, the general guidelines are 300 DPI for high-quality prints (magazines, photo prints), 150 DPI for acceptable quality (posters viewed at a distance), and 72 DPI is the old "screen resolution" standard that doesn't really mean anything useful anymore.</p>
 <p>This editor shows you the current dimensions of your image so you always know exactly what resolution you're working with. When resizing, the aspect ratio lock prevents accidental distortion by maintaining the original proportions. For web optimization, I've found that sizing images to exactly the display dimensions needed (rather than relying on CSS to resize a larger image) produces the best combination of quality and performance, which also helps with pagespeed scores on tools like Google Lighthouse.</p>
 
-<h2>Photo Editing Workflow Best Practices</h2>
+<h2 id="photo-editing-workflow-best-practices">Photo Editing Workflow Best Practices</h2>
 <p>Having a consistent editing workflow saves time and produces better results than randomly adjusting settings until something looks right. Here's the workflow I've developed over years of editing thousands of images, and it works well with this tool.</p>
 <p>Step one: Crop and straighten first. Get your composition right before adjusting anything else. There's no point fine-tuning the brightness of areas you're going to crop away. Use the crop tool to straighten horizons, remove distracting edges, and tighten the composition around your subject.</p>
 <p>Step two: Set the exposure. Adjust brightness to get the overall lightness/darkness where you want it. Don't worry about being perfect; you'll fine-tune with contrast next. The goal is to ensure no important details are completely lost to pure black or blown out to pure white.</p>
@@ -355,7 +373,7 @@ h2{font-size:1.35rem;}
 <p>Step six: Add text or drawings if needed. Text overlay and drawing should always come last because you can't undo them separately from the underlying image once they're committed to the canvas. Make sure your text is legible against the background; using a contrasting color or adding a slight shadow effect helps with readability.</p>
 <p>Step seven: Export at the right settings. For sharing online, JPEG at 85-92% quality is the standard choice. For archiving your edited version or for images with transparency, use PNG. Always keep the original unedited file as your master copy.</p>
 
-<h2>Browser Compatibility</h2>
+<h2 id="browser-compatibility">Browser Compatibility</h2>
 <p>This photo editor works across all modern browsers. I've personally tested it and verified functionality on these platforms during our original research and development phase:</p>
 <ul>
 <li>Chrome 130 and newer on Windows, macOS, Linux, and ChromeOS. Chrome has the most complete Canvas API implementation and delivers the best overall performance for image manipulation. The GPU-accelerated CSS filter rendering is particularly smooth in Chrome.</li>
@@ -384,7 +402,7 @@ h2{font-size:1.35rem;}
 <a href="https://news.ycombinator.com" target="_blank" rel="noopener">Hacker News</a>
 </div>
 
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 
 <details class="faq-item">
 <summary>Is this photo editor actually free</summary>
