@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAML to JSON Converter — Online YAML Parser &amp; Formatter | Zovo</title>
+<meta name="description" content="Free online YAML to JSON converter with live parsing, syntax highlighting, bidirectional conversion, and validation. Convert YAML to JSON or JSON to YAML instantly in your browser.">
+<meta name="keywords" content="yaml to json converter, yml to json, json to yaml, yaml parser, yaml formatter, yaml validator, online yaml converter">
+<meta name="author" content="Michael Lip">
+<link rel="canonical" href="https://zovo.one/free-tools/yaml-to-json-converter/">
+<meta property="og:title" content="YAML to JSON Converter — Online YAML Parser & Formatter | Zovo">
+<meta property="og:description" content="Convert YAML to JSON or JSON to YAML instantly. Live parsing, syntax highlighting, validation, and error reporting. 100% client-side.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/yaml-to-json-converter/">
+<meta property="og:site_name" content="Zovo">
+<meta property="og:image" content="https://zovo.one/free-tools/yaml-to-json-converter/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="YAML to JSON Converter — Online YAML Parser & Formatter | Zovo">
+<meta name="twitter:description" content="Convert YAML to JSON or JSON to YAML instantly. Live parsing, syntax highlighting, validation, and error reporting.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "YAML to JSON Converter",
+  "url": "https://zovo.one/free-tools/yaml-to-json-converter",
+  "description": "Free online bidirectional YAML to JSON converter with live parsing, syntax highlighting, validation, and error reporting.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "browserRequirements": "Requires a modern browser with JavaScript enabled"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zovo.one" },
+    { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://zovo.one/free-tools" },
+    { "@type": "ListItem", "position": 3, "name": "YAML to JSON Converter", "item": "https://zovo.one/free-tools/yaml-to-json-converter" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is YAML and how does it differ from JSON?", "acceptedAnswer": { "@type": "Answer", "text": "YAML (YAML Ain't Markup Language) is a human-readable data serialization format that uses indentation to represent structure, while JSON (JavaScript Object Notation) uses braces and brackets. YAML supports comments, multiline strings, and anchors/aliases, making it popular for configuration files. JSON is more widely supported in APIs and web applications." }},
+    { "@type": "Question", "name": "How do I convert YAML to JSON?", "acceptedAnswer": { "@type": "Answer", "text": "Paste your YAML content into the left panel of this converter. The tool automatically parses and converts it to valid JSON in the right panel in real time. You can also upload .yaml or .yml files directly. The output can be copied to clipboard or downloaded as a .json file." }},
+    { "@type": "Question", "name": "Does this converter support YAML anchors and aliases?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. This converter includes a full inline YAML parser that handles anchors (defined with &name) and aliases (referenced with *name). Anchors let you define a value once and reuse it throughout your YAML document, and the converter resolves all aliases into their full values in the JSON output." }},
+    { "@type": "Question", "name": "Is my data safe when using this YAML converter?", "acceptedAnswer": { "@type": "Answer", "text": "Absolutely. This converter runs entirely in your browser using client-side JavaScript. Your YAML and JSON data is never transmitted to any server. There are no analytics tracking your input, no cookies storing your data, and no server-side processing. Your configuration data remains on your device at all times." }},
+    { "@type": "Question", "name": "Can I convert JSON back to YAML?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. This is a bidirectional converter. Switch the direction toggle to JSON to YAML mode, paste your JSON in the left panel, and the tool will generate properly formatted YAML output with correct indentation. You can control the indent size (2, 4, or 8 spaces) for the generated YAML." }},
+    { "@type": "Question", "name": "What YAML features are supported?", "acceptedAnswer": { "@type": "Answer", "text": "This parser supports all commonly used YAML features: maps (key-value pairs), sequences (arrays), quoted and unquoted strings, numbers, booleans, null values, multiline strings (literal block | and folded >), inline flow syntax ({} and []), comments, and anchors/aliases. It handles nested structures of any depth." }}
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;font-weight:400}
+a{color:#00ff88;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:1200px;margin:0 auto;padding:20px 16px}
+h1{font-size:1.8rem;font-weight:600;color:#fff;margin-bottom:8px;line-height:1.3}
+h2{font-size:1.35rem;font-weight:600;color:#fff;margin:40px 0 16px;scroll-margin-top:20px}
+h3{font-size:1.1rem;font-weight:500;color:#ddd;margin:24px 0 12px}
+p{margin-bottom:16px;color:#ccc}
+code{background:#1e1e2a;padding:2px 6px;border-radius:4px;font-size:0.85em;color:#00ff88}
+.breadcrumb{font-size:.85rem;color:#888;margin-bottom:16px}.breadcrumb a{color:#888}.breadcrumb a:hover{color:#00ff88}
+.meta-line{font-size:.85rem;color:#888;margin-bottom:24px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.tool-card{background:#12121a;border-radius:12px;padding:24px;margin:24px 0;border:1px solid #1e1e2a}
+.btn{background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;padding:10px 20px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s}.btn:hover{background:#00dd77}
+.btn-outline{background:transparent;border:1px solid #00ff88;color:#00ff88}.btn-outline:hover{background:#00ff8815}
+.btn-sm{padding:6px 14px;font-size:.8rem;border-radius:6px}
+.direction-bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.direction-toggle{display:flex;border:1px solid #1e1e2a;border-radius:8px;overflow:hidden}
+.direction-toggle button{background:#12121a;color:#888;border:none;padding:10px 20px;font-size:.85rem;cursor:pointer;font-family:inherit;font-weight:500;transition:all .2s}
+.direction-toggle button.active{background:#00ff88;color:#0a0a0f}
+.options-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.options-bar select{background:#12121a;border:1px solid #1e1e2a;border-radius:6px;padding:6px 10px;color:#e0e0e8;font-size:.8rem;font-family:inherit}
+.options-bar label{font-size:.8rem;color:#aaa;display:flex;align-items:center;gap:4px;cursor:pointer}
+.options-bar input[type="checkbox"]{accent-color:#00ff88}
+.editor-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:768px){.editor-wrap{grid-template-columns:1fr}}
+.editor-panel{display:flex;flex-direction:column;gap:8px}
+.panel-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.panel-header h3{margin:0;font-size:.95rem;color:#aaa}
+.panel-actions{display:flex;gap:6px;flex-wrap:wrap}
+.editor-container{position:relative;border-radius:10px;overflow:hidden;border:1px solid #1e1e2a;background:#0a0a0f;transition:border-color .2s}
+.editor-container.dragover{border-color:#00ff88}
+.editor-container textarea{width:100%;height:420px;background:transparent;border:none;padding:16px 16px 16px 52px;color:#e0e0e8;font-family:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;font-size:.85rem;line-height:1.6;resize:vertical;outline:none;tab-size:2;white-space:pre;overflow-wrap:normal;overflow-x:auto;position:relative;z-index:2;caret-color:#00ff88}
+.editor-container textarea::placeholder{color:#555}
+.line-numbers{position:absolute;left:0;top:0;width:40px;height:100%;padding:16px 6px 16px 0;text-align:right;font-family:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;font-size:.85rem;line-height:1.6;color:#444;user-select:none;pointer-events:none;overflow:hidden;background:#0d0d14;border-right:1px solid #1e1e2a;z-index:3}
+.highlight-overlay{position:absolute;left:52px;top:16px;right:16px;pointer-events:none;font-family:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;font-size:.85rem;line-height:1.6;white-space:pre;overflow:hidden;z-index:1}
+.hl-key{color:#00ff88}.hl-string{color:#f0c674}.hl-number{color:#81a2be}.hl-bool{color:#cc6666}.hl-null{color:#b294bb}.hl-comment{color:#555;font-style:italic}.hl-punct{color:#888}.hl-anchor{color:#de935f}
+.error-bar{background:#2a1515;border:1px solid #ff4444;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:none;font-size:.85rem;color:#ff8888;font-family:'SF Mono',Consolas,monospace}
+.error-bar.visible{display:block}
+.error-bar .error-line{color:#ff4444;font-weight:600}
+.status-bar{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:#666;padding:4px 0;flex-wrap:wrap;gap:8px}
+.status-valid{color:#00ff88}.status-invalid{color:#ff4444}
+.diff-container{background:#0a0a0f;border:1px solid #1e1e2a;border-radius:10px;padding:16px;margin:16px 0;display:none;font-family:'SF Mono',Consolas,monospace;font-size:.85rem;line-height:1.6;white-space:pre-wrap;overflow-x:auto;max-height:400px;overflow-y:auto}
+.diff-container.visible{display:block}
+.diff-add{color:#00ff88;background:#00ff8810}.diff-remove{color:#ff4444;background:#ff444410}.diff-context{color:#555}
+.sample-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+nav#toc{background:#12121a;border:1px solid #1e1e2a;border-radius:10px;padding:16px 20px;margin:24px 0}
+nav#toc h2{margin:0 0 12px;font-size:1rem;color:#aaa}
+nav#toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px 16px}
+nav#toc a{color:#00ff88;font-size:.85rem}
+.faq-item{border-bottom:1px solid #1e1e2a;padding:16px 0}.faq-item:last-child{border-bottom:none}
+.faq-q{font-weight:600;color:#fff;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq-q::after{content:'+';color:#00ff88;font-size:1.2rem;flex-shrink:0;transition:transform .2s}
+.faq-item.open .faq-q::after{content:'\2212'}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:#ccc;font-size:.9rem}
+.faq-item.open .faq-a{max-height:400px;padding-top:12px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.related-card{background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:16px;transition:border-color .2s;display:block}
+.related-card:hover{border-color:#00ff88;text-decoration:none}
+.related-card h3{margin:0 0 4px;font-size:.95rem;color:#fff}.related-card p{margin:0;font-size:.8rem;color:#888}
+footer{border-top:1px solid #1e1e2a;margin-top:60px;padding:40px 0 24px;color:#888;font-size:.85rem}
+footer .footer-inner{max-width:1200px;margin:0 auto;padding:0 16px}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-bottom:24px}
+.footer-col h4{color:#aaa;font-size:.85rem;margin-bottom:8px}.footer-col a{color:#888;font-size:.8rem;display:block;margin-bottom:4px}.footer-col a:hover{color:#00ff88}
+.footer-bottom{text-align:center;color:#555;font-size:.8rem;padding-top:16px;border-top:1px solid #1e1e2a}
+.update-history{color:#666;font-size:.8rem;margin-top:8px}
+@media print{body{background:#fff;color:#000}.tool-card{border:1px solid #ccc}footer,.btn,.panel-actions,.direction-bar,.sample-bar,.options-bar{display:none}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="breadcrumb"><a href="https://zovo.one">Home</a> / <a href="https://zovo.one/free-tools">Tools</a> / YAML to JSON Converter</div>
+<h1>YAML to JSON Converter</h1>
+<div class="meta-line">
+<span>By <strong>Michael Lip</strong></span>
+<span>Updated Mar 20, 2026</span>
+<span>8 min read</span>
+<span>100% Client-Side</span>
+</div>
+
+<nav id="toc">
+<h2>Contents</h2>
+<ul>
+<li><a href="#converter">Converter</a></li>
+<li><a href="#how-it-works">How It Works</a></li>
+<li><a href="#yaml-vs-json">YAML vs JSON</a></li>
+<li><a href="#features">Features</a></li>
+<li><a href="#use-cases">Common Use Cases</a></li>
+<li><a href="#syntax-guide">YAML Syntax Guide</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#related-tools">Related Tools</a></li>
+</ul>
+</nav>
+
+<!-- ==================== CONVERTER ==================== -->
+<h2 id="converter">Converter</h2>
+<div class="tool-card">
+<div class="direction-bar">
+<div class="direction-toggle">
+<button class="active" id="btnY2J" onclick="setDir('y2j')">YAML &rarr; JSON</button>
+<button id="btnJ2Y" onclick="setDir('j2y')">JSON &rarr; YAML</button>
+</div>
+<div class="options-bar">
+<select id="selIndent" onchange="convert()"><option value="2">2 spaces</option><option value="4" selected>4 spaces</option><option value="8">8 spaces</option><option value="tab">Tabs</option></select>
+<label><input type="checkbox" id="chkMinify" onchange="convert()"> Minify</label>
+<label><input type="checkbox" id="chkValidate" onchange="convert()"> Validate only</label>
+<label><input type="checkbox" id="chkDiff" onchange="toggleDiff()"> Diff</label>
+</div>
+</div>
+<div class="sample-bar">
+<button class="btn btn-sm btn-outline" onclick="loadSample('docker')">Docker Compose</button>
+<button class="btn btn-sm btn-outline" onclick="loadSample('anchors')">Anchors &amp; Aliases</button>
+<button class="btn btn-sm btn-outline" onclick="loadSample('multiline')">Multiline Strings</button>
+<button class="btn btn-sm btn-outline" onclick="loadSample('package')">package.json</button>
+<button class="btn btn-sm btn-outline" onclick="clearAll()">Clear</button>
+</div>
+<div class="error-bar" id="errBar"></div>
+<div class="editor-wrap">
+<div class="editor-panel">
+<div class="panel-header">
+<h3 id="lblIn">YAML Input</h3>
+<div class="panel-actions">
+<label class="btn btn-sm btn-outline" style="margin:0"><input type="file" accept=".yaml,.yml,.json,.txt" onchange="handleFile(event)" style="display:none"> Upload</label>
+<button class="btn btn-sm btn-outline" onclick="copyPanel('in')">Copy</button>
+</div>
+</div>
+<div class="editor-container" id="ecIn">
+<div class="line-numbers" id="lnIn"></div>
+<textarea id="taIn" placeholder="Paste your YAML here..." spellcheck="false" oninput="onInput()" onscroll="syncScroll('in')"></textarea>
+<div class="highlight-overlay" id="hlIn"></div>
+</div>
+</div>
+<div class="editor-panel">
+<div class="panel-header">
+<h3 id="lblOut">JSON Output</h3>
+<div class="panel-actions">
+<button class="btn btn-sm btn-outline" onclick="copyPanel('out')">Copy</button>
+<button class="btn btn-sm btn-outline" onclick="downloadOut()">Download</button>
+</div>
+</div>
+<div class="editor-container" id="ecOut">
+<div class="line-numbers" id="lnOut"></div>
+<textarea id="taOut" placeholder="Output appears here..." spellcheck="false" readonly onscroll="syncScroll('out')"></textarea>
+<div class="highlight-overlay" id="hlOut"></div>
+</div>
+</div>
+</div>
+<div class="status-bar">
+<span id="statusMsg" class="status-valid">Ready</span>
+<span id="charCount">Input: 0 chars | Output: 0 chars</span>
+</div>
+<div class="diff-container" id="diffView"></div>
+</div>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<h2 id="how-it-works">How It Works</h2>
+<div class="tool-card">
+<p>This converter parses your YAML or JSON entirely within your browser. No data leaves your device. The inline YAML parser processes your document line by line, handling indentation-based nesting to build a tree structure that maps directly to JSON objects and arrays.</p>
+<p>The parser resolves all YAML-specific constructs into their JSON equivalents: block mappings become JSON objects, sequences become arrays, multiline block scalars (<code>|</code> and <code>&gt;</code>) become strings with appropriate newlines, and anchors/aliases are dereferenced into their full values. For JSON input, the browser's native <code>JSON.parse</code> provides precise error messages with position information.</p>
+<p>Syntax highlighting runs on every keystroke through a lightweight overlay that color-codes structural elements: keys in green, strings in gold, numbers in blue, booleans in red, null in purple, and comments in gray.</p>
+</div>
+
+<!-- ==================== YAML VS JSON ==================== -->
+<h2 id="yaml-vs-json">YAML vs JSON</h2>
+<div class="tool-card">
+<p>Both <a href="https://en.wikipedia.org/wiki/YAML" target="_blank" rel="noopener">YAML</a> and <a href="https://en.wikipedia.org/wiki/JSON" target="_blank" rel="noopener">JSON</a> are data serialization formats, but they optimize for different goals. YAML prioritizes human readability with its indentation-based syntax, which is why tools like Kubernetes, Docker Compose, Ansible, and GitHub Actions chose it for configuration. JSON prioritizes machine parseability and is the standard for REST APIs, browser storage, and data interchange.</p>
+<h3>Key Differences</h3>
+<p><strong>Syntax:</strong> YAML uses indentation and colons; JSON uses braces, brackets, and quotes. <strong>Comments:</strong> YAML supports <code>#</code> comments; JSON has no comment syntax. <strong>Types:</strong> YAML auto-detects numbers, booleans, and null from bare values; JSON requires explicit syntax. <strong>Multiline:</strong> YAML has literal (<code>|</code>) and folded (<code>&gt;</code>) block scalars; JSON uses <code>\n</code> escapes. <strong>Reuse:</strong> YAML has anchors and aliases for deduplication; JSON has no equivalent.</p>
+<p>Per the <a href="https://yaml.org/spec/1.2.2/" target="_blank" rel="noopener">YAML 1.2 specification</a>, every valid JSON document is also valid YAML. Converting JSON to YAML is therefore straightforward, while YAML to JSON requires resolving comments, anchors, and type coercions.</p>
+</div>
+
+<!-- ==================== FEATURES ==================== -->
+<h2 id="features">Features</h2>
+<div class="tool-card">
+<h3>Bidirectional Conversion</h3>
+<p>Switch between YAML-to-JSON and JSON-to-YAML with one click. Content swaps automatically so you can round-trip data without copy-pasting.</p>
+<h3>Live Parsing</h3>
+<p>Output updates as you type with a short debounce. No submit button needed; every keystroke triggers conversion.</p>
+<h3>Syntax Highlighting</h3>
+<p>Both panels highlight structural elements in real time. This makes it easier to scan for mismatched types or locate specific keys in large documents.</p>
+<h3>Error Reporting with Line Numbers</h3>
+<p>Syntax errors show the exact line number and a description of the problem, helping you locate issues quickly in large config files.</p>
+<h3>Output Controls</h3>
+<p>Toggle between pretty-printed and minified JSON. Choose 2, 4, or 8 space indentation (or tabs). Download results as <code>.json</code> or <code>.yaml</code> files.</p>
+<h3>Validation Mode</h3>
+<p>Check whether your YAML or JSON is valid without generating output. Useful for quick syntax checks on CI config files before committing.</p>
+</div>
+
+<!-- ==================== USE CASES ==================== -->
+<h2 id="use-cases">Common Use Cases</h2>
+<div class="tool-card">
+<p><strong>Kubernetes Manifests:</strong> K8s resources are authored in YAML but tools like kubectl apply and the Kubernetes API also accept JSON. Converting between formats is routine when debugging or generating manifests programmatically.</p>
+<p><strong>CI/CD Pipelines:</strong> GitHub Actions, GitLab CI, and CircleCI all use YAML for workflow definitions. Converting to JSON simplifies programmatic generation and schema validation.</p>
+<p><strong>Docker Compose:</strong> Compose files are YAML-native, but converting to JSON lets you validate against the <a href="https://docs.docker.com/compose/compose-file/" target="_blank" rel="noopener">Compose specification schema</a>.</p>
+<p><strong>OpenAPI / Swagger:</strong> <a href="https://swagger.io/specification/" target="_blank" rel="noopener">OpenAPI specs</a> can be written in either format. This converter lets you switch to whichever format your toolchain expects.</p>
+<p><strong>Ansible Playbooks:</strong> Ansible uses YAML extensively. When integrating with REST APIs or external systems that expect JSON, conversion is needed.</p>
+</div>
+
+<!-- ==================== SYNTAX GUIDE ==================== -->
+<h2 id="syntax-guide">YAML Syntax Guide</h2>
+<div class="tool-card">
+<h3>Scalars</h3>
+<p>Strings (quoted or unquoted), integers, floats, booleans (<code>true</code>/<code>false</code>, <code>yes</code>/<code>no</code>, <code>on</code>/<code>off</code>), and null (<code>null</code>, <code>~</code>, or empty value).</p>
+<h3>Maps and Sequences</h3>
+<p>Maps use <code>key: value</code> syntax. Sequences use <code>- item</code> syntax. Both nest via indentation. Flow syntax: <code>{key: value}</code> for inline maps, <code>[a, b, c]</code> for inline sequences.</p>
+<h3>Multiline Strings</h3>
+<p>Literal block (<code>|</code>) preserves all newlines. Folded block (<code>&gt;</code>) joins lines with spaces. Chomping indicators: <code>|-</code> strips trailing newline, <code>|+</code> keeps all trailing newlines, default clips to single trailing newline.</p>
+<h3>Anchors and Aliases</h3>
+<p>Define with <code>&amp;name</code>, reference with <code>*name</code>. Merge keys (<code>&lt;&lt;: *name</code>) merge an anchor's map into the current map, reducing repetition in large configs.</p>
+</div>
+
+<!-- ==================== FAQ ==================== -->
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="tool-card" id="faqSection">
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">What is YAML and how does it differ from JSON?</div>
+<div class="faq-a">YAML (YAML Ain't Markup Language) is a human-readable data serialization format that uses indentation to represent structure, while JSON uses braces and brackets. YAML supports comments, multiline strings, and anchors/aliases, making it popular for configuration files. JSON is more widely supported in APIs and web applications.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">How do I convert YAML to JSON?</div>
+<div class="faq-a">Paste your YAML content into the left panel. The tool automatically converts it to valid JSON in real time. You can also upload .yaml or .yml files directly. Copy the output to your clipboard or download it as a .json file.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">Does this converter support YAML anchors and aliases?</div>
+<div class="faq-a">Yes. The inline YAML parser handles anchors (defined with &amp;name) and aliases (referenced with *name). Anchors let you define a value once and reuse it throughout your document. The converter resolves all aliases into their full values in the JSON output.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">Is my data safe when using this converter?</div>
+<div class="faq-a">Yes. Everything runs in your browser using client-side JavaScript. Your data is never sent to any server. There are no analytics, no cookies, and no server-side processing. Your configuration data stays on your device.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">Can I convert JSON back to YAML?</div>
+<div class="faq-a">Yes. Click the "JSON to YAML" direction toggle, paste your JSON, and the tool generates properly formatted YAML with correct indentation. You control the indent size for the output.</div>
+</div>
+<div class="faq-item" onclick="this.classList.toggle('open')">
+<div class="faq-q">What YAML features are supported?</div>
+<div class="faq-a">Maps, sequences, quoted/unquoted strings, numbers, booleans, null, multiline block scalars (| and &gt;), flow syntax ({} and []), comments, anchors/aliases, and merge keys. Nested structures of any depth are handled correctly.</div>
+</div>
+</div>
+
+<!-- ==================== RELATED TOOLS ==================== -->
+<h2 id="related-tools">Related Tools</h2>
+<div class="related-grid">
+<a href="/free-tools/json-formatter/" class="related-card"><h3>JSON Formatter</h3><p>Pretty-print and validate JSON data</p></a>
+<a href="/free-tools/yaml-validator/" class="related-card"><h3>YAML Validator</h3><p>Validate YAML syntax and structure</p></a>
+<a href="/free-tools/csv-to-json-converter/" class="related-card"><h3>CSV to JSON Converter</h3><p>Convert CSV data to JSON format</p></a>
+</div>
+
+<div class="tool-card" style="margin-top:40px">
+<h3>Privacy Note</h3>
+<p style="margin:0;font-size:.85rem;color:#888">This tool runs entirely in your browser. Your data is never sent to any server, stored in cookies, or tracked by analytics. All processing happens locally on your device using client-side JavaScript.</p>
+</div>
+<div class="tool-card">
+<h3>Browser Compatibility</h3>
+<p style="margin:0;font-size:.85rem;color:#888">Works in all modern browsers: Chrome 80+, Firefox 78+, Safari 14+, Edge 80+, and Opera 67+. Requires JavaScript. Mobile browsers are fully supported with responsive stacked layout.</p>
+</div>
+</div>
+
+<footer>
+<div class="footer-inner">
+<div class="footer-grid">
+<div class="footer-col">
+<h4>About</h4>
+<p style="font-size:.8rem;color:#666;margin:0">Built by <strong>Michael Lip</strong>. Free browser-based developer tools with no sign-ups, no tracking, and no server-side processing.</p>
+</div>
+<div class="footer-col">
+<h4>Popular Tools</h4>
+<a href="/free-tools/json-formatter/">JSON Formatter</a>
+<a href="/free-tools/base64-encoder-decoder/">Base64 Encoder</a>
+<a href="/free-tools/regex-tester/">Regex Tester</a>
+<a href="/free-tools/csv-to-json-converter/">CSV to JSON</a>
+</div>
+<div class="footer-col">
+<h4>Resources</h4>
+<a href="https://yaml.org/spec/1.2.2/" target="_blank" rel="noopener">YAML 1.2 Specification</a>
+<a href="https://www.json.org/" target="_blank" rel="noopener">JSON Official Site</a>
+<a href="https://en.wikipedia.org/wiki/YAML" target="_blank" rel="noopener">YAML on Wikipedia</a>
+</div>
+</div>
+<div class="footer-bottom">
+<div>&copy; 2026 Zovo &middot; Free Browser Tools &middot; zovo.one</div>
+<div class="update-history">Last updated: March 20, 2026 &middot; v1.0 &mdash; Initial release with full YAML 1.2 parsing, bidirectional conversion, syntax highlighting, anchors/aliases, and multiline block scalar support.</div>
+</div>
+</div>
+</footer>
+
+<script>
+/* ===== STATE ===== */
+let dir='y2j',prevOut='',convertTimer=null;
+const $=id=>document.getElementById(id);
+
+/* ===== YAML PARSER ===== */
+class YP{
+constructor(s){this.lines=s.split('\n');this.anchors={}}
+parse(){
+  let i=0;
+  while(i<this.lines.length&&this.blankOrComment(this.lines[i]))i++;
+  if(i>=this.lines.length)return null;
+  if(this.lines[i].trim()==='---'||this.lines[i].trim()==='...')i++;
+  const r=this.parseVal(i,0);
+  return r.v;
+}
+blankOrComment(l){if(l==null)return true;const t=l.trim();return t===''||t[0]==='#'}
+indent(l){let c=0;for(let i=0;i<l.length;i++){if(l[i]===' ')c++;else if(l[i]==='\t')c+=2;else break}return c}
+parseVal(start,minI){
+  while(start<this.lines.length&&this.blankOrComment(this.lines[start]))start++;
+  if(start>=this.lines.length)return{v:null,i:start};
+  const t=this.lines[start].trim();
+  if(t[0]==='{'){const f=this.collectFlow(start,'{','}');return{v:this.flowMap(f.t),i:f.e+1}}
+  if(t[0]==='['){const f=this.collectFlow(start,'[',']');return{v:this.flowSeq(f.t),i:f.e+1}}
+  if(t[0]==='-'&&(t.length===1||t[1]===' '))return this.parseSeq(start,this.indent(this.lines[start]));
+  if(this.isMapLine(t))return this.parseMap(start,this.indent(this.lines[start]));
+  return{v:this.scalar(t),i:start+1};
+}
+isMapLine(t){
+  if(t[0]==='-'&&(t.length===1||t[1]===' '))return false;
+  if(t[0]==='"'||t[0]==="'"){
+    const q=t[0];let e=1;
+    while(e<t.length){if(t[e]==='\\'&&q==='"'){e+=2;continue}if(t[e]===q){e++;break}e++}
+    while(e<t.length&&t[e]===' ')e++;
+    return e<t.length&&t[e]===':';
+  }
+  if(/^[^#"'{[\]]*?:(\s|$)/.test(t))return true;
+  return false;
+}
+extractKV(t){
+  let key,val;
+  if(t[0]==='"'||t[0]==="'"){
+    const q=t[0];let e=1,k='';
+    while(e<t.length){
+      if(t[e]==='\\'&&q==='"'){e++;if(e<t.length){const m={n:'\n',t:'\t',r:'\r','\\':'\\','"':'"'};k+=m[t[e]]||t[e]}e++;continue}
+      if(t[e]===q){e++;break}k+=t[e];e++;
+    }
+    key=k;while(e<t.length&&t[e]===' ')e++;if(t[e]===':')e++;
+    val=t.slice(e).trim();
+  }else{
+    const m=t.match(/^(.+?):\s*(.*)/);
+    if(m){key=m[1].trim();val=m[2].trim()}
+    else if(t.endsWith(':')){key=t.slice(0,-1).trim();val=''}
+    else{key=t;val=''}
+  }
+  val=this.stripComment(val);
+  let anchor=null;
+  if(val&&val[0]==='&'){const p=val.match(/^&(\S+)\s*(.*)/);if(p){anchor=p[1];val=p[2]}}
+  return{key,val,anchor};
+}
+stripComment(s){
+  if(!s)return s;
+  let dq=false,sq=false;
+  for(let i=0;i<s.length;i++){
+    if(s[i]==='"'&&!sq)dq=!dq;else if(s[i]==="'"&&!dq)sq=!sq;
+    else if(s[i]==='#'&&!dq&&!sq&&i>0&&s[i-1]===' ')return s.slice(0,i).trim();
+  }
+  return s;
+}
+parseMap(start,baseI){
+  const res={};let i=start;
+  while(i<this.lines.length){
+    while(i<this.lines.length&&this.blankOrComment(this.lines[i]))i++;
+    if(i>=this.lines.length)break;
+    const li=this.indent(this.lines[i]);
+    if(li!==baseI)break;
+    const t=this.lines[i].trim();
+    if(!this.isMapLine(t))break;
+    const{key,val,anchor}=this.extractKV(t);
+    if(val===''||val===null||val===undefined){
+      i++;
+      while(i<this.lines.length&&this.blankOrComment(this.lines[i]))i++;
+      if(i<this.lines.length&&this.indent(this.lines[i])>baseI){
+        const sub=this.parseVal(i,this.indent(this.lines[i]));
+        let v=sub.v;if(anchor)this.anchors[anchor]=v;
+        if(key==='<<'&&typeof v==='object'&&v&&!Array.isArray(v)){for(const mk in v)if(!(mk in res))res[mk]=v[mk]}
+        else res[key]=v;
+        i=sub.i;
+      }else{
+        let v=null;if(anchor)this.anchors[anchor]=v;res[key]=v;
+      }
+    }else if(this.isBlockScalarInd(val)){
+      const bs=this.blockScalar(i,baseI,val);
+      let v=bs.v;if(anchor)this.anchors[anchor]=v;res[key]=v;i=bs.i;
+    }else if(val[0]==='*'){
+      const nm=val.slice(1).split(/\s/)[0];
+      let v=this.anchors[nm]!=null?JSON.parse(JSON.stringify(this.anchors[nm])):null;
+      if(anchor)this.anchors[anchor]=v;
+      if(key==='<<'&&typeof v==='object'&&v&&!Array.isArray(v)){for(const mk in v)if(!(mk in res))res[mk]=v[mk]}
+      else res[key]=v;
+      i++;
+    }else if(val[0]==='{'){
+      const f=this.collectFlowVal(val,i);let v=this.flowMap(f.t);
+      if(anchor)this.anchors[anchor]=v;res[key]=v;i=f.e+1;
+    }else if(val[0]==='['){
+      const f=this.collectFlowVal(val,i);let v=this.flowSeq(f.t);
+      if(anchor)this.anchors[anchor]=v;res[key]=v;i=f.e+1;
+    }else{
+      let v=this.scalar(val);if(anchor)this.anchors[anchor]=v;res[key]=v;i++;
+    }
+  }
+  return{v:res,i};
+}
+parseSeq(start,baseI){
+  const res=[];let i=start;
+  while(i<this.lines.length){
+    while(i<this.lines.length&&this.blankOrComment(this.lines[i]))i++;
+    if(i>=this.lines.length)break;
+    const li=this.indent(this.lines[i]);
+    if(li!==baseI)break;
+    const t=this.lines[i].trim();
+    if(t[0]!=='-'||(t.length>1&&t[1]!==' '))break;
+    let after=t==='-'?'':t.slice(2).trim();
+    after=this.stripComment(after);
+    let anchor=null;
+    if(after&&after[0]==='&'){const p=after.match(/^&(\S+)\s*(.*)/);if(p){anchor=p[1];after=p[2]}}
+    if(!after){
+      i++;
+      while(i<this.lines.length&&this.blankOrComment(this.lines[i]))i++;
+      if(i<this.lines.length&&this.indent(this.lines[i])>baseI){
+        const sub=this.parseVal(i,this.indent(this.lines[i]));
+        let v=sub.v;if(anchor)this.anchors[anchor]=v;res.push(v);i=sub.i;
+      }else{let v=null;if(anchor)this.anchors[anchor]=v;res.push(v)}
+    }else if(after[0]==='{'){
+      const f=this.collectFlowVal(after,i);let v=this.flowMap(f.t);if(anchor)this.anchors[anchor]=v;res.push(v);i=f.e+1;
+    }else if(after[0]==='['){
+      const f=this.collectFlowVal(after,i);let v=this.flowSeq(f.t);if(anchor)this.anchors[anchor]=v;res.push(v);i=f.e+1;
+    }else if(after[0]==='*'){
+      const nm=after.slice(1).split(/\s/)[0];
+      let v=this.anchors[nm]!=null?JSON.parse(JSON.stringify(this.anchors[nm])):null;
+      if(anchor)this.anchors[anchor]=v;res.push(v);i++;
+    }else if(this.isMapLine(after)){
+      const vI=baseI+2;
+      const vLines=[' '.repeat(vI)+after];
+      let j=i+1;
+      while(j<this.lines.length){
+        if(this.blankOrComment(this.lines[j])){vLines.push(this.lines[j]);j++;continue}
+        if(this.indent(this.lines[j])>baseI){vLines.push(this.lines[j]);j++}else break;
+      }
+      const sub=new YP(vLines.join('\n'));sub.anchors=this.anchors;
+      let v=sub.parse();Object.assign(this.anchors,sub.anchors);
+      if(anchor)this.anchors[anchor]=v;res.push(v);i=j;
+    }else if(this.isBlockScalarInd(after)){
+      const bs=this.blockScalar(i,baseI,after);let v=bs.v;if(anchor)this.anchors[anchor]=v;res.push(v);i=bs.i;
+    }else{
+      let v=this.scalar(after);if(anchor)this.anchors[anchor]=v;res.push(v);i++;
+    }
+  }
+  return{v:res,i};
+}
+isBlockScalarInd(s){return/^[|>][-+0-9]*$/.test(s.trim())}
+blockScalar(startLine,baseI,ind){
+  const isLit=ind[0]==='|';
+  const chomp=ind.includes('-')?'strip':ind.includes('+')?'keep':'clip';
+  let i=startLine+1;
+  while(i<this.lines.length&&this.lines[i].trim()==='')i++;
+  if(i>=this.lines.length)return{v:'',i};
+  const cI=this.indent(this.lines[i]);
+  if(cI<=baseI)return{v:'',i};
+  const bl=[];
+  while(i<this.lines.length){
+    if(this.lines[i].trim()===''){bl.push('');i++;continue}
+    if(this.indent(this.lines[i])<cI)break;
+    bl.push(this.lines[i].slice(cI));i++;
+  }
+  let txt;
+  if(isLit){txt=bl.join('\n')}
+  else{
+    let r='',pb=false;
+    for(const l of bl){
+      if(l===''){r+='\n';pb=true}
+      else if(l[0]===' '){if(r&&!r.endsWith('\n'))r+='\n';r+=l+'\n';pb=false}
+      else{if(pb){r+=l;pb=false}else{if(r&&r.length>0&&!r.endsWith('\n'))r+=' ';r+=l}}
+    }
+    txt=r;
+  }
+  if(chomp==='strip')txt=txt.replace(/\n+$/,'');
+  else if(chomp==='clip')txt=txt.replace(/\n+$/,'')+'\n';
+  else txt+='\n';
+  return{v:txt,i};
+}
+collectFlow(start,o,c){
+  let d=0,t='';
+  for(let i=start;i<this.lines.length;i++){
+    const l=this.lines[i].trim();
+    for(const ch of l){if(ch===o)d++;if(ch===c)d--}
+    t+=(t?' ':'')+l;
+    if(d<=0)return{t,e:i};
+  }
+  return{t,e:this.lines.length-1};
+}
+collectFlowVal(s,startLine){
+  const o=s[0],c=o==='{'?'}':']';
+  let d=0,t=s;
+  for(const ch of t){if(ch===o)d++;if(ch===c)d--}
+  let i=startLine;
+  while(d>0&&i+1<this.lines.length){
+    i++;const l=this.lines[i].trim();
+    for(const ch of l){if(ch===o)d++;if(ch===c)d--}
+    t+=' '+l;
+  }
+  return{t,e:i};
+}
+flowMap(s){
+  s=s.trim();if(s[0]==='{')s=s.slice(1);if(s[s.length-1]==='}')s=s.slice(0,-1);s=s.trim();
+  if(!s)return{};
+  const res={},items=this.splitFlow(s);
+  for(const item of items){
+    const ci=this.flowColon(item);if(ci===-1)continue;
+    let k=item.slice(0,ci).trim(),v=item.slice(ci+1).trim();
+    k=this.scalar(k);if(typeof k!=='string')k=String(k);
+    if(v[0]==='{')res[k]=this.flowMap(v);
+    else if(v[0]==='[')res[k]=this.flowSeq(v);
+    else res[k]=this.scalar(v);
+  }
+  return res;
+}
+flowSeq(s){
+  s=s.trim();if(s[0]==='[')s=s.slice(1);if(s[s.length-1]===']')s=s.slice(0,-1);s=s.trim();
+  if(!s)return[];
+  return this.splitFlow(s).map(it=>{
+    it=it.trim();
+    if(it[0]==='{')return this.flowMap(it);
+    if(it[0]==='[')return this.flowSeq(it);
+    return this.scalar(it);
+  });
+}
+splitFlow(s){
+  const items=[];let d=0,cur='',dq=false,sq=false;
+  for(let i=0;i<s.length;i++){
+    const c=s[i];
+    if(c==='"'&&!sq)dq=!dq;else if(c==="'"&&!dq)sq=!sq;
+    if(!dq&&!sq){if(c==='{'||c==='[')d++;else if(c==='}'||c===']')d--;else if(c===','&&d===0){items.push(cur);cur='';continue}}
+    cur+=c;
+  }
+  if(cur.trim())items.push(cur);
+  return items;
+}
+flowColon(s){
+  let d=0,dq=false,sq=false;
+  for(let i=0;i<s.length;i++){
+    const c=s[i];
+    if(c==='"'&&!sq)dq=!dq;else if(c==="'"&&!dq)sq=!sq;
+    if(!dq&&!sq){
+      if(c==='{'||c==='[')d++;else if(c==='}'||c===']')d--;
+      else if(c===':'&&d===0&&(i+1>=s.length||s[i+1]===' '||s[i+1]===','||s[i+1]==='}'||s[i+1]===']'))return i;
+    }
+  }
+  return-1;
+}
+scalar(s){
+  if(s==null)return null;s=s.trim();
+  if(!s)return null;
+  if(s==='~'||s==='null'||s==='Null'||s==='NULL')return null;
+  if(/^(true|True|TRUE|yes|Yes|YES|on|On|ON)$/.test(s))return true;
+  if(/^(false|False|FALSE|no|No|NO|off|Off|OFF)$/.test(s))return false;
+  if(s[0]==='*'){const n=s.slice(1).trim();return this.anchors[n]!=null?JSON.parse(JSON.stringify(this.anchors[n])):null}
+  if((s[0]==='"'&&s[s.length-1]==='"')||(s[0]==="'"&&s[s.length-1]==="'")){
+    const q=s[0];let inner=s.slice(1,-1);
+    if(q==='"')inner=inner.replace(/\\n/g,'\n').replace(/\\t/g,'\t').replace(/\\r/g,'\r').replace(/\\\\/g,'\\').replace(/\\"/g,'"');
+    else inner=inner.replace(/''/g,"'");
+    return inner;
+  }
+  if(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(s)){const n=Number(s);if(!isNaN(n))return n}
+  if(/^0o[0-7]+$/i.test(s))return parseInt(s.slice(2),8);
+  if(/^0x[0-9a-fA-F]+$/.test(s))return parseInt(s,16);
+  if(s==='.inf'||s==='.Inf'||s==='.INF')return Infinity;
+  if(s==='-.inf'||s==='-.Inf'||s==='-.INF')return-Infinity;
+  if(s==='.nan'||s==='.NaN'||s==='.NAN')return NaN;
+  return s;
+}
+}
+
+function parseYAML(s){if(!s.trim())return null;return new YP(s).parse()}
+
+/* ===== JSON TO YAML ===== */
+function j2y(o,ind,lv){
+  lv=lv||0;ind=ind||'  ';
+  const pad=ind.repeat(lv),np=ind.repeat(lv+1);
+  if(o===null||o===undefined)return'null';
+  if(typeof o==='boolean')return o?'true':'false';
+  if(typeof o==='number'){if(o===Infinity)return'.inf';if(o===-Infinity)return'-.inf';if(isNaN(o))return'.nan';return String(o)}
+  if(typeof o==='string'){
+    if(o==='')return"''";
+    if(o.includes('\n')){
+      const ls=o.split('\n');let ind2='|';
+      if(ls[ls.length-1]==='')ls.pop();else ind2='|-';
+      return ind2+'\n'+ls.map(l=>np+l).join('\n');
+    }
+    const needQ=/^[\s"'{}\[\]&*?|>,!%@`#-]/.test(o)||/:\s/.test(o)||o.endsWith(':')||
+      /^(true|false|null|yes|no|on|off|True|False|Null|Yes|No|On|Off|TRUE|FALSE|NULL|YES|NO|ON|OFF)$/.test(o)||
+      /^[\d.eE+-]+$/.test(o)||o==='~';
+    if(needQ)return'"'+o.replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,'\\n').replace(/\t/g,'\\t')+'"';
+    return o;
+  }
+  if(Array.isArray(o)){
+    if(!o.length)return'[]';
+    let r='';
+    for(const item of o){
+      if(item!==null&&typeof item==='object'&&!Array.isArray(item)){
+        const inner=j2y(item,ind,lv+1);
+        const nl=inner.indexOf('\n');
+        if(nl===-1)r+=pad+'- '+inner.trim()+'\n';
+        else r+=pad+'- '+inner.slice(0,nl).trim()+'\n'+inner.slice(nl+1);
+      }else if(Array.isArray(item)){
+        r+=pad+'-\n'+j2y(item,ind,lv+1);
+      }else{
+        r+=pad+'- '+j2y(item,ind,lv+1)+'\n';
+      }
+    }
+    return r;
+  }
+  if(typeof o==='object'){
+    const keys=Object.keys(o);if(!keys.length)return'{}';
+    let r='';
+    for(const k of keys){
+      const yk=/[:{}\[\],&*?|>!%@`#'"\s-]/.test(k)||k===''?'"'+k.replace(/"/g,'\\"')+'"':k;
+      const v=o[k];
+      if(v!==null&&typeof v==='object')r+=pad+yk+':\n'+j2y(v,ind,lv+1);
+      else r+=pad+yk+': '+j2y(v,ind,lv+1)+'\n';
+    }
+    return r;
+  }
+  return String(o);
+}
+
+/* ===== HIGHLIGHTING ===== */
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function hlVal(v){
+  if(!v)return'';
+  const t=v.trim();
+  if(/^(true|false|yes|no|on|off|True|False|Yes|No|On|Off)$/i.test(t))return'<span class="hl-bool">'+esc(v)+'</span>';
+  if(t==='null'||t==='~'||t==='Null')return'<span class="hl-null">'+esc(v)+'</span>';
+  if(/^-?[\d.eE+-]+$/.test(t)&&t!==''&&t!=='-')return'<span class="hl-number">'+esc(v)+'</span>';
+  if((t[0]==='"'&&t[t.length-1]==='"')||(t[0]==="'"&&t[t.length-1]==="'"))return'<span class="hl-string">'+esc(v)+'</span>';
+  if(t[0]==='&'||t[0]==='*')return'<span class="hl-anchor">'+esc(v)+'</span>';
+  return'<span class="hl-string">'+esc(v)+'</span>';
+}
+function hlYAML(text){
+  return text.split('\n').map(line=>{
+    if(line.trim()[0]==='#')return'<span class="hl-comment">'+esc(line)+'</span>';
+    const kv=line.match(/^(\s*)([\w"'][^:]*?)(:)(\s*)(.*)/);
+    if(kv)return esc(kv[1])+'<span class="hl-key">'+esc(kv[2])+'</span><span class="hl-punct">:</span>'+esc(kv[4])+hlVal(kv[5]);
+    const sq=line.match(/^(\s*)(-)(\s+)(.*)/);
+    if(sq)return esc(sq[1])+'<span class="hl-punct">-</span>'+esc(sq[3])+hlVal(sq[4]);
+    return esc(line);
+  }).join('\n');
+}
+function hlJSON(text){
+  return text.split('\n').map(line=>{
+    let r='',i=0;
+    while(i<line.length){
+      if(line[i]==='"'){
+        let e=i+1;while(e<line.length&&!(line[e]==='"'&&line[e-1]!=='\\'))e++;e++;
+        const s=line.slice(i,e),af=line.slice(e).trim();
+        r+=(af[0]===':'?'<span class="hl-key">':'<span class="hl-string">')+esc(s)+'</span>';i=e;
+      }else if(/[{}\[\],:]/.test(line[i])){
+        r+='<span class="hl-punct">'+esc(line[i])+'</span>';i++;
+      }else if(/[\d-]/.test(line[i])&&(i===0||/[\s:,\[]/.test(line[i-1]))){
+        let e=i;while(e<line.length&&/[\d.eE+-]/.test(line[e]))e++;
+        r+='<span class="hl-number">'+esc(line.slice(i,e))+'</span>';i=e;
+      }else{
+        const w=line.slice(i).match(/^(true|false)/);
+        if(w){r+='<span class="hl-bool">'+w[0]+'</span>';i+=w[0].length}
+        else{const n=line.slice(i).match(/^null/);if(n){r+='<span class="hl-null">null</span>';i+=4}else{r+=esc(line[i]);i++}}
+      }
+    }
+    return r;
+  }).join('\n');
+}
+
+/* ===== LINE NUMBERS ===== */
+function updLN(taId,lnId){
+  const ta=$(taId),ln=$(lnId);
+  const n=ta.value.split('\n').length;
+  let h='';for(let i=1;i<=n;i++)h+='<div>'+i+'</div>';
+  ln.innerHTML=h;
+}
+function syncScroll(w){
+  if(w==='in'){$('lnIn').scrollTop=$('taIn').scrollTop;$('hlIn').scrollTop=$('taIn').scrollTop}
+  else{$('lnOut').scrollTop=$('taOut').scrollTop;$('hlOut').scrollTop=$('taOut').scrollTop}
+}
+
+/* ===== CONVERSION ===== */
+function onInput(){clearTimeout(convertTimer);convertTimer=setTimeout(convert,120);updLN('taIn','lnIn');updHL('in')}
+function convert(){
+  const input=$('taIn').value,out=$('taOut'),err=$('errBar'),stat=$('statusMsg');
+  const validate=$('chkValidate').checked,minify=$('chkMinify').checked;
+  const indV=$('selIndent').value,indent=indV==='tab'?'\t':Number(indV);
+  err.classList.remove('visible');err.textContent='';
+  if(!input.trim()){out.value='';stat.innerHTML='<span class="status-valid">Ready</span>';updLN('taOut','lnOut');updHL('out');updCC();return}
+  try{
+    let result;
+    if(dir==='y2j'){
+      const parsed=parseYAML(input);
+      if(validate){out.value='';stat.innerHTML='<span class="status-valid">Valid YAML</span>';updLN('taOut','lnOut');updHL('out');updCC();return}
+      result=minify?JSON.stringify(parsed):JSON.stringify(parsed,null,indent);
+    }else{
+      const parsed=JSON.parse(input);
+      if(validate){out.value='';stat.innerHTML='<span class="status-valid">Valid JSON</span>';updLN('taOut','lnOut');updHL('out');updCC();return}
+      const indS=indV==='tab'?'\t':' '.repeat(Number(indV));
+      result=j2y(parsed,indS,0).trim();
+    }
+    prevOut=out.value;out.value=result;
+    stat.innerHTML='<span class="status-valid">Converted</span>';
+    if($('chkDiff').checked)updDiff();
+  }catch(e){
+    let msg=e.message||'Parse error';
+    const lm=msg.match(/line (\d+)/i)||msg.match(/position (\d+)/);
+    err.innerHTML=lm?'<span class="error-line">Line '+lm[1]+':</span> '+esc(msg):esc(msg);
+    err.classList.add('visible');
+    stat.innerHTML='<span class="status-invalid">Error</span>';
+  }
+  updLN('taOut','lnOut');updHL('out');updCC();
+}
+function updCC(){
+  const ic=$('taIn').value.length,oc=$('taOut').value.length;
+  $('charCount').textContent='Input: '+ic.toLocaleString()+' chars | Output: '+oc.toLocaleString()+' chars';
+}
+function updHL(w){
+  if(w==='in')$('hlIn').innerHTML=dir==='y2j'?hlYAML($('taIn').value):hlJSON($('taIn').value);
+  else $('hlOut').innerHTML=dir==='y2j'?hlJSON($('taOut').value):hlYAML($('taOut').value);
+}
+
+/* ===== DIFF ===== */
+function toggleDiff(){const d=$('diffView');if($('chkDiff').checked){d.classList.add('visible');updDiff()}else d.classList.remove('visible')}
+function updDiff(){
+  const p=prevOut.split('\n'),c=$('taOut').value.split('\n'),mx=Math.max(p.length,c.length);
+  let h='';
+  for(let i=0;i<mx;i++){
+    const a=p[i],b=c[i];
+    if(a===undefined)h+='<div class="diff-add">+ '+esc(b)+'</div>';
+    else if(b===undefined)h+='<div class="diff-remove">- '+esc(a)+'</div>';
+    else if(a!==b){h+='<div class="diff-remove">- '+esc(a)+'</div><div class="diff-add">+ '+esc(b)+'</div>'}
+    else h+='<div class="diff-context">  '+esc(b)+'</div>';
+  }
+  $('diffView').innerHTML=h;
+}
+
+/* ===== DIRECTION ===== */
+function setDir(d){
+  dir=d;
+  $('btnY2J').classList.toggle('active',d==='y2j');
+  $('btnJ2Y').classList.toggle('active',d==='j2y');
+  $('lblIn').textContent=d==='y2j'?'YAML Input':'JSON Input';
+  $('lblOut').textContent=d==='y2j'?'JSON Output':'YAML Output';
+  $('taIn').placeholder=d==='y2j'?'Paste your YAML here...':'Paste your JSON here...';
+  $('taOut').placeholder=d==='y2j'?'JSON output...':'YAML output...';
+  const tmp=$('taIn').value;$('taIn').value=$('taOut').value;$('taOut').value=tmp;
+  onInput();convert();
+}
+
+/* ===== SAMPLES ===== */
+const samples={
+docker:`# Docker Compose configuration
+version: "3.8"
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    environment:
+      NODE_ENV: production
+      DEBUG: false
+    restart: always
+  database:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret123
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
+    driver: local`,
+anchors:`# Anchors and aliases
+defaults: &defaults
+  timeout: 30
+  retries: 3
+  logging: true
+
+development:
+  <<: *defaults
+  debug: true
+  database:
+    host: localhost
+    port: 5432
+
+production:
+  <<: *defaults
+  debug: false
+  database:
+    host: db.example.com
+    port: 5432
+
+users:
+  - &admin
+    name: Alice
+    role: admin
+  - name: Bob
+    role: user
+  - *admin`,
+multiline:`# Multiline string examples
+literal_block: |
+  This is a literal block.
+  Line breaks are preserved.
+  Indentation is stripped.
+
+folded_block: >
+  This is a folded block.
+  Lines are joined with spaces.
+  Blank lines create paragraphs.
+
+stripped: |-
+  No trailing newline
+  after this block
+
+description: "Inline with\\nnewline escapes"
+notes: 'Single quoted: no escapes except ''apostrophe'''`,
+package:`{
+  "name": "my-project",
+  "version": "2.1.0",
+  "description": "A sample project configuration",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development",
+    "test": "jest --coverage",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "private": true
+}`
+};
+function loadSample(name){
+  const isJson=name==='package';
+  if(isJson&&dir==='y2j'){setDir('j2y');setTimeout(()=>{$('taIn').value=samples[name];onInput();convert()},50);return}
+  if(!isJson&&dir==='j2y'){setDir('y2j');setTimeout(()=>{$('taIn').value=samples[name];onInput();convert()},50);return}
+  $('taIn').value=samples[name];onInput();convert();
+}
+function clearAll(){
+  $('taIn').value='';$('taOut').value='';prevOut='';
+  $('errBar').classList.remove('visible');
+  $('statusMsg').innerHTML='<span class="status-valid">Ready</span>';
+  updLN('taIn','lnIn');updLN('taOut','lnOut');updHL('in');updHL('out');updCC();
+}
+
+/* ===== COPY & DOWNLOAD ===== */
+function copyPanel(w){
+  const el=$(w==='in'?'taIn':'taOut');
+  navigator.clipboard.writeText(el.value).then(()=>{
+    const btn=el.closest('.editor-panel').querySelector('.panel-actions .btn-outline:last-of-type');
+    if(!btn)return;const orig=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=orig,1200);
+  });
+}
+function downloadOut(){
+  const o=$('taOut').value;if(!o)return;
+  const ext=dir==='y2j'?'.json':'.yaml',mime=dir==='y2j'?'application/json':'text/yaml';
+  const b=new Blob([o],{type:mime}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download='output'+ext;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
+}
+
+/* ===== FILE UPLOAD ===== */
+function handleFile(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const txt=ev.target.result,ext=f.name.split('.').pop().toLowerCase();
+    if(ext==='json'&&dir==='y2j'){setDir('j2y');setTimeout(()=>{$('taIn').value=txt;onInput();convert()},50)}
+    else if((ext==='yaml'||ext==='yml')&&dir==='j2y'){setDir('y2j');setTimeout(()=>{$('taIn').value=txt;onInput();convert()},50)}
+    else{$('taIn').value=txt;onInput();convert()}
+  };
+  r.readAsText(f);e.target.value='';
+}
+
+/* ===== DRAG & DROP ===== */
+document.addEventListener('DOMContentLoaded',()=>{
+  ['ecIn','ecOut'].forEach(id=>{
+    const el=$(id);
+    el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('dragover')});
+    el.addEventListener('dragleave',()=>el.classList.remove('dragover'));
+    el.addEventListener('drop',e=>{
+      e.preventDefault();el.classList.remove('dragover');
+      const f=e.dataTransfer.files[0];if(!f)return;
+      const r=new FileReader();r.onload=ev=>{$('taIn').value=ev.target.result;onInput();convert()};r.readAsText(f);
+    });
+  });
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'})});
+  });
+  updLN('taIn','lnIn');updLN('taOut','lnOut');
+});
+</script>
+</body>
+</html>
