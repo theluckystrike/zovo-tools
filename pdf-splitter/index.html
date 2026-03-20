@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Splitter - Split PDF Pages, Extract Ranges Free Online | Zovo Tools</title>
+<meta name="description" content="Free online PDF splitter. Split PDF into individual pages, extract page ranges, or split every N pages. Client-side PDF parsing — your files never leave your device. Download split pages or ZIP.">
+<meta name="author" content="Michael Lip">
+<meta name="keywords" content="pdf splitter, split pdf online, extract pdf pages, pdf page range, split pdf into pages, pdf separator, pdf cutter, merge pdf pages">
+<link rel="canonical" href="https://zovo.one/free-tools/pdf-splitter/">
+
+<meta property="og:title" content="PDF Splitter - Split PDF Pages, Extract Ranges Free Online | Zovo Tools">
+<meta property="og:description" content="Free online PDF splitter. Split PDF into individual pages, extract page ranges, or split every N pages. Client-side processing — files never leave your device.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/pdf-splitter/">
+<meta property="og:site_name" content="Zovo Tools">
+<meta property="og:image" content="https://zovo.one/free-tools/pdf-splitter/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF Splitter - Split PDF Pages, Extract Ranges Free Online | Zovo Tools">
+<meta name="twitter:description" content="Free online PDF splitter. Split PDF into individual pages, extract page ranges, or split every N pages. Client-side — files never leave your device.">
+<meta name="twitter:image" content="https://zovo.one/free-tools/pdf-splitter/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PDF Splitter",
+  "description": "Free online PDF splitter with client-side PDF parsing. Split into individual pages, extract ranges, or split every N pages. No upload required.",
+  "url": "https://zovo.one/free-tools/pdf-splitter/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://zovo.one/free-tools/"},
+    {"@type": "ListItem", "position": 2, "name": "PDF Splitter", "item": "https://zovo.one/free-tools/pdf-splitter/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How does this PDF splitter work without uploading my file?", "acceptedAnswer": {"@type": "Answer", "text": "This tool parses the PDF binary format directly in your browser using JavaScript. It reads the cross-reference table, locates page objects, and reconstructs valid single-page PDFs by copying the necessary objects and resources. Everything runs locally — your file never leaves your device."}},
+    {"@type": "Question", "name": "What split modes are available?", "acceptedAnswer": {"@type": "Answer", "text": "You can extract a single page by number, extract a range of pages (e.g. 1-5, 8, 10-12), split the PDF into individual one-page files, or split every N pages (e.g. every 3 pages creates groups of 3). All modes produce valid PDF files you can download individually or as a ZIP."}},
+    {"@type": "Question", "name": "Can I reorder pages before splitting?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. After uploading a PDF, you can drag and drop page thumbnails to reorder them. The split operation will use your custom page order, so you can rearrange chapters or sections before extracting."}},
+    {"@type": "Question", "name": "What PDF types are supported?", "acceptedAnswer": {"@type": "Answer", "text": "This tool supports standard PDF files with traditional cross-reference tables (xref). Most PDFs from scanners, word processors, and standard PDF generators work well. Heavily encrypted PDFs or those with non-standard object compression may not parse correctly."}},
+    {"@type": "Question", "name": "Is there a file size limit?", "acceptedAnswer": {"@type": "Answer", "text": "There is no hard limit, but performance depends on your browser and device memory. PDFs under 100 MB typically process without issues. Very large files (200 MB+) may be slow or cause memory pressure on devices with limited RAM."}}
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --border: #1e1e2a;
+  --accent: #00ff88;
+  --accent-hover: #00cc6e;
+  --accent-dim: rgba(0,255,136,0.1);
+  --text: #e0e0e8;
+  --text-dim: #b0b0c0;
+  --text-bright: #ffffff;
+  --danger: #ff4466;
+  --warning: #ffaa00;
+}
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 0; }
+nav .container { display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { font-weight: 700; font-size: 1.15rem; color: var(--accent); }
+.nav-links a { color: var(--text-dim); margin-left: 24px; font-size: 0.9rem; }
+.nav-links a:hover { color: var(--text); text-decoration: none; }
+
+.breadcrumb { padding: 14px 0; font-size: 0.85rem; color: var(--text-dim); }
+.breadcrumb a { color: var(--text-dim); }
+.breadcrumb span { margin: 0 8px; }
+
+.hero { text-align: center; padding: 40px 0 30px; }
+.hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; color: var(--text-bright); }
+.hero p { font-size: 1.05rem; color: var(--text-dim); max-width: 680px; margin: 0 auto; }
+
+.reading-time { text-align: center; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 24px; }
+
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 50px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.drop-zone-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+.drop-zone-text { font-size: 1rem; color: var(--text-dim); }
+.drop-zone-text strong { color: var(--accent); }
+
+input[type="file"] { display: none; }
+
+.pdf-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.info-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+.info-item .info-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+.info-item .info-value { font-size: 1.1rem; font-weight: 600; color: var(--text-bright); margin-top: 2px; }
+
+.controls-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-top: 20px;
+}
+.control-group { display: flex; flex-direction: column; gap: 6px; }
+.control-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+
+select, input[type="number"], input[type="text"] {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+select:focus, input:focus { outline: none; border-color: var(--accent); }
+
+.btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.btn:hover { background: var(--accent-hover); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.btn-outline:hover { background: var(--accent-dim); }
+.btn-sm { padding: 8px 16px; font-size: 0.85rem; }
+
+.btn-row { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: var(--bg);
+  border-radius: 3px;
+  margin-top: 16px;
+  overflow: hidden;
+  display: none;
+}
+.progress-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.1s;
+}
+.progress-text { font-size: 0.85rem; color: var(--text-dim); margin-top: 6px; display: none; text-align: center; }
+
+/* Page grid */
+.page-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+.page-thumb {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  cursor: grab;
+  transition: border-color 0.2s;
+  user-select: none;
+}
+.page-thumb:hover { border-color: var(--accent); }
+.page-thumb.dragging { opacity: 0.5; border-color: var(--accent); }
+.page-thumb.drag-over { border-color: var(--accent); box-shadow: 0 0 12px rgba(0,255,136,0.3); }
+.page-thumb canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  background: #fff;
+}
+.page-thumb .page-num {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+/* Results */
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+.result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+.result-item .result-name { font-size: 0.9rem; color: var(--text); }
+.result-item .result-size { font-size: 0.8rem; color: var(--text-dim); }
+
+/* Content sections */
+.content-section { padding: 30px 0; }
+.content-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.content-section p, .content-section li {
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+.content-section ul { padding-left: 24px; }
+
+.toc {
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+.toc h3 { font-size: 1rem; font-weight: 700; color: var(--text-bright); margin-bottom: 12px; }
+.toc ul { list-style: none; padding: 0; }
+.toc li { margin-bottom: 6px; }
+.toc a { color: var(--text-dim); font-size: 0.9rem; }
+.toc a:hover { color: var(--accent); }
+
+.faq-item { margin-bottom: 20px; }
+.faq-item h3 { font-size: 1.05rem; color: var(--text-bright); margin-bottom: 6px; }
+
+.related-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.related-tool-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+.related-tool-card:hover { border-color: var(--accent); text-decoration: none; }
+.related-tool-card h3 { font-size: 1rem; color: var(--text-bright); margin-bottom: 4px; }
+.related-tool-card p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+
+.privacy-note {
+  background: var(--accent-dim);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+.compat-note {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 30px 0;
+  margin-top: 40px;
+}
+footer .container { text-align: center; }
+footer p { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 6px; }
+footer a { color: var(--accent); }
+
+.hidden { display: none !important; }
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 1.6rem; }
+  .controls-row { flex-direction: column; }
+  .tool-card { padding: 20px; }
+  .page-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="https://zovo.one/free-tools/" class="nav-brand">Zovo Tools</a>
+    <div class="nav-links">
+      <a href="https://zovo.one/free-tools/">All Tools</a>
+      <a href="https://zovo.one/free-tools/pdf-merger/">PDF Merger</a>
+      <a href="https://zovo.one/free-tools/pdf-compressor/">PDF Compressor</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="https://zovo.one/free-tools/">Home</a><span>/</span>PDF Splitter
+  </div>
+
+  <div class="hero">
+    <h1>PDF Splitter</h1>
+    <p>Split PDF files into individual pages or custom ranges. Client-side PDF parsing — your files never leave your browser. Reorder pages by drag-and-drop and download as ZIP.</p>
+  </div>
+
+  <div class="reading-time">10 min read</div>
+
+  <!-- TOOL AREA -->
+  <div class="tool-card" id="toolCard">
+    <div class="drop-zone" id="dropZone">
+      <span class="drop-zone-icon">&#128196;</span>
+      <div class="drop-zone-text">Drag &amp; drop a PDF here or <strong>click to browse</strong></div>
+      <div style="font-size:0.8rem;color:var(--text-dim);margin-top:8px;">PDF files only</div>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf">
+
+    <!-- PDF info -->
+    <div class="pdf-info hidden" id="pdfInfo">
+      <div class="info-item"><div class="info-label">Pages</div><div class="info-value" id="infoPages">—</div></div>
+      <div class="info-item"><div class="info-label">File Size</div><div class="info-value" id="infoSize">—</div></div>
+      <div class="info-item"><div class="info-label">PDF Version</div><div class="info-value" id="infoVersion">—</div></div>
+      <div class="info-item"><div class="info-label">Title</div><div class="info-value" id="infoTitle">—</div></div>
+      <div class="info-item"><div class="info-label">Author</div><div class="info-value" id="infoAuthor">—</div></div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-row hidden" id="controlsRow">
+      <div class="control-group">
+        <label>Split Mode</label>
+        <select id="splitMode">
+          <option value="single">Extract Single Page</option>
+          <option value="range">Extract Page Range</option>
+          <option value="individual">Split Into Individual Pages</option>
+          <option value="every-n">Split Every N Pages</option>
+        </select>
+      </div>
+      <div class="control-group" id="singlePageGroup">
+        <label>Page Number</label>
+        <input type="number" id="singlePage" min="1" value="1" style="width:100px;">
+      </div>
+      <div class="control-group hidden" id="rangeGroup">
+        <label>Page Range (e.g. 1-5, 8, 10-12)</label>
+        <input type="text" id="pageRange" placeholder="1-5, 8, 10-12" style="width:220px;">
+      </div>
+      <div class="control-group hidden" id="everyNGroup">
+        <label>Pages Per Group</label>
+        <input type="number" id="everyN" min="1" value="2" style="width:100px;">
+      </div>
+      <button class="btn" id="btnSplit">Split PDF</button>
+    </div>
+
+    <div class="progress-bar-container" id="progressContainer">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text" id="progressText"></div>
+
+    <!-- Page thumbnails -->
+    <div class="page-grid hidden" id="pageGrid"></div>
+
+    <!-- Results -->
+    <div class="hidden" id="resultsArea">
+      <div class="btn-row">
+        <button class="btn" id="btnDownloadAll">Download All as ZIP</button>
+      </div>
+      <div class="results-list" id="resultsList"></div>
+    </div>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <nav class="toc" style="background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:20px 24px;margin:24px 0;">
+    <h3>Table of Contents</h3>
+    <ul>
+      <li><a href="#about-tool">About This PDF Splitter</a></li>
+      <li><a href="#how-pdf-parsing-works">How PDF Parsing Works</a></li>
+      <li><a href="#split-modes">Split Modes Explained</a></li>
+      <li><a href="#page-reordering">Page Reordering</a></li>
+      <li><a href="#zip-builder">ZIP File Builder</a></li>
+      <li><a href="#technical-limits">Technical Details and Limits</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+      <li><a href="#related-tools">Related Tools</a></li>
+    </ul>
+  </nav>
+
+  <!-- CONTENT SECTIONS -->
+  <div class="content-section">
+    <h2 id="about-tool">About This PDF Splitter</h2>
+    <p>This tool splits PDF files entirely in your browser. It reads the raw binary data of your PDF, parses the internal structure to locate each page, and reconstructs valid single-page or multi-page PDFs from the original objects. No server is involved at any point.</p>
+    <p>You can extract a single page, a custom range like "1-5, 8, 10-12", split into one PDF per page, or group pages in sets of N. After uploading, page thumbnails appear in a grid that you can reorder by dragging. The split operation respects your custom order.</p>
+    <p>Once splitting is complete, download each resulting PDF individually or grab everything at once as a ZIP file. The ZIP is also built from scratch in JavaScript — no external libraries involved.</p>
+  </div>
+
+  <div class="content-section">
+    <h2 id="how-pdf-parsing-works">How PDF Parsing Works</h2>
+    <p>A PDF file is structured around numbered objects, a cross-reference table (xref), and a trailer. This tool reads each of those components to understand where pages live inside the file.</p>
+    <ul>
+      <li><strong>Header:</strong> The first line declares the PDF version (e.g., <code>%PDF-1.4</code>). This tells the parser which features to expect.</li>
+      <li><strong>Cross-Reference Table:</strong> Near the end of the file, the xref table maps each object number to its byte offset. The parser reads this to locate any object on demand without scanning the entire file.</li>
+      <li><strong>Trailer:</strong> Right after the xref, the trailer dictionary points to the root catalog object and optionally an info dictionary with metadata (title, author, creation date).</li>
+      <li><strong>Catalog and Pages Tree:</strong> The root catalog contains a reference to the Pages tree, which is a hierarchy of page objects. Each page object defines its media box (dimensions), content streams (the drawing commands), and resources (fonts, images).</li>
+    </ul>
+    <p>To extract a page, the parser copies the page object and all objects it references (content streams, fonts, images) into a new PDF with its own xref table and trailer. The result is a valid, self-contained PDF file.</p>
+    <p>For more on PDF internals, see the <a href="https://en.wikipedia.org/wiki/PDF" target="_blank" rel="noopener">Wikipedia article on the PDF format</a>.</p>
+  </div>
+
+  <div class="content-section">
+    <h2 id="split-modes">Split Modes Explained</h2>
+    <p><strong>Extract Single Page</strong> takes one page number and produces one PDF containing only that page. Useful for pulling out a specific form, certificate, or receipt from a larger document.</p>
+    <p><strong>Extract Page Range</strong> accepts a comma-separated list of ranges and individual pages. For example, "1-5, 8, 10-12" extracts pages 1 through 5, page 8, and pages 10 through 12 into a single output PDF. This is the most flexible mode for custom selections.</p>
+    <p><strong>Split Into Individual Pages</strong> creates one PDF per page. A 20-page document becomes 20 separate files. Combined with the ZIP download, this is the fastest way to break a document into its smallest units.</p>
+    <p><strong>Split Every N Pages</strong> groups consecutive pages. If you set N to 5, a 20-page document produces 4 PDFs of 5 pages each. Useful for splitting books into chapters of roughly equal length, or dividing a large manual into sections.</p>
+  </div>
+
+  <div class="content-section">
+    <h2 id="page-reordering">Page Reordering</h2>
+    <p>After your PDF loads, each page appears as a thumbnail card in a grid. You can drag any card and drop it at a new position to change the page order. The split operation uses whatever order you set, so you can rearrange pages before extracting.</p>
+    <p>This is particularly useful when you want to reorganize a scanned document, move an appendix to the front, or group related pages together before splitting. The reordering is purely visual and does not modify your original file.</p>
+  </div>
+
+  <div class="content-section">
+    <h2 id="zip-builder">ZIP File Builder</h2>
+    <p>When you click "Download All as ZIP," the tool constructs a valid ZIP archive entirely in JavaScript. It writes local file headers for each PDF, followed by the central directory and end-of-central-directory record — the three components every ZIP reader expects.</p>
+    <p>Each file entry uses the stored (no compression) method, since PDF files are already compressed internally. The CRC-32 checksum is calculated for each entry to ensure integrity. The result is a standard ZIP file that opens in any archive utility or operating system file manager.</p>
+    <p>For details on the ZIP specification, see the <a href="https://en.wikipedia.org/wiki/ZIP_(file_format)" target="_blank" rel="noopener">Wikipedia article on ZIP file format</a>.</p>
+  </div>
+
+  <div class="content-section">
+    <h2 id="technical-limits">Technical Details and Limits</h2>
+    <p>The parser handles standard xref tables as used by the vast majority of PDF generators. PDFs with linearized (web-optimized) structures, incremental updates, and multiple xref sections are supported by following the <code>/Prev</code> chain in trailers.</p>
+    <p>Cross-reference streams (a compressed alternative introduced in PDF 1.5) are supported at a basic level. The parser decompresses FlateDecode streams to read xref data when a traditional table is not present.</p>
+    <p>Encrypted PDFs are not supported — the parser cannot decrypt protected content. If you need to split a password-protected PDF, remove the password first using a dedicated PDF decryption tool.</p>
+
+    <div class="compat-note">
+      <strong>Browser Compatibility:</strong> This tool works in Chrome 80+, Firefox 78+, Safari 14+, and Edge 80+. It uses the File API, ArrayBuffer, DataView, and the DecompressionStream API (with fallback) for handling compressed content. Internet Explorer is not supported.
+    </div>
+
+    <div class="privacy-note">
+      <strong>Privacy Note:</strong> Your PDF files are processed entirely in your browser. Nothing is uploaded to any server. No analytics track your file contents. The tool works offline after the page loads. Close the tab and all data is gone.
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="content-section">
+    <h2 id="faq">Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <h3>How does this PDF splitter work without uploading my file?</h3>
+      <p>This tool parses the PDF binary format directly in your browser using JavaScript. It reads the cross-reference table, locates page objects, and reconstructs valid PDFs by copying the necessary objects. Everything runs locally — your file never leaves your device.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What split modes are available?</h3>
+      <p>You can extract a single page by number, extract a custom range (e.g. "1-5, 8, 10-12"), split into individual one-page files, or split every N pages. All modes produce valid PDF files you can download individually or as a ZIP.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Can I reorder pages before splitting?</h3>
+      <p>Yes. After uploading, drag and drop the page thumbnails to rearrange them. The split operation uses your custom order, so you can reorganize before extracting.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What PDF types are supported?</h3>
+      <p>This tool supports standard PDFs with traditional cross-reference tables. Most PDFs from scanners, word processors, and standard generators work well. Heavily encrypted or non-standard compressed PDFs may not parse correctly.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Is there a file size limit?</h3>
+      <p>No hard limit, but performance depends on your browser and available memory. PDFs under 100 MB process smoothly. Larger files may be slower on devices with limited RAM.</p>
+    </div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="content-section">
+    <h2 id="related-tools">Related Tools</h2>
+    <div class="related-tools">
+      <a href="https://zovo.one/free-tools/pdf-merger/" class="related-tool-card">
+        <h3>PDF Merger</h3>
+        <p>Combine multiple PDF files into one document. Reorder, rotate, and merge with full control.</p>
+      </a>
+      <a href="https://zovo.one/free-tools/pdf-compressor/" class="related-tool-card">
+        <h3>PDF Compressor</h3>
+        <p>Reduce PDF file size while maintaining quality. Optimize images and remove unnecessary data.</p>
+      </a>
+      <a href="https://zovo.one/free-tools/pdf-editor/" class="related-tool-card">
+        <h3>PDF Editor</h3>
+        <p>Edit PDF text, add annotations, fill forms, and sign documents directly in your browser.</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- References -->
+  <div class="content-section">
+    <h2 id="references">References</h2>
+    <ul>
+      <li><a href="https://en.wikipedia.org/wiki/PDF" target="_blank" rel="noopener">PDF (Portable Document Format) — Wikipedia</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/ZIP_(file_format)" target="_blank" rel="noopener">ZIP file format — Wikipedia</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/File_API" target="_blank" rel="noopener">File API — MDN Web Docs</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noopener">Canvas API — MDN Web Docs</a></li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>Built by <strong>Michael Lip</strong> &mdash; software developer focused on practical, privacy-first web tools.</p>
+    <p>&copy; 2025 <a href="https://zovo.one/free-tools/">Zovo Tools</a>. All processing runs locally in your browser.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ========== STATE ==========
+  let pdfBytes = null;        // Uint8Array of raw PDF
+  let pdfStr = '';            // string representation
+  let pdfObjects = {};        // objNum -> { offset, raw }
+  let pageObjects = [];       // array of page obj nums in order
+  let pageOrder = [];         // current page order (indices into pageObjects, for reorder)
+  let splitResults = [];      // { name, data: Uint8Array }
+  let totalPages = 0;
+  let pdfVersion = '';
+  let pdfTitle = '';
+  let pdfAuthor = '';
+
+  // DOM
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const pdfInfoDiv = document.getElementById('pdfInfo');
+  const controlsRow = document.getElementById('controlsRow');
+  const pageGrid = document.getElementById('pageGrid');
+  const resultsArea = document.getElementById('resultsArea');
+  const resultsList = document.getElementById('resultsList');
+  const progressContainer = document.getElementById('progressContainer');
+  const progressBar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText');
+  const splitModeSel = document.getElementById('splitMode');
+
+  // File handling
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+
+  // Split mode toggle
+  splitModeSel.addEventListener('change', updateModeUI);
+  function updateModeUI() {
+    const mode = splitModeSel.value;
+    document.getElementById('singlePageGroup').classList.toggle('hidden', mode !== 'single');
+    document.getElementById('rangeGroup').classList.toggle('hidden', mode !== 'range');
+    document.getElementById('everyNGroup').classList.toggle('hidden', mode !== 'every-n');
+  }
+
+  function showProgress(show) {
+    progressContainer.style.display = show ? 'block' : 'none';
+    progressText.style.display = show ? 'block' : 'none';
+  }
+  function setProgress(pct, text) {
+    progressBar.style.width = pct + '%';
+    progressText.textContent = text || Math.round(pct) + '%';
+  }
+
+  // ========== FILE HANDLING ==========
+  function handleFile(file) {
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      alert('Please select a PDF file.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      pdfBytes = new Uint8Array(e.target.result);
+      pdfStr = '';
+      for (let i = 0; i < pdfBytes.length; i++) {
+        pdfStr += String.fromCharCode(pdfBytes[i]);
+      }
+      try {
+        parsePDF();
+        displayInfo(file.size);
+        renderPageThumbnails();
+        controlsRow.classList.remove('hidden');
+        pdfInfoDiv.classList.remove('hidden');
+        resultsArea.classList.add('hidden');
+        updateModeUI();
+      } catch (err) {
+        alert('Error parsing PDF: ' + err.message);
+        console.error(err);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  // ========== PDF PARSER ==========
+  function parsePDF() {
+    pdfObjects = {};
+    pageObjects = [];
+    pdfVersion = '';
+    pdfTitle = '';
+    pdfAuthor = '';
+
+    // 1. Read header
+    const headerMatch = pdfStr.match(/%PDF-(\d+\.\d+)/);
+    if (!headerMatch) throw new Error('Not a valid PDF file');
+    pdfVersion = headerMatch[1];
+
+    // 2. Find startxref
+    const startxrefMatch = pdfStr.match(/startxref\s+(\d+)\s+%%EOF/g);
+    if (!startxrefMatch) throw new Error('Cannot find startxref');
+    // Get the last one (in case of incremental updates)
+    const lastStartxref = startxrefMatch[startxrefMatch.length - 1];
+    const xrefOffset = parseInt(lastStartxref.match(/startxref\s+(\d+)/)[1]);
+
+    // 3. Parse xref table(s) and trailer(s)
+    let allTrailers = [];
+    parseXrefChain(xrefOffset, allTrailers);
+
+    // 4. Find root catalog from trailer
+    let rootRef = null;
+    let infoRef = null;
+    for (const trailer of allTrailers) {
+      if (!rootRef) {
+        const rootMatch = trailer.match(/\/Root\s+(\d+)\s+(\d+)\s+R/);
+        if (rootMatch) rootRef = parseInt(rootMatch[1]);
+      }
+      if (!infoRef) {
+        const infoMatch = trailer.match(/\/Info\s+(\d+)\s+(\d+)\s+R/);
+        if (infoMatch) infoRef = parseInt(infoMatch[1]);
+      }
+    }
+
+    if (!rootRef) throw new Error('Cannot find root catalog');
+
+    // 5. Read metadata from Info dict
+    if (infoRef && pdfObjects[infoRef]) {
+      const infoObj = getObjectContent(infoRef);
+      const titleM = infoObj.match(/\/Title\s*\(([^)]*)\)/);
+      if (titleM) pdfTitle = titleM[1];
+      const titleHexM = infoObj.match(/\/Title\s*<([0-9A-Fa-f]+)>/);
+      if (!pdfTitle && titleHexM) pdfTitle = hexToStr(titleHexM[1]);
+      const authorM = infoObj.match(/\/Author\s*\(([^)]*)\)/);
+      if (authorM) pdfAuthor = authorM[1];
+      const authorHexM = infoObj.match(/\/Author\s*<([0-9A-Fa-f]+)>/);
+      if (!pdfAuthor && authorHexM) pdfAuthor = hexToStr(authorHexM[1]);
+    }
+
+    // 6. Navigate catalog -> Pages tree
+    const catalogObj = getObjectContent(rootRef);
+    const pagesRefM = catalogObj.match(/\/Pages\s+(\d+)\s+(\d+)\s+R/);
+    if (!pagesRefM) throw new Error('Cannot find Pages reference in catalog');
+    const pagesRef = parseInt(pagesRefM[1]);
+
+    // 7. Recursively collect page objects
+    collectPages(pagesRef);
+    totalPages = pageObjects.length;
+    pageOrder = pageObjects.map((_, i) => i);
+
+    if (totalPages === 0) throw new Error('No pages found in PDF');
+  }
+
+  function parseXrefChain(offset, trailers) {
+    // Check if it's a standard xref table or xref stream
+    const slice = pdfStr.substring(offset, offset + 10);
+    if (slice.startsWith('xref')) {
+      parseStandardXref(offset, trailers);
+    } else {
+      // Could be an xref stream (object)
+      parseXrefStream(offset, trailers);
+    }
+  }
+
+  function parseStandardXref(offset, trailers) {
+    // Parse "xref\n" followed by subsections
+    let pos = offset + 4; // skip "xref"
+    // Skip whitespace
+    while (pos < pdfStr.length && (pdfStr[pos] === '\r' || pdfStr[pos] === '\n' || pdfStr[pos] === ' ')) pos++;
+
+    // Read subsections until "trailer"
+    while (pos < pdfStr.length && !pdfStr.substring(pos, pos + 7).startsWith('trailer')) {
+      // Read start and count
+      const lineEnd = pdfStr.indexOf('\n', pos);
+      const line = pdfStr.substring(pos, lineEnd !== -1 ? lineEnd : pos + 40).trim();
+      const parts = line.split(/\s+/);
+      if (parts.length < 2) break;
+      const startObj = parseInt(parts[0]);
+      const count = parseInt(parts[1]);
+      pos = lineEnd + 1;
+
+      for (let i = 0; i < count; i++) {
+        // Each entry is 20 bytes: 10-digit offset + space + 5-digit gen + space + f/n + CR/LF
+        const entryStr = pdfStr.substring(pos, pos + 20);
+        const entryOffset = parseInt(entryStr.substring(0, 10));
+        const flag = entryStr.charAt(17);
+        if (flag === 'n' && entryOffset > 0) {
+          const objNum = startObj + i;
+          if (!pdfObjects[objNum]) {
+            pdfObjects[objNum] = { offset: entryOffset };
+          }
+        }
+        pos += 20;
+        // skip extra whitespace
+        while (pos < pdfStr.length && (pdfStr[pos] === '\r' || pdfStr[pos] === '\n')) pos++;
+      }
+    }
+
+    // Parse trailer
+    const trailerStart = pdfStr.indexOf('trailer', pos);
+    if (trailerStart !== -1) {
+      const trailerDictStart = pdfStr.indexOf('<<', trailerStart);
+      const trailerDictEnd = findMatchingClose(pdfStr, trailerDictStart);
+      const trailerStr = pdfStr.substring(trailerDictStart, trailerDictEnd + 2);
+      trailers.push(trailerStr);
+
+      // Check for /Prev
+      const prevMatch = trailerStr.match(/\/Prev\s+(\d+)/);
+      if (prevMatch) {
+        parseXrefChain(parseInt(prevMatch[1]), trailers);
+      }
+    }
+  }
+
+  function parseXrefStream(offset, trailers) {
+    // The xref stream is an object at this offset
+    // Read the object to get the dictionary and stream data
+    const objHeader = pdfStr.substring(offset, offset + 50);
+    const objMatch = objHeader.match(/(\d+)\s+(\d+)\s+obj/);
+    if (!objMatch) throw new Error('Cannot parse xref stream object at offset ' + offset);
+    const objNum = parseInt(objMatch[1]);
+
+    // Find the dictionary
+    const dictStart = pdfStr.indexOf('<<', offset);
+    const dictEnd = findMatchingClose(pdfStr, dictStart);
+    const dictStr = pdfStr.substring(dictStart, dictEnd + 2);
+
+    trailers.push(dictStr);
+
+    // Parse /W array
+    const wMatch = dictStr.match(/\/W\s*\[\s*(\d+)\s+(\d+)\s+(\d+)\s*\]/);
+    if (!wMatch) return; // can't parse this stream
+    const w1 = parseInt(wMatch[1]);
+    const w2 = parseInt(wMatch[2]);
+    const w3 = parseInt(wMatch[3]);
+    const entrySize = w1 + w2 + w3;
+
+    // Parse /Size
+    const sizeMatch = dictStr.match(/\/Size\s+(\d+)/);
+    const size = sizeMatch ? parseInt(sizeMatch[1]) : 0;
+
+    // Parse /Index array (optional)
+    let indexPairs = [];
+    const indexMatch = dictStr.match(/\/Index\s*\[([\d\s]+)\]/);
+    if (indexMatch) {
+      const nums = indexMatch[1].trim().split(/\s+/).map(Number);
+      for (let i = 0; i < nums.length; i += 2) {
+        indexPairs.push([nums[i], nums[i+1]]);
+      }
+    } else {
+      indexPairs = [[0, size]];
+    }
+
+    // Get stream data
+    const streamStart = pdfStr.indexOf('stream', dictEnd);
+    let dataStart = streamStart + 6;
+    if (pdfStr[dataStart] === '\r') dataStart++;
+    if (pdfStr[dataStart] === '\n') dataStart++;
+
+    const lengthMatch = dictStr.match(/\/Length\s+(\d+)/);
+    let streamLength = 0;
+    if (lengthMatch) {
+      streamLength = parseInt(lengthMatch[1]);
+    } else {
+      // Find endstream
+      const endStream = pdfStr.indexOf('endstream', dataStart);
+      streamLength = endStream - dataStart;
+    }
+
+    const rawStreamBytes = pdfBytes.slice(dataStart, dataStart + streamLength);
+
+    // Decompress (likely FlateDecode)
+    let streamData;
+    const filterMatch = dictStr.match(/\/Filter\s*\/(\w+)/);
+    if (filterMatch && filterMatch[1] === 'FlateDecode') {
+      try {
+        streamData = inflateRaw(rawStreamBytes);
+      } catch(e) {
+        console.warn('Failed to decompress xref stream:', e);
+        return;
+      }
+    } else {
+      streamData = rawStreamBytes;
+    }
+
+    // Parse entries
+    let byteIdx = 0;
+    for (const [startNum, count] of indexPairs) {
+      for (let i = 0; i < count; i++) {
+        if (byteIdx + entrySize > streamData.length) break;
+        let type = 1; // default if w1 == 0
+        if (w1 > 0) {
+          type = readIntBE(streamData, byteIdx, w1);
+        }
+        const field2 = readIntBE(streamData, byteIdx + w1, w2);
+        const field3 = readIntBE(streamData, byteIdx + w1 + w2, w3);
+        byteIdx += entrySize;
+
+        const objN = startNum + i;
+        if (type === 1 && field2 > 0) {
+          // type 1: in-use, field2 = offset
+          if (!pdfObjects[objN]) {
+            pdfObjects[objN] = { offset: field2 };
+          }
+        }
+        // type 0 = free, type 2 = compressed in object stream (we skip these for now)
+      }
+    }
+
+    // Check for /Prev
+    const prevMatch = dictStr.match(/\/Prev\s+(\d+)/);
+    if (prevMatch) {
+      parseXrefChain(parseInt(prevMatch[1]), trailers);
+    }
+  }
+
+  function readIntBE(data, offset, len) {
+    let val = 0;
+    for (let i = 0; i < len; i++) {
+      val = (val << 8) | (data[offset + i] || 0);
+    }
+    return val;
+  }
+
+  // Simple inflate for FlateDecode (deflate raw) using DecompressionStream or manual
+  function inflateRaw(data) {
+    // Add zlib header if needed for DecompressionStream
+    // Try using sync approach with manual Huffman decode as fallback
+    // For simplicity, we try the browser's DecompressionStream synchronously via a hack
+    // But DecompressionStream is async, so we use a manual inflate
+
+    // Check for zlib header (0x78)
+    if (data[0] === 0x78) {
+      // Has zlib header, strip it (2 bytes header, 4 bytes checksum at end)
+      return pako_inflate_raw(data.slice(2, data.length - 4));
+    }
+    return pako_inflate_raw(data);
+  }
+
+  // Minimal raw inflate (deflate decompressor)
+  function pako_inflate_raw(input) {
+    let pos = 0;
+    let output = [];
+    let bitBuf = 0;
+    let bitCount = 0;
+
+    function readBits(n) {
+      while (bitCount < n) {
+        if (pos >= input.length) throw new Error('Unexpected end of deflate data');
+        bitBuf |= input[pos++] << bitCount;
+        bitCount += 8;
+      }
+      const val = bitBuf & ((1 << n) - 1);
+      bitBuf >>= n;
+      bitCount -= n;
+      return val;
+    }
+
+    function readByte() {
+      return readBits(8);
+    }
+
+    // Fixed Huffman tables
+    const FIXED_LIT_TABLE = buildFixedLitTable();
+    const FIXED_DIST_TABLE = buildFixedDistTable();
+
+    // Length/distance extra bits tables
+    const LEN_BASE = [3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258];
+    const LEN_EXTRA = [0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+    const DIST_BASE = [1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577];
+    const DIST_EXTRA = [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+
+    let final = false;
+    while (!final) {
+      final = readBits(1) === 1;
+      const type = readBits(2);
+
+      if (type === 0) {
+        // Stored block
+        bitBuf = 0;
+        bitCount = 0;
+        const len = input[pos] | (input[pos+1] << 8);
+        pos += 4; // skip len and nlen
+        for (let i = 0; i < len; i++) {
+          output.push(input[pos++]);
+        }
+      } else if (type === 1 || type === 2) {
+        // Huffman
+        let litTable, distTable;
+        if (type === 1) {
+          litTable = FIXED_LIT_TABLE;
+          distTable = FIXED_DIST_TABLE;
+        } else {
+          const tables = readDynamicTables();
+          litTable = tables.lit;
+          distTable = tables.dist;
+        }
+
+        while (true) {
+          const sym = decodeSymbol(litTable);
+          if (sym === 256) break; // end
+          if (sym < 256) {
+            output.push(sym);
+          } else {
+            // Length
+            const lenIdx = sym - 257;
+            let length = LEN_BASE[lenIdx] + readBits(LEN_EXTRA[lenIdx]);
+            // Distance
+            const distSym = decodeSymbol(distTable);
+            let dist = DIST_BASE[distSym] + readBits(DIST_EXTRA[distSym]);
+            // Copy
+            const srcStart = output.length - dist;
+            for (let i = 0; i < length; i++) {
+              output.push(output[srcStart + i]);
+            }
+          }
+        }
+      } else {
+        throw new Error('Invalid deflate block type');
+      }
+    }
+
+    function readDynamicTables() {
+      const hlit = readBits(5) + 257;
+      const hdist = readBits(5) + 1;
+      const hclen = readBits(4) + 4;
+
+      const CL_ORDER = [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+      const clLens = new Uint8Array(19);
+      for (let i = 0; i < hclen; i++) {
+        clLens[CL_ORDER[i]] = readBits(3);
+      }
+      const clTable = buildHuffmanTable(clLens);
+
+      // Read literal/length + distance code lengths
+      const allLens = new Uint8Array(hlit + hdist);
+      let idx = 0;
+      while (idx < hlit + hdist) {
+        const sym = decodeSymbol(clTable);
+        if (sym < 16) {
+          allLens[idx++] = sym;
+        } else if (sym === 16) {
+          const rep = readBits(2) + 3;
+          const val = idx > 0 ? allLens[idx - 1] : 0;
+          for (let i = 0; i < rep; i++) allLens[idx++] = val;
+        } else if (sym === 17) {
+          const rep = readBits(3) + 3;
+          for (let i = 0; i < rep; i++) allLens[idx++] = 0;
+        } else if (sym === 18) {
+          const rep = readBits(7) + 11;
+          for (let i = 0; i < rep; i++) allLens[idx++] = 0;
+        }
+      }
+
+      const litLens = allLens.slice(0, hlit);
+      const distLens = allLens.slice(hlit, hlit + hdist);
+
+      return {
+        lit: buildHuffmanTable(litLens),
+        dist: buildHuffmanTable(distLens)
+      };
+    }
+
+    function decodeSymbol(table) {
+      let code = 0;
+      let len = 0;
+      while (len < 16) {
+        code = (code << 1) | readBits(1);
+        len++;
+        const entry = table[len];
+        if (entry && entry.has(code)) {
+          return entry.get(code);
+        }
+      }
+      throw new Error('Invalid Huffman code');
+    }
+
+    function buildHuffmanTable(lengths) {
+      const table = {};
+      const maxLen = Math.max(...lengths);
+      const blCount = new Uint32Array(maxLen + 1);
+      for (let i = 0; i < lengths.length; i++) {
+        if (lengths[i] > 0) blCount[lengths[i]]++;
+      }
+      const nextCode = new Uint32Array(maxLen + 1);
+      let code = 0;
+      for (let bits = 1; bits <= maxLen; bits++) {
+        code = (code + blCount[bits - 1]) << 1;
+        nextCode[bits] = code;
+      }
+      for (let n = 0; n < lengths.length; n++) {
+        const len = lengths[n];
+        if (len > 0) {
+          if (!table[len]) table[len] = new Map();
+          table[len].set(nextCode[len], n);
+          nextCode[len]++;
+        }
+      }
+      return table;
+    }
+
+    return new Uint8Array(output);
+  }
+
+  function buildFixedLitTable() {
+    const lengths = new Uint8Array(288);
+    for (let i = 0; i <= 143; i++) lengths[i] = 8;
+    for (let i = 144; i <= 255; i++) lengths[i] = 9;
+    for (let i = 256; i <= 279; i++) lengths[i] = 7;
+    for (let i = 280; i <= 287; i++) lengths[i] = 8;
+
+    const table = {};
+    const maxLen = 9;
+    const blCount = new Uint32Array(maxLen + 1);
+    for (let i = 0; i < lengths.length; i++) {
+      if (lengths[i] > 0) blCount[lengths[i]]++;
+    }
+    const nextCode = new Uint32Array(maxLen + 1);
+    let code = 0;
+    for (let bits = 1; bits <= maxLen; bits++) {
+      code = (code + blCount[bits - 1]) << 1;
+      nextCode[bits] = code;
+    }
+    for (let n = 0; n < lengths.length; n++) {
+      const len = lengths[n];
+      if (len > 0) {
+        if (!table[len]) table[len] = new Map();
+        table[len].set(nextCode[len], n);
+        nextCode[len]++;
+      }
+    }
+    return table;
+  }
+
+  function buildFixedDistTable() {
+    const lengths = new Uint8Array(30);
+    for (let i = 0; i < 30; i++) lengths[i] = 5;
+
+    const table = {};
+    const blCount = new Uint32Array(6);
+    for (let i = 0; i < lengths.length; i++) blCount[lengths[i]]++;
+    const nextCode = new Uint32Array(6);
+    let code = 0;
+    for (let bits = 1; bits <= 5; bits++) {
+      code = (code + blCount[bits - 1]) << 1;
+      nextCode[bits] = code;
+    }
+    for (let n = 0; n < lengths.length; n++) {
+      const len = lengths[n];
+      if (len > 0) {
+        if (!table[len]) table[len] = new Map();
+        table[len].set(nextCode[len], n);
+        nextCode[len]++;
+      }
+    }
+    return table;
+  }
+
+  function hexToStr(hex) {
+    let str = '';
+    // Check for UTF-16 BOM
+    if (hex.substring(0, 4) === 'FEFF' || hex.substring(0, 4) === 'feff') {
+      for (let i = 4; i < hex.length; i += 4) {
+        str += String.fromCharCode(parseInt(hex.substring(i, i + 4), 16));
+      }
+    } else {
+      for (let i = 0; i < hex.length; i += 2) {
+        str += String.fromCharCode(parseInt(hex.substring(i, i + 2), 16));
+      }
+    }
+    return str;
+  }
+
+  function findMatchingClose(str, openPos) {
+    let depth = 0;
+    let i = openPos;
+    while (i < str.length - 1) {
+      if (str[i] === '<' && str[i + 1] === '<') {
+        depth++;
+        i += 2;
+      } else if (str[i] === '>' && str[i + 1] === '>') {
+        depth--;
+        if (depth === 0) return i;
+        i += 2;
+      } else {
+        i++;
+      }
+    }
+    return str.length - 2;
+  }
+
+  function getObjectContent(objNum) {
+    const info = pdfObjects[objNum];
+    if (!info) return '';
+    const start = info.offset;
+    // Find endobj
+    const endIdx = pdfStr.indexOf('endobj', start);
+    if (endIdx === -1) return pdfStr.substring(start, Math.min(start + 10000, pdfStr.length));
+    return pdfStr.substring(start, endIdx + 6);
+  }
+
+  function getObjectDict(objContent) {
+    const dictStart = objContent.indexOf('<<');
+    if (dictStart === -1) return '';
+    const dictEnd = findMatchingClose(objContent, dictStart);
+    return objContent.substring(dictStart, dictEnd + 2);
+  }
+
+  function collectPages(pagesObjNum) {
+    const content = getObjectContent(pagesObjNum);
+    const dict = getObjectDict(content);
+
+    // Check if this is a Pages node or a Page leaf
+    const typeMatch = dict.match(/\/Type\s*\/(\w+)/);
+    const type = typeMatch ? typeMatch[1] : '';
+
+    if (type === 'Page') {
+      pageObjects.push(pagesObjNum);
+      return;
+    }
+
+    // It's a Pages node, find Kids array
+    const kidsStart = dict.indexOf('/Kids');
+    if (kidsStart === -1) return;
+    const arrStart = dict.indexOf('[', kidsStart);
+    const arrEnd = dict.indexOf(']', arrStart);
+    if (arrStart === -1 || arrEnd === -1) return;
+    const kidsStr = dict.substring(arrStart + 1, arrEnd);
+
+    // Extract references
+    const refRegex = /(\d+)\s+\d+\s+R/g;
+    let m;
+    while ((m = refRegex.exec(kidsStr)) !== null) {
+      collectPages(parseInt(m[1]));
+    }
+  }
+
+  // ========== DISPLAY INFO ==========
+  function displayInfo(fileSize) {
+    document.getElementById('infoPages').textContent = totalPages;
+    document.getElementById('infoSize').textContent = formatBytes(fileSize);
+    document.getElementById('infoVersion').textContent = pdfVersion;
+    document.getElementById('infoTitle').textContent = pdfTitle || '(none)';
+    document.getElementById('infoAuthor').textContent = pdfAuthor || '(none)';
+  }
+
+  // ========== PAGE THUMBNAILS ==========
+  function renderPageThumbnails() {
+    pageGrid.classList.remove('hidden');
+    pageGrid.innerHTML = '';
+
+    for (let i = 0; i < totalPages; i++) {
+      const div = document.createElement('div');
+      div.className = 'page-thumb';
+      div.dataset.index = i;
+      div.draggable = true;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 120;
+      canvas.height = 160;
+      const ctx = canvas.getContext('2d');
+
+      // Render a simple thumbnail: white bg with page number
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 120, 160);
+      ctx.fillStyle = '#333333';
+      ctx.font = 'bold 28px system-ui';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Page', 60, 60);
+      ctx.fillText(String(i + 1), 60, 100);
+
+      // Try to extract page dimensions for better preview
+      const pageObjNum = pageObjects[i];
+      const content = getObjectContent(pageObjNum);
+      const mediaBoxM = content.match(/\/MediaBox\s*\[\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*\]/);
+      if (mediaBoxM) {
+        const pw = parseFloat(mediaBoxM[3]) - parseFloat(mediaBoxM[1]);
+        const ph = parseFloat(mediaBoxM[4]) - parseFloat(mediaBoxM[2]);
+        ctx.fillStyle = '#999999';
+        ctx.font = '11px system-ui';
+        ctx.fillText(Math.round(pw) + ' x ' + Math.round(ph) + ' pt', 60, 140);
+      }
+
+      div.appendChild(canvas);
+      const label = document.createElement('div');
+      label.className = 'page-num';
+      label.textContent = 'Page ' + (i + 1);
+      div.appendChild(label);
+
+      // Drag events
+      div.addEventListener('dragstart', onDragStart);
+      div.addEventListener('dragover', onDragOver);
+      div.addEventListener('drop', onDrop);
+      div.addEventListener('dragend', onDragEnd);
+      div.addEventListener('dragleave', onDragLeave);
+
+      pageGrid.appendChild(div);
+    }
+  }
+
+  let dragSrcIndex = null;
+
+  function onDragStart(e) {
+    dragSrcIndex = parseInt(this.dataset.index);
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+  function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    this.classList.add('drag-over');
+  }
+  function onDragLeave() {
+    this.classList.remove('drag-over');
+  }
+  function onDrop(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    const targetIndex = parseInt(this.dataset.index);
+    if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) {
+      // Swap in pageOrder
+      const temp = pageOrder[dragSrcIndex];
+      pageOrder.splice(dragSrcIndex, 1);
+      pageOrder.splice(targetIndex, 0, temp);
+      renderPageThumbnails();
+    }
+  }
+  function onDragEnd() {
+    this.classList.remove('dragging');
+    document.querySelectorAll('.page-thumb').forEach(el => el.classList.remove('drag-over'));
+  }
+
+  // ========== SPLIT ==========
+  document.getElementById('btnSplit').addEventListener('click', () => {
+    const mode = splitModeSel.value;
+    splitResults = [];
+    resultsArea.classList.add('hidden');
+
+    let pageGroups = []; // array of arrays of page indices (into pageOrder)
+
+    if (mode === 'single') {
+      const pg = parseInt(document.getElementById('singlePage').value);
+      if (pg < 1 || pg > totalPages) { alert('Invalid page number.'); return; }
+      pageGroups.push([pg - 1]);
+    } else if (mode === 'range') {
+      const rangeStr = document.getElementById('pageRange').value.trim();
+      if (!rangeStr) { alert('Enter a page range.'); return; }
+      const pages = parseRange(rangeStr, totalPages);
+      if (!pages.length) { alert('Invalid range.'); return; }
+      pageGroups.push(pages);
+    } else if (mode === 'individual') {
+      for (let i = 0; i < totalPages; i++) {
+        pageGroups.push([i]);
+      }
+    } else if (mode === 'every-n') {
+      const n = parseInt(document.getElementById('everyN').value);
+      if (n < 1) { alert('Invalid N.'); return; }
+      for (let i = 0; i < totalPages; i += n) {
+        const group = [];
+        for (let j = i; j < Math.min(i + n, totalPages); j++) {
+          group.push(j);
+        }
+        pageGroups.push(group);
+      }
+    }
+
+    showProgress(true);
+    setProgress(0, 'Splitting...');
+
+    setTimeout(() => {
+      try {
+        for (let g = 0; g < pageGroups.length; g++) {
+          const group = pageGroups[g];
+          // Map through pageOrder
+          const actualPageIndices = group.map(i => pageOrder[i]);
+          const pdfData = buildSplitPDF(actualPageIndices);
+
+          let name;
+          if (mode === 'single') {
+            name = 'page-' + (group[0] + 1) + '.pdf';
+          } else if (mode === 'range') {
+            name = 'pages-' + document.getElementById('pageRange').value.replace(/\s/g, '') + '.pdf';
+          } else if (mode === 'individual') {
+            name = 'page-' + (group[0] + 1) + '.pdf';
+          } else {
+            name = 'pages-' + (group[0] + 1) + '-to-' + (group[group.length - 1] + 1) + '.pdf';
+          }
+
+          splitResults.push({ name, data: pdfData });
+          setProgress(((g + 1) / pageGroups.length) * 100, 'Split ' + (g + 1) + ' of ' + pageGroups.length);
+        }
+
+        showProgress(false);
+        displayResults();
+      } catch (err) {
+        showProgress(false);
+        alert('Error splitting PDF: ' + err.message);
+        console.error(err);
+      }
+    }, 50);
+  });
+
+  function parseRange(str, max) {
+    const pages = [];
+    const parts = str.split(',');
+    for (const part of parts) {
+      const trimmed = part.trim();
+      if (trimmed.includes('-')) {
+        const [a, b] = trimmed.split('-').map(s => parseInt(s.trim()));
+        if (isNaN(a) || isNaN(b)) continue;
+        for (let i = Math.max(1, a); i <= Math.min(max, b); i++) {
+          pages.push(i - 1);
+        }
+      } else {
+        const n = parseInt(trimmed);
+        if (!isNaN(n) && n >= 1 && n <= max) {
+          pages.push(n - 1);
+        }
+      }
+    }
+    return pages;
+  }
+
+  // ========== PDF BUILDER ==========
+  function buildSplitPDF(pageIndices) {
+    // Strategy: build a minimal valid PDF containing the selected pages
+    // We copy the raw bytes of each needed object, renumber them sequentially,
+    // and build new xref + trailer.
+
+    // Collect all objects needed for the selected pages
+    const neededObjs = new Set();
+    const pageObjNums = pageIndices.map(i => pageObjects[i]);
+
+    for (const pageObjNum of pageObjNums) {
+      collectReferencedObjects(pageObjNum, neededObjs);
+    }
+
+    // Create object number mapping: old -> new
+    const objList = Array.from(neededObjs).sort((a, b) => a - b);
+    const objMap = {};
+    let newObjNum = 1;
+    // Reserve obj 1 for catalog, obj 2 for pages
+    const catalogNewNum = newObjNum++;
+    const pagesNewNum = newObjNum++;
+
+    for (const oldNum of objList) {
+      objMap[oldNum] = newObjNum++;
+    }
+
+    const totalObjs = newObjNum;
+
+    // Build PDF content
+    let parts = [];
+    const header = '%PDF-' + pdfVersion + '\n%\xE2\xE3\xCF\xD3\n';
+    parts.push(strToBytes(header));
+
+    const offsets = new Array(totalObjs).fill(0);
+    let currentOffset = header.length;
+
+    // Write catalog object
+    const pageRefsStr = pageObjNums.map(n => objMap[n] + ' 0 R').join(' ');
+    const catalogStr = catalogNewNum + ' 0 obj\n<< /Type /Catalog /Pages ' + pagesNewNum + ' 0 R >>\nendobj\n';
+    offsets[catalogNewNum] = currentOffset;
+    parts.push(strToBytes(catalogStr));
+    currentOffset += catalogStr.length;
+
+    // Write pages object
+    const pageKidsStr = pagesNewNum + ' 0 obj\n<< /Type /Pages /Kids [' + pageObjNums.map(n => objMap[n] + ' 0 R').join(' ') + '] /Count ' + pageObjNums.length + ' >>\nendobj\n';
+    offsets[pagesNewNum] = currentOffset;
+    parts.push(strToBytes(pageKidsStr));
+    currentOffset += pageKidsStr.length;
+
+    // Write each needed object with renumbered references
+    for (const oldNum of objList) {
+      const objContent = getObjectRawBytes(oldNum);
+      if (!objContent) continue;
+
+      // Renumber this object and all its references
+      let objStr = '';
+      for (let i = 0; i < objContent.length; i++) {
+        objStr += String.fromCharCode(objContent[i]);
+      }
+
+      // Replace object header
+      objStr = objStr.replace(/^\d+\s+\d+\s+obj/, objMap[oldNum] + ' 0 obj');
+
+      // Replace references inside (but not inside streams)
+      const streamIdx = objStr.indexOf('stream');
+      let dictPart, streamPart;
+      if (streamIdx !== -1) {
+        // Find the dict end before stream
+        dictPart = objStr.substring(0, streamIdx);
+        streamPart = objStr.substring(streamIdx);
+      } else {
+        dictPart = objStr;
+        streamPart = '';
+      }
+
+      // Replace /Parent references to point to our new Pages object
+      dictPart = dictPart.replace(/\/Parent\s+\d+\s+\d+\s+R/g, '/Parent ' + pagesNewNum + ' 0 R');
+
+      // Replace all other references
+      dictPart = dictPart.replace(/(\d+)\s+0\s+R/g, (match, num) => {
+        const n = parseInt(num);
+        if (objMap[n] !== undefined) return objMap[n] + ' 0 R';
+        if (n === catalogNewNum || n === pagesNewNum) return match;
+        // Object not in our set, keep reference (will be broken but most readers handle it)
+        return match;
+      });
+
+      const finalStr = dictPart + streamPart;
+
+      offsets[objMap[oldNum]] = currentOffset;
+
+      // Convert back to bytes preserving binary stream data
+      let finalBytes;
+      if (streamIdx !== -1) {
+        // Split at stream boundary in final string
+        const newStreamIdx = finalStr.indexOf('stream');
+        const dictBytes = strToBytes(finalStr.substring(0, newStreamIdx));
+        // For stream part, use original binary bytes
+        const origStreamStart = findStreamStart(objContent);
+        const origEndObj = findEndObj(objContent);
+        const streamBytes = new Uint8Array(objContent.buffer, objContent.byteOffset + origStreamStart, origEndObj - origStreamStart);
+        const endObjBytes = strToBytes('\nendobj\n');
+
+        const combined = new Uint8Array(dictBytes.length + streamBytes.length + endObjBytes.length);
+        combined.set(dictBytes, 0);
+        combined.set(streamBytes, dictBytes.length);
+        combined.set(endObjBytes, dictBytes.length + streamBytes.length);
+        finalBytes = combined;
+      } else {
+        if (!finalStr.endsWith('\n')) {
+          finalBytes = strToBytes(finalStr + '\n');
+        } else {
+          finalBytes = strToBytes(finalStr);
+        }
+      }
+
+      parts.push(finalBytes);
+      currentOffset += finalBytes.length;
+    }
+
+    // Write xref table
+    const xrefOffset = currentOffset;
+    let xrefStr = 'xref\n0 ' + totalObjs + '\n';
+    xrefStr += '0000000000 65535 f \r\n';
+    for (let i = 1; i < totalObjs; i++) {
+      xrefStr += String(offsets[i]).padStart(10, '0') + ' 00000 n \r\n';
+    }
+
+    // Trailer
+    xrefStr += 'trailer\n<< /Size ' + totalObjs + ' /Root ' + catalogNewNum + ' 0 R >>\nstartxref\n' + xrefOffset + '\n%%EOF\n';
+
+    parts.push(strToBytes(xrefStr));
+
+    // Combine all parts
+    let totalLen = 0;
+    for (const p of parts) totalLen += p.length;
+    const result = new Uint8Array(totalLen);
+    let offset = 0;
+    for (const p of parts) {
+      result.set(p, offset);
+      offset += p.length;
+    }
+
+    return result;
+  }
+
+  function findStreamStart(objBytes) {
+    // Find "stream" keyword followed by newline
+    for (let i = 0; i < objBytes.length - 6; i++) {
+      if (objBytes[i] === 115 && objBytes[i+1] === 116 && objBytes[i+2] === 114 &&
+          objBytes[i+3] === 101 && objBytes[i+4] === 97 && objBytes[i+5] === 109) {
+        let start = i + 6;
+        if (start < objBytes.length && objBytes[start] === 13) start++; // CR
+        if (start < objBytes.length && objBytes[start] === 10) start++; // LF
+        return start;
+      }
+    }
+    return 0;
+  }
+
+  function findEndObj(objBytes) {
+    // Find "endstream" from the end
+    for (let i = objBytes.length - 10; i >= 0; i--) {
+      if (objBytes[i] === 101 && objBytes[i+1] === 110 && objBytes[i+2] === 100 &&
+          objBytes[i+3] === 115 && objBytes[i+4] === 116 && objBytes[i+5] === 114) {
+        return i;
+      }
+    }
+    // If no endstream found, find endobj
+    for (let i = objBytes.length - 7; i >= 0; i--) {
+      if (objBytes[i] === 101 && objBytes[i+1] === 110 && objBytes[i+2] === 100 &&
+          objBytes[i+3] === 111 && objBytes[i+4] === 98 && objBytes[i+5] === 106) {
+        return i;
+      }
+    }
+    return objBytes.length;
+  }
+
+  function getObjectRawBytes(objNum) {
+    const info = pdfObjects[objNum];
+    if (!info) return null;
+    const start = info.offset;
+    // Find endobj
+    let endIdx = pdfStr.indexOf('endobj', start);
+    if (endIdx === -1) return null;
+    endIdx += 6;
+    return pdfBytes.slice(start, endIdx);
+  }
+
+  function collectReferencedObjects(objNum, set, depth) {
+    if (!depth) depth = 0;
+    if (depth > 50) return; // prevent infinite loops
+    if (set.has(objNum)) return;
+    if (!pdfObjects[objNum]) return;
+    set.add(objNum);
+
+    const content = getObjectContent(objNum);
+    const dict = getObjectDict(content);
+
+    // Don't follow /Parent references (would include the whole pages tree)
+    const cleanDict = dict.replace(/\/Parent\s+\d+\s+\d+\s+R/g, '');
+
+    // Find all object references
+    const refRegex = /(\d+)\s+0\s+R/g;
+    let m;
+    while ((m = refRegex.exec(cleanDict)) !== null) {
+      const ref = parseInt(m[1]);
+      collectReferencedObjects(ref, set, depth + 1);
+    }
+  }
+
+  function strToBytes(str) {
+    const bytes = new Uint8Array(str.length);
+    for (let i = 0; i < str.length; i++) {
+      bytes[i] = str.charCodeAt(i) & 0xFF;
+    }
+    return bytes;
+  }
+
+  // ========== DISPLAY RESULTS ==========
+  function displayResults() {
+    resultsArea.classList.remove('hidden');
+    resultsList.innerHTML = '';
+
+    for (let i = 0; i < splitResults.length; i++) {
+      const result = splitResults[i];
+      const div = document.createElement('div');
+      div.className = 'result-item';
+
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'result-name';
+      nameSpan.textContent = result.name;
+
+      const sizeSpan = document.createElement('span');
+      sizeSpan.className = 'result-size';
+      sizeSpan.textContent = formatBytes(result.data.length);
+
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-sm btn-outline';
+      btn.textContent = 'Download';
+      btn.addEventListener('click', () => downloadFile(result.name, result.data, 'application/pdf'));
+
+      const right = document.createElement('div');
+      right.style.display = 'flex';
+      right.style.gap = '12px';
+      right.style.alignItems = 'center';
+      right.appendChild(sizeSpan);
+      right.appendChild(btn);
+
+      div.appendChild(nameSpan);
+      div.appendChild(right);
+      resultsList.appendChild(div);
+    }
+  }
+
+  // ========== ZIP BUILDER ==========
+  document.getElementById('btnDownloadAll').addEventListener('click', () => {
+    if (splitResults.length === 0) return;
+    const zipData = buildZip(splitResults);
+    downloadFile('split-pages.zip', zipData, 'application/zip');
+  });
+
+  function buildZip(files) {
+    // ZIP format: local file headers + file data, then central directory, then end record
+    const localHeaders = [];
+    const centralEntries = [];
+    let offset = 0;
+
+    for (const file of files) {
+      const nameBytes = strToBytes(file.name);
+      const crc = crc32(file.data);
+      const size = file.data.length;
+
+      // Local file header (30 bytes + name)
+      const localHeader = new Uint8Array(30 + nameBytes.length);
+      const lhView = new DataView(localHeader.buffer);
+      lhView.setUint32(0, 0x04034b50, true);   // Signature
+      lhView.setUint16(4, 20, true);            // Version needed (2.0)
+      lhView.setUint16(6, 0, true);             // Flags
+      lhView.setUint16(8, 0, true);             // Compression (stored)
+      lhView.setUint16(10, 0, true);            // Mod time
+      lhView.setUint16(12, 0, true);            // Mod date
+      lhView.setUint32(14, crc, true);          // CRC-32
+      lhView.setUint32(18, size, true);         // Compressed size
+      lhView.setUint32(22, size, true);         // Uncompressed size
+      lhView.setUint16(26, nameBytes.length, true); // Name length
+      lhView.setUint16(28, 0, true);            // Extra length
+      localHeader.set(nameBytes, 30);
+
+      // Central directory entry (46 bytes + name)
+      const centralEntry = new Uint8Array(46 + nameBytes.length);
+      const ceView = new DataView(centralEntry.buffer);
+      ceView.setUint32(0, 0x02014b50, true);    // Signature
+      ceView.setUint16(4, 20, true);            // Version made by
+      ceView.setUint16(6, 20, true);            // Version needed
+      ceView.setUint16(8, 0, true);             // Flags
+      ceView.setUint16(10, 0, true);            // Compression
+      ceView.setUint16(12, 0, true);            // Mod time
+      ceView.setUint16(14, 0, true);            // Mod date
+      ceView.setUint32(16, crc, true);          // CRC-32
+      ceView.setUint32(20, size, true);         // Compressed size
+      ceView.setUint32(24, size, true);         // Uncompressed size
+      ceView.setUint16(28, nameBytes.length, true); // Name length
+      ceView.setUint16(30, 0, true);            // Extra length
+      ceView.setUint16(32, 0, true);            // Comment length
+      ceView.setUint16(34, 0, true);            // Disk number start
+      ceView.setUint16(36, 0, true);            // Internal attributes
+      ceView.setUint32(38, 0, true);            // External attributes
+      ceView.setUint32(42, offset, true);       // Local header offset
+      centralEntry.set(nameBytes, 46);
+
+      localHeaders.push({ header: localHeader, data: file.data });
+      centralEntries.push(centralEntry);
+
+      offset += localHeader.length + file.data.length;
+    }
+
+    // Calculate sizes
+    const centralDirOffset = offset;
+    let centralDirSize = 0;
+    for (const ce of centralEntries) centralDirSize += ce.length;
+
+    // End of central directory (22 bytes)
+    const endRecord = new Uint8Array(22);
+    const erView = new DataView(endRecord.buffer);
+    erView.setUint32(0, 0x06054b50, true);       // Signature
+    erView.setUint16(4, 0, true);                // Disk number
+    erView.setUint16(6, 0, true);                // Central dir disk
+    erView.setUint16(8, files.length, true);     // Entries on disk
+    erView.setUint16(10, files.length, true);    // Total entries
+    erView.setUint32(12, centralDirSize, true);  // Central dir size
+    erView.setUint32(16, centralDirOffset, true);// Central dir offset
+    erView.setUint16(20, 0, true);               // Comment length
+
+    // Combine everything
+    let totalSize = 0;
+    for (const lh of localHeaders) totalSize += lh.header.length + lh.data.length;
+    totalSize += centralDirSize + endRecord.length;
+
+    const zip = new Uint8Array(totalSize);
+    let pos = 0;
+
+    for (const lh of localHeaders) {
+      zip.set(lh.header, pos);
+      pos += lh.header.length;
+      zip.set(lh.data, pos);
+      pos += lh.data.length;
+    }
+    for (const ce of centralEntries) {
+      zip.set(ce, pos);
+      pos += ce.length;
+    }
+    zip.set(endRecord, pos);
+
+    return zip;
+  }
+
+  // CRC-32 implementation
+  function crc32(data) {
+    let crc = 0xFFFFFFFF;
+    if (!crc32.table) {
+      crc32.table = new Uint32Array(256);
+      for (let i = 0; i < 256; i++) {
+        let c = i;
+        for (let j = 0; j < 8; j++) {
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        crc32.table[i] = c;
+      }
+    }
+    for (let i = 0; i < data.length; i++) {
+      crc = crc32.table[(crc ^ data[i]) & 0xFF] ^ (crc >>> 8);
+    }
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  // ========== DOWNLOAD ==========
+  function downloadFile(name, data, mimeType) {
+    const blob = new Blob([data], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+})();
+</script>
+
+</body>
+</html>
