@@ -1,908 +1,1222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" href="https://zovo.one/favicon.ico">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CSP Header Generator — Content Security Policy Builder | Zovo</title>
-<meta name="description" content="Free Content Security Policy (CSP) header generator. Build CSP directives visually, evaluate existing policies, get Nginx/Apache/Express config snippets, and export as HTTP header or meta tag.">
+<title>CSP Header Generator - Content Security Policy Builder | Free Tool</title>
+<meta name="description" content="Free Content Security Policy (CSP) header generator. Build CSP headers visually with support for all directives, presets, violation analysis, and export to HTTP header, meta tag, nginx, and Apache formats.">
+<meta name="keywords" content="csp generator, content security policy, csp header, csp builder, security headers, web security, csp directives, script-src, style-src">
 <meta name="author" content="Michael Lip">
-<meta name="keywords" content="CSP header generator, content security policy generator, CSP builder, CSP directives, script-src, default-src, CSP evaluator, CSP nginx, CSP apache">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <link rel="canonical" href="https://zovo.one/free-tools/csp-header-generator/">
-<meta property="og:title" content="CSP Header Generator — Content Security Policy Builder | Zovo">
-<meta property="og:description" content="Free Content Security Policy (CSP) header generator. Build CSP directives visually, evaluate existing policies, and get server config snippets.">
-<meta property="og:type" content="website">
+<link rel="icon" href="https://zovo.one/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Open Graph -->
+<meta property="og:title" content="CSP Header Generator - Content Security Policy Builder">
+<meta property="og:description" content="Free visual CSP header builder. Configure directives, use presets, analyze violations, and export to HTTP header, meta tag, nginx, or Apache config.">
 <meta property="og:url" content="https://zovo.one/free-tools/csp-header-generator/">
-<meta property="og:site_name" content="Zovo">
-<meta property="og:image" content="https://zovo.one/free-tools/csp-header-generator/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zovo Tools">
+
+<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CSP Header Generator — Content Security Policy Builder | Zovo">
-<meta name="twitter:description" content="Free Content Security Policy header generator with visual directive builder, presets, and server config output.">
+<meta name="twitter:title" content="CSP Header Generator - Content Security Policy Builder">
+<meta name="twitter:description" content="Free visual CSP header builder. Configure directives, use presets, analyze violations, and export to HTTP header, meta tag, nginx, or Apache config.">
+
+<!-- WebApplication JSON-LD -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "CSP Header Generator",
+  "description": "Free Content Security Policy header generator tool. Visually build CSP headers with support for all directives, presets (strict, moderate, permissive), violation analysis, and export to HTTP header, meta tag, nginx, and Apache configurations.",
   "url": "https://zovo.one/free-tools/csp-header-generator/",
-  "description": "Free Content Security Policy (CSP) header generator with visual directive builder, presets, CSP evaluator, and server configuration snippets for Nginx, Apache, and Express.",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "author": { "@type": "Person", "name": "Michael Lip" },
-  "browserRequirements": "Requires a modern browser with JavaScript enabled"
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "browserRequirements": "Requires a modern web browser with JavaScript enabled"
 }
 </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zovo.one/free-tools/" },
-    { "@type": "ListItem", "position": 2, "name": "CSP Header Generator", "item": "https://zovo.one/free-tools/csp-header-generator/" }
-  ]
-}
-</script>
+
+<!-- FAQPage JSON-LD -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "What is a Content Security Policy (CSP)?", "acceptedAnswer": { "@type": "Answer", "text": "A Content Security Policy is an HTTP response header that tells browsers which content sources are allowed on a web page. It prevents cross-site scripting (XSS), clickjacking, and other code injection attacks by restricting where scripts, styles, images, and other resources can be loaded from." }},
-    { "@type": "Question", "name": "How do I add a CSP header to my website?", "acceptedAnswer": { "@type": "Answer", "text": "You can add a CSP header via your web server configuration (Nginx, Apache), your application framework (Express, Django, Rails), or as a meta tag in your HTML. The server header approach is preferred because meta tags cannot set frame-ancestors or report-uri directives." }},
-    { "@type": "Question", "name": "What does 'unsafe-inline' mean in CSP?", "acceptedAnswer": { "@type": "Answer", "text": "'unsafe-inline' allows inline scripts and styles (e.g., onclick handlers, style attributes, script tags without src). It significantly weakens CSP protection because any injected inline code will execute. Prefer using nonces or hashes instead of unsafe-inline for better security." }},
-    { "@type": "Question", "name": "What is the difference between CSP Level 2 and Level 3?", "acceptedAnswer": { "@type": "Answer", "text": "CSP Level 2 added nonce-based and hash-based source expressions and the base-uri and form-action directives. CSP Level 3 introduced strict-dynamic, which automatically trusts scripts loaded by already-trusted scripts, and the report-to directive using the Reporting API. Most modern browsers support Level 3." }},
-    { "@type": "Question", "name": "Should I use 'strict-dynamic' in my CSP?", "acceptedAnswer": { "@type": "Answer", "text": "strict-dynamic is recommended for applications that dynamically load scripts. When combined with a nonce, it allows trusted scripts to load additional scripts without listing every domain. It is the foundation of the strict CSP approach recommended by security researchers." }},
-    { "@type": "Question", "name": "What happens when a CSP violation occurs?", "acceptedAnswer": { "@type": "Answer", "text": "When a browser detects a resource that violates the CSP, it blocks that resource from loading or executing. If a report-uri or report-to directive is configured, the browser sends a JSON violation report to the specified endpoint. The Content-Security-Policy-Report-Only header can be used to monitor violations without blocking." }}
+    {
+      "@type": "Question",
+      "name": "What is Content Security Policy (CSP)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Content Security Policy (CSP) is a security standard that helps prevent cross-site scripting (XSS), clickjacking, and other code injection attacks. It works by allowing web developers to specify which sources of content (scripts, styles, images, etc.) the browser should trust and execute. CSP is delivered via an HTTP response header or a meta tag."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why should I use CSP on my website?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CSP provides a critical layer of defense against XSS attacks, which remain one of the most common web vulnerabilities. By restricting where scripts and other resources can load from, CSP limits the damage an attacker can do even if they find an injection point. CSP also helps prevent data exfiltration, clickjacking via frame-ancestors, and unauthorized form submissions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the most common CSP directives?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most commonly used directives are: default-src (fallback for other directives), script-src (JavaScript sources), style-src (CSS sources), img-src (image sources), connect-src (fetch/XHR/WebSocket endpoints), font-src (web font sources), frame-src (iframe sources), and frame-ancestors (which pages can embed yours). Each directive accepts source values like 'self', 'none', specific domains, 'unsafe-inline', 'unsafe-eval', nonces, and hashes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do inline scripts work with CSP?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "By default, CSP blocks inline scripts and styles for security. To allow them, you have three options: (1) Use 'unsafe-inline' which allows all inline code but weakens security significantly. (2) Use nonces by adding a random nonce attribute to each script tag and including it in the CSP. (3) Use hashes by computing the SHA-256/384/512 hash of the inline code and adding it to the CSP. Nonces are the recommended approach."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between nonce and hash in CSP?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A nonce is a random value generated per request that is added to both the CSP header and the script/style tag. It must change with every page load. A hash is a cryptographic digest of the inline script content itself. Hashes are static and do not need to change per request, but require updating whenever the script content changes. Nonces are generally preferred for dynamic applications, while hashes work well for static inline scripts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is CSP report-only mode?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Content-Security-Policy-Report-Only is a special header that tells the browser to report CSP violations without actually blocking the content. This allows you to test a new CSP policy without breaking your site. You can specify a report-uri or report-to endpoint to receive JSON violation reports, analyze them, and refine your policy before enforcing it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is CSP Level 3 and what does it add?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CSP Level 3 is the latest version of the specification and adds several features: 'strict-dynamic' which allows trusted scripts to load additional scripts, 'report-to' directive for modern reporting API integration, 'worker-src' for controlling Web Worker sources, and 'navigate-to' for restricting navigation targets. Level 3 is supported by all modern browsers."
+      }
+    }
   ]
 }
 </script>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0f; color: #e0e0e8; line-height: 1.7; }
-a { color: #00ff88; text-decoration: none; }
-a:hover { text-decoration: underline; }
-.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-header { background: #12121a; border-bottom: 1px solid #1e1e2a; padding: 16px 0; }
-header .container { display: flex; align-items: center; justify-content: space-between; }
-.logo { font-size: 1.3rem; font-weight: 700; color: #00ff88; letter-spacing: -0.5px; }
-nav a { color: #888; margin-left: 20px; font-size: 0.9rem; }
-.breadcrumb { padding: 14px 0; font-size: 0.85rem; color: #666; }
-.breadcrumb a { color: #666; }
-.breadcrumb span { margin: 0 6px; }
-.hero { padding: 40px 0 10px; }
-h1 { font-size: 2.1rem; font-weight: 700; color: #fff; margin-bottom: 10px; line-height: 1.25; }
-.subtitle { color: #999; font-size: 1.05rem; margin-bottom: 6px; }
-.meta-line { font-size: 0.82rem; color: #555; margin-bottom: 20px; }
-h2 { font-size: 1.45rem; font-weight: 600; margin: 40px 0 16px; color: #fff; scroll-margin-top: 80px; }
-h3 { font-size: 1.1rem; font-weight: 500; margin: 20px 0 10px; color: #ccc; }
-p { margin-bottom: 14px; color: #bbb; }
-ul, ol { margin: 0 0 16px 24px; color: #bbb; }
-li { margin-bottom: 6px; }
-code { font-family: 'Courier New', monospace; background: #1a1a25; padding: 2px 6px; border-radius: 4px; font-size: 0.88rem; color: #00ff88; }
-.card { background: #12121a; border: 1px solid #1e1e2a; border-radius: 12px; padding: 24px; margin: 20px 0; }
-label { display: block; font-size: 0.85rem; font-weight: 500; color: #999; margin-bottom: 6px; }
-textarea { width: 100%; padding: 14px; background: #0a0a0f; border: 1px solid #1e1e2a; border-radius: 8px; color: #e0e0e8; font-family: 'Courier New', monospace; font-size: 0.88rem; resize: vertical; line-height: 1.6; }
-textarea:focus { outline: none; border-color: #00ff88; }
-select, input[type="text"] { padding: 8px 12px; background: #0a0a0f; border: 1px solid #1e1e2a; border-radius: 6px; color: #e0e0e8; font-family: system-ui, sans-serif; font-size: 0.88rem; }
-select:focus, input:focus { outline: none; border-color: #00ff88; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #00ff88; color: #0a0a0f; border: none; border-radius: 8px; font-family: system-ui, sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s; }
-.btn:hover { background: #00e07a; transform: translateY(-1px); }
-.btn:active { transform: translateY(0); }
-.btn-outline { background: transparent; border: 1px solid #1e1e2a; color: #999; font-weight: 500; }
-.btn-outline:hover { border-color: #00ff88; color: #00ff88; background: rgba(0,255,136,0.05); }
-.btn-sm { padding: 6px 14px; font-size: 0.8rem; }
-.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
-.tabs { display: flex; gap: 4px; margin-bottom: 16px; background: #0a0a0f; border-radius: 10px; padding: 4px; border: 1px solid #1e1e2a; flex-wrap: wrap; }
-.tab { padding: 9px 18px; background: transparent; border: none; border-radius: 7px; cursor: pointer; font-size: 0.85rem; color: #777; transition: all 0.2s; font-family: system-ui, sans-serif; font-weight: 500; }
-.tab.active { background: #00ff88; color: #0a0a0f; font-weight: 600; }
-.tab:hover:not(.active) { color: #ccc; }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
 
-/* DIRECTIVE BUILDER */
-.directive-grid { display: flex; flex-direction: column; gap: 12px; }
-.directive-row { background: #0e0e16; border: 1px solid #1e1e2a; border-radius: 10px; padding: 14px 16px; transition: border-color 0.2s; }
-.directive-row.enabled { border-color: #00ff88; }
-.directive-header { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-.directive-toggle { width: 40px; height: 22px; background: #2a2a3a; border-radius: 11px; position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0; border: none; }
-.directive-toggle.on { background: #00ff88; }
-.directive-toggle::after { content: ''; position: absolute; width: 18px; height: 18px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: transform 0.2s; }
-.directive-toggle.on::after { transform: translateX(18px); }
-.directive-name { font-family: 'Courier New', monospace; font-weight: 600; color: #ccc; font-size: 0.9rem; min-width: 140px; }
-.directive-desc { color: #666; font-size: 0.78rem; flex: 1; }
-.directive-body { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #1e1e2a; }
-.directive-row.enabled .directive-body { display: block; }
-.source-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-.pill { padding: 5px 12px; background: #1a1a25; border: 1px solid #2a2a3a; border-radius: 6px; font-size: 0.78rem; font-family: 'Courier New', monospace; color: #999; cursor: pointer; transition: all 0.2s; }
-.pill.active { background: rgba(0,255,136,0.1); border-color: #00ff88; color: #00ff88; }
-.pill:hover:not(.active) { border-color: #555; color: #ccc; }
-.custom-input-row { display: flex; gap: 8px; }
-.custom-input-row input { flex: 1; }
-.custom-input-row button { flex-shrink: 0; }
-.custom-domains { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-.domain-tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: #1a1a25; border: 1px solid #2a2a3a; border-radius: 5px; font-size: 0.78rem; font-family: 'Courier New', monospace; color: #bbb; }
-.domain-tag button { background: none; border: none; color: #666; cursor: pointer; font-size: 0.9rem; padding: 0 2px; }
-.domain-tag button:hover { color: #ff4444; }
-
-/* PRESET BUTTONS */
-.presets-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin: 12px 0; }
-.preset-btn { padding: 10px 14px; background: #12121a; border: 1px solid #1e1e2a; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s; font-family: system-ui, sans-serif; color: #bbb; font-size: 0.84rem; font-weight: 500; }
-.preset-btn:hover { border-color: #00ff88; color: #00ff88; }
-.preset-btn.active { border-color: #00ff88; background: rgba(0,255,136,0.08); color: #00ff88; }
-
-/* EVALUATION */
-.eval-score { display: inline-block; padding: 4px 14px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; margin: 8px 0; }
-.eval-score.high { background: rgba(0,255,136,0.15); color: #00ff88; }
-.eval-score.medium { background: rgba(255,200,0,0.15); color: #ffc800; }
-.eval-score.low { background: rgba(255,68,68,0.15); color: #ff4444; }
-.eval-item { padding: 8px 0; border-bottom: 1px solid #1a1a25; font-size: 0.88rem; }
-.eval-item:last-child { border-bottom: none; }
-.eval-good { color: #00ff88; }
-.eval-warn { color: #ffc800; }
-.eval-bad { color: #ff4444; }
-
-/* CODE BLOCK */
-.code-block { background: #0a0a0f; border: 1px solid #1e1e2a; border-radius: 8px; padding: 16px; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.6; color: #ccc; overflow-x: auto; white-space: pre-wrap; word-break: break-all; position: relative; margin: 10px 0; }
-.code-block .copy-btn { position: absolute; top: 8px; right: 8px; padding: 4px 10px; background: #1e1e2a; border: 1px solid #2a2a3a; border-radius: 4px; color: #888; font-size: 0.75rem; cursor: pointer; font-family: system-ui, sans-serif; }
-.code-block .copy-btn:hover { color: #00ff88; border-color: #00ff88; }
-
-.toc { background: #12121a; border: 1px solid #1e1e2a; border-radius: 12px; padding: 20px 24px; margin: 24px 0; }
-.toc h3 { margin: 0 0 12px; color: #fff; font-size: 0.95rem; }
-.toc ul { list-style: none; margin: 0; padding: 0; columns: 2; }
-.toc li { margin-bottom: 6px; }
-.toc a { color: #888; font-size: 0.85rem; }
-.toc a:hover { color: #00ff88; }
-.faq-item { border-bottom: 1px solid #1e1e2a; padding: 16px 0; }
-.faq-item:last-child { border-bottom: none; }
-.faq-q { font-weight: 600; color: #fff; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-.faq-q::after { content: '+'; color: #00ff88; font-size: 1.2rem; transition: transform 0.2s; }
-.faq-q.open::after { content: '\2212'; }
-.faq-a { color: #999; font-size: 0.92rem; line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-.faq-a.open { max-height: 400px; }
-.related-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 20px 0; }
-.related-tool { background: #12121a; border: 1px solid #1e1e2a; border-radius: 10px; padding: 18px; transition: border-color 0.2s; }
-.related-tool:hover { border-color: #00ff88; }
-.related-tool h4 { color: #fff; margin-bottom: 6px; font-size: 0.95rem; }
-.related-tool p { color: #777; font-size: 0.82rem; margin: 0; }
-.privacy-note { background: #12121a; border: 1px solid #1e1e2a; border-radius: 10px; padding: 16px 20px; font-size: 0.85rem; color: #777; margin: 24px 0; }
-.privacy-note strong { color: #00ff88; }
-footer { background: #0a0a0f; border-top: 1px solid #1e1e2a; padding: 30px 0; margin-top: 60px; }
-.footer-inner { text-align: center; color: #444; font-size: 0.82rem; }
-.footer-inner a { color: #555; }
-.update-history { font-size: 0.82rem; color: #555; margin-top: 12px; }
-.toast { position: fixed; bottom: 24px; right: 24px; background: #00ff88; color: #0a0a0f; padding: 10px 20px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 999; pointer-events: none; }
-.toast.show { opacity: 1; transform: translateY(0); }
-@media (max-width: 768px) {
-  h1 { font-size: 1.6rem; }
-  .toc ul { columns: 1; }
-  .tabs { gap: 2px; }
-  .tab { padding: 7px 12px; font-size: 0.8rem; }
-  .card { padding: 16px; }
-  .directive-name { min-width: 100px; font-size: 0.82rem; }
-  .directive-desc { display: none; }
-  .presets-grid { grid-template-columns: repeat(2, 1fr); }
+<!-- BreadcrumbList JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Zovo Tools",
+      "item": "https://zovo.one/free-tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "CSP Header Generator",
+      "item": "https://zovo.one/free-tools/csp-header-generator/"
+    }
+  ]
 }
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --accent: #00ff88;
+    --accent-dim: rgba(0,255,136,0.15);
+    --accent-hover: #00cc6e;
+    --text: #e0e0e8;
+    --text-dim: #8888a0;
+    --border: #2a2a3a;
+    --danger: #ff4466;
+    --warning: #ffaa00;
+    --info: #4488ff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .breadcrumb {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .breadcrumb a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+  .breadcrumb a:hover { color: var(--accent-hover); }
+  .breadcrumb span { margin: 0 8px; }
+
+  header {
+    text-align: center;
+    padding: 48px 24px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  header h1 .hl { color: var(--accent); }
+  header p {
+    font-size: 16px;
+    color: var(--text-dim);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .panel-head h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+  }
+
+  .panel-body { padding: 20px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface2);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+  .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: var(--bg); }
+
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+  .btn-danger { border-color: var(--danger); color: var(--danger); }
+  .btn-danger:hover { background: rgba(255,68,102,0.15); }
+
+  .btn-group { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* Presets */
+  .presets-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    align-items: center;
+  }
+  .presets-bar label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 8px;
+  }
+
+  /* Directives */
+  .directives-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 768px) {
+    .directives-grid { grid-template-columns: 1fr; }
+  }
+
+  .directive-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .directive-card.active { border-color: var(--accent); }
+
+  .dir-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .dir-head:hover { background: var(--accent-dim); }
+
+  .dir-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+  }
+
+  .dir-toggle {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 40px;
+    height: 22px;
+    background: var(--bg);
+    border-radius: 11px;
+    border: 1px solid var(--border);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .dir-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: var(--text-dim);
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  .dir-toggle:checked {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+  }
+  .dir-toggle:checked::after {
+    left: 20px;
+    background: var(--accent);
+  }
+
+  .dir-body {
+    padding: 12px 16px;
+    display: none;
+  }
+  .dir-body.open { display: block; }
+
+  .source-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .source-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    background: var(--bg);
+    color: var(--text-dim);
+    font-family: 'Courier New', monospace;
+  }
+  .source-chip.selected {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .source-chip:hover { border-color: var(--accent); }
+
+  .domain-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    transition: border-color 0.2s;
+  }
+  .domain-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+  .domain-input::placeholder { color: var(--text-dim); }
+
+  .domain-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .domain-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 3px 8px;
+    font-size: 12px;
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+  }
+  .domain-tag button {
+    background: none;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0 2px;
+  }
+
+  /* Output */
+  .output-area {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--accent);
+    word-break: break-all;
+    white-space: pre-wrap;
+    min-height: 60px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .output-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .output-tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .output-tab:hover { color: var(--text); }
+  .output-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Violation Analyzer */
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    padding: 16px;
+    resize: vertical;
+    transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+  textarea::placeholder { color: var(--text-dim); }
+
+  .analysis-result {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .analysis-result .label { color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .analysis-result .value { color: var(--accent); font-family: 'Courier New', monospace; font-size: 13px; }
+  .analysis-result .suggestion { color: var(--warning); margin-top: 8px; }
+  .analysis-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .analysis-item:last-child { border-bottom: none; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    z-index: 1000;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Content */
+  .content-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .content-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+  .content-section h3 { font-size: 17px; font-weight: 600; margin: 20px 0 10px; }
+  .content-section p { color: var(--text-dim); margin-bottom: 12px; line-height: 1.7; }
+  .content-section ul, .content-section ol { color: var(--text-dim); margin: 8px 0 16px 24px; line-height: 1.8; }
+  .content-section code {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 13px;
+    color: var(--accent);
+    font-family: 'Courier New', monospace;
+  }
+
+  .quick-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .fact-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .fact-card strong { color: var(--accent); font-size: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .fact-card p { margin: 6px 0 0; font-size: 14px; color: var(--text); }
+
+  .steps {
+    counter-reset: step-counter;
+    list-style: none;
+    margin: 16px 0;
+    padding: 0;
+  }
+  .steps li {
+    counter-increment: step-counter;
+    padding: 16px 16px 16px 56px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    width: 28px;
+    height: 28px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .use-case {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 12px 0;
+  }
+  .use-case strong { color: var(--accent); display: block; margin-bottom: 4px; }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .related-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: block;
+  }
+  .related-card:hover { border-color: var(--accent); background: var(--accent-dim); }
+  .related-card span { color: var(--text); font-weight: 500; font-size: 14px; }
+
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-top: 48px;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    header { padding: 32px 16px 24px; }
+    main { padding: 20px 16px; }
+    .content-section { padding: 24px 20px; }
+    .presets-bar { flex-direction: column; }
+  }
 </style>
 </head>
 <body>
 
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="https://zovo.one/free-tools/">Zovo Tools</a>
+  <span>&#8250;</span>
+  CSP Header Generator
+</nav>
+
 <header>
-  <div class="container">
-    <a href="https://zovo.one/free-tools/" class="logo">Zovo</a>
-    <nav>
-      <a href="https://zovo.one/free-tools/">All Tools</a>
-    </nav>
-  </div>
+  <h1><span class="hl">CSP Header</span> Generator</h1>
+  <p>Visually build Content Security Policy headers. Configure directives, use presets, analyze violations, and export for nginx, Apache, or HTML meta tags.</p>
 </header>
 
-<div class="container">
-  <div class="breadcrumb">
-    <a href="https://zovo.one/free-tools/">Home</a>
-    <span>&rsaquo;</span>
-    CSP Header Generator
+<main>
+  <!-- Presets -->
+  <div class="presets-bar">
+    <label>Presets:</label>
+    <button class="btn btn-sm" onclick="CSP.applyPreset('strict')">Strict</button>
+    <button class="btn btn-sm" onclick="CSP.applyPreset('moderate')">Moderate</button>
+    <button class="btn btn-sm" onclick="CSP.applyPreset('permissive')">Permissive</button>
+    <button class="btn btn-sm btn-danger" onclick="CSP.resetAll()">Reset All</button>
   </div>
 
-  <div class="hero">
-    <h1>CSP Header Generator — Content Security Policy Builder</h1>
-    <p class="subtitle">Build Content Security Policy headers visually, evaluate existing policies, and get ready-to-use configuration snippets for Nginx, Apache, and Node.js — entirely in your browser.</p>
-    <p class="meta-line">By Michael Lip &middot; Updated March 2026 &middot; 10 min read</p>
+  <!-- Directives -->
+  <div class="directives-grid" id="directivesGrid"></div>
+
+  <!-- Live Output -->
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Generated Policy</h2>
+      <div class="btn-group">
+        <button class="btn btn-sm" onclick="CSP.copyOutput()">Copy</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="output-tabs">
+        <button class="output-tab active" data-tab="header" onclick="CSP.setTab('header')">HTTP Header</button>
+        <button class="output-tab" data-tab="meta" onclick="CSP.setTab('meta')">Meta Tag</button>
+        <button class="output-tab" data-tab="nginx" onclick="CSP.setTab('nginx')">Nginx</button>
+        <button class="output-tab" data-tab="apache" onclick="CSP.setTab('apache')">Apache</button>
+      </div>
+      <div class="output-area" id="outputArea">No directives configured yet.</div>
+    </div>
   </div>
 
-  <nav id="toc" class="toc">
-    <h3>Table of Contents</h3>
+  <!-- Violation Analyzer -->
+  <div class="panel">
+    <div class="panel-head">
+      <h2>CSP Violation Analyzer</h2>
+    </div>
+    <div class="panel-body">
+      <p style="color:var(--text-dim);font-size:14px;margin-bottom:12px;">Paste a CSP violation report (JSON) or a browser console error message below to get an explanation and suggested fix.</p>
+      <textarea id="violationInput" placeholder='Paste a CSP violation report JSON or console error, e.g.:
+{"csp-report":{"document-uri":"https://example.com","violated-directive":"script-src","blocked-uri":"https://evil.com/script.js"}}
+
+or:
+Refused to load the script '\''https://cdn.example.com/app.js'\'' because it violates the following Content Security Policy directive: "script-src '\''self'\''"' spellcheck="false"></textarea>
+      <div style="margin-top:12px;">
+        <button class="btn btn-primary" onclick="CSP.analyzeViolation()">Analyze Violation</button>
+      </div>
+      <div class="analysis-result" id="analysisResult" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Educational Section -->
+  <section class="content-section">
+    <h2>Understanding Content Security Policy</h2>
+    <p>Content Security Policy (CSP) is one of the most effective defenses against cross-site scripting (XSS) attacks, the most prevalent class of web application vulnerabilities. CSP works by telling the browser exactly which sources of content are trusted, and the browser refuses to load or execute anything that does not match the policy.</p>
+
+    <h3>How CSP Works</h3>
+    <p>When a browser receives a CSP header with an HTTP response, it parses each directive and builds an allow-list of trusted sources for each content type. When the page tries to load a resource (script, stylesheet, image, etc.), the browser checks it against the relevant directive. If no matching source is found, the browser blocks the resource and optionally sends a violation report to a configured endpoint.</p>
+
+    <h3>Directive Hierarchy</h3>
+    <p>The <code>default-src</code> directive acts as a fallback for any directive that is not explicitly configured. For example, if you set <code>default-src 'self'</code> but do not specify <code>img-src</code>, then images will also be restricted to same-origin. Specific directives always override the default. This makes <code>default-src 'none'</code> a popular starting point for strict policies, where you then selectively enable each content type.</p>
+
+    <h3>Source Values Explained</h3>
     <ul>
-      <li><a href="#builder">CSP Directive Builder</a></li>
-      <li><a href="#presets">Common Presets</a></li>
-      <li><a href="#preview">Header Preview &amp; Export</a></li>
-      <li><a href="#evaluator">CSP Evaluator</a></li>
-      <li><a href="#server-config">Server Configuration Snippets</a></li>
-      <li><a href="#reporting">Violation Reporting</a></li>
-      <li><a href="#guide">CSP Reference Guide</a></li>
-      <li><a href="#faq">Frequently Asked Questions</a></li>
-      <li><a href="#related">Related Tools</a></li>
+      <li><code>'self'</code> &mdash; Allows resources from the same origin (same scheme, host, and port).</li>
+      <li><code>'none'</code> &mdash; Blocks all sources for this directive. Use with default-src for a deny-by-default approach.</li>
+      <li><code>'unsafe-inline'</code> &mdash; Allows inline scripts/styles. Weakens XSS protection significantly.</li>
+      <li><code>'unsafe-eval'</code> &mdash; Allows <code>eval()</code> and similar dynamic code execution. Avoid when possible.</li>
+      <li><code>'strict-dynamic'</code> &mdash; Trusts scripts loaded by already-trusted scripts. Useful for modern frameworks.</li>
+      <li><code>nonce-&lt;value&gt;</code> &mdash; Allows specific inline scripts/styles with a matching nonce attribute.</li>
+      <li><code>sha256-&lt;hash&gt;</code> &mdash; Allows inline code whose hash matches the specified value.</li>
+      <li>Domain URLs &mdash; Allows resources from the specified domain(s), e.g., <code>https://cdn.example.com</code>.</li>
     </ul>
-  </nav>
 
-  <!-- DIRECTIVE BUILDER -->
-  <h2 id="builder">CSP Directive Builder</h2>
-  <div class="card">
-    <p style="color:#777;font-size:0.88rem;margin-bottom:16px;">Toggle directives on/off and select source values. The CSP header updates in real time below.</p>
-    <div class="directive-grid" id="directiveGrid"></div>
-  </div>
+    <h3>Deployment Strategy</h3>
+    <p>The recommended approach is to deploy CSP in stages: (1) Start with <code>Content-Security-Policy-Report-Only</code> and a report endpoint. (2) Monitor violation reports and adjust the policy. (3) Once violations are resolved, switch to the enforcing <code>Content-Security-Policy</code> header. This approach prevents accidentally breaking your site while building a strong policy.</p>
+  </section>
 
-  <!-- PRESETS -->
-  <h2 id="presets">Common Presets</h2>
-  <div class="card">
-    <p style="color:#777;font-size:0.88rem;margin-bottom:14px;">Load a preconfigured policy as a starting point. You can customize further after applying.</p>
-    <div class="presets-grid" id="presetsGrid">
-      <button class="preset-btn" data-preset="strict">Strict (Recommended)</button>
-      <button class="preset-btn" data-preset="moderate">Moderate</button>
-      <button class="preset-btn" data-preset="permissive">Permissive</button>
-      <button class="preset-btn" data-preset="wordpress">WordPress</button>
-      <button class="preset-btn" data-preset="react-spa">React SPA</button>
-      <button class="preset-btn" data-preset="nextjs">Next.js</button>
+  <!-- Quick Facts -->
+  <section class="content-section">
+    <h2>Quick Facts</h2>
+    <div class="quick-facts">
+      <div class="fact-card">
+        <strong>XSS Prevention</strong>
+        <p>CSP is the primary browser defense against cross-site scripting attacks</p>
+      </div>
+      <div class="fact-card">
+        <strong>13+ Directives</strong>
+        <p>Control scripts, styles, images, fonts, frames, forms, and more</p>
+      </div>
+      <div class="fact-card">
+        <strong>Report-Only Mode</strong>
+        <p>Test policies without breaking your site using report-only headers</p>
+      </div>
+      <div class="fact-card">
+        <strong>CSP Level 3</strong>
+        <p>Latest spec adds strict-dynamic, report-to, and worker-src</p>
+      </div>
+      <div class="fact-card">
+        <strong>Browser Support</strong>
+        <p>Supported by all modern browsers since 2015+</p>
+      </div>
+      <div class="fact-card">
+        <strong>Nonces vs Hashes</strong>
+        <p>Two secure alternatives to unsafe-inline for inline code</p>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- PREVIEW & EXPORT -->
-  <h2 id="preview">Header Preview &amp; Export</h2>
-  <div class="card">
-    <div class="tabs" id="outputTabs">
-      <button class="tab active" data-tab="output-header">HTTP Header</button>
-      <button class="tab" data-tab="output-meta">Meta Tag</button>
-      <button class="tab" data-tab="output-report-only">Report-Only</button>
-    </div>
+  <!-- How-To Steps -->
+  <section class="content-section">
+    <h2>How to Use the CSP Header Generator</h2>
+    <ol class="steps">
+      <li><strong>Choose a preset or start from scratch.</strong> Use the Strict, Moderate, or Permissive preset as a starting point, or configure each directive manually.</li>
+      <li><strong>Enable and configure directives.</strong> Toggle each directive on/off and select source values. Click the common source chips or add custom domains.</li>
+      <li><strong>Add custom domains.</strong> Type a domain (e.g., <code>https://cdn.example.com</code>) in the input field of each directive and press Enter to add it as a trusted source.</li>
+      <li><strong>Review the live preview.</strong> The generated policy updates in real-time as you make changes. Check the output in HTTP header, meta tag, nginx, or Apache format.</li>
+      <li><strong>Copy and deploy.</strong> Click the Copy button and add the policy to your web server configuration or HTML document.</li>
+      <li><strong>Test with report-only.</strong> Start with <code>Content-Security-Policy-Report-Only</code> to monitor violations before enforcing.</li>
+      <li><strong>Analyze violations.</strong> If you receive CSP violation reports, paste them into the analyzer below to get explanations and suggested fixes.</li>
+    </ol>
+  </section>
 
-    <div id="output-header" class="tab-panel active">
-      <div class="code-block" id="headerOutput">Content-Security-Policy: default-src 'self';</div>
+  <!-- Common Use Cases -->
+  <section class="content-section">
+    <h2>Common Use Cases &amp; Tips</h2>
+    <div class="use-case">
+      <strong>Single-Page Applications</strong>
+      SPAs often need connect-src for API calls, script-src for bundles, and style-src for CSS. Use 'strict-dynamic' with nonces to allow dynamically loaded scripts securely.
     </div>
-    <div id="output-meta" class="tab-panel">
-      <div class="code-block" id="metaOutput">&lt;meta http-equiv="Content-Security-Policy" content="default-src 'self';"&gt;</div>
+    <div class="use-case">
+      <strong>E-Commerce Sites</strong>
+      Payment pages benefit from strict CSP to prevent data skimming. Lock down script-src and connect-src to only trusted payment processors and your own origin.
     </div>
-    <div id="output-report-only" class="tab-panel">
-      <div class="code-block" id="reportOnlyOutput">Content-Security-Policy-Report-Only: default-src 'self';</div>
+    <div class="use-case">
+      <strong>WordPress &amp; CMS Sites</strong>
+      CMS platforms often use inline styles and scripts. Start with a moderate policy and progressively tighten it. Consider using nonces with a server-side plugin.
     </div>
+    <div class="use-case">
+      <strong>API-Only Services</strong>
+      APIs that do not serve HTML can use a minimal CSP like <code>default-src 'none'</code> to add defense-in-depth against accidental HTML responses.
+    </div>
+    <div class="use-case">
+      <strong>Embedding Prevention</strong>
+      Use <code>frame-ancestors 'none'</code> to prevent your pages from being embedded in iframes on other sites, mitigating clickjacking attacks.
+    </div>
+    <div class="use-case">
+      <strong>Third-Party Widget Integration</strong>
+      When adding analytics, chat widgets, or ad scripts, add their domains to the appropriate directives (script-src, connect-src, frame-src) rather than using unsafe-inline.
+    </div>
+  </section>
 
-    <div class="btn-row" style="margin-top:14px;">
-      <button class="btn btn-sm" onclick="copyOutput('header')">Copy Header</button>
-      <button class="btn btn-sm btn-outline" onclick="copyOutput('meta')">Copy Meta Tag</button>
-      <button class="btn btn-sm btn-outline" onclick="resetAll()">Reset All</button>
-    </div>
-  </div>
+  <!-- Browser Compatibility -->
+  <section class="content-section">
+    <h2>Browser Compatibility</h2>
+    <p>Content Security Policy Level 2 is supported by all modern browsers including Chrome 40+, Firefox 31+, Safari 10+, Edge 15+, and Opera 27+. CSP Level 3 features like <code>strict-dynamic</code> and <code>worker-src</code> are supported in Chrome 52+, Firefox 52+, Safari 15.4+, and Edge 79+.</p>
+    <p>This CSP generator tool itself runs entirely in your browser. No data is transmitted to any server, ensuring your security policy configuration remains private.</p>
+  </section>
 
-  <!-- CSP EVALUATOR -->
-  <h2 id="evaluator">CSP Evaluator</h2>
-  <div class="card">
-    <p style="color:#777;font-size:0.88rem;margin-bottom:14px;">Paste an existing Content-Security-Policy header to evaluate its security level.</p>
-    <label for="evalInput">Paste CSP header value</label>
-    <textarea id="evalInput" rows="4" placeholder="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"></textarea>
-    <div class="btn-row">
-      <button class="btn btn-sm" onclick="evaluateCSP()">Evaluate</button>
-    </div>
-    <div id="evalResults" style="display:none;margin-top:16px;"></div>
-  </div>
+  <!-- E-E-A-T -->
+  <section class="content-section">
+    <h2>About This Tool</h2>
+    <p>This CSP header generator was built by <strong>Michael Lip</strong>, a software developer with expertise in web security and developer tooling. The tool is designed to make CSP adoption easier by providing a visual interface, sensible presets, and a violation analyzer that explains CSP errors in plain language.</p>
+    <p>The generator supports all CSP Level 2 and Level 3 directives and produces output compatible with all major web servers and deployment methods.</p>
+  </section>
 
-  <!-- SERVER CONFIG -->
-  <h2 id="server-config">Server Configuration Snippets</h2>
-  <div class="card">
-    <div class="tabs" id="serverTabs">
-      <button class="tab active" data-tab="cfg-nginx">Nginx</button>
-      <button class="tab" data-tab="cfg-apache">Apache</button>
-      <button class="tab" data-tab="cfg-express">Node.js / Express</button>
-    </div>
-    <div id="cfg-nginx" class="tab-panel active">
-      <div class="code-block" id="nginxOutput">add_header Content-Security-Policy "default-src 'self';" always;</div>
-    </div>
-    <div id="cfg-apache" class="tab-panel">
-      <div class="code-block" id="apacheOutput">Header set Content-Security-Policy "default-src 'self';"</div>
-    </div>
-    <div id="cfg-express" class="tab-panel">
-      <div class="code-block" id="expressOutput">app.use((req, res, next) => {
-  res.setHeader('Content-Security-Policy', "default-src 'self';");
-  next();
-});</div>
-    </div>
-    <div class="btn-row" style="margin-top:10px;">
-      <button class="btn btn-sm btn-outline" onclick="copyServerConfig()">Copy Current Snippet</button>
-    </div>
-  </div>
-
-  <!-- REPORTING -->
-  <h2 id="reporting">Violation Reporting</h2>
-  <div class="card">
-    <h3 style="margin-top:0;">Report-URI and Report-To</h3>
-    <p>CSP supports two reporting mechanisms. The older <code>report-uri</code> directive sends JSON violation reports via POST to a specified URL. The newer <code>report-to</code> directive uses the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Reporting_API" target="_blank" rel="noopener">Reporting API</a> and requires a <code>Report-To</code> response header defining endpoint groups.</p>
-    <p>For maximum compatibility, include both directives in your policy.</p>
-
-    <h3>Violation Report Format</h3>
-    <p>When a CSP violation occurs, the browser sends a JSON report containing:</p>
-    <div class="code-block">{
-  "csp-report": {
-    "document-uri": "https://example.com/page",
-    "referrer": "",
-    "violated-directive": "script-src 'self'",
-    "effective-directive": "script-src",
-    "original-policy": "default-src 'self'; script-src 'self';",
-    "blocked-uri": "https://evil.com/malicious.js",
-    "status-code": 200,
-    "source-file": "https://example.com/page",
-    "line-number": 15,
-    "column-number": 2
-  }
-}</div>
-    <p style="margin-top:14px;">The <code>blocked-uri</code> field shows which resource was blocked, <code>violated-directive</code> indicates which policy rule was triggered, and <code>source-file</code> with line/column numbers help pinpoint the offending code. Use a service like <a href="https://report-uri.com" target="_blank" rel="noopener">report-uri.com</a> or build your own endpoint to collect and analyze these reports.</p>
-
-    <h3>Report-To Configuration</h3>
-    <div class="code-block">Report-To: {"group":"csp","max_age":86400,"endpoints":[{"url":"https://example.com/csp-report"}]}
-Content-Security-Policy: default-src 'self'; report-to csp;</div>
-  </div>
-
-  <!-- CSP GUIDE -->
-  <h2 id="guide">CSP Reference Guide</h2>
-  <div class="card">
-    <h3 style="margin-top:0;">What Is Content Security Policy?</h3>
-    <p>Content Security Policy (CSP) is a security standard introduced to mitigate cross-site scripting (XSS) and other content injection attacks. By declaring which resource origins are permitted, you create a whitelist that browsers enforce. Any resource loaded from an unlisted origin is blocked.</p>
-    <p>CSP was first standardized by the <a href="https://www.w3.org/TR/CSP3/" target="_blank" rel="noopener">W3C</a> and is now supported by all major browsers. The <a href="https://owasp.org/www-community/controls/Content_Security_Policy" target="_blank" rel="noopener">OWASP Content Security Policy guide</a> is an authoritative reference for implementation best practices.</p>
-
-    <h3>Directive Reference</h3>
-    <p>Each CSP directive controls a specific type of resource:</p>
+  <!-- Update History -->
+  <section class="content-section">
+    <h2>Update History</h2>
     <ul>
-      <li><code>default-src</code> — Fallback for all unspecified directives</li>
-      <li><code>script-src</code> — JavaScript sources (critical for XSS prevention)</li>
-      <li><code>style-src</code> — CSS stylesheet sources</li>
-      <li><code>img-src</code> — Image sources</li>
-      <li><code>font-src</code> — Web font sources</li>
-      <li><code>connect-src</code> — XHR, fetch, WebSocket endpoints</li>
-      <li><code>media-src</code> — Audio and video sources</li>
-      <li><code>object-src</code> — Plugin content (Flash, Java)</li>
-      <li><code>frame-src</code> — iframe sources</li>
-      <li><code>frame-ancestors</code> — Which pages can embed this page (replaces X-Frame-Options)</li>
-      <li><code>base-uri</code> — Restricts the base element URL</li>
-      <li><code>form-action</code> — Where forms can submit to</li>
+      <li><strong>March 2026</strong> &mdash; Added CSP violation analyzer, nginx/Apache export formats, and strict-dynamic support.</li>
+      <li><strong>February 2026</strong> &mdash; Introduced presets (strict, moderate, permissive) and meta tag output format.</li>
+      <li><strong>January 2026</strong> &mdash; Initial release with visual directive builder, live preview, and HTTP header output.</li>
     </ul>
-    <p>For the full specification, see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" target="_blank" rel="noopener">MDN's CSP documentation</a> and the <a href="https://en.wikipedia.org/wiki/Content_Security_Policy" target="_blank" rel="noopener">Wikipedia CSP article</a>.</p>
+  </section>
 
-    <h3>Nonces and Hashes</h3>
-    <p>Instead of using <code>'unsafe-inline'</code>, you can whitelist specific inline scripts/styles using:</p>
-    <ul>
-      <li><strong>Nonces:</strong> A unique, random token generated per request. Add <code>nonce-{random}</code> to your CSP and the matching <code>nonce</code> attribute to your script/style tag.</li>
-      <li><strong>Hashes:</strong> A SHA-256/384/512 hash of the inline script content. The browser computes the hash and checks it against the policy.</li>
-    </ul>
-    <p>Nonces are preferred for dynamic applications since hashes break when code changes. With <code>'strict-dynamic'</code>, nonce-trusted scripts can load additional scripts without explicit allowlisting.</p>
-  </div>
-
-  <!-- BROWSER COMPAT -->
-  <div class="card" style="margin-top:20px;">
-    <h3 style="margin-top:0;">Browser Compatibility</h3>
-    <p>CSP Level 2 is supported in Chrome 40+, Firefox 31+, Safari 10+, and Edge 15+. CSP Level 3 features like <code>'strict-dynamic'</code> are supported in Chrome 52+, Firefox 52+, and Edge 79+. Safari has partial Level 3 support. This generator tool works in all modern browsers including mobile Chrome and Safari on iOS/Android.</p>
-  </div>
-
-  <!-- PRIVACY -->
-  <div class="privacy-note">
-    <strong>Privacy Note:</strong> All CSP generation and evaluation happens entirely in your browser. No data is sent to any server. Your policies and configurations never leave your device.
-  </div>
-
-  <!-- FAQ -->
-  <h2 id="faq">Frequently Asked Questions</h2>
-  <div class="card">
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is a Content Security Policy (CSP)?</div>
-      <div class="faq-a">A Content Security Policy is an HTTP response header that tells browsers which content sources are allowed on a web page. It prevents cross-site scripting (XSS), clickjacking, and other code injection attacks by restricting where scripts, styles, images, and other resources can be loaded from.</div>
+  <!-- Related Tools -->
+  <section class="content-section">
+    <h2>Related Tools</h2>
+    <p>Explore more free security and developer tools:</p>
+    <div class="related-grid">
+      <a class="related-card" href="https://zovo.one/free-tools/ssl-checker/"><span>SSL Checker</span></a>
+      <a class="related-card" href="https://zovo.one/free-tools/http-header-analyzer/"><span>HTTP Header Analyzer</span></a>
+      <a class="related-card" href="https://zovo.one/free-tools/cors-tester/"><span>CORS Tester</span></a>
+      <a class="related-card" href="https://zovo.one/free-tools/password-generator/"><span>Password Generator</span></a>
+      <a class="related-card" href="https://zovo.one/free-tools/hash-generator/"><span>Hash Generator</span></a>
+      <a class="related-card" href="https://zovo.one/free-tools/jwt-decoder/"><span>JWT Decoder</span></a>
     </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How do I add a CSP header to my website?</div>
-      <div class="faq-a">You can add a CSP header via your web server configuration (Nginx, Apache), your application framework (Express, Django, Rails), or as a meta tag in your HTML. The server header approach is preferred because meta tags cannot set frame-ancestors or report-uri directives.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What does 'unsafe-inline' mean in CSP?</div>
-      <div class="faq-a">'unsafe-inline' allows inline scripts and styles (e.g., onclick handlers, style attributes, script tags without src). It significantly weakens CSP protection because any injected inline code will execute. Prefer using nonces or hashes instead of unsafe-inline for better security.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is the difference between CSP Level 2 and Level 3?</div>
-      <div class="faq-a">CSP Level 2 added nonce-based and hash-based source expressions and the base-uri and form-action directives. CSP Level 3 introduced strict-dynamic, which automatically trusts scripts loaded by already-trusted scripts, and the report-to directive using the Reporting API. Most modern browsers support Level 3.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Should I use 'strict-dynamic' in my CSP?</div>
-      <div class="faq-a">strict-dynamic is recommended for applications that dynamically load scripts. When combined with a nonce, it allows trusted scripts to load additional scripts without listing every domain. It is the foundation of the strict CSP approach recommended by security researchers.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What happens when a CSP violation occurs?</div>
-      <div class="faq-a">When a browser detects a resource that violates the CSP, it blocks that resource from loading or executing. If a report-uri or report-to directive is configured, the browser sends a JSON violation report to the specified endpoint. The Content-Security-Policy-Report-Only header can be used to monitor violations without blocking.</div>
-    </div>
-  </div>
-
-  <!-- RELATED TOOLS -->
-  <h2 id="related">Related Tools</h2>
-  <div class="related-tools">
-    <a href="/free-tools/http-header-analyzer/" class="related-tool">
-      <h4>HTTP Header Analyzer</h4>
-      <p>Inspect and analyze HTTP response headers for any URL.</p>
-    </a>
-    <a href="/free-tools/ssl-checker/" class="related-tool">
-      <h4>SSL Certificate Checker</h4>
-      <p>Verify SSL/TLS certificates, expiry dates, and chain validity.</p>
-    </a>
-    <a href="/free-tools/nginx-config-generator/" class="related-tool">
-      <h4>Nginx Config Generator</h4>
-      <p>Generate Nginx server blocks with SSL, caching, and security headers.</p>
-    </a>
-  </div>
-
-  <!-- E-E-A-T FOOTER -->
-  <div style="margin-top:40px;padding-top:20px;border-top:1px solid #1e1e2a;">
-    <p style="font-size:0.82rem;color:#555;">This CSP header generator was built by <strong style="color:#888;">Michael Lip</strong>, a web developer with experience in application security and HTTP security headers. The evaluation logic is based on documented best practices from <a href="https://owasp.org/www-community/controls/Content_Security_Policy" target="_blank" rel="noopener">OWASP</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" target="_blank" rel="noopener">MDN Web Security documentation</a>. Review the page source to verify the implementation.</p>
-    <div class="update-history">
-      <strong style="color:#666;">Update History:</strong> March 2026 — Initial release with visual directive builder, six presets, CSP evaluator, server config snippets, and violation reporting guide.
-    </div>
-  </div>
-</div>
+  </section>
+</main>
 
 <footer>
-  <div class="container footer-inner">
-    <p>&copy; 2026 Zovo &middot; Free Browser Tools &middot; <a href="https://zovo.one">zovo.one</a></p>
-  </div>
+  <p>&copy; 2026 <a href="https://zovo.one">Zovo</a>. Built by Michael Lip. All tools run client-side &mdash; your data never leaves your browser.</p>
 </footer>
 
-<div class="toast" id="toast">Copied!</div>
+<div class="toast" id="toast">Copied to clipboard!</div>
 
 <script>
-// ========== DIRECTIVES DEFINITION ==========
-const DIRECTIVES = [
-  { name: 'default-src', desc: 'Fallback for all resource types not covered by other directives', sources: ["'self'","'none'","'unsafe-inline'","'unsafe-eval'"], category: 'fetch' },
-  { name: 'script-src', desc: 'Controls which scripts can execute', sources: ["'self'","'none'","'unsafe-inline'","'unsafe-eval'","'strict-dynamic'","'unsafe-hashes'"], category: 'fetch' },
-  { name: 'style-src', desc: 'Controls which stylesheets can be applied', sources: ["'self'","'none'","'unsafe-inline'"], category: 'fetch' },
-  { name: 'img-src', desc: 'Controls which images can be loaded', sources: ["'self'","'none'","data:","blob:","https:"], category: 'fetch' },
-  { name: 'font-src', desc: 'Controls which web fonts can be loaded', sources: ["'self'","'none'","data:","https:"], category: 'fetch' },
-  { name: 'connect-src', desc: 'Controls XHR, fetch, WebSocket, EventSource endpoints', sources: ["'self'","'none'","https:","wss:"], category: 'fetch' },
-  { name: 'media-src', desc: 'Controls audio and video sources', sources: ["'self'","'none'","https:","blob:"], category: 'fetch' },
-  { name: 'object-src', desc: 'Controls plugin content (Flash, Java applets)', sources: ["'self'","'none'"], category: 'fetch' },
-  { name: 'frame-src', desc: 'Controls which URLs can be loaded in iframes', sources: ["'self'","'none'","https:"], category: 'fetch' },
-  { name: 'child-src', desc: 'Controls workers and nested browsing contexts', sources: ["'self'","'none'","blob:"], category: 'fetch' },
-  { name: 'worker-src', desc: 'Controls Worker, SharedWorker, ServiceWorker sources', sources: ["'self'","'none'","blob:"], category: 'fetch' },
-  { name: 'manifest-src', desc: 'Controls web app manifest sources', sources: ["'self'","'none'"], category: 'fetch' },
-  { name: 'base-uri', desc: 'Restricts URLs that can be used in the base element', sources: ["'self'","'none'"], category: 'document' },
-  { name: 'form-action', desc: 'Restricts URLs forms can submit to', sources: ["'self'","'none'","https:"], category: 'document' },
-  { name: 'frame-ancestors', desc: 'Controls which pages can embed this page in frames', sources: ["'self'","'none'","https:"], category: 'navigation' },
-  { name: 'navigate-to', desc: 'Restricts URLs the document can navigate to', sources: ["'self'","'none'","https:"], category: 'navigation' }
-];
+var CSP = (function() {
+  'use strict';
 
-// State: { enabled: bool, selectedSources: Set, customDomains: [] }
-const state = {};
+  var currentTab = 'header';
 
-function initState() {
-  DIRECTIVES.forEach(d => {
-    state[d.name] = { enabled: false, selectedSources: new Set(), customDomains: [] };
-  });
-  // Enable default-src 'self' by default
-  state['default-src'].enabled = true;
-  state['default-src'].selectedSources.add("'self'");
-}
+  var DIRECTIVES = [
+    { id: 'default-src', label: 'default-src', desc: 'Fallback for all other directives', sources: ["'self'", "'none'", "'unsafe-inline'", "'unsafe-eval'", "'strict-dynamic'", "*"] },
+    { id: 'script-src', label: 'script-src', desc: 'JavaScript sources', sources: ["'self'", "'none'", "'unsafe-inline'", "'unsafe-eval'", "'strict-dynamic'", "*"] },
+    { id: 'style-src', label: 'style-src', desc: 'CSS stylesheet sources', sources: ["'self'", "'none'", "'unsafe-inline'", "*"] },
+    { id: 'img-src', label: 'img-src', desc: 'Image sources', sources: ["'self'", "'none'", "data:", "blob:", "*"] },
+    { id: 'font-src', label: 'font-src', desc: 'Web font sources', sources: ["'self'", "'none'", "data:", "*"] },
+    { id: 'connect-src', label: 'connect-src', desc: 'Fetch, XHR, WebSocket endpoints', sources: ["'self'", "'none'", "*"] },
+    { id: 'frame-src', label: 'frame-src', desc: 'Sources for iframes', sources: ["'self'", "'none'", "*"] },
+    { id: 'media-src', label: 'media-src', desc: 'Audio and video sources', sources: ["'self'", "'none'", "blob:", "*"] },
+    { id: 'object-src', label: 'object-src', desc: 'Plugin sources (Flash, etc.)', sources: ["'self'", "'none'"] },
+    { id: 'base-uri', label: 'base-uri', desc: 'Restricts base element URLs', sources: ["'self'", "'none'"] },
+    { id: 'form-action', label: 'form-action', desc: 'Allowed form submission targets', sources: ["'self'", "'none'", "*"] },
+    { id: 'frame-ancestors', label: 'frame-ancestors', desc: 'Who can embed this page', sources: ["'self'", "'none'", "*"] },
+    { id: 'report-uri', label: 'report-uri', desc: 'Violation report endpoint', sources: [], customOnly: true }
+  ];
 
-// ========== RENDER DIRECTIVES ==========
-function renderDirectives() {
-  const grid = document.getElementById('directiveGrid');
-  grid.innerHTML = '';
+  var state = {};
 
-  DIRECTIVES.forEach(d => {
-    const s = state[d.name];
-    const row = document.createElement('div');
-    row.className = 'directive-row' + (s.enabled ? ' enabled' : '');
-    row.dataset.directive = d.name;
-
-    row.innerHTML = `
-      <div class="directive-header">
-        <button class="directive-toggle ${s.enabled ? 'on' : ''}" data-dir="${d.name}"></button>
-        <span class="directive-name">${d.name}</span>
-        <span class="directive-desc">${d.desc}</span>
-      </div>
-      <div class="directive-body">
-        <div class="source-pills" data-dir="${d.name}">
-          ${d.sources.map(src => `<span class="pill ${s.selectedSources.has(src) ? 'active' : ''}" data-src="${src}">${src}</span>`).join('')}
-        </div>
-        <div class="custom-input-row">
-          <input type="text" placeholder="Add custom domain (e.g., https://cdn.example.com)" data-dir="${d.name}" class="custom-domain-input">
-          <button class="btn btn-sm btn-outline" onclick="addCustomDomain('${d.name}')">Add</button>
-        </div>
-        <div class="custom-domains" data-dir="${d.name}">
-          ${s.customDomains.map((dom, i) => `<span class="domain-tag">${escapeHTML(dom)} <button onclick="removeCustomDomain('${d.name}', ${i})">&times;</button></span>`).join('')}
-        </div>
-      </div>
-    `;
-
-    grid.appendChild(row);
-  });
-
-  // Bind toggle buttons
-  grid.querySelectorAll('.directive-toggle').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const dir = btn.dataset.dir;
-      state[dir].enabled = !state[dir].enabled;
-      renderDirectives();
-      updateOutput();
+  function initState() {
+    state = {};
+    DIRECTIVES.forEach(function(d) {
+      state[d.id] = { enabled: false, sources: [], domains: [] };
     });
-  });
+  }
 
-  // Bind header click to toggle
-  grid.querySelectorAll('.directive-header').forEach(header => {
-    header.addEventListener('click', (e) => {
-      if (e.target.classList.contains('directive-toggle')) return;
-      const dir = header.querySelector('.directive-toggle').dataset.dir;
-      state[dir].enabled = !state[dir].enabled;
-      renderDirectives();
-      updateOutput();
+  function renderDirectives() {
+    var grid = document.getElementById('directivesGrid');
+    var html = '';
+    DIRECTIVES.forEach(function(d) {
+      var s = state[d.id];
+      html += '<div class="directive-card' + (s.enabled ? ' active' : '') + '" id="card-' + d.id + '">';
+      html += '<div class="dir-head" onclick="CSP.toggleDir(\'' + d.id + '\')">';
+      html += '<div><span class="dir-name">' + d.label + '</span><br><span style="font-size:12px;color:var(--text-dim)">' + d.desc + '</span></div>';
+      html += '<input type="checkbox" class="dir-toggle" ' + (s.enabled ? 'checked' : '') + ' onclick="event.stopPropagation();CSP.toggleDir(\'' + d.id + '\')">';
+      html += '</div>';
+      html += '<div class="dir-body' + (s.enabled ? ' open' : '') + '" id="body-' + d.id + '">';
+      if (!d.customOnly) {
+        html += '<div class="source-options">';
+        d.sources.forEach(function(src) {
+          var sel = s.sources.indexOf(src) !== -1 ? ' selected' : '';
+          html += '<span class="source-chip' + sel + '" onclick="CSP.toggleSource(\'' + d.id + '\',\'' + src + '\')">' + escapeHtml(src) + '</span>';
+        });
+        html += '</div>';
+      }
+      html += '<input type="text" class="domain-input" placeholder="Add domain (e.g. https://cdn.example.com) and press Enter" onkeydown="if(event.key===\'Enter\'){event.preventDefault();CSP.addDomain(\'' + d.id + '\',this.value);this.value=\'\';}">';
+      html += '<div class="domain-tags" id="tags-' + d.id + '">';
+      s.domains.forEach(function(dom, idx) {
+        html += '<span class="domain-tag">' + escapeHtml(dom) + '<button onclick="CSP.removeDomain(\'' + d.id + '\',' + idx + ')">&times;</button></span>';
+      });
+      html += '</div>';
+      html += '</div>';
+      html += '</div>';
     });
-  });
+    grid.innerHTML = html;
+  }
 
-  // Bind pills
-  grid.querySelectorAll('.source-pills .pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      const dir = pill.parentElement.dataset.dir;
-      const src = pill.dataset.src;
-      if (state[dir].selectedSources.has(src)) {
-        state[dir].selectedSources.delete(src);
+  function toggleDir(id) {
+    state[id].enabled = !state[id].enabled;
+    var card = document.getElementById('card-' + id);
+    var body = document.getElementById('body-' + id);
+    var toggle = card.querySelector('.dir-toggle');
+    if (state[id].enabled) {
+      card.classList.add('active');
+      body.classList.add('open');
+      toggle.checked = true;
+    } else {
+      card.classList.remove('active');
+      body.classList.remove('open');
+      toggle.checked = false;
+    }
+    generateOutput();
+  }
+
+  function toggleSource(dirId, source) {
+    var s = state[dirId];
+    var idx = s.sources.indexOf(source);
+    if (idx !== -1) {
+      s.sources.splice(idx, 1);
+    } else {
+      // Handle mutually exclusive sources
+      if (source === "'none'") {
+        s.sources = ["'none'"];
       } else {
-        // If selecting 'none', clear others
-        if (src === "'none'") {
-          state[dir].selectedSources.clear();
-          state[dir].customDomains = [];
+        var ni = s.sources.indexOf("'none'");
+        if (ni !== -1) s.sources.splice(ni, 1);
+        s.sources.push(source);
+      }
+    }
+    if (!s.enabled) {
+      s.enabled = true;
+    }
+    renderDirectives();
+    generateOutput();
+  }
+
+  function addDomain(dirId, domain) {
+    domain = domain.trim();
+    if (!domain) return;
+    var s = state[dirId];
+    if (s.domains.indexOf(domain) !== -1) return;
+    s.domains.push(domain);
+    if (!s.enabled) s.enabled = true;
+    // Remove 'none' if we add a domain
+    var ni = s.sources.indexOf("'none'");
+    if (ni !== -1) s.sources.splice(ni, 1);
+    renderDirectives();
+    generateOutput();
+  }
+
+  function removeDomain(dirId, idx) {
+    state[dirId].domains.splice(idx, 1);
+    renderDirectives();
+    generateOutput();
+  }
+
+  function buildPolicy() {
+    var parts = [];
+    DIRECTIVES.forEach(function(d) {
+      var s = state[d.id];
+      if (!s.enabled) return;
+      var values = [];
+      s.sources.forEach(function(src) { values.push(src); });
+      s.domains.forEach(function(dom) { values.push(dom); });
+      if (values.length === 0 && !d.customOnly) return;
+      if (d.customOnly && s.domains.length === 0) return;
+      parts.push(d.id + ' ' + values.join(' '));
+    });
+    return parts.join('; ');
+  }
+
+  function generateOutput() {
+    var policy = buildPolicy();
+    var el = document.getElementById('outputArea');
+    if (!policy) {
+      el.textContent = 'No directives configured yet.';
+      el.style.color = 'var(--text-dim)';
+      return;
+    }
+    el.style.color = 'var(--accent)';
+    if (currentTab === 'header') {
+      el.textContent = 'Content-Security-Policy: ' + policy;
+    } else if (currentTab === 'meta') {
+      el.textContent = '<meta http-equiv="Content-Security-Policy" content="' + policy + '">';
+    } else if (currentTab === 'nginx') {
+      el.textContent = 'add_header Content-Security-Policy "' + policy + '" always;';
+    } else if (currentTab === 'apache') {
+      el.textContent = 'Header set Content-Security-Policy "' + policy + '"';
+    }
+  }
+
+  function setTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.output-tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.tab === tab);
+    });
+    generateOutput();
+  }
+
+  function copyOutput() {
+    var text = document.getElementById('outputArea').textContent;
+    if (!text || text === 'No directives configured yet.') return;
+    navigator.clipboard.writeText(text).then(function() { showToast('Copied to clipboard!'); });
+  }
+
+  function applyPreset(type) {
+    initState();
+    if (type === 'strict') {
+      state['default-src'] = { enabled: true, sources: ["'none'"], domains: [] };
+      state['script-src'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['style-src'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['img-src'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['font-src'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['connect-src'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['frame-src'] = { enabled: true, sources: ["'none'"], domains: [] };
+      state['object-src'] = { enabled: true, sources: ["'none'"], domains: [] };
+      state['base-uri'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['form-action'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['frame-ancestors'] = { enabled: true, sources: ["'none'"], domains: [] };
+    } else if (type === 'moderate') {
+      state['default-src'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['script-src'] = { enabled: true, sources: ["'self'", "'unsafe-inline'"], domains: [] };
+      state['style-src'] = { enabled: true, sources: ["'self'", "'unsafe-inline'"], domains: [] };
+      state['img-src'] = { enabled: true, sources: ["'self'", "data:"], domains: [] };
+      state['font-src'] = { enabled: true, sources: ["'self'", "data:"], domains: [] };
+      state['connect-src'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['object-src'] = { enabled: true, sources: ["'none'"], domains: [] };
+      state['frame-ancestors'] = { enabled: true, sources: ["'self'"], domains: [] };
+    } else if (type === 'permissive') {
+      state['default-src'] = { enabled: true, sources: ["'self'"], domains: [] };
+      state['script-src'] = { enabled: true, sources: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], domains: [] };
+      state['style-src'] = { enabled: true, sources: ["'self'", "'unsafe-inline'"], domains: [] };
+      state['img-src'] = { enabled: true, sources: ["'self'", "data:", "blob:", "*"], domains: [] };
+      state['font-src'] = { enabled: true, sources: ["'self'", "data:", "*"], domains: [] };
+      state['connect-src'] = { enabled: true, sources: ["'self'", "*"], domains: [] };
+      state['frame-src'] = { enabled: true, sources: ["'self'", "*"], domains: [] };
+      state['media-src'] = { enabled: true, sources: ["'self'", "blob:"], domains: [] };
+    }
+    renderDirectives();
+    generateOutput();
+    showToast(type.charAt(0).toUpperCase() + type.slice(1) + ' preset applied!');
+  }
+
+  function resetAll() {
+    initState();
+    renderDirectives();
+    generateOutput();
+    showToast('All directives reset.');
+  }
+
+  function analyzeViolation() {
+    var input = document.getElementById('violationInput').value.trim();
+    var result = document.getElementById('analysisResult');
+    if (!input) {
+      result.style.display = 'none';
+      return;
+    }
+    result.style.display = '';
+
+    var analyses = [];
+
+    // Try parsing as JSON
+    try {
+      var json = JSON.parse(input);
+      var report = json['csp-report'] || json;
+      if (report['violated-directive'] || report['violatedDirective']) {
+        var directive = report['violated-directive'] || report['violatedDirective'] || 'unknown';
+        var blocked = report['blocked-uri'] || report['blockedURI'] || report['blocked-url'] || 'unknown';
+        var docUri = report['document-uri'] || report['documentURI'] || 'unknown';
+        var effectiveDir = report['effective-directive'] || report['effectiveDirective'] || directive.split(' ')[0];
+
+        analyses.push({
+          type: 'JSON Violation Report',
+          directive: effectiveDir,
+          blocked: blocked,
+          docUri: docUri,
+          suggestion: buildSuggestion(effectiveDir, blocked)
+        });
+      }
+    } catch(e) {
+      // Try parsing as console error
+      var refusedMatch = input.match(/Refused to (?:load|execute|apply|connect to|frame) (?:the |)(\w+)?.*?'([^']*)'.*?(?:directive|policy)[:\s]*"?([^".\n]*)"?/i);
+      if (refusedMatch) {
+        var blockedUri = refusedMatch[2] || 'unknown';
+        var dir = refusedMatch[3] ? refusedMatch[3].split(' ')[0] : 'unknown';
+        analyses.push({
+          type: 'Console Error',
+          directive: dir,
+          blocked: blockedUri,
+          docUri: 'N/A',
+          suggestion: buildSuggestion(dir, blockedUri)
+        });
+      } else {
+        // Generic parse
+        var dirMatch = input.match(/(default-src|script-src|style-src|img-src|font-src|connect-src|frame-src|media-src|object-src|base-uri|form-action|frame-ancestors)/);
+        var urlMatch = input.match(/(https?:\/\/[^\s'"]+)/);
+        if (dirMatch) {
+          analyses.push({
+            type: 'Partial Match',
+            directive: dirMatch[1],
+            blocked: urlMatch ? urlMatch[1] : 'unknown',
+            docUri: 'N/A',
+            suggestion: buildSuggestion(dirMatch[1], urlMatch ? urlMatch[1] : '')
+          });
         } else {
-          state[dir].selectedSources.delete("'none'");
+          analyses.push({
+            type: 'Unrecognized Format',
+            directive: 'unknown',
+            blocked: 'unknown',
+            docUri: 'N/A',
+            suggestion: 'Could not parse the violation. Please paste a valid CSP violation report JSON or browser console error message.'
+          });
         }
-        state[dir].selectedSources.add(src);
       }
-      renderDirectives();
-      updateOutput();
-    });
-  });
-
-  // Bind custom domain input enter key
-  grid.querySelectorAll('.custom-domain-input').forEach(input => {
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        addCustomDomain(input.dataset.dir);
-      }
-    });
-  });
-}
-
-function addCustomDomain(dir) {
-  const input = document.querySelector(`.custom-domain-input[data-dir="${dir}"]`);
-  const val = input.value.trim();
-  if (!val) return;
-  state[dir].selectedSources.delete("'none'");
-  state[dir].customDomains.push(val);
-  input.value = '';
-  renderDirectives();
-  updateOutput();
-}
-
-function removeCustomDomain(dir, index) {
-  state[dir].customDomains.splice(index, 1);
-  renderDirectives();
-  updateOutput();
-}
-
-function escapeHTML(str) {
-  const el = document.createElement('span');
-  el.textContent = str;
-  return el.innerHTML;
-}
-
-// ========== GENERATE CSP STRING ==========
-function generateCSP() {
-  const parts = [];
-  DIRECTIVES.forEach(d => {
-    const s = state[d.name];
-    if (!s.enabled) return;
-    const sources = [...s.selectedSources, ...s.customDomains];
-    if (sources.length === 0) return;
-    parts.push(`${d.name} ${sources.join(' ')}`);
-  });
-  return parts.join('; ') + (parts.length ? ';' : '');
-}
-
-function updateOutput() {
-  const csp = generateCSP();
-  const safeCSP = escapeHTML(csp);
-
-  document.getElementById('headerOutput').innerHTML = `Content-Security-Policy: ${safeCSP}`;
-  document.getElementById('metaOutput').innerHTML = `&lt;meta http-equiv="Content-Security-Policy" content="${safeCSP}"&gt;`;
-  document.getElementById('reportOnlyOutput').innerHTML = `Content-Security-Policy-Report-Only: ${safeCSP}`;
-  document.getElementById('nginxOutput').textContent = `add_header Content-Security-Policy "${csp}" always;`;
-  document.getElementById('apacheOutput').textContent = `Header set Content-Security-Policy "${csp}"`;
-  document.getElementById('expressOutput').textContent = `app.use((req, res, next) => {\n  res.setHeader('Content-Security-Policy', "${csp}");\n  next();\n});`;
-}
-
-// ========== PRESETS ==========
-const PRESETS = {
-  strict: {
-    'default-src': { enabled: true, sources: ["'none'"], domains: [] },
-    'script-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'style-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'img-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'font-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'connect-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'object-src': { enabled: true, sources: ["'none'"], domains: [] },
-    'base-uri': { enabled: true, sources: ["'self'"], domains: [] },
-    'form-action': { enabled: true, sources: ["'self'"], domains: [] },
-    'frame-ancestors': { enabled: true, sources: ["'none'"], domains: [] }
-  },
-  moderate: {
-    'default-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'script-src': { enabled: true, sources: ["'self'","'unsafe-inline'"], domains: [] },
-    'style-src': { enabled: true, sources: ["'self'","'unsafe-inline'"], domains: [] },
-    'img-src': { enabled: true, sources: ["'self'","data:","https:"], domains: [] },
-    'font-src': { enabled: true, sources: ["'self'","data:","https:"], domains: [] },
-    'connect-src': { enabled: true, sources: ["'self'","https:"], domains: [] },
-    'object-src': { enabled: true, sources: ["'none'"], domains: [] },
-    'frame-ancestors': { enabled: true, sources: ["'self'"], domains: [] }
-  },
-  permissive: {
-    'default-src': { enabled: true, sources: ["'self'","https:"], domains: [] },
-    'script-src': { enabled: true, sources: ["'self'","'unsafe-inline'","'unsafe-eval'","https:"], domains: [] },
-    'style-src': { enabled: true, sources: ["'self'","'unsafe-inline'","https:"], domains: [] },
-    'img-src': { enabled: true, sources: ["'self'","data:","blob:","https:"], domains: [] },
-    'object-src': { enabled: true, sources: ["'none'"], domains: [] }
-  },
-  wordpress: {
-    'default-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'script-src': { enabled: true, sources: ["'self'","'unsafe-inline'","'unsafe-eval'"], domains: [] },
-    'style-src': { enabled: true, sources: ["'self'","'unsafe-inline'"], domains: ['https://fonts.googleapis.com'] },
-    'img-src': { enabled: true, sources: ["'self'","data:","https:"], domains: [] },
-    'font-src': { enabled: true, sources: ["'self'","data:"], domains: ['https://fonts.gstatic.com'] },
-    'connect-src': { enabled: true, sources: ["'self'","https:"], domains: [] },
-    'media-src': { enabled: true, sources: ["'self'","https:"], domains: [] },
-    'object-src': { enabled: true, sources: ["'none'"], domains: [] },
-    'frame-src': { enabled: true, sources: ["'self'"], domains: ['https://www.youtube.com','https://www.google.com'] },
-    'frame-ancestors': { enabled: true, sources: ["'self'"], domains: [] },
-    'base-uri': { enabled: true, sources: ["'self'"], domains: [] },
-    'form-action': { enabled: true, sources: ["'self'"], domains: [] }
-  },
-  'react-spa': {
-    'default-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'script-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'style-src': { enabled: true, sources: ["'self'","'unsafe-inline'"], domains: [] },
-    'img-src': { enabled: true, sources: ["'self'","data:","blob:"], domains: [] },
-    'font-src': { enabled: true, sources: ["'self'","data:"], domains: [] },
-    'connect-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'worker-src': { enabled: true, sources: ["'self'","blob:"], domains: [] },
-    'object-src': { enabled: true, sources: ["'none'"], domains: [] },
-    'base-uri': { enabled: true, sources: ["'self'"], domains: [] },
-    'form-action': { enabled: true, sources: ["'self'"], domains: [] },
-    'frame-ancestors': { enabled: true, sources: ["'none'"], domains: [] }
-  },
-  nextjs: {
-    'default-src': { enabled: true, sources: ["'self'"], domains: [] },
-    'script-src': { enabled: true, sources: ["'self'","'unsafe-eval'","'unsafe-inline'"], domains: [] },
-    'style-src': { enabled: true, sources: ["'self'","'unsafe-inline'"], domains: [] },
-    'img-src': { enabled: true, sources: ["'self'","data:","blob:","https:"], domains: [] },
-    'font-src': { enabled: true, sources: ["'self'","data:"], domains: [] },
-    'connect-src': { enabled: true, sources: ["'self'","https:","wss:"], domains: [] },
-    'worker-src': { enabled: true, sources: ["'self'","blob:"], domains: [] },
-    'child-src': { enabled: true, sources: ["'self'","blob:"], domains: [] },
-    'object-src': { enabled: true, sources: ["'none'"], domains: [] },
-    'base-uri': { enabled: true, sources: ["'self'"], domains: [] },
-    'frame-ancestors': { enabled: true, sources: ["'self'"], domains: [] }
-  }
-};
-
-document.getElementById('presetsGrid').addEventListener('click', (e) => {
-  const btn = e.target.closest('.preset-btn');
-  if (!btn) return;
-  const presetName = btn.dataset.preset;
-  const preset = PRESETS[presetName];
-  if (!preset) return;
-
-  // Highlight active preset
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-
-  // Reset all
-  DIRECTIVES.forEach(d => {
-    state[d.name] = { enabled: false, selectedSources: new Set(), customDomains: [] };
-  });
-
-  // Apply preset
-  Object.entries(preset).forEach(([dir, config]) => {
-    if (state[dir]) {
-      state[dir].enabled = config.enabled;
-      state[dir].selectedSources = new Set(config.sources);
-      state[dir].customDomains = [...config.domains];
     }
-  });
 
-  renderDirectives();
-  updateOutput();
-});
-
-// ========== CSP EVALUATOR ==========
-function evaluateCSP() {
-  const raw = document.getElementById('evalInput').value.trim();
-  if (!raw) return;
-
-  // Parse CSP
-  const clean = raw.replace(/^Content-Security-Policy:\s*/i, '');
-  const directives = {};
-  clean.split(';').forEach(part => {
-    const trimmed = part.trim();
-    if (!trimmed) return;
-    const tokens = trimmed.split(/\s+/);
-    const name = tokens[0].toLowerCase();
-    directives[name] = tokens.slice(1);
-  });
-
-  const findings = [];
-  let score = 100;
-
-  // Check default-src
-  if (!directives['default-src']) {
-    findings.push({ type: 'bad', text: 'Missing default-src — no fallback policy exists for unlisted directives.' });
-    score -= 20;
-  } else if (directives['default-src'].includes('*')) {
-    findings.push({ type: 'bad', text: "default-src includes wildcard '*' — allows loading from any origin." });
-    score -= 30;
-  } else if (directives['default-src'].includes("'none'")) {
-    findings.push({ type: 'good', text: "default-src is 'none' — strict baseline, individual directives must explicitly allow sources." });
-  } else if (directives['default-src'].includes("'self'")) {
-    findings.push({ type: 'good', text: "default-src is 'self' — only same-origin resources allowed by default." });
-  }
-
-  // Check script-src
-  const scriptSrc = directives['script-src'] || directives['default-src'] || [];
-  if (scriptSrc.includes("'unsafe-inline'") && !scriptSrc.includes("'strict-dynamic'")) {
-    findings.push({ type: 'bad', text: "script-src allows 'unsafe-inline' — inline scripts will execute, defeating XSS protection." });
-    score -= 25;
-  }
-  if (scriptSrc.includes("'unsafe-eval'")) {
-    findings.push({ type: 'warn', text: "script-src allows 'unsafe-eval' — eval() and similar functions are permitted." });
-    score -= 10;
-  }
-  if (scriptSrc.includes('*')) {
-    findings.push({ type: 'bad', text: "script-src includes wildcard '*' — scripts from any origin can execute." });
-    score -= 25;
-  }
-  if (scriptSrc.includes("'strict-dynamic'")) {
-    findings.push({ type: 'good', text: "'strict-dynamic' is used — trusted scripts can load dependencies dynamically." });
-    score += 5;
-  }
-  if (scriptSrc.includes('data:')) {
-    findings.push({ type: 'bad', text: "script-src allows 'data:' URIs — allows script injection via data URIs." });
-    score -= 15;
-  }
-
-  // Check style-src
-  const styleSrc = directives['style-src'] || directives['default-src'] || [];
-  if (styleSrc.includes("'unsafe-inline'")) {
-    findings.push({ type: 'warn', text: "style-src allows 'unsafe-inline' — inline styles are permitted. Less dangerous than script-src but can enable data exfiltration." });
-    score -= 5;
-  }
-
-  // Check object-src
-  if (!directives['object-src']) {
-    findings.push({ type: 'warn', text: 'Missing object-src — plugin content (Flash, etc.) falls back to default-src.' });
-    score -= 5;
-  } else if (directives['object-src'].includes("'none'")) {
-    findings.push({ type: 'good', text: "object-src is 'none' — plugin content is blocked." });
-  }
-
-  // Check base-uri
-  if (!directives['base-uri']) {
-    findings.push({ type: 'warn', text: 'Missing base-uri — base tag hijacking is possible.' });
-    score -= 5;
-  } else if (directives['base-uri'].includes("'self'") || directives['base-uri'].includes("'none'")) {
-    findings.push({ type: 'good', text: 'base-uri is restricted — base tag hijacking is mitigated.' });
-  }
-
-  // Check form-action
-  if (!directives['form-action']) {
-    findings.push({ type: 'warn', text: 'Missing form-action — forms can submit to any URL.' });
-    score -= 3;
-  }
-
-  // Check frame-ancestors
-  if (!directives['frame-ancestors']) {
-    findings.push({ type: 'warn', text: 'Missing frame-ancestors — page can be embedded in iframes on any site.' });
-    score -= 5;
-  } else if (directives['frame-ancestors'].includes("'none'")) {
-    findings.push({ type: 'good', text: "frame-ancestors is 'none' — page cannot be framed (prevents clickjacking)." });
-  }
-
-  // Check for report-uri or report-to
-  if (!directives['report-uri'] && !directives['report-to']) {
-    findings.push({ type: 'warn', text: 'No reporting configured — violations will not be tracked.' });
-    score -= 3;
-  } else {
-    findings.push({ type: 'good', text: 'Violation reporting is configured.' });
-  }
-
-  score = Math.max(0, Math.min(100, score));
-
-  const scoreClass = score >= 70 ? 'high' : score >= 40 ? 'medium' : 'low';
-  const scoreLabel = score >= 70 ? 'Strong' : score >= 40 ? 'Moderate' : 'Weak';
-
-  let html = `<div class="eval-score ${scoreClass}">${scoreLabel} — ${score}/100</div>`;
-  findings.forEach(f => {
-    const icon = f.type === 'good' ? '\u2713' : f.type === 'warn' ? '\u26A0' : '\u2717';
-    html += `<div class="eval-item"><span class="eval-${f.type}">${icon}</span> ${f.text}</div>`;
-  });
-
-  const results = document.getElementById('evalResults');
-  results.innerHTML = html;
-  results.style.display = 'block';
-}
-
-// ========== TABS ==========
-document.querySelectorAll('.tabs').forEach(tabGroup => {
-  tabGroup.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabGroup.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      // Find sibling panels
-      const container = tabGroup.parentElement;
-      container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      container.querySelector(`#${tab.dataset.tab}`).classList.add('active');
+    var html = '';
+    analyses.forEach(function(a) {
+      html += '<div class="analysis-item">';
+      html += '<div class="label">Source Type</div><div class="value">' + escapeHtml(a.type) + '</div>';
+      html += '<div class="label" style="margin-top:8px">Violated Directive</div><div class="value">' + escapeHtml(a.directive) + '</div>';
+      html += '<div class="label" style="margin-top:8px">Blocked Resource</div><div class="value">' + escapeHtml(a.blocked) + '</div>';
+      if (a.docUri !== 'N/A') {
+        html += '<div class="label" style="margin-top:8px">Document URI</div><div class="value">' + escapeHtml(a.docUri) + '</div>';
+      }
+      html += '<div class="suggestion">' + a.suggestion + '</div>';
+      html += '</div>';
     });
-  });
-});
-
-// ========== COPY / RESET ==========
-function copyOutput(type) {
-  let text = '';
-  if (type === 'header') {
-    text = document.getElementById('headerOutput').textContent;
-  } else if (type === 'meta') {
-    text = `<meta http-equiv="Content-Security-Policy" content="${generateCSP()}">`;
+    result.innerHTML = html;
   }
-  navigator.clipboard.writeText(text).then(() => showToast('Copied!'));
-}
 
-function copyServerConfig() {
-  // Determine which tab is active
-  const activeTab = document.querySelector('#serverTabs .tab.active');
-  let id = '';
-  if (activeTab.dataset.tab === 'cfg-nginx') id = 'nginxOutput';
-  else if (activeTab.dataset.tab === 'cfg-apache') id = 'apacheOutput';
-  else id = 'expressOutput';
-  const text = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(text).then(() => showToast('Copied!'));
-}
+  function buildSuggestion(directive, blockedUri) {
+    var dirName = directive.split(' ')[0] || directive;
+    var suggestions = [];
 
-function resetAll() {
+    if (blockedUri && blockedUri !== 'unknown' && blockedUri !== 'inline') {
+      try {
+        var url = new URL(blockedUri);
+        suggestions.push('Add <code>' + escapeHtml(url.origin) + '</code> to your <code>' + escapeHtml(dirName) + '</code> directive.');
+        suggestions.push('Or use a wildcard subdomain: <code>*.' + escapeHtml(url.hostname.split('.').slice(-2).join('.')) + '</code>');
+      } catch(e) {
+        if (blockedUri === 'data') {
+          suggestions.push('Add <code>data:</code> to your <code>' + escapeHtml(dirName) + '</code> directive to allow data URIs.');
+        } else if (blockedUri === 'blob') {
+          suggestions.push('Add <code>blob:</code> to your <code>' + escapeHtml(dirName) + '</code> directive to allow blob URIs.');
+        } else if (blockedUri === 'eval') {
+          suggestions.push('Add <code>\'unsafe-eval\'</code> to your <code>' + escapeHtml(dirName) + '</code> directive. Warning: this weakens security. Consider refactoring to avoid eval().');
+        } else {
+          suggestions.push('Add the blocked source to your <code>' + escapeHtml(dirName) + '</code> directive.');
+        }
+      }
+    }
+
+    if (blockedUri === 'inline' || blockedUri === '' || (!blockedUri || blockedUri === 'unknown')) {
+      if (dirName === 'script-src' || dirName === 'style-src') {
+        suggestions.push('The violation is likely caused by inline code. Use a <code>nonce</code> or <code>hash</code> instead of <code>\'unsafe-inline\'</code> for better security.');
+        suggestions.push('Quick fix (less secure): Add <code>\'unsafe-inline\'</code> to <code>' + escapeHtml(dirName) + '</code>.');
+      }
+    }
+
+    if (suggestions.length === 0) {
+      suggestions.push('Review your <code>' + escapeHtml(dirName) + '</code> directive and ensure the blocked resource\'s origin is included.');
+    }
+
+    suggestions.push('Tip: Use <code>Content-Security-Policy-Report-Only</code> header to test changes before enforcing.');
+
+    return '<strong style="color:var(--warning)">Suggested Fix:</strong><br>' + suggestions.join('<br>');
+  }
+
+  function escapeHtml(str) {
+    var d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2000);
+  }
+
+  // Init
   initState();
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
   renderDirectives();
-  updateOutput();
-}
+  generateOutput();
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 1800);
-}
-
-// ========== FAQ ==========
-function toggleFaq(el) {
-  el.classList.toggle('open');
-  el.nextElementSibling.classList.toggle('open');
-}
-
-// ========== SMOOTH SCROLL ==========
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
-});
-
-// ========== INIT ==========
-initState();
-renderDirectives();
-updateOutput();
+  return {
+    setMode: function() {},
+    toggleDir: toggleDir,
+    toggleSource: toggleSource,
+    addDomain: addDomain,
+    removeDomain: removeDomain,
+    setTab: setTab,
+    copyOutput: copyOutput,
+    applyPreset: applyPreset,
+    resetAll: resetAll,
+    analyzeViolation: analyzeViolation
+  };
+})();
 </script>
 </body>
 </html>
