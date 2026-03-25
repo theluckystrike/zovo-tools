@@ -98,22 +98,41 @@ class QualityMaster:
         # Track recent modifications (likely from PM1/PM2)
         recent_threshold = datetime.now() - timedelta(minutes=5)
 
-        for tool in all_tools:
-            tool_path = self.base_dir / tool
+        # Process tools in batches to avoid memory issues
+        batch_size = 50
+        total_processed = 0
 
-            # Check if tool was recently modified (new content from PMs)
-            try:
-                mod_time = datetime.fromtimestamp(os.path.getmtime(tool_path))
-                if mod_time > recent_threshold:
-                    new_content_detected += 1
-                    print(f"  🆕 New content detected: {tool}")
-            except:
-                pass
+        for i in range(0, len(all_tools), batch_size):
+            batch = all_tools[i:i + batch_size]
+            print(f"  Processing batch {i//batch_size + 1}/{(len(all_tools) + batch_size - 1)//batch_size} ({len(batch)} tools)")
 
-            # Scan for violations
-            if self.scanner.scan_tool(tool):
-                violations_fixed += 1
+            for tool in batch:
+                try:
+                    tool_path = self.base_dir / tool
+                    total_processed += 1
 
+                    # Check if tool was recently modified (new content from PMs)
+                    try:
+                        mod_time = datetime.fromtimestamp(os.path.getmtime(tool_path))
+                        if mod_time > recent_threshold:
+                            new_content_detected += 1
+                            print(f"    🆕 New content detected: {tool}")
+                    except:
+                        pass
+
+                    # Scan for violations (with timeout protection)
+                    if self.scanner.scan_tool(tool):
+                        violations_fixed += 1
+
+                    # Progress indicator
+                    if total_processed % 100 == 0:
+                        print(f"    Progress: {total_processed}/{len(all_tools)} tools scanned")
+
+                except Exception as e:
+                    print(f"    ⚠️ Error scanning {tool}: {e}")
+                    continue
+
+        print(f"  ✅ Scan complete: {total_processed} tools processed")
         self.total_violations_fixed += violations_fixed
         self.total_new_content += new_content_detected
 
@@ -261,7 +280,11 @@ def main():
             print(f"📡 {pull_msg}")
 
         # Run comprehensive quality scan
-        violations_fixed, new_content = master.advanced_quality_scan()
+        try:
+            violations_fixed, new_content = master.advanced_quality_scan()
+        except Exception as e:
+            print(f"❌ Error in quality scan: {e}")
+            violations_fixed, new_content = 0, 0
 
         # Record stats
         master.loop_stats.append({
