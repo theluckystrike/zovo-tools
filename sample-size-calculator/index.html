@@ -459,6 +459,65 @@ footer { background: #12121a; border-top: 1px solid #2a2a3e; padding: 20px; text
     <p>Consider the cost per response. If each completed interview costs $50 (not uncommon for telephone surveys with incentives), the difference between a sample of 385 and 664 is $13,950. Explicitly evaluating whether the additional precision is worth the additional cost makes for better decision-making.</p>
 
     <p>Document your assumptions. Record the confidence level, margin of error, expected proportion, and population size used in your calculation, along with the rationale for each choice. This documentation is valuable for peer review, client presentations, and future replication of similar studies.</p>
+
+    <h3>Stratified Sampling and Subgroup Analysis</h3>
+    <p>When your survey needs to produce dependable estimates for specific subgroups of the population, each subgroup essentially requires its own minimum sample size. If you need to compare satisfaction levels across 4 geographic regions with a margin of error of 5% within each region, you need approximately 385 respondents per region, for a total minimum sample of 1,540. Simply surveying 385 people total and hoping for roughly equal representation across regions is insufficient because random sampling might give you 200 from one region and 50 from another.</p>
+
+    <p>Stratified sampling addresses this by dividing the population into homogeneous subgroups (strata) and sampling independently within each stratum. There are two main approaches. Proportional allocation assigns sample sizes to each stratum in proportion to the stratum's share of the total population. If Region A contains 40% of the population, it receives 40% of the sample. This approach is best when the goal is to estimate the overall population parameter with maximum precision.</p>
+
+    <p>Disproportional (or best) allocation, also called Neyman allocation, assigns larger samples to strata with greater variability. If satisfaction levels vary widely in Region B but are very consistent in Region C, more respondents should come from Region B. The formula for best allocation is n_h = n x (N_h x S_h) / sum(N_h x S_h), where N_h is the stratum size and S_h is the stratum standard deviation. This approach minimizes the overall variance of the estimate for a given total sample size.</p>
+
+    <h3>Statistical Power and Effect Size</h3>
+    <p>While this calculator focuses on sample size for estimation (determining a proportion with a given precision), many research questions require sample size for hypothesis testing (determining whether two groups differ). The concept of statistical power is central to these calculations.</p>
+
+    <p>Power is the probability of correctly detecting a real effect when one exists. A study with 80% power has a 20% chance of missing a real effect (a Type II error, or false negative). The conventional minimum power in biomedical and social science research is 80%, though 90% is increasingly recommended for clinical trials and confirmatory studies.</p>
+
+    <p>Effect size measures the magnitude of the difference you want to detect. For comparing two proportions, the effect size is simply the difference between them (p1 - p2). For comparing two means, Cohen's d = (mean1 - mean2) / pooled standard deviation. Cohen's conventions classify effect sizes as small (d = 0.2), medium (d = 0.5), and large (d = 0.8), though these labels are somewhat arbitrary and domain-specific.</p>
+
+    <table class="info-table">
+      <thead>
+        <tr><th>Effect Size (Cohen's d)</th><th>Sample per Group (80% power, alpha = 0.05)</th><th>Total Sample (two groups)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0.2 (small)</td><td>394</td><td>788</td></tr>
+        <tr><td>0.3</td><td>176</td><td>352</td></tr>
+        <tr><td>0.5 (medium)</td><td>64</td><td>128</td></tr>
+        <tr><td>0.8 (large)</td><td>26</td><td>52</td></tr>
+        <tr><td>1.0</td><td>17</td><td>34</td></tr>
+      </tbody>
+    </table>
+
+    <p>The relationship between sample size and detectable effect size is quadratic. Halving the detectable effect size requires quadrupling the sample. This is why studies designed to detect small effects require large samples, and why pilot studies (which typically use small samples) are only appropriate for detecting large effects or estimating parameters for power calculations.</p>
+
+    <h3>Bayesian Approaches to Sample Size</h3>
+    <p>The Cochran formula used in this calculator is based on frequentist statistics, which is the dominant framework in applied survey research. However, Bayesian methods offer an alternative approach to sample size determination that incorporates prior information more formally.</p>
+
+    <p>In a Bayesian framework, you specify a prior distribution for the parameter of interest (reflecting your existing knowledge or beliefs), and the sample size is chosen to ensure that the posterior distribution (updated with the survey data) meets a specified precision criterion. For example, you might determine the sample size needed so that the 95% credible interval for the population proportion is no wider than 10 percentage points.</p>
+
+    <p>Bayesian sample size determination tends to produce smaller required samples when strong prior information is available, because the prior effectively contributes additional information beyond what the sample provides. When prior information is weak (a non-informative prior), Bayesian and frequentist sample sizes converge to similar values. In practice, Bayesian sample size calculations are more common in clinical trials and pharmaceutical research, where prior studies often provide substantial information about expected effect sizes.</p>
+
+    <h3>Sequential and Adaptive Sampling</h3>
+    <p>Traditional sample size calculations determine a fixed sample size before data collection begins. Sequential and adaptive designs allow the sample size to be adjusted during data collection based on the results observed so far.</p>
+
+    <p>In sequential sampling, data is analyzed at predetermined interim points, and the study may be stopped early if the results are already conclusive (either positively or negatively). Group sequential designs are standard in clinical trials, where it would be unethical to continue enrolling patients in a study after enough evidence has accumulated to determine treatment superiority or futility.</p>
+
+    <p>Adaptive designs go further by allowing modifications to the study design (including sample size) based on interim analyses. A sample size re-estimation might occur after 50% of the data is collected, using the observed variance to refine the final sample size target. This approach is particularly valuable when the expected variance is uncertain at the design stage.</p>
+
+    <p>These modern designs require specialized statistical methods to maintain valid Type I error rates (protecting against false positives) despite the multiple analyses. The Pocock and O'Brien-Fleming boundaries are commonly used spending functions that control the overall significance level across sequential analyses.</p>
+
+    <h3>Finite Population Correction in Practice</h3>
+    <p>The finite population correction (FPC) is one of the most misunderstood aspects of sample size calculation. Many people are surprised to learn that surveying a population of 10,000 requires almost the same sample as surveying a population of 10 million. The underlying reason is that the precision of a sample estimate depends primarily on the absolute number of observations, not on the sampling fraction.</p>
+
+    <p>The FPC only produces a meaningful reduction in sample size when the sampling fraction (n/N) exceeds about 5%. For a population of 1,000, the uncorrected sample of 385 represents 38.5% of the population, and the FPC reduces it to 278, a significant reduction. For a population of 100,000, the uncorrected sample of 385 represents only 0.385%, and the FPC barely changes the number (to 383).</p>
+
+    <p>This has a practical implication that many researchers find counterintuitive. A nationwide survey and a survey of a small company both require about the same number of respondents for the same level of precision. The difference is that the company survey will achieve a higher response rate more easily, and it may benefit from the FPC, but the base sample size is driven by the desired precision, not the population size.</p>
+
+    <h3>Non-Probability Sampling Methods</h3>
+    <p>The sample size formulas in this calculator assume probability sampling, where every member of the population has a known, non-zero chance of being selected. In practice, many surveys and studies use non-probability sampling methods where this assumption does not hold.</p>
+
+    <p>Convenience sampling (surveying whoever is easily accessible), voluntary response sampling (only counting those who choose to participate), snowball sampling (using existing respondents to recruit new ones), and quota sampling (targeting specific demographic profiles) are all non-probability methods. For these methods, traditional margin-of-error calculations do not strictly apply because the sampling error cannot be quantified in the same way.</p>
+
+    <p>Nevertheless, the sample size numbers from this calculator serve as useful guidelines even for non-probability samples. A convenience sample of 400 is generally more informative than a convenience sample of 50, even though neither has a formally calculable margin of error. Researchers using non-probability methods should report their results without formal margins of error and clearly describe the sampling method and its limitations.</p>
   </section>
 
   <!-- FAQ Section -->
