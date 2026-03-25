@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href="https://zovo.one/favicon.ico" rel="icon"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pressure Drop Calculator - Darcy-Weisbach Pipe Flow Solver | Zovo Tools</title>
+<meta content="Free pressure drop calculator using the Darcy-Weisbach equation. Calculate friction loss, head loss, and minor losses in pipes with Colebrook-White friction factor. Supports Sch 40, Sch 80, and custom pipe materials." name="description"/>
+<meta content="Michael Lip" name="author"/>
+<meta content="pressure drop calculator, Darcy-Weisbach, pipe friction loss, Colebrook-White, head loss calculator, pipe flow calculator, minor losses, K-factor, pipe pressure loss" name="keywords"/>
+<link rel="canonical" href="https://zovo.one/free-tools/pressure-drop-calculator/">
+<meta content="Pressure Drop Calculator - Darcy-Weisbach Pipe Flow Solver | Zovo Tools" property="og:title"/>
+<meta content="Free pressure drop calculator using the Darcy-Weisbach equation. Calculate friction loss, head loss, and minor losses in pipes with iterative Colebrook-White friction factor." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://zovo.one/free-tools/pressure-drop-calculator/" property="og:url"/>
+<meta content="Zovo" property="og:site_name"/>
+<meta content="https://zovo.one/og-image.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Pressure Drop Calculator - Darcy-Weisbach Pipe Flow Solver | Zovo Tools" name="twitter:title"/>
+<meta content="Free pressure drop calculator using the Darcy-Weisbach equation with Colebrook-White friction factor, minor losses, and pipe schedule reference." name="twitter:description"/>
+<meta content="https://zovo.one/og-image.png" name="twitter:image"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Pressure Drop Calculator",
+  "description": "Free pressure drop calculator using the Darcy-Weisbach equation with Colebrook-White friction factor for pipe flow analysis.",
+  "url": "https://zovo.one/free-tools/pressure-drop-calculator/",
+  "applicationCategory": "Engineering",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "browserRequirements": "Requires JavaScript. Works in Chrome, Firefox, Safari, Edge."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is the Darcy-Weisbach equation?", "acceptedAnswer": { "@type": "Answer", "text": "The Darcy-Weisbach equation calculates pressure drop due to friction in a pipe: ΔP = f × (L/D) × (ρv²/2), where f is the Darcy friction factor, L is pipe length, D is diameter, ρ is fluid density, and v is flow velocity." }},
+    { "@type": "Question", "name": "How is the friction factor calculated?", "acceptedAnswer": { "@type": "Answer", "text": "The Darcy friction factor is calculated iteratively using the Colebrook-White equation: 1/√f = -2 log₁₀(ε/(3.7D) + 2.51/(Re√f)). This calculator uses Newton-Raphson iteration to solve it." }},
+    { "@type": "Question", "name": "What are minor losses in pipe flow?", "acceptedAnswer": { "@type": "Answer", "text": "Minor losses are pressure drops caused by fittings, valves, bends, and other flow obstructions. They are calculated using K-factors: ΔP_minor = K × (ρv²/2). Despite the name, minor losses can be significant in short pipe runs with many fittings." }},
+    { "@type": "Question", "name": "What is pipe roughness?", "acceptedAnswer": { "@type": "Answer", "text": "Pipe roughness (ε) is the average height of surface irregularities inside the pipe. Common values: commercial steel 0.045 mm, PVC 0.0015 mm, cast iron 0.26 mm. Roughness increases with age and corrosion." }},
+    { "@type": "Question", "name": "What is Reynolds number?", "acceptedAnswer": { "@type": "Answer", "text": "Reynolds number (Re = ρvD/μ) determines the flow regime. Re < 2300 is laminar flow, 2300-4000 is transitional, and Re > 4000 is turbulent. Most industrial pipe flow is turbulent." }},
+    { "@type": "Question", "name": "How do I convert between pressure units?", "acceptedAnswer": { "@type": "Answer", "text": "Common conversions: 1 bar = 100,000 Pa = 14.5038 psi. 1 atm = 101,325 Pa = 14.696 psi. This calculator provides results in Pa, psi, bar, and head loss in meters and feet." }},
+    { "@type": "Question", "name": "What pipe schedule should I use?", "acceptedAnswer": { "@type": "Answer", "text": "Schedule 40 is standard for most low-pressure applications. Schedule 80 has thicker walls for higher pressure ratings. Schedule 160 and XXS are for extreme pressure or corrosive service. The schedule affects inside diameter." }},
+    { "@type": "Question", "name": "Can this calculator handle laminar flow?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. For laminar flow (Re < 2300), the friction factor is calculated as f = 64/Re. For turbulent flow, the Colebrook-White equation is used. The calculator automatically detects the flow regime." }}
+  ]
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;overflow-x:hidden}
+a{color:#00ccff;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:20px}
+h1{font-size:2rem;margin-bottom:8px;color:#fff;font-weight:700}
+h2{font-size:1.4rem;color:#00ff88;margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid #1e1e2a;font-weight:600}
+h3{font-size:1.1rem;color:#e0e0e8;margin:20px 0 10px}
+p{margin:0 0 14px;color:#c0c0cc}
+.subtitle{color:#b0b0c0;font-size:1rem;margin-bottom:24px}
+blockquote.reading-time{background:#12121a;border-left:4px solid #00ff88;padding:12px 20px;margin:0 0 28px;border-radius:0 8px 8px 0;font-size:0.92rem;color:#b0b0c0}
+nav.toc{position:sticky;top:0;background:#0a0a0f;z-index:100;border-bottom:1px solid #1e1e2a;padding:10px 0;margin:0 0 28px}
+nav.toc details{max-width:900px;margin:0 auto;padding:0 20px}
+nav.toc summary{color:#00ff88;cursor:pointer;font-weight:600;font-size:0.95rem}
+nav.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px}
+nav.toc a{color:#b0b0c0;font-size:0.82rem;padding:2px 0}nav.toc a:hover{color:#00ff88}
+.calc-card{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin:0 0 20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-size:0.88rem;color:#b0b0c0;margin-bottom:4px;font-weight:500}
+input,select{width:100%;padding:10px 12px;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;color:#e0e0e8;font-size:0.95rem;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:#00ff88}
+.btn{display:inline-block;padding:12px 28px;background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit;transition:background .2s}
+.btn:hover{background:#00cc6a}
+.btn-secondary{background:transparent;border:1px solid #00ff88;color:#00ff88}
+.btn-secondary:hover{background:#00ff8815}
+.result-box{background:#0a0a0f;border:1px solid #00ff88;border-radius:8px;padding:16px 20px;margin:14px 0;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1e1e2a;font-size:0.95rem}
+.result-row:last-child{border-bottom:none}
+.result-label{color:#b0b0c0}.result-value{color:#00ff88;font-weight:600;font-family:'Courier New',monospace}
+.warn{background:#332200;border:1px solid #665500;border-radius:8px;padding:12px 16px;margin:10px 0;font-size:0.9rem;color:#ffcc00}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.88rem}
+th{background:#1a1a2e;color:#00ff88;padding:10px 12px;text-align:left;font-weight:600;border:1px solid #1e1e2a}
+td{padding:8px 12px;border:1px solid #1e1e2a;color:#c0c0cc}
+tr:nth-child(even){background:#12121a}
+.formula{background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:16px 20px;margin:12px 0;font-family:'Courier New',monospace;font-size:0.9rem;color:#00ff88;overflow-x:auto}
+.privacy-note{background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:16px 20px;margin:20px 0;font-size:0.88rem;color:#b0b0c0}
+.cross-link{display:inline-block;background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:8px 16px;margin:4px;font-size:0.88rem;transition:border-color .2s}
+.cross-link:hover{border-color:#00ff88;text-decoration:none}
+ul,ol{margin:0 0 14px 20px;color:#c0c0cc}li{margin-bottom:6px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}h1{font-size:1.5rem}h2{font-size:1.2rem}.container{padding:14px}table{font-size:0.78rem}th,td{padding:6px 8px}}
+</style>
+</head>
+<body>
+<nav class="toc"><details open>
+<summary>Table of Contents</summary>
+<ul>
+<li><a href="#pressure-drop-calculator">Calculator</a></li>
+<li><a href="#darcy-weisbach-equation">Darcy-Weisbach</a></li>
+<li><a href="#friction-factor">Friction Factor</a></li>
+<li><a href="#reynolds-number">Reynolds Number</a></li>
+<li><a href="#minor-losses">Minor Losses</a></li>
+<li><a href="#pipe-roughness-values">Pipe Roughness</a></li>
+<li><a href="#pipe-schedule-reference">Pipe Schedules</a></li>
+<li><a href="#fittings-k-factors">Fittings K-Factors</a></li>
+<li><a href="#unit-conversions">Unit Conversions</a></li>
+<li><a href="#worked-examples">Worked Examples</a></li>
+<li><a href="#design-considerations">Design Tips</a></li>
+<li><a href="#fluid-properties-table">Fluid Properties</a></li>
+<li><a href="#frequently-asked-questions">FAQ</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</details></nav>
+
+<div class="container">
+<h1>Pressure Drop Calculator</h1>
+<p class="subtitle">Calculate friction losses in piping systems using the Darcy-Weisbach equation with iterative Colebrook-White friction factor</p>
+<blockquote class="reading-time">Estimated reading time: 14 minutes. This page covers major losses (pipe friction), minor losses (fittings and valves), pipe schedules, and fluid properties for accurate pressure drop analysis.</blockquote>
+
+<h2 id="pressure-drop-calculator">Pressure Drop Calculator</h2>
+<div class="calc-card">
+<h3>Pipe Parameters</h3>
+<div class="form-grid">
+<div><label for="pipeLength">Pipe Length</label><div style="display:flex;gap:6px"><input type="number" id="pipeLength" value="100" step="any" min="0"><select id="pipeLengthUnit"><option value="m">m</option><option value="ft">ft</option></select></div></div>
+<div><label for="pipeDia">Inside Diameter</label><div style="display:flex;gap:6px"><input type="number" id="pipeDia" value="0.1" step="any" min="0.0001"><select id="pipeDiaUnit"><option value="m">m</option><option value="mm">mm</option><option value="in">in</option></select></div></div>
+<div><label for="velocity">Flow Velocity (m/s)</label><input type="number" id="velocity" value="2" step="any" min="0"></div>
+<div><label for="roughness">Pipe Roughness (mm)</label><select id="roughness"><option value="0.045">Commercial Steel (0.045)</option><option value="0.0015">PVC / Plastic (0.0015)</option><option value="0.15">Galvanized Steel (0.15)</option><option value="0.26">Cast Iron (0.26)</option><option value="1.0">Concrete (1.0)</option><option value="0.03">Drawn Tubing (0.03)</option><option value="0.9">Riveted Steel (0.9)</option><option value="custom">Custom...</option></select></div>
+<div id="customRoughnessWrap" style="display:none"><label for="customRoughness">Custom Roughness (mm)</label><input type="number" id="customRoughness" value="0.045" step="any" min="0"></div>
+</div>
+<h3 style="margin-top:18px">Fluid Properties</h3>
+<div class="form-grid">
+<div><label for="fluidPreset">Fluid Preset</label><select id="fluidPreset"><option value="water20">Water (20°C)</option><option value="water60">Water (60°C)</option><option value="air20">Air (20°C, 1 atm)</option><option value="oil">SAE 30 Oil (20°C)</option><option value="gasoline">Gasoline (20°C)</option><option value="custom">Custom...</option></select></div>
+<div><label for="density">Density (kg/m³)</label><input type="number" id="density" value="998.2" step="any" min="0.001"></div>
+<div><label for="viscosity">Dynamic Viscosity (Pa·s)</label><input type="number" id="viscosity" value="0.001002" step="any" min="0.0000001"></div>
+</div>
+<h3 style="margin-top:18px">Minor Losses (Optional)</h3>
+<div class="form-grid">
+<div><label for="totalK">Total K-factor (sum of all fittings)</label><input type="number" id="totalK" value="0" step="any" min="0"></div>
+</div>
+<button class="btn" onclick="calcPressureDrop()">Calculate Pressure Drop</button>
+<button class="btn btn-secondary" onclick="clearResults()" style="margin-left:8px">Clear</button>
+<div class="result-box" id="resultBox">
+<div class="result-row"><span class="result-label">Reynolds Number</span><span class="result-value" id="resRe">-</span></div>
+<div class="result-row"><span class="result-label">Flow Regime</span><span class="result-value" id="resRegime">-</span></div>
+<div class="result-row"><span class="result-label">Darcy Friction Factor (f)</span><span class="result-value" id="resFf">-</span></div>
+<div class="result-row"><span class="result-label">Major Loss (Pipe Friction)</span><span class="result-value" id="resMajor">-</span></div>
+<div class="result-row"><span class="result-label">Minor Loss (Fittings)</span><span class="result-value" id="resMinor">-</span></div>
+<div class="result-row"><span class="result-label">Total Pressure Drop (Pa)</span><span class="result-value" id="resPa">-</span></div>
+<div class="result-row"><span class="result-label">Total Pressure Drop (psi)</span><span class="result-value" id="resPsi">-</span></div>
+<div class="result-row"><span class="result-label">Total Pressure Drop (bar)</span><span class="result-value" id="resBar">-</span></div>
+<div class="result-row"><span class="result-label">Head Loss (m)</span><span class="result-value" id="resHm">-</span></div>
+<div class="result-row"><span class="result-label">Head Loss (ft)</span><span class="result-value" id="resHft">-</span></div>
+<div class="result-row"><span class="result-label">Velocity Head (Pa)</span><span class="result-value" id="resVh">-</span></div>
+</div>
+<div class="warn" id="warnBox" style="display:none"></div>
+</div>
+
+<h2 id="darcy-weisbach-equation">The Darcy-Weisbach Equation</h2>
+<p>The Darcy-Weisbach equation is the standard method for calculating pressure drop due to friction in pipes and ducts carrying any Newtonian fluid. It applies to both laminar and turbulent flow and is preferred over empirical formulas like Hazen-Williams because it is physically based and works for all fluids.</p>
+<div class="formula">ΔP = f × (L / D) × (ρ × v² / 2)</div>
+<p>Where:</p>
+<ul>
+<li><strong>ΔP</strong> = pressure drop due to friction (Pa)</li>
+<li><strong>f</strong> = Darcy friction factor (dimensionless)</li>
+<li><strong>L</strong> = pipe length (m)</li>
+<li><strong>D</strong> = inside diameter (m)</li>
+<li><strong>ρ</strong> = fluid density (kg/m³)</li>
+<li><strong>v</strong> = mean flow velocity (m/s)</li>
+</ul>
+<p>The term ρv²/2 is called the dynamic pressure or velocity head. The ratio L/D is dimensionless and represents how many diameters long the pipe is. A longer pipe or smaller diameter gives a higher pressure drop, which matches physical intuition.</p>
+<p>You can also express the result as head loss in meters of fluid column:</p>
+<div class="formula">h_f = f × (L / D) × (v² / 2g)</div>
+<p>This form is useful when working with pump head curves or gravity-fed systems. The value g = 9.81 m/s² is gravitational acceleration.</p>
+
+<h2 id="friction-factor">Friction Factor Calculation</h2>
+<p>The friction factor f depends on the Reynolds number and the relative roughness of the pipe (ε/D). For laminar flow (Re &lt; 2300), the friction factor has an exact analytical solution:</p>
+<div class="formula">f = 64 / Re (laminar flow)</div>
+<p>For turbulent flow (Re &gt; 4000), the Colebrook-White equation provides the friction factor:</p>
+<div class="formula">1/√f = -2 × log₁₀(ε/(3.7D) + 2.51/(Re×√f))</div>
+<p>This is an implicit equation, meaning f appears on both sides. It must be solved iteratively. This calculator uses the Newton-Raphson method, which typically converges within 6 to 10 iterations to machine precision. The initial guess comes from the Swamee-Jain approximation:</p>
+<div class="formula">f ≈ 0.25 / [log₁₀(ε/(3.7D) + 5.74/Re⁰·⁹)]²</div>
+<p>The transitional region (Re 2300-4000) is less predictable. Flow alternates between laminar and turbulent patterns. This calculator interpolates between the laminar and turbulent friction factors in that range, which is a common engineering approach. For critical applications in the transition zone, consider consulting detailed references or using experimental data.</p>
+
+<h2 id="reynolds-number">Reynolds Number and Flow Regimes</h2>
+<p>The Reynolds number determines whether flow is laminar (smooth, orderly layers) or turbulent (chaotic, mixing eddies):</p>
+<div class="formula">Re = ρ × v × D / μ</div>
+<p>Where μ is the dynamic viscosity of the fluid (Pa·s or kg/(m·s)).</p>
+<table>
+<tr><th>Reynolds Number</th><th>Flow Regime</th><th>Characteristics</th></tr>
+<tr><td>Re &lt; 2,300</td><td>Laminar</td><td>Smooth, parallel streamlines. Friction factor depends only on Re.</td></tr>
+<tr><td>2,300 - 4,000</td><td>Transitional</td><td>Intermittent turbulent bursts. Unpredictable. Avoid designing here.</td></tr>
+<tr><td>Re &gt; 4,000</td><td>Turbulent</td><td>Chaotic mixing. Friction factor depends on Re and roughness.</td></tr>
+<tr><td>Re &gt; 100,000</td><td>Fully Rough</td><td>Friction factor depends primarily on roughness, not Re.</td></tr>
+</table>
+<p>Most industrial piping systems operate in the turbulent regime. Water flowing at 1-3 m/s in pipes larger than 25 mm diameter is almost always turbulent. Laminar flow is more common with viscous fluids like heavy oils or in very small tubing.</p>
+
+<h2 id="minor-losses">Minor Losses in Pipe Systems</h2>
+<p>Fittings, valves, expansions, contractions, and bends all cause additional pressure drops beyond the straight-pipe friction loss. These are called minor losses (though they can be a major portion of total loss in short systems with many fittings):</p>
+<div class="formula">ΔP_minor = K × (ρ × v² / 2)</div>
+<p>Each fitting has a loss coefficient K. For a system with multiple fittings, sum all K values and multiply by the velocity head once. Some common K-values are listed in the fittings table below.</p>
+<p>An alternative method uses equivalent length (L/D), which converts each fitting to an equivalent length of straight pipe that would produce the same pressure drop. This is less accurate but simpler for quick estimates:</p>
+<div class="formula">L_equivalent = K × D / f</div>
+<p>When minor losses make up more than 30% of total system losses, it is worth taking extra care with the K-factor values and considering manufacturer-specific data.</p>
+
+<h2 id="pipe-roughness-values">Pipe Roughness Values</h2>
+<p>Absolute roughness (ε) represents the average height of surface irregularities inside the pipe wall. These values are for new, clean pipe. In practice, roughness increases with age, corrosion, scale buildup, and biological fouling.</p>
+<table>
+<tr><th>Pipe Material</th><th>Roughness ε (mm)</th><th>Roughness ε (in)</th><th>Notes</th></tr>
+<tr><td>Drawn Tubing (copper, brass)</td><td>0.0015 - 0.03</td><td>0.00006 - 0.001</td><td>Smoothest common material</td></tr>
+<tr><td>PVC / HDPE / Plastic</td><td>0.0015 - 0.007</td><td>0.00006 - 0.0003</td><td>Very smooth, no corrosion</td></tr>
+<tr><td>Commercial Steel / Wrought Iron</td><td>0.045</td><td>0.0018</td><td>Most common industrial pipe</td></tr>
+<tr><td>Stainless Steel</td><td>0.015</td><td>0.0006</td><td>Smoother than carbon steel</td></tr>
+<tr><td>Galvanized Steel</td><td>0.15</td><td>0.006</td><td>Zinc coating adds roughness</td></tr>
+<tr><td>Cast Iron (new)</td><td>0.26</td><td>0.01</td><td>Increases significantly with age</td></tr>
+<tr><td>Concrete</td><td>0.3 - 3.0</td><td>0.012 - 0.12</td><td>Depends on finish quality</td></tr>
+<tr><td>Riveted Steel</td><td>0.9 - 9.0</td><td>0.035 - 0.35</td><td>Rarely used in new construction</td></tr>
+<tr><td>Corrugated Metal</td><td>45 - 60</td><td>1.8 - 2.4</td><td>Culverts and drainage</td></tr>
+</table>
+<p>For aged pipes, it is common practice to multiply the new-pipe roughness by 2 to 5 times, depending on service conditions. Pipes carrying untreated water or aggressive chemicals will degrade faster. A pigging or cleaning operation can restore near-original roughness.</p>
+
+<h2 id="pipe-schedule-reference">Pipe Schedule Reference</h2>
+<p>Pipe schedule numbers (Sch 40, Sch 80, etc.) define the wall thickness for each nominal pipe size. The inside diameter decreases as schedule number increases, which directly affects pressure drop. Below are common nominal sizes with their inside diameters.</p>
+<table>
+<tr><th>Nominal Size</th><th>Sch 40 ID (in)</th><th>Sch 40 ID (mm)</th><th>Sch 80 ID (in)</th><th>Sch 80 ID (mm)</th></tr>
+<tr><td>1/2"</td><td>0.622</td><td>15.80</td><td>0.546</td><td>13.87</td></tr>
+<tr><td>3/4"</td><td>0.824</td><td>20.93</td><td>0.742</td><td>18.85</td></tr>
+<tr><td>1"</td><td>1.049</td><td>26.64</td><td>0.957</td><td>24.31</td></tr>
+<tr><td>1-1/2"</td><td>1.610</td><td>40.89</td><td>1.500</td><td>38.10</td></tr>
+<tr><td>2"</td><td>2.067</td><td>52.50</td><td>1.939</td><td>49.25</td></tr>
+<tr><td>3"</td><td>3.068</td><td>77.93</td><td>2.900</td><td>73.66</td></tr>
+<tr><td>4"</td><td>4.026</td><td>102.26</td><td>3.826</td><td>97.18</td></tr>
+<tr><td>6"</td><td>6.065</td><td>154.05</td><td>5.761</td><td>146.33</td></tr>
+<tr><td>8"</td><td>7.981</td><td>202.72</td><td>7.625</td><td>193.68</td></tr>
+<tr><td>10"</td><td>10.020</td><td>254.51</td><td>9.564</td><td>242.93</td></tr>
+<tr><td>12"</td><td>11.938</td><td>303.23</td><td>11.376</td><td>288.95</td></tr>
+</table>
+<p>When selecting pipe size, engineers balance pressure drop against material cost and installation space. Larger pipe reduces friction loss but costs more. A common design target is 1-3 m/s velocity for liquids and 15-30 m/s for gases.</p>
+
+<h2 id="fittings-k-factors">Fittings and Valves K-Factors</h2>
+<p>The following K-factors are representative values for standard fittings. Actual values depend on the specific manufacturer, size, and connection type. For critical systems, always consult manufacturer data sheets.</p>
+<table>
+<tr><th>Fitting Type</th><th>K-Factor</th><th>Equivalent L/D</th></tr>
+<tr><td>90° Standard Elbow</td><td>0.75</td><td>30</td></tr>
+<tr><td>90° Long Radius Elbow</td><td>0.45</td><td>20</td></tr>
+<tr><td>45° Standard Elbow</td><td>0.35</td><td>16</td></tr>
+<tr><td>180° Return Bend</td><td>1.50</td><td>60</td></tr>
+<tr><td>Standard Tee (flow through run)</td><td>0.40</td><td>20</td></tr>
+<tr><td>Standard Tee (flow through branch)</td><td>1.00</td><td>60</td></tr>
+<tr><td>Gate Valve (fully open)</td><td>0.17</td><td>8</td></tr>
+<tr><td>Gate Valve (half open)</td><td>4.50</td><td>160</td></tr>
+<tr><td>Globe Valve (fully open)</td><td>6.00</td><td>340</td></tr>
+<tr><td>Ball Valve (fully open)</td><td>0.05</td><td>3</td></tr>
+<tr><td>Butterfly Valve (fully open)</td><td>0.25</td><td>12</td></tr>
+<tr><td>Check Valve (swing)</td><td>2.00</td><td>100</td></tr>
+<tr><td>Check Valve (ball)</td><td>4.50</td><td>150</td></tr>
+<tr><td>Sudden Expansion</td><td>(1 - d²/D²)²</td><td>Varies</td></tr>
+<tr><td>Sudden Contraction</td><td>0.5(1 - d²/D²)</td><td>Varies</td></tr>
+<tr><td>Pipe Entrance (sharp)</td><td>0.50</td><td>-</td></tr>
+<tr><td>Pipe Entrance (rounded)</td><td>0.03</td><td>-</td></tr>
+<tr><td>Pipe Exit</td><td>1.00</td><td>-</td></tr>
+</table>
+<p>To find the total K-factor for your system, list every fitting along the pipe run and sum their individual K-values. Enter this sum in the calculator above.</p>
+
+<h2 id="unit-conversions">Pressure Unit Conversions</h2>
+<p>Engineers work with different pressure units depending on region and industry. Here are the key conversion factors:</p>
+<table>
+<tr><th>From</th><th>To Pa</th><th>To psi</th><th>To bar</th></tr>
+<tr><td>1 Pa</td><td>1</td><td>1.4504 × 10⁻⁴</td><td>1 × 10⁻⁵</td></tr>
+<tr><td>1 psi</td><td>6,894.76</td><td>1</td><td>0.06895</td></tr>
+<tr><td>1 bar</td><td>100,000</td><td>14.5038</td><td>1</td></tr>
+<tr><td>1 atm</td><td>101,325</td><td>14.696</td><td>1.01325</td></tr>
+<tr><td>1 kPa</td><td>1,000</td><td>0.14504</td><td>0.01</td></tr>
+<tr><td>1 inH₂O</td><td>249.09</td><td>0.03613</td><td>0.00249</td></tr>
+<tr><td>1 mmHg (torr)</td><td>133.32</td><td>0.01934</td><td>0.00133</td></tr>
+</table>
+<p>Head loss can be converted to pressure using ΔP = ρ × g × h, where h is the head in meters. This is useful for comparing results with pump specifications, which are typically given in meters or feet of head.</p>
+
+<h2 id="worked-examples">Worked Examples</h2>
+<h3>Example 1: Water in a Steel Pipe</h3>
+<p>Calculate the pressure drop for water at 20°C flowing through 50 meters of 2-inch Schedule 40 commercial steel pipe at 2 m/s.</p>
+<p><strong>Given:</strong> L = 50 m, D = 52.50 mm = 0.0525 m, v = 2 m/s, ρ = 998.2 kg/m³, μ = 0.001002 Pa·s, ε = 0.045 mm.</p>
+<p><strong>Step 1:</strong> Reynolds number: Re = 998.2 × 2 × 0.0525 / 0.001002 = 104,700 (turbulent).</p>
+<p><strong>Step 2:</strong> Relative roughness: ε/D = 0.045/52.50 = 0.000857.</p>
+<p><strong>Step 3:</strong> Solve Colebrook-White iteratively: f ≈ 0.0199.</p>
+<p><strong>Step 4:</strong> ΔP = 0.0199 × (50/0.0525) × (998.2 × 2²/2) = 37,890 Pa ≈ 5.49 psi ≈ 0.379 bar.</p>
+<p><strong>Step 5:</strong> Head loss: h = 37,890 / (998.2 × 9.81) = 3.87 m.</p>
+
+<h3>Example 2: System with Fittings</h3>
+<p>Add 4 standard elbows and 1 globe valve to Example 1. Total K = 4(0.75) + 6.0 = 9.0.</p>
+<p>Minor loss: ΔP_minor = 9.0 × (998.2 × 2²/2) = 17,968 Pa = 2.60 psi.</p>
+<p>Total: 37,890 + 17,968 = 55,858 Pa = 8.10 psi. The fittings add 47% to the total loss in this case.</p>
+
+<h2 id="design-considerations">Design Considerations for Pipe Systems</h2>
+<p>When sizing pipes for a new system, keep these practical guidelines in mind:</p>
+<ul>
+<li><strong>Velocity limits:</strong> For water, 1-3 m/s is typical. Below 0.5 m/s risks sedimentation; above 3 m/s causes noise and erosion. For steam, 25-40 m/s is common.</li>
+<li><strong>Pressure class:</strong> Higher schedule numbers allow higher working pressures. Verify that total system pressure stays within the pipe and fitting ratings.</li>
+<li><strong>Corrosion allowance:</strong> Add 1-3 mm to wall thickness for carbon steel in corrosive service. This reduces inside diameter and increases pressure drop over the pipe's lifetime.</li>
+<li><strong>Thermal expansion:</strong> Long pipe runs need expansion loops or flexible joints. Temperature changes affect fluid properties (viscosity drops with heat, reducing friction).</li>
+<li><strong>Water hammer:</strong> Quick valve closures cause transient pressure spikes that can be 10-100 times the steady-state pressure drop. Size pipes and valves to control closing speed.</li>
+<li><strong>Two-phase flow:</strong> The Darcy-Weisbach equation applies to single-phase flow only. Two-phase (gas-liquid) systems need separate correlations like Lockhart-Martinelli.</li>
+<li><strong>Economic pipe diameter:</strong> Larger pipe costs more but uses less pumping energy. The economic optimum balances capital cost against annual energy cost over the project lifetime.</li>
+</ul>
+
+<h2 id="fluid-properties-table">Common Fluid Properties</h2>
+<p>Accurate pressure drop calculations require correct fluid properties. Temperature has a large effect on viscosity, especially for liquids.</p>
+<table>
+<tr><th>Fluid</th><th>Temperature</th><th>Density (kg/m³)</th><th>Viscosity (Pa·s)</th></tr>
+<tr><td>Water</td><td>4°C</td><td>1000.0</td><td>0.001567</td></tr>
+<tr><td>Water</td><td>20°C</td><td>998.2</td><td>0.001002</td></tr>
+<tr><td>Water</td><td>40°C</td><td>992.2</td><td>0.000653</td></tr>
+<tr><td>Water</td><td>60°C</td><td>983.2</td><td>0.000467</td></tr>
+<tr><td>Water</td><td>80°C</td><td>971.8</td><td>0.000355</td></tr>
+<tr><td>Water</td><td>100°C</td><td>958.4</td><td>0.000282</td></tr>
+<tr><td>Air (1 atm)</td><td>20°C</td><td>1.204</td><td>0.0000182</td></tr>
+<tr><td>Air (1 atm)</td><td>100°C</td><td>0.946</td><td>0.0000218</td></tr>
+<tr><td>SAE 30 Oil</td><td>20°C</td><td>876</td><td>0.290</td></tr>
+<tr><td>SAE 30 Oil</td><td>100°C</td><td>830</td><td>0.010</td></tr>
+<tr><td>Gasoline</td><td>20°C</td><td>720</td><td>0.000290</td></tr>
+<tr><td>Ethanol</td><td>20°C</td><td>789</td><td>0.001200</td></tr>
+<tr><td>Glycerin</td><td>20°C</td><td>1261</td><td>1.412</td></tr>
+<tr><td>Mercury</td><td>20°C</td><td>13546</td><td>0.001526</td></tr>
+</table>
+<p>For fluids not listed here, consult engineering handbooks or the fluid manufacturer's data sheet. Online property databases from NIST are also a good source for verified values.</p>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+<h3>What is the Darcy-Weisbach equation used for?</h3>
+<p>The Darcy-Weisbach equation calculates the pressure drop caused by friction as fluid flows through a pipe. It works for any Newtonian fluid (water, air, oil, etc.) in any flow regime (laminar or turbulent). It is the standard method taught in fluid mechanics courses and used in professional piping design.</p>
+
+<h3>How accurate is the Colebrook-White equation?</h3>
+<p>The Colebrook-White equation matches experimental data within about 10-15% for most conditions. The main sources of error are uncertainty in pipe roughness (which can vary significantly even for the same material) and the assumption of fully developed flow. For most engineering purposes, this accuracy is more than sufficient.</p>
+
+<h3>Why not just use Hazen-Williams?</h3>
+<p>Hazen-Williams is simpler but only valid for water at moderate temperatures (40-75°F) and turbulent flow. The Darcy-Weisbach equation works for all fluids and flow regimes. For anything other than room-temperature water, Darcy-Weisbach is the better choice.</p>
+
+<h3>What if my pipe has multiple diameters?</h3>
+<p>Calculate pressure drop for each pipe segment separately, then sum the results. At each diameter change, add a contraction or expansion minor loss. The velocity changes at each diameter transition, so recalculate using the continuity equation: v₁A₁ = v₂A₂.</p>
+
+<h3>How do I account for elevation changes?</h3>
+<p>Add the hydrostatic pressure difference: ΔP_elevation = ρ × g × Δz, where Δz is the height difference (positive for uphill flow). The total pressure difference is friction loss plus elevation change.</p>
+
+<h3>What is the Moody chart?</h3>
+<p>The Moody chart is a graphical representation of the Colebrook-White equation, plotting friction factor against Reynolds number for various relative roughness values. It was published by Lewis Moody in 1944 and remains a standard reference. This calculator performs the same calculation numerically.</p>
+
+<h3>Can I use this for gas flow?</h3>
+<p>Yes, for incompressible gas flow (pressure drop less than about 10% of inlet pressure). For larger pressure drops, compressibility effects become significant and you need to use the general energy equation or segment the pipe into shorter sections where the incompressible assumption holds.</p>
+
+<h3>How do temperature changes affect pressure drop?</h3>
+<p>Temperature primarily affects viscosity and density. For water, viscosity drops by about 3% per degree Celsius increase near room temperature. This means hot water has less friction loss than cold water at the same velocity. For gases, viscosity increases slightly with temperature while density decreases.</p>
+
+<h2 id="references">References and Further Reading</h2>
+<ul>
+<li><a href="https://www.asme.org/" target="_blank" rel="noopener">ASME (American Society of Mechanical Engineers)</a> - Piping codes and standards (B31.1, B31.3)</li>
+<li><a href="https://www.engineeringtoolbox.com/darcy-weisbach-equation-d_646.html" target="_blank" rel="noopener">Engineering Toolbox - Darcy-Weisbach Equation</a> - Detailed reference tables and worked examples</li>
+<li>Crane Technical Paper No. 410 - "Flow of Fluids Through Valves, Fittings, and Pipe" (industry standard reference for K-factors and flow calculations)</li>
+</ul>
+<p>These references provide the foundational equations and data tables used in this calculator. Crane TP-410 is particularly valuable for its fitting loss coefficient data, which has been the industry standard since 1957.</p>
+
+<div class="privacy-note">
+<strong>Privacy Note:</strong> This pressure drop calculator runs entirely in your browser. No data is sent to any server, no cookies are set, and no personal information is collected. Your pipe specifications and fluid properties remain on your device.
+</div>
+
+<p style="margin-top:24px">More engineering and calculation tools:</p>
+<div style="margin-bottom:20px">
+<a class="cross-link" href="https://zovo.one/free-tools/flow-rate-calculator/">Flow Rate Calculator</a>
+<a class="cross-link" href="https://zovo.one/free-tools/beam-deflection-calculator/">Beam Deflection Calculator</a>
+<a class="cross-link" href="https://zovo.one/free-tools/gear-tooth-calculator/">Gear Tooth Calculator</a>
+<a class="cross-link" href="https://zovo.one/free-tools/">All Free Tools</a>
+</div>
+
+</div>
+
+<footer style="text-align:center;padding:24px;color:#b0b0c0;font-size:0.85rem;border-top:1px solid #1e1e2a;margin-top:40px;">Built by Michael Lip · More free tools at <a href="https://zovo.one/free-tools/" style="color:#00ff88;text-decoration:none;">zovo.one</a></footer>
+
+<script>
+const fluidPresets={water20:{d:998.2,v:0.001002},water60:{d:983.2,v:0.000467},air20:{d:1.204,v:0.0000182},oil:{d:876,v:0.290},gasoline:{d:720,v:0.000290}};
+document.getElementById('fluidPreset').addEventListener('change',function(){
+const p=fluidPresets[this.value];
+if(p){document.getElementById('density').value=p.d;document.getElementById('viscosity').value=p.v;}
+});
+document.getElementById('roughness').addEventListener('change',function(){
+document.getElementById('customRoughnessWrap').style.display=this.value==='custom'?'block':'none';
+});
+
+function getLength(){
+const v=parseFloat(document.getElementById('pipeLength').value);
+const u=document.getElementById('pipeLengthUnit').value;
+return u==='ft'?v*0.3048:v;
+}
+function getDia(){
+const v=parseFloat(document.getElementById('pipeDia').value);
+const u=document.getElementById('pipeDiaUnit').value;
+if(u==='mm')return v/1000;if(u==='in')return v*0.0254;return v;
+}
+function getRoughness(){
+const sel=document.getElementById('roughness');
+if(sel.value==='custom')return parseFloat(document.getElementById('customRoughness').value)/1000;
+return parseFloat(sel.value)/1000;
+}
+
+function solveColebrook(Re,eD){
+// Swamee-Jain initial guess
+let f=0.25/Math.pow(Math.log10(eD/3.7+5.74/Math.pow(Re,0.9)),2);
+for(let i=0;i<50;i++){
+const sf=Math.sqrt(f);
+const lhs=1/sf;
+const rhs=-2*Math.log10(eD/3.7+2.51/(Re*sf));
+const err=lhs-rhs;
+if(Math.abs(err)<1e-10)break;
+// Newton-Raphson derivative
+const dfdlhs=-0.5/(f*sf);
+const dfdrhs=-2/(Math.LN10)*(2.51/(Re*2*f*sf))*(1/(eD/3.7+2.51/(Re*sf)));
+const deriv=dfdlhs-dfdrhs;
+if(Math.abs(deriv)<1e-30)break;
+f=f-err/(-0.5*Math.pow(f,-1.5)-(-2/Math.LN10*(-2.51/(2*Re*Math.pow(f,1.5)))/(eD/3.7+2.51/(Re*sf))));
+if(f<1e-8)f=1e-8;
+}
+return f;
+}
+
+function calcPressureDrop(){
+const L=getLength(),D=getDia(),v=parseFloat(document.getElementById('velocity').value);
+const rho=parseFloat(document.getElementById('density').value),mu=parseFloat(document.getElementById('viscosity').value);
+const eps=getRoughness(),K=parseFloat(document.getElementById('totalK').value)||0;
+const warn=document.getElementById('warnBox');warn.style.display='none';
+
+if(isNaN(L)||isNaN(D)||isNaN(v)||isNaN(rho)||isNaN(mu)||D<=0||L<=0||v<0||rho<=0||mu<=0){
+warn.textContent='Please enter valid positive values for all required fields.';warn.style.display='block';return;
+}
+
+const Re=rho*v*D/mu;
+const eD=eps/D;
+let f,regime;
+
+if(Re<2300){
+f=64/Re;regime='Laminar';
+}else if(Re<4000){
+const fLam=64/2300;
+const fTurb=solveColebrook(4000,eD);
+const t=(Re-2300)/1700;
+f=fLam+(fTurb-fLam)*t;
+regime='Transitional';
+}else{
+f=solveColebrook(Re,eD);
+regime=Re>100000?'Fully Turbulent':'Turbulent';
+}
+
+const velHead=rho*v*v/2;
+const majorLoss=f*(L/D)*velHead;
+const minorLoss=K*velHead;
+const totalDP=majorLoss+minorLoss;
+const headM=totalDP/(rho*9.81);
+const headFt=headM*3.28084;
+
+document.getElementById('resRe').textContent=Re.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+document.getElementById('resRegime').textContent=regime;
+document.getElementById('resFf').textContent=f.toFixed(6);
+document.getElementById('resMajor').textContent=majorLoss.toFixed(1)+' Pa ('+( majorLoss*0.000145038).toFixed(3)+' psi)';
+document.getElementById('resMinor').textContent=minorLoss.toFixed(1)+' Pa ('+(minorLoss*0.000145038).toFixed(3)+' psi)';
+document.getElementById('resPa').textContent=totalDP.toFixed(1);
+document.getElementById('resPsi').textContent=(totalDP*0.000145038).toFixed(4);
+document.getElementById('resBar').textContent=(totalDP*0.00001).toFixed(6);
+document.getElementById('resHm').textContent=headM.toFixed(4);
+document.getElementById('resHft').textContent=headFt.toFixed(4);
+document.getElementById('resVh').textContent=velHead.toFixed(2);
+document.getElementById('resultBox').classList.add('show');
+
+if(Re>=2300&&Re<=4000){warn.textContent='Warning: Flow is in the transitional regime (Re = '+Re.toFixed(0)+'). Results are interpolated and may be less reliable. Consider adjusting velocity to move clearly into laminar or turbulent flow.';warn.style.display='block';}
+if(v>5&&rho>500){warn.textContent=(warn.textContent?warn.textContent+' ':'')+'Note: High velocity detected. Check for erosion and noise limits.';warn.style.display='block';}
+}
+function clearResults(){document.getElementById('resultBox').classList.remove('show');document.getElementById('warnBox').style.display='none';}
+
+// Smooth scroll for TOC
+document.querySelectorAll('nav.toc a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});})});
+</script>
+</body>
+</html>
