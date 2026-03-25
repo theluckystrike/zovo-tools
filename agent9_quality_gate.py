@@ -149,14 +149,13 @@ class Agent9QualityGate:
                         content = content.replace(ai_phrase, replacement)
                         violations_fixed += 1
 
-                # Ensure author is Michael Lip
-                wrong_author_pattern = re.compile(
-                    r'(?<!Michael )(?<!Michael Lip )\b[A-Z][a-z]+ [A-Z][a-z]+\b(?=.*(?:author|written by|created by))',
-                    re.IGNORECASE
-                )
-                if wrong_author_pattern.search(content):
-                    content = wrong_author_pattern.sub('Michael Lip', content)
-                    violations_fixed += 1
+                # Check for wrong author (simplified - only fix obvious cases)
+                if 'name="author"' in content and 'Michael Lip' not in content:
+                    # Find and fix author meta tags that don't contain Michael Lip
+                    author_pattern = re.compile(r'<meta\s+content="([^"]+)"\s+name="author"[^>]*>', re.IGNORECASE)
+                    if author_pattern.search(content):
+                        content = author_pattern.sub(r'<meta content="Michael Lip" name="author"/>', content)
+                        violations_fixed += 1
 
                 # Write back if changes were made
                 if content != original_content:
