@@ -1,83 +1,808 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://tools.zovo.one/dosage-calculator/" />
-    <title>Dosage Calculator - Free Calculator</title>
-    <meta name="description" content="Professional medical dosage calculator for healthcare providers. Calculate safe medication doses based on patient weight, age, and medical conditions with built-in safety checks.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dosage Calculator - Free Medication Dose by Weight Calculator | Zovo</title>
+<meta name="description" content="Calculate medication dosages by weight with our free dosage calculator. Supports mg/kg dosing, Clark's Rule, Young's Rule for children, BSA-based dosing, and max dose warnings. Includes medical disclaimers.">
+<meta name="author" content="Michael Lip">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://zovo.one/free-tools/dosage-calculator/">
+<meta property="og:title" content="Dosage Calculator - Free Medication Dose by Weight Calculator">
+<meta property="og:description" content="Calculate medication dosages by weight. Supports mg/kg dosing, Clark's Rule, Young's Rule for children, BSA-based dosing, and max dose warnings.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/dosage-calculator/">
+<meta property="og:image" content="https://zovo.one/free-tools/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dosage Calculator - Free Medication Dose by Weight Calculator">
+<meta name="twitter:description" content="Calculate medication dosages by weight. Supports mg/kg dosing, Clark's Rule, Young's Rule for children, BSA-based dosing, and max dose warnings.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Dosage Calculator",
+  "description": "Calculate medication dosages by weight with mg/kg dosing, Clark's Rule, Young's Rule, BSA-based dosing, and max dose warnings.",
+  "url": "https://zovo.one/free-tools/dosage-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "browserRequirements": "Requires a modern web browser with JavaScript enabled"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is mg/kg dosing and how does it work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Mg/kg dosing calculates medication doses based on body weight. The prescribed dose (in milligrams) is multiplied by the patient's weight (in kilograms) to determine the total dose. For example, if a medication is prescribed at 10 mg/kg and the patient weighs 70 kg, the dose would be 700 mg. This method ensures the dose is proportional to body size."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Clark's Rule for pediatric dosing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Clark's Rule is a formula for estimating pediatric doses based on the child's weight relative to an average adult weight of 150 pounds (68 kg). The formula is: Child's Dose = (Child's Weight in lbs / 150) x Adult Dose. For example, a child weighing 50 lbs would receive one-third of the adult dose. Clark's Rule is a rough estimation and should be verified with specific pediatric dosing guidelines."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Young's Rule for pediatric dosing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Young's Rule estimates pediatric doses based on age rather than weight. The formula is: Child's Dose = (Age in years / (Age + 12)) x Adult Dose. For a 6-year-old child, the dose would be 6/(6+12) = 1/3 of the adult dose. Young's Rule is intended for children aged 1-12 years and provides a rough estimate that should be confirmed with age-specific dosing references."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is Body Surface Area (BSA) calculated for dosing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "BSA is commonly calculated using the Mosteller formula: BSA (m squared) = square root of ((Height in cm x Weight in kg) / 3600). BSA-based dosing is often used for chemotherapy and certain other medications where surface area correlates better with drug metabolism than weight alone. An average adult BSA is approximately 1.73 m squared."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why are maximum dose limits important?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Maximum dose limits exist because exceeding certain thresholds can cause toxicity, organ damage, or death regardless of body weight. For example, acetaminophen has a maximum of 4,000 mg per day for adults. Even if a weight-based calculation suggests a higher dose, the maximum should never be exceeded. These limits are established through clinical trials and post-market safety data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert between pounds and kilograms for dosing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To convert pounds to kilograms, divide by 2.205. To convert kilograms to pounds, multiply by 2.205. For quick mental math, dividing pounds by 2.2 gives a close approximation. For example, 150 lbs divided by 2.205 = 68 kg. Accurate weight conversion is critical for correct dosing, especially in pediatric patients where small errors can be significant."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this calculator a substitute for medical advice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. This calculator is for educational and reference purposes only. It should never be used as a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider, pharmacist, or the prescribing physician for medication dosing decisions. Dosing can be affected by factors not captured by simple calculations, including organ function, drug interactions, and individual patient factors."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What factors affect medication dosing beyond weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Many factors affect optimal dosing beyond body weight, including age, kidney function (renal clearance), liver function (hepatic metabolism), concurrent medications (drug interactions), genetic factors affecting drug metabolism, pregnancy status, disease severity, and route of administration. Weight-based dosing provides a starting point, but clinical judgment and patient-specific factors should always guide final dosing decisions."
+      }
+    }
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0f; color: #e0e0e8; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; padding: 0; overflow-x: hidden; }
+a { color: #00ccff; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+h1 { font-size: 2.2rem; margin-bottom: 16px; color: #ffffff; line-height: 1.3; }
+h2 { font-size: 1.5rem; color: #00ff88; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #1e1e2a; }
+h3 { font-size: 1.2rem; color: #e0e0e8; margin: 24px 0 12px; }
+p { margin-bottom: 16px; }
+ul, ol { margin: 0 0 16px 24px; }
+li { margin-bottom: 8px; }
+blockquote { background: #12121a; border-left: 4px solid #00ff88; padding: 16px 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+th, td { border: 1px solid #1e1e2a; padding: 10px 14px; text-align: left; }
+th { background: #12121a; color: #00ff88; font-weight: 600; }
+tr:nth-child(even) { background: #0d0d14; }
+code { background: #12121a; padding: 2px 6px; border-radius: 4px; font-size: 0.9rem; }
+.toc { position: sticky; top: 20px; background: #12121a; border: 1px solid #1e1e2a; border-radius: 10px; padding: 20px; margin-bottom: 30px; max-height: 80vh; overflow-y: auto; }
+.toc h3 { color: #00ff88; margin: 0 0 12px; font-size: 1rem; }
+.toc ul { list-style: none; margin: 0; padding: 0; }
+.toc li { margin-bottom: 6px; }
+.toc a { color: #b0b0c0; font-size: 0.9rem; transition: color 0.2s; }
+.toc a:hover { color: #00ff88; text-decoration: none; }
+.reading-time { background: #12121a; border-left: 4px solid #00ccff; padding: 12px 20px; margin: 20px 0 30px; border-radius: 0 8px 8px 0; color: #b0b0c0; font-size: 0.95rem; }
+.calculator-card { background: #12121a; border: 1px solid #1e1e2a; border-radius: 12px; padding: 30px; margin: 20px 0; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #e0e0e8; }
+.form-group input, .form-group select { width: 100%; padding: 12px 16px; background: #0a0a0f; border: 1px solid #1e1e2a; border-radius: 8px; color: #e0e0e8; font-size: 1rem; font-family: inherit; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #00ff88; box-shadow: 0 0 0 3px rgba(0,255,136,0.1); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.btn { display: inline-block; padding: 14px 32px; background: #00ff88; color: #0a0a0f; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn:hover { background: #00cc6a; transform: translateY(-1px); }
+.btn-secondary { background: transparent; border: 2px solid #00ff88; color: #00ff88; }
+.btn-secondary:hover { background: rgba(0,255,136,0.1); }
+.results-card { background: #12121a; border: 1px solid #1e1e2a; border-radius: 12px; padding: 30px; margin: 24px 0; display: none; }
+.results-card.visible { display: block; }
+.result-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #1e1e2a; }
+.result-row:last-child { border-bottom: none; }
+.result-label { color: #b0b0c0; }
+.result-value { font-weight: 700; font-size: 1.1rem; color: #e0e0e8; }
+.result-value.accent { color: #00ff88; font-size: 1.3rem; }
+.result-value.warning { color: #ff6b6b; }
+.privacy-note { background: #12121a; border: 1px solid #1e1e2a; border-radius: 10px; padding: 16px 20px; margin: 20px 0; font-size: 0.9rem; color: #b0b0c0; display: flex; align-items: flex-start; gap: 10px; }
+.privacy-note::before { content: '\1F512'; font-size: 1.2rem; flex-shrink: 0; }
+.medical-disclaimer { background: #1a1215; border: 2px solid #ff6b6b; border-radius: 10px; padding: 20px; margin: 20px 0; font-size: 0.95rem; color: #e0c0c0; }
+.medical-disclaimer strong { color: #ff6b6b; }
+.cross-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
+.cross-link { background: #12121a; border: 1px solid #1e1e2a; border-radius: 8px; padding: 16px; transition: border-color 0.2s; }
+.cross-link:hover { border-color: #00ff88; text-decoration: none; }
+.cross-link span { display: block; color: #00ff88; font-weight: 600; margin-bottom: 4px; }
+.cross-link small { color: #b0b0c0; font-size: 0.85rem; }
+.formula-card { background: #0d0d14; border: 1px solid #1e1e2a; border-radius: 10px; padding: 20px; margin: 16px 0; font-family: monospace; text-align: center; font-size: 1.1rem; color: #00ff88; }
+.tab-nav { display: flex; gap: 0; margin-bottom: 0; border-bottom: 2px solid #1e1e2a; }
+.tab-btn { padding: 12px 24px; background: transparent; border: none; border-bottom: 2px solid transparent; color: #b0b0c0; font-size: 0.95rem; cursor: pointer; font-family: inherit; font-weight: 600; margin-bottom: -2px; transition: all 0.2s; }
+.tab-btn.active { color: #00ff88; border-bottom-color: #00ff88; }
+.tab-btn:hover { color: #e0e0e8; }
+.tab-content { display: none; padding-top: 20px; }
+.tab-content.active { display: block; }
+.warning-box { background: #1a1a10; border: 1px solid #3a3a10; border-radius: 8px; padding: 14px 18px; margin: 12px 0; color: #ffcc00; font-size: 0.9rem; }
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+.info-item { background: #12121a; border: 1px solid #1e1e2a; border-radius: 10px; padding: 20px; }
+.info-item h4 { color: #00ff88; margin-bottom: 8px; font-size: 1rem; }
+.info-item p { font-size: 0.9rem; color: #b0b0c0; margin: 0; }
+@media (max-width: 768px) {
+  h1 { font-size: 1.6rem; }
+  .form-row, .form-row-3 { grid-template-columns: 1fr; }
+  .container { padding: 16px; }
+  .calculator-card { padding: 20px; }
+  .tab-nav { flex-wrap: wrap; }
+  .tab-btn { padding: 10px 16px; font-size: 0.85rem; }
+}
+html { scroll-behavior: smooth; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Medical Dosage Calculator</h1>
-        <p>Professional-grade dosage calculator designed for healthcare providers to determine safe and effective medication doses. This tool incorporates medical guidelines, patient factors, and safety protocols.</p>
-        
-        <div class="tool-interface">
-            <h2>Dosage Calculation Features</h2>
-            <ul>
-                <li>Weight-based dosage calculations</li>
-                <li>Age-appropriate dose adjustments</li>
-                <li>Kidney function considerations</li>
-                <li>Drug interaction warnings</li>
-                <li>Pediatric and geriatric protocols</li>
-            </ul>
-            
-            <h2>How to Use the Dosage Calculator</h2>
-            <p>This medical dosage calculator provides multiple calculation methods to ensure accurate and safe medication dosing for different patient populations and clinical scenarios.</p>
-            
-            <h3>Weight-Based Calculations</h3>
-            <p>Calculate medication doses based on patient weight using standard mg/kg or mcg/kg formulas. The calculator automatically adjusts for different weight units and provides dose ranges for various medications.</p>
-            
-            <h3>Age-Specific Dosing</h3>
-            <p>Pediatric and geriatric patients require special dosing considerations. Our calculator includes age-appropriate algorithms that account for developmental factors and age-related changes in drug metabolism.</p>
-            
-            <h3>Renal Function Adjustments</h3>
-            <p>For patients with kidney impairment, medication doses often require adjustment. The calculator incorporates creatinine clearance values to suggest appropriate dose modifications.</p>
-            
-            <h2>Clinical Application Guidelines</h2>
-            <p>Proper use of dosage calculators in clinical practice requires understanding of pharmacokinetics, patient factors, and institutional protocols. This tool supports evidence-based prescribing practices.</p>
-            
-            <ul>
-                <li>Always verify calculations using alternative methods</li>
-                <li>Consider patient-specific factors beyond weight and age</li>
-                <li>Check for drug interactions and contraindications</li>
-                <li>Follow institutional prescribing guidelines</li>
-                <li>Document rationale for dose selections</li>
-            </ul>
-            
-            <h2>Safety Protocols and Verification</h2>
-            <p>Medical dosage calculations require multiple verification steps to prevent medication errors. Our calculator includes built-in safety checks and requires confirmation of critical parameters.</p>
-            
-            <h3>Double-Check Systems</h3>
-            <p>The calculator displays dose calculations in multiple formats and units, allowing healthcare providers to verify accuracy through cross-referencing. This redundancy helps identify potential calculation errors.</p>
-            
-            <h3>Range Checking</h3>
-            <p>Calculated doses are automatically compared against established therapeutic ranges for common medications. Doses outside normal ranges trigger warnings and require additional confirmation.</p>
-            
-            <h2>Special Population Considerations</h2>
-            <p>Different patient populations require specialized dosing approaches. The calculator includes protocols for pediatric, geriatric, pregnancy, and critically ill patients.</p>
-            
-            <h3>Pediatric Dosing</h3>
-            <p>Children are not simply small adults when it comes to medication dosing. Pediatric calculations consider developmental pharmacokinetics, organ maturity, and age-specific safety profiles.</p>
-            
-            <h3>Geriatric Considerations</h3>
-            <p>Elderly patients often require dose adjustments due to changes in drug metabolism, kidney function, and increased sensitivity to medications. The calculator includes geriatric-specific algorithms.</p>
-            
-            <h2>Emergency Dosing Protocols</h2>
-            <p>In emergency situations, rapid and accurate dosage calculations are critical. The calculator includes quick-reference emergency protocols for common acute care medications.</p>
-            
-            <p>Emergency dosing features include pre-calculated dose tables, rapid weight estimation methods, and critical care drug protocols that can be accessed quickly during urgent situations.</p>
-            
-            <h2>Quality Assurance and Documentation</h2>
-            <p>All dosage calculations include comprehensive documentation features that support clinical record-keeping and quality assurance programs.</p>
-            
-            <p>The tool generates detailed calculation reports that show all input parameters, formulas used, and final recommendations, providing a clear audit trail for clinical documentation.</p>
-            
-            <div class="disclaimer">
-                <h3>Important Medical Disclaimer</h3>
-                <p>This dosage calculator is intended for use by qualified healthcare professionals only. Always verify calculations independently and consider individual patient factors. This tool does not replace clinical judgment or professional medical advice.</p>
-            </div>
-        </div>
-    </div>
+<div class="container">
+<h1>Dosage Calculator &mdash; Free Medication Dose by Weight Calculator</h1>
+
+<blockquote class="reading-time">Estimated reading time: 20 minutes. This guide covers mg/kg dosing, Clark's Rule, Young's Rule, BSA-based dosing, maximum dose limits, and pediatric dosing safety considerations.</blockquote>
+
+<div class="medical-disclaimer">
+<strong>Medical Disclaimer:</strong> This calculator is for educational and reference purposes only. It is NOT a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider, pharmacist, or the prescribing physician before making any medication dosing decisions. Dosing errors can cause serious harm or death. Never adjust medication doses without professional guidance.
+</div>
+
+<div class="privacy-note">This tool runs entirely in your browser. No data is sent to any server.</div>
+
+<nav class="toc">
+<h3>Table of Contents</h3>
+<ul>
+<li><a href="#dosage-calculator-tool">Dosage Calculator Tool</a></li>
+<li><a href="#understanding-weight-based-dosing">Understanding Weight-Based Dosing</a></li>
+<li><a href="#mg-per-kg-dosing-explained">mg/kg Dosing Explained</a></li>
+<li><a href="#clarks-rule-for-children">Clark's Rule for Children</a></li>
+<li><a href="#youngs-rule-for-children">Young's Rule for Children</a></li>
+<li><a href="#bsa-based-dosing">BSA-Based Dosing</a></li>
+<li><a href="#maximum-dose-limits">Maximum Dose Limits and Safety</a></li>
+<li><a href="#pediatric-dosing-considerations">Pediatric Dosing Considerations</a></li>
+<li><a href="#common-medication-dosing-reference">Common Medication Dosing Reference</a></li>
+<li><a href="#factors-affecting-drug-dosing">Factors Affecting Drug Dosing</a></li>
+<li><a href="#weight-conversion-guide">Weight Conversion Guide</a></li>
+<li><a href="#dosing-calculation-examples">Dosing Calculation Examples</a></li>
+<li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
+<li><a href="#external-references">External References and Resources</a></li>
+</ul>
+</nav>
+
+<h2 id="dosage-calculator-tool">Dosage Calculator Tool</h2>
+<p>Use this calculator to determine medication doses based on body weight, age, or body surface area. Select the dosing method that matches your needs and enter the required parameters. The calculator supports mg/kg dosing, Clark's Rule, Young's Rule, and BSA-based calculations.</p>
+
+<div class="calculator-card">
+<div class="tab-nav">
+<button class="tab-btn active" onclick="switchTab('mgkg')">mg/kg Dosing</button>
+<button class="tab-btn" onclick="switchTab('clarks')">Clark's Rule</button>
+<button class="tab-btn" onclick="switchTab('youngs')">Young's Rule</button>
+<button class="tab-btn" onclick="switchTab('bsa')">BSA Dosing</button>
+</div>
+
+<div class="tab-content active" id="tab-mgkg">
+<div class="form-row">
+<div class="form-group">
+<label for="mgkg-weight">Patient Weight</label>
+<input type="number" id="mgkg-weight" placeholder="e.g. 70" min="0" step="0.1">
+</div>
+<div class="form-group">
+<label for="mgkg-weight-unit">Weight Unit</label>
+<select id="mgkg-weight-unit">
+<option value="kg">Kilograms (kg)</option>
+<option value="lbs">Pounds (lbs)</option>
+</select>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="mgkg-dose">Prescribed Dose (mg/kg)</label>
+<input type="number" id="mgkg-dose" placeholder="e.g. 10" min="0" step="0.01">
+</div>
+<div class="form-group">
+<label for="mgkg-frequency">Doses Per Day</label>
+<select id="mgkg-frequency">
+<option value="1">Once daily (QD)</option>
+<option value="2">Twice daily (BID)</option>
+<option value="3">Three times daily (TID)</option>
+<option value="4">Four times daily (QID)</option>
+<option value="6">Every 4 hours (Q4H)</option>
+</select>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="mgkg-max">Maximum Single Dose (mg, optional)</label>
+<input type="number" id="mgkg-max" placeholder="e.g. 1000" min="0" step="1">
+</div>
+<div class="form-group">
+<label for="mgkg-max-daily">Maximum Daily Dose (mg, optional)</label>
+<input type="number" id="mgkg-max-daily" placeholder="e.g. 4000" min="0" step="1">
+</div>
+</div>
+<div class="form-group">
+<label for="mgkg-concentration">Liquid Concentration (mg/mL, optional)</label>
+<input type="number" id="mgkg-concentration" placeholder="e.g. 25" min="0" step="0.1">
+</div>
+<button class="btn" onclick="calcMgKg()">Calculate Dose</button>
+<button class="btn btn-secondary" onclick="resetCalc('mgkg')" style="margin-left:10px;">Reset</button>
+</div>
+
+<div class="tab-content" id="tab-clarks">
+<div class="form-row">
+<div class="form-group">
+<label for="clarks-weight">Child's Weight</label>
+<input type="number" id="clarks-weight" placeholder="e.g. 50" min="0" step="0.1">
+</div>
+<div class="form-group">
+<label for="clarks-weight-unit">Weight Unit</label>
+<select id="clarks-weight-unit">
+<option value="lbs">Pounds (lbs)</option>
+<option value="kg">Kilograms (kg)</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label for="clarks-adult-dose">Adult Dose (mg)</label>
+<input type="number" id="clarks-adult-dose" placeholder="e.g. 500" min="0" step="1">
+</div>
+<button class="btn" onclick="calcClarks()">Calculate with Clark's Rule</button>
+<button class="btn btn-secondary" onclick="resetCalc('clarks')" style="margin-left:10px;">Reset</button>
+</div>
+
+<div class="tab-content" id="tab-youngs">
+<div class="form-row">
+<div class="form-group">
+<label for="youngs-age">Child's Age (years)</label>
+<input type="number" id="youngs-age" placeholder="e.g. 6" min="1" max="12" step="1">
+</div>
+<div class="form-group">
+<label for="youngs-adult-dose">Adult Dose (mg)</label>
+<input type="number" id="youngs-adult-dose" placeholder="e.g. 500" min="0" step="1">
+</div>
+</div>
+<button class="btn" onclick="calcYoungs()">Calculate with Young's Rule</button>
+<button class="btn btn-secondary" onclick="resetCalc('youngs')" style="margin-left:10px;">Reset</button>
+</div>
+
+<div class="tab-content" id="tab-bsa">
+<div class="form-row">
+<div class="form-group">
+<label for="bsa-weight">Patient Weight</label>
+<input type="number" id="bsa-weight" placeholder="e.g. 70" min="0" step="0.1">
+</div>
+<div class="form-group">
+<label for="bsa-weight-unit">Weight Unit</label>
+<select id="bsa-weight-unit">
+<option value="kg">Kilograms (kg)</option>
+<option value="lbs">Pounds (lbs)</option>
+</select>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="bsa-height">Patient Height</label>
+<input type="number" id="bsa-height" placeholder="e.g. 170" min="0" step="0.1">
+</div>
+<div class="form-group">
+<label for="bsa-height-unit">Height Unit</label>
+<select id="bsa-height-unit">
+<option value="cm">Centimeters (cm)</option>
+<option value="in">Inches (in)</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label for="bsa-dose">Prescribed Dose (mg/m&sup2;)</label>
+<input type="number" id="bsa-dose" placeholder="e.g. 75" min="0" step="0.1">
+</div>
+<button class="btn" onclick="calcBSA()">Calculate BSA Dose</button>
+<button class="btn btn-secondary" onclick="resetCalc('bsa')" style="margin-left:10px;">Reset</button>
+</div>
+</div>
+
+<div class="results-card" id="results">
+<h3 style="color:#00ff88;margin-bottom:20px;">Dosage Calculation Results</h3>
+<div id="results-summary"></div>
+</div>
+
+<h2 id="understanding-weight-based-dosing">Understanding Weight-Based Dosing</h2>
+<p>Weight-based dosing is the standard approach for determining appropriate medication amounts for individual patients. The principle is straightforward: larger bodies require larger doses to achieve the same drug concentration in the bloodstream. This approach accounts for the fact that a 50 kg patient and a 100 kg patient have very different volumes of distribution for any given drug.</p>
+
+<p>The most common weight-based dosing method expresses the dose in milligrams per kilogram (mg/kg). A physician or pharmacist determines the appropriate mg/kg ratio based on clinical evidence, and this ratio is then multiplied by the patient's weight to calculate the actual dose. This method is used for the vast majority of medications in both adult and pediatric medicine.</p>
+
+<p>Weight-based dosing is particularly critical in pediatric medicine, where patients range from 2 kg premature infants to 100+ kg adolescents. A fixed dose that is safe for an adult could be lethal for a small child, while the same fixed dose might be completely ineffective for a large adult. By tying the dose to body weight, clinicians can prescribe appropriate amounts across this wide range of patient sizes.</p>
+
+<p>While weight is the most common dosing parameter, it is not the only factor. Drug metabolism, organ function, age, genetic factors, and concurrent medications all influence how a patient processes a drug. Weight-based dosing provides a starting point that clinicians then adjust based on these additional considerations. This is why the same mg/kg dose may be modified for patients with kidney disease, liver impairment, or extreme body compositions.</p>
+
+<h2 id="mg-per-kg-dosing-explained">mg/kg Dosing Explained</h2>
+<p>The mg/kg dosing method is the foundation of weight-based prescribing. The formula is simple in concept but requires careful attention to units and weight accuracy in practice:</p>
+
+<div class="formula-card">
+Dose (mg) = Prescribed Rate (mg/kg) &times; Patient Weight (kg)
+</div>
+
+<p>For example, if ibuprofen is prescribed at 10 mg/kg and the patient weighs 25 kg, the calculated dose is 10 &times; 25 = 250 mg. If the medication comes as a liquid at 100 mg/5 mL, the volume to administer would be 12.5 mL.</p>
+
+<p>Several key considerations apply when using mg/kg dosing:</p>
+
+<ul>
+<li><strong>Weight must be in kilograms:</strong> If the patient's weight is recorded in pounds, it must be converted first. Divide pounds by 2.205 to get kilograms. Using pounds instead of kilograms without converting is one of the most common dosing errors and results in doses that are approximately 2.2 times too high.</li>
+<li><strong>Actual vs. ideal body weight:</strong> For some medications, particularly those that do not distribute well into fat tissue, dosing should be based on ideal body weight rather than actual weight. This is especially important for obese patients where using actual weight could result in overdosing. Your pharmacist or prescriber can advise on which weight to use.</li>
+<li><strong>Single dose vs. daily dose:</strong> Some references express doses as mg/kg/day (total daily dose) while others express doses as mg/kg/dose (per administration). Confusing these two can result in doses that are several times too high or too low. Always clarify whether the prescribed rate is per dose or per day.</li>
+<li><strong>Maximum dose limits:</strong> Many medications have ceiling doses beyond which additional amounts provide no benefit but increase toxicity risk. Even if the mg/kg calculation yields a higher number, the maximum dose should not be exceeded.</li>
+</ul>
+
+<h2 id="clarks-rule-for-children">Clark's Rule for Children</h2>
+<p>Clark's Rule is a historical formula for estimating pediatric doses when specific pediatric dosing data is unavailable. It uses the child's weight relative to a standard adult weight to proportion the adult dose:</p>
+
+<div class="formula-card">
+Child's Dose = (Child's Weight in lbs &divide; 150) &times; Adult Dose
+</div>
+
+<p>The number 150 in the formula represents the assumed average adult weight in pounds (approximately 68 kg). For a child weighing 75 lbs, the calculation would yield 75/150 = 0.5, meaning the child should receive half the adult dose.</p>
+
+<p>Clark's Rule has several important limitations that modern practitioners should understand:</p>
+
+<p><strong>Historical context:</strong> Clark's Rule was developed in the 19th century when specific pediatric dosing studies were rare. Today, most medications have established pediatric dosing guidelines based on actual clinical trials in children. These evidence-based guidelines should always take precedence over Clark's Rule when available.</p>
+
+<p><strong>Linear assumption:</strong> The rule assumes a linear relationship between weight and dose, which is not always accurate. Drug metabolism in children is not simply a scaled-down version of adult metabolism. Children have different proportions of body water, fat, and protein compared to adults, and their liver and kidney function mature at different rates. These factors can cause significant deviations from the linear prediction.</p>
+
+<p><strong>When it remains useful:</strong> Clark's Rule can still provide a rough "sanity check" on pediatric doses or a starting estimate when no other guidance is available. It is most accurate for older children (over 2 years) whose metabolism more closely resembles adult patterns. It should never be used for neonates or infants without additional clinical guidance.</p>
+
+<p><strong>The 150 lb assumption:</strong> The standard adult weight of 150 lbs was established when the rule was first created and may not reflect modern populations. Some practitioners adjust this to 154 lbs (70 kg) for consistency with metric-based dosing references. The difference is small but can matter for medications with narrow therapeutic windows.</p>
+
+<h2 id="youngs-rule-for-children">Young's Rule for Children</h2>
+<p>Young's Rule takes a different approach to pediatric dose estimation by using the child's age rather than weight as the basis for calculation:</p>
+
+<div class="formula-card">
+Child's Dose = (Age in years &divide; (Age + 12)) &times; Adult Dose
+</div>
+
+<p>For a 4-year-old child, the calculation would be 4/(4+12) = 4/16 = 0.25, meaning the child should receive one-quarter of the adult dose. For a 12-year-old, the result would be 12/(12+12) = 12/24 = 0.5, or half the adult dose.</p>
+
+<p>Young's Rule is intended for children between 1 and 12 years of age. It should not be applied to infants under one year, as their drug metabolism is substantially different from older children. For teenagers over 12, adult dosing guidelines are typically more appropriate, though weight-based adjustments may still be needed for smaller adolescents.</p>
+
+<p>The advantage of Young's Rule is its simplicity when a child's weight is unknown. In emergency situations or resource-limited settings where a scale is not immediately available, age-based estimation provides a reasonable starting point. However, children of the same age can vary dramatically in size. A small 6-year-old weighing 18 kg and a large 6-year-old weighing 30 kg would receive the same dose under Young's Rule, even though their actual drug clearance differs significantly.</p>
+
+<p>Like Clark's Rule, Young's Rule is a rough estimation tool that has been largely superseded by specific mg/kg dosing guidelines for most medications. It remains a useful backup calculation and teaching tool, but should not replace evidence-based pediatric dosing when such data is available. The American Academy of Pediatrics (AAP) recommends using weight-based dosing whenever possible rather than age-based estimation rules.</p>
+
+<h2 id="bsa-based-dosing">BSA-Based Dosing</h2>
+<p>Body Surface Area (BSA) dosing calculates medication amounts based on the patient's skin surface area, measured in square meters (m&sup2;). BSA correlates with several physiological parameters including cardiac output, blood volume, and glomerular filtration rate, making it a more accurate predictor of drug metabolism for certain medication classes.</p>
+
+<div class="formula-card">
+BSA (m&sup2;) = &radic;((Height in cm &times; Weight in kg) &divide; 3600)<br><br>
+Dose (mg) = Prescribed Rate (mg/m&sup2;) &times; BSA (m&sup2;)
+</div>
+
+<p>The formula above is the Mosteller formula, which is the most commonly used BSA calculation method due to its simplicity. Other formulas exist (DuBois, Haycock, Gehan-George), but the Mosteller formula provides results that are close to the others and is easier to calculate without specialized tools.</p>
+
+<p><strong>When BSA dosing is preferred:</strong> BSA-based dosing is standard practice for chemotherapy drugs, where precise dosing is critical due to narrow therapeutic windows. Many cancer treatment protocols specify doses in mg/m&sup2; to account for differences in drug clearance between patients of different sizes. BSA dosing is also used for some cardiac medications, immunosuppressants, and burn treatment calculations.</p>
+
+<p><strong>Average adult BSA:</strong> The average adult body surface area is approximately 1.73 m&sup2;. This value is often used as a reference when converting between BSA-based doses and weight-based doses. For example, a dose of 100 mg/m&sup2; for an average adult (BSA 1.73 m&sup2;) would equal a total dose of 173 mg.</p>
+
+<p><strong>Limitations of BSA dosing:</strong> BSA calculations require both height and weight measurements, making them less convenient than weight-only calculations. In obese patients, BSA may overestimate the appropriate dose for drugs that do not distribute into fat tissue. Some recent research suggests that for certain drugs, BSA-based dosing does not provide meaningfully better accuracy than simpler weight-based methods, though the practice remains standard in oncology.</p>
+
+<p><strong>Pediatric BSA considerations:</strong> BSA-based dosing is particularly useful in pediatric oncology because it accounts for the different body proportions of children. A child's BSA-to-weight ratio is higher than an adult's, meaning a child has relatively more surface area per kilogram. This higher ratio correlates with faster drug metabolism in children, and BSA-based dosing automatically adjusts for this difference.</p>
+
+<h2 id="maximum-dose-limits">Maximum Dose Limits and Safety</h2>
+<p>Maximum dose limits are critical safety boundaries that should never be exceeded regardless of what weight-based calculations suggest. These limits exist because drug toxicity is not always linear with dose, and exceeding certain thresholds can overwhelm the body's ability to metabolize or eliminate the drug safely.</p>
+
+<table>
+<thead>
+<tr><th>Medication</th><th>Typical mg/kg Dose</th><th>Max Single Dose</th><th>Max Daily Dose</th></tr>
+</thead>
+<tbody>
+<tr><td>Acetaminophen (adult)</td><td>10-15 mg/kg</td><td>1,000 mg</td><td>4,000 mg</td></tr>
+<tr><td>Ibuprofen (adult)</td><td>5-10 mg/kg</td><td>800 mg</td><td>3,200 mg</td></tr>
+<tr><td>Amoxicillin (peds)</td><td>25-50 mg/kg/day</td><td>500 mg/dose</td><td>3,000 mg</td></tr>
+<tr><td>Acetaminophen (peds)</td><td>10-15 mg/kg</td><td>750 mg</td><td>75 mg/kg (max 4,000 mg)</td></tr>
+<tr><td>Ibuprofen (peds)</td><td>5-10 mg/kg</td><td>400 mg</td><td>40 mg/kg (max 2,400 mg)</td></tr>
+<tr><td>Diphenhydramine</td><td>1-1.25 mg/kg</td><td>50 mg</td><td>300 mg</td></tr>
+</tbody>
+</table>
+
+<div class="warning-box">
+<strong>Warning:</strong> The table above shows general reference ranges only. Actual prescribing should follow current clinical guidelines, drug manufacturer labeling, and the professional judgment of the prescribing healthcare provider. Doses vary based on indication, patient factors, and formulation.
+</div>
+
+<p>Acetaminophen (Tylenol) provides an important example of why maximum dose limits matter. While the standard weight-based dose of 10-15 mg/kg is safe for most patients, the daily maximum of 4,000 mg exists because the liver can only safely metabolize a limited amount of the drug. Exceeding this limit, even by modest amounts over several days, can cause irreversible liver damage. Acetaminophen overdose is the leading cause of acute liver failure in the United States.</p>
+
+<p>Maximum dose limits also apply to pediatric patients, often with lower absolute ceilings than adults. A large adolescent weighing 90 kg with a prescribed dose of 15 mg/kg would calculate to 1,350 mg of acetaminophen, but the typical pediatric maximum single dose is 750 mg (or 1,000 mg for older adolescents being dosed as adults). The weight-based calculation must always be checked against the applicable maximum.</p>
+
+<p>Some medications have additional safety limits based on cumulative lifetime exposure. Certain chemotherapy drugs, for example, have lifetime dose limits beyond which the risk of organ toxicity (particularly cardiac or pulmonary) becomes unacceptable. These lifetime limits are tracked throughout the patient's treatment history and factored into ongoing dosing decisions.</p>
+
+<h2 id="pediatric-dosing-considerations">Pediatric Dosing Considerations</h2>
+<p>Pediatric dosing requires special attention because children are not simply small adults. Their bodies process medications differently at every stage of development, from premature infants through adolescence. Understanding these differences is essential for safe and effective medication use in children.</p>
+
+<p><strong>Neonates (0-28 days):</strong> Newborns have immature liver and kidney function, higher body water content (75-80% vs. 60% in adults), lower protein binding capacity, and underdeveloped blood-brain barriers. These factors mean that drugs are distributed differently, metabolized more slowly, and eliminated less efficiently. Many medications require significantly lower mg/kg doses in neonates compared to older children, and dosing intervals are often extended to account for slower clearance.</p>
+
+<p><strong>Infants (1 month - 1 year):</strong> Organ function matures rapidly during the first year of life. By 6 months, liver enzyme activity for many drug-metabolizing pathways has reached or exceeded adult levels. However, kidney function continues to mature through the first year. Dosing for infants is almost always weight-based using specific pediatric guidelines rather than estimation rules like Clark's or Young's.</p>
+
+<p><strong>Children (1-12 years):</strong> Children in this age range often have higher metabolic rates relative to body weight than adults, meaning they may actually require higher mg/kg doses to achieve the same blood levels. This counterintuitive finding means that simply scaling down the adult dose can result in underdosing. Specific pediatric dosing guidelines account for this increased metabolic capacity.</p>
+
+<p><strong>Adolescents (12-18 years):</strong> Older adolescents approaching adult size are often dosed using adult guidelines, though clinicians should consider whether the adolescent has reached adult weight and physiological maturity. Small adolescents may still require pediatric weight-based dosing, while large adolescents may be safely dosed as adults (with appropriate maximum dose limits applied).</p>
+
+<p><strong>Accurate weight measurement:</strong> The AAP strongly recommends that pediatric patients be weighed in kilograms at every healthcare visit and that all dosing be performed in metric units. Using pounds or estimating weights introduces unnecessary error. In emergency situations where weighing is not possible, the Broselow tape (which estimates weight from body length) provides a standardized method for quick weight estimation in children.</p>
+
+<h2 id="common-medication-dosing-reference">Common Medication Dosing Reference</h2>
+<p>The following table provides general dosing references for commonly prescribed medications. These are typical ranges and should be verified against current clinical guidelines and manufacturer labeling before use.</p>
+
+<table>
+<thead>
+<tr><th>Medication</th><th>Adult Dose</th><th>Pediatric Dose</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Acetaminophen</td><td>500-1000 mg Q4-6H</td><td>10-15 mg/kg Q4-6H</td><td>Max 4g/day adult, 75 mg/kg/day peds</td></tr>
+<tr><td>Ibuprofen</td><td>200-800 mg Q6-8H</td><td>5-10 mg/kg Q6-8H</td><td>Take with food, max 3.2g/day adult</td></tr>
+<tr><td>Amoxicillin</td><td>250-500 mg Q8H</td><td>25-50 mg/kg/day divided Q8H</td><td>Higher doses for otitis media</td></tr>
+<tr><td>Azithromycin</td><td>500 mg day 1, then 250 mg</td><td>10 mg/kg day 1, then 5 mg/kg</td><td>5-day course typical</td></tr>
+<tr><td>Prednisone</td><td>5-60 mg/day</td><td>1-2 mg/kg/day</td><td>Taper for courses longer than 7 days</td></tr>
+<tr><td>Diphenhydramine</td><td>25-50 mg Q6-8H</td><td>1-1.25 mg/kg Q6-8H</td><td>May cause drowsiness</td></tr>
+<tr><td>Cetirizine</td><td>10 mg daily</td><td>2.5-5 mg daily (2-5yr)</td><td>Non-drowsy antihistamine</td></tr>
+</tbody>
+</table>
+
+<div class="medical-disclaimer">
+<strong>Important:</strong> This reference table is for general educational purposes. Drug dosing is affected by diagnosis, patient-specific factors (renal function, hepatic function, allergies, drug interactions), and formulation. Always follow the prescribing healthcare provider's specific instructions and current clinical guidelines.
+</div>
+
+<h2 id="factors-affecting-drug-dosing">Factors Affecting Drug Dosing</h2>
+<p>While weight is the primary factor in dose calculation, numerous other variables influence the optimal dose for any given patient. Understanding these factors helps explain why two patients of the same weight might receive different doses of the same medication.</p>
+
+<div class="info-grid">
+<div class="info-item">
+<h4>Kidney Function</h4>
+<p>Many drugs are eliminated through the kidneys. Reduced kidney function (measured by creatinine clearance or GFR) requires dose reductions or extended intervals to prevent drug accumulation and toxicity.</p>
+</div>
+<div class="info-item">
+<h4>Liver Function</h4>
+<p>The liver metabolizes most drugs. Liver disease or impairment can slow drug metabolism, leading to higher-than-expected blood levels. Dose reductions are often needed for hepatically cleared drugs.</p>
+</div>
+<div class="info-item">
+<h4>Age</h4>
+<p>Both very young and elderly patients may process drugs differently. Pediatric patients have developing organs, while geriatric patients often have declining function that affects drug clearance.</p>
+</div>
+<div class="info-item">
+<h4>Drug Interactions</h4>
+<p>Concurrent medications can increase or decrease the metabolism of other drugs. Enzyme inhibitors raise drug levels, while enzyme inducers lower them, potentially requiring dose adjustments.</p>
+</div>
+<div class="info-item">
+<h4>Genetics</h4>
+<p>Pharmacogenomics shows that genetic variations in drug-metabolizing enzymes (like CYP2D6, CYP2C19) can make patients "rapid" or "poor" metabolizers, significantly affecting optimal dosing.</p>
+</div>
+<div class="info-item">
+<h4>Body Composition</h4>
+<p>Obese patients may need dose adjustments for drugs that distribute poorly into fat tissue. Using actual vs. ideal vs. adjusted body weight depends on the specific medication.</p>
+</div>
+</div>
+
+<p>These factors illustrate why medication dosing is both a science and an art. The weight-based calculation provides a starting dose, but clinical judgment and patient monitoring are essential for optimizing therapy. Therapeutic drug monitoring (measuring actual blood levels) is used for medications with narrow safety margins, such as vancomycin, aminoglycosides, and many anti-seizure medications.</p>
+
+<h2 id="weight-conversion-guide">Weight Conversion Guide</h2>
+<p>Accurate weight conversion is a fundamental requirement for safe dosing calculations. Errors in weight conversion are a documented source of medication errors, particularly in emergency settings where conversions are done quickly under pressure.</p>
+
+<table>
+<thead>
+<tr><th>Pounds (lbs)</th><th>Kilograms (kg)</th><th>Common Patient Group</th></tr>
+</thead>
+<tbody>
+<tr><td>5 lbs</td><td>2.3 kg</td><td>Premature neonate</td></tr>
+<tr><td>8 lbs</td><td>3.6 kg</td><td>Full-term newborn</td></tr>
+<tr><td>22 lbs</td><td>10 kg</td><td>1-year-old</td></tr>
+<tr><td>33 lbs</td><td>15 kg</td><td>2-3 year old</td></tr>
+<tr><td>44 lbs</td><td>20 kg</td><td>5-6 year old</td></tr>
+<tr><td>66 lbs</td><td>30 kg</td><td>8-10 year old</td></tr>
+<tr><td>88 lbs</td><td>40 kg</td><td>11-12 year old</td></tr>
+<tr><td>110 lbs</td><td>50 kg</td><td>Small adult or teen</td></tr>
+<tr><td>132 lbs</td><td>60 kg</td><td>Average adult female</td></tr>
+<tr><td>154 lbs</td><td>70 kg</td><td>Reference adult</td></tr>
+<tr><td>176 lbs</td><td>80 kg</td><td>Average adult male</td></tr>
+<tr><td>220 lbs</td><td>100 kg</td><td>Large adult</td></tr>
+</tbody>
+</table>
+
+<p>The conversion formulas are:</p>
+<ul>
+<li><strong>Pounds to Kilograms:</strong> Weight in kg = Weight in lbs &divide; 2.205</li>
+<li><strong>Kilograms to Pounds:</strong> Weight in lbs = Weight in kg &times; 2.205</li>
+</ul>
+
+<p>For quick mental estimation, dividing pounds by 2.2 gives a close approximation. Some clinicians use the even simpler rule of dividing by 2 and subtracting 10%, which yields the same result: 150 lbs &divide; 2 = 75, minus 10% (7.5) = 67.5 kg (actual: 68.0 kg). This mental math shortcut is accurate enough for most quick estimates but should be verified with a calculator for precise dosing.</p>
+
+<h2 id="dosing-calculation-examples">Dosing Calculation Examples</h2>
+<p>Working through specific examples helps solidify understanding of dosing calculations. Here are several scenarios that illustrate different methods and considerations:</p>
+
+<h3>Example 1: Pediatric Ibuprofen (mg/kg)</h3>
+<p>A 4-year-old child weighing 18 kg has a fever. Ibuprofen is prescribed at 10 mg/kg every 6-8 hours.</p>
+<p><strong>Calculation:</strong> 10 mg/kg &times; 18 kg = 180 mg per dose. The ibuprofen suspension is 100 mg/5 mL. Volume to administer: (180 mg &divide; 100 mg) &times; 5 mL = 9 mL. Maximum daily dose check: 180 mg &times; 4 doses = 720 mg/day, which is under the pediatric maximum of 40 mg/kg/day (720 mg). This dose is appropriate.</p>
+
+<h3>Example 2: Clark's Rule for Amoxicillin</h3>
+<p>A child weighing 60 lbs needs amoxicillin. The adult dose is 500 mg three times daily.</p>
+<p><strong>Clark's Rule:</strong> (60 &divide; 150) &times; 500 mg = 200 mg per dose. Cross-check with mg/kg: 60 lbs = 27.2 kg. Standard amoxicillin dosing for children is 25-50 mg/kg/day. At 200 mg TID, the daily dose is 600 mg &divide; 27.2 kg = 22 mg/kg/day. This is slightly below the typical range, illustrating that Clark's Rule can sometimes underestimate. The prescriber might adjust to 250 mg TID (27.6 mg/kg/day) based on clinical guidelines.</p>
+
+<h3>Example 3: BSA-Based Chemotherapy Dosing</h3>
+<p>A patient weighing 75 kg and 172 cm tall needs a chemotherapy agent dosed at 100 mg/m&sup2;.</p>
+<p><strong>BSA calculation:</strong> BSA = &radic;((172 &times; 75) &divide; 3600) = &radic;(3.583) = 1.89 m&sup2;. <strong>Dose:</strong> 100 mg/m&sup2; &times; 1.89 m&sup2; = 189 mg. The oncologist would likely round to 190 mg based on available vial sizes and institutional rounding protocols.</p>
+
+<h3>Example 4: Maximum Dose Limit Scenario</h3>
+<p>A 120 kg adult is prescribed acetaminophen at 15 mg/kg every 6 hours.</p>
+<p><strong>Calculation:</strong> 15 mg/kg &times; 120 kg = 1,800 mg per dose. However, the maximum single dose for acetaminophen is 1,000 mg, and the maximum daily dose is 4,000 mg. The weight-based calculation exceeds both limits. The appropriate dose would be capped at 1,000 mg per dose, not exceeding 4,000 mg/day. This example shows why maximum dose limits are essential safety checks.</p>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<h3>Can I use this calculator to determine my own medication doses?</h3>
+<p>This calculator is for educational reference only. You should never determine your own medication doses without guidance from a qualified healthcare provider. Self-dosing based on calculator results can lead to serious harm. Always follow the dosing instructions provided by your doctor, pharmacist, or the medication label. If you have questions about your dose, contact your prescriber or pharmacist.</p>
+
+<h3>Which dosing method is most accurate for children?</h3>
+<p>Weight-based mg/kg dosing using current pediatric clinical guidelines is the most accurate method for children. Clark's Rule and Young's Rule are historical approximation methods that can serve as rough estimates but are less precise than evidence-based mg/kg recommendations. The AAP and WHO both recommend weight-based dosing as the standard for pediatric prescribing. When specific pediatric guidelines exist for a medication, they should always be used in preference to estimation rules.</p>
+
+<h3>What should I do if a calculated dose exceeds the maximum?</h3>
+<p>If a weight-based calculation produces a dose above the established maximum, the dose should be capped at the maximum. Never exceed maximum dose limits, even if the weight-based formula suggests a higher amount. Maximum limits exist to prevent toxicity that occurs regardless of body size. If you believe a higher dose may be needed, this decision should be made by a qualified healthcare provider who can weigh the risks and benefits based on the specific clinical situation.</p>
+
+<h3>How do I handle doses for obese patients?</h3>
+<p>Dosing for obese patients depends on the specific medication. Some drugs distribute into fat tissue and should be dosed on actual body weight. Others do not distribute into fat and should be dosed on ideal body weight (IBW). Some medications use an adjusted body weight (ABW) that accounts for partial distribution into fat. Your pharmacist can advise on which weight metric to use for specific medications. Using actual weight for all drugs in obese patients can lead to significant overdosing.</p>
+
+<h3>Is there a difference between mg/kg/dose and mg/kg/day?</h3>
+<p>Yes, and confusing these two can cause serious dosing errors. Mg/kg/dose means the calculated amount is the dose given each time. Mg/kg/day means the calculated amount is the total for the entire day and must be divided by the number of daily administrations. For example, amoxicillin at 45 mg/kg/day divided three times daily for a 20 kg child means: 45 &times; 20 = 900 mg per day, divided by 3 = 300 mg per dose. If you mistakenly interpreted 45 mg/kg as a per-dose value, each dose would be 900 mg, triple the intended amount.</p>
+
+<h3>When is BSA dosing preferred over weight-based dosing?</h3>
+<p>BSA dosing is primarily used for chemotherapy drugs, certain cardiac medications, and some immunosuppressants. It is preferred when drug clearance correlates more closely with body surface area than weight, which is true for drugs with high first-pass metabolism or drugs that distribute primarily in the vascular compartment. For most routine medications, weight-based dosing is sufficient and preferred due to its simplicity. Your oncologist or specialist will specify when BSA-based dosing is appropriate.</p>
+
+<h2 id="external-references">External References and Resources</h2>
+<p>For authoritative information on medication dosing, consult these sources:</p>
+<ul>
+<li><a href="https://www.fda.gov/drugs/resources-you-drugs/drug-information-consumers" target="_blank" rel="noopener noreferrer">U.S. Food and Drug Administration (FDA)</a> &mdash; Drug safety information, labeling, and dosing guidance for approved medications.</li>
+<li><a href="https://www.aap.org/en/practice-management/patient-safety/" target="_blank" rel="noopener noreferrer">American Academy of Pediatrics (AAP)</a> &mdash; Pediatric medication safety guidelines and dosing recommendations.</li>
+<li><a href="https://www.who.int/medicines/publications/essentialmedicines/en/" target="_blank" rel="noopener noreferrer">World Health Organization (WHO)</a> &mdash; Essential medicines list and international dosing guidelines.</li>
+<li><a href="https://dailymed.nlm.nih.gov/dailymed/" target="_blank" rel="noopener noreferrer">DailyMed (NIH)</a> &mdash; FDA-approved drug labeling with complete dosing information and package inserts.</li>
+</ul>
+
+<h2 id="related-tools">Related Health and Medical Calculators</h2>
+<p>If you found this dosage calculator helpful, you may also want to check out these related free tools:</p>
+<div class="cross-links">
+<a href="https://zovo.one/free-tools/iv-drip-rate-calculator/" class="cross-link">
+<span>IV Drip Rate Calculator</span>
+<small>Calculate IV infusion rates in gtts/min and mL/hr</small>
+</a>
+<a href="https://zovo.one/free-tools/bmi-calculator/" class="cross-link">
+<span>BMI Calculator</span>
+<small>Body mass index with health category classification</small>
+</a>
+<a href="https://zovo.one/free-tools/body-fat-calculator/" class="cross-link">
+<span>Body Fat Calculator</span>
+<small>Estimate body fat percentage using multiple methods</small>
+</a>
+<a href="https://zovo.one/free-tools/calorie-calculator/" class="cross-link">
+<span>Calorie Calculator</span>
+<small>Daily caloric needs based on activity level and goals</small>
+</a>
+</div>
+
+</div>
+
+<footer style="text-align:center;padding:24px;color:#b0b0c0;font-size:0.85rem;border-top:1px solid #1e1e2a;margin-top:40px;">Built by Michael Lip &middot; More free tools at <a href="https://zovo.one/free-tools/" style="color:#00ff88;text-decoration:none;">zovo.one</a></footer>
+
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  event.target.classList.add('active');
+  document.getElementById('results').classList.remove('visible');
+}
+
+function fmt(n) { return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+function toKg(weight, unit) {
+  return unit === 'lbs' ? weight / 2.205 : weight;
+}
+
+function toLbs(weight, unit) {
+  return unit === 'kg' ? weight * 2.205 : weight;
+}
+
+function calcMgKg() {
+  var weight = parseFloat(document.getElementById('mgkg-weight').value) || 0;
+  var unit = document.getElementById('mgkg-weight-unit').value;
+  var doseRate = parseFloat(document.getElementById('mgkg-dose').value) || 0;
+  var frequency = parseInt(document.getElementById('mgkg-frequency').value);
+  var maxSingle = parseFloat(document.getElementById('mgkg-max').value) || 0;
+  var maxDaily = parseFloat(document.getElementById('mgkg-max-daily').value) || 0;
+  var concentration = parseFloat(document.getElementById('mgkg-concentration').value) || 0;
+
+  if (weight <= 0 || doseRate <= 0) {
+    alert('Please enter a valid weight and dose rate.');
+    return;
+  }
+
+  var weightKg = toKg(weight, unit);
+  var weightLbs = toLbs(weight, unit);
+  var singleDose = doseRate * weightKg;
+  var dailyDose = singleDose * frequency;
+  var warnings = [];
+
+  if (maxSingle > 0 && singleDose > maxSingle) {
+    warnings.push('Calculated single dose (' + fmt(singleDose) + ' mg) exceeds the maximum single dose of ' + fmt(maxSingle) + ' mg. Dose has been capped.');
+    singleDose = maxSingle;
+    dailyDose = singleDose * frequency;
+  }
+
+  if (maxDaily > 0 && dailyDose > maxDaily) {
+    warnings.push('Calculated daily dose (' + fmt(dailyDose) + ' mg) exceeds the maximum daily dose of ' + fmt(maxDaily) + ' mg. Daily total has been capped.');
+    dailyDose = maxDaily;
+    singleDose = Math.min(singleDose, maxDaily / frequency);
+  }
+
+  var html = '<div class="result-row"><span class="result-label">Patient Weight</span><span class="result-value">' + fmt(weightKg) + ' kg (' + fmt(weightLbs) + ' lbs)</span></div>';
+  html += '<div class="result-row"><span class="result-label">Prescribed Rate</span><span class="result-value">' + doseRate + ' mg/kg</span></div>';
+  html += '<div class="result-row"><span class="result-label">Calculated Single Dose</span><span class="result-value accent">' + fmt(singleDose) + ' mg</span></div>';
+  html += '<div class="result-row"><span class="result-label">Frequency</span><span class="result-value">' + frequency + 'x daily</span></div>';
+  html += '<div class="result-row"><span class="result-label">Total Daily Dose</span><span class="result-value accent">' + fmt(dailyDose) + ' mg/day</span></div>';
+  html += '<div class="result-row"><span class="result-label">Daily Dose per kg</span><span class="result-value">' + fmt(dailyDose / weightKg) + ' mg/kg/day</span></div>';
+
+  if (concentration > 0) {
+    var volumePerDose = singleDose / concentration;
+    html += '<div class="result-row" style="border-top:2px solid #1e1e2a;margin-top:8px;padding-top:12px;"><span class="result-label">Liquid Concentration</span><span class="result-value">' + concentration + ' mg/mL</span></div>';
+    html += '<div class="result-row"><span class="result-label">Volume Per Dose</span><span class="result-value accent">' + fmt(volumePerDose) + ' mL</span></div>';
+  }
+
+  for (var i = 0; i < warnings.length; i++) {
+    html += '<div class="warning-box" style="margin-top:12px;">' + warnings[i] + '</div>';
+  }
+
+  showResults(html);
+}
+
+function calcClarks() {
+  var weight = parseFloat(document.getElementById('clarks-weight').value) || 0;
+  var unit = document.getElementById('clarks-weight-unit').value;
+  var adultDose = parseFloat(document.getElementById('clarks-adult-dose').value) || 0;
+
+  if (weight <= 0 || adultDose <= 0) {
+    alert('Please enter a valid weight and adult dose.');
+    return;
+  }
+
+  var weightLbs = toLbs(weight, unit);
+  var weightKg = toKg(weight, unit);
+  var childDose = (weightLbs / 150) * adultDose;
+  var proportion = (weightLbs / 150 * 100).toFixed(1);
+
+  var html = '<div class="result-row"><span class="result-label">Child\'s Weight</span><span class="result-value">' + fmt(weightLbs) + ' lbs (' + fmt(weightKg) + ' kg)</span></div>';
+  html += '<div class="result-row"><span class="result-label">Adult Dose</span><span class="result-value">' + fmt(adultDose) + ' mg</span></div>';
+  html += '<div class="result-row"><span class="result-label">Clark\'s Rule Formula</span><span class="result-value">(' + fmt(weightLbs) + ' / 150) x ' + fmt(adultDose) + '</span></div>';
+  html += '<div class="result-row"><span class="result-label">Proportion of Adult Dose</span><span class="result-value">' + proportion + '%</span></div>';
+  html += '<div class="result-row"><span class="result-label">Estimated Child\'s Dose</span><span class="result-value accent">' + fmt(childDose) + ' mg</span></div>';
+  html += '<div class="warning-box" style="margin-top:12px;">Clark\'s Rule provides a rough estimate only. Always verify with current pediatric dosing guidelines specific to the medication. This rule is most appropriate for children over 2 years of age.</div>';
+
+  showResults(html);
+}
+
+function calcYoungs() {
+  var age = parseFloat(document.getElementById('youngs-age').value) || 0;
+  var adultDose = parseFloat(document.getElementById('youngs-adult-dose').value) || 0;
+
+  if (age <= 0 || age > 12 || adultDose <= 0) {
+    alert('Please enter a valid age (1-12 years) and adult dose.');
+    return;
+  }
+
+  var childDose = (age / (age + 12)) * adultDose;
+  var proportion = ((age / (age + 12)) * 100).toFixed(1);
+
+  var html = '<div class="result-row"><span class="result-label">Child\'s Age</span><span class="result-value">' + age + ' years</span></div>';
+  html += '<div class="result-row"><span class="result-label">Adult Dose</span><span class="result-value">' + fmt(adultDose) + ' mg</span></div>';
+  html += '<div class="result-row"><span class="result-label">Young\'s Rule Formula</span><span class="result-value">(' + age + ' / (' + age + ' + 12)) x ' + fmt(adultDose) + '</span></div>';
+  html += '<div class="result-row"><span class="result-label">Proportion of Adult Dose</span><span class="result-value">' + proportion + '%</span></div>';
+  html += '<div class="result-row"><span class="result-label">Estimated Child\'s Dose</span><span class="result-value accent">' + fmt(childDose) + ' mg</span></div>';
+  html += '<div class="warning-box" style="margin-top:12px;">Young\'s Rule is for children aged 1-12 years and provides a rough age-based estimate. Weight-based dosing (mg/kg) is more accurate. Always verify with current pediatric dosing guidelines specific to the medication.</div>';
+
+  showResults(html);
+}
+
+function calcBSA() {
+  var weight = parseFloat(document.getElementById('bsa-weight').value) || 0;
+  var wUnit = document.getElementById('bsa-weight-unit').value;
+  var height = parseFloat(document.getElementById('bsa-height').value) || 0;
+  var hUnit = document.getElementById('bsa-height-unit').value;
+  var doseRate = parseFloat(document.getElementById('bsa-dose').value) || 0;
+
+  if (weight <= 0 || height <= 0 || doseRate <= 0) {
+    alert('Please enter valid weight, height, and dose rate.');
+    return;
+  }
+
+  var weightKg = toKg(weight, wUnit);
+  var heightCm = hUnit === 'in' ? height * 2.54 : height;
+  var bsa = Math.sqrt((heightCm * weightKg) / 3600);
+  var totalDose = doseRate * bsa;
+
+  var html = '<div class="result-row"><span class="result-label">Patient Weight</span><span class="result-value">' + fmt(weightKg) + ' kg</span></div>';
+  html += '<div class="result-row"><span class="result-label">Patient Height</span><span class="result-value">' + fmt(heightCm) + ' cm</span></div>';
+  html += '<div class="result-row"><span class="result-label">Body Surface Area (Mosteller)</span><span class="result-value accent">' + bsa.toFixed(3) + ' m&sup2;</span></div>';
+  html += '<div class="result-row"><span class="result-label">Prescribed Rate</span><span class="result-value">' + doseRate + ' mg/m&sup2;</span></div>';
+  html += '<div class="result-row"><span class="result-label">Calculated Dose</span><span class="result-value accent">' + fmt(totalDose) + ' mg</span></div>';
+  html += '<div class="result-row"><span class="result-label">Reference: Average Adult BSA</span><span class="result-value">1.73 m&sup2;</span></div>';
+
+  showResults(html);
+}
+
+function showResults(html) {
+  var resultsDiv = document.getElementById('results');
+  document.getElementById('results-summary').innerHTML = html;
+  resultsDiv.classList.add('visible');
+  resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetCalc(type) {
+  if (type === 'mgkg') {
+    document.getElementById('mgkg-weight').value = '';
+    document.getElementById('mgkg-dose').value = '';
+    document.getElementById('mgkg-max').value = '';
+    document.getElementById('mgkg-max-daily').value = '';
+    document.getElementById('mgkg-concentration').value = '';
+  } else if (type === 'clarks') {
+    document.getElementById('clarks-weight').value = '';
+    document.getElementById('clarks-adult-dose').value = '';
+  } else if (type === 'youngs') {
+    document.getElementById('youngs-age').value = '';
+    document.getElementById('youngs-adult-dose').value = '';
+  } else if (type === 'bsa') {
+    document.getElementById('bsa-weight').value = '';
+    document.getElementById('bsa-height').value = '';
+    document.getElementById('bsa-dose').value = '';
+  }
+  document.getElementById('results').classList.remove('visible');
+}
+</script>
 </body>
 </html>
