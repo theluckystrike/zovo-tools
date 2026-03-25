@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fantasy Trade Analyzer | Player Value & Trade Calculator | Zovo Tools</title>
+<meta name="description" content="Free fantasy football trade analyzer to evaluate trade fairness using player valuations, positional scarcity, and projected points. Compare trade value for your fantasy league."/>
+<meta name="keywords" content="fantasy trade analyzer, fantasy football trade calculator, fantasy trade value chart, player trade value, fantasy football calculator, dynasty trade analyzer, fantasy trade evaluator"/>
+<meta name="author" content="Michael Lip"/>
+<meta name="robots" content="index, follow"/>
+<meta name="last-modified" content="2026-03-26"/>
+<link rel="canonical" href="https://zovo.one/free-tools/fantasy-trade-analyzer/"/>
+<link rel="icon" href="https://zovo.one/favicon.ico"/>
+<meta property="og:title" content="Fantasy Trade Analyzer | Free Tool"/>
+<meta property="og:description" content="Analyze fantasy football trades using player valuations and projections to determine trade fairness."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://zovo.one/free-tools/fantasy-trade-analyzer/"/>
+<meta property="og:site_name" content="Zovo"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Fantasy Trade Analyzer | Free Tool"/>
+<meta name="twitter:description" content="Analyze fantasy football trades using player valuations and projections to determine trade fairness."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Fantasy Trade Analyzer",
+  "description": "Analyze fantasy football trades using player valuations, positional scarcity, and projected points to determine trade fairness.",
+  "url": "https://zovo.one/free-tools/fantasy-trade-analyzer/",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How are fantasy football trade values calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fantasy trade values are calculated using a combination of projected points, positional scarcity, age and career trajectory, injury history, and strength of schedule. Each player receives a composite value score that accounts for these factors. The most important component is projected fantasy points above replacement level (the value a free agent at the same position would provide), which isolates the true surplus value of rostering a particular player."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is positional scarcity in fantasy football?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Positional scarcity refers to how much a player's production exceeds the average production available at their position. Quarterbacks score the most raw fantasy points but have the lowest scarcity because many QBs produce at a high level. Tight ends have the highest scarcity because the gap between elite TEs (like top-3) and the average starter is enormous. Running backs also have high scarcity due to short career spans and workload volatility."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I trade for one star player or multiple good players?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In most formats, consolidating talent into fewer roster spots is advantageous because your starting lineup improves while bench depth matters less during most weeks. Trading two good players for one great player typically improves your team if you have serviceable replacements on waivers or your bench. The exception is during bye-heavy weeks or if your league has large rosters where depth becomes more critical."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does scoring format affect trade values?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Scoring format significantly impacts player valuations. In PPR (point per reception) leagues, pass-catching running backs and high-volume receivers gain substantial value. In standard (non-PPR) leagues, touchdown-dependent players and rushing volume become more important. Half-PPR splits the difference. A running back who catches 80 passes is worth considerably more in PPR than standard, while a goal-line back who scores 12 touchdowns but catches only 15 passes gains relative value in standard scoring."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When is the best time to make trades in fantasy football?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The best time to initiate trades is after weeks 3 through 5, when you have enough data to identify trends but before struggling teams give up on their season. Buy low on players who started slow due to schedule difficulty or minor injuries, and sell high on players who overperformed their projections due to unsustainable touchdown rates or lucky game scripts. The trade deadline (typically weeks 10-12) creates urgency that can produce favorable deals for playoff-bound teams."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://zovo.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Free Tools",
+      "item": "https://zovo.one/free-tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Fantasy Trade Analyzer",
+      "item": "https://zovo.one/free-tools/fantasy-trade-analyzer/"
+    }
+  ]
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #e0e0e8; line-height: 1.7; min-height: 100vh; }
+header { background: #12121a; border-bottom: 1px solid #2a2a3e; padding: 14px 24px; }
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #aaa; max-width: 900px; margin: 0 auto; flex-wrap: wrap; }
+.breadcrumb a { color: #00ccff; text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb span.sep { color: #555; }
+main { max-width: 900px; margin: 0 auto; padding: 40px 24px 60px; }
+h1 { font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 10px; line-height: 1.2; }
+.subtitle { color: #bbb; font-size: 1.1rem; margin-bottom: 36px; line-height: 1.6; }
+.calc-card { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 16px; padding: 32px; margin-bottom: 36px; }
+.calc-card h2 { color: #fff; font-size: 1.3rem; margin-bottom: 20px; }
+.settings-row { display: flex; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+.settings-row .form-group { flex: 1; min-width: 180px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 0.85rem; color: #aaa; font-weight: 500; }
+.form-group input, .form-group select { background: #12121a; border: 1px solid #2a2a3e; border-radius: 8px; padding: 12px 16px; color: #e0e0e8; font-size: 1rem; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #00ff88; }
+.trade-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+.trade-side { background: #12121a; border: 1px solid #2a2a3e; border-radius: 12px; padding: 20px; }
+.trade-side h3 { color: #fff; font-size: 1rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.trade-side h3 .side-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+.side-a .side-icon { background: #00ff88; color: #0a0a0f; }
+.side-b .side-icon { background: #00ccff; color: #0a0a0f; }
+.player-entry { margin-bottom: 12px; }
+.player-row { display: flex; gap: 8px; align-items: flex-end; }
+.player-row .form-group { flex: 2; }
+.player-row .form-group:last-of-type { flex: 1; }
+.player-row .remove-player { background: none; border: 1px solid #ff6b6b; color: #ff6b6b; border-radius: 6px; padding: 10px 10px; cursor: pointer; font-size: 0.75rem; font-family: 'Inter', sans-serif; margin-bottom: 6px; flex-shrink: 0; }
+.player-row .remove-player:hover { background: rgba(255,107,107,0.15); }
+.btn-add-player { background: none; border: 1px dashed #2a2a3e; color: #aaa; border-radius: 8px; padding: 10px; cursor: pointer; font-size: 0.8rem; font-family: 'Inter', sans-serif; width: 100%; margin-top: 8px; transition: border-color 0.2s; }
+.btn-add-player:hover { border-color: #00ff88; color: #00ff88; }
+.btn-calculate { background: #00ff88; color: #0a0a0f; border: none; border-radius: 8px; padding: 14px 32px; font-size: 1rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: opacity 0.2s; width: 100%; }
+.btn-calculate:hover { opacity: 0.9; }
+.results { display: none; margin-top: 28px; }
+.results.show { display: block; }
+.verdict-card { text-align: center; padding: 28px; background: #12121a; border: 2px solid #2a2a3e; border-radius: 16px; margin-bottom: 24px; }
+.verdict-card .verdict-text { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+.verdict-card .verdict-sub { color: #aaa; font-size: 0.95rem; }
+.verdict-card.fair { border-color: #00ff88; }
+.verdict-card.side-a-wins { border-color: #00ff88; }
+.verdict-card.side-b-wins { border-color: #00ccff; }
+.results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.result-side { background: #12121a; border: 1px solid #2a2a3e; border-radius: 12px; padding: 20px; }
+.result-side h3 { font-size: 1rem; margin-bottom: 12px; }
+.result-side.side-a h3 { color: #00ff88; }
+.result-side.side-b h3 { color: #00ccff; }
+.result-side .total-value { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.result-side .player-values { list-style: none; }
+.result-side .player-values li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1a1a2e; font-size: 0.9rem; }
+.result-side .player-values li .pname { color: #e0e0e8; }
+.result-side .player-values li .pval { color: #00ff88; font-weight: 600; }
+.comparison-bar { margin: 24px 0; }
+.comparison-bar h3 { color: #fff; font-size: 1rem; margin-bottom: 12px; }
+.comp-bar-track { height: 40px; background: #12121a; border-radius: 10px; overflow: hidden; display: flex; border: 1px solid #2a2a3e; }
+.comp-bar-a { background: #00ff88; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #0a0a0f; font-size: 0.85rem; transition: width 0.6s ease; }
+.comp-bar-b { background: #00ccff; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #0a0a0f; font-size: 0.85rem; transition: width 0.6s ease; }
+.comp-legend { display: flex; gap: 24px; margin-top: 8px; font-size: 0.8rem; color: #aaa; }
+.comp-legend span { display: flex; align-items: center; gap: 6px; }
+.comp-legend .dot { width: 10px; height: 10px; border-radius: 3px; }
+.pos-breakdown { margin-top: 24px; overflow-x: auto; }
+.pos-breakdown h3 { color: #fff; font-size: 1.1rem; margin-bottom: 12px; }
+.pos-breakdown table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.pos-breakdown th { background: #12121a; color: #00ff88; padding: 10px 14px; text-align: left; border-bottom: 1px solid #2a2a3e; }
+.pos-breakdown td { padding: 10px 14px; border-bottom: 1px solid #1a1a2e; color: #e0e0e8; }
+.tips-card { margin-top: 20px; background: #12121a; border: 1px solid #2a2a3e; border-radius: 12px; padding: 20px; }
+.tips-card h3 { color: #00ff88; font-size: 1rem; margin-bottom: 8px; }
+.tips-card ul { margin-left: 20px; color: #ccc; font-size: 0.9rem; }
+.tips-card ul li { margin-bottom: 6px; }
+.info-section { margin-top: 48px; }
+.info-section h2 { color: #fff; font-size: 1.5rem; margin: 36px 0 16px; }
+.info-section h3 { color: #fff; font-size: 1.2rem; margin: 28px 0 12px; }
+.info-section p { color: #ccc; margin-bottom: 16px; line-height: 1.8; }
+.info-section ul, .info-section ol { color: #ccc; margin: 0 0 16px 24px; line-height: 1.8; }
+.info-section li { margin-bottom: 8px; }
+.info-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9rem; }
+.info-table th { background: #1a1a2e; color: #00ff88; padding: 12px 16px; text-align: left; border: 1px solid #2a2a3e; }
+.info-table td { padding: 10px 16px; border: 1px solid #2a2a3e; color: #e0e0e8; }
+.info-table tr:nth-child(even) td { background: rgba(26,26,46,0.5); }
+.faq-section { margin-top: 48px; }
+.faq-section h2 { color: #fff; font-size: 1.5rem; margin-bottom: 24px; }
+.faq-item { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+.faq-q { padding: 20px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #fff; font-weight: 500; }
+.faq-q:hover { background: rgba(0,255,136,0.03); }
+.faq-q .arrow { color: #00ff88; font-size: 1.2rem; transition: transform 0.3s; }
+.faq-item.open .faq-q .arrow { transform: rotate(180deg); }
+.faq-a { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; color: #ccc; line-height: 1.8; }
+.faq-item.open .faq-a { max-height: 500px; padding: 0 24px 20px; }
+.cross-links { margin-top: 48px; }
+.cross-links h2 { color: #fff; font-size: 1.3rem; margin-bottom: 20px; }
+.cross-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+.cross-link-card { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 10px; padding: 16px 20px; text-decoration: none; transition: border-color 0.2s, transform 0.2s; display: block; }
+.cross-link-card:hover { border-color: #00ff88; transform: translateY(-2px); }
+.cross-link-card h3 { color: #00ccff; font-size: 0.95rem; margin-bottom: 4px; }
+.cross-link-card p { color: #aaa; font-size: 0.8rem; }
+footer { background: #12121a; border-top: 1px solid #2a2a3e; padding: 24px; text-align: center; color: #aaa; font-size: 0.85rem; }
+footer a { color: #00ccff; text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+.player-autocomplete { position: relative; }
+.autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: #12121a; border: 1px solid #2a2a3e; border-radius: 8px; max-height: 200px; overflow-y: auto; z-index: 10; display: none; }
+.autocomplete-list.show { display: block; }
+.autocomplete-item { padding: 10px 14px; cursor: pointer; font-size: 0.85rem; color: #e0e0e8; display: flex; justify-content: space-between; }
+.autocomplete-item:hover { background: rgba(0,255,136,0.08); }
+.autocomplete-item .pos-tag { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+.pos-qb { background: rgba(255,99,132,0.2); color: #ff6384; }
+.pos-rb { background: rgba(0,255,136,0.2); color: #00ff88; }
+.pos-wr { background: rgba(0,204,255,0.2); color: #00ccff; }
+.pos-te { background: rgba(255,206,86,0.2); color: #ffce56; }
+@media (max-width: 640px) {
+  h1 { font-size: 1.6rem; }
+  .calc-card { padding: 20px; }
+  .trade-sides { grid-template-columns: 1fr; }
+  .results-grid { grid-template-columns: 1fr; }
+  .player-row { flex-wrap: wrap; }
+  .settings-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<header>
+<nav class="breadcrumb">
+<a href="https://zovo.one/">Home</a> <span class="sep">/</span>
+<a href="https://zovo.one/free-tools/">Free Tools</a> <span class="sep">/</span>
+<span>Fantasy Trade Analyzer</span>
+</nav>
+</header>
+<main>
+<h1>Fantasy Trade Analyzer</h1>
+<p class="subtitle">Analyze fantasy football trades using player valuations, positional scarcity adjustments, and projected points. Evaluate whether a trade is fair, who benefits more, and get strategic recommendations for your league.</p>
+
+<div class="calc-card">
+<h2>Trade Settings</h2>
+<div class="settings-row">
+<div class="form-group">
+<label for="scoringFormat">Scoring Format</label>
+<select id="scoringFormat">
+<option value="ppr">PPR (Point Per Reception)</option>
+<option value="half">Half PPR</option>
+<option value="standard">Standard (Non-PPR)</option>
+</select>
+</div>
+<div class="form-group">
+<label for="leagueSize">League Size</label>
+<select id="leagueSize">
+<option value="8">8 Teams</option>
+<option value="10">10 Teams</option>
+<option value="12" selected>12 Teams</option>
+<option value="14">14 Teams</option>
+<option value="16">16 Teams</option>
+</select>
+</div>
+<div class="form-group">
+<label for="leagueType">League Type</label>
+<select id="leagueType">
+<option value="redraft" selected>Redraft</option>
+<option value="keeper">Keeper</option>
+<option value="dynasty">Dynasty</option>
+</select>
+</div>
+</div>
+
+<div class="trade-sides">
+<div class="trade-side side-a">
+<h3><span class="side-icon">A</span> Team A Receives</h3>
+<div class="players-list" id="sideAPlayers">
+<div class="player-entry">
+<div class="player-row">
+<div class="form-group player-autocomplete">
+<label>Player Name</label>
+<input type="text" class="player-name" placeholder="Start typing..." oninput="showSuggestions(this)" onfocus="showSuggestions(this)"/>
+<div class="autocomplete-list"></div>
+</div>
+<div class="form-group">
+<label>Position</label>
+<select class="player-pos">
+<option value="QB">QB</option>
+<option value="RB" selected>RB</option>
+<option value="WR">WR</option>
+<option value="TE">TE</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<button class="btn-add-player" onclick="addPlayer('sideAPlayers')">+ Add Player</button>
+</div>
+<div class="trade-side side-b">
+<h3><span class="side-icon">B</span> Team B Receives</h3>
+<div class="players-list" id="sideBPlayers">
+<div class="player-entry">
+<div class="player-row">
+<div class="form-group player-autocomplete">
+<label>Player Name</label>
+<input type="text" class="player-name" placeholder="Start typing..." oninput="showSuggestions(this)" onfocus="showSuggestions(this)"/>
+<div class="autocomplete-list"></div>
+</div>
+<div class="form-group">
+<label>Position</label>
+<select class="player-pos">
+<option value="QB">QB</option>
+<option value="RB" selected>RB</option>
+<option value="WR">WR</option>
+<option value="TE">TE</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<button class="btn-add-player" onclick="addPlayer('sideBPlayers')">+ Add Player</button>
+</div>
+</div>
+
+<button class="btn-calculate" onclick="analyzeTrade()">Analyze Trade</button>
+
+<div class="results" id="results">
+<div class="verdict-card" id="verdictCard">
+<div class="verdict-text" id="verdictText"></div>
+<div class="verdict-sub" id="verdictSub"></div>
+</div>
+
+<div class="results-grid">
+<div class="result-side side-a">
+<h3>Team A Receives</h3>
+<div class="total-value" id="totalA">0</div>
+<p style="color:#aaa; font-size:0.8rem; margin-bottom:12px;">Total Trade Value</p>
+<ul class="player-values" id="valuesA"></ul>
+</div>
+<div class="result-side side-b">
+<h3>Team B Receives</h3>
+<div class="total-value" id="totalB">0</div>
+<p style="color:#aaa; font-size:0.8rem; margin-bottom:12px;">Total Trade Value</p>
+<ul class="player-values" id="valuesB"></ul>
+</div>
+</div>
+
+<div class="comparison-bar">
+<h3>Value Distribution</h3>
+<div class="comp-bar-track" id="compBar"></div>
+<div class="comp-legend">
+<span><span class="dot" style="background:#00ff88"></span> Team A</span>
+<span><span class="dot" style="background:#00ccff"></span> Team B</span>
+</div>
+</div>
+
+<div class="pos-breakdown">
+<h3>Player Detail Breakdown</h3>
+<table>
+<thead>
+<tr><th>Side</th><th>Player</th><th>Position</th><th>Base Value</th><th>Scarcity Adj.</th><th>Final Value</th></tr>
+</thead>
+<tbody id="breakdownBody"></tbody>
+</table>
+</div>
+
+<div class="tips-card" id="tipsCard">
+<h3>Trade Analysis Notes</h3>
+<ul id="tipsList"></ul>
+</div>
+</div>
+</div>
+
+<section class="info-section">
+<h2>Understanding Fantasy Football Trade Values</h2>
+<p>Fantasy football trades are the lifeblood of competitive leagues. The difference between a championship team and a middle-of-the-pack roster often comes down to two or three well-timed trades. I built this trade analyzer because evaluating trade fairness is one of the most difficult aspects of fantasy management, and most managers rely on gut instinct rather than systematic valuation.</p>
+<p>This tool assigns each player a value score based on projected fantasy points, positional scarcity, league format, and additional factors like age (for dynasty leagues). By comparing the total value on each side of a proposed trade, you can quickly determine whether the trade is fair, slightly lopsided, or clearly favoring one side.</p>
+<p>The core principle behind trade valuation is straightforward. A player's value is not just about how many points they score. It is about how many more points they score than a freely available replacement at the same position. This concept, known as Value Over Replacement Player (VORP), is the foundation of every serious trade value chart.</p>
+
+<h2>How Player Values Are Determined</h2>
+<p>The valuation system in this analyzer uses several components to generate a composite trade value for each player.</p>
+
+<h3>Projected Fantasy Points</h3>
+<p>The starting point for any valuation is the player's projected season-long fantasy point total. These projections incorporate target volume, rushing attempts, touchdown probability, red zone usage, and historical performance. A player projected for 280 fantasy points in PPR scoring is more valuable than one projected for 200, all else being equal.</p>
+<p>However, raw point totals do not tell the complete story. A quarterback projected for 380 points might be less valuable in a trade than a running back projected for 260 points because of the vast difference in positional scarcity.</p>
+
+<h3>Value Over Replacement</h3>
+<p>The replacement level represents the production available on the waiver wire for each position. In a 12-team league, the replacement-level running back might produce 90 fantasy points over a season, while the replacement-level quarterback produces 250 points. This means a QB projected for 380 points has a VORP of 130 (380 minus 250), while an RB projected for 260 points has a VORP of 170 (260 minus 90).</p>
+<p>Despite scoring 120 fewer raw points, the running back is more valuable because he provides 40 more points above what you could get for free at his position. This is why running backs and tight ends consistently appear at the top of trade value charts despite scoring fewer total points than quarterbacks.</p>
+
+<h3>Positional Scarcity Multipliers</h3>
+<p>On top of VORP, this analyzer applies positional scarcity multipliers that reflect the real-world supply and demand dynamics in fantasy leagues. These multipliers vary by scoring format and league size.</p>
+
+<table class="info-table">
+<tr><th>Position</th><th>Standard Multiplier</th><th>PPR Multiplier</th><th>Reasoning</th></tr>
+<tr><td>QB</td><td>0.80x</td><td>0.75x</td><td>Deep position with many viable starters. In 1-QB leagues, streaming is effective.</td></tr>
+<tr><td>RB</td><td>1.25x</td><td>1.20x</td><td>Short career spans, injury-prone, heavy workload variance. Elite RBs are rare.</td></tr>
+<tr><td>WR</td><td>1.00x</td><td>1.10x</td><td>Moderate depth. PPR increases value of high-target WRs. Longer careers than RBs.</td></tr>
+<tr><td>TE</td><td>1.15x</td><td>1.30x</td><td>Extreme top-heaviness. The gap between TE1-3 and TE10 is massive in PPR.</td></tr>
+</table>
+
+<p>In a 2-QB or superflex league, the QB multiplier jumps to 1.40x or higher because quarterback scarcity increases dramatically when each team starts two.</p>
+
+<h2>Trade Value Chart · PPR Format</h2>
+<p>The following chart provides reference trade values for top fantasy players in PPR scoring as of the 2025-2026 season cycle. Values are on a 100-point scale where the top overall player scores 100.</p>
+
+<table class="info-table">
+<tr><th>Rank</th><th>Player</th><th>Position</th><th>Trade Value</th></tr>
+<tr><td>1</td><td>Christian McCaffrey</td><td>RB</td><td>100</td></tr>
+<tr><td>2</td><td>CeeDee Lamb</td><td>WR</td><td>95</td></tr>
+<tr><td>3</td><td>Ja'Marr Chase</td><td>WR</td><td>93</td></tr>
+<tr><td>4</td><td>Breece Hall</td><td>RB</td><td>90</td></tr>
+<tr><td>5</td><td>Tyreek Hill</td><td>WR</td><td>88</td></tr>
+<tr><td>6</td><td>Bijan Robinson</td><td>RB</td><td>87</td></tr>
+<tr><td>7</td><td>Amon-Ra St. Brown</td><td>WR</td><td>85</td></tr>
+<tr><td>8</td><td>Saquon Barkley</td><td>RB</td><td>83</td></tr>
+<tr><td>9</td><td>Travis Kelce</td><td>TE</td><td>80</td></tr>
+<tr><td>10</td><td>Garrett Wilson</td><td>WR</td><td>78</td></tr>
+<tr><td>11</td><td>Puka Nacua</td><td>WR</td><td>77</td></tr>
+<tr><td>12</td><td>Josh Allen</td><td>QB</td><td>75</td></tr>
+<tr><td>13</td><td>De'Von Achane</td><td>RB</td><td>74</td></tr>
+<tr><td>14</td><td>Jalen Hurts</td><td>QB</td><td>72</td></tr>
+<tr><td>15</td><td>Jonathan Taylor</td><td>RB</td><td>70</td></tr>
+<tr><td>16</td><td>Sam LaPorta</td><td>TE</td><td>68</td></tr>
+<tr><td>17</td><td>A.J. Brown</td><td>WR</td><td>67</td></tr>
+<tr><td>18</td><td>Davante Adams</td><td>WR</td><td>64</td></tr>
+<tr><td>19</td><td>Patrick Mahomes</td><td>QB</td><td>62</td></tr>
+<tr><td>20</td><td>Lamar Jackson</td><td>QB</td><td>60</td></tr>
+</table>
+
+<p>These values shift throughout the season based on performance, injury, and schedule. A player coming off a 3-game stretch averaging 25+ fantasy points per game will see their value climb above their preseason ranking, while a player dealing with a nagging hamstring issue will see their value drop.</p>
+
+<h2>The Concept of Positional Scarcity</h2>
+<p>Positional scarcity is the single most misunderstood concept in fantasy trade evaluation. Many managers make the mistake of comparing raw fantasy points across positions, which leads to overvaluing quarterbacks and undervaluing tight ends.</p>
+<p>In a standard 12-team PPR league, consider the point differential between the QB1 and QB12 versus the RB1 and RB12. In a typical season, the QB1 might score 420 points while the QB12 scores 320 points, a gap of 100 points. The RB1 might score 310 points while the RB12 scores 170 points, a gap of 140 points. And at tight end, the TE1 might score 240 points while the TE12 scores 100 points, a gap of 140 points.</p>
+<p>The running back and tight end positions have steeper drop-offs, meaning the elite players at those positions provide a larger advantage over the rest of the field. This is why an RB1 or elite TE is often worth more in a trade than a top-5 quarterback in 1-QB leagues.</p>
+
+<h3>How League Size Affects Scarcity</h3>
+<p>Positional scarcity increases as league size grows. In an 8-team league, the replacement-level running back (the RB16 in a 2-RB starting lineup) is still a viable player. In a 14-team league, the replacement RB (RB28) is a low-end flex option at best. This amplifies the value of top-tier RBs in larger leagues.</p>
+
+<table class="info-table">
+<tr><th>League Size</th><th>Replacement RB (Rank)</th><th>Replacement WR (Rank)</th><th>RB Scarcity Rating</th></tr>
+<tr><td>8 teams</td><td>RB16</td><td>WR16</td><td>Low</td></tr>
+<tr><td>10 teams</td><td>RB20</td><td>WR20</td><td>Moderate</td></tr>
+<tr><td>12 teams</td><td>RB24</td><td>WR24</td><td>High</td></tr>
+<tr><td>14 teams</td><td>RB28</td><td>WR28</td><td>Very High</td></tr>
+<tr><td>16 teams</td><td>RB32</td><td>WR32</td><td>Extreme</td></tr>
+</table>
+
+<h2>Scoring Format and Its Impact on Trade Values</h2>
+<p>The scoring format you play in significantly alters player trade values. The three major formats create different valuation landscapes.</p>
+
+<h3>PPR (Point Per Reception)</h3>
+<p>In PPR scoring, every catch earns an additional point. This elevates pass-catching running backs and high-volume receivers. A running back who catches 75 balls gains 75 additional points compared to standard scoring. This makes players like Christian McCaffrey, Austin Ekeler, and other pass-catching backs particularly valuable.</p>
+<p>At wide receiver, high-target players gain the most value in PPR. A receiver who catches 120 balls adds 120 points to their standard total, while a big-play receiver who catches only 55 balls adds just 55 points. Slot receivers and possession types see the largest PPR boost.</p>
+<p>At tight end, PPR amplifies the advantage of elite tight ends who run routes on a high percentage of snaps. Travis Kelce or similar elite TEs who catch 90+ balls become even more valuable than they already are in standard scoring.</p>
+
+<h3>Half PPR</h3>
+<p>Half PPR (0.5 points per reception) splits the difference and is increasingly the most popular format in competitive leagues. It rewards receivers and pass-catching backs without making reception volume the dominant stat. In half PPR, the balance between rushing and receiving is closer to equal, which creates the most nuanced trade valuation landscape.</p>
+
+<h3>Standard (Non-PPR)</h3>
+<p>Standard scoring rewards touchdowns and yardage without extra value for receptions. This elevates goal-line running backs who score 10 or more rushing touchdowns and reduces the value of high-volume, low-touchdown receivers. Running back trade values are highest in standard scoring relative to receivers because receiving yards carry the same weight as rushing yards without the reception bonus.</p>
+
+<h2>Dynasty and Keeper League Trade Adjustments</h2>
+<p>In dynasty and keeper leagues, trade values must account for a player's long-term outlook, not just their current-season projection. Age, contract status, and career trajectory become critical factors.</p>
+
+<h3>Age and Career Arc</h3>
+<p>Running backs peak between ages 23 and 27 and decline rapidly after 28. Wide receivers have a longer window, typically peaking between 25 and 30. Quarterbacks and tight ends can produce into their mid-30s. A 23-year-old running back with RB8 production is worth substantially more in dynasty than a 29-year-old running back with RB5 production because of the remaining productive years.</p>
+
+<table class="info-table">
+<tr><th>Position</th><th>Peak Age Range</th><th>Sharp Decline Age</th><th>Dynasty Value Window</th></tr>
+<tr><td>QB</td><td>26 to 34</td><td>37+</td><td>Long (8+ years at peak)</td></tr>
+<tr><td>RB</td><td>23 to 27</td><td>28+</td><td>Short (4 to 5 years at peak)</td></tr>
+<tr><td>WR</td><td>25 to 30</td><td>31+</td><td>Medium (5 to 6 years at peak)</td></tr>
+<tr><td>TE</td><td>25 to 32</td><td>33+</td><td>Long (7+ years at peak)</td></tr>
+</table>
+
+<p>In dynasty trades, I always factor in the remaining peak years. A 25-year-old WR with 5 peak years left is worth more than a 29-year-old WR with 2 peak years left, even if the older player is projected for slightly more points this season.</p>
+
+<h3>Draft Picks as Trade Currency</h3>
+<p>In dynasty leagues, future draft picks are frequently included in trades. A 1st-round pick in the following year's rookie draft is typically valued at roughly the equivalent of a top-20 to top-25 dynasty player. A 2nd-round pick is valued around top-35 to top-40. These values fluctuate based on draft class strength and how early in the round the pick is projected to fall.</p>
+<p>Trading a proven veteran for future draft picks makes sense when you are in a rebuilding phase and the veteran's remaining peak years are short. Trading picks for veterans is appropriate when your team is in a championship window and needs immediate production.</p>
+
+<h2>Common Trade Evaluation Mistakes</h2>
+<p>Fantasy managers consistently make several errors when evaluating trades. Recognizing these patterns helps you avoid bad deals and exploit opponents who fall into these traps.</p>
+
+<h3>The Name Value Trap</h3>
+<p>Managers tend to overvalue players they drafted highly or who have prestigious reputations. A first-round pick who is performing as the RB15 through week 8 is worth an RB15, not an RB5. Past draft capital does not influence current trade value. This is also known as sunk cost bias. Judge players on their current and projected production, not on where they were drafted.</p>
+
+<h3>Recency Bias</h3>
+<p>A player who scored 35 points last week is not suddenly worth 50% more than he was the week before. Single-game performances create noise in the data. Look at 3-game and season-long trends rather than reacting to one big week. Conversely, a star player who had a bad game due to game script or a blowout is not worth less than he was before that game.</p>
+
+<h3>The 2-for-1 Fallacy</h3>
+<p>Many managers believe that offering two decent players for one good player is a fair trade because the total projected points are similar. This ignores roster construction. The team receiving two players must bench two of their current players to start both new additions. If those benched players were producing 8 to 10 points per week, the effective upgrade is much smaller than the raw numbers suggest.</p>
+<p>In reality, 2-for-1 trades usually favor the side receiving the single best player. Consolidating talent into fewer roster spots is a proven winning strategy because it maximizes starting lineup production. I recommend being the side receiving the best player in a trade whenever possible.</p>
+
+<h3>Ignoring Schedule Context</h3>
+<p>A running back who averaged 22 points per game over his last 4 games against bottom-10 run defenses will likely regress when he faces top-10 defenses in the coming weeks. Remaining strength of schedule should factor into trade evaluations, especially in the second half of the season when playoff positioning is at stake.</p>
+
+<h2>When to Buy Low and Sell High</h2>
+<p>Successful fantasy trading is largely about timing. Identifying the right moments to acquire players below their true value (buy low) and to trade away players above their true value (sell high) separates championship managers from average ones.</p>
+
+<h3>Buy Low Indicators</h3>
+<ul>
+<li>Tough early schedule. A running back who faced 3 top-10 run defenses in his first 4 games may have depressed stats that do not reflect his true talent.</li>
+<li>Minor injuries. A receiver who missed a game and returned to limited snaps may see a temporary dip in production and trade value. If the injury is not chronic, this represents a buying opportunity.</li>
+<li>New offensive scheme. Players joining a new team or adjusting to a new coordinator often start slow before chemistry develops. The adjustment typically resolves by weeks 4 to 6.</li>
+<li>Touchdown regression. A player who scores 0 touchdowns through 4 weeks despite heavy red-zone usage is due for positive regression. Their current point total understates their expected production.</li>
+</ul>
+
+<h3>Sell High Indicators</h3>
+<ul>
+<li>Unsustainable touchdown rate. A player scoring touchdowns on 25%+ of their opportunities is likely overperforming. The NFL average is roughly 3% to 5% per touch. Sell before the touchdowns normalize.</li>
+<li>Upcoming schedule difficulty. If a player's remaining schedule includes several top-5 defenses at their position, their second-half production will likely decline.</li>
+<li>Injury-replacement production. A backup running back who stepped into a workhorse role due to injury may produce RB1 numbers for 3 to 4 weeks. Trade this player at peak value before the starter returns.</li>
+<li>Age-related decline risk. A 30-year-old running back who is currently producing may hit a wall in the second half of the season. Selling before that decline materializes locks in peak value.</li>
+</ul>
+
+<h2>Trade Negotiation Strategies</h2>
+<p>Beyond the numbers, the art of negotiation plays a significant role in completing successful trades.</p>
+<p>Start by identifying what your trade partner needs. If they are weak at running back and strong at receiver, offering a running back for a receiver is more likely to generate interest than the reverse. Frame the trade as solving a problem for both teams rather than as a value extraction.</p>
+<p>When making an offer, lead with your target player and let the other manager propose what they want in return. This often reveals their valuation and lets you structure a deal more efficiently. Avoid lowball opening offers that can offend the trade partner and kill negotiations entirely.</p>
+<p>Use the numbers from this trade analyzer as a starting point for your discussions. Showing that a trade grades as roughly fair according to a neutral calculator can help convince a hesitant trade partner that the deal benefits both sides.</p>
+<p>Finally, be willing to overpay slightly for the right player. If a trade improves your chances of winning the championship from 15% to 25%, giving up slightly more value than you receive is a worthwhile investment. Championships are won by teams that make the right upgrades, not by teams that win every trade by a few percentage points.</p>
+</section>
+
+<section class="faq-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">
+<span>How are fantasy football trade values calculated?</span>
+<span class="arrow">&#9660;</span>
+</div>
+<div class="faq-a">Fantasy trade values are calculated using a combination of projected points, positional scarcity, age and career trajectory, injury history, and strength of schedule. Each player receives a composite value score that accounts for these factors. The most important component is projected fantasy points above replacement level (the value a free agent at the same position would provide), which isolates the true surplus value of rostering a particular player.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">
+<span>What is positional scarcity in fantasy football?</span>
+<span class="arrow">&#9660;</span>
+</div>
+<div class="faq-a">Positional scarcity refers to how much a player's production exceeds the average production available at their position. Quarterbacks score the most raw fantasy points but have the lowest scarcity because many QBs produce at a high level. Tight ends have the highest scarcity because the gap between elite TEs (like top-3) and the average starter is enormous. Running backs also have high scarcity due to short career spans and workload volatility.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">
+<span>Should I trade for one star player or multiple good players?</span>
+<span class="arrow">&#9660;</span>
+</div>
+<div class="faq-a">In most formats, consolidating talent into fewer roster spots is advantageous because your starting lineup improves while bench depth matters less during most weeks. Trading two good players for one great player typically improves your team if you have serviceable replacements on waivers or your bench. The exception is during bye-heavy weeks or if your league has large rosters where depth becomes more critical.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">
+<span>How does scoring format affect trade values?</span>
+<span class="arrow">&#9660;</span>
+</div>
+<div class="faq-a">Scoring format significantly impacts player valuations. In PPR (point per reception) leagues, pass-catching running backs and high-volume receivers gain substantial value. In standard (non-PPR) leagues, touchdown-dependent players and rushing volume become more important. Half-PPR splits the difference. A running back who catches 80 passes is worth considerably more in PPR than standard, while a goal-line back who scores 12 touchdowns but catches only 15 passes gains relative value in standard scoring.</div>
+</div>
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">
+<span>When is the best time to make trades in fantasy football?</span>
+<span class="arrow">&#9660;</span>
+</div>
+<div class="faq-a">The best time to initiate trades is after weeks 3 through 5, when you have enough data to identify trends but before struggling teams give up on their season. Buy low on players who started slow due to schedule difficulty or minor injuries, and sell high on players who overperformed their projections due to unsustainable touchdown rates or lucky game scripts. The trade deadline (typically weeks 10-12) creates urgency that can produce favorable deals for playoff-bound teams.</div>
+</div>
+</section>
+
+<section class="cross-links">
+<h2>Related Tools</h2>
+<div class="cross-links-grid">
+<a href="https://zovo.one/free-tools/percentage-calculator/" class="cross-link-card">
+<h3>Percentage Calculator</h3>
+<p>Calculate percentages, proportions, and ratios for any statistical analysis.</p>
+</a>
+<a href="https://zovo.one/free-tools/percentage-change-calculator/" class="cross-link-card">
+<h3>Percentage Change Calculator</h3>
+<p>Measure the percentage difference between player stats or season totals.</p>
+</a>
+<a href="https://zovo.one/free-tools/compound-interest-calculator/" class="cross-link-card">
+<h3>Compound Interest Calculator</h3>
+<p>See how value compounds over time in dynasty and keeper league contexts.</p>
+</a>
+<a href="https://zovo.one/free-tools/savings-calculator/" class="cross-link-card">
+<h3>Savings Calculator</h3>
+<p>Project growth scenarios for your financial planning needs.</p>
+</a>
+<a href="https://zovo.one/free-tools/stock-profit-calculator/" class="cross-link-card">
+<h3>Stock Profit Calculator</h3>
+<p>Calculate returns on investment across different scenarios and time periods.</p>
+</a>
+</div>
+</section>
+</main>
+
+<footer>
+Built by Michael Lip · <a href="https://zovo.one">zovo.one</a>
+</footer>
+
+<script>
+// Player database with trade values by scoring format
+var PLAYERS = [
+  { name: "Christian McCaffrey", pos: "RB", ppr: 100, half: 97, std: 94 },
+  { name: "CeeDee Lamb", pos: "WR", ppr: 95, half: 92, std: 88 },
+  { name: "Ja'Marr Chase", pos: "WR", ppr: 93, half: 91, std: 89 },
+  { name: "Breece Hall", pos: "RB", ppr: 90, half: 89, std: 88 },
+  { name: "Tyreek Hill", pos: "WR", ppr: 88, half: 85, std: 80 },
+  { name: "Bijan Robinson", pos: "RB", ppr: 87, half: 88, std: 90 },
+  { name: "Amon-Ra St. Brown", pos: "WR", ppr: 85, half: 82, std: 77 },
+  { name: "Saquon Barkley", pos: "RB", ppr: 83, half: 82, std: 81 },
+  { name: "Travis Kelce", pos: "TE", ppr: 80, half: 77, std: 72 },
+  { name: "Garrett Wilson", pos: "WR", ppr: 78, half: 75, std: 70 },
+  { name: "Puka Nacua", pos: "WR", ppr: 77, half: 75, std: 72 },
+  { name: "Josh Allen", pos: "QB", ppr: 75, half: 76, std: 78 },
+  { name: "De'Von Achane", pos: "RB", ppr: 74, half: 72, std: 69 },
+  { name: "Jalen Hurts", pos: "QB", ppr: 72, half: 73, std: 75 },
+  { name: "Jonathan Taylor", pos: "RB", ppr: 70, half: 71, std: 73 },
+  { name: "Sam LaPorta", pos: "TE", ppr: 68, half: 65, std: 60 },
+  { name: "A.J. Brown", pos: "WR", ppr: 67, half: 65, std: 62 },
+  { name: "Davante Adams", pos: "WR", ppr: 64, half: 62, std: 59 },
+  { name: "Patrick Mahomes", pos: "QB", ppr: 62, half: 63, std: 65 },
+  { name: "Lamar Jackson", pos: "QB", ppr: 60, half: 62, std: 65 },
+  { name: "Derrick Henry", pos: "RB", ppr: 58, half: 60, std: 65 },
+  { name: "Kyren Williams", pos: "RB", ppr: 57, half: 57, std: 58 },
+  { name: "Travis Etienne", pos: "RB", ppr: 56, half: 55, std: 54 },
+  { name: "Chris Olave", pos: "WR", ppr: 55, half: 53, std: 50 },
+  { name: "Drake London", pos: "WR", ppr: 54, half: 52, std: 49 },
+  { name: "Mike Evans", pos: "WR", ppr: 53, half: 52, std: 51 },
+  { name: "Jaylen Waddle", pos: "WR", ppr: 52, half: 50, std: 46 },
+  { name: "Mark Andrews", pos: "TE", ppr: 51, half: 49, std: 45 },
+  { name: "George Kittle", pos: "TE", ppr: 50, half: 48, std: 45 },
+  { name: "Stefon Diggs", pos: "WR", ppr: 49, half: 47, std: 44 },
+  { name: "Joe Mixon", pos: "RB", ppr: 48, half: 48, std: 49 },
+  { name: "Josh Jacobs", pos: "RB", ppr: 47, half: 47, std: 48 },
+  { name: "DK Metcalf", pos: "WR", ppr: 46, half: 45, std: 44 },
+  { name: "Deebo Samuel", pos: "WR", ppr: 45, half: 44, std: 43 },
+  { name: "Kenneth Walker III", pos: "RB", ppr: 44, half: 44, std: 45 },
+  { name: "James Cook", pos: "RB", ppr: 43, half: 43, std: 42 },
+  { name: "Tee Higgins", pos: "WR", ppr: 42, half: 41, std: 39 },
+  { name: "Isiah Pacheco", pos: "RB", ppr: 41, half: 42, std: 44 },
+  { name: "Najee Harris", pos: "RB", ppr: 40, half: 40, std: 41 },
+  { name: "T.J. Hockenson", pos: "TE", ppr: 39, half: 37, std: 34 },
+  { name: "Dak Prescott", pos: "QB", ppr: 38, half: 39, std: 40 },
+  { name: "Joe Burrow", pos: "QB", ppr: 37, half: 38, std: 39 },
+  { name: "C.J. Stroud", pos: "QB", ppr: 36, half: 37, std: 38 },
+  { name: "Amari Cooper", pos: "WR", ppr: 35, half: 34, std: 32 },
+  { name: "Calvin Ridley", pos: "WR", ppr: 34, half: 33, std: 31 },
+  { name: "Rachaad White", pos: "RB", ppr: 33, half: 32, std: 30 },
+  { name: "David Montgomery", pos: "RB", ppr: 32, half: 32, std: 33 },
+  { name: "Dalton Kincaid", pos: "TE", ppr: 31, half: 29, std: 26 },
+  { name: "Tony Pollard", pos: "RB", ppr: 30, half: 30, std: 29 },
+  { name: "Zay Flowers", pos: "WR", ppr: 29, half: 28, std: 26 },
+  { name: "Brandon Aiyuk", pos: "WR", ppr: 28, half: 27, std: 26 },
+  { name: "D'Andre Swift", pos: "RB", ppr: 27, half: 26, std: 24 },
+  { name: "Aaron Jones", pos: "RB", ppr: 26, half: 26, std: 25 },
+  { name: "Michael Pittman Jr.", pos: "WR", ppr: 25, half: 24, std: 22 },
+  { name: "Keenan Allen", pos: "WR", ppr: 24, half: 23, std: 20 },
+  { name: "Evan Engram", pos: "TE", ppr: 23, half: 21, std: 18 },
+  { name: "Rhamondre Stevenson", pos: "RB", ppr: 22, half: 22, std: 22 },
+  { name: "Courtland Sutton", pos: "WR", ppr: 21, half: 20, std: 19 },
+  { name: "Diontae Johnson", pos: "WR", ppr: 20, half: 19, std: 17 },
+  { name: "Terry McLaurin", pos: "WR", ppr: 19, half: 18, std: 17 }
+];
+
+// Scarcity multipliers by format
+var SCARCITY = {
+  ppr: { QB: 0.75, RB: 1.20, WR: 1.10, TE: 1.30 },
+  half: { QB: 0.80, RB: 1.22, WR: 1.05, TE: 1.25 },
+  standard: { QB: 0.80, RB: 1.25, WR: 1.00, TE: 1.15 }
+};
+
+// League size adjustments
+var SIZE_ADJ = { '8': 0.90, '10': 0.95, '12': 1.00, '14': 1.05, '16': 1.10 };
+
+function showSuggestions(input) {
+  var val = input.value.toLowerCase().trim();
+  var listEl = input.closest('.player-autocomplete').querySelector('.autocomplete-list');
+  if (val.length < 2) { listEl.classList.remove('show'); return; }
+  var matches = PLAYERS.filter(function(p) {
+    return p.name.toLowerCase().indexOf(val) !== -1;
+  }).slice(0, 8);
+  if (matches.length === 0) { listEl.classList.remove('show'); return; }
+  listEl.innerHTML = '';
+  matches.forEach(function(p) {
+    var item = document.createElement('div');
+    item.className = 'autocomplete-item';
+    var posClass = 'pos-' + p.pos.toLowerCase();
+    item.innerHTML = '<span>' + p.name + '</span><span class="pos-tag ' + posClass + '">' + p.pos + '</span>';
+    item.addEventListener('click', function() {
+      input.value = p.name;
+      // Set position dropdown
+      var posSelect = input.closest('.player-row').querySelector('.player-pos');
+      posSelect.value = p.pos;
+      listEl.classList.remove('show');
+    });
+    listEl.appendChild(item);
+  });
+  listEl.classList.add('show');
+}
+
+// Hide autocomplete on outside click
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.player-autocomplete')) {
+    document.querySelectorAll('.autocomplete-list').forEach(function(el) { el.classList.remove('show'); });
+  }
+});
+
+function addPlayer(containerId) {
+  var container = document.getElementById(containerId);
+  var entry = document.createElement('div');
+  entry.className = 'player-entry';
+  entry.innerHTML = '<div class="player-row">' +
+    '<div class="form-group player-autocomplete"><label>Player Name</label>' +
+    '<input type="text" class="player-name" placeholder="Start typing..." oninput="showSuggestions(this)" onfocus="showSuggestions(this)"/>' +
+    '<div class="autocomplete-list"></div></div>' +
+    '<div class="form-group"><label>Position</label><select class="player-pos">' +
+    '<option value="QB">QB</option><option value="RB" selected>RB</option><option value="WR">WR</option><option value="TE">TE</option></select></div>' +
+    '<button class="remove-player" onclick="this.closest(\'.player-entry\').remove()">X</button></div>';
+  container.appendChild(entry);
+}
+
+function getPlayerValue(name, pos, format) {
+  var nameLower = name.toLowerCase().trim();
+  var match = PLAYERS.find(function(p) { return p.name.toLowerCase() === nameLower; });
+  if (match) {
+    return match[format];
+  }
+  // Partial match
+  match = PLAYERS.find(function(p) { return p.name.toLowerCase().indexOf(nameLower) !== -1; });
+  if (match) {
+    return match[format];
+  }
+  // Custom player: assign a default value based on position
+  var defaults = { QB: 20, RB: 25, WR: 22, TE: 15 };
+  return defaults[pos] || 20;
+}
+
+function analyzeTrade() {
+  var format = document.getElementById('scoringFormat').value;
+  var leagueSize = document.getElementById('leagueSize').value;
+  var leagueType = document.getElementById('leagueType').value;
+  var sizeAdj = SIZE_ADJ[leagueSize];
+  var scarcity = SCARCITY[format];
+
+  // Collect Side A
+  var sideAEntries = document.querySelectorAll('#sideAPlayers .player-entry');
+  var sideA = [];
+  sideAEntries.forEach(function(entry) {
+    var name = entry.querySelector('.player-name').value.trim();
+    var pos = entry.querySelector('.player-pos').value;
+    if (name) {
+      var baseVal = getPlayerValue(name, pos, format);
+      var scarcityMult = scarcity[pos] || 1.0;
+      var finalVal = Math.round(baseVal * scarcityMult * sizeAdj);
+      sideA.push({ name: name, pos: pos, base: baseVal, scarcityMult: scarcityMult, value: finalVal });
+    }
+  });
+
+  // Collect Side B
+  var sideBEntries = document.querySelectorAll('#sideBPlayers .player-entry');
+  var sideB = [];
+  sideBEntries.forEach(function(entry) {
+    var name = entry.querySelector('.player-name').value.trim();
+    var pos = entry.querySelector('.player-pos').value;
+    if (name) {
+      var baseVal = getPlayerValue(name, pos, format);
+      var scarcityMult = scarcity[pos] || 1.0;
+      var finalVal = Math.round(baseVal * scarcityMult * sizeAdj);
+      sideB.push({ name: name, pos: pos, base: baseVal, scarcityMult: scarcityMult, value: finalVal });
+    }
+  });
+
+  if (sideA.length === 0 || sideB.length === 0) {
+    alert('Please add at least one player to each side of the trade.');
+    return;
+  }
+
+  var totalA = sideA.reduce(function(s, p) { return s + p.value; }, 0);
+  var totalB = sideB.reduce(function(s, p) { return s + p.value; }, 0);
+  var diff = Math.abs(totalA - totalB);
+  var maxVal = Math.max(totalA, totalB);
+  var diffPct = maxVal > 0 ? (diff / maxVal * 100) : 0;
+
+  // Verdict
+  var verdictCard = document.getElementById('verdictCard');
+  var verdictText = document.getElementById('verdictText');
+  var verdictSub = document.getElementById('verdictSub');
+  verdictCard.className = 'verdict-card';
+
+  if (diffPct <= 10) {
+    verdictCard.classList.add('fair');
+    verdictText.style.color = '#00ff88';
+    verdictText.textContent = 'Fair Trade';
+    verdictSub.textContent = 'The trade values are within ' + diffPct.toFixed(1) + '% of each other. This is a balanced trade.';
+  } else if (totalA > totalB) {
+    verdictCard.classList.add('side-a-wins');
+    verdictText.style.color = '#00ff88';
+    verdictText.textContent = 'Team A Wins This Trade';
+    verdictSub.textContent = 'Team A receives ' + diff + ' more trade value points (' + diffPct.toFixed(1) + '% advantage).';
+  } else {
+    verdictCard.classList.add('side-b-wins');
+    verdictText.style.color = '#00ccff';
+    verdictText.textContent = 'Team B Wins This Trade';
+    verdictSub.textContent = 'Team B receives ' + diff + ' more trade value points (' + diffPct.toFixed(1) + '% advantage).';
+  }
+
+  // Totals
+  document.getElementById('totalA').textContent = totalA;
+  document.getElementById('totalB').textContent = totalB;
+
+  // Player values lists
+  var valuesA = document.getElementById('valuesA');
+  valuesA.innerHTML = '';
+  sideA.forEach(function(p) {
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="pname">' + p.name + ' (' + p.pos + ')</span><span class="pval">' + p.value + '</span>';
+    valuesA.appendChild(li);
+  });
+
+  var valuesB = document.getElementById('valuesB');
+  valuesB.innerHTML = '';
+  sideB.forEach(function(p) {
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="pname">' + p.name + ' (' + p.pos + ')</span><span class="pval" style="color:#00ccff">' + p.value + '</span>';
+    valuesB.appendChild(li);
+  });
+
+  // Comparison bar
+  var totalBoth = totalA + totalB;
+  var pctA = totalBoth > 0 ? (totalA / totalBoth * 100) : 50;
+  var pctB = 100 - pctA;
+  var compBar = document.getElementById('compBar');
+  compBar.innerHTML = '<div class="comp-bar-a" style="width:' + pctA.toFixed(1) + '%">Team A: ' + totalA + '</div>' +
+    '<div class="comp-bar-b" style="width:' + pctB.toFixed(1) + '%">Team B: ' + totalB + '</div>';
+
+  // Breakdown table
+  var tbody = document.getElementById('breakdownBody');
+  tbody.innerHTML = '';
+  sideA.forEach(function(p) {
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td style="color:#00ff88">A</td><td>' + p.name + '</td><td>' + p.pos + '</td><td>' + p.base + '</td><td>' + p.scarcityMult.toFixed(2) + 'x</td><td style="font-weight:600">' + p.value + '</td>';
+    tbody.appendChild(tr);
+  });
+  sideB.forEach(function(p) {
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td style="color:#00ccff">B</td><td>' + p.name + '</td><td>' + p.pos + '</td><td>' + p.base + '</td><td>' + p.scarcityMult.toFixed(2) + 'x</td><td style="font-weight:600">' + p.value + '</td>';
+    tbody.appendChild(tr);
+  });
+
+  // Tips
+  var tips = [];
+  if (sideA.length > sideB.length) {
+    tips.push('Team A is receiving more players. Consider the roster impact: benching current players to start multiple new ones reduces the effective upgrade.');
+  } else if (sideB.length > sideA.length) {
+    tips.push('Team B is receiving more players. Consolidation trades (fewer, better players) generally favor the side getting the best single asset.');
+  }
+  if (sideA.some(function(p) { return p.pos === 'TE'; }) || sideB.some(function(p) { return p.pos === 'TE'; })) {
+    tips.push('Tight end trades in ' + format.toUpperCase() + ' format carry high scarcity value. Elite TEs are extremely difficult to replace on waivers.');
+  }
+  if (leagueType === 'dynasty') {
+    tips.push('In dynasty leagues, consider player age and remaining peak years. Young players with similar current production hold more long-term value.');
+  }
+  if (diffPct > 20) {
+    tips.push('This trade has a significant value gap (' + diffPct.toFixed(0) + '%). The disadvantaged team should request additional assets to balance the deal.');
+  }
+  if (diffPct <= 5) {
+    tips.push('This trade is extremely close in value. Both teams should feel confident accepting this deal.');
+  }
+  var bestPlayerA = sideA.reduce(function(best, p) { return p.value > best.value ? p : best; }, sideA[0]);
+  var bestPlayerB = sideB.reduce(function(best, p) { return p.value > best.value ? p : best; }, sideB[0]);
+  if (bestPlayerA.value > bestPlayerB.value) {
+    tips.push('The highest-valued individual player (' + bestPlayerA.name + ') goes to Team A. In most cases, the team receiving the best single player benefits the most.');
+  } else if (bestPlayerB.value > bestPlayerA.value) {
+    tips.push('The highest-valued individual player (' + bestPlayerB.name + ') goes to Team B. In most cases, the team receiving the best single player benefits the most.');
+  }
+
+  var tipsList = document.getElementById('tipsList');
+  tipsList.innerHTML = '';
+  tips.forEach(function(tip) {
+    var li = document.createElement('li');
+    li.textContent = tip;
+    tipsList.appendChild(li);
+  });
+
+  document.getElementById('results').classList.add('show');
+}
+
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>
