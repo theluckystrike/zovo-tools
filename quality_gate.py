@@ -19,7 +19,7 @@ class QualityGate:
         # Violation patterns
         self.bold_pattern = re.compile(r'\*\*[^*]+\*\*|<b>.*?</b>|<strong>.*?</strong>', re.IGNORECASE)
         self.em_dash_pattern = re.compile(r'—')
-        self.hashtag_pattern = re.compile(r'(?<![&=:;"\'/])#[A-Za-z]\w*(?![A-Fa-f0-9])')
+        self.hashtag_pattern = re.compile(r'(?<=\s)#[A-Za-z]\w{1,30}(?=[\s,.\)]|$)')
         self.ai_phrases = [
             'AI-powered', 'AI powered', 'artificial intelligence',
             'machine learning', 'ML-based', 'powered by AI',
