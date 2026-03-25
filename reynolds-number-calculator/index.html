@@ -124,8 +124,8 @@ li{margin-bottom:0.4rem}
 label{display:block;font-size:0.85rem;color:#8888a0;margin-bottom:0.3rem}
 input,select{width:100%;padding:0.65rem 0.85rem;border-radius:8px;border:1px solid #2a2a3a;background:#0a0a0f;color:#e0e0e8;font-size:1rem;font-family:system-ui,-apple-system,sans-serif}
 input:focus,select:focus{outline:none;border-color:#00ff88;box-shadow:0 0 0 2px rgba(0,255,136,0.15)}
-.btn{display:inline-block;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#0a0a0f;padding:0.75rem 2rem;border:none;border-radius:8px;font-weight:600;font-size:1rem;cursor:pointer;width:100%;margin-top:0.5rem;font-family:system-ui,sans-serif;transition:transform 0.15s}
-.btn:hover{transform:translateY(-1px)}
+.btn{display:inline-block;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#0a0a0f;padding:0.75rem 2rem;border:none;border-radius:8px;font-weight:600;font-size:1rem;cursor:pointer;width:100%;margin-top:0.5rem;font-family:system-ui,sans-serif;transition:change 0.15s}
+.btn:hover{change:translateY(-1px)}
 .result-card{background:linear-gradient(135deg,rgba(0,255,136,0.08),rgba(0,204,255,0.05));border:1px solid rgba(0,255,136,0.15);border-radius:16px;padding:1.5rem;margin-top:1.5rem}
 .result-row{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04)}
 .result-row:last-child{border-bottom:none}
@@ -191,7 +191,7 @@ Reading time: 18 minutes
 </ul>
 </nav>
 
-<p>I built this Reynolds number calculator because determining flow regime is one of the most fundamental tasks in fluid mechanics, and getting it wrong leads to incorrect pipe sizing, pump selection, and heat transfer calculations. Whether you are sizing a pipeline, designing an HVAC system, analyzing aerodynamic drag, or working through a fluids homework problem, this tool gives you the Reynolds number and flow classification in seconds.</p>
+<p>I built this Reynolds number calculator because determining flow regime is one of the most basic tasks in fluid mechanics, and getting it wrong leads to incorrect pipe sizing, pump selection, and heat transfer calculations. Whether you are sizing a pipeline, designing an HVAC system, analyzing aerodynamic drag, or working through a fluids homework problem, this tool gives you the Reynolds number and flow classification in seconds.</p>
 
 <p>The calculator supports both the density-based formula (Re = ρvD/μ) and the kinematic viscosity approach (Re = vD/ν), with preset fluid properties for water, air, oil, and other common fluids at various temperatures. I included the presets because looking up fluid properties at specific temperatures is one of the most tedious parts of these calculations, and getting the viscosity wrong by an order of magnitude is a common mistake.</p>
 
@@ -200,7 +200,7 @@ Reading time: 18 minutes
 <div style="margin-bottom:1rem">
 <label for="calcMode">Calculation Method</label>
 <select id="calcMode" onchange="toggleCalcMode()">
-<option value="density">Using Density and Dynamic Viscosity (Re = ρvD/μ)</option>
+<option value="density">Using Density and adaptable Viscosity (Re = ρvD/μ)</option>
 <option value="kinematic">Using Kinematic Viscosity (Re = vD/ν)</option>
 </select>
 </div>
@@ -240,7 +240,7 @@ Reading time: 18 minutes
 <input type="number" id="density" value="998.2" min="0" step="0.1"/>
 </div>
 <div id="dynViscField">
-<label for="dynVisc">Dynamic Viscosity μ (Pa·s)</label>
+<label for="dynVisc">adaptable Viscosity μ (Pa·s)</label>
 <input type="number" id="dynVisc" value="0.001002" min="0" step="0.000001"/>
 </div>
 <div id="kinViscField" style="display:none">
@@ -268,27 +268,27 @@ Reading time: 18 minutes
 <h2 id="formula">The Reynolds Number Formula</h2>
 <p>The Reynolds number is defined as the ratio of inertial forces to viscous forces acting on a fluid element. There are two equivalent formulations depending on which viscosity value you have available.</p>
 
-<h3>Using Density and Dynamic Viscosity</h3>
+<h3>Using Density and adaptable Viscosity</h3>
 <div class="formula-box">Re = ρ · v · D / μ</div>
 <p>Where:</p>
 <ul>
-<li><strong>ρ</strong> (rho) = fluid density in kg/m³</li>
-<li><strong>v</strong> = mean flow velocity in m/s</li>
-<li><strong>D</strong> = characteristic length (pipe internal diameter for pipe flow) in meters</li>
-<li><strong>μ</strong> (mu) = dynamic (absolute) viscosity in Pa·s or kg/(m·s)</li>
+<li>ρ (rho) = fluid density in kg/m³</li>
+<li>v = mean flow velocity in m/s</li>
+<li>D = characteristic length (pipe internal diameter for pipe flow) in meters</li>
+<li>μ (mu) = adaptable (absolute) viscosity in Pa·s or kg/(m·s)</li>
 </ul>
 
 <h3>Using Kinematic Viscosity</h3>
 <div class="formula-box">Re = v · D / ν</div>
 <p>Where:</p>
 <ul>
-<li><strong>ν</strong> (nu) = kinematic viscosity in m²/s</li>
+<li>ν (nu) = kinematic viscosity in m²/s</li>
 <li>Since ν = μ/ρ, these two formulas are mathematically identical</li>
 </ul>
 
-<p>The kinematic viscosity form is often more convenient because fluid property tables frequently list kinematic viscosity directly. For water at 20°C, ν = 1.004 x 10⁻⁶ m²/s. For air at 20°C and 1 atm, ν = 1.516 x 10⁻⁵ m²/s. The order-of-magnitude difference between water and air kinematic viscosity is something that catches students off guard: air has much higher kinematic viscosity than water despite being far less "thick" in the intuitive sense.</p>
+<p>The kinematic viscosity form is often more convenient because fluid property tables frequently list kinematic viscosity directly. For water at 20°C, ν = 1.004 x 10⁻⁶ m²/s. For air at 20°C and 1 atm, ν = 1.516 x 10⁻⁵ m²/s. The order-of-magnitude difference between water and air kinematic viscosity is something that catches students off guard: air has much higher kinematic viscosity than water despite being far less "thick" in the easy to use sense.</p>
 
-<p>The reason is that kinematic viscosity accounts for density. Air's dynamic viscosity is about 50 times lower than water's, but air's density is about 800 times lower, so the ratio (kinematic viscosity) ends up being about 15 times higher for air. This means that for the same velocity and pipe diameter, water flow will have a higher Reynolds number than air flow.</p>
+<p>The reason is that kinematic viscosity accounts for density. Air's adaptable viscosity is about 50 times lower than water's, but air's density is about 800 times lower, so the ratio (kinematic viscosity) ends up being about 15 times higher for air. This means that for the same velocity and pipe diameter, water flow will have a higher Reynolds number than air flow.</p>
 
 <h2 id="flow-regimes">Flow Regime Classification</h2>
 <p>For internal pipe flow, the Reynolds number determines which of three flow regimes the fluid is in. These thresholds were established through Osborne Reynolds' original experiments in 1883 and have been validated by over a century of research and engineering practice.</p>
@@ -313,7 +313,7 @@ Reading time: 18 minutes
 
 <table>
 <thead>
-<tr><th>Fluid</th><th>Temperature</th><th>Density (kg/m³)</th><th>Dynamic Visc. (Pa·s)</th><th>Kinematic Visc. (m²/s)</th></tr>
+<tr><th>Fluid</th><th>Temperature</th><th>Density (kg/m³)</th><th>adaptable Visc. (Pa·s)</th><th>Kinematic Visc. (m²/s)</th></tr>
 </thead>
 <tbody>
 <tr><td>Water</td><td>20°C</td><td>998.2</td><td>1.002 × 10⁻³</td><td>1.004 × 10⁻⁶</td></tr>
@@ -335,7 +335,7 @@ Reading time: 18 minutes
 </tbody>
 </table>
 
-<p>Notice the enormous range in viscosity values. Glycerin at 20°C has a dynamic viscosity of about 1.4 Pa·s, while air is around 1.8 x 10⁻⁵ Pa·s. That is a factor of roughly 77,000. This is why oil flows in pipelines are almost always laminar (Re in the hundreds or low thousands), while water and gas flows are typically turbulent at practical velocities. The viscosity dominates the Reynolds number calculation far more than density or velocity in most real systems.</p>
+<p>Notice the enormous range in viscosity values. Glycerin at 20°C has a adaptable viscosity of about 1.4 Pa·s, while air is around 1.8 x 10⁻⁵ Pa·s. That is a factor of roughly 77,000. This is why oil flows in pipelines are almost always laminar (Re in the hundreds or low thousands), while water and gas flows are typically turbulent at practical velocities. The viscosity dominates the Reynolds number calculation far more than density or velocity in most real systems.</p>
 
 <h2 id="moody-diagram">Moody Diagram Explained</h2>
 <p>The <a href="https://en.wikipedia.org/wiki/Moody_chart" target="_blank" rel="noopener">Moody diagram</a> (also called the Moody chart) is one of the most important tools in pipe flow analysis. It plots the Darcy-Weisbach friction factor against Reynolds number for various values of relative pipe roughness (ε/D). Once you know your Reynolds number, the Moody diagram tells you the friction factor, which you need to calculate pressure drop in a pipe system.</p>
@@ -430,13 +430,13 @@ Reading time: 18 minutes
 
 <p>The Dittus-Boelter equation shows that the Nusselt number (and therefore the heat transfer coefficient) scales with Re to the 0.8 power in turbulent flow. This means doubling the Reynolds number increases the heat transfer coefficient by a factor of 2^0.8 = 1.74, or about 74%. This strong dependence on Reynolds number is why heat exchangers are designed to operate in the turbulent regime whenever pumping costs allow it.</p>
 
-<p>In practice, shell-and-tube heat exchangers use baffles to increase velocity and promote turbulence on the shell side, specifically to increase the Reynolds number and improve heat transfer. Plate heat exchangers achieve high Reynolds numbers through narrow channels and corrugated surfaces. Both designs are intentionally creating turbulence to maximize thermal performance.</p>
+<p>In practice, shell-and-tube heat exchangers use baffles to increase velocity and promote turbulence on the shell side, specifically to increase the Reynolds number and improve heat transfer. Plate heat exchangers achieve high Reynolds numbers through narrow channels and corrugated surfaces. Both designs are intentionally creating turbulence to increase thermal performance.</p>
 
 <h2 id="temperature-effects">Temperature Effects on Viscosity</h2>
 <p>Temperature has a dramatic effect on fluid viscosity, which directly changes the Reynolds number even when flow conditions remain constant. The direction and magnitude of the effect differ between liquids and gases.</p>
 
 <h3>Liquids: Viscosity Decreases with Temperature</h3>
-<p>For most liquids, viscosity drops significantly as temperature rises. Water's dynamic viscosity drops from 1.79 x 10⁻³ Pa·s at 0°C to 2.82 x 10⁻⁴ Pa·s at 100°C, a factor of 6.3 reduction. For oils, the effect is even more pronounced. SAE 30 motor oil viscosity can drop by a factor of 100 or more between cold start temperatures and operating temperature.</p>
+<p>For most liquids, viscosity drops significantly as temperature rises. Water's adaptable viscosity drops from 1.79 x 10⁻³ Pa·s at 0°C to 2.82 x 10⁻⁴ Pa·s at 100°C, a factor of 6.3 reduction. For oils, the effect is even more pronounced. SAE 30 motor oil viscosity can drop by a factor of 100 or more between cold start temperatures and operating temperature.</p>
 
 <table>
 <thead>
@@ -472,7 +472,7 @@ Reading time: 18 minutes
 
 <p>At low velocities, the dye stream remained a coherent, straight line, indicating smooth laminar flow. As he increased the velocity, the dye stream began to waver and eventually broke up into chaotic mixing throughout the tube. Reynolds showed that the transition between these regimes depended not on velocity alone, but on the dimensionless combination ρvD/μ.</p>
 
-<p>What made Reynolds' work groundbreaking was the concept of dynamic similarity. He demonstrated that two geometrically similar flow systems will behave identically if they have the same Reynolds number, regardless of the actual values of velocity, size, density, and viscosity. This principle is the foundation of all scale model testing in fluid mechanics, from wind tunnel testing to ship hull design to hydraulic model studies.</p>
+<p>What made Reynolds' work groundbreaking was the concept of adaptable similarity. He demonstrated that two geometrically similar flow systems will behave identically if they have the same Reynolds number, regardless of the actual values of velocity, size, density, and viscosity. This principle is the foundation of all scale model testing in fluid mechanics, from wind tunnel testing to ship hull design to hydraulic model studies.</p>
 
 <p>The actual term "Reynolds number" was coined by Arnold Sommerfeld in 1908, nearly 25 years after Reynolds published his results. Before that, the concept was referenced by various names and notations. The standardization of the symbol Re and the name "Reynolds number" helped unify fluid mechanics as a discipline and made it easier to communicate results across different fields of engineering.</p>
 
@@ -482,34 +482,34 @@ Reading time: 18 minutes
 
 <h3>Example 1: Water Flow in a Household Pipe</h3>
 <div class="card">
-<p><strong>Given:</strong> Water at 20°C flowing at 1.2 m/s through a 19mm (3/4 inch) copper pipe.</p>
-<p><strong>Properties:</strong> ρ = 998.2 kg/m³, μ = 1.002 × 10⁻³ Pa·s</p>
+<p>Given: Water at 20°C flowing at 1.2 m/s through a 19mm (3/4 inch) copper pipe.</p>
+<p>Properties: ρ = 998.2 kg/m³, μ = 1.002 × 10⁻³ Pa·s</p>
 <div class="formula-box">Re = ρvD/μ = (998.2)(1.2)(0.019) / (1.002 × 10⁻³) = 22,745</div>
-<p><strong>Result:</strong> Re = 22,745. This is well above 4,000, so the flow is <strong style="color:#ff4444">turbulent</strong>. Typical for household water supply.</p>
+<p>Result: Re = 22,745. This is well above 4,000, so the flow is turbulent. Typical for household water supply.</p>
 </div>
 
 <h3>Example 2: Oil in a Pipeline</h3>
 <div class="card">
-<p><strong>Given:</strong> SAE 30 motor oil at 40°C flowing at 0.5 m/s through a 150mm pipeline.</p>
-<p><strong>Properties:</strong> ρ = 876 kg/m³, μ = 0.296 Pa·s</p>
+<p>Given: SAE 30 motor oil at 40°C flowing at 0.5 m/s through a 150mm pipeline.</p>
+<p>Properties: ρ = 876 kg/m³, μ = 0.296 Pa·s</p>
 <div class="formula-box">Re = ρvD/μ = (876)(0.5)(0.15) / (0.296) = 222</div>
-<p><strong>Result:</strong> Re = 222. This is far below 2,300, so the flow is <strong style="color:#00ff88">laminar</strong>. Oil pipelines commonly operate in laminar flow due to high viscosity.</p>
+<p>Result: Re = 222. This is far below 2,300, so the flow is laminar. Oil pipelines commonly operate in laminar flow due to high viscosity.</p>
 </div>
 
 <h3>Example 3: Air in HVAC Ductwork</h3>
 <div class="card">
-<p><strong>Given:</strong> Air at 20°C flowing at 5 m/s through a 300mm round duct.</p>
-<p><strong>Properties:</strong> ρ = 1.204 kg/m³, μ = 1.825 × 10⁻⁵ Pa·s</p>
+<p>Given: Air at 20°C flowing at 5 m/s through a 300mm round duct.</p>
+<p>Properties: ρ = 1.204 kg/m³, μ = 1.825 × 10⁻⁵ Pa·s</p>
 <div class="formula-box">Re = ρvD/μ = (1.204)(5)(0.3) / (1.825 × 10⁻⁵) = 99,041</div>
-<p><strong>Result:</strong> Re = 99,041. Strongly <strong style="color:#ff4444">turbulent</strong>. This is normal for HVAC systems and promotes good mixing of supply air.</p>
+<p>Result: Re = 99,041. Strongly turbulent. This is normal for HVAC systems and promotes good mixing of supply air.</p>
 </div>
 
 <h3>Example 4: Airplane Wing</h3>
 <div class="card">
-<p><strong>Given:</strong> Aircraft cruising at 250 m/s (Mach 0.85) at 10,000m altitude. Wing chord = 4m.</p>
-<p><strong>Properties at altitude:</strong> ρ = 0.414 kg/m³, μ = 1.458 × 10⁻⁵ Pa·s</p>
+<p>Given: Aircraft cruising at 250 m/s (Mach 0.85) at 10,000m altitude. Wing chord = 4m.</p>
+<p>Properties at altitude: ρ = 0.414 kg/m³, μ = 1.458 × 10⁻⁵ Pa·s</p>
 <div class="formula-box">Re = ρvD/μ = (0.414)(250)(4) / (1.458 × 10⁻⁵) = 28,400,000</div>
-<p><strong>Result:</strong> Re = 28.4 million. The boundary layer is <strong style="color:#ff4444">turbulent</strong> over most of the wing surface. At this Reynolds number, natural laminar flow is difficult to maintain past the first 10-20% of the chord without careful surface finishing and airfoil design.</p>
+<p>Result: Re = 28.4 million. The boundary layer is turbulent over most of the wing surface. At this Reynolds number, natural laminar flow is difficult to maintain past the first 10-20% of the chord without careful surface finishing and airfoil design.</p>
 </div>
 
 <h2 id="reference-table">Quick Reference Table</h2>
@@ -541,15 +541,15 @@ Reading time: 18 minutes
 </div>
 <div class="faq-item">
 <p class="faq-q">How do I calculate Reynolds number?</p>
-<p class="faq-a">Reynolds number is calculated using Re = ρvD/μ, where ρ is fluid density (kg/m³), v is flow velocity (m/s), D is the characteristic length such as pipe diameter (m), and μ is dynamic viscosity (Pa·s). Alternatively, use Re = vD/ν where ν is kinematic viscosity (m²/s). Both formulas give the same result since ν = μ/ρ.</p>
+<p class="faq-a">Reynolds number is calculated using Re = ρvD/μ, where ρ is fluid density (kg/m³), v is flow velocity (m/s), D is the characteristic length such as pipe diameter (m), and μ is adaptable viscosity (Pa·s). Alternatively, use Re = vD/ν where ν is kinematic viscosity (m²/s). Both formulas give the same result since ν = μ/ρ.</p>
 </div>
 <div class="faq-item">
 <p class="faq-q">What Reynolds number indicates turbulent flow?</p>
 <p class="faq-a">For internal pipe flow with circular cross-section, Re > 4,000 indicates fully turbulent flow. The range 2,300 to 4,000 is transitional, and Re < 2,300 is laminar. For external flow over a flat plate, the critical Re is about 500,000. These thresholds vary by geometry and surface conditions.</p>
 </div>
 <div class="faq-item">
-<p class="faq-q">What is the difference between dynamic and kinematic viscosity?</p>
-<p class="faq-a">Dynamic viscosity (μ, units: Pa·s) measures a fluid's internal resistance to shearing flow. Kinematic viscosity (ν, units: m²/s) is dynamic viscosity divided by density: ν = μ/ρ. Kinematic viscosity accounts for the fluid's density, which is why air (low μ, low ρ) has higher kinematic viscosity than water (higher μ, much higher ρ).</p>
+<p class="faq-q">What is the difference between adaptable and kinematic viscosity?</p>
+<p class="faq-a">adaptable viscosity (μ, units: Pa·s) measures a fluid's internal resistance to shearing flow. Kinematic viscosity (ν, units: m²/s) is adaptable viscosity divided by density: ν = μ/ρ. Kinematic viscosity accounts for the fluid's density, which is why air (low μ, low ρ) has higher kinematic viscosity than water (higher μ, much higher ρ).</p>
 </div>
 <div class="faq-item">
 <p class="faq-q">Why does temperature affect the Reynolds number?</p>
@@ -561,7 +561,7 @@ Reading time: 18 minutes
 </div>
 <div class="faq-item">
 <p class="faq-q">How is Reynolds number used in aerodynamics?</p>
-<p class="faq-a">In aerodynamics, Re determines boundary layer behavior (laminar vs. turbulent), which affects drag, lift, and heat transfer. Wind tunnel tests must match the Re of full-scale conditions for accurate results. Aircraft Reynolds numbers range from about 50,000 for small drones to 50 million for commercial jets. Model aircraft often need special low-Re airfoils that perform well at Re below 500,000.</p>
+<p class="faq-a">In aerodynamics, Re determines boundary layer behavior (laminar vs. turbulent), which affects drag, lift, and heat transfer. Wind tunnel tests must match the Re of full-scale conditions for precise results. Aircraft Reynolds numbers range from about 50,000 for small drones to 50 million for commercial jets. Model aircraft often need special low-Re airfoils that perform well at Re below 500,000.</p>
 </div>
 <div class="faq-item">
 <p class="faq-q">Can Reynolds number be negative?</p>
@@ -580,12 +580,12 @@ Reading time: 18 minutes
 </div>
 
 <div class="privacy-note">
-<strong>Privacy note:</strong> This Reynolds number calculator runs entirely in your browser. No fluid data, velocities, or calculation results are sent to any server. Your preset selections and recent calculations are saved locally so they persist between visits, but nothing leaves your device.
+Privacy note - This Reynolds number calculator runs entirely in your browser. No fluid data, velocities, or calculation results are sent to any server. Your preset selections and recent calculations are saved locally so they persist between visits, but nothing leaves your device.
 </div>
 
 <div class="card" style="margin-top:2rem">
 <h3>About This Tool</h3>
-<p>This Reynolds number calculator was built by Michael Lip as part of the Zovo free tools collection. Fluid property data was sourced from the <a href="https://www.engineeringtoolbox.com/water-dynamic-kinematic-viscosity-d_596.html" target="_blank" rel="noopener">Engineering Toolbox</a>, verified against published engineering references. The flow regime thresholds follow standard values used by ASME and in undergraduate fluid mechanics textbooks.</p>
+<p>This Reynolds number calculator was built by Michael Lip as part of the Zovo free tools collection. Fluid property data was sourced from the <a href="https://www.engineeringtoolbox.com/water-adaptable-kinematic-viscosity-d_596.html" target="_blank" rel="noopener">Engineering Toolbox</a>, verified against published engineering references. The flow regime thresholds follow standard values used by ASME and in undergraduate fluid mechanics textbooks.</p>
 <p style="margin-top:0.5rem">This tool is for educational and estimation purposes. For critical engineering applications, always verify fluid properties at your exact operating conditions and consult relevant engineering standards.</p>
 </div>
 
