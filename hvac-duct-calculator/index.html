@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HVAC Duct Calculator | Free Online Tool | Zovo Tools</title>
+<meta name="description" content="Size HVAC ducts based on CFM airflow, friction rate, and duct material. Calculate round and rectangular duct dimensions, velocity, and equivalent diameter."/>
+<meta name="keywords" content="HVAC duct calculator, duct sizing, CFM calculator, duct friction rate, equivalent diameter, duct velocity, ASHRAE duct sizing, rectangular duct sizing"/>
+<meta name="author" content="Michael Lip"/>
+<meta name="robots" content="index, follow"/>
+<meta name="last-modified" content="2026-03-26"/>
+<link rel="canonical" href="https://zovo.one/free-tools/hvac-duct-calculator/"/>
+<link rel="icon" href="https://zovo.one/favicon.ico"/>
+<meta property="og:title" content="HVAC Duct Calculator | Free Tool"/>
+<meta property="og:description" content="Size HVAC ducts based on CFM airflow requirements, friction rate, and material type."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://zovo.one/free-tools/hvac-duct-calculator/"/>
+<meta property="og:site_name" content="Zovo"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="HVAC Duct Calculator | Free Tool"/>
+<meta name="twitter:description" content="Size HVAC ducts based on CFM airflow requirements, friction rate, and material type."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "HVAC Duct Calculator",
+  "url": "https://zovo.one/free-tools/hvac-duct-calculator/",
+  "description": "Size HVAC ducts based on CFM airflow requirements, friction rate, and duct material types. Calculate round and rectangular dimensions.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate duct size from CFM?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To calculate duct size from CFM, you need to know the desired airflow (CFM) and the maximum velocity or friction rate. Using the equal friction method with a standard friction rate of 0.08 inches of water per 100 feet, you can determine the required duct diameter. The formula relates CFM, duct area, and air velocity: Area = CFM / Velocity. For a round duct, Diameter = 2 x sqrt(Area / pi). This calculator uses the Darcy-Weisbach equation with standard air density to perform these calculations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the recommended air velocity for residential ductwork?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For residential ductwork, ASHRAE recommends maximum air velocities of 600 to 900 feet per minute (FPM) in main supply ducts, 500 to 700 FPM in branch supply ducts, and 400 to 600 FPM in return ducts. Higher velocities increase noise and energy consumption. For noise-sensitive areas like bedrooms, velocities below 500 FPM are preferred. Commercial systems can use higher velocities, up to 2,000 FPM in main ducts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the equivalent diameter for a rectangular duct?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The equivalent diameter of a rectangular duct is the diameter of a round duct that would produce the same friction loss at the same airflow. The formula is De = 1.30 x ((a x b)^0.625) / ((a + b)^0.250), where a and b are the two sides of the rectangular duct in inches. For example, a 12 x 8 inch rectangular duct has an equivalent diameter of approximately 10.4 inches."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What friction rate should I use for duct sizing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A friction rate of 0.08 to 0.10 inches of water per 100 feet of duct is standard for residential systems. This rate balances acceptable noise levels with reasonable duct sizes. For commercial systems, 0.08 to 0.15 inches per 100 feet is common. Low-velocity systems may use 0.05 to 0.08 inches per 100 feet. The available static pressure from the air handler minus fitting losses determines the maximum allowable friction rate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does duct material affect sizing calculations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Duct material affects the absolute roughness factor used in friction loss calculations. Galvanized sheet metal has an absolute roughness of about 0.0003 feet, making it the smoothest common duct material. Fiberglass-lined duct has a roughness of about 0.003 feet, ten times rougher. Flexible duct fully stretched has a roughness of about 0.003 feet as well, but compression (which is common in practice) can increase this to 0.01 feet or more. Rougher materials require larger duct sizes to achieve the same airflow at the same friction rate."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zovo.one/" },
+    { "@type": "ListItem", "position": 2, "name": "Free Tools", "item": "https://zovo.one/free-tools/" },
+    { "@type": "ListItem", "position": 3, "name": "HVAC Duct Calculator", "item": "https://zovo.one/free-tools/hvac-duct-calculator/" }
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;min-height:100vh}
+a{color:#00ccff;text-decoration:none}
+a:hover{text-decoration:underline}
+header{background:#12121a;border-bottom:1px solid #2a2a3e;padding:12px 0}
+.breadcrumb{max-width:900px;margin:0 auto;padding:0 20px;font-size:14px;color:#aaa}
+.breadcrumb a{color:#00ccff;font-size:14px}
+.breadcrumb span{margin:0 8px;color:#555}
+main{max-width:900px;margin:0 auto;padding:40px 20px 60px}
+h1{font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.2}
+.subtitle{font-size:1.1rem;color:#bbb;margin-bottom:32px;max-width:700px}
+h2{font-size:1.6rem;font-weight:600;color:#fff;margin:48px 0 16px}
+h3{font-size:1.25rem;font-weight:600;color:#fff;margin:32px 0 12px}
+h4{font-size:1.05rem;font-weight:600;color:#fff;margin:24px 0 10px}
+p{margin-bottom:16px;color:#e0e0e8}
+.card{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:12px;padding:28px;margin-bottom:28px}
+.form-group{margin-bottom:18px}
+label{display:block;font-size:14px;font-weight:500;color:#ccc;margin-bottom:6px}
+input[type="text"],input[type="number"],select{width:100%;padding:12px 14px;background:#12121a;border:1px solid #2a2a3e;border-radius:8px;color:#e0e0e8;font-size:15px;font-family:'Inter',sans-serif}
+input:focus,select:focus{outline:none;border-color:#00ff88}
+.row{display:flex;gap:16px;flex-wrap:wrap}
+.row .form-group{flex:1;min-width:140px}
+.btn{display:inline-block;padding:14px 32px;background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-secondary{background:#2a2a3e;color:#e0e0e8;margin-left:12px}
+.btn-secondary:hover{background:#3a3a4e}
+.results{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:12px;padding:28px;margin-top:24px;display:none}
+.results.show{display:block}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+.result-card{background:#12121a;border:1px solid #2a2a3e;border-radius:10px;padding:20px;text-align:center}
+.result-card .value{font-size:1.8rem;font-weight:700;color:#00ff88}
+.result-card .label{font-size:13px;color:#aaa;margin-top:4px}
+.result-card.highlight{border-color:#00ff88}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.detail-card{background:#12121a;border:1px solid #2a2a3e;border-radius:8px;padding:16px}
+.detail-card h4{margin:0 0 12px;font-size:14px;color:#00ff88}
+.detail-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a2e;font-size:14px}
+.detail-row .dl{color:#aaa}
+.detail-row .dv{color:#e0e0e8;font-weight:500}
+.velocity-gauge{margin-top:20px;padding:20px;background:#12121a;border:1px solid #2a2a3e;border-radius:8px}
+.gauge-bar{width:100%;height:24px;background:#2a2a3e;border-radius:12px;overflow:hidden;margin:8px 0}
+.gauge-fill{height:100%;border-radius:12px;transition:width .5s}
+.gauge-labels{display:flex;justify-content:space-between;font-size:12px;color:#888}
+.rect-inputs{display:none}
+.rect-inputs.show{display:block}
+.tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:10px 20px;background:#12121a;border:1px solid #2a2a3e;border-radius:8px;cursor:pointer;color:#aaa;font-size:14px;font-family:'Inter',sans-serif;transition:all .2s}
+.tab.active{background:#00ff88;color:#0a0a0f;border-color:#00ff88;font-weight:600}
+.tab:hover:not(.active){border-color:#00ff88;color:#e0e0e8}
+.ref-table{width:100%;border-collapse:collapse;margin:20px 0}
+.ref-table th,.ref-table td{padding:10px 14px;text-align:left;border-bottom:1px solid #2a2a3e}
+.ref-table th{color:#00ff88;font-weight:600;font-size:14px}
+.ref-table td{color:#e0e0e8;font-size:14px}
+.ref-table tr:hover{background:#12121a}
+.info-section{margin-top:60px}
+.info-section p,.info-section li{color:#ccc;line-height:1.8}
+.info-section ul,.info-section ol{margin:12px 0 20px 24px}
+.info-section li{margin-bottom:8px}
+.formula-block{background:#12121a;border:1px solid #2a2a3e;border-radius:8px;padding:20px;margin:16px 0;font-family:monospace;font-size:14px;color:#00ff88;line-height:1.8;overflow-x:auto}
+.faq-section{margin-top:48px}
+.faq-item{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:10px;margin-bottom:12px;overflow:hidden}
+.faq-question{padding:18px 24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:#fff;font-weight:500}
+.faq-question:hover{background:#12121a}
+.faq-arrow{transition:transform .3s;color:#00ff88;font-size:18px}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-answer{padding:0 24px 18px;color:#ccc;display:none;line-height:1.8}
+.faq-item.open .faq-answer{display:block}
+.cross-links{margin-top:48px;padding-top:32px;border-top:1px solid #2a2a3e}
+.cross-links h3{margin-top:0}
+.cross-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.cross-link-card{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:8px;padding:16px;transition:border-color .2s}
+.cross-link-card:hover{border-color:#00ff88;text-decoration:none}
+.cross-link-card h4{margin:0 0 4px;font-size:14px;color:#00ff88}
+.cross-link-card p{margin:0;font-size:13px;color:#aaa}
+footer{background:#12121a;border-top:1px solid #2a2a3e;text-align:center;padding:24px;color:#aaa;font-size:14px}
+.note-box{background:#12121a;border:1px solid #2a2a3e;border-radius:8px;padding:16px;margin:16px 0;font-size:14px;color:#ccc}
+@media(max-width:600px){
+  h1{font-size:1.6rem}
+  .row{flex-direction:column;gap:0}
+  .result-grid{grid-template-columns:1fr}
+  .detail-grid{grid-template-columns:1fr}
+  .btn{width:100%;text-align:center}
+  .btn-secondary{margin:8px 0 0}
+  .tabs{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<header>
+<nav class="breadcrumb" aria-label="Breadcrumb">
+<a href="https://zovo.one/">Home</a><span>›</span>
+<a href="https://zovo.one/free-tools/">Free Tools</a><span>›</span>
+HVAC Duct Calculator
+</nav>
+</header>
+<main>
+<h1>HVAC Duct Calculator</h1>
+<p class="subtitle">Size HVAC ducts based on CFM airflow requirements, friction rates, and duct material types. Supports round and rectangular duct calculations with velocity analysis.</p>
+
+<div class="card">
+<h2 style="margin-top:0;font-size:1.2rem;">Duct Configuration</h2>
+<div class="tabs">
+<button class="tab active" onclick="switchDuctType('round')">Round Duct</button>
+<button class="tab" onclick="switchDuctType('rectangular')">Rectangular Duct</button>
+</div>
+
+<div class="row">
+<div class="form-group">
+<label for="cfm">Airflow (CFM)</label>
+<input type="number" id="cfm" value="400" min="1" step="any"/>
+</div>
+<div class="form-group">
+<label for="frictionRate">Friction Rate (in. w.g. per 100 ft)</label>
+<input type="number" id="frictionRate" value="0.08" min="0.01" step="0.01"/>
+</div>
+</div>
+<div class="row">
+<div class="form-group">
+<label for="material">Duct Material</label>
+<select id="material">
+<option value="0.0003">Galvanized Sheet Metal (smooth)</option>
+<option value="0.0005">Aluminum (smooth)</option>
+<option value="0.003">Fiberglass Lined</option>
+<option value="0.003">Flexible Duct (fully extended)</option>
+<option value="0.01">Flexible Duct (compressed 4%)</option>
+<option value="0.05">Flexible Duct (compressed 15%)</option>
+<option value="0.0015">Fibrous Glass Duct Board</option>
+</select>
+</div>
+<div class="form-group">
+<label for="ductLength">Duct Length (feet) · optional</label>
+<input type="number" id="ductLength" value="50" min="0" step="any"/>
+</div>
+</div>
+
+<div class="rect-inputs" id="rectInputs">
+<div class="row">
+<div class="form-group">
+<label for="rectSideA">Side A (inches)</label>
+<input type="number" id="rectSideA" value="12" min="1" step="1"/>
+</div>
+<div class="form-group">
+<label for="rectSideB">Side B (inches)</label>
+<input type="number" id="rectSideB" value="8" min="1" step="1"/>
+</div>
+</div>
+<p style="font-size:13px;color:#888;margin-top:4px;">Enter rectangular dimensions to calculate equivalent round diameter and compare performance</p>
+</div>
+
+<div class="row" style="margin-top:8px;">
+<div class="form-group">
+<label for="airTemp">Air Temperature (F) · optional</label>
+<input type="number" id="airTemp" value="70" step="any"/>
+</div>
+<div class="form-group">
+<label for="altitude">Altitude (feet) · optional</label>
+<input type="number" id="altitude" value="0" min="0" step="100"/>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:12px;">
+<button class="btn" onclick="calculateDuct()">Calculate Duct Size</button>
+<button class="btn btn-secondary" onclick="resetDuct()">Reset</button>
+</div>
+
+<div class="results" id="results">
+<h2 style="margin-top:0;font-size:1.3rem;">Duct Sizing Results</h2>
+<div class="result-grid">
+<div class="result-card highlight">
+<div class="value" id="ductDiameter">-</div>
+<div class="label" id="ductDiameterLabel">Round Duct Diameter</div>
+</div>
+<div class="result-card">
+<div class="value" id="velocity">-</div>
+<div class="label">Velocity (FPM)</div>
+</div>
+<div class="result-card">
+<div class="value" id="pressureDrop">-</div>
+<div class="label" id="pressureDropLabel">Pressure Drop (in. w.g.)</div>
+</div>
+</div>
+
+<div class="velocity-gauge" id="velocityGauge">
+<h4 style="margin:0 0 8px;font-size:14px;">Air Velocity Assessment</h4>
+<div class="gauge-bar">
+<div class="gauge-fill" id="gaugeFill" style="width:0%;background:#00ff88;"></div>
+</div>
+<div class="gauge-labels">
+<span>0 FPM</span>
+<span>600 (Quiet)</span>
+<span>900 (Moderate)</span>
+<span>1200 (Loud)</span>
+<span>2000+</span>
+</div>
+<p style="margin:8px 0 0;font-size:13px;color:#aaa;" id="velocityNote"></p>
+</div>
+
+<div class="detail-grid" id="detailGrid">
+<div class="detail-card">
+<h4>Duct Properties</h4>
+<div id="ductProperties"></div>
+</div>
+<div class="detail-card">
+<h4>Air Properties</h4>
+<div id="airProperties"></div>
+</div>
+</div>
+
+<div id="rectResults" style="display:none;margin-top:20px;">
+<div class="detail-card" style="margin:0;">
+<h4>Rectangular Duct Analysis</h4>
+<div id="rectDetails"></div>
+</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:36px;">
+<h2 style="margin-top:0;font-size:1.2rem;">CFM Requirements by Room Type</h2>
+<table class="ref-table">
+<thead><tr><th>Room Type</th><th>Typical CFM</th><th>CFM per sq ft</th><th>Suggested Duct (round)</th></tr></thead>
+<tbody>
+<tr><td>Bedroom (150 sq ft)</td><td>100-150</td><td>0.67-1.0</td><td>6-7 inch</td></tr>
+<tr><td>Living Room (300 sq ft)</td><td>200-350</td><td>0.67-1.17</td><td>8-10 inch</td></tr>
+<tr><td>Kitchen (200 sq ft)</td><td>150-250</td><td>0.75-1.25</td><td>7-9 inch</td></tr>
+<tr><td>Master Bedroom (250 sq ft)</td><td>175-275</td><td>0.70-1.10</td><td>7-9 inch</td></tr>
+<tr><td>Bathroom (75 sq ft)</td><td>50-75</td><td>0.67-1.0</td><td>5-6 inch</td></tr>
+<tr><td>Home Office (150 sq ft)</td><td>100-175</td><td>0.67-1.17</td><td>6-7 inch</td></tr>
+<tr><td>Basement (600 sq ft)</td><td>400-700</td><td>0.67-1.17</td><td>10-12 inch</td></tr>
+<tr><td>Main Trunk Line</td><td>800-1600</td><td>N/A</td><td>12-18 inch</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0;font-size:1.2rem;">Standard Round Duct Sizes</h2>
+<table class="ref-table">
+<thead><tr><th>Diameter (in)</th><th>Area (sq in)</th><th>Max CFM at 900 FPM</th><th>Max CFM at 600 FPM</th></tr></thead>
+<tbody>
+<tr><td>4</td><td>12.57</td><td>79</td><td>52</td></tr>
+<tr><td>5</td><td>19.63</td><td>123</td><td>82</td></tr>
+<tr><td>6</td><td>28.27</td><td>177</td><td>118</td></tr>
+<tr><td>7</td><td>38.48</td><td>240</td><td>160</td></tr>
+<tr><td>8</td><td>50.27</td><td>314</td><td>209</td></tr>
+<tr><td>9</td><td>63.62</td><td>398</td><td>265</td></tr>
+<tr><td>10</td><td>78.54</td><td>491</td><td>327</td></tr>
+<tr><td>12</td><td>113.10</td><td>707</td><td>471</td></tr>
+<tr><td>14</td><td>153.94</td><td>962</td><td>641</td></tr>
+<tr><td>16</td><td>201.06</td><td>1,257</td><td>838</td></tr>
+<tr><td>18</td><td>254.47</td><td>1,590</td><td>1,060</td></tr>
+<tr><td>20</td><td>314.16</td><td>1,963</td><td>1,309</td></tr>
+<tr><td>24</td><td>452.39</td><td>2,827</td><td>1,885</td></tr>
+</tbody>
+</table>
+</div>
+
+<section class="info-section">
+<h2>The Complete Guide to HVAC Duct Sizing</h2>
+<p>Proper duct sizing is the foundation of an efficient, quiet, and comfortable HVAC system. Undersized ducts restrict airflow, increase static pressure, reduce system efficiency, and create noise. Oversized ducts waste material and space while potentially reducing air velocity below the minimum needed for proper mixing and distribution. I built this calculator to help HVAC technicians, engineers, and informed homeowners determine the right duct dimensions based on real engineering principles from ASHRAE and SMACNA guidelines.</p>
+
+<h3>Fundamentals of Airflow in Ducts</h3>
+<p>Air moving through a duct experiences friction against the duct walls and turbulence at fittings, transitions, and turns. This friction creates a pressure drop, measured in inches of water gauge (in. w.g.). The air handler or furnace blower must generate enough static pressure to overcome the total friction losses throughout the duct system while still delivering the required airflow (measured in cubic feet per minute, or CFM) to each room.</p>
+<p>The three primary variables in duct sizing are airflow (CFM), duct size, and friction rate. Knowing any two allows you to calculate the third. In practice, the designer knows the required CFM (determined by the heating and cooling load calculations) and selects an appropriate friction rate based on available static pressure and noise requirements. The duct size is then calculated to deliver that CFM at that friction rate.</p>
+<p>Air velocity, measured in feet per minute (FPM), is a derived value equal to CFM divided by the cross-sectional area of the duct in square feet. Velocity directly affects noise generation. Low velocities mean less noise but require larger ducts. High velocities allow smaller ducts but create more noise and increase energy consumption because friction losses increase roughly with the square of velocity.</p>
+
+<h3>The Equal Friction Method</h3>
+<p>The equal friction method is the most widely used duct sizing approach for residential and light commercial systems. It sizes all duct sections in the system to have the same friction rate per unit length, typically expressed as inches of water gauge per 100 feet of duct (in. w.g./100 ft).</p>
+<p>The standard friction rate for residential systems is 0.08 in. w.g./100 ft. This rate provides a good balance between duct size, noise, and energy consumption. To determine the appropriate friction rate for a specific system, divide the available static pressure (total blower pressure minus losses at the air handler, filter, coil, and register) by the total equivalent length of the longest duct run, then multiply by 100.</p>
+<div class="formula-block">
+Available Static Pressure = Total Blower Pressure - Equipment Losses<br/>
+Friction Rate = (Available Static / Total Equivalent Length) x 100<br/><br/>
+Example:<br/>
+Blower delivers 0.50 in. w.g. total<br/>
+Equipment losses (filter, coil, register) = 0.20 in. w.g.<br/>
+Available for ductwork = 0.30 in. w.g.<br/>
+Longest run equivalent length = 300 ft<br/>
+Friction Rate = (0.30 / 300) x 100 = 0.10 in. w.g./100 ft
+</div>
+
+<h3>The Darcy-Weisbach Equation</h3>
+<p>The fundamental equation governing fluid friction in ducts is the Darcy-Weisbach equation, which relates friction loss to duct diameter, flow velocity, duct roughness, and fluid properties.</p>
+<div class="formula-block">
+Delta P = f x (L / D) x (rho x V^2) / 2<br/><br/>
+Where:<br/>
+Delta P = pressure loss (Pa or in. w.g.)<br/>
+f = Darcy friction factor (dimensionless)<br/>
+L = duct length (ft or m)<br/>
+D = duct diameter (ft or m)<br/>
+rho = air density (lb/ft^3 or kg/m^3)<br/>
+V = air velocity (ft/s or m/s)
+</div>
+<p>The Darcy friction factor f depends on the Reynolds number and the relative roughness of the duct surface. For turbulent flow (Reynolds number above 4,000, which covers virtually all HVAC applications), the Colebrook equation provides the friction factor. Since the Colebrook equation requires iterative solution, this calculator uses the explicit Swamee-Jain approximation, which gives results within 1% of the Colebrook solution.</p>
+<div class="formula-block">
+f = 0.25 / [log10(epsilon/(3.7 x D) + 5.74/Re^0.9)]^2<br/><br/>
+Where:<br/>
+epsilon = absolute roughness (ft)<br/>
+D = duct diameter (ft)<br/>
+Re = Reynolds number = V x D / nu<br/>
+nu = kinematic viscosity of air
+</div>
+
+<h3>Material Roughness and Its Impact</h3>
+<p>The interior surface roughness of the duct material is one of the most significant factors in friction loss calculations. Smooth galvanized sheet metal, the traditional material for trunk lines and main ducts, has an absolute roughness of approximately 0.0003 feet (0.09 mm). This is the baseline against which other materials are compared.</p>
+<p>Fiberglass-lined ducts, used for sound attenuation and thermal insulation, have a roughness of about 0.003 feet (0.9 mm), ten times that of bare sheet metal. This means that a fiberglass-lined duct must be larger than a bare metal duct to carry the same airflow at the same friction rate.</p>
+<p>Flexible duct is the most variable in terms of effective roughness. When fully extended (stretched to its maximum length with no sag), its corrugated inner surface has a roughness of about 0.003 feet, similar to fiberglass-lined duct. However, flexible duct is rarely installed at full extension in practice. Even 4% compression (which looks nearly straight to the eye) increases the effective roughness to about 0.01 feet. At 15% compression (typical of many installations), the roughness can exceed 0.05 feet, causing friction losses 10 to 20 times greater than smooth sheet metal.</p>
+<p>This is why HVAC industry best practices specify that flexible duct should be installed with no more than 4% compression and should be fully supported to prevent sagging. A 6-inch flexible duct with 15% compression may deliver only 60% of the airflow of a properly installed version of the same duct, even though both are the same nominal size.</p>
+
+<h3>Rectangular Duct Equivalent Diameter</h3>
+<p>Rectangular ducts are commonly used where height clearance is limited, such as above dropped ceilings or between floor joists. A rectangular duct does not produce the same friction loss as a round duct of equal cross-sectional area. The hydraulic diameter concept addresses this by calculating an equivalent round diameter that gives the same friction loss at the same airflow.</p>
+<div class="formula-block">
+Equivalent Diameter (De) = 1.30 x ((a x b)^0.625) / ((a + b)^0.250)<br/><br/>
+Where a and b are the two sides of the rectangular duct in inches.<br/><br/>
+Example: 12" x 8" rectangular duct<br/>
+De = 1.30 x ((12 x 8)^0.625) / ((12 + 8)^0.250)<br/>
+De = 1.30 x (96^0.625) / (20^0.250)<br/>
+De = 1.30 x 22.63 / 2.115<br/>
+De = 13.91 inches
+</div>
+<p>The aspect ratio of a rectangular duct (the ratio of its longer side to its shorter side) significantly affects efficiency. As the aspect ratio increases beyond 4:1, the equivalent diameter drops well below what the cross-sectional area would suggest, and the duct becomes increasingly inefficient. SMACNA recommends keeping the aspect ratio at 4:1 or below. A 24 x 6 inch duct (4:1 ratio) has an equivalent diameter of about 11.5 inches, while a 12 x 12 inch duct (1:1 ratio) with the same area has an equivalent diameter of 13.2 inches.</p>
+
+<h3>Air Density Corrections</h3>
+<p>Standard duct sizing tables and calculations assume standard air density of 0.075 pounds per cubic foot, which corresponds to 70 degrees Fahrenheit at sea level and 0% humidity. At higher altitudes or temperatures, air density decreases, which affects both the volume of air needed and the friction characteristics of the duct system.</p>
+<p>At Denver, Colorado (altitude 5,280 feet), air density is approximately 0.062 lb/ft3, about 83% of sea-level density. This means a system in Denver needs approximately 20% more CFM to deliver the same mass of air (and thus the same heating or cooling capacity) as a system at sea level. The duct sizes must increase accordingly.</p>
+<p>The air density at non-standard conditions can be approximated using the ideal gas law. Density equals atmospheric pressure divided by the gas constant times the absolute temperature. At altitude, atmospheric pressure decreases exponentially. A reasonable approximation for the pressure at altitude h (in feet) is P = 14.696 x (1 - 0.0000068753 x h)^5.2559 psi.</p>
+
+<h3>Noise Criteria and Velocity Limits</h3>
+<p>Duct velocity is the primary driver of system noise. Air flowing through straight duct generates noise roughly proportional to the sixth power of velocity, meaning that doubling the velocity increases noise by approximately 18 decibels. Fittings, transitions, and dampers generate additional noise, often exceeding the straight-duct contribution.</p>
+<p>ASHRAE publishes recommended maximum duct velocities based on the noise criteria (NC) required for different spaces. Residential bedrooms have a target NC of 25 to 30, requiring main duct velocities below 700 FPM and branch velocities below 500 FPM. Living rooms target NC 30 to 35, allowing slightly higher velocities. Commercial offices target NC 30 to 40, and industrial spaces may accept NC 45 to 60 with velocities above 2,000 FPM.</p>
+<p>In practice, I recommend keeping residential trunk duct velocities below 800 FPM and branch ducts below 600 FPM for an acceptably quiet system. If the calculated velocity exceeds these limits, consider increasing the duct size by one standard increment rather than accepting the noise penalty.</p>
+
+<h3>System Design Principles</h3>
+<p>A complete duct design involves more than sizing individual sections. The system must balance airflow to each room, minimize total pressure drop, and fit within the available space. The two main system configurations are trunk-and-branch (also called reducing trunk) and radial (or spider).</p>
+<p>Trunk-and-branch systems use a large main trunk that reduces in size as branches tap off to individual rooms. This is the most common residential configuration. The trunk starts at the air handler plenum and runs the length of the house, with branch ducts (typically 5 to 8 inches in diameter) extending to each register. As each branch taps airflow from the trunk, the remaining trunk can be reduced in size, saving material and space.</p>
+<p>Radial systems run individual ducts from the air handler directly to each register, with no shared trunk line. These are common in slab-on-grade construction where ducts run through the attic. Radial systems are simpler to balance because each duct run is independent, but they require more total duct material and more connections at the air handler plenum.</p>
+<p>Both systems benefit from a well-designed return air path. The return duct system should be sized to handle at least 90% of the supply airflow (the remaining 10% provides slight positive pressurization of the conditioned space, which is desirable for humidity control). Undersized return ducts are one of the most common HVAC installation problems, causing negative pressure in the air handler closet, increased energy consumption, and comfort complaints.</p>
+
+<h3>Manual D and Load Calculations</h3>
+<p>ACCA Manual D is the industry-standard procedure for residential duct design. It integrates with Manual J (which calculates room-by-room heating and cooling loads) to size ductwork for each branch. The Manual D process starts with the equipment external static pressure, subtracts component losses (filter, coil, supply register, return grille), and distributes the remaining available pressure across the duct system using the total effective length (straight duct plus equivalent length of fittings) of the critical path.</p>
+<p>Manual J determines the CFM requirement for each room based on its heat gain and heat loss. A room with south-facing windows and poor insulation might need 250 CFM for cooling, while a well-insulated interior room of the same size might need only 100 CFM. These individual requirements drive the branch duct sizes and, cumulatively, the trunk sizes.</p>
+<p>While this calculator provides accurate sizing for individual duct sections, a complete system design should follow the Manual D methodology for residential work or ASHRAE guidelines for commercial projects. The total system pressure drop, including all fittings, transitions, elbows, and branch takeoffs, must stay within the blower's capacity at the required airflow.</p>
+
+<h3>Fitting Equivalent Lengths</h3>
+<p>Fittings create additional pressure drop beyond what their physical length would suggest. This additional loss is expressed as an equivalent length of straight duct. A 90-degree elbow in a round duct has an equivalent length of approximately 15 to 25 diameters, depending on the turn radius. A standard 10-inch round 90-degree elbow with a throat radius of 1.5 diameters adds the equivalent of about 17 feet of straight duct.</p>
+<p>Common fitting equivalent lengths for round duct include the following. A 90-degree elbow with 1.5D radius adds 10 to 20 equivalent feet. A 45-degree elbow adds 5 to 10 feet. A tee branch adds 30 to 60 feet. A transition (reduction) adds 5 to 15 feet. A register boot adds 10 to 35 feet. A supply register adds 10 to 20 feet depending on type.</p>
+<p>For a typical residential branch run consisting of a trunk takeoff, 15 feet of straight duct, two elbows, a register boot, and a supply register, the total effective length might be 15 + 20 + 30 + 25 + 15 = 105 equivalent feet, even though the physical duct length is only 15 feet. This is why fitting losses often dominate the total system pressure drop and must be included in any meaningful duct sizing calculation.</p>
+
+<h3>Energy Efficiency and Duct Losses</h3>
+<p>According to the US Department of Energy, typical residential duct systems lose 25 to 40% of the energy produced by the furnace or air conditioner. These losses come from two sources. Conductive losses occur when conditioned air transfers heat through the duct wall to unconditioned spaces like attics, crawl spaces, and wall cavities. Leakage losses occur when air escapes through gaps in duct joints, connections, and seams.</p>
+<p>Duct insulation reduces conductive losses. The minimum recommended R-value for ducts in unconditioned spaces is R-6 for mild climates and R-8 for extreme climates. Uninsulated sheet metal duct in a 140-degree attic can increase the temperature of supply air by 20 degrees or more between the air handler and the register, consuming cooling energy without providing comfort.</p>
+<p>Duct sealing with mastic (a water-based adhesive) or metallic tape (not standard cloth duct tape, which degrades over time) reduces leakage losses. Studies consistently show that professional duct sealing reduces HVAC energy consumption by 15 to 30%. The cost of sealing is typically recovered in energy savings within two to four years.</p>
+</section>
+
+<section class="faq-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">
+<span>How do I calculate duct size from CFM?</span>
+<span class="faq-arrow">&#9660;</span>
+</div>
+<div class="faq-answer">
+<p>To calculate duct size from CFM, you need to know the desired airflow (CFM) and the maximum velocity or friction rate. Using the equal friction method with a standard friction rate of 0.08 inches of water per 100 feet, you can determine the required duct diameter. The formula relates CFM, duct area, and air velocity: Area = CFM / Velocity. For a round duct, Diameter = 2 x sqrt(Area / pi). This calculator uses the Darcy-Weisbach equation with standard air density to perform these calculations.</p>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">
+<span>What is the recommended air velocity for residential ductwork?</span>
+<span class="faq-arrow">&#9660;</span>
+</div>
+<div class="faq-answer">
+<p>For residential ductwork, ASHRAE recommends maximum air velocities of 600 to 900 feet per minute (FPM) in main supply ducts, 500 to 700 FPM in branch supply ducts, and 400 to 600 FPM in return ducts. Higher velocities increase noise and energy consumption. For noise-sensitive areas like bedrooms, velocities below 500 FPM are preferred.</p>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">
+<span>What is the equivalent diameter for a rectangular duct?</span>
+<span class="faq-arrow">&#9660;</span>
+</div>
+<div class="faq-answer">
+<p>The equivalent diameter of a rectangular duct is the diameter of a round duct that would produce the same friction loss at the same airflow. The formula is De = 1.30 x ((a x b)^0.625) / ((a + b)^0.250), where a and b are the two sides of the rectangular duct in inches. For example, a 12 x 8 inch rectangular duct has an equivalent diameter of approximately 10.4 inches.</p>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">
+<span>What friction rate should I use for duct sizing?</span>
+<span class="faq-arrow">&#9660;</span>
+</div>
+<div class="faq-answer">
+<p>A friction rate of 0.08 to 0.10 inches of water per 100 feet of duct is standard for residential systems. This rate balances acceptable noise levels with reasonable duct sizes. For commercial systems, 0.08 to 0.15 inches per 100 feet is common. The available static pressure from the air handler minus fitting losses determines the maximum allowable friction rate.</p>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">
+<span>How does duct material affect sizing calculations?</span>
+<span class="faq-arrow">&#9660;</span>
+</div>
+<div class="faq-answer">
+<p>Duct material affects the absolute roughness factor used in friction loss calculations. Galvanized sheet metal has an absolute roughness of about 0.0003 feet, making it the smoothest common duct material. Fiberglass-lined duct has a roughness of about 0.003 feet, ten times rougher. Flexible duct fully stretched has a roughness of about 0.003 feet as well, but compression can increase this to 0.01 feet or more. Rougher materials require larger duct sizes to achieve the same airflow.</p>
+</div>
+</div>
+</section>
+
+<div class="cross-links">
+<h3>Related Free Tools</h3>
+<div class="cross-links-grid">
+<a href="https://zovo.one/free-tools/btu-calculator/" class="cross-link-card">
+<h4>BTU Calculator</h4>
+<p>Calculate heating and cooling BTU requirements for any room</p>
+</a>
+<a href="https://zovo.one/free-tools/heat-pump-sizing-calculator/" class="cross-link-card">
+<h4>Heat Pump Sizing Calculator</h4>
+<p>Size a heat pump based on climate zone and home characteristics</p>
+</a>
+<a href="https://zovo.one/free-tools/air-density-calculator/" class="cross-link-card">
+<h4>Air Density Calculator</h4>
+<p>Calculate air density at any temperature, pressure, and humidity</p>
+</a>
+<a href="https://zovo.one/free-tools/electricity-cost-calculator/" class="cross-link-card">
+<h4>Electricity Cost Calculator</h4>
+<p>Estimate energy costs for HVAC and other electrical equipment</p>
+</a>
+<a href="https://zovo.one/free-tools/square-footage-calculator/" class="cross-link-card">
+<h4>Square Footage Calculator</h4>
+<p>Measure room areas for load calculations and system sizing</p>
+</a>
+</div>
+</div>
+</main>
+
+<footer>Built by Michael Lip · <a href="https://zovo.one">zovo.one</a></footer>
+
+<script>
+let ductType = 'round';
+
+function switchDuctType(type) {
+  ductType = type;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  const rectInputs = document.getElementById('rectInputs');
+  if (type === 'rectangular') {
+    rectInputs.classList.add('show');
+  } else {
+    rectInputs.classList.remove('show');
+  }
+}
+
+function getVal(id) {
+  return parseFloat(document.getElementById(id).value) || 0;
+}
+
+// Calculate air density based on temperature and altitude
+function airDensity(tempF, altFt) {
+  const tempR = tempF + 459.67; // Rankine
+  // Pressure at altitude (psi)
+  const P = 14.696 * Math.pow(1 - 0.0000068753 * altFt, 5.2559);
+  // Air density lb/ft3 using ideal gas law
+  // rho = P / (R * T) where R = 53.35 ft-lbf/(lbm-R) for dry air
+  const rho = (P * 144) / (53.35 * tempR); // 144 converts psi to lbf/ft2
+  return rho;
+}
+
+// Kinematic viscosity of air (ft2/s) at temperature
+function kinematicViscosity(tempF) {
+  // Sutherland's formula approximation
+  const tempK = (tempF - 32) * 5/9 + 273.15;
+  const mu = 1.458e-6 * Math.pow(tempK, 1.5) / (tempK + 110.4); // dynamic viscosity kg/(m*s)
+  const rho = 1.225 * (293.15 / tempK); // approximate density kg/m3 at sea level
+  const nu_m2s = mu / rho;
+  return nu_m2s * 10.7639; // convert to ft2/s
+}
+
+// Swamee-Jain friction factor
+function frictionFactor(epsilon, D, Re) {
+  if (Re < 2300) {
+    return 64 / Re; // laminar
+  }
+  const term = epsilon / (3.7 * D) + 5.74 / Math.pow(Re, 0.9);
+  return 0.25 / Math.pow(Math.log10(term), 2);
+}
+
+// Iterative duct sizing: find diameter that gives target friction rate at given CFM
+function findDuctDiameter(cfm, frictionRatePer100ft, epsilon, rho, nu) {
+  // Convert friction rate from in.wg/100ft to Pa/m then to lbf/ft2 per ft
+  // 1 in.wg = 249.089 Pa = 5.2023 lbf/ft2
+  // frictionRate per 100ft -> per ft = frictionRatePer100ft / 100
+  // in lbf/ft2 per ft = (frictionRatePer100ft / 100) * 5.2023
+  const dP_per_ft = (frictionRatePer100ft / 100) * 5.2023; // lbf/ft2 per foot of duct
+
+  // Start with a guess based on velocity method
+  // Assume 700 FPM velocity as starting point
+  let D = Math.sqrt(4 * cfm / (700 * Math.PI)) ; // diameter in feet from A = pi*D^2/4 = CFM/V
+
+  for (let i = 0; i < 50; i++) {
+    const A = Math.PI * D * D / 4; // ft2
+    const V = cfm / (A * 60); // convert CFM to ft3/s (divide by 60), velocity in ft/s
+    // Wait, CFM = ft3/min, so V_fps = CFM / (60 * A)
+    // Actually V in ft/min = CFM / A, V in ft/s = CFM / (60 * A)
+    const V_fps = cfm / (60 * A);
+    const Re = V_fps * D / nu;
+    const f = frictionFactor(epsilon, D, Re);
+
+    // Darcy-Weisbach: dP/L = f * (1/D) * (rho * V^2 / 2)
+    // dP_per_ft_calc in lbf/ft2 per foot
+    const dP_calc = f * (1 / D) * (rho * V_fps * V_fps / 2);
+
+    // Adjust D: if calculated friction is too high, increase D
+    const ratio = dP_calc / dP_per_ft;
+    if (Math.abs(ratio - 1) < 0.001) break;
+
+    // Newton-like adjustment
+    D = D * Math.pow(ratio, 0.2);
+  }
+
+  return D; // in feet
+}
+
+function calculateDuct() {
+  const cfm = getVal('cfm');
+  const frictionRate = getVal('frictionRate');
+  const epsilon = parseFloat(document.getElementById('material').value);
+  const ductLength = getVal('ductLength') || 100;
+  const tempF = getVal('airTemp') || 70;
+  const altitude = getVal('altitude') || 0;
+
+  if (cfm <= 0 || frictionRate <= 0) {
+    alert('Please enter valid CFM and friction rate values.');
+    return;
+  }
+
+  const rho = airDensity(tempF, altitude);
+  const nu = kinematicViscosity(tempF);
+
+  // Find the round duct diameter
+  const D_ft = findDuctDiameter(cfm, frictionRate, epsilon, rho, nu);
+  const D_in = D_ft * 12;
+
+  // Round up to nearest standard size
+  const standardSizes = [4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
+  let selectedSize = standardSizes[standardSizes.length - 1];
+  for (let i = 0; i < standardSizes.length; i++) {
+    if (standardSizes[i] >= D_in) {
+      selectedSize = standardSizes[i];
+      break;
+    }
+  }
+
+  // Calculate actual performance at selected size
+  const actualD_ft = selectedSize / 12;
+  const actualArea_ft2 = Math.PI * actualD_ft * actualD_ft / 4;
+  const actualArea_in2 = Math.PI * selectedSize * selectedSize / 4;
+  const velocity_fpm = cfm / actualArea_ft2;
+  const velocity_fps = velocity_fpm / 60;
+  const Re = velocity_fps * actualD_ft / nu;
+  const f = frictionFactor(epsilon, actualD_ft, Re);
+  const actualDP_per_ft = f * (1 / actualD_ft) * (rho * velocity_fps * velocity_fps / 2);
+  const actualDP_inWG = actualDP_per_ft / 5.2023; // per foot in in.wg
+  const totalDP = actualDP_inWG * ductLength;
+
+  // Display results
+  document.getElementById('ductDiameter').textContent = selectedSize + '"';
+  document.getElementById('ductDiameterLabel').textContent = 'Recommended Round Duct';
+  document.getElementById('velocity').textContent = Math.round(velocity_fpm);
+  document.getElementById('pressureDrop').textContent = totalDP.toFixed(3);
+  document.getElementById('pressureDropLabel').textContent = 'Total Pressure Drop (' + ductLength + ' ft)';
+
+  // Velocity gauge
+  const pct = Math.min(velocity_fpm / 2000 * 100, 100);
+  const gaugeFill = document.getElementById('gaugeFill');
+  gaugeFill.style.width = pct + '%';
+  if (velocity_fpm <= 600) {
+    gaugeFill.style.background = '#00ff88';
+    document.getElementById('velocityNote').textContent = 'Velocity is within the quiet range. Suitable for bedrooms and noise-sensitive areas.';
+  } else if (velocity_fpm <= 900) {
+    gaugeFill.style.background = '#ffaa00';
+    document.getElementById('velocityNote').textContent = 'Velocity is moderate. Acceptable for main trunk lines and living areas.';
+  } else if (velocity_fpm <= 1200) {
+    gaugeFill.style.background = '#ff6600';
+    document.getElementById('velocityNote').textContent = 'Velocity is high. May produce noticeable noise. Consider upsizing the duct.';
+  } else {
+    gaugeFill.style.background = '#ff4444';
+    document.getElementById('velocityNote').textContent = 'Velocity exceeds recommended residential limits. Increase duct size for acceptable noise levels.';
+  }
+
+  // Duct properties
+  document.getElementById('ductProperties').innerHTML =
+    '<div class="detail-row"><span class="dl">Calculated Diameter</span><span class="dv">' + D_in.toFixed(1) + ' inches</span></div>' +
+    '<div class="detail-row"><span class="dl">Selected Standard Size</span><span class="dv">' + selectedSize + ' inches</span></div>' +
+    '<div class="detail-row"><span class="dl">Cross-sectional Area</span><span class="dv">' + actualArea_in2.toFixed(1) + ' sq in</span></div>' +
+    '<div class="detail-row"><span class="dl">Friction Rate</span><span class="dv">' + (actualDP_inWG * 100).toFixed(4) + ' in.wg/100ft</span></div>' +
+    '<div class="detail-row"><span class="dl">Reynolds Number</span><span class="dv">' + Math.round(Re).toLocaleString() + '</span></div>' +
+    '<div class="detail-row"><span class="dl">Friction Factor (f)</span><span class="dv">' + f.toFixed(5) + '</span></div>' +
+    '<div class="detail-row"><span class="dl">Material Roughness</span><span class="dv">' + epsilon + ' ft</span></div>';
+
+  document.getElementById('airProperties').innerHTML =
+    '<div class="detail-row"><span class="dl">Air Density</span><span class="dv">' + rho.toFixed(4) + ' lb/ft&sup3;</span></div>' +
+    '<div class="detail-row"><span class="dl">Temperature</span><span class="dv">' + tempF + ' &deg;F</span></div>' +
+    '<div class="detail-row"><span class="dl">Altitude</span><span class="dv">' + altitude.toLocaleString() + ' ft</span></div>' +
+    '<div class="detail-row"><span class="dl">Kinematic Viscosity</span><span class="dv">' + nu.toExponential(3) + ' ft&sup2;/s</span></div>' +
+    '<div class="detail-row"><span class="dl">Standard Density (ref)</span><span class="dv">0.0750 lb/ft&sup3;</span></div>' +
+    '<div class="detail-row"><span class="dl">Density Correction</span><span class="dv">' + (rho / 0.075 * 100).toFixed(1) + '%</span></div>';
+
+  // Rectangular duct analysis
+  const rectResults = document.getElementById('rectResults');
+  if (ductType === 'rectangular') {
+    const sideA = getVal('rectSideA');
+    const sideB = getVal('rectSideB');
+    if (sideA > 0 && sideB > 0) {
+      const De = 1.30 * Math.pow(sideA * sideB, 0.625) / Math.pow(sideA + sideB, 0.250);
+      const rectArea = sideA * sideB;
+      const rectVelocity = cfm / (rectArea / 144);
+      const aspectRatio = Math.max(sideA, sideB) / Math.min(sideA, sideB);
+
+      document.getElementById('rectDetails').innerHTML =
+        '<div class="detail-row"><span class="dl">Rectangular Dimensions</span><span class="dv">' + sideA + '" x ' + sideB + '"</span></div>' +
+        '<div class="detail-row"><span class="dl">Equivalent Round Diameter</span><span class="dv">' + De.toFixed(1) + ' inches</span></div>' +
+        '<div class="detail-row"><span class="dl">Rectangular Area</span><span class="dv">' + rectArea + ' sq in</span></div>' +
+        '<div class="detail-row"><span class="dl">Velocity in Rect Duct</span><span class="dv">' + Math.round(rectVelocity) + ' FPM</span></div>' +
+        '<div class="detail-row"><span class="dl">Aspect Ratio</span><span class="dv">' + aspectRatio.toFixed(1) + ':1' + (aspectRatio > 4 ? ' (not recommended)' : ' (acceptable)') + '</span></div>' +
+        '<div class="detail-row"><span class="dl">Comparison to Round</span><span class="dv">' + (De >= selectedSize ? 'Adequate' : 'Undersized vs. ' + selectedSize + '" round') + '</span></div>';
+
+      rectResults.style.display = 'block';
+    }
+  } else {
+    rectResults.style.display = 'none';
+  }
+
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetDuct() {
+  document.getElementById('cfm').value = '400';
+  document.getElementById('frictionRate').value = '0.08';
+  document.getElementById('material').value = '0.0003';
+  document.getElementById('ductLength').value = '50';
+  document.getElementById('airTemp').value = '70';
+  document.getElementById('altitude').value = '0';
+  document.getElementById('rectSideA').value = '12';
+  document.getElementById('rectSideB').value = '8';
+  document.getElementById('results').classList.remove('show');
+}
+
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>
