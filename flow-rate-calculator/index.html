@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href="https://zovo.one/favicon.ico" rel="icon"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flow Rate Calculator - Volumetric and Mass Flow Solver | Zovo Tools</title>
+<meta content="Free flow rate calculator for volumetric and mass flow. Convert between GPM, LPM, CFM, m³/hr. Includes orifice plate flow, Manning's equation for open channels, and pump sizing guide." name="description"/>
+<meta content="Michael Lip" name="author"/>
+<meta content="flow rate calculator, volumetric flow rate, mass flow rate, GPM calculator, orifice plate flow, Manning equation, pump sizing, continuity equation, pipe flow calculator" name="keywords"/>
+<link rel="canonical" href="https://zovo.one/free-tools/flow-rate-calculator/">
+<meta content="Flow Rate Calculator - Volumetric and Mass Flow Solver | Zovo Tools" property="og:title"/>
+<meta content="Free flow rate calculator for pipe flow, orifice plates, and open channels. Convert between GPM, LPM, CFM, m³/hr with mass flow rate output." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://zovo.one/free-tools/flow-rate-calculator/" property="og:url"/>
+<meta content="Zovo" property="og:site_name"/>
+<meta content="https://zovo.one/og-image.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Flow Rate Calculator - Volumetric and Mass Flow Solver | Zovo Tools" name="twitter:title"/>
+<meta content="Free flow rate calculator for pipe flow, orifice plates, open channels, and pump sizing with unit conversions." name="twitter:description"/>
+<meta content="https://zovo.one/og-image.png" name="twitter:image"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Flow Rate Calculator",
+  "description": "Free flow rate calculator for volumetric and mass flow rate with unit conversions, orifice plate flow, Manning's equation, and pump sizing.",
+  "url": "https://zovo.one/free-tools/flow-rate-calculator/",
+  "applicationCategory": "Engineering",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "browserRequirements": "Requires JavaScript. Works in Chrome, Firefox, Safari, Edge."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is volumetric flow rate?", "acceptedAnswer": { "@type": "Answer", "text": "Volumetric flow rate (Q) is the volume of fluid passing through a cross-section per unit time. It equals the cross-sectional area times the average velocity: Q = A × v. Common units include GPM (gallons per minute), LPM (liters per minute), and m³/s." }},
+    { "@type": "Question", "name": "What is the difference between volumetric and mass flow rate?", "acceptedAnswer": { "@type": "Answer", "text": "Volumetric flow rate (Q) measures volume per time, while mass flow rate (ṁ) measures mass per time. They are related by ṁ = ρ × Q, where ρ is the fluid density. Mass flow rate is preferred for compressible fluids since volume changes with pressure and temperature." }},
+    { "@type": "Question", "name": "How do I convert GPM to LPM?", "acceptedAnswer": { "@type": "Answer", "text": "Multiply GPM by 3.78541 to get LPM. For example, 100 GPM = 378.54 LPM. One US gallon equals 3.78541 liters." }},
+    { "@type": "Question", "name": "What is an orifice plate?", "acceptedAnswer": { "@type": "Answer", "text": "An orifice plate is a thin plate with a hole that is inserted into a pipe to measure flow rate. The pressure difference across the plate is proportional to the square of the flow rate. It is one of the most common industrial flow measurement devices." }},
+    { "@type": "Question", "name": "What is Manning's equation?", "acceptedAnswer": { "@type": "Answer", "text": "Manning's equation calculates flow rate in open channels and partially filled pipes: Q = (1/n) × A × R^(2/3) × S^(1/2), where n is the Manning roughness coefficient, A is the cross-sectional area, R is the hydraulic radius, and S is the channel slope." }},
+    { "@type": "Question", "name": "How do I size a pump for my system?", "acceptedAnswer": { "@type": "Answer", "text": "Pump sizing requires knowing the flow rate, total dynamic head (static lift plus friction losses), and fluid properties. Power = Q × ΔP / η, where η is pump efficiency (typically 60-85%). Always add a safety margin of 10-20%." }},
+    { "@type": "Question", "name": "What is the continuity equation?", "acceptedAnswer": { "@type": "Answer", "text": "The continuity equation states that for incompressible steady flow, the mass flow rate is constant throughout the pipe: A₁v₁ = A₂v₂. If a pipe narrows, velocity must increase proportionally. This is fundamental to pipe network analysis." }},
+    { "@type": "Question", "name": "What is CFM and where is it used?", "acceptedAnswer": { "@type": "Answer", "text": "CFM (cubic feet per minute) is a volumetric flow rate unit commonly used in HVAC, compressed air, and ventilation systems in the United States. 1 CFM = 0.47195 L/s = 28.317 L/min." }}
+  ]
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;overflow-x:hidden}
+a{color:#00ccff;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:20px}
+h1{font-size:2rem;margin-bottom:8px;color:#fff;font-weight:700}
+h2{font-size:1.4rem;color:#00ff88;margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid #1e1e2a;font-weight:600}
+h3{font-size:1.1rem;color:#e0e0e8;margin:20px 0 10px}
+p{margin:0 0 14px;color:#c0c0cc}
+.subtitle{color:#b0b0c0;font-size:1rem;margin-bottom:24px}
+blockquote.reading-time{background:#12121a;border-left:4px solid #00ff88;padding:12px 20px;margin:0 0 28px;border-radius:0 8px 8px 0;font-size:0.92rem;color:#b0b0c0}
+nav.toc{position:sticky;top:0;background:#0a0a0f;z-index:100;border-bottom:1px solid #1e1e2a;padding:10px 0;margin:0 0 28px}
+nav.toc details{max-width:900px;margin:0 auto;padding:0 20px}
+nav.toc summary{color:#00ff88;cursor:pointer;font-weight:600;font-size:0.95rem}
+nav.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px}
+nav.toc a{color:#b0b0c0;font-size:0.82rem;padding:2px 0}nav.toc a:hover{color:#00ff88}
+.calc-card{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin:0 0 20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-size:0.88rem;color:#b0b0c0;margin-bottom:4px;font-weight:500}
+input,select{width:100%;padding:10px 12px;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;color:#e0e0e8;font-size:0.95rem;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:#00ff88}
+.btn{display:inline-block;padding:12px 28px;background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit;transition:background .2s}
+.btn:hover{background:#00cc6a}
+.btn-secondary{background:transparent;border:1px solid #00ff88;color:#00ff88}
+.btn-secondary:hover{background:#00ff8815}
+.result-box{background:#0a0a0f;border:1px solid #00ff88;border-radius:8px;padding:16px 20px;margin:14px 0;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1e1e2a;font-size:0.95rem}
+.result-row:last-child{border-bottom:none}
+.result-label{color:#b0b0c0}.result-value{color:#00ff88;font-weight:600;font-family:'Courier New',monospace}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.88rem}
+th{background:#1a1a2e;color:#00ff88;padding:10px 12px;text-align:left;font-weight:600;border:1px solid #1e1e2a}
+td{padding:8px 12px;border:1px solid #1e1e2a;color:#c0c0cc}
+tr:nth-child(even){background:#12121a}
+.formula{background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:16px 20px;margin:12px 0;font-family:'Courier New',monospace;font-size:0.9rem;color:#00ff88;overflow-x:auto}
+.privacy-note{background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:16px 20px;margin:20px 0;font-size:0.88rem;color:#b0b0c0}
+.cross-link{display:inline-block;background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:8px 16px;margin:4px;font-size:0.88rem;transition:border-color .2s}
+.cross-link:hover{border-color:#00ff88;text-decoration:none}
+.tab-bar{display:flex;gap:0;margin-bottom:0}
+.tab-btn{flex:1;padding:10px;background:#0a0a0f;border:1px solid #1e1e2a;color:#b0b0c0;cursor:pointer;font-size:0.9rem;font-family:inherit;transition:all .2s;border-bottom:2px solid transparent}
+.tab-btn.active{color:#00ff88;border-bottom-color:#00ff88;background:#12121a}
+.tab-panel{display:none;padding:20px 0 0}.tab-panel.active{display:block}
+ul,ol{margin:0 0 14px 20px;color:#c0c0cc}li{margin-bottom:6px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}h1{font-size:1.5rem}h2{font-size:1.2rem}.container{padding:14px}.tab-btn{font-size:0.8rem;padding:8px 4px}table{font-size:0.78rem}th,td{padding:6px 8px}}
+</style>
+</head>
+<body>
+<nav class="toc"><details open>
+<summary>Table of Contents</summary>
+<ul>
+<li><a href="#flow-rate-calculator">Calculator</a></li>
+<li><a href="#volumetric-flow-fundamentals">Volumetric Flow</a></li>
+<li><a href="#mass-flow-rate">Mass Flow Rate</a></li>
+<li><a href="#continuity-equation">Continuity Equation</a></li>
+<li><a href="#orifice-plate-flow">Orifice Plate Flow</a></li>
+<li><a href="#open-channel-flow">Open Channel Flow</a></li>
+<li><a href="#unit-conversion-tables">Unit Conversions</a></li>
+<li><a href="#pump-sizing-guide">Pump Sizing</a></li>
+<li><a href="#flow-measurement-methods">Measurement Methods</a></li>
+<li><a href="#pipe-velocity-reference">Velocity Reference</a></li>
+<li><a href="#worked-examples">Worked Examples</a></li>
+<li><a href="#system-curves">System Curves</a></li>
+<li><a href="#frequently-asked-questions">FAQ</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</details></nav>
+
+<div class="container">
+<h1>Flow Rate Calculator</h1>
+<p class="subtitle">Calculate volumetric and mass flow rates for pipe flow, orifice plates, and open channels with full unit conversions</p>
+<blockquote class="reading-time">Estimated reading time: 16 minutes. Covers pipe flow, orifice plate calculations, Manning's equation for open channels, pump sizing fundamentals, and flow unit conversion tables.</blockquote>
+
+<h2 id="flow-rate-calculator">Flow Rate Calculator</h2>
+<div class="calc-card">
+<div class="tab-bar">
+<button class="tab-btn active" onclick="switchTab('pipe')">Pipe Flow</button>
+<button class="tab-btn" onclick="switchTab('orifice')">Orifice Plate</button>
+<button class="tab-btn" onclick="switchTab('channel')">Open Channel</button>
+<button class="tab-btn" onclick="switchTab('convert')">Unit Convert</button>
+</div>
+
+<div class="tab-panel active" id="tab-pipe">
+<h3>Pipe Flow: Q = A × v</h3>
+<div class="form-grid">
+<div><label for="pipeDia">Pipe Inside Diameter</label><div style="display:flex;gap:6px"><input type="number" id="pipeDia" value="100" step="any" min="0"><select id="pipeDiaUnit"><option value="mm">mm</option><option value="in">in</option><option value="m">m</option></select></div></div>
+<div><label for="pipeVel">Flow Velocity (m/s)</label><input type="number" id="pipeVel" value="2" step="any" min="0"></div>
+<div><label for="pipeDensity">Fluid Density (kg/m³)</label><input type="number" id="pipeDensity" value="998.2" step="any" min="0.001"></div>
+</div>
+<button class="btn" onclick="calcPipeFlow()">Calculate</button>
+<div class="result-box" id="pipeResult">
+<div class="result-row"><span class="result-label">Cross-sectional Area</span><span class="result-value" id="prArea">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (m³/s)</span><span class="result-value" id="prM3s">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (L/min)</span><span class="result-value" id="prLPM">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (GPM)</span><span class="result-value" id="prGPM">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (m³/hr)</span><span class="result-value" id="prM3h">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (CFM)</span><span class="result-value" id="prCFM">-</span></div>
+<div class="result-row"><span class="result-label">Mass Flow Rate (kg/s)</span><span class="result-value" id="prKgs">-</span></div>
+<div class="result-row"><span class="result-label">Mass Flow Rate (kg/hr)</span><span class="result-value" id="prKgh">-</span></div>
+<div class="result-row"><span class="result-label">Mass Flow Rate (lb/hr)</span><span class="result-value" id="prLbh">-</span></div>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-orifice">
+<h3>Orifice Plate Flow Measurement</h3>
+<div class="form-grid">
+<div><label for="orPipeDia">Pipe ID (mm)</label><input type="number" id="orPipeDia" value="100" step="any" min="1"></div>
+<div><label for="orOrDia">Orifice Bore (mm)</label><input type="number" id="orOrDia" value="50" step="any" min="1"></div>
+<div><label for="orDP">Differential Pressure (Pa)</label><input type="number" id="orDP" value="5000" step="any" min="0"></div>
+<div><label for="orDensity">Fluid Density (kg/m³)</label><input type="number" id="orDensity" value="998.2" step="any" min="0.001"></div>
+<div><label for="orCd">Discharge Coefficient</label><input type="number" id="orCd" value="0.61" step="0.01" min="0.1" max="1"></div>
+</div>
+<button class="btn" onclick="calcOrifice()">Calculate</button>
+<div class="result-box" id="orificeResult">
+<div class="result-row"><span class="result-label">Beta Ratio (d/D)</span><span class="result-value" id="orBeta">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (m³/s)</span><span class="result-value" id="orM3s">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (GPM)</span><span class="result-value" id="orGPM">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (L/min)</span><span class="result-value" id="orLPM">-</span></div>
+<div class="result-row"><span class="result-label">Mass Flow Rate (kg/s)</span><span class="result-value" id="orKgs">-</span></div>
+<div class="result-row"><span class="result-label">Pipe Velocity (m/s)</span><span class="result-value" id="orVel">-</span></div>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-channel">
+<h3>Open Channel Flow (Manning's Equation)</h3>
+<div class="form-grid">
+<div><label for="chShape">Channel Shape</label><select id="chShape"><option value="rect">Rectangular</option><option value="trap">Trapezoidal</option><option value="circ">Circular (partially filled)</option></select></div>
+<div><label for="chWidth">Bottom Width (m)</label><input type="number" id="chWidth" value="2" step="any" min="0"></div>
+<div><label for="chDepth">Water Depth (m)</label><input type="number" id="chDepth" value="0.5" step="any" min="0.001"></div>
+<div><label for="chSlope">Channel Slope (m/m)</label><input type="number" id="chSlope" value="0.001" step="any" min="0.00001"></div>
+<div><label for="chN">Manning's n</label><select id="chN"><option value="0.013">Concrete (0.013)</option><option value="0.024">Earth, clean (0.024)</option><option value="0.035">Earth, weedy (0.035)</option><option value="0.015">Brick (0.015)</option><option value="0.012">Finished concrete (0.012)</option><option value="0.030">Natural stream (0.030)</option><option value="0.010">PVC/Plastic (0.010)</option></select></div>
+<div id="chSideWrap"><label for="chSide">Side Slope (H:V)</label><input type="number" id="chSide" value="1.5" step="any" min="0"></div>
+<div id="chCircDiaWrap" style="display:none"><label for="chCircDia">Pipe Diameter (m)</label><input type="number" id="chCircDia" value="1" step="any" min="0.01"></div>
+</div>
+<button class="btn" onclick="calcChannel()">Calculate</button>
+<div class="result-box" id="channelResult">
+<div class="result-row"><span class="result-label">Cross-sectional Area</span><span class="result-value" id="chArea">-</span></div>
+<div class="result-row"><span class="result-label">Wetted Perimeter</span><span class="result-value" id="chWP">-</span></div>
+<div class="result-row"><span class="result-label">Hydraulic Radius</span><span class="result-value" id="chRh">-</span></div>
+<div class="result-row"><span class="result-label">Flow Velocity (m/s)</span><span class="result-value" id="chVel">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (m³/s)</span><span class="result-value" id="chQ">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (L/min)</span><span class="result-value" id="chLPM">-</span></div>
+<div class="result-row"><span class="result-label">Volumetric Flow (GPM)</span><span class="result-value" id="chGPM">-</span></div>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-convert">
+<h3>Flow Rate Unit Converter</h3>
+<div class="form-grid">
+<div><label for="convVal">Value</label><input type="number" id="convVal" value="100" step="any"></div>
+<div><label for="convFrom">From</label><select id="convFrom"><option value="gpm">GPM (US)</option><option value="lpm">L/min</option><option value="m3s">m³/s</option><option value="m3h">m³/hr</option><option value="cfm">CFM</option><option value="igpm">GPM (Imperial)</option><option value="bblday">bbl/day</option></select></div>
+</div>
+<button class="btn" onclick="convertFlow()">Convert</button>
+<div class="result-box" id="convertResult">
+<div class="result-row"><span class="result-label">m³/s</span><span class="result-value" id="cvM3s">-</span></div>
+<div class="result-row"><span class="result-label">m³/hr</span><span class="result-value" id="cvM3h">-</span></div>
+<div class="result-row"><span class="result-label">L/min (LPM)</span><span class="result-value" id="cvLPM">-</span></div>
+<div class="result-row"><span class="result-label">GPM (US)</span><span class="result-value" id="cvGPM">-</span></div>
+<div class="result-row"><span class="result-label">GPM (Imperial)</span><span class="result-value" id="cvIGPM">-</span></div>
+<div class="result-row"><span class="result-label">CFM</span><span class="result-value" id="cvCFM">-</span></div>
+<div class="result-row"><span class="result-label">bbl/day</span><span class="result-value" id="cvBBL">-</span></div>
+<div class="result-row"><span class="result-label">L/s</span><span class="result-value" id="cvLs">-</span></div>
+</div>
+</div>
+</div>
+
+<h2 id="volumetric-flow-fundamentals">Volumetric Flow Rate Fundamentals</h2>
+<p>Volumetric flow rate measures the volume of fluid passing through a given cross-section per unit time. It is the most straightforward way to quantify how much fluid is moving through a pipe, channel, or duct.</p>
+<div class="formula">Q = A × v</div>
+<p>Where:</p>
+<ul>
+<li><strong>Q</strong> = volumetric flow rate (m³/s)</li>
+<li><strong>A</strong> = cross-sectional area of flow (m²)</li>
+<li><strong>v</strong> = mean (average) flow velocity (m/s)</li>
+</ul>
+<p>For a circular pipe, A = π D² / 4, where D is the inside diameter. This gives:</p>
+<div class="formula">Q = (π / 4) × D² × v</div>
+<p>The mean velocity in this equation is the average across the entire cross-section. In turbulent flow, the velocity profile is relatively flat, so the centerline velocity is only about 20% higher than the mean. In laminar flow, the centerline velocity is exactly twice the mean (parabolic profile).</p>
+<p>Volumetric flow rate works well for incompressible fluids (liquids and low-velocity gases). For compressible gas flow, you need to specify whether you mean actual volumetric flow (at actual conditions) or standard volumetric flow (corrected to standard temperature and pressure).</p>
+
+<h2 id="mass-flow-rate">Mass Flow Rate</h2>
+<p>Mass flow rate relates directly to volumetric flow rate through fluid density:</p>
+<div class="formula">ṁ = ρ × Q = ρ × A × v</div>
+<p>Where ṁ (m-dot) is mass flow rate in kg/s and ρ is fluid density in kg/m³.</p>
+<p>Mass flow rate is preferred over volumetric flow rate when working with:</p>
+<ul>
+<li><strong>Compressible gases:</strong> Volume changes with pressure and temperature, but mass is conserved</li>
+<li><strong>Chemical reactions:</strong> Stoichiometry is based on mass, not volume</li>
+<li><strong>Heat exchangers:</strong> Heat transfer calculations use mass flow rate: Q̇ = ṁ × cp × ΔT</li>
+<li><strong>Steam systems:</strong> Steam tables are indexed by mass</li>
+</ul>
+<p>In a closed system with no leaks, mass flow rate is constant at every point along the pipe, regardless of changes in diameter, temperature, or pressure. This conservation principle is the basis of the continuity equation.</p>
+
+<h2 id="continuity-equation">The Continuity Equation</h2>
+<p>The continuity equation is one of the fundamental laws of fluid mechanics. For steady, incompressible flow:</p>
+<div class="formula">A₁ × v₁ = A₂ × v₂</div>
+<p>This means when a pipe narrows, the fluid speeds up proportionally. If a 4-inch pipe (A₁) connects to a 2-inch pipe (A₂), the area ratio is 4:1, so velocity in the smaller pipe is 4 times higher.</p>
+<p>For compressible flow, the general form is:</p>
+<div class="formula">ρ₁ × A₁ × v₁ = ρ₂ × A₂ × v₂</div>
+<p>Practical applications of the continuity equation include:</p>
+<ul>
+<li>Sizing reducers and expansions in piping systems</li>
+<li>Determining velocity at any point in a variable-area system</li>
+<li>Calculating flow split in branching pipe networks</li>
+<li>Designing nozzles and diffusers</li>
+</ul>
+<p>When flow divides into parallel branches, the sum of all branch flow rates equals the total inlet flow rate: Q_total = Q₁ + Q₂ + Q₃ + ...</p>
+
+<h2 id="orifice-plate-flow">Orifice Plate Flow Measurement</h2>
+<p>An orifice plate is one of the most widely used flow measurement devices in industry. A thin plate with a precisely machined hole (bore) is placed perpendicular to the flow. The pressure drop across the plate is measured, and flow rate is calculated from:</p>
+<div class="formula">Q = Cd × A₂ × √(2 × ΔP / (ρ × (1 - β⁴)))</div>
+<p>Where:</p>
+<ul>
+<li><strong>Cd</strong> = discharge coefficient (typically 0.59-0.65 for concentric orifice plates)</li>
+<li><strong>A₂</strong> = orifice bore area (m²)</li>
+<li><strong>ΔP</strong> = differential pressure across the plate (Pa)</li>
+<li><strong>ρ</strong> = fluid density (kg/m³)</li>
+<li><strong>β</strong> = beta ratio = d/D (orifice bore / pipe ID)</li>
+</ul>
+<p>The beta ratio should typically be between 0.20 and 0.75. Below 0.20, the pressure drop is excessive and difficult to measure accurately. Above 0.75, the flow pattern is not well-characterized and accuracy decreases.</p>
+<p>The discharge coefficient Cd accounts for the vena contracta effect, where the actual flow area is smaller than the orifice bore area. For a square-edged concentric orifice, Cd is approximately 0.61 and varies slightly with Reynolds number and beta ratio. The precise value can be calculated using the Reader-Harris/Gallagher equation per ISO 5167.</p>
+
+<h2 id="open-channel-flow">Open Channel Flow (Manning's Equation)</h2>
+<p>Manning's equation is the standard method for calculating flow rate in open channels, ditches, streams, and partially filled pipes:</p>
+<div class="formula">Q = (1/n) × A × R^(2/3) × S^(1/2)</div>
+<p>Where:</p>
+<ul>
+<li><strong>n</strong> = Manning's roughness coefficient (dimensionless)</li>
+<li><strong>A</strong> = cross-sectional area of flow (m²)</li>
+<li><strong>R</strong> = hydraulic radius = A / P (m)</li>
+<li><strong>P</strong> = wetted perimeter (m)</li>
+<li><strong>S</strong> = channel bed slope (m/m, dimensionless)</li>
+</ul>
+<p>Manning's n values for common channel materials:</p>
+<table>
+<tr><th>Channel Type</th><th>Manning's n</th><th>Typical Use</th></tr>
+<tr><td>PVC / Plastic pipe</td><td>0.009 - 0.011</td><td>Storm drains, sewer</td></tr>
+<tr><td>Finished concrete</td><td>0.011 - 0.013</td><td>Lined channels</td></tr>
+<tr><td>Unfinished concrete</td><td>0.013 - 0.017</td><td>Open channels</td></tr>
+<tr><td>Brick / Masonry</td><td>0.013 - 0.017</td><td>Culverts</td></tr>
+<tr><td>Clean earth</td><td>0.020 - 0.030</td><td>Irrigation ditches</td></tr>
+<tr><td>Weedy earth</td><td>0.030 - 0.040</td><td>Drainage channels</td></tr>
+<tr><td>Natural stream (clean)</td><td>0.025 - 0.035</td><td>River flow estimates</td></tr>
+<tr><td>Natural stream (weedy)</td><td>0.035 - 0.050</td><td>Floodplain analysis</td></tr>
+<tr><td>Corrugated metal pipe</td><td>0.022 - 0.026</td><td>Culverts</td></tr>
+</table>
+<p>The hydraulic radius R is the ratio of flow area to wetted perimeter. For a wide, shallow channel, R is approximately equal to the water depth. For a full circular pipe, R = D/4.</p>
+
+<h2 id="unit-conversion-tables">Flow Rate Unit Conversion Tables</h2>
+<p>Converting between flow rate units is one of the most common tasks in fluid engineering. Here are the key conversion factors:</p>
+<table>
+<tr><th>Unit</th><th>To m³/s (multiply by)</th><th>To GPM (multiply by)</th></tr>
+<tr><td>1 m³/s</td><td>1</td><td>15,850.3</td></tr>
+<tr><td>1 m³/hr</td><td>2.7778 × 10⁻⁴</td><td>4.40287</td></tr>
+<tr><td>1 L/min (LPM)</td><td>1.6667 × 10⁻⁵</td><td>0.26417</td></tr>
+<tr><td>1 L/s</td><td>0.001</td><td>15.8503</td></tr>
+<tr><td>1 GPM (US)</td><td>6.3090 × 10⁻⁵</td><td>1</td></tr>
+<tr><td>1 GPM (Imperial)</td><td>7.5768 × 10⁻⁵</td><td>1.20095</td></tr>
+<tr><td>1 CFM</td><td>4.7195 × 10⁻⁴</td><td>7.48052</td></tr>
+<tr><td>1 bbl/day</td><td>1.8401 × 10⁻⁶</td><td>0.02917</td></tr>
+</table>
+<p>Quick mental conversions that are useful in the field:</p>
+<ul>
+<li>1 GPM is about 3.8 LPM (multiply GPM by 3.785)</li>
+<li>1 CFM is about 0.47 L/s or 28.3 LPM</li>
+<li>1 m³/hr is about 4.4 GPM</li>
+<li>1,000 GPM is about 63 L/s</li>
+</ul>
+
+<h2 id="pump-sizing-guide">Pump Sizing Guide</h2>
+<p>Selecting the right pump requires matching the system requirements (flow rate and head) with the pump performance curve. The key steps are:</p>
+<h3>Step 1: Determine Required Flow Rate</h3>
+<p>The design flow rate is set by the process requirements. Add 10-20% margin for future expansion and measurement uncertainty.</p>
+<h3>Step 2: Calculate Total Dynamic Head (TDH)</h3>
+<div class="formula">TDH = Static Head + Friction Head + Velocity Head + Pressure Head</div>
+<ul>
+<li><strong>Static head:</strong> The vertical elevation difference between suction and discharge (m or ft)</li>
+<li><strong>Friction head:</strong> Losses from pipe friction and fittings (use Darcy-Weisbach)</li>
+<li><strong>Velocity head:</strong> v²/(2g), usually small and often neglected</li>
+<li><strong>Pressure head:</strong> Difference in surface pressures at source and destination</li>
+</ul>
+<h3>Step 3: Calculate Pump Power</h3>
+<div class="formula">P_hydraulic = ρ × g × Q × TDH</div>
+<div class="formula">P_shaft = P_hydraulic / η_pump</div>
+<div class="formula">P_motor = P_shaft / η_motor</div>
+<p>Typical pump efficiencies range from 50% for small pumps to 85% for large, well-matched centrifugal pumps. Motor efficiency is typically 90-95%.</p>
+<h3>Step 4: Check NPSH</h3>
+<p>Net Positive Suction Head (NPSH) must be verified to prevent cavitation. NPSH available must exceed NPSH required by the pump by at least 0.5-1.0 m margin.</p>
+
+<h2 id="flow-measurement-methods">Flow Measurement Methods</h2>
+<p>Different flow measurement technologies suit different applications:</p>
+<table>
+<tr><th>Method</th><th>Accuracy</th><th>Pressure Loss</th><th>Best For</th></tr>
+<tr><td>Orifice Plate</td><td>±1-2%</td><td>High</td><td>Clean liquids and gases, low cost</td></tr>
+<tr><td>Venturi Tube</td><td>±0.5-1%</td><td>Low</td><td>Large pipes, slurries</td></tr>
+<tr><td>Magnetic (Mag)</td><td>±0.2-0.5%</td><td>None</td><td>Conductive liquids, wastewater</td></tr>
+<tr><td>Ultrasonic (clamp-on)</td><td>±1-3%</td><td>None</td><td>Retrofit, non-invasive</td></tr>
+<tr><td>Coriolis</td><td>±0.1-0.2%</td><td>Medium</td><td>Mass flow, custody transfer</td></tr>
+<tr><td>Vortex</td><td>±0.5-1%</td><td>Medium</td><td>Steam, gases</td></tr>
+<tr><td>Turbine</td><td>±0.25-0.5%</td><td>Medium</td><td>Clean liquids, custody transfer</td></tr>
+<tr><td>Rotameter (VA)</td><td>±2-5%</td><td>Medium</td><td>Low-cost, visual indication</td></tr>
+<tr><td>Pitot Tube</td><td>±3-5%</td><td>Very low</td><td>Large ducts, point velocity</td></tr>
+</table>
+<p>The best meter for a given application depends on fluid type, pipe size, required accuracy, allowable pressure loss, budget, and maintenance requirements. Coriolis meters are the gold standard for accuracy but are expensive. Orifice plates are cheap but cause significant permanent pressure loss.</p>
+
+<h2 id="pipe-velocity-reference">Recommended Pipe Velocities</h2>
+<p>Selecting the right velocity balances cost, noise, erosion, and pressure drop:</p>
+<table>
+<tr><th>Service</th><th>Velocity Range</th><th>Notes</th></tr>
+<tr><td>Water (suction)</td><td>0.5 - 1.5 m/s</td><td>Keep low to avoid cavitation</td></tr>
+<tr><td>Water (discharge)</td><td>1.5 - 3.0 m/s</td><td>Standard range for most piping</td></tr>
+<tr><td>Water (fire protection)</td><td>Up to 6 m/s</td><td>Acceptable for intermittent use</td></tr>
+<tr><td>Steam (saturated)</td><td>25 - 40 m/s</td><td>Higher velocity in larger pipes</td></tr>
+<tr><td>Steam (superheated)</td><td>30 - 60 m/s</td><td>Higher velocities acceptable</td></tr>
+<tr><td>Compressed air</td><td>6 - 10 m/s</td><td>Balance noise and pressure drop</td></tr>
+<tr><td>Natural gas</td><td>15 - 25 m/s</td><td>Erosion velocity limit applies</td></tr>
+<tr><td>Hydraulic oil</td><td>2 - 6 m/s</td><td>Higher in return lines</td></tr>
+<tr><td>Slurries</td><td>1.5 - 4.0 m/s</td><td>Must exceed settling velocity</td></tr>
+</table>
+
+<h2 id="worked-examples">Worked Examples</h2>
+<h3>Example 1: Water Through a 3-Inch Pipe</h3>
+<p>Find the flow rate for water at 20°C flowing at 2.5 m/s through a 3-inch Schedule 40 pipe (ID = 77.93 mm).</p>
+<p><strong>Area:</strong> A = π × (0.07793)² / 4 = 0.004770 m²</p>
+<p><strong>Volumetric flow:</strong> Q = 0.004770 × 2.5 = 0.01192 m³/s = 715.5 L/min = 189.0 GPM</p>
+<p><strong>Mass flow:</strong> ṁ = 998.2 × 0.01192 = 11.90 kg/s = 42,841 kg/hr = 94,444 lb/hr</p>
+
+<h3>Example 2: Orifice Plate Measurement</h3>
+<p>A 50 mm orifice in a 100 mm pipe measures 5 kPa differential pressure with water (ρ = 998.2 kg/m³).</p>
+<p><strong>Beta:</strong> β = 50/100 = 0.5</p>
+<p><strong>Bore area:</strong> A₂ = π × (0.050)²/4 = 0.001963 m²</p>
+<p><strong>Flow:</strong> Q = 0.61 × 0.001963 × √(2 × 5000 / (998.2 × (1 - 0.5⁴))) = 0.003717 m³/s = 58.9 GPM</p>
+
+<h3>Example 3: Open Channel Flow</h3>
+<p>A rectangular concrete channel is 2 m wide with 0.5 m water depth and 0.001 slope (Manning's n = 0.013).</p>
+<p><strong>Area:</strong> A = 2 × 0.5 = 1.0 m²</p>
+<p><strong>Wetted perimeter:</strong> P = 2 + 2(0.5) = 3.0 m</p>
+<p><strong>Hydraulic radius:</strong> R = 1.0/3.0 = 0.333 m</p>
+<p><strong>Velocity:</strong> v = (1/0.013) × 0.333^(2/3) × 0.001^(1/2) = 1.17 m/s</p>
+<p><strong>Flow:</strong> Q = 1.0 × 1.17 = 1.17 m³/s = 18,534 GPM</p>
+
+<h2 id="system-curves">System Curves and Operating Points</h2>
+<p>A system curve plots the total head required by the piping system as a function of flow rate. Since friction loss is proportional to velocity squared (and velocity is proportional to flow rate), the system curve is a parabola:</p>
+<div class="formula">H_system = H_static + K_system × Q²</div>
+<p>The operating point is where the system curve intersects the pump curve. At this point, the pump delivers exactly the head the system needs at that flow rate.</p>
+<p>Key concepts for system curve analysis:</p>
+<ul>
+<li><strong>Throttling:</strong> Partially closing a valve shifts the system curve upward, reducing flow rate</li>
+<li><strong>Parallel pumps:</strong> Double the flow at the same head (approximately)</li>
+<li><strong>Series pumps:</strong> Double the head at the same flow (approximately)</li>
+<li><strong>VFD control:</strong> Variable frequency drives change pump speed, shifting the pump curve. This is more energy-efficient than throttling</li>
+</ul>
+<p>The affinity laws relate flow, head, and power to pump speed:</p>
+<div class="formula">Q₂/Q₁ = N₂/N₁    H₂/H₁ = (N₂/N₁)²    P₂/P₁ = (N₂/N₁)³</div>
+<p>Reducing pump speed by 20% reduces power consumption by nearly 50%, which is why VFDs are so popular for energy savings.</p>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+<h3>What is volumetric flow rate?</h3>
+<p>Volumetric flow rate is the volume of fluid passing a given point per unit time. For pipe flow, it equals the cross-sectional area times the average velocity: Q = A × v. Common units include gallons per minute (GPM), liters per minute (LPM), and cubic meters per second (m³/s).</p>
+
+<h3>How do I convert between GPM and LPM?</h3>
+<p>Multiply GPM by 3.78541 to get LPM. Divide LPM by 3.78541 to get GPM. This conversion applies to US gallons. For Imperial (UK) gallons, multiply by 4.54609.</p>
+
+<h3>What is the difference between actual and standard flow rate?</h3>
+<p>Actual flow rate (ACFM) is measured at the actual operating pressure and temperature. Standard flow rate (SCFM) is corrected to standard conditions (typically 14.696 psia, 60°F or 68°F depending on the standard). For gases, SCFM is preferred for comparing flow rates because it represents the same mass of gas regardless of conditions.</p>
+
+<h3>How do I calculate flow from pressure drop?</h3>
+<p>Rearrange the Darcy-Weisbach equation: v = √(2 × ΔP × D / (f × L × ρ)), then Q = A × v. Since the friction factor depends on velocity (through Reynolds number), this requires iteration. Start with an assumed velocity, calculate Re and f, then recalculate velocity until it converges.</p>
+
+<h3>What is the continuity equation?</h3>
+<p>The continuity equation states that mass flow rate is constant in a steady-flow system: ρ₁A₁v₁ = ρ₂A₂v₂. For incompressible fluids, this simplifies to A₁v₁ = A₂v₂. It is the mathematical expression of conservation of mass applied to fluid flow.</p>
+
+<h3>When should I use Manning's equation?</h3>
+<p>Manning's equation applies to uniform open channel flow, where the channel slope, cross-section, and depth are constant. It works for ditches, canals, streams, and partially filled pipes. For closed-pipe flow under pressure, use the Darcy-Weisbach equation instead.</p>
+
+<h3>What is NPSH and why does it matter?</h3>
+<p>Net Positive Suction Head (NPSH) is the difference between the absolute pressure at the pump suction and the fluid's vapor pressure. If NPSH is too low, the fluid partially vaporizes (cavitation), causing damage to the pump impeller and reducing performance. The NPSH available must always exceed the NPSH required by the pump.</p>
+
+<h3>How accurate is an orifice plate?</h3>
+<p>A properly installed orifice plate per ISO 5167 can achieve ±0.5-2% accuracy. Factors that degrade accuracy include insufficient straight pipe upstream (need 20-40 diameters), worn or damaged plate edges, pulsating flow, and incorrect pressure tap locations. Regular inspection and calibration are important for metering applications.</p>
+
+<h2 id="references">References and Further Reading</h2>
+<ul>
+<li><a href="https://www.asme.org/" target="_blank" rel="noopener">ASME (American Society of Mechanical Engineers)</a> - Flow measurement standards (MFC series)</li>
+<li><a href="https://www.isa.org/" target="_blank" rel="noopener">ISA (International Society of Automation)</a> - Instrumentation and flow measurement standards</li>
+<li><a href="https://www.engineeringtoolbox.com/flow-rate-calculator-d_1053.html" target="_blank" rel="noopener">Engineering Toolbox - Flow Rate Calculator</a> - Reference tables and worked examples</li>
+</ul>
+<p>ISO 5167 is the primary international standard for orifice plate flow measurement. Manning's equation coefficients are documented in USGS Water Supply Papers and the FHWA Hydraulic Design Series.</p>
+
+<div class="privacy-note">
+<strong>Privacy Note:</strong> This flow rate calculator runs entirely in your browser. No data is sent to any server, no cookies are set, and no personal information is collected. Your pipe dimensions and flow data remain on your device.
+</div>
+
+<p style="margin-top:24px">More engineering and calculation tools:</p>
+<div style="margin-bottom:20px">
+<a class="cross-link" href="https://zovo.one/free-tools/pressure-drop-calculator/">Pressure Drop Calculator</a>
+<a class="cross-link" href="https://zovo.one/free-tools/beam-deflection-calculator/">Beam Deflection Calculator</a>
+<a class="cross-link" href="https://zovo.one/free-tools/gear-tooth-calculator/">Gear Tooth Calculator</a>
+<a class="cross-link" href="https://zovo.one/free-tools/">All Free Tools</a>
+</div>
+</div>
+
+<footer style="text-align:center;padding:24px;color:#b0b0c0;font-size:0.85rem;border-top:1px solid #1e1e2a;margin-top:40px;">Built by Michael Lip · More free tools at <a href="https://zovo.one/free-tools/" style="color:#00ff88;text-decoration:none;">zovo.one</a></footer>
+
+<script>
+function switchTab(name){
+document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['pipe','orifice','channel','convert'][i]===name));
+document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+document.getElementById('tab-'+name).classList.add('active');
+}
+
+document.getElementById('chShape').addEventListener('change',function(){
+const v=this.value;
+document.getElementById('chSideWrap').style.display=v==='trap'?'block':'none';
+document.getElementById('chCircDiaWrap').style.display=v==='circ'?'block':'none';
+document.getElementById('chWidth').parentElement.style.display=v==='circ'?'none':'block';
+});
+
+function getDiaPipe(){
+const v=parseFloat(document.getElementById('pipeDia').value);
+const u=document.getElementById('pipeDiaUnit').value;
+if(u==='mm')return v/1000;if(u==='in')return v*0.0254;return v;
+}
+
+function calcPipeFlow(){
+const D=getDiaPipe(),v=parseFloat(document.getElementById('pipeVel').value);
+const rho=parseFloat(document.getElementById('pipeDensity').value);
+if(isNaN(D)||isNaN(v)||isNaN(rho)||D<=0||v<0||rho<=0)return;
+const A=Math.PI*D*D/4;
+const Q=A*v;
+const mdot=rho*Q;
+document.getElementById('prArea').textContent=A.toFixed(6)+' m²';
+document.getElementById('prM3s').textContent=Q.toExponential(4);
+document.getElementById('prLPM').textContent=(Q*60000).toFixed(2);
+document.getElementById('prGPM').textContent=(Q*15850.3).toFixed(2);
+document.getElementById('prM3h').textContent=(Q*3600).toFixed(4);
+document.getElementById('prCFM').textContent=(Q*2118.88).toFixed(2);
+document.getElementById('prKgs').textContent=mdot.toFixed(4);
+document.getElementById('prKgh').textContent=(mdot*3600).toFixed(1);
+document.getElementById('prLbh').textContent=(mdot*3600*2.20462).toFixed(1);
+document.getElementById('pipeResult').classList.add('show');
+}
+
+function calcOrifice(){
+const D=parseFloat(document.getElementById('orPipeDia').value)/1000;
+const d=parseFloat(document.getElementById('orOrDia').value)/1000;
+const dP=parseFloat(document.getElementById('orDP').value);
+const rho=parseFloat(document.getElementById('orDensity').value);
+const Cd=parseFloat(document.getElementById('orCd').value);
+if(isNaN(D)||isNaN(d)||isNaN(dP)||isNaN(rho)||isNaN(Cd))return;
+const beta=d/D;
+const A2=Math.PI*d*d/4;
+const Q=Cd*A2*Math.sqrt(2*dP/(rho*(1-Math.pow(beta,4))));
+const Apipe=Math.PI*D*D/4;
+document.getElementById('orBeta').textContent=beta.toFixed(4);
+document.getElementById('orM3s').textContent=Q.toExponential(4);
+document.getElementById('orGPM').textContent=(Q*15850.3).toFixed(2);
+document.getElementById('orLPM').textContent=(Q*60000).toFixed(2);
+document.getElementById('orKgs').textContent=(rho*Q).toFixed(4);
+document.getElementById('orVel').textContent=(Q/Apipe).toFixed(3);
+document.getElementById('orificeResult').classList.add('show');
+}
+
+function calcChannel(){
+const shape=document.getElementById('chShape').value;
+const y=parseFloat(document.getElementById('chDepth').value);
+const S=parseFloat(document.getElementById('chSlope').value);
+const n=parseFloat(document.getElementById('chN').value);
+let A,P;
+if(shape==='rect'){
+const b=parseFloat(document.getElementById('chWidth').value);
+A=b*y;P=b+2*y;
+}else if(shape==='trap'){
+const b=parseFloat(document.getElementById('chWidth').value);
+const z=parseFloat(document.getElementById('chSide').value);
+A=(b+z*y)*y;P=b+2*y*Math.sqrt(1+z*z);
+}else{
+const D=parseFloat(document.getElementById('chCircDia').value);
+const r=D/2;
+if(y>=D){A=Math.PI*r*r;P=Math.PI*D;}
+else{const theta=2*Math.acos((r-y)/r);A=r*r*(theta-Math.sin(theta))/2;P=r*theta;}
+}
+const R=A/P;
+const v=(1/n)*Math.pow(R,2/3)*Math.pow(S,0.5);
+const Q=A*v;
+document.getElementById('chArea').textContent=A.toFixed(4)+' m²';
+document.getElementById('chWP').textContent=P.toFixed(4)+' m';
+document.getElementById('chRh').textContent=R.toFixed(4)+' m';
+document.getElementById('chVel').textContent=v.toFixed(3)+' m/s';
+document.getElementById('chQ').textContent=Q.toFixed(4)+' m³/s';
+document.getElementById('chLPM').textContent=(Q*60000).toFixed(1);
+document.getElementById('chGPM').textContent=(Q*15850.3).toFixed(1);
+document.getElementById('channelResult').classList.add('show');
+}
+
+const flowFactors={gpm:6.30902e-5,lpm:1.66667e-5,m3s:1,m3h:2.77778e-4,cfm:4.71947e-4,igpm:7.57682e-5,bblday:1.84013e-6};
+function convertFlow(){
+const val=parseFloat(document.getElementById('convVal').value);
+const from=document.getElementById('convFrom').value;
+if(isNaN(val))return;
+const m3s=val*flowFactors[from];
+document.getElementById('cvM3s').textContent=m3s.toExponential(4);
+document.getElementById('cvM3h').textContent=(m3s*3600).toFixed(4);
+document.getElementById('cvLPM').textContent=(m3s/flowFactors.lpm).toFixed(3);
+document.getElementById('cvGPM').textContent=(m3s/flowFactors.gpm).toFixed(3);
+document.getElementById('cvIGPM').textContent=(m3s/flowFactors.igpm).toFixed(3);
+document.getElementById('cvCFM').textContent=(m3s/flowFactors.cfm).toFixed(3);
+document.getElementById('cvBBL').textContent=(m3s/flowFactors.bblday).toFixed(2);
+document.getElementById('cvLs').textContent=(m3s*1000).toFixed(4);
+document.getElementById('convertResult').classList.add('show');
+}
+
+document.querySelectorAll('nav.toc a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});})});
+</script>
+</body>
+</html>
