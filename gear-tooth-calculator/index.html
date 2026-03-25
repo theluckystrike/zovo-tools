@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href="https://zovo.one/favicon.ico" rel="icon"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gear Tooth Calculator - Gear Dimensions and Geometry Solver | Zovo Tools</title>
+<meta content="Free gear tooth calculator for spur, helical, bevel, and worm gears. Calculate pitch diameter, outside diameter, root diameter, tooth thickness, addendum, dedendum, and gear ratios using module or diametral pitch." name="description"/>
+<meta content="Michael Lip" name="author"/>
+<meta content="gear tooth calculator, gear dimensions, pitch diameter calculator, module gear, diametral pitch, gear ratio calculator, spur gear, involute gear, AGMA standards" name="keywords"/>
+<link rel="canonical" href="https://zovo.one/free-tools/gear-tooth-calculator/">
+<meta content="Gear Tooth Calculator - Gear Dimensions and Geometry Solver | Zovo Tools" property="og:title"/>
+<meta content="Free gear tooth calculator. Calculate pitch diameter, tooth thickness, addendum, dedendum, gear ratios, and backlash for spur, helical, bevel, and worm gears." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://zovo.one/free-tools/gear-tooth-calculator/" property="og:url"/>
+<meta content="Zovo" property="og:site_name"/>
+<meta content="https://zovo.one/og-image.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Gear Tooth Calculator - Gear Dimensions and Geometry Solver | Zovo Tools" name="twitter:title"/>
+<meta content="Free gear tooth calculator for pitch diameter, tooth geometry, gear ratios, and backlash with AGMA standards reference." name="twitter:description"/>
+<meta content="https://zovo.one/og-image.png" name="twitter:image"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Gear Tooth Calculator",
+  "description": "Free gear tooth calculator for gear dimensions and geometry including pitch diameter, tooth thickness, addendum, dedendum, and gear ratios.",
+  "url": "https://zovo.one/free-tools/gear-tooth-calculator/",
+  "applicationCategory": "Engineering",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "browserRequirements": "Requires JavaScript. Works in Chrome, Firefox, Safari, Edge."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is gear module?", "acceptedAnswer": { "@type": "Answer", "text": "Module (m) is the ratio of the pitch diameter to the number of teeth: m = PD / N. It is the metric measure of tooth size, expressed in millimeters. A larger module means larger teeth. Standard modules include 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, and 10 mm." }},
+    { "@type": "Question", "name": "What is diametral pitch?", "acceptedAnswer": { "@type": "Answer", "text": "Diametral pitch (P) is the number of teeth per inch of pitch diameter: P = N / PD. It is the Imperial (inch) measure of tooth size. A higher diametral pitch means smaller teeth. The relationship between module and diametral pitch is m = 25.4 / P." }},
+    { "@type": "Question", "name": "How do I calculate pitch diameter?", "acceptedAnswer": { "@type": "Answer", "text": "For metric gears: PD = m × N, where m is the module and N is the number of teeth. For Imperial gears: PD = N / P, where P is the diametral pitch. The pitch diameter is the fundamental reference diameter for all other gear dimensions." }},
+    { "@type": "Question", "name": "What pressure angle should I use?", "acceptedAnswer": { "@type": "Answer", "text": "20° is the most common pressure angle for modern gears. It offers a good balance between tooth strength and smooth operation. 14.5° was the old standard and gives quieter operation but weaker teeth. 25° provides the strongest teeth but with more noise and bearing loads." }},
+    { "@type": "Question", "name": "What is gear backlash?", "acceptedAnswer": { "@type": "Answer", "text": "Backlash is the clearance between mating gear teeth, measured at the pitch circle. Some backlash is necessary to allow for thermal expansion, lubrication, and manufacturing tolerances. Typical backlash is 0.03 to 0.05 times the module. Zero-backlash gears use spring-loaded split gears or anti-backlash mechanisms." }},
+    { "@type": "Question", "name": "What is the minimum number of teeth to avoid undercutting?", "acceptedAnswer": { "@type": "Answer", "text": "For a standard 20° pressure angle spur gear, the minimum number of teeth to avoid undercutting is 17. For 14.5° it is 32, and for 25° it is 12. Undercutting weakens the tooth root and reduces the contact ratio. Profile shift can be used to avoid undercutting with fewer teeth." }},
+    { "@type": "Question", "name": "How do I calculate gear ratio?", "acceptedAnswer": { "@type": "Answer", "text": "Gear ratio = N₂ / N₁ = PD₂ / PD₁ = RPM₁ / RPM₂, where subscript 1 is the driving gear (pinion) and 2 is the driven gear. A ratio greater than 1 means speed reduction (and torque multiplication). For example, a 20-tooth pinion driving a 60-tooth gear gives a 3:1 ratio." }},
+    { "@type": "Question", "name": "What is the difference between spur and helical gears?", "acceptedAnswer": { "@type": "Answer", "text": "Spur gears have straight teeth parallel to the axis. Helical gears have angled teeth that engage gradually, resulting in smoother and quieter operation. Helical gears can transmit more power but produce axial thrust forces that require thrust bearings. Double helical (herringbone) gears cancel this thrust." }},
+    { "@type": "Question", "name": "What is an involute tooth profile?", "acceptedAnswer": { "@type": "Answer", "text": "The involute is the curve traced by a point on a string as it unwraps from a cylinder (the base circle). Involute tooth profiles maintain a constant speed ratio even with small center distance errors, making them the standard for virtually all modern gears. The involute was first proposed by Leonhard Euler in the 18th century." }}
+  ]
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;overflow-x:hidden}
+a{color:#00ccff;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:20px}
+h1{font-size:2rem;margin-bottom:8px;color:#fff;font-weight:700}
+h2{font-size:1.4rem;color:#00ff88;margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid #1e1e2a;font-weight:600}
+h3{font-size:1.1rem;color:#e0e0e8;margin:20px 0 10px}
+p{margin:0 0 14px;color:#c0c0cc}
+.subtitle{color:#b0b0c0;font-size:1rem;margin-bottom:24px}
+blockquote.reading-time{background:#12121a;border-left:4px solid #00ff88;padding:12px 20px;margin:0 0 28px;border-radius:0 8px 8px 0;font-size:0.92rem;color:#b0b0c0}
+nav.toc{position:sticky;top:0;background:#0a0a0f;z-index:100;border-bottom:1px solid #1e1e2a;padding:10px 0;margin:0 0 28px}
+nav.toc details{max-width:900px;margin:0 auto;padding:0 20px}
+nav.toc summary{color:#00ff88;cursor:pointer;font-weight:600;font-size:0.95rem}
+nav.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px}
+nav.toc a{color:#b0b0c0;font-size:0.82rem;padding:2px 0}nav.toc a:hover{color:#00ff88}
+.calc-card{background:#12121a;border:1px solid #1e1e2a;border-radius:12px;padding:24px;margin:0 0 20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-size:0.88rem;color:#b0b0c0;margin-bottom:4px;font-weight:500}
+input,select{width:100%;padding:10px 12px;background:#0a0a0f;border:1px solid #1e1e2a;border-radius:8px;color:#e0e0e8;font-size:0.95rem;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:#00ff88}
+.btn{display:inline-block;padding:12px 28px;background:#00ff88;color:#0a0a0f;border:none;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit;transition:background .2s}
+.btn:hover{background:#00cc6a}
+.btn-secondary{background:transparent;border:1px solid #00ff88;color:#00ff88}
+.btn-secondary:hover{background:#00ff8815}
+.result-box{background:#0a0a0f;border:1px solid #00ff88;border-radius:8px;padding:16px 20px;margin:14px 0;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1e1e2a;font-size:0.95rem;flex-wrap:wrap}
+.result-row:last-child{border-bottom:none}
+.result-label{color:#b0b0c0}.result-value{color:#00ff88;font-weight:600;font-family:'Courier New',monospace}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.88rem}
+th{background:#1a1a2e;color:#00ff88;padding:10px 12px;text-align:left;font-weight:600;border:1px solid #1e1e2a}
+td{padding:8px 12px;border:1px solid #1e1e2a;color:#c0c0cc}
+tr:nth-child(even){background:#12121a}
+.formula{background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:16px 20px;margin:12px 0;font-family:'Courier New',monospace;font-size:0.9rem;color:#00ff88;overflow-x:auto}
+.privacy-note{background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:16px 20px;margin:20px 0;font-size:0.88rem;color:#b0b0c0}
+.cross-link{display:inline-block;background:#12121a;border:1px solid #1e1e2a;border-radius:8px;padding:8px 16px;margin:4px;font-size:0.88rem;transition:border-color .2s}
+.cross-link:hover{border-color:#00ff88;text-decoration:none}
+.tab-bar{display:flex;gap:0;margin-bottom:0}
+.tab-btn{flex:1;padding:10px;background:#0a0a0f;border:1px solid #1e1e2a;color:#b0b0c0;cursor:pointer;font-size:0.9rem;font-family:inherit;transition:all .2s;border-bottom:2px solid transparent}
+.tab-btn.active{color:#00ff88;border-bottom-color:#00ff88;background:#12121a}
+.tab-panel{display:none;padding:20px 0 0}.tab-panel.active{display:block}
+ul,ol{margin:0 0 14px 20px;color:#c0c0cc}li{margin-bottom:6px}
+.warn{background:#332200;border:1px solid #665500;border-radius:8px;padding:12px 16px;margin:10px 0;font-size:0.9rem;color:#ffcc00}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}h1{font-size:1.5rem}h2{font-size:1.2rem}.container{padding:14px}.tab-btn{font-size:0.78rem;padding:8px 4px}table{font-size:0.78rem}th,td{padding:6px 8px}}
+</style>
+</head>
+<body>
+<nav class="toc"><details open>
+<summary>Table of Contents</summary>
+<ul>
+<li><a href="#gear-tooth-calculator">Calculator</a></li>
+<li><a href="#gear-ratio-calculator">Gear Ratio</a></li>
+<li><a href="#gear-geometry-fundamentals">Geometry Basics</a></li>
+<li><a href="#module-vs-diametral-pitch">Module vs DP</a></li>
+<li><a href="#pressure-angle-effects">Pressure Angle</a></li>
+<li><a href="#involute-tooth-profile">Involute Profile</a></li>
+<li><a href="#gear-types-comparison">Gear Types</a></li>
+<li><a href="#backlash-and-tolerances">Backlash</a></li>
+<li><a href="#standard-module-sizes">Standard Sizes</a></li>
+<li><a href="#undercutting-and-profile-shift">Undercutting</a></li>
+<li><a href="#agma-quality-grades">AGMA Grades</a></li>
+<li><a href="#worked-examples">Examples</a></li>
+<li><a href="#frequently-asked-questions">FAQ</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</details></nav>
+
+<div class="container">
+<h1>Gear Tooth Calculator</h1>
+<p class="subtitle">Calculate gear dimensions, tooth geometry, and gear ratios for spur, helical, bevel, and worm gears using module or diametral pitch</p>
+<blockquote class="reading-time">Estimated reading time: 15 minutes. Covers tooth geometry formulas, gear types comparison, pressure angle selection, backlash guidelines, and AGMA quality grades for manufacturing specifications.</blockquote>
+
+<h2 id="gear-tooth-calculator">Gear Tooth Calculator</h2>
+<div class="calc-card">
+<div class="tab-bar">
+<button class="tab-btn active" onclick="switchTab('metric')">Metric (Module)</button>
+<button class="tab-btn" onclick="switchTab('imperial')">Imperial (DP)</button>
+</div>
+<div class="tab-panel active" id="tab-metric">
+<div class="form-grid">
+<div><label for="mModule">Module (mm)</label><select id="mModule"><option value="0.5">0.5</option><option value="0.8">0.8</option><option value="1" selected>1</option><option value="1.25">1.25</option><option value="1.5">1.5</option><option value="2">2</option><option value="2.5">2.5</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="8">8</option><option value="10">10</option><option value="custom">Custom</option></select></div>
+<div id="mCustomWrap" style="display:none"><label for="mCustomMod">Custom Module (mm)</label><input type="number" id="mCustomMod" value="1" step="any" min="0.1"></div>
+<div><label for="mTeeth">Number of Teeth</label><input type="number" id="mTeeth" value="24" step="1" min="6"></div>
+<div><label for="mPA">Pressure Angle (°)</label><select id="mPA"><option value="14.5">14.5°</option><option value="20" selected>20°</option><option value="25">25°</option></select></div>
+</div>
+<button class="btn" onclick="calcMetric()">Calculate</button>
+<div class="result-box" id="metricResult">
+<div class="result-row"><span class="result-label">Pitch Diameter (PD)</span><span class="result-value" id="mPD">-</span></div>
+<div class="result-row"><span class="result-label">Outside Diameter (OD)</span><span class="result-value" id="mOD">-</span></div>
+<div class="result-row"><span class="result-label">Root Diameter</span><span class="result-value" id="mRD">-</span></div>
+<div class="result-row"><span class="result-label">Base Circle Diameter</span><span class="result-value" id="mBD">-</span></div>
+<div class="result-row"><span class="result-label">Addendum</span><span class="result-value" id="mAdd">-</span></div>
+<div class="result-row"><span class="result-label">Dedendum</span><span class="result-value" id="mDed">-</span></div>
+<div class="result-row"><span class="result-label">Whole Depth</span><span class="result-value" id="mWD">-</span></div>
+<div class="result-row"><span class="result-label">Working Depth</span><span class="result-value" id="mWkD">-</span></div>
+<div class="result-row"><span class="result-label">Clearance</span><span class="result-value" id="mClr">-</span></div>
+<div class="result-row"><span class="result-label">Circular Pitch</span><span class="result-value" id="mCP">-</span></div>
+<div class="result-row"><span class="result-label">Tooth Thickness (at pitch circle)</span><span class="result-value" id="mTT">-</span></div>
+<div class="result-row"><span class="result-label">Diametral Pitch Equivalent</span><span class="result-value" id="mDP">-</span></div>
+</div>
+<div class="warn" id="mWarn" style="display:none"></div>
+</div>
+<div class="tab-panel" id="tab-imperial">
+<div class="form-grid">
+<div><label for="iDP">Diametral Pitch (teeth/in)</label><select id="iDP"><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="8">8</option><option value="10" selected>10</option><option value="12">12</option><option value="16">16</option><option value="20">20</option><option value="24">24</option><option value="32">32</option><option value="48">48</option><option value="64">64</option><option value="custom">Custom</option></select></div>
+<div id="iCustomWrap" style="display:none"><label for="iCustomDP">Custom DP (teeth/in)</label><input type="number" id="iCustomDP" value="10" step="any" min="0.5"></div>
+<div><label for="iTeeth">Number of Teeth</label><input type="number" id="iTeeth" value="24" step="1" min="6"></div>
+<div><label for="iPA">Pressure Angle (°)</label><select id="iPA"><option value="14.5">14.5°</option><option value="20" selected>20°</option><option value="25">25°</option></select></div>
+</div>
+<button class="btn" onclick="calcImperial()">Calculate</button>
+<div class="result-box" id="imperialResult">
+<div class="result-row"><span class="result-label">Pitch Diameter (PD)</span><span class="result-value" id="iPD">-</span></div>
+<div class="result-row"><span class="result-label">Outside Diameter (OD)</span><span class="result-value" id="iOD">-</span></div>
+<div class="result-row"><span class="result-label">Root Diameter</span><span class="result-value" id="iRD">-</span></div>
+<div class="result-row"><span class="result-label">Base Circle Diameter</span><span class="result-value" id="iBD">-</span></div>
+<div class="result-row"><span class="result-label">Addendum</span><span class="result-value" id="iAdd">-</span></div>
+<div class="result-row"><span class="result-label">Dedendum</span><span class="result-value" id="iDed">-</span></div>
+<div class="result-row"><span class="result-label">Whole Depth</span><span class="result-value" id="iWD">-</span></div>
+<div class="result-row"><span class="result-label">Working Depth</span><span class="result-value" id="iWkD">-</span></div>
+<div class="result-row"><span class="result-label">Clearance</span><span class="result-value" id="iClr">-</span></div>
+<div class="result-row"><span class="result-label">Circular Pitch</span><span class="result-value" id="iCP">-</span></div>
+<div class="result-row"><span class="result-label">Tooth Thickness (at pitch circle)</span><span class="result-value" id="iTT">-</span></div>
+<div class="result-row"><span class="result-label">Module Equivalent</span><span class="result-value" id="iMod">-</span></div>
+</div>
+<div class="warn" id="iWarn" style="display:none"></div>
+</div>
+</div>
+
+<h2 id="gear-ratio-calculator">Gear Ratio Calculator</h2>
+<div class="calc-card">
+<h3>Two-Gear System</h3>
+<div class="form-grid">
+<div><label for="grN1">Pinion Teeth (N₁, driver)</label><input type="number" id="grN1" value="18" step="1" min="6"></div>
+<div><label for="grN2">Gear Teeth (N₂, driven)</label><input type="number" id="grN2" value="54" step="1" min="6"></div>
+<div><label for="grRPM1">Pinion Speed (RPM)</label><input type="number" id="grRPM1" value="1750" step="any" min="0"></div>
+<div><label for="grTorque1">Pinion Torque (N·m)</label><input type="number" id="grTorque1" value="10" step="any" min="0"></div>
+</div>
+<button class="btn" onclick="calcGearRatio()">Calculate</button>
+<div class="result-box" id="ratioResult">
+<div class="result-row"><span class="result-label">Gear Ratio</span><span class="result-value" id="grRatio">-</span></div>
+<div class="result-row"><span class="result-label">Output Speed (RPM)</span><span class="result-value" id="grRPM2">-</span></div>
+<div class="result-row"><span class="result-label">Output Torque (N·m)</span><span class="result-value" id="grTorque2">-</span></div>
+<div class="result-row"><span class="result-label">Speed Reduction</span><span class="result-value" id="grReduc">-</span></div>
+<div class="result-row"><span class="result-label">Torque Multiplication</span><span class="result-value" id="grMult">-</span></div>
+<div class="result-row"><span class="result-label">Direction</span><span class="result-value" id="grDir">-</span></div>
+</div>
+</div>
+
+<h2 id="gear-geometry-fundamentals">Gear Geometry Fundamentals</h2>
+<p>Every gear is defined by a set of standard dimensions that determine how teeth mesh and transmit power. Understanding these dimensions is necessary for designing gears that work correctly together.</p>
+<ul>
+<li><strong>Pitch Circle:</strong> The imaginary circle where two mating gears effectively contact. This is the reference circle for all other dimensions.</li>
+<li><strong>Addendum:</strong> The height of the tooth above the pitch circle. For standard gears, addendum = 1 module (or 1/DP).</li>
+<li><strong>Dedendum:</strong> The depth of the tooth below the pitch circle. Standard dedendum = 1.25 × module (includes clearance).</li>
+<li><strong>Whole Depth:</strong> Addendum + Dedendum = 2.25 × module (the total height of the tooth).</li>
+<li><strong>Working Depth:</strong> The depth of tooth engagement = 2 × addendum = 2 × module.</li>
+<li><strong>Clearance:</strong> The gap between the top of one tooth and the bottom of the mating tooth space = 0.25 × module.</li>
+<li><strong>Circular Pitch:</strong> The distance from one tooth to the next, measured along the pitch circle = π × module.</li>
+<li><strong>Tooth Thickness:</strong> The width of the tooth at the pitch circle = circular pitch / 2 = π × module / 2.</li>
+<li><strong>Base Circle:</strong> The circle from which the involute tooth profile is generated = PD × cos(pressure angle).</li>
+</ul>
+<p>These formulas assume standard full-depth teeth with no profile shift. Profile-shifted gears have modified addendum and dedendum values to avoid undercutting or to adjust center distance.</p>
+
+<h2 id="module-vs-diametral-pitch">Module vs Diametral Pitch</h2>
+<p>Module and diametral pitch are two ways of expressing the same thing: tooth size. They are inversely related:</p>
+<div class="formula">Module (mm) = 25.4 / Diametral Pitch (teeth/inch)</div>
+<div class="formula">Diametral Pitch = 25.4 / Module</div>
+<p>Module is the metric standard (ISO) and is used worldwide. Diametral pitch is the Imperial standard (AGMA/ANSI) and is common in the United States and United Kingdom.</p>
+<table>
+<tr><th>Module (mm)</th><th>Diametral Pitch</th><th>Circular Pitch (mm)</th><th>Typical Application</th></tr>
+<tr><td>0.5</td><td>50.8</td><td>1.571</td><td>Instruments, watches</td></tr>
+<tr><td>1.0</td><td>25.4</td><td>3.142</td><td>Small mechanisms, robotics</td></tr>
+<tr><td>1.5</td><td>16.93</td><td>4.712</td><td>Power tools, appliances</td></tr>
+<tr><td>2.0</td><td>12.7</td><td>6.283</td><td>Automotive, light machinery</td></tr>
+<tr><td>3.0</td><td>8.47</td><td>9.425</td><td>Machine tools, conveyors</td></tr>
+<tr><td>4.0</td><td>6.35</td><td>12.566</td><td>Heavy machinery</td></tr>
+<tr><td>5.0</td><td>5.08</td><td>15.708</td><td>Industrial gearboxes</td></tr>
+<tr><td>8.0</td><td>3.175</td><td>25.133</td><td>Mining, mill drives</td></tr>
+<tr><td>10.0</td><td>2.54</td><td>31.416</td><td>Large open gears</td></tr>
+</table>
+<p>Two gears must have the same module (or DP) and the same pressure angle to mesh correctly. Gears with different modules cannot work together.</p>
+
+<h2 id="pressure-angle-effects">Pressure Angle and Its Effects</h2>
+<p>The pressure angle is the angle between the line of action (the direction of force between meshing teeth) and the tangent to the pitch circle. It fundamentally affects tooth shape, strength, and operation:</p>
+<table>
+<tr><th>Property</th><th>14.5°</th><th>20°</th><th>25°</th></tr>
+<tr><td>Tooth Shape</td><td>Tall, slender</td><td>Medium</td><td>Short, stubby</td></tr>
+<tr><td>Tooth Strength</td><td>Lower</td><td>Good</td><td>Highest</td></tr>
+<tr><td>Contact Ratio</td><td>Higher (smoother)</td><td>Good</td><td>Lower</td></tr>
+<tr><td>Bearing Load</td><td>Lower radial load</td><td>Moderate</td><td>Higher radial load</td></tr>
+<tr><td>Noise Level</td><td>Quieter</td><td>Moderate</td><td>Louder</td></tr>
+<tr><td>Min Teeth (no undercut)</td><td>32</td><td>17</td><td>12</td></tr>
+<tr><td>Usage Today</td><td>Legacy systems</td><td>Standard (most common)</td><td>High-load applications</td></tr>
+</table>
+<p>The 20° pressure angle has become the de facto standard because it provides a good balance between strength and smooth engagement. The 14.5° angle is found primarily in older machinery and replacement gears. The 25° angle is used where maximum load capacity is needed, such as in heavy-duty speed reducers.</p>
+
+<h2 id="involute-tooth-profile">The Involute Tooth Profile</h2>
+<p>Virtually all modern gears use the involute curve for the tooth profile. The involute is generated by unwinding a taut string from the base circle. The key property that makes it so useful: the contact between two involute teeth always occurs along a straight line (the line of action), producing a constant angular velocity ratio.</p>
+<p>This means that even if the center distance between two gears is slightly off due to manufacturing tolerances or thermal expansion, the speed ratio remains exactly correct. Only the pressure angle changes slightly. This tolerance for center distance variation is the primary reason involute gears replaced cycloidal gears in almost all applications.</p>
+<p>The involute function (inv φ) is defined as:</p>
+<div class="formula">inv(φ) = tan(φ) - φ  (where φ is in radians)</div>
+<p>This function is used in tooth thickness calculations at different radii and in profile shift calculations. The involute starts at the base circle and extends outward. Below the base circle, the tooth flank is typically a straight radial line (or a trochoid cut by the generating tool).</p>
+
+<h2 id="gear-types-comparison">Gear Types Comparison</h2>
+<p>Different gear configurations suit different speed, load, and space requirements:</p>
+<table>
+<tr><th>Gear Type</th><th>Axis Orientation</th><th>Efficiency</th><th>Speed Range</th><th>Noise</th><th>Cost</th></tr>
+<tr><td>Spur</td><td>Parallel</td><td>98-99%</td><td>Low-Medium</td><td>Moderate</td><td>Low</td></tr>
+<tr><td>Helical</td><td>Parallel</td><td>96-99%</td><td>Medium-High</td><td>Low</td><td>Medium</td></tr>
+<tr><td>Double Helical</td><td>Parallel</td><td>96-99%</td><td>High</td><td>Very Low</td><td>High</td></tr>
+<tr><td>Bevel (straight)</td><td>Intersecting (90°)</td><td>97-99%</td><td>Low-Medium</td><td>Moderate</td><td>Medium</td></tr>
+<tr><td>Spiral Bevel</td><td>Intersecting (90°)</td><td>97-99%</td><td>Medium-High</td><td>Low</td><td>High</td></tr>
+<tr><td>Worm</td><td>Non-intersecting (90°)</td><td>40-90%</td><td>High ratios</td><td>Low</td><td>Medium</td></tr>
+<tr><td>Rack and Pinion</td><td>Linear</td><td>97-99%</td><td>Any</td><td>Moderate</td><td>Low</td></tr>
+<tr><td>Internal</td><td>Parallel</td><td>98-99%</td><td>Low-Medium</td><td>Low</td><td>High</td></tr>
+</table>
+<p><strong>Spur gears</strong> are the simplest and cheapest to manufacture. They work well at moderate speeds but become noisy at high RPM because teeth engage along their entire width simultaneously (line contact).</p>
+<p><strong>Helical gears</strong> have teeth cut at an angle (helix angle, typically 15-30°). The gradual tooth engagement reduces noise and vibration. The downside is axial thrust, which requires thrust bearings.</p>
+<p><strong>Bevel gears</strong> connect shafts at an angle, most commonly 90°. Straight bevel gears are the simplest; spiral bevel gears are quieter and stronger.</p>
+<p><strong>Worm gears</strong> provide very high reduction ratios (5:1 to 100:1) in a compact package. However, they are less efficient due to sliding contact and often cannot be back-driven (the output cannot drive the input), which can be a safety feature or a limitation.</p>
+
+<h2 id="backlash-and-tolerances">Backlash and Tolerances</h2>
+<p>Backlash is the gap between the non-driving face of a tooth and the mating tooth when the driving faces are in contact. Some backlash is necessary for:</p>
+<ul>
+<li><strong>Thermal expansion:</strong> Gears heat up during operation and grow. Without backlash, they would bind.</li>
+<li><strong>Lubrication:</strong> Oil needs space to form a film between teeth.</li>
+<li><strong>Manufacturing tolerances:</strong> No gear is perfect. Backlash accommodates small errors in tooth profile and spacing.</li>
+</ul>
+<p>Recommended backlash values (measured at the pitch circle):</p>
+<table>
+<tr><th>Module (mm)</th><th>Normal Backlash (mm)</th><th>Tight Backlash (mm)</th></tr>
+<tr><td>0.5 - 1.0</td><td>0.04 - 0.08</td><td>0.02 - 0.04</td></tr>
+<tr><td>1.0 - 2.0</td><td>0.06 - 0.12</td><td>0.03 - 0.06</td></tr>
+<tr><td>2.0 - 4.0</td><td>0.10 - 0.20</td><td>0.05 - 0.10</td></tr>
+<tr><td>4.0 - 8.0</td><td>0.15 - 0.35</td><td>0.08 - 0.18</td></tr>
+<tr><td>8.0 - 16.0</td><td>0.25 - 0.50</td><td>0.12 - 0.25</td></tr>
+</table>
+<p>Backlash can be controlled by adjusting center distance (moving gears closer reduces backlash), by thinning teeth, or by using anti-backlash mechanisms (spring-loaded split gears, preloaded duplex gears). For servo systems and CNC machines, minimal backlash is critical for positioning accuracy.</p>
+
+<h2 id="standard-module-sizes">Standard Module and DP Sizes</h2>
+<p>Using standard module or DP values ensures that off-the-shelf cutting tools (hobs, shaper cutters) are available. Custom tooth sizes require custom tooling, which is expensive.</p>
+<p><strong>ISO Standard Modules (mm):</strong> 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.25, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0</p>
+<p><strong>Standard Diametral Pitches:</strong> 2.5, 3, 4, 5, 6, 8, 10, 12, 14, 16, 18, 20, 24, 32, 48, 64, 72, 80, 96, 120</p>
+<p>When designing a gear train, select the smallest standard module that provides adequate tooth strength and fits the available space. Larger modules mean larger, heavier gears but with stronger teeth that can handle more torque.</p>
+
+<h2 id="undercutting-and-profile-shift">Undercutting and Profile Shift</h2>
+<p>Undercutting occurs when the generating tool (hob or shaper cutter) removes material from the base of the tooth during manufacturing. This weakens the tooth root and reduces the effective contact length.</p>
+<p>Undercutting happens when the number of teeth is below a critical minimum:</p>
+<div class="formula">N_min = 2 / sin²(φ)</div>
+<p>For standard pressure angles: N_min = 32 at 14.5°, 17 at 20°, and 12 at 25°.</p>
+<p>If you need fewer teeth than the minimum, profile shift (also called addendum modification or x-shift) is used. A positive profile shift moves the cutting tool away from the gear center, producing thicker teeth at the root and thinner teeth at the tip:</p>
+<div class="formula">Profile shift coefficient: x = (N_min - N) / N_min  (approximate starting point)</div>
+<p>Profile shift also affects center distance and backlash. When one gear has a positive shift, the mating gear typically has a negative shift so that the center distance remains standard. Consult gear design software or AGMA standards for precise profile shift calculations.</p>
+
+<h2 id="agma-quality-grades">AGMA Quality Grades</h2>
+<p>AGMA (American Gear Manufacturers Association) defines quality grades that specify allowable tolerances for tooth-to-tooth and total composite errors. Higher grades mean tighter tolerances and higher manufacturing cost:</p>
+<table>
+<tr><th>AGMA Grade</th><th>ISO Grade</th><th>Tolerance Level</th><th>Typical Application</th></tr>
+<tr><td>3 - 5</td><td>10 - 8</td><td>Low</td><td>Non-critical, hand-operated mechanisms</td></tr>
+<tr><td>6 - 8</td><td>7 - 5</td><td>Medium</td><td>General industrial, commercial vehicles</td></tr>
+<tr><td>9 - 11</td><td>4 - 2</td><td>High</td><td>Machine tools, turbines, precision drives</td></tr>
+<tr><td>12 - 14</td><td>1 - 0</td><td>Ultra-high</td><td>Instruments, master gears, aerospace</td></tr>
+</table>
+<p>Note that AGMA and ISO numbering runs in opposite directions. AGMA grade 12 is the highest precision (tightest tolerance), while ISO grade 0 is the highest. Most industrial gears are AGMA 8-10 (ISO 5-3).</p>
+<p>Manufacturing method affects achievable quality: hobbing produces AGMA 8-10, shaving achieves AGMA 10-11, and grinding can reach AGMA 12-14. Each additional quality grade approximately doubles the manufacturing cost.</p>
+
+<h2 id="worked-examples">Worked Examples</h2>
+<h3>Example 1: Module 2, 30-Tooth Spur Gear</h3>
+<p>Module = 2 mm, N = 30, Pressure angle = 20°</p>
+<ul>
+<li>Pitch Diameter: PD = 2 × 30 = 60.000 mm</li>
+<li>Outside Diameter: OD = (30 + 2) × 2 = 64.000 mm</li>
+<li>Root Diameter: RD = (30 - 2.5) × 2 = 55.000 mm</li>
+<li>Base Circle: DB = 60 × cos(20°) = 56.382 mm</li>
+<li>Addendum: a = 1 × 2 = 2.000 mm</li>
+<li>Dedendum: d = 1.25 × 2 = 2.500 mm</li>
+<li>Circular Pitch: p = π × 2 = 6.283 mm</li>
+<li>Tooth Thickness: t = 6.283 / 2 = 3.142 mm</li>
+</ul>
+
+<h3>Example 2: Gear Ratio Design</h3>
+<p>Need a 4:1 reduction with module 3 gears, input speed 1800 RPM.</p>
+<ul>
+<li>Select pinion: N₁ = 20 teeth (above the 17-tooth minimum for 20° PA)</li>
+<li>Gear: N₂ = 20 × 4 = 80 teeth</li>
+<li>Pinion PD: 3 × 20 = 60 mm</li>
+<li>Gear PD: 3 × 80 = 240 mm</li>
+<li>Center Distance: (60 + 240) / 2 = 150 mm</li>
+<li>Output Speed: 1800 / 4 = 450 RPM</li>
+<li>Output Torque: 4 × input torque (minus friction losses)</li>
+</ul>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+<h3>What is gear module?</h3>
+<p>Module is the metric unit for gear tooth size, defined as the pitch diameter divided by the number of teeth: m = PD/N. It is expressed in millimeters. Two gears must have the same module to mesh correctly. Standard modules per ISO are: 0.5, 0.8, 1.0, 1.25, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0, and larger.</p>
+
+<h3>How do I convert module to diametral pitch?</h3>
+<p>Diametral Pitch = 25.4 / Module. For example, module 2 mm = 25.4/2 = 12.7 DP. In practice, you would round to the nearest standard DP (12 or 14). The conversion is exact but standard sizes in metric and Imperial do not line up perfectly.</p>
+
+<h3>Can I mesh gears with different pressure angles?</h3>
+<p>No. Both gears in a meshing pair must have the same pressure angle. A 20° gear cannot mesh with a 14.5° gear. Attempting to do so will result in improper tooth contact, excessive wear, noise, and potential failure.</p>
+
+<h3>What determines whether I need spur or helical gears?</h3>
+<p>Use spur gears when: cost is a priority, speed is moderate (under 1000 RPM for large gears), noise is not critical, and axial space is limited. Use helical gears when: quiet operation is needed, speeds are high, loads are heavy, or smooth power transmission is required.</p>
+
+<h3>How many teeth should my pinion have?</h3>
+<p>At minimum, use 17 teeth for 20° pressure angle to avoid undercutting. For power transmission, 18-25 teeth is a good range for the pinion. More teeth gives smoother operation but limits the maximum gear ratio for a given gear size. Using profile shift allows fewer teeth without undercutting.</p>
+
+<h3>What is contact ratio and why does it matter?</h3>
+<p>Contact ratio is the average number of tooth pairs in contact at any instant. It should be at least 1.2 for smooth operation. Values of 1.4-1.8 are typical for spur gears. Higher contact ratios mean smoother, quieter operation and lower tooth stresses because the load is shared between more teeth.</p>
+
+<h3>How do I specify a gear for manufacturing?</h3>
+<p>At minimum, specify: module (or DP), number of teeth, pressure angle, face width, material, heat treatment, surface finish, and AGMA quality grade. Also include tooth thickness tolerance, runout tolerance, and any profile modifications (tip relief, crowning). A gear drawing should reference the applicable AGMA or ISO standard.</p>
+
+<h3>What materials are used for gears?</h3>
+<p>Common gear materials: 4140 and 4340 alloy steel (general purpose), 8620 carburizing steel (high hardness), ductile iron (cost-effective, vibration damping), bronze (worm wheels), nylon/acetal (low load, quiet). Case-hardened steel gears (58-62 HRC surface) can handle 2-3 times the load of through-hardened gears.</p>
+
+<h2 id="references">References and Further Reading</h2>
+<ul>
+<li><a href="https://www.agma.org/" target="_blank" rel="noopener">AGMA (American Gear Manufacturers Association)</a> - Gear standards (AGMA 2001, AGMA 2101, AGMA 915)</li>
+<li>Machinery's Handbook (Industrial Press) - The standard reference for gear geometry formulas, tables, and manufacturing data (30th edition, 2016)</li>
+<li><a href="https://www.iso.org/standard/63819.html" target="_blank" rel="noopener">ISO 6336 - Calculation of Load Capacity of Spur and Helical Gears</a> - International standard for gear strength calculations</li>
+</ul>
+<p>AGMA 2001-D04 is the primary US standard for spur and helical gear rating. ISO 6336 is the international equivalent. Machinery's Handbook provides the most accessible collection of gear formulas and data tables for everyday design work.</p>
+
+<div class="privacy-note">
+<strong>Privacy Note:</strong> This gear tooth calculator runs entirely in your browser. No data is sent to any server, no cookies are set, and no personal information is collected. Your gear specifications remain on your device.
+</div>
+
+<p style="margin-top:24px">More engineering and calculation tools:</p>
+<div style="margin-bottom:20px">
+<a class="cross-link" href="https://zovo.one/free-tools/pressure-drop-calculator/">Pressure Drop Calculator</a>
+<a class="cross-link" href="https://zovo.one/free-tools/flow-rate-calculator/">Flow Rate Calculator</a>
+<a class="cross-link" href="https://zovo.one/free-tools/beam-deflection-calculator/">Beam Deflection Calculator</a>
+<a class="cross-link" href="https://zovo.one/free-tools/">All Free Tools</a>
+</div>
+</div>
+
+<footer style="text-align:center;padding:24px;color:#b0b0c0;font-size:0.85rem;border-top:1px solid #1e1e2a;margin-top:40px;">Built by Michael Lip · More free tools at <a href="https://zovo.one/free-tools/" style="color:#00ff88;text-decoration:none;">zovo.one</a></footer>
+
+<script>
+function switchTab(name){
+document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['metric','imperial'][i]===name));
+document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+document.getElementById('tab-'+name).classList.add('active');
+}
+document.getElementById('mModule').addEventListener('change',function(){document.getElementById('mCustomWrap').style.display=this.value==='custom'?'block':'none';});
+document.getElementById('iDP').addEventListener('change',function(){document.getElementById('iCustomWrap').style.display=this.value==='custom'?'block':'none';});
+
+function getModule(){
+const sel=document.getElementById('mModule');
+return sel.value==='custom'?parseFloat(document.getElementById('mCustomMod').value):parseFloat(sel.value);
+}
+function getDP(){
+const sel=document.getElementById('iDP');
+return sel.value==='custom'?parseFloat(document.getElementById('iCustomDP').value):parseFloat(sel.value);
+}
+function minTeeth(pa){return Math.ceil(2/Math.pow(Math.sin(pa*Math.PI/180),2));}
+
+function calcMetric(){
+const m=getModule(),N=parseInt(document.getElementById('mTeeth').value);
+const pa=parseFloat(document.getElementById('mPA').value);
+if(isNaN(m)||isNaN(N)||m<=0||N<1)return;
+const paRad=pa*Math.PI/180;
+const PD=m*N;
+const OD=m*(N+2);
+const RD=m*(N-2.5);
+const BD=PD*Math.cos(paRad);
+const add=m;
+const ded=1.25*m;
+const wd=2.25*m;
+const wkd=2*m;
+const clr=0.25*m;
+const cp=Math.PI*m;
+const tt=cp/2;
+const dp=25.4/m;
+
+document.getElementById('mPD').textContent=PD.toFixed(3)+' mm';
+document.getElementById('mOD').textContent=OD.toFixed(3)+' mm';
+document.getElementById('mRD').textContent=RD.toFixed(3)+' mm';
+document.getElementById('mBD').textContent=BD.toFixed(3)+' mm';
+document.getElementById('mAdd').textContent=add.toFixed(3)+' mm';
+document.getElementById('mDed').textContent=ded.toFixed(3)+' mm';
+document.getElementById('mWD').textContent=wd.toFixed(3)+' mm';
+document.getElementById('mWkD').textContent=wkd.toFixed(3)+' mm';
+document.getElementById('mClr').textContent=clr.toFixed(3)+' mm';
+document.getElementById('mCP').textContent=cp.toFixed(3)+' mm';
+document.getElementById('mTT').textContent=tt.toFixed(3)+' mm';
+document.getElementById('mDP').textContent=dp.toFixed(2)+' teeth/in';
+document.getElementById('metricResult').classList.add('show');
+
+const mt=minTeeth(pa);
+const w=document.getElementById('mWarn');
+if(N<mt){w.textContent='Warning: '+N+' teeth is below the minimum of '+mt+' for '+pa+'° pressure angle. Undercutting will occur. Consider profile shift or increasing teeth count.';w.style.display='block';}else{w.style.display='none';}
+}
+
+function calcImperial(){
+const P=getDP(),N=parseInt(document.getElementById('iTeeth').value);
+const pa=parseFloat(document.getElementById('iPA').value);
+if(isNaN(P)||isNaN(N)||P<=0||N<1)return;
+const paRad=pa*Math.PI/180;
+const PD=N/P;
+const OD=(N+2)/P;
+const RD=(N-2.5)/P;
+const BD=PD*Math.cos(paRad);
+const add=1/P;
+const ded=1.25/P;
+const wd=2.25/P;
+const wkd=2/P;
+const clr=0.25/P;
+const cp=Math.PI/P;
+const tt=cp/2;
+const mod=25.4/P;
+
+document.getElementById('iPD').textContent=PD.toFixed(4)+' in ('+( PD*25.4).toFixed(2)+' mm)';
+document.getElementById('iOD').textContent=OD.toFixed(4)+' in ('+(OD*25.4).toFixed(2)+' mm)';
+document.getElementById('iRD').textContent=RD.toFixed(4)+' in ('+(RD*25.4).toFixed(2)+' mm)';
+document.getElementById('iBD').textContent=BD.toFixed(4)+' in ('+(BD*25.4).toFixed(2)+' mm)';
+document.getElementById('iAdd').textContent=add.toFixed(4)+' in ('+(add*25.4).toFixed(3)+' mm)';
+document.getElementById('iDed').textContent=ded.toFixed(4)+' in ('+(ded*25.4).toFixed(3)+' mm)';
+document.getElementById('iWD').textContent=wd.toFixed(4)+' in ('+(wd*25.4).toFixed(3)+' mm)';
+document.getElementById('iWkD').textContent=wkd.toFixed(4)+' in ('+(wkd*25.4).toFixed(3)+' mm)';
+document.getElementById('iClr').textContent=clr.toFixed(4)+' in ('+(clr*25.4).toFixed(3)+' mm)';
+document.getElementById('iCP').textContent=cp.toFixed(4)+' in ('+(cp*25.4).toFixed(3)+' mm)';
+document.getElementById('iTT').textContent=tt.toFixed(4)+' in ('+(tt*25.4).toFixed(3)+' mm)';
+document.getElementById('iMod').textContent=mod.toFixed(3)+' mm';
+document.getElementById('imperialResult').classList.add('show');
+
+const mt=minTeeth(pa);
+const w=document.getElementById('iWarn');
+if(N<mt){w.textContent='Warning: '+N+' teeth is below the minimum of '+mt+' for '+pa+'° pressure angle. Undercutting will occur.';w.style.display='block';}else{w.style.display='none';}
+}
+
+function calcGearRatio(){
+const N1=parseInt(document.getElementById('grN1').value);
+const N2=parseInt(document.getElementById('grN2').value);
+const rpm1=parseFloat(document.getElementById('grRPM1').value);
+const t1=parseFloat(document.getElementById('grTorque1').value);
+if(isNaN(N1)||isNaN(N2)||N1<1||N2<1)return;
+const ratio=N2/N1;
+const rpm2=rpm1/ratio;
+const t2=t1*ratio;
+document.getElementById('grRatio').textContent=ratio.toFixed(3)+':1 ('+N2+'/'+N1+')';
+document.getElementById('grRPM2').textContent=rpm2.toFixed(1);
+document.getElementById('grTorque2').textContent=t2.toFixed(2)+' N·m (ideal, no losses)';
+document.getElementById('grReduc').textContent=((1-1/ratio)*100).toFixed(1)+'%';
+document.getElementById('grMult').textContent=ratio.toFixed(1)+'×';
+document.getElementById('grDir').textContent=ratio>0?'Reversed (external mesh)':'Same';
+document.getElementById('ratioResult').classList.add('show');
+}
+
+document.querySelectorAll('nav.toc a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});})});
+</script>
+</body>
+</html>
