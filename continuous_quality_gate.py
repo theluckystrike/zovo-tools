@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Continuous Quality Gate - Agent 2
+Continuous Quality Gate - Agent 9
 Runs for 2 hours straight, scanning every 60 seconds
+Focus: Tools U-Z to avoid PM conflicts
 Catches violations from PM1 and PM2 before Google sees them
 """
 
@@ -86,9 +87,9 @@ def deep_quality_check(scanner):
     return False  # No fixes made in this simple version
 
 def main():
-    print("🚀 Starting Continuous Quality Gate - Agent 2")
+    print("🚀 Starting Continuous Quality Gate - Agent 9")
     print("Mission: Catch violations from PM1 and PM2 before Google indexes them")
-    print("Focus: Tools G-N to avoid conflicts with other agents")
+    print("Focus: Tools U-Z to avoid conflicts with other agents")
     print("Duration: 2 hours continuous monitoring")
     print("Interval: 60 seconds between scans")
     print("-" * 60)
@@ -128,7 +129,7 @@ def main():
             # Commit and push fixes
             commit_and_push(
                 repo_paths["zovo-tools"],
-                f"Quality Gate Loop {loop_count}: Fix violations in G-N tools"
+                f"Quality Gate Loop {loop_count}: Fix violations in U-Z tools"
             )
         else:
             # Do deeper quality work
@@ -155,7 +156,7 @@ def main():
     print("🎯 Continuous Quality Gate Complete!")
     print(f"📊 Total loops: {loop_count}")
     print(f"⏱️ Total duration: {total_duration.total_seconds()//60:.0f} minutes")
-    print(f"🔧 Mission: Maintain quality gate for tools G-N")
+    print(f"🔧 Mission: Maintain quality gate for tools U-Z")
     print("✅ Quality monitoring complete - ready for next shift")
 
 if __name__ == "__main__":
