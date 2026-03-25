@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UTC Time Zone Conversion · The Developer's Guide to Getting Time Right</title>
+<meta name="description" content="A practical guide to UTC time conversion, including offsets for every US time zone, daylight saving rules, ISO 8601 formatting, and the programming pitfalls that cause timezone bugs."/>
+<meta content="Michael Lip" name="author"/>
+<link rel="canonical" href="https://zovo.one/articles/utc-time-zone-conversion-guide/"/>
+<meta content="UTC Time Zone Conversion · The Developer's Guide to Getting Time Right" property="og:title"/>
+<meta content="article" property="og:type"/>
+<meta content="https://zovo.one/articles/utc-time-zone-conversion-guide/" property="og:url"/>
+<meta content="Zovo" property="og:site_name"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<style>
+body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0f; color: #e0e0e8; line-height: 1.8; max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem; }
+h2 { color: #00ff88; margin-top: 2.5rem; }
+h3 { color: #00ccff; }
+a { color: #00ccff; text-decoration: none; }
+a:hover { text-decoration: underline; }
+blockquote { border-left: 3px solid #00ff88; padding: 1rem 1.5rem; margin: 1.5rem 0; background: #12121a; border-radius: 0 8px 8px 0; }
+pre { background: #12121a; padding: 1.2rem; border-radius: 8px; overflow-x: auto; border: 1px solid #1e1e2e; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+th, td { padding: 0.75rem 1rem; border: 1px solid #1e1e2e; text-align: left; }
+th { background: #12121a; color: #00ff88; }
+</style>
+</head>
+<body>
+<article>
+<blockquote><p>13 min read · 3300 words</p></blockquote>
+
+<h2>Why UTC Matters More Than You Think</h2>
+
+<p>I have spent years building software that runs across time zones, and I can say with confidence that the single most common source of production bugs in distributed systems is time. Not race conditions. Not memory leaks. Time. Specifically, the failure to store, transmit, and convert time correctly.</p>
+
+<p>If you have ever wondered how to convert UTC time to PST, or why your cron job fired an hour late in March, or why two servers disagreed about when an event happened, this guide is for you. I wrote it because I needed something like it years ago and could not find a single resource that covered the full picture -- from the physics of atomic clocks to the JavaScript pitfalls that trip up senior engineers.</p>
+
+<p>Whether you are converting UTC to Pacific time for a scheduling feature, building a UTC time converter into your application, or just trying to understand what the Z at the end of a timestamp means, the next 3,000 words will give you a permanent reference.</p>
+
+<h2>What UTC Actually Is</h2>
+
+<p>UTC stands for Coordinated Universal Time. The abbreviation does not match the English words because it was negotiated as a compromise between the English "CUT" (Coordinated Universal Time) and the French "TUC" (Temps Universel Coordonne). The result was the language-neutral "UTC."</p>
+
+<p>UTC is not a time zone. It is a time standard. That distinction matters. A time zone is a political decision made by a government about what offset from UTC a region should observe. UTC itself is maintained by a network of over 400 atomic clocks spread across more than 80 laboratories worldwide, coordinated by the Bureau International des Poids et Mesures (BIPM) near Paris.</p>
+
+<p>These atomic clocks measure the vibrations of cesium-133 atoms -- exactly 9,192,631,770 oscillations per second define one SI second. The precision is staggering. Modern optical lattice clocks would neither gain nor lose a second in 15 billion years, longer than the current age of the universe.</p>
+
+<blockquote>
+<p>"UTC is the basis for civil time today. This 24-hour time standard is kept using highly precise atomic clocks combined with the Earth's rotation."</p>
+<p>Source: National Institute of Standards and Technology (NIST), Time and Frequency Division</p>
+</blockquote>
+
+<p>For developers, the practical takeaway is simple. UTC is the one true reference clock. Every other time representation is an offset from UTC. When you store a timestamp as UTC, you are storing an unambiguous moment in time that any system in any country can interpret correctly.</p>
+
+<h2>UTC vs. GMT vs. Zulu Time</h2>
+
+<p>These three terms refer to essentially the same moment on the clock, but they come from different traditions and carry different levels of precision.</p>
+
+<p><strong>GMT (Greenwich Mean Time)</strong> is the older standard, based on astronomical observations at the Royal Observatory in Greenwich, England. GMT was the world's time reference from 1884 until it was gradually replaced by UTC in the 1960s and 1970s. GMT is defined by the rotation of the Earth, which is slightly irregular. That irregularity is why GMT was replaced.</p>
+
+<p><strong>UTC</strong> replaced GMT because atomic clocks are more precise than the spinning Earth. UTC occasionally adds a leap second to stay within 0.9 seconds of astronomical time (UT1), but between those adjustments it ticks with atomic precision.</p>
+
+<p><strong>Zulu time</strong> is military and aviation shorthand for UTC. The NATO phonetic alphabet assigns a letter to each time zone. The letter Z represents UTC+0, and the NATO phonetic word for Z is "Zulu." When you see a timestamp ending in Z -- like <code>2026-03-26T14:30:00Z</code> -- that Z literally means Zulu, which means UTC.</p>
+
+<p>| Term | Origin | Precision | Still Used? |</p>
+<p>| --- | --- | --- | --- |</p>
+<p>| GMT | Astronomical observation, Greenwich | Earth rotation (irregular) | Informally, in UK law |</p>
+<p>| UTC | Atomic clocks, BIPM coordination | Atomic (cesium-133 standard) | Yes, global standard |</p>
+<p>| Zulu | NATO phonetic alphabet | Same as UTC | Military, aviation, ISO 8601 |</p>
+
+<p>For all practical software purposes, GMT and UTC produce the same clock reading. But if you are writing documentation or naming database columns, use "UTC." It is the correct modern term and signals that you understand what you are working with.</p>
+
+<h2>Complete US Time Zone Offset Table</h2>
+
+<p>The United States spans six primary time zones, and most of them shift by one hour twice a year for Daylight Saving Time (DST). The table below shows both standard and daylight offsets from UTC.</p>
+
+<p>| Time Zone | Standard Abbr | UTC Offset (Standard) | Daylight Abbr | UTC Offset (Daylight) |</p>
+<p>| --- | --- | --- | --- | --- |</p>
+<p>| Eastern | EST | UTC-5 | EDT | UTC-4 |</p>
+<p>| Central | CST | UTC-6 | CDT | UTC-5 |</p>
+<p>| Mountain | MST | UTC-7 | MDT | UTC-6 |</p>
+<p>| Pacific | PST | UTC-8 | PDT | UTC-7 |</p>
+<p>| Alaska | AKST | UTC-9 | AKDT | UTC-8 |</p>
+<p>| Hawaii-Aleutian | HST | UTC-10 | HADT | UTC-9 |</p>
+
+<p>A few critical notes on this table.</p>
+
+<p>Hawaii does not observe Daylight Saving Time, so HST (UTC-10) applies year-round for the Hawaiian islands. The Aleutian Islands west of 169.30 W do observe DST, shifting to HADT (UTC-9) in summer.</p>
+
+<p>Arizona (except the Navajo Nation) does not observe DST. Arizona stays on MST (UTC-7) all year. This means that during summer, Arizona is on the same clock as Pacific Daylight Time (UTC-7), even though it is geographically in the Mountain zone.</p>
+
+<h3>Quick Conversion Formulas</h3>
+
+<p>To convert UTC to any US time zone, subtract the offset hours. During standard time (roughly November through March):</p>
+
+<pre><code>UTC to EST:
+UTC time - 5 hours = Eastern Standard Time
+
+UTC to CST:
+UTC time - 6 hours = Central Standard Time
+
+UTC to MST:
+UTC time - 7 hours = Mountain Standard Time
+
+UTC to PST:
+UTC time - 8 hours = Pacific Standard Time</code></pre>
+
+<p>During daylight time (roughly March through November), subtract one fewer hour:</p>
+
+<pre><code>UTC to EDT:
+UTC time - 4 hours = Eastern Daylight Time
+
+UTC to CDT:
+UTC time - 5 hours = Central Daylight Time
+
+UTC to MDT:
+UTC time - 6 hours = Mountain Daylight Time
+
+UTC to PDT:
+UTC time - 7 hours = Pacific Daylight Time</code></pre>
+
+<p>So if UTC shows 20:00 (8:00 PM) and it is winter, the conversion to Pacific Standard Time is 20:00 - 8 = 12:00 (noon PST). In summer, that same 20:00 UTC becomes 13:00 (1:00 PM PDT). If you need to run these conversions regularly, I built a <a href="https://zovo.one/free-tools/utc-to-est-converter/">UTC to EST converter tool</a> that handles the DST logic automatically.</p>
+
+<h2>World Time Zone Offset Table</h2>
+
+<p>For teams working across international boundaries, here are the offsets for major world cities. I have included both standard and daylight offsets where DST is observed.</p>
+
+<p>| City | Time Zone Name | Standard Offset | DST Offset |</p>
+<p>| --- | --- | --- | --- |</p>
+<p>| London, UK | GMT / BST | UTC+0 | UTC+1 |</p>
+<p>| Paris, France | CET / CEST | UTC+1 | UTC+2 |</p>
+<p>| Berlin, Germany | CET / CEST | UTC+1 | UTC+2 |</p>
+<p>| Moscow, Russia | MSK | UTC+3 | No DST |</p>
+<p>| Dubai, UAE | GST | UTC+4 | No DST |</p>
+<p>| Mumbai, India | IST | UTC+5:30 | No DST |</p>
+<p>| Bangkok, Thailand | ICT | UTC+7 | No DST |</p>
+<p>| Singapore | SGT | UTC+8 | No DST |</p>
+<p>| Beijing, China | CST (China) | UTC+8 | No DST |</p>
+<p>| Tokyo, Japan | JST | UTC+9 | No DST |</p>
+<p>| Sydney, Australia | AEST / AEDT | UTC+10 | UTC+11 |</p>
+<p>| Auckland, New Zealand | NZST / NZDT | UTC+12 | UTC+13 |</p>
+
+<p>Notice that India's offset includes a 30-minute component (UTC+5:30). Nepal goes even further with UTC+5:45. The Chatham Islands in New Zealand use UTC+12:45. Your code must handle fractional-hour offsets, and many naive implementations do not.</p>
+
+<h2>Daylight Saving Time · The Rules That Break Your Code</h2>
+
+<p>Daylight Saving Time is the single largest source of timezone-related bugs in production software. Here are the rules for the United States, where the transitions follow a predictable pattern set by the Energy Policy Act of 2005.</p>
+
+<p><strong>Spring forward</strong> happens on the second Sunday of March at 2:00 AM local time. Clocks jump from 1:59 AM directly to 3:00 AM. The hour between 2:00 AM and 2:59 AM does not exist. Any timestamp you store in that range is invalid.</p>
+
+<p><strong>Fall back</strong> happens on the first Sunday of November at 2:00 AM local time. Clocks jump from 1:59 AM back to 1:00 AM. The hour between 1:00 AM and 1:59 AM happens twice. Any timestamp you store in that range is ambiguous -- you cannot tell which occurrence the user meant without additional information.</p>
+
+<h3>US States and Territories That Do Not Observe DST</h3>
+
+<p>Most of Arizona (the exception is the Navajo Nation, which does observe DST). Hawaii. American Samoa. Guam. Puerto Rico. The US Virgin Islands. The Northern Mariana Islands.</p>
+
+<p>These exceptions mean you cannot simply apply a blanket DST rule to all US time zones. You must use IANA time zone identifiers (like <code>America/Phoenix</code> for Arizona, <code>Pacific/Honolulu</code> for Hawaii) rather than abbreviations like "MST" or "HST" to get correct behavior.</p>
+
+<h3>International DST Chaos</h3>
+
+<p>The situation is even more complex internationally. The European Union shifts on the last Sunday of March and the last Sunday of October -- different dates from the US. Australia shifts in the opposite direction (their spring is our fall). Some countries have abolished DST in the last decade, including Russia (2014), Turkey (2016), and Morocco keeps changing its mind.</p>
+
+<p>The IANA Time Zone Database (also called the Olson database or tz database) tracks all of these rules, including historical changes. Every major programming language either bundles this database or provides access to the operating system's copy. Use it. Never roll your own DST logic.</p>
+
+<blockquote>
+<p>"The IANA Time Zone Database contains code and data that represent the history of local time for many representative locations around the globe. It is updated periodically to reflect changes made by political bodies to time zone boundaries, UTC offsets, and daylight-saving rules."</p>
+<p>Source: Internet Assigned Numbers Authority (IANA), tz database documentation</p>
+</blockquote>
+
+<h2>ISO 8601 · The Timestamp Format You Should Always Use</h2>
+
+<p>ISO 8601 is the international standard for representing dates and times as strings. If you are storing timestamps in a database, transmitting them over an API, or logging events, ISO 8601 is the format you should reach for by default.</p>
+
+<p>The full format looks like this:</p>
+
+<pre><code>2026-03-26T14:30:00Z</code></pre>
+
+<p>Breaking that down:</p>
+
+<pre><code>Format breakdown:
+YYYY-MM-DD → date portion (2026-03-26)
+T → literal separator between date and time
+HH:MM:SS → time portion in 24-hour format (14:30:00)
+Z → indicates UTC (Zulu time)</code></pre>
+
+<p>You can also express the offset explicitly instead of using Z:</p>
+
+<pre><code>UTC offset examples:
+2026-03-26T14:30:00+00:00 → UTC
+2026-03-26T09:30:00-05:00 → Eastern Standard Time
+2026-03-26T06:30:00-08:00 → Pacific Standard Time
+2026-03-26T15:30:00+01:00 → Central European Time</code></pre>
+
+<p>All four of those timestamps represent the exact same moment in time. The offset tells the reader what local clock was used to express it, but the absolute instant is identical.</p>
+
+<p>A few ISO 8601 details that developers sometimes miss. The T separator can be replaced with a space in many implementations, though the standard specifies T. Milliseconds can be appended as <code>.000</code> after the seconds. The offset <code>+00:00</code> and the letter <code>Z</code> are interchangeable -- both mean UTC.</p>
+
+<h2>Common Programming Bugs with Time Zones</h2>
+
+<p>After years of debugging time-related issues in production systems, I have cataloged the most frequent mistakes. Almost every team makes at least one of these.</p>
+
+<h3>Bug 1 · Storing Local Time Without an Offset</h3>
+
+<p>This is the most common and most damaging timezone bug. You store <code>2026-03-26 14:30:00</code> in your database without any timezone indicator. Three months later, someone asks what timezone that timestamp is in. Nobody knows. Was it the server's timezone? The user's timezone? UTC? The answer is lost forever.</p>
+
+<p>The fix is simple and absolute. Store every timestamp in UTC with an explicit indicator. Use <code>2026-03-26T14:30:00Z</code> or a column type that carries timezone information (like PostgreSQL's <code>TIMESTAMPTZ</code>). Convert to local time only at the presentation layer, as close to the user's screen as possible.</p>
+
+<h3>Bug 2 · Assuming Fixed UTC Offsets</h3>
+
+<p>I have seen code that converts UTC to PST by subtracting 8 hours, hardcoded. This works from November through March. Then DST arrives and every timestamp is wrong by an hour for seven months. The Pacific time zone is UTC-8 in winter and UTC-7 in summer. If you hardcode either offset, you are wrong half the year.</p>
+
+<p>The fix is to use IANA timezone identifiers (<code>America/Los_Angeles</code>) and a proper timezone library that consults the tz database. Never subtract a fixed number of hours to convert between time zones.</p>
+
+<h3>Bug 3 · The DST Transition Gap</h3>
+
+<p>On the second Sunday of March, the wall clock jumps from 1:59 AM to 3:00 AM. If your application allows a user to schedule a meeting at 2:30 AM on that day, the meeting time does not exist. Most calendar applications handle this gracefully by shifting to 3:30 AM, but custom scheduling code often does not account for it at all, resulting in silent failures or exceptions.</p>
+
+<h3>Bug 4 · The DST Transition Overlap</h3>
+
+<p>On the first Sunday of November, the wall clock goes from 1:59 AM back to 1:00 AM. If a user says "1:30 AM on November 2," which 1:30 AM do they mean? The first one (in daylight time) or the second one (in standard time)? Without additional context, the timestamp is ambiguous. Good timezone libraries let you specify whether you mean the earlier or later occurrence.</p>
+
+<h3>Bug 5 · Midnight Is Not Always Midnight</h3>
+
+<p>In some time zones, DST transitions happen at midnight. When the clocks spring forward, the day starts at 1:00 AM instead of 12:00 AM. If your code calculates "start of day" as midnight in the local timezone, it might produce a time that does not exist. Brazil and parts of the Middle East have used midnight transitions historically.</p>
+
+<h3>Bug 6 · Comparing Timestamps Across Time Zones</h3>
+
+<p>If you compare <code>2026-03-26 14:30:00</code> (no timezone) from Server A in New York with <code>2026-03-26 14:30:00</code> (no timezone) from Server B in London, you will conclude they happened at the same time. They did not. They were five hours apart. This bug becomes critical in distributed systems, event ordering, audit trails, and financial transaction records.</p>
+
+<h2>JavaScript Date Handling · Pitfalls and Solutions</h2>
+
+<p>JavaScript's <code>Date</code> object is one of the most problematic datetime implementations in any mainstream language. Understanding its quirks is essential for any frontend or Node.js developer working with UTC time conversion.</p>
+
+<h3>The Core Problem</h3>
+
+<p>A JavaScript <code>Date</code> object internally stores a single number -- milliseconds since January 1, 1970 00:00:00 UTC (the Unix epoch). This number is always in UTC. However, when you call methods like <code>.toString()</code>, <code>.getHours()</code>, or <code>.getDay()</code>, JavaScript converts to the local timezone of the environment where the code is running. This implicit conversion is the source of countless bugs.</p>
+
+<pre><code>// The same Date object, different outputs depending on server location
+const timestamp = new Date('2026-03-26T20:00:00Z');
+
+// On a server in New York (EDT, UTC-4):
+timestamp.getHours();    // 16 (4:00 PM local)
+timestamp.toString();    // "Thu Mar 26 2026 16:00:00 GMT-0400 (EDT)"
+
+// On a server in London (GMT, UTC+0):
+timestamp.getHours();    // 20 (8:00 PM local)
+timestamp.toString();    // "Thu Mar 26 2026 20:00:00 GMT+0000 (GMT)"
+
+// On a server in Tokyo (JST, UTC+9):
+timestamp.getHours();    // 5 (5:00 AM next day, March 27)
+timestamp.toString();    // "Fri Mar 27 2026 05:00:00 GMT+0900 (JST)"</code></pre>
+
+<p>The underlying UTC value is identical in all three cases. But the default string representation and the values returned by getter methods change based on where the code runs. If you are rendering times in a server-side template and your staging server is in a different timezone than production, you will get different output.</p>
+
+<h3>Solution · Use UTC Methods</h3>
+
+<p>JavaScript provides UTC-specific getters that always return the UTC value regardless of the server's local timezone:</p>
+
+<pre><code>const timestamp = new Date('2026-03-26T20:00:00Z');
+
+timestamp.getUTCHours();    // 20 (always, everywhere)
+timestamp.getUTCDate();     // 26 (always, everywhere)
+timestamp.toISOString();    // "2026-03-26T20:00:00.000Z" (always UTC)</code></pre>
+
+<p>Use <code>.toISOString()</code> for serialization. Use <code>.getUTC*()</code> methods when you need individual components. Never use <code>.getHours()</code> or <code>.toString()</code> in server-side code unless you explicitly want the server's local timezone.</p>
+
+<h3>Solution · Intl.DateTimeFormat for Display</h3>
+
+<p>When you need to display a time in a specific timezone for the user, the <code>Intl.DateTimeFormat</code> API is the right tool. It uses the operating system's IANA timezone database and handles DST automatically.</p>
+
+<pre><code>const timestamp = new Date('2026-03-26T20:00:00Z');
+
+// Convert to Pacific Time (handles DST automatically)
+const pacificFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/Los_Angeles',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  timeZoneName: 'short'
+});
+
+pacificFormatter.format(timestamp);
+// "March 26, 2026, 01:00 PM PDT"
+
+// Convert to Eastern Time
+const easternFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  hour: '2-digit',
+  minute: '2-digit',
+  timeZoneName: 'long'
+});
+
+easternFormatter.format(timestamp);
+// "04:00 PM Eastern Daylight Time"</code></pre>
+
+<p>This approach is superior to manual offset arithmetic because <code>Intl.DateTimeFormat</code> consults the system's timezone database. It knows that <code>America/Los_Angeles</code> is UTC-8 in winter and UTC-7 in summer, and it applies the correct offset based on the actual date being formatted.</p>
+
+<h3>Solution · toLocaleString for Quick Conversions</h3>
+
+<p>For simpler cases, <code>Date.prototype.toLocaleString()</code> accepts a timezone option:</p>
+
+<pre><code>const timestamp = new Date('2026-03-26T20:00:00Z');
+
+// Quick UTC to PST/PDT conversion
+timestamp.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+// "3/26/2026, 1:00:00 PM"
+
+// Quick UTC to EST/EDT conversion
+timestamp.toLocaleString('en-US', { timeZone: 'America/New_York' });
+// "3/26/2026, 4:00:00 PM"
+
+// Quick UTC to JST conversion
+timestamp.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' });
+// "3/27/2026, 5:00:00 AM"</code></pre>
+
+<h3>Libraries Worth Considering</h3>
+
+<p>For complex timezone work in JavaScript, the built-in APIs sometimes fall short. Here is my assessment of the current library landscape.</p>
+
+<p><strong>Temporal API (Stage 3 proposal).</strong> This is the future of datetime handling in JavaScript. It provides first-class timezone support, unambiguous types (<code>PlainDate</code>, <code>ZonedDateTime</code>, <code>Instant</code>), and handles every edge case correctly. It is not yet available in all browsers and runtimes, but polyfills exist. I recommend learning it now so your code is ready when it ships.</p>
+
+<p><strong>Luxon.</strong> A mature, well-designed library built by one of the Moment.js maintainers. It has excellent timezone support via the Intl API and a clean, immutable API. It is my current recommendation for production code that needs timezone arithmetic.</p>
+
+<p><strong>date-fns-tz.</strong> A timezone extension for the popular date-fns library. Good if you already use date-fns and want to add timezone conversion without a full library swap.</p>
+
+<p><strong>Moment.js and Moment Timezone.</strong> These are in maintenance mode. The Moment team itself recommends against using them in new projects. If you have existing Moment code, plan a migration.</p>
+
+<h2>Database Timezone Storage · Best Practices</h2>
+
+<p>How you store timestamps in your database determines whether your application will handle time correctly across regions. Here are the patterns I recommend after building systems that serve users in 40+ countries.</p>
+
+<h3>PostgreSQL</h3>
+
+<p>Use <code>TIMESTAMPTZ</code> (timestamp with time zone), not <code>TIMESTAMP</code> (timestamp without time zone). Despite the name, <code>TIMESTAMPTZ</code> does not actually store a timezone -- it stores the value in UTC and converts to the session's timezone on retrieval. This is exactly the behavior you want.</p>
+
+<pre><code>-- Good: stores in UTC, converts on display
+CREATE TABLE events (
+  id SERIAL PRIMARY KEY,
+  event_name TEXT NOT NULL,
+  event_time TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Bad: no timezone information, ambiguous
+CREATE TABLE events_bad (
+  id SERIAL PRIMARY KEY,
+  event_name TEXT NOT NULL,
+  event_time TIMESTAMP NOT NULL DEFAULT NOW()
+);</code></pre>
+
+<p>Set your server's timezone to UTC with <code>SET timezone = 'UTC';</code> at the session or server level. This ensures that all timestamps are inserted and retrieved in UTC by default, and conversion to local time happens in your application layer.</p>
+
+<h3>MySQL</h3>
+
+<p>MySQL's <code>DATETIME</code> type does not store timezone information. The <code>TIMESTAMP</code> type converts from the session timezone to UTC on storage and back on retrieval, similar to PostgreSQL's <code>TIMESTAMPTZ</code>. Use <code>TIMESTAMP</code> when possible, and set the server's global timezone to UTC.</p>
+
+<pre><code>-- Set MySQL server to UTC
+SET GLOBAL time_zone = '+00:00';
+SET SESSION time_zone = '+00:00';</code></pre>
+
+<h3>MongoDB</h3>
+
+<p>MongoDB's <code>Date</code> type always stores timestamps as milliseconds since the Unix epoch in UTC. This is correct by default. The risk comes from your application code -- if you construct a JavaScript <code>Date</code> from a local time string without specifying UTC, you will store the wrong value.</p>
+
+<h3>The Golden Rules</h3>
+
+<p>Store everything in UTC. Always. No exceptions. Convert to local time at the last possible moment, in the presentation layer of your application. Store the user's preferred timezone as a separate field (using IANA identifiers like <code>America/Los_Angeles</code>, never abbreviations like "PST"). When displaying times, use that stored preference to convert from UTC to local for the user.</p>
+
+<p>If your application records events that are tied to a specific wall-clock time regardless of UTC (like "the store opens at 9:00 AM local time every day"), store the local time and the IANA timezone identifier as separate fields. This is the one case where storing local time is correct, because the intent is "9:00 AM in this timezone" rather than "a specific instant in time."</p>
+
+<h2>Leap Seconds · The Edge Case You Probably Cannot Ignore Forever</h2>
+
+<p>A leap second is a one-second adjustment applied to UTC to keep it synchronized with the Earth's rotation. Since 1972, 27 leap seconds have been added. They are announced roughly six months in advance by the International Earth Rotation and Reference Systems Service (IERS).</p>
+
+<p>During a positive leap second, the UTC clock reads <code>23:59:60</code> before rolling over to <code>00:00:00</code>. Most operating systems and programming languages cannot represent <code>:60</code> seconds, so they handle leap seconds by either repeating a second (smearing) or by jumping.</p>
+
+<p>Google and Amazon use "leap smearing," spreading the extra second across a longer window (typically 24 hours) so that each second is slightly longer than a true SI second. This means their servers' clocks are technically inaccurate during the smear, but no timestamp is duplicated or skipped.</p>
+
+<p>For most applications, leap seconds are invisible. Your operating system handles them via NTP synchronization. But if you are building high-frequency trading systems, scientific instrumentation, or satellite timing, you need to understand how your platform handles them.</p>
+
+<p>In November 2022, the General Conference on Weights and Measures (CGPM) voted to abolish leap seconds by 2035. After that date, UTC will tick purely on atomic time without corrections for Earth's rotation. The accumulated difference will be addressed by a larger correction sometime in the next century.</p>
+
+<h2>Practical Conversion Reference</h2>
+
+<p>Here is a quick-reference table for the most common UTC conversions. Remember that these offsets change when DST is in effect.</p>
+
+<p>| Conversion | Standard Time | Daylight Time | Formula (Standard) |</p>
+<p>| --- | --- | --- | --- |</p>
+<p>| UTC to Eastern | EST (UTC-5) | EDT (UTC-4) | Subtract 5 hours |</p>
+<p>| UTC to Central | CST (UTC-6) | CDT (UTC-5) | Subtract 6 hours |</p>
+<p>| UTC to Mountain | MST (UTC-7) | MDT (UTC-6) | Subtract 7 hours |</p>
+<p>| UTC to Pacific | PST (UTC-8) | PDT (UTC-7) | Subtract 8 hours |</p>
+<p>| UTC to Alaska | AKST (UTC-9) | AKDT (UTC-8) | Subtract 9 hours |</p>
+<p>| UTC to Hawaii | HST (UTC-10) | N/A | Subtract 10 hours |</p>
+<p>| UTC to London | GMT (UTC+0) | BST (UTC+1) | No change |</p>
+<p>| UTC to Tokyo | JST (UTC+9) | N/A | Add 9 hours |</p>
+<p>| UTC to Sydney | AEST (UTC+10) | AEDT (UTC+11) | Add 10 hours |</p>
+
+<p>If you need to run these conversions frequently or want to convert between non-UTC time zones, the <a href="https://zovo.one/free-tools/utc-to-est-converter/">UTC time converter tool</a> I built handles all the offset logic and DST awareness automatically.</p>
+
+<h2>A Checklist for Timezone-Safe Applications</h2>
+
+<p>After over a decade of building software that crosses time zone boundaries, I have distilled my approach into a checklist that I apply to every new project. If you follow these rules, you will avoid the vast majority of timezone bugs.</p>
+
+<p>First, store all timestamps in UTC. Use <code>TIMESTAMPTZ</code> in PostgreSQL, <code>TIMESTAMP</code> in MySQL, or always construct JavaScript <code>Date</code> objects from UTC values.</p>
+
+<p>Second, never hardcode UTC offsets. Use IANA timezone identifiers (<code>America/New_York</code>, <code>Europe/London</code>, <code>Asia/Tokyo</code>) and let your timezone library handle the offset calculation, including DST transitions.</p>
+
+<p>Third, store the user's timezone preference as a separate field in their profile. Use the IANA identifier, not an abbreviation. "America/Los_Angeles" is unambiguous. "PST" is not, because it could refer to Pacific Standard Time (UTC-8) or Philippine Standard Time (UTC+8).</p>
+
+<p>Fourth, convert to local time at the presentation layer only. Your API should send UTC timestamps. Your frontend or mobile app should convert to the user's local time for display. This keeps your backend timezone-agnostic.</p>
+
+<p>Fifth, test DST transitions explicitly. Write unit tests for dates that fall on the second Sunday of March and the first Sunday of November. Test 2:30 AM (the gap) and 1:30 AM (the overlap). If your application schedules recurring events, test what happens when a weekly event falls on a DST transition day.</p>
+
+<p>Sixth, validate user-entered times against DST rules. If a user tries to schedule something at 2:30 AM on March 8, 2026, in the Eastern time zone, that time does not exist. Your application should detect this and either reject the input with a clear error message or automatically adjust to 3:30 AM.</p>
+
+<p>Seventh, use ISO 8601 for all timestamp serialization. Whenever a timestamp crosses a system boundary -- between a client and server, between microservices, into a log file, or into a message queue -- format it as ISO 8601 with an explicit UTC indicator.</p>
+
+<p>Eighth, keep your IANA timezone database current. Governments change timezone rules with surprisingly little notice. Your programming language or operating system provides updates, but you need to apply them. A system running a three-year-old timezone database may produce incorrect results for recently changed zones.</p>
+
+<h2>Wrapping Up</h2>
+
+<p>Time zone conversion is not hard once you internalize the core principle. UTC is the single source of truth. Everything else is a view on top of that truth, shaped by geography, politics, and the semiannual ritual of Daylight Saving Time.</p>
+
+<p>Store UTC. Transmit UTC. Convert at the edges. Use IANA identifiers instead of abbreviations. Let well-tested libraries handle the arithmetic. Test your DST edge cases.</p>
+
+<p>If you do those things consistently, you will never get a 3:00 AM page because a timestamp conversion went wrong. And that, in my experience, is worth every minute spent understanding how time actually works in software systems.</p>
+
+</article>
+</body>
+</html>
