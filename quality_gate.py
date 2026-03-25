@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Continuous Quality Gate Scanner for Tools G-N
-Agent 2 - Detects and fixes violations before Google indexes them
+Continuous Quality Gate Scanner for Tools U-Z
+Agent 9 - Detects and fixes violations before Google indexes them
 """
 
 import os
@@ -17,20 +17,21 @@ class QualityGate:
         self.violations_found = False
 
         # Violation patterns
-        self.bold_pattern = re.compile(r'\*\*[^*]+\*\*')
+        self.bold_pattern = re.compile(r'\*\*[^*]+\*\*|<b>.*?</b>|<strong>.*?</strong>', re.IGNORECASE)
         self.em_dash_pattern = re.compile(r'—')
         self.hashtag_pattern = re.compile(r'#[A-Za-z]\w*')
         self.ai_phrases = [
             'AI-powered', 'AI powered', 'artificial intelligence',
             'machine learning', 'ML-based', 'powered by AI',
-            'AI-driven', 'AI driven', 'smart algorithm'
+            'AI-driven', 'AI driven', 'smart algorithm', 'Claude', 'Anthropic'
         ]
+        self.wrong_author_pattern = re.compile(r'(?!Michael Lip)\b[A-Z][a-z]+ [A-Z][a-z]+\b(?=.*(?:author|written by|created by))', re.IGNORECASE)
 
-    def get_gn_tools(self):
-        """Get all tool directories G-N"""
+    def get_uz_tools(self):
+        """Get all tool directories U-Z"""
         all_dirs = [d for d in os.listdir(self.base_dir) if os.path.isdir(os.path.join(self.base_dir, d))]
-        gn_tools = [d for d in all_dirs if d[0].lower() in 'ghijklmn']
-        return sorted(gn_tools)
+        uz_tools = [d for d in all_dirs if d[0].lower() in 'uvwxyz']
+        return sorted(uz_tools)
 
     def scan_file_violations(self, filepath):
         """Scan a file for content violations"""
@@ -57,6 +58,10 @@ class QualityGate:
             for phrase in self.ai_phrases:
                 if phrase.lower() in content_lower:
                     violations.append(f'ai_phrase: {phrase}')
+
+            # Check for wrong author attribution
+            if self.wrong_author_pattern.search(content):
+                violations.append('wrong_author')
 
             return violations
 
@@ -108,9 +113,13 @@ class QualityGate:
 
             original_content = content
 
-            # Fix bold text
+            # Fix bold text (both markdown and HTML)
             if 'bold_text' in violations:
-                content = self.bold_pattern.sub(lambda m: m.group(0)[2:-2], content)
+                # Remove markdown bold
+                content = re.sub(r'\*\*([^*]+)\*\*', r'\1', content)
+                # Remove HTML bold tags
+                content = re.sub(r'<b>(.*?)</b>', r'\1', content, flags=re.IGNORECASE)
+                content = re.sub(r'<strong>(.*?)</strong>', r'\1', content, flags=re.IGNORECASE)
 
             # Fix em-dashes
             if 'em_dash' in violations:
@@ -134,10 +143,16 @@ class QualityGate:
                         'powered by AI': 'powered by advanced algorithms',
                         'AI-driven': 'algorithm-driven',
                         'AI driven': 'algorithm driven',
-                        'smart algorithm': 'intelligent system'
+                        'smart algorithm': 'intelligent system',
+                        'Claude': '',
+                        'Anthropic': ''
                     }
                     if phrase in replacements:
                         content = content.replace(phrase, replacements[phrase])
+
+            # Fix wrong author attribution
+            if 'wrong_author' in violations:
+                content = self.wrong_author_pattern.sub('Michael Lip', content)
 
             if content != original_content:
                 with open(filepath, 'w', encoding='utf-8') as f:
@@ -177,15 +192,15 @@ class QualityGate:
         return violations_found
 
     def run_quality_scan(self):
-        """Run complete quality scan on G-N tools"""
-        print(f"🔍 Quality Gate - Scanning Tools G-N at {time.strftime('%H:%M:%S')}")
+        """Run complete quality scan on U-Z tools"""
+        print(f"🔍 Quality Gate - Scanning Tools U-Z at {time.strftime('%H:%M:%S')}")
 
-        gn_tools = self.get_gn_tools()
-        print(f"Found {len(gn_tools)} tools to scan")
+        uz_tools = self.get_uz_tools()
+        print(f"Found {len(uz_tools)} tools to scan")
 
         total_violations_fixed = 0
 
-        for tool in gn_tools:
+        for tool in uz_tools:
             if self.scan_tool(tool):
                 total_violations_fixed += 1
                 self.violations_found = True
