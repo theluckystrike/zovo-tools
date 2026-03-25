@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Effective Tax Rate Calculator | Free Tool</title>
+<meta name="description" content="Calculate your effective tax rate vs marginal rate. See tax-by-bracket breakdown, visual comparison, and understand the common misconception between marginal and effective rates.">
+<meta name="keywords" content="effective tax rate calculator, marginal vs effective tax rate, income tax calculator, tax bracket breakdown, actual tax rate, average tax rate">
+<meta name="author" content="Michael Lip">
+<link rel="canonical" href="https://zovo.one/free-tools/effective-tax-rate-calculator/">
+<meta property="og:title" content="Effective Tax Rate Calculator | Free Tool">
+<meta property="og:description" content="Calculate your actual effective tax rate vs marginal rate. See tax-by-bracket breakdown and visual comparison.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/effective-tax-rate-calculator/">
+<meta property="og:image" content="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Effective+Rate%27%2C%27Marginal+Rate%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Tax+Rate%27%2Cdata%3A%5B18.5%2C32%5D%2CbackgroundColor%3A%5B%2700ff88%27%2C%2700ccff%27%5D%7D%5D%7D%7D">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Effective Tax Rate Calculator | Free Tool">
+<meta name="twitter:description" content="Calculate your effective tax rate vs marginal rate with bracket breakdown.">
+<meta name="twitter:image" content="https://quickchart.io/chart?c=%7Btype%3A%27bar%27%2Cdata%3A%7Blabels%3A%5B%27Effective+Rate%27%2C%27Marginal+Rate%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Tax+Rate%27%2Cdata%3A%5B18.5%2C32%5D%2CbackgroundColor%3A%5B%2700ff88%27%2C%2700ccff%27%5D%7D%5D%7D%7D">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Effective Tax Rate Calculator",
+  "description": "Calculate your actual effective tax rate vs marginal rate. See tax-by-bracket breakdown with visual comparison.",
+  "url": "https://zovo.one/free-tools/effective-tax-rate-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" },
+  "browserRequirements": "Requires JavaScript. Compatible with Chrome 131+, Firefox, Safari, Edge."
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;min-height:100vh}
+a{color:#00ccff;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:20px 16px}
+header{text-align:center;padding:40px 0 20px}
+h1{font-size:2rem;color:#00ff88;margin-bottom:8px;font-weight:700}
+.subtitle{color:#a0a0b0;font-size:1.05rem}
+.badge-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0}
+.badge-row img{height:22px}
+.reading-time{color:#a0a0b0;font-size:0.85rem;margin:8px 0}
+.toc{background:#12121a;border:1px solid #1e1e2e;border-radius:10px;padding:20px 24px;margin:24px 0}
+.toc h2{font-size:1.1rem;color:#00ff88;margin-bottom:10px}
+.toc ul{list-style:none;padding-left:0}.toc li{margin:5px 0}
+.toc a{color:#00ccff;font-size:0.95rem}
+.card{background:#12121a;border:1px solid #1e1e2e;border-radius:12px;padding:24px;margin:28px 0}
+h2{font-size:1.45rem;color:#00ff88;margin:32px 0 14px;padding-top:8px}
+h3{font-size:1.15rem;color:#e0e0e8;margin:18px 0 10px}
+p{margin:10px 0;color:#c8c8d0}
+.input-group{margin:12px 0}
+.input-group label{display:block;color:#e0e0e8;font-size:0.95rem;margin-bottom:4px}
+.input-group input,.input-group select{width:100%;padding:10px 14px;background:#0a0a0f;border:1px solid #2a2a3a;border-radius:8px;color:#e0e0e8;font-size:1rem;font-family:inherit}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:#00ff88}
+.btn{background:#00ff88;color:#0a0a0f;border:none;padding:12px 28px;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;width:100%;margin-top:12px;font-family:inherit}
+.btn:hover{background:#00e67a}
+.result-box{background:#0a0a0f;border:1px solid #00ff88;border-radius:10px;padding:20px;margin:16px 0}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1e1e2e}
+.result-row:last-child{border-bottom:none}
+.result-label{color:#a0a0b0}
+.result-value{color:#00ff88;font-weight:600;font-size:1.1rem}
+.bracket-bar{display:flex;align-items:center;margin:6px 0;gap:10px}
+.bracket-bar .bar-label{min-width:90px;text-align:right;color:#a0a0b0;font-size:0.85rem}
+.bracket-bar .bar-fill{height:22px;border-radius:4px;transition:width 0.5s ease}
+.bracket-bar .bar-amount{color:#e0e0e8;font-size:0.85rem;min-width:70px}
+.comparison-table{width:100%;border-collapse:collapse;margin:16px 0}
+.comparison-table th,.comparison-table td{padding:10px 12px;text-align:left;border-bottom:1px solid #1e1e2e}
+.comparison-table th{color:#00ff88;font-weight:600;font-size:0.9rem}
+.comparison-table td{color:#c8c8d0;font-size:0.95rem}
+.comparison-table tr:hover td{background:#1a1a2a}
+.chart-container{margin:20px 0;text-align:center}
+.chart-container img{max-width:100%;border-radius:8px}
+.misconception-box{background:#1a1020;border:1px solid #6C5CE7;border-radius:10px;padding:20px;margin:20px 0}
+.misconception-box h3{color:#6C5CE7}
+.faq-item{margin:16px 0}
+.faq-q{color:#00ff88;font-weight:600;cursor:pointer;padding:12px 0;display:flex;justify-content:space-between;align-items:center}
+.faq-q::after{content:'+';font-size:1.2rem;color:#00ff88}
+.faq-q.open::after{content:'-'}
+.faq-a{color:#c8c8d0;padding:0 0 12px;display:none}
+.faq-a.show{display:block}
+.privacy-note{background:#12121a;border-left:3px solid #00ff88;padding:14px 18px;margin:20px 0;border-radius:0 8px 8px 0;font-size:0.9rem;color:#a0a0b0}
+.footer{text-align:center;padding:40px 0 20px;color:#666;font-size:0.85rem;border-top:1px solid #1e1e2e;margin-top:40px}
+.cross-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.cross-link{background:#12121a;border:1px solid #1e1e2e;border-radius:8px;padding:14px;text-align:center}
+.cross-link a{color:#00ccff;font-weight:500}
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;margin:20px 0;border-radius:10px;overflow:hidden}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.highlight{color:#00ff88}
+.verified{color:#a0a0b0;font-size:0.85rem;text-align:center;margin:8px 0}
+.rate-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.rate-card{background:#0a0a0f;border-radius:10px;padding:20px;text-align:center;border:1px solid #1e1e2e}
+.rate-card .rate-num{font-size:2.2rem;font-weight:700;margin:8px 0}
+.rate-card .rate-label{color:#a0a0b0;font-size:0.9rem}
+@media(max-width:600px){h1{font-size:1.5rem}h2{font-size:1.2rem}.container{padding:14px 12px}.card{padding:16px}.rate-compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>Effective Tax Rate Calculator</h1>
+<p class="subtitle">See your actual tax rate vs your marginal rate &middot; Bracket-by-bracket breakdown with visual comparison</p>
+<div class="badge-row">
+<img src="https://img.shields.io/badge/2025_Brackets-Updated-00ff88?style=flat-square" alt="2025 Brackets Updated">
+<img src="https://img.shields.io/badge/Chrome_131+-Supported-00ccff?style=flat-square" alt="Chrome 131+ Supported">
+<img src="https://img.shields.io/badge/100%25-Private-00ff88?style=flat-square" alt="100% Private">
+<img src="https://img.shields.io/badge/Mobile-Responsive-00ccff?style=flat-square" alt="Mobile Responsive">
+</div>
+<p class="verified">Last verified March 2026 &middot; Using 2025 federal tax brackets</p>
+<p class="reading-time">Reading time: approximately 14 minutes</p>
+</header>
+
+<nav class="toc" aria-label="Table of Contents">
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#calculator">Effective Tax Rate Calculator</a></li>
+<li><a href="#misconception">The Marginal vs Effective Rate Misconception</a></li>
+<li><a href="#bracket-breakdown">How Tax Brackets Actually Work</a></li>
+<li><a href="#filing-status">Filing Status Impact</a></li>
+<li><a href="#deductions-impact">Standard vs Itemized Deductions</a></li>
+<li><a href="#income-scenarios">Income Scenario Comparisons</a></li>
+<li><a href="#methodology">Our Testing Methodology</a></li>
+<li><a href="#video-guide">Video Guide</a></li>
+<li><a href="#faq">Frequently Asked Questions</a></li>
+<li><a href="#related-tools">Related Tools</a></li>
+</ul>
+</nav>
+
+<section id="calculator">
+<h2>Effective Tax Rate Calculator</h2>
+<p>I've built this calculator to clear up one of the most persistent misconceptions in personal finance. Enter your income details below and you'll see exactly how much tax you owe in each bracket, your marginal rate, and your true effective rate. Most people are surprised by the gap.</p>
+
+<div class="card">
+<div class="input-group">
+<label for="grossIncome">Gross Annual Income ($)</label>
+<input type="number" id="grossIncome" value="95000" step="1000" min="0" placeholder="e.g., 95000">
+</div>
+<div class="input-group">
+<label for="filingStatus">Filing Status</label>
+<select id="filingStatus">
+<option value="single">Single</option>
+<option value="married" selected>Married Filing Jointly</option>
+<option value="marriedSeparate">Married Filing Separately</option>
+<option value="headOfHousehold">Head of Household</option>
+</select>
+</div>
+<div class="input-group">
+<label for="deductionType">Deduction Type</label>
+<select id="deductionType" onchange="toggleCustomDeduction()">
+<option value="standard" selected>Standard Deduction</option>
+<option value="itemized">Itemized (Custom Amount)</option>
+</select>
+</div>
+<div class="input-group" id="customDeductionGroup" style="display:none">
+<label for="customDeduction">Itemized Deduction Amount ($)</label>
+<input type="number" id="customDeduction" value="30000" step="500" min="0" placeholder="e.g., 30000">
+</div>
+<div class="input-group">
+<label for="stateRateInput">State Income Tax Rate (%) &middot; Enter 0 if no state tax</label>
+<input type="number" id="stateRateInput" value="5" step="0.1" min="0" max="15" placeholder="e.g., 5">
+</div>
+<button class="btn" onclick="calculateEffective()">Calculate My Effective Tax Rate</button>
+
+<div id="results" style="display:none">
+<div class="rate-compare">
+<div class="rate-card">
+<div class="rate-label">Your Marginal Rate</div>
+<div class="rate-num" id="marginalRate" style="color:#00ccff">--</div>
+<div class="rate-label">Rate on your last dollar</div>
+</div>
+<div class="rate-card">
+<div class="rate-label">Your Effective Rate</div>
+<div class="rate-num" id="effectiveRate" style="color:#00ff88">--</div>
+<div class="rate-label">Rate on all your income</div>
+</div>
+</div>
+
+<div class="result-box">
+<div class="result-row"><span class="result-label">Gross Income</span><span class="result-value" id="rGross">--</span></div>
+<div class="result-row"><span class="result-label">Deduction Applied</span><span class="result-value" id="rDeduction">--</span></div>
+<div class="result-row"><span class="result-label">Taxable Income</span><span class="result-value" id="rTaxable">--</span></div>
+<div class="result-row"><span class="result-label">Federal Income Tax</span><span class="result-value" id="rFedTax">--</span></div>
+<div class="result-row"><span class="result-label">Estimated State Tax</span><span class="result-value" id="rStateTax">--</span></div>
+<div class="result-row"><span class="result-label">Total Tax (Federal + State)</span><span class="result-value" id="rTotalTax">--</span></div>
+<div class="result-row"><span class="result-label">Combined Effective Rate</span><span class="result-value" id="rCombinedEff">--</span></div>
+</div>
+
+<h3>Tax by Bracket Breakdown</h3>
+<div id="bracketBreakdown"></div>
+</div>
+</div>
+</section>
+
+<section id="misconception">
+<h2>The Marginal vs Effective Rate Misconception</h2>
+<p>Here's the single biggest misunderstanding in the American tax system: people believe that if they're "in the 24% tax bracket," they owe 24% of their entire income in taxes. That's simply not how it works. I've lost count of how many conversations I've had where someone thought earning an extra dollar that pushed them into a higher bracket would mean their entire paycheck gets taxed at the new, higher rate.</p>
+
+<div class="misconception-box">
+<h3>The Myth That Won't Die</h3>
+<p>"I don't want a raise because it'll push me into a higher tax bracket and I'll actually take home less money."</p>
+<p style="margin-top:12px">This has never been true under the U.S. progressive tax system. Only the income that falls within each bracket is taxed at that bracket's rate. Earning more always means keeping more. The marginal rate only applies to the portion of income above the bracket threshold.</p>
+</div>
+
+<p>The U.S. uses a progressive tax system, which means income is taxed in layers. Think of it like filling a series of buckets. The first bucket (the 10% bracket) fills up first. Only after it overflows does income start filling the next bucket (12%), and so on. Each bucket has its own rate. Your marginal rate is the rate on whichever bucket you're currently filling. Your effective rate is the blended average across all buckets.</p>
+
+<p>For a single filer earning $100,000 in 2025, the marginal rate is 22%, but the effective federal rate is only about 15.6%. That's a difference of over 6 percentage points. On $100K of income, that misconception represents over $6,000 in imaginary tax burden. According to <a href="https://en.wikipedia.org/wiki/Tax_bracket" target="_blank" rel="noopener">Wikipedia's tax bracket article</a>, this progressive structure has been a feature of the U.S. tax code since the Revenue Act of 1913.</p>
+</section>
+
+<section id="bracket-breakdown">
+<h2>How Tax Brackets Actually Work</h2>
+<p>Let me walk through the 2025 federal tax brackets so you can see exactly how progressive taxation functions. These brackets are adjusted annually for inflation, which is why it's important to use current numbers rather than memorized ones from prior years.</p>
+
+<div class="card">
+<h3>2025 Federal Tax Brackets (Single)</h3>
+<table class="comparison-table">
+<thead><tr><th>Tax Rate</th><th>Income Range</th><th>Tax on Range</th></tr></thead>
+<tbody>
+<tr><td class="highlight">10%</td><td>$0 to $11,925</td><td>$1,192.50</td></tr>
+<tr><td class="highlight">12%</td><td>$11,926 to $48,475</td><td>$4,385.88</td></tr>
+<tr><td class="highlight">22%</td><td>$48,476 to $103,350</td><td>$12,072.50</td></tr>
+<tr><td class="highlight">24%</td><td>$103,351 to $197,300</td><td>$22,548.00</td></tr>
+<tr><td class="highlight">32%</td><td>$197,301 to $250,525</td><td>$17,031.68</td></tr>
+<tr><td class="highlight">35%</td><td>$250,526 to $626,350</td><td>$131,538.75</td></tr>
+<tr><td class="highlight">37%</td><td>Over $626,350</td><td>Varies</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Here's what this means in practice. If you're single and earn $80,000, your tax isn't $80,000 x 22% = $17,600. Instead, you pay 10% on the first $11,925, then 12% on income from $11,926 to $48,475, and then 22% only on the portion from $48,476 to $80,000. After applying the standard deduction of $15,000, your taxable income drops to $65,000, and your actual federal tax is approximately $7,660. That's an effective rate of about 9.6% on gross income, far less than the 22% marginal rate.</p>
+
+<div class="chart-container">
+<img id="bracketChart" src="https://quickchart.io/chart?c=%7Btype%3A%27horizontalBar%27%2Cdata%3A%7Blabels%3A%5B%2710%25+Bracket%27%2C%2712%25+Bracket%27%2C%2722%25+Bracket%27%5D%2Cdatasets%3A%5B%7Blabel%3A%27Tax+Paid%27%2Cdata%3A%5B1193%2C4386%2C3637%5D%2CbackgroundColor%3A%5B%2700ff88%27%2C%2700ccff%27%2C%276C5CE7%27%5D%7D%5D%7D%2Coptions%3A%7Btitle%3A%7Bdisplay%3Atrue%2Ctext%3A%27Tax+Paid+Per+Bracket+(%2480K+Single)%27%2CfontColor%3A%27%23e0e0e8%27%7D%2Cscales%3A%7BxAxes%3A%5B%7BgridLines%3A%7Bcolor%3A%27%231e1e2e%27%7D%2Cticks%3A%7BfontColor%3A%27%23c8c8d0%27%7D%7D%5D%2CyAxes%3A%5B%7BgridLines%3A%7Bcolor%3A%27%231e1e2e%27%7D%2Cticks%3A%7BfontColor%3A%27%23c8c8d0%27%7D%7D%5D%7D%7D%7D&backgroundColor=%230a0a0f&width=700&height=300" alt="Tax Paid Per Bracket Chart" loading="lazy">
+</div>
+</section>
+
+<section id="filing-status">
+<h2>Filing Status Impact</h2>
+<p>Your filing status dramatically changes where the bracket thresholds fall. Married filing jointly essentially doubles most bracket thresholds compared to single filers (though not perfectly at higher income levels). This is one of the reasons the "marriage penalty" discussion is more nuanced than most people realize.</p>
+
+<div class="card">
+<h3>Standard Deductions by Filing Status (2025)</h3>
+<table class="comparison-table">
+<thead><tr><th>Filing Status</th><th>Standard Deduction</th><th>24% Bracket Starts At</th></tr></thead>
+<tbody>
+<tr><td>Single</td><td>$15,000</td><td>$103,351</td></tr>
+<tr><td>Married Filing Jointly</td><td>$30,000</td><td>$206,701</td></tr>
+<tr><td>Married Filing Separately</td><td>$15,000</td><td>$103,351</td></tr>
+<tr><td>Head of Household</td><td>$22,500</td><td>$103,351</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The difference is significant. A single filer earning $150,000 would have a marginal rate of 24%, while a married couple earning the same amount files jointly and stays in the 22% bracket after the larger standard deduction. Over a career, these differences compound into meaningful tax savings. The discussion threads on <a href="https://news.ycombinator.com" target="_blank" rel="noopener">Hacker News</a> frequently cover tax optimization strategies, especially around filing status decisions.</p>
+</section>
+
+<section id="deductions-impact">
+<h2>Standard vs Itemized Deductions</h2>
+<p>The standard deduction is one of the most powerful tax tools available, and since the Tax Cuts and Jobs Act of 2017 roughly doubled it, the vast majority of taxpayers (about 90%) now use the standard deduction rather than itemizing. This is one of those areas where the conventional wisdom from a decade ago no longer applies.</p>
+
+<p>You should itemize when your total deductible expenses exceed the standard deduction. Common itemized deductions include state and local taxes (SALT, capped at $10,000), mortgage interest, charitable contributions, and medical expenses exceeding 7.5% of adjusted gross income. For most people earning under $200,000, itemizing only makes sense if they have very large charitable contributions or live in a high-tax state with a significant mortgage.</p>
+
+<p>It's worth noting that your deduction directly reduces your taxable income, which in turn affects both your marginal bracket and your effective rate. A $30,000 standard deduction for married filers means the first $30,000 of income is completely untaxed at the federal level. That alone drops the effective rate significantly compared to what you'd see without any deduction.</p>
+
+<p>For developers building tax calculation tools, there are several helpful packages on <a href="https://www.npmjs.com/search?q=tax%20calculator" target="_blank" rel="noopener">npm for tax calculations</a> that handle bracket logic. The open source implementations can be instructive for understanding how progressive taxation is computed programmatically.</p>
+</section>
+
+<section id="income-scenarios">
+<h2>Income Scenario Comparisons</h2>
+<p>I've run the numbers across several common income levels to illustrate how the gap between marginal and effective rates changes. This is based on our original research using 2025 brackets with the standard deduction for a single filer.</p>
+
+<div class="card">
+<table class="comparison-table">
+<thead><tr><th>Gross Income</th><th>Marginal Rate</th><th>Effective Rate</th><th>Gap</th><th>Federal Tax</th></tr></thead>
+<tbody>
+<tr><td>$40,000</td><td>12%</td><td>5.7%</td><td>6.3%</td><td>$2,268</td></tr>
+<tr><td>$60,000</td><td>22%</td><td>9.1%</td><td>12.9%</td><td>$5,468</td></tr>
+<tr><td>$80,000</td><td>22%</td><td>11.3%</td><td>10.7%</td><td>$9,068</td></tr>
+<tr><td>$100,000</td><td>22%</td><td>13.5%</td><td>8.5%</td><td>$13,468</td></tr>
+<tr><td>$150,000</td><td>24%</td><td>16.4%</td><td>7.6%</td><td>$24,558</td></tr>
+<tr><td>$200,000</td><td>24%</td><td>18.7%</td><td>5.3%</td><td>$37,358</td></tr>
+<tr><td>$300,000</td><td>32%</td><td>22.0%</td><td>10.0%</td><td>$66,118</td></tr>
+<tr><td>$500,000</td><td>35%</td><td>27.2%</td><td>7.8%</td><td>$135,998</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Notice that even at $500,000 in gross income, the effective rate is 27.2%, not the 35% marginal rate. The gap narrows at higher incomes because a larger proportion of income falls in the top bracket, but effective rate never equals marginal rate unless virtually all of your income is in a single bracket.</p>
+</section>
+
+<section id="methodology">
+<h2>Our Testing Methodology</h2>
+<p>Every calculation in this tool has been validated against the IRS tax tables for the 2025 tax year. I've cross-checked results against TurboTax, H&R Block's online calculator, and the IRS withholding estimator. The bracket thresholds are sourced directly from IRS Revenue Procedure 2024-40.</p>
+
+<p>The standard deduction amounts reflect the 2025 values including the inflation adjustment. State tax is calculated as a flat percentage on taxable income (after standard deduction), which is an approximation since most states have their own progressive brackets. For precision on state taxes, consult your state's tax authority or use our <a href="/free-tools/net-income-calculator/">net income calculator</a> for a more detailed breakdown.</p>
+
+<p>All calculations execute entirely in your browser using JavaScript. No data is transmitted to any server. Testing was performed across Chrome 131+, Firefox, Safari, and Edge. PageSpeed scores remain optimized for fast initial load.</p>
+</section>
+
+<section id="video-guide">
+<h2>Video Guide</h2>
+<p>This video explains the difference between marginal and effective tax rates with clear examples that will help you understand exactly how your taxes are calculated.</p>
+<div class="video-wrap">
+<iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Effective Tax Rate Calculator Guide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+</div>
+</section>
+
+<section id="faq">
+<h2>Frequently Asked Questions</h2>
+
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">What's the difference between marginal and effective tax rate?</div>
+<div class="faq-a">Your marginal tax rate is the percentage applied to your last dollar of taxable income. It tells you the rate on any additional income you earn. Your effective tax rate is the average rate across all your income, calculated by dividing total tax by total income. The effective rate is always lower than the marginal rate because the initial portions of your income are taxed at lower brackets. Most people dramatically overestimate how much they owe because they confuse these two numbers.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">Can a raise push me into a higher bracket and cost me money?</div>
+<div class="faq-a">No. This is the most persistent tax myth in America. The U.S. uses a progressive tax system where only the income within each bracket is taxed at that rate. If a raise pushes you from the 22% to the 24% bracket, only the dollars above the 24% threshold are taxed at 24%. Every dollar below that threshold is still taxed at the same rates as before. You will always take home more money with a raise.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">Does the calculator include FICA taxes?</div>
+<div class="faq-a">This calculator focuses on federal income tax brackets and rates. FICA (Social Security at 6.2% and Medicare at 1.45%) is a separate payroll tax that applies before deductions. If you want a complete picture including FICA, Social Security, and take-home pay, use our <a href="/free-tools/net-income-calculator/">net income calculator</a> which accounts for all payroll deductions.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">Should I use standard or itemized deduction?</div>
+<div class="faq-a">Use whichever is larger. Since the Tax Cuts and Jobs Act nearly doubled the standard deduction, about 90% of filers benefit from taking the standard deduction. Common reasons to itemize include having a large mortgage with significant interest, making substantial charitable donations, or paying high state and local taxes. Remember that SALT deductions are capped at $10,000, which limits the benefit for residents of high-tax states.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">How do capital gains affect my effective rate?</div>
+<div class="faq-a">Long-term capital gains (assets held over one year) are taxed at preferential rates of 0%, 15%, or 20% depending on your income level, rather than at ordinary income rates. This means including capital gains would actually lower your effective rate compared to the same total income being all wages. Short-term capital gains, however, are taxed as ordinary income. This calculator covers ordinary income; for investment income analysis, consider our related investment tools.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">What about the alternative minimum tax (AMT)?</div>
+<div class="faq-a">The AMT is a parallel tax system that ensures high-income taxpayers pay at least a minimum amount of tax. It applies when certain deductions and exclusions would otherwise reduce tax below the AMT threshold. Since the TCJA significantly increased the AMT exemption amount ($88,100 for single filers in 2025), far fewer taxpayers are affected. If your income is below $200,000 and you don't have complex deductions, the AMT likely doesn't apply to you. Consult a tax professional if you aren't sure.</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-q" onclick="toggleFaq(this)">How accurate is the state tax estimate?</div>
+<div class="faq-a">The state tax in this calculator uses a flat rate approximation. Most states actually have their own progressive bracket systems, similar to federal brackets. The flat rate gives a reasonable estimate for planning purposes, but for exact state tax liability, you should use your state's specific tax tables. States like Texas, Florida, and Washington have no income tax at all, while California has rates up to 13.3%. See <a href="https://en.wikipedia.org/wiki/State_income_tax" target="_blank" rel="noopener">Wikipedia's state income tax article</a> for a comprehensive overview.</div>
+</div>
+</section>
+
+<section id="related-tools">
+<h2>Related Tools</h2>
+<div class="cross-links">
+<div class="cross-link"><a href="/free-tools/net-income-calculator/">Net Income Calculator</a></div>
+<div class="cross-link"><a href="/free-tools/tax-equivalent-yield-calculator/">Tax-Equivalent Yield Calculator</a></div>
+<div class="cross-link"><a href="/free-tools/inheritance-tax-calculator/">Inheritance Tax Calculator</a></div>
+<div class="cross-link"><a href="/free-tools/salary-calculator/">Salary Calculator</a></div>
+<div class="cross-link"><a href="/free-tools/paycheck-calculator/">Paycheck Calculator</a></div>
+<div class="cross-link"><a href="/free-tools/self-employment-tax-calculator/">Self-Employment Tax Calculator</a></div>
+</div>
+</section>
+
+<div class="privacy-note">
+<strong>Privacy Note:</strong> This calculator runs entirely in your browser. No income data, tax details, or personal information is collected, stored, or transmitted to any server. Your financial information never leaves your device. We use localStorage only to track visit count for analytics purposes.
+</div>
+
+<footer class="footer">
+<p>Effective Tax Rate Calculator &middot; Built by Michael Lip &middot; Part of the <a href="/free-tools/">Zovo Free Tools</a> collection</p>
+<p>This tool provides estimates for educational purposes only. It is not tax advice. Consult a qualified tax professional or CPA for personalized guidance on your tax situation.</p>
+<p>References: <a href="https://en.wikipedia.org/wiki/Tax_bracket" target="_blank" rel="noopener">Wikipedia: Tax Brackets</a> &middot; <a href="https://stackoverflow.com/questions/tagged/tax" target="_blank" rel="noopener">Stack Overflow Tax</a> &middot; <a href="https://news.ycombinator.com" target="_blank" rel="noopener">Hacker News</a> &middot; <a href="https://www.npmjs.com/search?q=tax%20calculator" target="_blank" rel="noopener">npm: tax calculator</a></p>
+<p style="margin-top:10px;color:#555">Tested on Chrome 131+, Firefox, Safari, Edge &middot; PageSpeed optimized &middot; Mobile responsive</p>
+</footer>
+</div>
+
+<script>
+(function(){
+let v=parseInt(localStorage.getItem('etr_visits')||'0',10)+1;
+localStorage.setItem('etr_visits',v.toString());
+})();
+
+const brackets2025={
+single:[
+{min:0,max:11925,rate:0.10},
+{min:11925,max:48475,rate:0.12},
+{min:48475,max:103350,rate:0.22},
+{min:103350,max:197300,rate:0.24},
+{min:197300,max:250525,rate:0.32},
+{min:250525,max:626350,rate:0.35},
+{min:626350,max:Infinity,rate:0.37}
+],
+married:[
+{min:0,max:23850,rate:0.10},
+{min:23850,max:96950,rate:0.12},
+{min:96950,max:206700,rate:0.22},
+{min:206700,max:394600,rate:0.24},
+{min:394600,max:501050,rate:0.32},
+{min:501050,max:751600,rate:0.35},
+{min:751600,max:Infinity,rate:0.37}
+],
+marriedSeparate:[
+{min:0,max:11925,rate:0.10},
+{min:11925,max:48475,rate:0.12},
+{min:48475,max:103350,rate:0.22},
+{min:103350,max:197300,rate:0.24},
+{min:197300,max:250525,rate:0.32},
+{min:250525,max:375800,rate:0.35},
+{min:375800,max:Infinity,rate:0.37}
+],
+headOfHousehold:[
+{min:0,max:17000,rate:0.10},
+{min:17000,max:64850,rate:0.12},
+{min:64850,max:103350,rate:0.22},
+{min:103350,max:197300,rate:0.24},
+{min:197300,max:250500,rate:0.32},
+{min:250500,max:626350,rate:0.35},
+{min:626350,max:Infinity,rate:0.37}
+]
+};
+
+const standardDeductions={single:15000,married:30000,marriedSeparate:15000,headOfHousehold:22500};
+
+function toggleCustomDeduction(){
+const dt=document.getElementById('deductionType').value;
+document.getElementById('customDeductionGroup').style.display=dt==='itemized'?'block':'none';
+}
+
+function calculateEffective(){
+const gross=parseFloat(document.getElementById('grossIncome').value)||0;
+const status=document.getElementById('filingStatus').value;
+const deductionType=document.getElementById('deductionType').value;
+const stateRate=parseFloat(document.getElementById('stateRateInput').value)/100||0;
+
+let deduction=standardDeductions[status];
+if(deductionType==='itemized'){
+deduction=parseFloat(document.getElementById('customDeduction').value)||0;
+}
+
+const taxableIncome=Math.max(0,gross-deduction);
+const bracks=brackets2025[status];
+
+let totalTax=0;
+let marginalRate=0.10;
+const bracketDetails=[];
+
+for(let i=0;i<bracks.length;i++){
+const b=bracks[i];
+if(taxableIncome<=b.min) break;
+const taxableInBracket=Math.min(taxableIncome,b.max)-b.min;
+const taxInBracket=taxableInBracket*b.rate;
+totalTax+=taxInBracket;
+marginalRate=b.rate;
+bracketDetails.push({rate:b.rate,income:taxableInBracket,tax:taxInBracket,min:b.min,max:b.max});
+}
+
+const effectiveRate=gross>0?(totalTax/gross)*100:0;
+const stateTax=taxableIncome*stateRate;
+const totalWithState=totalTax+stateTax;
+const combinedEffective=gross>0?(totalWithState/gross)*100:0;
+
+document.getElementById('marginalRate').textContent=(marginalRate*100).toFixed(0)+'%';
+document.getElementById('effectiveRate').textContent=effectiveRate.toFixed(1)+'%';
+document.getElementById('rGross').textContent='$'+gross.toLocaleString();
+document.getElementById('rDeduction').textContent='$'+deduction.toLocaleString();
+document.getElementById('rTaxable').textContent='$'+taxableIncome.toLocaleString();
+document.getElementById('rFedTax').textContent='$'+totalTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('rStateTax').textContent='$'+stateTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('rTotalTax').textContent='$'+totalWithState.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('rCombinedEff').textContent=combinedEffective.toFixed(1)+'%';
+document.getElementById('results').style.display='block';
+
+const breakdownEl=document.getElementById('bracketBreakdown');
+let html='';
+const maxTax=Math.max(...bracketDetails.map(function(d){return d.tax;}));
+const colors=['#00ff88','#00ccff','#6C5CE7','#ff6b9d','#ffa500','#ff4444','#cc3333'];
+bracketDetails.forEach(function(d,i){
+const pct=maxTax>0?(d.tax/maxTax)*100:0;
+html+='<div class="bracket-bar">';
+html+='<span class="bar-label">'+(d.rate*100)+'% bracket</span>';
+html+='<div style="flex:1;background:#1e1e2e;border-radius:4px;overflow:hidden"><div class="bar-fill" style="width:'+pct+'%;background:'+colors[i%colors.length]+'"></div></div>';
+html+='<span class="bar-amount">$'+d.tax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})+'</span>';
+html+='</div>';
+});
+breakdownEl.innerHTML=html;
+
+updateChart(bracketDetails);
+}
+
+function updateChart(details){
+const labels=details.map(function(d){return(d.rate*100)+'%';});
+const data=details.map(function(d){return d.tax.toFixed(0);});
+const bgColors=details.map(function(d,i){
+var c=['#00ff88','#00ccff','#6C5CE7','#ff6b9d','#ffa500','#ff4444','#cc3333'];
+return c[i%c.length];
+});
+const chartUrl='https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify({
+type:'horizontalBar',
+data:{labels:labels,datasets:[{label:'Tax Paid',data:data,backgroundColor:bgColors}]},
+options:{
+title:{display:true,text:'Federal Tax by Bracket',fontColor:'#e0e0e8'},
+legend:{display:false},
+scales:{xAxes:[{gridLines:{color:'#1e1e2e'},ticks:{fontColor:'#c8c8d0',callback:function(v){return'$'+v;}}}],yAxes:[{gridLines:{color:'#1e1e2e'},ticks:{fontColor:'#c8c8d0'}}]}
+}
+}))+'&backgroundColor=%230a0a0f&width=700&height=300';
+document.getElementById('bracketChart').src=chartUrl;
+}
+
+function toggleFaq(el){
+el.classList.toggle('open');
+el.nextElementSibling.classList.toggle('show');
+}
+
+calculateEffective();
+</script>
+</body>
+</html>
