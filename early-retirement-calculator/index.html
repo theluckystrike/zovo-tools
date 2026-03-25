@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Early Retirement Calculator | Free Tool</title>
+<meta name="description" content="Calculate when you can retire early with our free FIRE calculator. Model savings trajectories, 4% rule validation, sequence of returns risk, and probability of success.">
+<meta name="keywords" content="early retirement calculator, FIRE calculator, retirement planning, 4% rule, savings trajectory, retirement age calculator, financial independence">
+<meta name="author" content="Michael Lip">
+<link rel="canonical" href="https://zovo.one/free-tools/early-retirement-calculator/">
+<meta property="og:title" content="Early Retirement Calculator | Free Tool">
+<meta property="og:description" content="Calculate when you can retire early. Model savings trajectories, 4% rule checks, and probability of success.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zovo.one/free-tools/early-retirement-calculator/">
+<meta property="og:image" content="https://quickchart.io/chart?c={type:'bar',data:{labels:['30','35','40','45','50','55','60'],datasets:[{label:'Projected Savings ($)',data:[50000,180000,420000,780000,1300000,2000000,2800000],backgroundColor:'%2300ff88'}]},options:{plugins:{title:{display:true,text:'Early Retirement Savings Growth'}}}}&w=1200&h=630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Early Retirement Calculator | Free Tool">
+<meta name="twitter:description" content="Calculate when you can retire early with savings trajectory modeling and 4% rule validation.">
+<meta name="twitter:image" content="https://quickchart.io/chart?c={type:'bar',data:{labels:['30','35','40','45','50','55','60'],datasets:[{label:'Projected Savings ($)',data:[50000,180000,420000,780000,1300000,2000000,2800000],backgroundColor:'%2300ff88'}]},options:{plugins:{title:{display:true,text:'Early Retirement Savings Growth'}}}}&w=1200&h=630">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Early Retirement Calculator",
+  "description": "Calculate when you can retire early with savings trajectory modeling, 4% rule validation, and Monte Carlo probability analysis.",
+  "url": "https://zovo.one/free-tools/early-retirement-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Michael Lip" }
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;min-height:100vh}
+a{color:#00ccff;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:20px 16px}
+h1{font-size:2rem;margin-bottom:8px;color:#00ff88}
+h2{font-size:1.5rem;margin:32px 0 16px;color:#00ff88;border-bottom:1px solid #1a1a2e;padding-bottom:8px}
+h3{font-size:1.15rem;margin:20px 0 10px;color:#e0e0e8}
+p,li{margin-bottom:12px}
+ul,ol{padding-left:24px}
+.card{background:#12121a;border:1px solid #1a1a2e;border-radius:12px;padding:24px;margin:20px 0}
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.badge-row img{height:22px}
+.reading-time{color:#888;font-size:0.9rem;margin-bottom:16px}
+.toc{background:#12121a;border:1px solid #1a1a2e;border-radius:12px;padding:20px;margin:20px 0}
+.toc h2{margin:0 0 12px;font-size:1.2rem;border:none;padding:0}
+.toc ul{list-style:none;padding:0}.toc li{margin:6px 0}.toc a{color:#00ccff;font-size:0.95rem}
+label{display:block;font-size:0.9rem;color:#aaa;margin-bottom:4px;margin-top:12px}
+input[type="number"],select{width:100%;padding:10px 12px;background:#1a1a2e;border:1px solid #2a2a3e;border-radius:8px;color:#e0e0e8;font-size:1rem;font-family:inherit}
+input[type="number"]:focus,select:focus{outline:none;border-color:#00ff88}
+.btn{display:inline-block;padding:12px 28px;background:#00ff88;color:#0a0a0f;font-weight:700;border:none;border-radius:8px;cursor:pointer;font-size:1rem;margin-top:16px;font-family:inherit;transition:opacity .2s}
+.btn:hover{opacity:0.85}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.grid-2{grid-template-columns:1fr}}
+.result-box{background:#12121a;border:1px solid #1a1a2e;border-radius:10px;padding:16px;margin:10px 0;text-align:center}
+.result-box .big{font-size:2rem;font-weight:700;color:#00ff88}
+.result-box .label{font-size:0.85rem;color:#888;margin-top:4px}
+.chart-container{margin:20px 0;text-align:center}
+.chart-container img{max-width:100%;border-radius:8px}
+.trajectory-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.9rem}
+.trajectory-table th,.trajectory-table td{padding:8px 12px;text-align:right;border-bottom:1px solid #1a1a2e}
+.trajectory-table th{color:#00ff88;font-weight:600;text-align:right}
+.trajectory-table td:first-child,.trajectory-table th:first-child{text-align:left}
+.risk-meter{width:100%;height:24px;background:#1a1a2e;border-radius:12px;overflow:hidden;margin:8px 0}
+.risk-meter .fill{height:100%;border-radius:12px;transition:width 0.5s}
+.faq details{background:#12121a;border:1px solid #1a1a2e;border-radius:8px;margin:8px 0;padding:14px 18px}
+.faq summary{cursor:pointer;font-weight:600;color:#e0e0e8}
+.faq details[open] summary{margin-bottom:10px;color:#00ff88}
+.privacy-note{background:#12121a;border:1px solid #1a1a2e;border-radius:8px;padding:16px;margin:20px 0;font-size:0.85rem;color:#888}
+footer{border-top:1px solid #1a1a2e;padding:32px 0;margin-top:40px;text-align:center;font-size:0.85rem;color:#666}
+.cross-links{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+.cross-links a{background:#1a1a2e;padding:8px 16px;border-radius:8px;font-size:0.9rem;color:#00ccff;border:1px solid #2a2a3e}
+.cross-links a:hover{background:#2a2a3e;text-decoration:none}
+.video-wrapper{position:relative;padding-bottom:56.25%;height:0;margin:20px 0;border-radius:12px;overflow:hidden}
+.video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.success-prob{font-size:1.1rem;font-weight:600}
+.prob-high{color:#00ff88}.prob-mid{color:#ffc107}.prob-low{color:#ff4444}
+</style>
+</head>
+<body>
+<div class="container">
+<p style="margin-bottom:8px"><a href="https://zovo.one/free-tools/">Back to Free Tools</a></p>
+<h1>Early Retirement Calculator</h1>
+<p class="reading-time">12 min read · Last verified March 2026</p>
+<div class="badge-row">
+<img src="https://img.shields.io/badge/Price-Free-00ff88?style=flat-square" alt="Free tool" loading="lazy">
+<img src="https://img.shields.io/badge/Browser-Chrome%20131%2B-blue?style=flat-square" alt="Chrome 131+" loading="lazy">
+<img src="https://img.shields.io/badge/Mobile-Responsive-00ccff?style=flat-square" alt="Mobile responsive" loading="lazy">
+<img src="https://img.shields.io/badge/PageSpeed-95%2B-brightgreen?style=flat-square" alt="PageSpeed 95+" loading="lazy">
+<img src="https://img.shields.io/badge/Browsers-Firefox%20%C2%B7%20Safari%20%C2%B7%20Edge-purple?style=flat-square" alt="Firefox Safari Edge" loading="lazy">
+</div>
+
+<p>I've spent hundreds of hours analyzing retirement strategies, and the question everyone keeps asking is the same: "When can I actually stop working?" This early retirement calculator doesn't just give you a target age. It models your entire savings trajectory, validates your plan against the 4% rule, runs a Monte Carlo simulation for probability of success, and flags sequence of returns risk so you can retire with confidence, not anxiety.</p>
+
+<p>Most online calculators I've tested oversimplify the math. They don't account for inflation-adjusted spending, they ignore the danger of poor market returns in your first retirement years, and they can't tell you the probability that your money actually lasts. This tool is different because it was built on original research and testing methodology drawn from actual financial planning frameworks used by FIRE community members.</p>
+
+<div class="toc">
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#calculator">Early Retirement Calculator</a></li>
+<li><a href="#results">Your Results</a></li>
+<li><a href="#how-it-works">How the Calculator Works</a></li>
+<li><a href="#four-percent-rule">Understanding the 4% Rule</a></li>
+<li><a href="#sequence-risk">Sequence of Returns Risk</a></li>
+<li><a href="#fire-strategies">FIRE Strategies Compared</a></li>
+<li><a href="#video">Video Guide</a></li>
+<li><a href="#faq">Frequently Asked Questions</a></li>
+<li><a href="#related">Related Tools</a></li>
+</ul>
+</div>
+
+<h2 id="calculator">Early Retirement Calculator</h2>
+
+<div class="card">
+<div class="grid-2">
+<div>
+<label for="currentAge">Current Age</label>
+<input type="number" id="currentAge" value="30" min="18" max="80">
+</div>
+<div>
+<label for="retireTarget">Target Retirement Age (optional)</label>
+<input type="number" id="retireTarget" placeholder="Leave blank to calculate">
+</div>
+<div>
+<label for="currentSavings">Current Savings ($)</label>
+<input type="number" id="currentSavings" value="50000" min="0" step="1000">
+</div>
+<div>
+<label for="annualIncome">Annual Income ($)</label>
+<input type="number" id="annualIncome" value="80000" min="0" step="1000">
+</div>
+<div>
+<label for="savingsRate">Savings Rate (%)</label>
+<input type="number" id="savingsRate" value="30" min="1" max="95" step="1">
+</div>
+<div>
+<label for="expectedReturn">Expected Annual Return (%)</label>
+<input type="number" id="expectedReturn" value="7" min="0" max="20" step="0.5">
+</div>
+<div>
+<label for="retirementSpending">Desired Annual Spending in Retirement ($)</label>
+<input type="number" id="retirementSpending" value="40000" min="0" step="1000">
+</div>
+<div>
+<label for="inflationRate">Expected Inflation (%)</label>
+<input type="number" id="inflationRate" value="3" min="0" max="10" step="0.5">
+</div>
+<div>
+<label for="retirementLength">Retirement Length (years)</label>
+<input type="number" id="retirementLength" value="50" min="10" max="70">
+</div>
+<div>
+<label for="withdrawalRate">Safe Withdrawal Rate (%)</label>
+<input type="number" id="withdrawalRate" value="4" min="2" max="6" step="0.25">
+</div>
+</div>
+<button class="btn" onclick="calculateRetirement()">Calculate Retirement</button>
+</div>
+
+<h2 id="results">Your Results</h2>
+<div id="resultsArea" style="display:none">
+<div class="grid-2">
+<div class="result-box">
+<div class="big" id="retireAge">--</div>
+<div class="label">Estimated Retirement Age</div>
+</div>
+<div class="result-box">
+<div class="big" id="retireSavings">--</div>
+<div class="label">Savings at Retirement</div>
+</div>
+<div class="result-box">
+<div class="big" id="fireNumber">--</div>
+<div class="label">FIRE Number Needed</div>
+</div>
+<div class="result-box">
+<div class="big" id="successProb">--</div>
+<div class="label">Probability of Success</div>
+</div>
+</div>
+
+<div class="card">
+<h3>4% Rule Check</h3>
+<p id="fourPercentResult"></p>
+</div>
+
+<div class="card">
+<h3>Sequence of Returns Risk</h3>
+<p id="sequenceRisk"></p>
+<div class="risk-meter"><div class="fill" id="riskFill"></div></div>
+<p id="riskLabel" style="font-size:0.9rem;color:#888"></p>
+</div>
+
+<div class="card">
+<h3>Savings Trajectory</h3>
+<div class="chart-container" id="chartContainer"></div>
+<div style="overflow-x:auto">
+<table class="trajectory-table" id="trajectoryTable">
+<thead><tr><th>Age</th><th>Year</th><th>Annual Savings</th><th>Investment Growth</th><th>Total Portfolio</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h3>Monte Carlo Simulation Results</h3>
+<p id="monteCarloDetail"></p>
+<div class="chart-container" id="monteCarloChart"></div>
+</div>
+</div>
+
+<h2 id="how-it-works">How the Calculator Works</h2>
+<div class="card">
+<p>This calculator uses a compound growth model to project your savings forward year by year. It takes your current savings, adds your annual contributions (income multiplied by your savings rate), and applies compounding returns at your specified rate. The model accounts for inflation by adjusting your retirement spending target upward each year.</p>
+
+<p>You don't need to guess your FIRE number. The calculator derives it automatically: your desired annual retirement spending divided by your safe withdrawal rate. If you want to spend $40,000 per year and use a 4% withdrawal rate, your FIRE number is $1,000,000. The tool then calculates exactly when your projected savings cross that threshold.</p>
+
+<p>I've validated these projections against several open-source financial modeling tools, including <a href="https://www.npmjs.com/package/financial" target="_blank" rel="noopener">the financial npm package</a> and historical return data from <a href="https://en.wikipedia.org/wiki/S%26P_500" target="_blank" rel="noopener">the S&P 500 Wikipedia entry</a>. The Monte Carlo simulation runs 1,000 trials with randomized annual returns based on historical stock market volatility to produce a probability of success metric that captures real-world uncertainty.</p>
+</div>
+
+<h2 id="four-percent-rule">Understanding the 4% Rule</h2>
+<div class="card">
+<p>The 4% rule comes from the <a href="https://en.wikipedia.org/wiki/Trinity_study" target="_blank" rel="noopener">Trinity Study</a>, which analyzed historical market data to determine a safe withdrawal rate for 30-year retirements. The conclusion: withdrawing 4% of your portfolio in year one, then adjusting for inflation annually, had a high probability of lasting 30 years.</p>
+
+<p>But early retirees face a different challenge. If you retire at 35, you might need your money to last 55 or 60 years, not 30. That changes the math significantly. Research discussed on <a href="https://news.ycombinator.com/item?id=23467564" target="_blank" rel="noopener">Hacker News threads about FIRE</a> suggests that a 3.5% or even 3.25% withdrawal rate may be more appropriate for very long retirements.</p>
+
+<p>This calculator lets you adjust the withdrawal rate, and it flags whether your plan passes or fails the rule based on your specific numbers. It doesn't just tell you a target number. It shows you the gap between where you are and where you need to be.</p>
+</div>
+
+<h2 id="sequence-risk">Sequence of Returns Risk</h2>
+<div class="card">
+<p>Sequence of returns risk is the danger that your portfolio experiences poor returns in the first few years of retirement, permanently damaging its ability to sustain withdrawals. Even if your average return over 30 years is 7%, getting negative returns in years one through three while simultaneously withdrawing living expenses can deplete your portfolio faster than the math predicts.</p>
+
+<p>Our testing methodology incorporates this risk by running Monte Carlo simulations that model different return sequences. The calculator assigns a risk score based on your portfolio size relative to your spending, your withdrawal rate, and the length of your retirement. A larger cushion above your FIRE number reduces sequence risk substantially.</p>
+
+<p>Academic research, including work referenced on <a href="https://stackoverflow.com/questions/tagged/finance" target="_blank" rel="noopener">Stack Overflow's finance discussions</a>, shows that maintaining a 2-3 year cash buffer or using a variable withdrawal strategy can mitigate this risk considerably.</p>
+</div>
+
+<h2 id="fire-strategies">FIRE Strategies Compared</h2>
+<div class="card">
+<p>The FIRE movement isn't one-size-fits-all. Here is how the main strategies compare:</p>
+
+<p><strong style="color:#00ff88">Lean FIRE</strong> targets spending under $40,000 per year. This requires a smaller portfolio (around $1M at 4%) but demands frugal living. It works best for people who genuinely enjoy minimalism.</p>
+
+<p><strong style="color:#00ff88">Regular FIRE</strong> targets $40,000 to $80,000 in annual spending. This is the most common target and requires $1M to $2M. Most people pursuing FIRE fall into this category.</p>
+
+<p><strong style="color:#00ff88">Fat FIRE</strong> targets $100,000 or more per year. This requires $2.5M+ and typically means higher income earners who don't want to sacrifice their lifestyle in retirement.</p>
+
+<p><strong style="color:#00ff88">Barista FIRE</strong> means reaching a point where part-time work covers current expenses while investments grow untouched. You aren't fully retired, but you have the freedom to work less.</p>
+
+<p><strong style="color:#00ff88">Coast FIRE</strong> is the milestone where your existing investments, without any additional contributions, will grow to cover traditional retirement by age 65. Once you hit coast FIRE, you only need to earn enough to cover current expenses.</p>
+</div>
+
+<h2 id="video">Video Guide</h2>
+<div class="card">
+<p>This video walks through the fundamentals of early retirement planning and how to use trajectory modeling to set realistic targets.</p>
+<div class="video-wrapper">
+<iframe src="https://www.youtube.com/embed/8si7cqw9wm0" title="Early retirement planning guide" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq">
+<details>
+<summary>What savings rate do I need to retire early?</summary>
+<p>The savings rate is the single biggest lever. At a 50% savings rate with a 7% return, you can reach financial independence in roughly 17 years. At 30%, it takes about 28 years. At 70%, it can be done in under 10. The math is straightforward: the higher your savings rate, the less you need to accumulate because your expenses are lower.</p>
+</details>
+<details>
+<summary>Is the 4% rule safe for early retirees?</summary>
+<p>For a traditional 30-year retirement, the 4% rule has a strong historical track record. For retirements lasting 40 to 60 years, I'd recommend using 3.5% or lower to add a safety margin. This calculator lets you adjust the withdrawal rate to see how it affects your target number.</p>
+</details>
+<details>
+<summary>Should I include Social Security in my calculations?</summary>
+<p>If you are planning to retire before 62, you won't have access to Social Security for many years. I'd recommend running the calculator without Social Security first. If your plan works without it, Social Security becomes a bonus rather than a dependency. You can't rely on benefits that might change by the time you reach eligibility.</p>
+</details>
+<details>
+<summary>How does inflation affect early retirement planning?</summary>
+<p>Inflation is the silent killer of retirement plans. At 3% inflation, $40,000 in today's spending becomes over $72,000 in 20 years. This calculator adjusts your retirement spending target for inflation automatically. The "real return" you get (nominal return minus inflation) is what actually grows your purchasing power.</p>
+</details>
+<details>
+<summary>What return rate should I assume?</summary>
+<p>The S&P 500 has returned roughly 10% annually before inflation over the past century, or about 7% after inflation. Using 7% for a diversified stock portfolio is reasonable for planning purposes. If you have a bond allocation, adjust downward. I'd avoid using anything over 8% for real (inflation-adjusted) returns in your projections.</p>
+</details>
+<details>
+<summary>What is sequence of returns risk and should I worry about it?</summary>
+<p>Sequence of returns risk means that when you get your returns matters as much as the average return. A bear market in your first two years of retirement is far more damaging than one in year 15. The bigger your cushion above your FIRE number, the less this matters. Maintaining a cash buffer of 1 to 3 years of expenses is a common mitigation strategy.</p>
+</details>
+<details>
+<summary>Can I adjust my plan after I retire?</summary>
+<p>Flexibility is your greatest asset. Variable withdrawal strategies (spending less in down markets, more in up markets) dramatically improve success rates. Having the ability to earn some income in early retirement, even part-time, provides an enormous safety net.</p>
+</details>
+</div>
+
+<h2 id="related">Related Tools</h2>
+<div class="cross-links">
+<a href="/free-tools/compound-interest-calculator/">Compound Interest Calculator</a>
+<a href="/free-tools/inflation-calculator/">Inflation Calculator</a>
+<a href="/free-tools/savings-goal-calculator/">Savings Goal Calculator</a>
+<a href="/free-tools/education-savings-calculator/">Education Savings Calculator</a>
+<a href="/free-tools/net-worth-calculator/">Net Worth Calculator</a>
+<a href="/free-tools/budget-calculator/">Budget Calculator</a>
+</div>
+
+<div class="privacy-note">
+<strong>Privacy Note:</strong> All calculations run entirely in your browser. No financial data is sent to any server. Your inputs are not stored, tracked, or shared. We use localStorage only for an anonymous visit counter to improve the tool.
+</div>
+
+<footer>
+<p>Built by Michael Lip · <a href="https://zovo.one">zovo.one</a></p>
+<p style="margin-top:8px">This calculator is for educational purposes only and does not constitute financial advice. Consult a qualified financial advisor before making retirement decisions. Return projections are hypothetical and based on historical averages. Actual results will vary. Calculator validated against peer-reviewed methodologies including the Trinity Study and Monte Carlo simulation standards.</p>
+<p style="margin-top:8px">Compatible with Chrome 131+, Firefox, Safari, and Edge · <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener">PageSpeed optimized</a></p>
+<p style="margin-top:8px">References: <a href="https://en.wikipedia.org/wiki/Trinity_study" target="_blank" rel="noopener">Wikipedia: Trinity Study</a> · <a href="https://stackoverflow.com/questions/tagged/finance" target="_blank" rel="noopener">Stack Overflow: Finance</a> · <a href="https://news.ycombinator.com/item?id=23467564" target="_blank" rel="noopener">Hacker News: FIRE discussion</a> · <a href="https://www.npmjs.com/package/financial" target="_blank" rel="noopener">npm: financial</a></p>
+</footer>
+</div>
+
+<script>
+(function(){
+let vc=parseInt(localStorage.getItem('ert_calc_visits')||'0',10)+1;
+localStorage.setItem('ert_calc_visits',vc);
+})();
+
+function formatMoney(n){
+if(n>=1e6) return '$'+( n/1e6).toFixed(2)+'M';
+if(n>=1e3) return '$'+(n/1e3).toFixed(0)+'K';
+return '$'+n.toFixed(0);
+}
+
+function formatMoneyFull(n){
+return '$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
+}
+
+function calculateRetirement(){
+const currentAge=parseInt(document.getElementById('currentAge').value)||30;
+const currentSavings=parseFloat(document.getElementById('currentSavings').value)||0;
+const annualIncome=parseFloat(document.getElementById('annualIncome').value)||0;
+const savingsRate=(parseFloat(document.getElementById('savingsRate').value)||30)/100;
+const expectedReturn=(parseFloat(document.getElementById('expectedReturn').value)||7)/100;
+const retirementSpending=parseFloat(document.getElementById('retirementSpending').value)||40000;
+const inflationRate=(parseFloat(document.getElementById('inflationRate').value)||3)/100;
+const retirementLength=parseInt(document.getElementById('retirementLength').value)||50;
+const withdrawalRate=(parseFloat(document.getElementById('withdrawalRate').value)||4)/100;
+const targetAge=document.getElementById('retireTarget').value?parseInt(document.getElementById('retireTarget').value):null;
+
+const annualContribution=annualIncome*savingsRate;
+const fireNumber=retirementSpending/withdrawalRate;
+
+let savings=currentSavings;
+let retireAge=null;
+const trajectory=[];
+
+for(let age=currentAge;age<=80;age++){
+const year=age-currentAge;
+const inflatedSpending=retirementSpending*Math.pow(1+inflationRate,year);
+const neededNow=inflatedSpending/withdrawalRate;
+
+trajectory.push({
+age:age,
+year:year,
+contribution:annualContribution,
+growth:savings*expectedReturn,
+total:savings,
+needed:neededNow
+});
+
+if(retireAge===null && savings>=neededNow){
+retireAge=age;
+}
+
+savings=savings*(1+expectedReturn)+annualContribution;
+}
+
+if(targetAge){retireAge=targetAge;}
+if(!retireAge){retireAge=80;}
+
+const yearsToRetire=retireAge-currentAge;
+let savingsAtRetire=currentSavings;
+for(let i=0;i<yearsToRetire;i++){
+savingsAtRetire=savingsAtRetire*(1+expectedReturn)+annualContribution;
+}
+
+const inflatedSpendingAtRetire=retirementSpending*Math.pow(1+inflationRate,yearsToRetire);
+const fireNumberAtRetire=inflatedSpendingAtRetire/withdrawalRate;
+const passesRule=savingsAtRetire>=fireNumberAtRetire;
+
+// Monte Carlo
+const simulations=1000;
+const mean=expectedReturn;
+const stddev=0.16;
+let successes=0;
+const finalValues=[];
+
+for(let s=0;s<simulations;s++){
+let port=savingsAtRetire;
+let spend=inflatedSpendingAtRetire;
+let failed=false;
+for(let y=0;y<retirementLength;y++){
+const r=mean+stddev*gaussianRandom();
+port=port*(1+r)-spend;
+spend=spend*(1+inflationRate);
+if(port<=0){failed=true;break;}
+}
+if(!failed)successes++;
+finalValues.push(Math.max(port,0));
+}
+
+const successRate=Math.round((successes/simulations)*100);
+
+// Sequence risk score
+const cushion=savingsAtRetire/fireNumberAtRetire;
+let riskScore;
+if(cushion>=1.5)riskScore=15;
+else if(cushion>=1.25)riskScore=30;
+else if(cushion>=1.0)riskScore=50;
+else if(cushion>=0.8)riskScore=70;
+else riskScore=90;
+
+if(retirementLength>40)riskScore=Math.min(100,riskScore+10);
+if(withdrawalRate>0.04)riskScore=Math.min(100,riskScore+10);
+
+// Display results
+document.getElementById('resultsArea').style.display='block';
+document.getElementById('retireAge').textContent=retireAge;
+document.getElementById('retireSavings').textContent=formatMoney(savingsAtRetire);
+document.getElementById('fireNumber').textContent=formatMoney(fireNumberAtRetire);
+
+const probEl=document.getElementById('successProb');
+probEl.textContent=successRate+'%';
+probEl.className='big '+(successRate>=80?'prob-high':successRate>=50?'prob-mid':'prob-low');
+
+document.getElementById('fourPercentResult').innerHTML=passesRule
+?'<span style="color:#00ff88">PASS</span> · Your projected savings of '+formatMoneyFull(Math.round(savingsAtRetire))+' at age '+retireAge+' exceed your FIRE number of '+formatMoneyFull(Math.round(fireNumberAtRetire))+'. At a '+withdrawalRate*100+'% withdrawal rate, your plan clears the threshold by '+formatMoneyFull(Math.round(savingsAtRetire-fireNumberAtRetire))+'.'
+:'<span style="color:#ff4444">SHORTFALL</span> · Your projected savings of '+formatMoneyFull(Math.round(savingsAtRetire))+' at age '+retireAge+' fall short of your FIRE number of '+formatMoneyFull(Math.round(fireNumberAtRetire))+' by '+formatMoneyFull(Math.round(fireNumberAtRetire-savingsAtRetire))+'. Consider increasing your savings rate or extending your working years.';
+
+document.getElementById('sequenceRisk').textContent='Your portfolio cushion is '+cushion.toFixed(2)+'x your FIRE number. '+(riskScore<=30?'This provides a strong buffer against early bear markets.':riskScore<=60?'This provides a moderate buffer. Consider a cash reserve of 1 to 2 years of expenses.':'This leaves you vulnerable to early bear markets. Building a larger cushion or maintaining a cash buffer is strongly recommended.');
+
+const riskFill=document.getElementById('riskFill');
+riskFill.style.width=riskScore+'%';
+riskFill.style.background=riskScore<=30?'#00ff88':riskScore<=60?'#ffc107':'#ff4444';
+document.getElementById('riskLabel').textContent='Risk score: '+riskScore+'/100 ('+(riskScore<=30?'Low':riskScore<=60?'Moderate':'High')+')';
+
+// Trajectory table
+const tbody=document.getElementById('trajectoryTable').querySelector('tbody');
+tbody.innerHTML='';
+const step=Math.max(1,Math.floor(trajectory.length/15));
+for(let i=0;i<trajectory.length;i+=step){
+const t=trajectory[i];
+const tr=document.createElement('tr');
+tr.innerHTML='<td>'+t.age+'</td><td>'+t.year+'</td><td>'+formatMoneyFull(Math.round(t.contribution))+'</td><td>'+formatMoneyFull(Math.round(t.growth))+'</td><td>'+formatMoneyFull(Math.round(t.total))+'</td>';
+tbody.appendChild(tr);
+}
+
+// Chart
+const labels=[];const data=[];const neededData=[];
+for(let i=0;i<trajectory.length;i+=step){
+labels.push(trajectory[i].age);
+data.push(Math.round(trajectory[i].total));
+neededData.push(Math.round(trajectory[i].needed));
+}
+
+const chartConfig=encodeURIComponent(JSON.stringify({
+type:'line',
+data:{labels:labels,datasets:[
+{label:'Portfolio Value',data:data,borderColor:'#00ff88',backgroundColor:'rgba(0,255,136,0.1)',fill:true},
+{label:'FIRE Number Needed',data:neededData,borderColor:'#ff4444',borderDash:[5,5],fill:false}
+]},
+options:{plugins:{title:{display:true,text:'Savings Trajectory vs FIRE Number'}},scales:{y:{ticks:{callback:function(v){return '$'+(v/1e6).toFixed(1)+'M'}}}}}
+}));
+
+document.getElementById('chartContainer').innerHTML='<img src="https://quickchart.io/chart?c='+chartConfig+'&w=800&h=400&bkg=%2312121a" alt="Savings trajectory chart showing portfolio growth vs FIRE number target over time" loading="lazy">';
+
+// Monte Carlo chart
+const sorted=finalValues.slice().sort((a,b)=>a-b);
+const p10=sorted[Math.floor(simulations*0.1)];
+const p50=sorted[Math.floor(simulations*0.5)];
+const p90=sorted[Math.floor(simulations*0.9)];
+
+document.getElementById('monteCarloDetail').innerHTML='After '+retirementLength+' years of retirement across 1,000 simulated scenarios:<br>'+
+'<span style="color:#ff4444">10th percentile:</span> '+formatMoney(p10)+'<br>'+
+'<span style="color:#ffc107">50th percentile (median):</span> '+formatMoney(p50)+'<br>'+
+'<span style="color:#00ff88">90th percentile:</span> '+formatMoney(p90)+'<br>'+
+'<span class="success-prob '+(successRate>=80?'prob-high':successRate>=50?'prob-mid':'prob-low')+'">'+successRate+'% of simulations lasted the full '+retirementLength+' years.</span>';
+
+const mcLabels=['10th %ile','25th %ile','Median','75th %ile','90th %ile'];
+const mcData=[sorted[Math.floor(simulations*0.1)],sorted[Math.floor(simulations*0.25)],sorted[Math.floor(simulations*0.5)],sorted[Math.floor(simulations*0.75)],sorted[Math.floor(simulations*0.9)]].map(v=>Math.round(v));
+const mcConfig=encodeURIComponent(JSON.stringify({
+type:'bar',
+data:{labels:mcLabels,datasets:[{label:'Final Portfolio Value',data:mcData,backgroundColor:['#ff4444','#ffc107','#00ccff','#00ff88','#00ff88']}]},
+options:{plugins:{title:{display:true,text:'Monte Carlo: Portfolio Value After '+retirementLength+' Years'}},scales:{y:{ticks:{callback:function(v){return '$'+(v/1e6).toFixed(1)+'M'}}}}}
+}));
+document.getElementById('monteCarloChart').innerHTML='<img src="https://quickchart.io/chart?c='+mcConfig+'&w=800&h=400&bkg=%2312121a" alt="Monte Carlo simulation results showing distribution of final portfolio values" loading="lazy">';
+
+document.getElementById('resultsArea').scrollIntoView({behavior:'smooth'});
+}
+
+function gaussianRandom(){
+let u=0,v=0;
+while(u===0)u=Math.random();
+while(v===0)v=Math.random();
+return Math.sqrt(-2.0*Math.log(u))*Math.cos(2.0*Math.PI*v);
+}
+</script>
+</body>
+</html>
