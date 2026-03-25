@@ -1,23 +1,24 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Regular Expressions in the Real World: 10 Patterns I Actually Use</title>
-<meta name="description" content="10 practical regex patterns with full breakdowns, test cases, and edge cases. Covers email validation, URL extraction, phone normalization, date parsing, CSV handling, log parsing, HTML stripping, version comparison, IP validation, and credit card masking. By Michael Lip.">
-<meta name="author" content="Michael Lip">
-<link rel="canonical" href="https://zovo.one/free-tools/articles/regex-patterns-real-world/">
-<meta property="og:title" content="Regular Expressions in the Real World: 10 Patterns I Actually Use">
-<meta property="og:description" content="10 practical regex patterns with full breakdowns, test cases, and edge cases. Covers email validation, URL extraction, phone normalization, date parsing, and more.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://zovo.one/free-tools/articles/regex-patterns-real-world/">
-<meta property="og:site_name" content="Zovo Tools">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Regular Expressions in the Real World: 10 Patterns I Actually Use">
-<meta name="twitter:description" content="10 practical regex patterns with full breakdowns, test cases, and edge cases for real-world development tasks.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta content="10 practical regex patterns with full breakdowns, test cases, and edge cases. Covers email validation, URL extraction, phone normalization, date parsing, CSV handling, log parsing, HTML stripping, version comparison, IP validation, and credit card masking. By Michael Lip." name="description"/>
+<meta content="Michael Lip" name="author"/>
+<link href="https://zovo.one/free-tools/articles/regex-patterns-real-world/" rel="canonical"/>
+<meta content="Regular Expressions in the Real World: 10 Patterns I Actually Use" property="og:title"/>
+<meta content="10 practical regex patterns with full breakdowns, test cases, and edge cases. Covers email validation, URL extraction, phone normalization, date parsing, and more." property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="https://zovo.one/free-tools/articles/regex-patterns-real-world/" property="og:url"/>
+<meta content="Zovo Tools" property="og:site_name"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Regular Expressions in the Real World: 10 Patterns I Actually Use" name="twitter:title"/>
+<meta content="10 practical regex patterns with full breakdowns, test cases, and edge cases for real-world development tasks." name="twitter:description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -112,24 +113,16 @@ code{background:#1a1a2e;color:#00ff88;padding:.15rem .4rem;border-radius:4px;fon
 <a href="https://zovo.one">zovo.one</a>
 </nav>
 </div>
-
 <div class="container">
-<div class="breadcrumb"><a href="/free-tools/">Zovo Tools</a> &raquo; <a href="/free-tools/articles/">Articles</a> &raquo; Regex Patterns for the Real World</div>
-
+<div class="breadcrumb"><a href="/free-tools/">Zovo Tools</a> » <a href="/free-tools/articles/">Articles</a> » Regex Patterns for the Real World</div>
 <h1>Regular Expressions in the Real World: 10 Patterns I Actually Use</h1>
 <p class="subtitle">I have been writing regex for over a decade. Most regex tutorials teach theory. They explain character classes and quantifiers and lookaheads. What they rarely do is hand you a pattern that solves a specific, common problem and explain exactly why every piece of it exists. That is what this article does. Ten patterns. Each one pulls its weight in production code.</p>
 <div class="meta-line">By Michael Lip / March 25, 2026 / 28 min read</div>
-
-<p>Test every pattern in this article with a <a href="/free-tools/regex-tester/" class="tool-link">regex tester</a> or generate custom patterns with a <a href="/free-tools/regex-generator/" class="tool-link">regex generator</a>.</p>
-
+<p>Test every pattern in this article with a <a class="tool-link" href="/free-tools/regex-tester/">regex tester</a> or generate custom patterns with a <a class="tool-link" href="/free-tools/regex-generator/">regex generator</a>.</p>
 <h2><span class="pattern-num">1</span> Email Validation</h2>
-
 <h3>The Practical Pattern</h3>
-
 <div class="pattern">^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$</div>
-
 <h3>Breakdown</h3>
-
 <table>
 <thead><tr><th>Component</th><th>Meaning</th></tr></thead>
 <tbody>
@@ -142,9 +135,7 @@ code{background:#1a1a2e;color:#00ff88;padding:.15rem .4rem;border-radius:4px;fon
 <tr><td><code>$</code></td><td>End of string</td></tr>
 </tbody>
 </table>
-
 <h3>Test Cases</h3>
-
 <table>
 <thead><tr><th>Input</th><th>Match?</th><th>Notes</th></tr></thead>
 <tbody>
@@ -157,25 +148,16 @@ code{background:#1a1a2e;color:#00ff88;padding:.15rem .4rem;border-radius:4px;fon
 <tr><td>user@example</td><td>No</td><td>Missing TLD</td></tr>
 </tbody>
 </table>
-
 <h3>The 6,300-Character Elephant in the Room</h3>
-
 <p>RFC 5322 defines the complete grammar for email addresses. The regex that fully implements this standard is 6,343 characters long. It handles quoted local parts (<code>"john doe"@example.com</code>), IP literal domains (<code>user@[192.168.1.1]</code>), comments (<code>user(comment)@example.com</code>), and various escape sequences.</p>
-
 <p>I have never seen any of these edge cases in a real-world user registration form in over a decade of web development. The practical pattern above catches formatting errors without false-rejecting real users. If you need RFC compliance, use a library, not a regex. The Python <code>email-validator</code> library or JavaScript's <code>isemail</code> package handle the full spec properly.</p>
-
 <div class="callout">
 <p>The best email validation is not regex at all. Accept any string containing an @ symbol, send a confirmation email, and consider the address valid when the user clicks the link. No regex can tell you whether an email address actually exists or whether the user has access to it.</p>
 </div>
-
 <h2><span class="pattern-num">2</span> URL Extraction from Text</h2>
-
 <h3>The Pattern</h3>
-
 <div class="pattern">https?://[^\s&lt;&gt;"']+[^\s&lt;&gt;"'.,;:!?)]</div>
-
 <h3>Breakdown</h3>
-
 <table>
 <thead><tr><th>Component</th><th>Meaning</th></tr></thead>
 <tbody>
@@ -184,11 +166,8 @@ code{background:#1a1a2e;color:#00ff88;padding:.15rem .4rem;border-radius:4px;fon
 <tr><td><code>[^\s&lt;&gt;"'.,;:!?)]</code></td><td>Last character must not be punctuation that is probably part of the sentence, not the URL</td></tr>
 </tbody>
 </table>
-
 <p>The trailing character exclusion is the key insight. When someone writes "Check out https://example.com/page." in a sentence, the period after "page" is sentence punctuation, not part of the URL. Without the exclusion, the regex would capture the trailing period.</p>
-
 <h3>Test Cases</h3>
-
 <table>
 <thead><tr><th>Input Text</th><th>Extracted URL</th></tr></thead>
 <tbody>
@@ -199,25 +178,15 @@ code{background:#1a1a2e;color:#00ff88;padding:.15rem .4rem;border-radius:4px;fon
 <tr><td>(https://example.com/page)</td><td>https://example.com/page</td></tr>
 </tbody>
 </table>
-
 <h3>Edge Cases to Watch</h3>
-
 <p>This pattern does not handle URLs with parentheses in the path, which is common on Wikipedia: <code>https://en.wikipedia.org/wiki/Regex_(computing)</code>. The closing parenthesis gets excluded by the trailing character rule. Handling Wikipedia-style URLs requires a more complex pattern that counts parenthesis nesting, which pushes regex beyond its comfortable limits.</p>
-
 <p>For URLs without a protocol (like <code>example.com/page</code>), you need a different approach. Detecting bare domains requires matching against known TLDs or using heuristics, which is better done with a dedicated URL parsing library.</p>
-
 <h2><span class="pattern-num">3</span> Phone Number Normalization</h2>
-
 <h3>The Strategy: Strip, Then Validate</h3>
-
 <p>Phone numbers arrive in dozens of formats. Trying to match them all with one regex is a losing game. Instead, use a two-step approach. Step 1: strip all non-digit characters. Step 2: validate the resulting digit string.</p>
-
 <h3>Step 1: Strip non-digits</h3>
-
 <div class="pattern">[^\d]</div>
-
 <p>Replace all matches with empty string. This turns any of these inputs into a clean digit string.</p>
-
 <table>
 <thead><tr><th>Input</th><th>After stripping</th></tr></thead>
 <tbody>
@@ -229,25 +198,15 @@ code{background:#1a1a2e;color:#00ff88;padding:.15rem .4rem;border-radius:4px;fon
 <tr><td>5551234567</td><td>5551234567</td></tr>
 </tbody>
 </table>
-
 <h3>Step 2: Validate and format (US numbers)</h3>
-
 <div class="pattern">^1?(\d{3})(\d{3})(\d{4})$</div>
-
 <p>This matches 10-digit US numbers with an optional leading 1 (country code). The three capture groups extract area code, exchange, and subscriber number. Reformat to <code>($1) $2-$3</code> for display or <code>+1$1$2$3</code> for E.164 international format.</p>
-
 <h3>For International Numbers</h3>
-
 <p>International phone validation is genuinely hard. Country codes range from 1 to 3 digits. National number formats vary wildly (UK: 11 digits, Japan: 10-11 digits, France: 10 digits). The E.164 standard defines the maximum at 15 digits. For anything beyond US/Canada validation, use Google's libphonenumber library, which handles 200+ country formats with carrier-specific validation.</p>
-
 <h2><span class="pattern-num">4</span> Date Parsing (Multiple Formats)</h2>
-
 <h3>The Pattern</h3>
-
 <div class="pattern">(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{2,4})</div>
-
 <h3>Breakdown</h3>
-
 <table>
 <thead><tr><th>Component</th><th>Meaning</th></tr></thead>
 <tbody>
@@ -258,9 +217,7 @@ code{background:#1a1a2e;color:#00ff88;padding:.15rem .4rem;border-radius:4px;fon
 <tr><td><code>(\d{2,4})</code></td><td>Year: 2 or 4 digits</td></tr>
 </tbody>
 </table>
-
 <h3>Test Cases</h3>
-
 <table>
 <thead><tr><th>Input</th><th>Groups</th><th>Interpretation</th></tr></thead>
 <tbody>
@@ -270,33 +227,20 @@ code{background:#1a1a2e;color:#00ff88;padding:.15rem .4rem;border-radius:4px;fon
 <tr><td>12/31/2025</td><td>12, 31, 2025</td><td>MM/DD/YYYY</td></tr>
 </tbody>
 </table>
-
 <h3>The Ambiguity Problem</h3>
-
 <p>This is the honest section. Regex can extract the three numbers from a date string. It cannot tell you what they mean. Is 03/04/2026 March 4th or April 3rd? That depends on whether the source uses US (MM/DD) or international (DD/MM) format. Any date where both numbers are 12 or less (like 03/04 or 11/06) is fundamentally ambiguous without additional context.</p>
-
 <p>For ISO 8601 dates (the unambiguous international standard), use this pattern:</p>
-
 <div class="pattern">(\d{4})-(\d{2})-(\d{2})</div>
-
 <p>This matches YYYY-MM-DD format, which is unambiguous because the year comes first and the format is standardized. If you control the input format, always use ISO 8601.</p>
-
 <div class="warning">
 <p>Regex does not validate dates. February 30, April 31, and month 13 all match the pattern. After extracting the components with regex, always validate them programmatically. Check that the month is 1-12, the day is valid for that month (accounting for leap years), and the year is in a reasonable range.</p>
 </div>
-
 <h2><span class="pattern-num">5</span> CSV Field Extraction (Handling Quoted Commas)</h2>
-
 <h3>The Problem</h3>
-
 <p>Splitting a CSV line on commas seems trivial until you encounter: <code>"Smith, John",42,"New York, NY",Engineer</code>. Splitting on every comma gives 6 fields. The correct answer is 4 fields, because two of the commas are inside quoted strings.</p>
-
 <h3>The Pattern</h3>
-
 <div class="pattern">"([^"]*)"| *([^,]*)</div>
-
 <p>This uses alternation (<code>|</code>) to match either a quoted field or an unquoted field.</p>
-
 <table>
 <thead><tr><th>Component</th><th>Meaning</th></tr></thead>
 <tbody>
@@ -305,36 +249,23 @@ code{background:#1a1a2e;color:#00ff88;padding:.15rem .4rem;border-radius:4px;fon
 <tr><td><code> *([^,]*)</code></td><td>Match optional spaces then any characters except comma (captured)</td></tr>
 </tbody>
 </table>
-
 <h3>Applying to the Example</h3>
-
 <pre>Input: "Smith, John",42,"New York, NY",Engineer
 
-Match 1: "Smith, John"     -> Group 1: Smith, John
-Match 2: 42                -> Group 2: 42
-Match 3: "New York, NY"    -> Group 1: New York, NY
-Match 4: Engineer          -> Group 2: Engineer</pre>
-
+Match 1: "Smith, John"     -&gt; Group 1: Smith, John
+Match 2: 42                -&gt; Group 2: 42
+Match 3: "New York, NY"    -&gt; Group 1: New York, NY
+Match 4: Engineer          -&gt; Group 2: Engineer</pre>
 <h3>Where This Breaks Down</h3>
-
 <p>Escaped quotes inside quoted fields. The CSV spec says a quote inside a quoted field is represented by doubling it: <code>"He said ""hello"""</code> represents the value <code>He said "hello"</code>. The simple pattern above stops at the first closing quote instead of recognizing the escaped pair.</p>
-
 <p>A pattern that handles escaped quotes:</p>
-
 <div class="pattern">"((?:[^"]|"")*)"|([^,]*)</div>
-
 <p>The <code>(?:[^"]|"")*</code> matches either a non-quote character or a pair of quotes (escaped quote), repeated any number of times. This handles most CSV edge cases.</p>
-
 <p>For production CSV parsing, I always recommend using a proper CSV parser. Python's <code>csv</code> module, JavaScript's <code>Papa Parse</code>, or Go's <code>encoding/csv</code> all handle the full spec including newlines inside quoted fields, which regex cannot handle when parsing line by line.</p>
-
 <h2><span class="pattern-num">6</span> Log File Timestamp Extraction</h2>
-
 <h3>The Pattern (for common log formats)</h3>
-
 <div class="pattern">(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:?\d{2})?)</div>
-
 <h3>Breakdown</h3>
-
 <table>
 <thead><tr><th>Component</th><th>Meaning</th></tr></thead>
 <tbody>
@@ -345,30 +276,19 @@ Match 4: Engineer          -> Group 2: Engineer</pre>
 <tr><td><code>(?:Z|[+-]\d{2}:?\d{2})?</code></td><td>Optional timezone: Z (UTC), +05:30, -0800</td></tr>
 </tbody>
 </table>
-
 <h3>Real-World Log Lines Matched</h3>
-
 <pre>2026-03-25T14:30:22.451Z [INFO] Server started on port 3000
 2026-03-25 14:30:22 ERROR Database connection failed
 2026-03-25T14:30:22.451232+05:30 WARN High memory usage detected
 2026-03-25T14:30:22-0800 [DEBUG] Cache miss for key user:1234</pre>
-
 <p>Each of these log lines uses a slightly different timestamp format. The pattern captures all of them in a single pass, which makes it useful for aggregating logs from multiple services with different formatting conventions.</p>
-
 <h3>Apache/Nginx Common Log Format</h3>
-
 <p>Apache and Nginx use a different timestamp format: <code>[25/Mar/2026:14:30:22 +0000]</code>. For this, use:</p>
-
 <div class="pattern">\[(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2} [+-]\d{4})\]</div>
-
 <h2><span class="pattern-num">7</span> HTML Tag Stripping (and Why Regex Is Wrong for HTML)</h2>
-
 <h3>The Quick-and-Dirty Pattern</h3>
-
 <div class="pattern">&lt;[^&gt;]+&gt;</div>
-
 <p>This matches an opening angle bracket, one or more characters that are not closing angle brackets, then a closing angle bracket. Replace all matches with empty string to strip HTML tags.</p>
-
 <pre>Input:  &lt;p&gt;Hello &lt;b&gt;world&lt;/b&gt;&lt;/p&gt;
 Output: Hello world
 
@@ -377,31 +297,19 @@ Output: Click here
 
 Input:  &lt;img src="photo.jpg" alt="A photo" /&gt;
 Output: (empty string)</pre>
-
 <h3>When This Fails</h3>
-
 <p>Angle brackets in attributes: <code>&lt;div data-formula="x&gt;5"&gt;</code>. The regex stops at the <code>&gt;</code> inside the attribute value, leaving broken output.</p>
-
 <p>Script and style content: <code>&lt;script&gt;alert("hi")&lt;/script&gt;</code>. Stripping tags leaves the JavaScript code: <code>alert("hi")</code>. You probably wanted to remove the content too.</p>
-
 <p>HTML comments: <code>&lt;!-- This &lt;b&gt;is&lt;/b&gt; a comment --&gt;</code>. The regex removes <code>&lt;!-- This &lt;b&gt;</code> and <code>&lt;/b&gt;</code> and <code>--&gt;</code> but leaves "is" and "a comment" in the wrong places.</p>
-
 <p>CDATA sections, processing instructions, and malformed markup all break the pattern in different ways.</p>
-
 <div class="warning">
 <p>The famous Stack Overflow answer about parsing HTML with regex has been viewed over 4 million times. Its core message is correct: HTML is a context-free language (due to nesting), and regular expressions can only match regular languages. Regex fundamentally cannot handle arbitrary nesting depth. For any production use, use a proper HTML parser: DOMParser in browsers, cheerio or jsdom in Node.js, BeautifulSoup in Python, or Nokogiri in Ruby.</p>
 </div>
-
 <p>That said, I still use the simple tag-stripping regex for quick one-off tasks where I know the input is well-formed and does not contain the edge cases above. Knowing when a tool is "good enough" for the specific input at hand is part of being practical.</p>
-
 <h2><span class="pattern-num">8</span> Version Number Parsing and Comparison</h2>
-
 <h3>The Pattern (Semantic Versioning)</h3>
-
 <div class="pattern">^v?(\d+)\.(\d+)\.(\d+)(?:-([\w.]+))?(?:\+([\w.]+))?$</div>
-
 <h3>Breakdown</h3>
-
 <table>
 <thead><tr><th>Component</th><th>Meaning</th></tr></thead>
 <tbody>
@@ -413,9 +321,7 @@ Output: (empty string)</pre>
 <tr><td><code>(?:\+([\w.]+))?</code></td><td>Optional build metadata: +build.123, +sha.abc123</td></tr>
 </tbody>
 </table>
-
 <h3>Test Cases</h3>
-
 <table>
 <thead><tr><th>Input</th><th>Major</th><th>Minor</th><th>Patch</th><th>Pre-release</th><th>Build</th></tr></thead>
 <tbody>
@@ -426,28 +332,19 @@ Output: (empty string)</pre>
 <tr><td>v0.1.0-rc.1</td><td>0</td><td>1</td><td>0</td><td>rc.1</td><td></td></tr>
 </tbody>
 </table>
-
 <h3>Comparing Versions Programmatically</h3>
-
 <p>After extracting major, minor, and patch as integers, comparison is straightforward. Compare major first. If equal, compare minor. If equal, compare patch. A version with a pre-release identifier is lower than the same version without one (1.0.0-alpha &lt; 1.0.0). Build metadata is ignored for comparison purposes per the SemVer spec.</p>
-
 <pre>function compareVersions(a, b) {
   const re = /^v?(\d+)\.(\d+)\.(\d+)/;
   const [, aMaj, aMin, aPat] = a.match(re).map(Number);
   const [, bMaj, bMin, bPat] = b.match(re).map(Number);
   return aMaj - bMaj || aMin - bMin || aPat - bPat;
 }</pre>
-
 <h2><span class="pattern-num">9</span> IP Address Validation (IPv4 and IPv6)</h2>
-
 <h3>IPv4 Pattern (with octet range validation)</h3>
-
 <div class="pattern">^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$</div>
-
 <h3>How the Octet Matching Works</h3>
-
 <p>Each octet allows 0-255. The alternation handles three cases:</p>
-
 <table>
 <thead><tr><th>Pattern</th><th>Range</th><th>Examples</th></tr></thead>
 <tbody>
@@ -456,9 +353,7 @@ Output: (empty string)</pre>
 <tr><td><code>[01]?\d\d?</code></td><td>0-199</td><td>0, 5, 42, 127, 199</td></tr>
 </tbody>
 </table>
-
 <h3>IPv4 Test Cases</h3>
-
 <table>
 <thead><tr><th>Input</th><th>Valid?</th><th>Notes</th></tr></thead>
 <tbody>
@@ -472,27 +367,16 @@ Output: (empty string)</pre>
 <tr><td>192.168.01.1</td><td>Yes*</td><td>Leading zero matches [01]?\d\d?</td></tr>
 </tbody>
 </table>
-
 <p>*Leading zeros in octets are technically ambiguous (some systems interpret them as octal). If you want to reject leading zeros, replace <code>[01]?\d\d?</code> with <code>(0|[1-9]\d?|1\d\d|2[0-4]\d|25[0-5])</code>.</p>
-
 <h3>IPv6 Pattern (simplified)</h3>
-
 <p>Full IPv6 validation with regex is painful because of the zero-compression rule (the <code>::</code> shorthand). A practical pattern that matches expanded IPv6 addresses:</p>
-
 <div class="pattern">^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$</div>
-
 <p>This matches the full form: <code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code>. For addresses using <code>::</code> compression (like <code>::1</code> or <code>fe80::1</code>), you need a more complex pattern with alternation for the variable-length compressed segments, or you can expand the address first and then validate the expanded form.</p>
-
 <p>In practice, I validate IPv6 addresses programmatically (parse into 8 groups of 16-bit values) rather than with regex. The <code>::</code> expansion rules and the mixed IPv4-in-IPv6 notation (<code>::ffff:192.168.1.1</code>) make a correct regex extremely complex without adding readability.</p>
-
 <h2><span class="pattern-num">10</span> Credit Card Number Masking</h2>
-
 <h3>The Pattern</h3>
-
 <div class="pattern">(\d{4})[\s-]?(\d{4})[\s-]?(\d{4})[\s-]?(\d{4})</div>
-
 <h3>Breakdown</h3>
-
 <table>
 <thead><tr><th>Component</th><th>Meaning</th></tr></thead>
 <tbody>
@@ -505,9 +389,7 @@ Output: (empty string)</pre>
 <tr><td><code>(\d{4})</code></td><td>Last 4 digits (captured)</td></tr>
 </tbody>
 </table>
-
 <h3>Masking Strategies</h3>
-
 <pre>Input: 4532 1234 5678 9012
 
 Strategy 1 (show last 4):  **** **** **** 9012
@@ -518,9 +400,7 @@ Replace:  $1 **** **** $4
 
 Strategy 3 (full mask):  **** **** **** ****
 Replace:  **** **** **** ****</pre>
-
 <h3>Test Cases</h3>
-
 <table>
 <thead><tr><th>Input Format</th><th>Matches?</th><th>Masked Output</th></tr></thead>
 <tbody>
@@ -530,33 +410,20 @@ Replace:  **** **** **** ****</pre>
 <tr><td>4532 1234 5678 901</td><td>No</td><td>Only 15 digits</td></tr>
 </tbody>
 </table>
-
 <h3>Important Caveats</h3>
-
 <p>American Express cards use a 4-6-5 grouping (15 digits). The standard 4-4-4-4 pattern misses them. For AmEx: <code>(\d{4})[\s-]?(\d{6})[\s-]?(\d{5})</code>.</p>
-
 <p>This pattern is for display masking in logs, receipts, and confirmation screens. For PCI DSS compliance, never store full card numbers in application logs. The masking should happen before the number reaches any log or database. If you are handling payment data, use a payment processor's tokenization service rather than storing or processing card numbers yourself.</p>
-
 <div class="warning">
 <p>Searching for credit card numbers in log files is a common PCI compliance task. If you find unmasked card numbers in your logs, that is a security incident. The pattern above helps you find them. But the fix is to prevent them from being logged in the first place, not to mask them after the fact.</p>
 </div>
-
 <h2>Performance Considerations</h2>
-
 <p>Regex engines can be surprisingly slow if patterns are written poorly. A few guidelines from real performance debugging.</p>
-
 <p>Catastrophic backtracking happens when a pattern with nested quantifiers encounters input that causes the engine to try exponentially many paths before failing. The classic example: <code>(a+)+b</code> applied to <code>aaaaaaaaaaaaaaac</code>. The engine tries every way to divide the "a" characters between the inner and outer <code>+</code> quantifiers before concluding there is no match. With 25 "a" characters, this can take seconds. With 30, minutes. With 35, it may never finish.</p>
-
-<p>Prevention: avoid nested quantifiers on the same character class. Use possessive quantifiers (<code>a++</code>) or atomic groups (<code>(?>a+)</code>) when your engine supports them. These tell the engine "do not backtrack into this group," eliminating exponential behavior.</p>
-
+<p>Prevention: avoid nested quantifiers on the same character class. Use possessive quantifiers (<code>a++</code>) or atomic groups (<code>(?&gt;a+)</code>) when your engine supports them. These tell the engine "do not backtrack into this group," eliminating exponential behavior.</p>
 <p>Anchoring matters. A pattern without <code>^</code> and <code>$</code> anchors must be tested at every position in the input string. On a 10,000-character input, an unanchored pattern performs up to 10,000 match attempts. If you know the pattern should match the entire string, anchor it.</p>
-
 <p>Specificity matters. <code>[^,]*</code> is faster than <code>.*?</code> for matching "everything except a comma." The negated character class fails immediately on a comma. The reluctant quantifier <code>.*?</code> tries the shortest match, then backtracks to longer and longer matches until it succeeds or fails. For large inputs, the difference is measurable.</p>
-
 <h2>The Regex Quick Reference</h2>
-
 <p>A condensed reference for the metacharacters and constructs that appear in the patterns above.</p>
-
 <table>
 <thead><tr><th>Syntax</th><th>Meaning</th><th>Example</th></tr></thead>
 <tbody>
@@ -578,49 +445,39 @@ Replace:  **** **** **** ****</pre>
 <tr><td><code>\</code></td><td>Escape special character</td><td><code>\.</code> matches literal dot</td></tr>
 </tbody>
 </table>
-
 <h2>Frequently Asked Questions</h2>
-
 <div class="faq-item">
 <h3>What is the best regex for email validation?</h3>
 <p>Use <code>^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$</code> for practical validation. The full RFC 5322 regex is 6,300+ characters and handles cases that never appear in real-world sign-up forms. For true validation, send a confirmation email. Regex can only check format, not existence.</p>
 </div>
-
 <div class="faq-item">
 <h3>How do I extract URLs from text?</h3>
 <p>Use <code>https?://[^\s&lt;&gt;"']+[^\s&lt;&gt;"'.,;:!?)]</code> to match URLs while excluding trailing punctuation that belongs to the surrounding sentence. This handles paths, query strings, and fragments. It does not handle bare domains (no protocol) or URLs with parentheses in the path (Wikipedia links).</p>
 </div>
-
 <div class="faq-item">
 <h3>Can regex handle CSV files with quoted commas?</h3>
 <p>The pattern <code>"([^"]*)"| *([^,]*)</code> handles basic CSV with quoted fields. For escaped quotes inside quoted fields, use <code>"((?:[^"]|"")*)"|([^,]*)</code>. For production work, use a proper CSV parsing library because regex cannot handle newlines inside quoted fields when processing line-by-line.</p>
 </div>
-
 <div class="faq-item">
 <h3>Should I use regex to parse HTML?</h3>
 <p>No. HTML is not a regular language, and regex fails on nested tags, attributes containing angle brackets, comments, CDATA, and malformed markup. The simple tag-stripping pattern <code>&lt;[^&gt;]+&gt;</code> works for quick cleanup of well-formed snippets, but always use a proper DOM parser (DOMParser, cheerio, BeautifulSoup) for anything in production.</p>
 </div>
-
 <div class="faq-item">
 <h3>How do I validate an IPv4 address with regex?</h3>
 <p>Use <code>^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.</code> repeated for each octet to validate the 0-255 range per octet. The simpler pattern <code>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}</code> matches the format but allows invalid values like 999.999.999.999.</p>
 </div>
-
 <div class="faq-item">
 <h3>How do I normalize phone numbers?</h3>
 <p>Strip all non-digits with <code>[^\d]</code> replaced by empty string. Then validate with <code>^1?(\d{3})(\d{3})(\d{4})$</code> for US numbers. Format the capture groups as needed. For international numbers, use Google's libphonenumber library instead of regex.</p>
 </div>
-
 <div class="faq-item">
 <h3>What causes catastrophic backtracking in regex?</h3>
 <p>Nested quantifiers on overlapping character classes, like <code>(a+)+b</code>. The engine tries exponentially many ways to divide input between the inner and outer quantifiers. Prevention: avoid nested quantifiers, use atomic groups or possessive quantifiers, and prefer specific character classes (<code>[^,]*</code>) over generic lazy quantifiers (<code>.*?</code>).</p>
 </div>
-
 <div class="faq-item">
 <h3>How do I mask credit card numbers with regex?</h3>
 <p>Match with <code>(\d{4})[\s-]?(\d{4})[\s-]?(\d{4})[\s-]?(\d{4})</code> and replace with <code>**** **** **** $4</code> to show only the last four digits. Note that AmEx uses a 4-6-5 format (15 digits) requiring a separate pattern. For PCI compliance, mask before logging, not after.</p>
 </div>
-
 <div class="footer-bar">
 <p>Built by <a href="https://zovo.one">Michael Lip</a></p>
 </div>
