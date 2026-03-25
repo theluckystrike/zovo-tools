@@ -570,6 +570,26 @@ footer { border-top: 1px solid #1e1e2e; margin-top: 48px; padding: 28px 0; text-
 <p>For a single proportion, the 95% CI is: rate plus or minus 1.96 times the square root of (rate times (1 minus rate) divided by n). For a 5% rate with 1,000 visitors, the interval is approximately [3.65%, 6.35%]. Larger samples produce narrower, more precise intervals.</p>
 </div>
 
+<h2 id="testing-tools">A/B Testing Tools and Platforms</h2>
+<p>While this calculator handles the statistical analysis, running A/B tests requires a testing platform to split traffic and serve different experiences. Here is an overview of the major platforms and their statistical approaches.</p>
+<h3>Google improve (Sunset) and Alternatives</h3>
+<p>Google improve was the most widely used free A/B testing tool before Google discontinued it in September 2023. The platform used Bayesian methods for its reporting, showing the probability that each variant beats the baseline. Popular replacements include VWO (Visual Website Optimizer), which offers a free tier, and Google's recommendation to use third-party tools with Google Analytics 4 integration.</p>
+<h3>Optimizely</h3>
+<p>Optimizely uses a sequential testing framework called Stats Engine, which allows continuous monitoring without the peeking problem. It uses the false discovery rate (FDR) approach rather than traditional p-values, controlling the expected proportion of false positives among all declared significant results. This is more appropriate for companies running many concurrent tests.</p>
+<h3>VWO</h3>
+<p>VWO offers both Bayesian and frequentist reporting. Its SmartStats engine uses Bayesian methods by default, showing the probability of a variant being the winner and the expected loss from choosing each variant. The expected loss metric is particularly useful for business decisions because it quantifies the downside risk in concrete terms (e.g., "If you choose Variant B and it is actually worse, you expect to lose 0.1% in conversion rate").</p>
+<h3>AB Tasty</h3>
+<p>AB Tasty uses Bayesian inference with a sequential testing approach. It reports results in terms of probability to beat the original and improvement range (confidence interval), making results accessible to non-statisticians. The platform automatically handles the multiple testing correction when you compare more than two variants.</p>
+<h3>Custom Solutions</h3>
+<p>Many large companies build custom A/B testing infrastructure. Netflix, Uber, Microsoft, and Booking.com have all published papers describing their testing platforms. These custom systems typically use modern statistical methods (like CUPED for variance reduction) that can detect smaller effects with fewer samples than standard approaches. If you are building a custom system, this calculator provides a useful validation tool to verify your implementation against a known-correct calculation.</p>
+
+<h2 id="metrics-selection">Choosing the Right Metrics for Your Test</h2>
+<p>Selecting the correct metric to test is as important as the statistical methodology. The wrong metric can lead you to improve for the wrong outcome.</p>
+<p>Primary metrics (also called success metrics or decision metrics) are the metrics that determine whether you ship the change. You should have exactly one primary metric per test. Common primary metrics include conversion rate, revenue per visitor, sign-up rate, and engagement rate. Having a single primary metric avoids the multiple testing problem and provides a clear decision framework.</p>
+<p>Secondary metrics (also called guardrail metrics) are metrics you monitor to ensure the change does not cause unintended harm. If your primary metric is purchase conversion rate, your guardrail metrics might include page load time, bounce rate, customer service contact rate, and return rate. If the variant improves conversion rate but significantly degrades a guardrail metric, you should investigate before shipping.</p>
+<p>Leading versus lagging metrics matter for test duration. Conversion rate (a leading metric) can be measured immediately after each visit. Customer lifetime value (a lagging metric) takes months to materialize. Using leading metrics keeps test duration manageable, but ensure that improving the leading metric actually drives the lagging business outcome you care about.</p>
+<p>Ratio metrics (like conversion rate, which is conversions divided by visitors) are generally more suitable for A/B testing than count metrics (like total revenue or total page views) because they naturally normalize for traffic volume differences between variants. If one variant randomly receives 2% more traffic due to implementation quirks, a ratio metric handles this gracefully while a count metric would be biased.</p>
+
 <div class="privacy-note">
 All calculations run locally in your browser. No experiment data is transmitted to any server. Results are for informational purposes. Consult a statistician for high-stakes business decisions.
 </div>
