@@ -142,7 +142,8 @@ function auditArticle(articlePath, articleName) {
     }
 
     // 10. Meta description
-    const metaDescMatch = htmlContent.match(/<meta[^>]+name=["']description["'][^>]*content=["']([^"']{100,}?)["'][^>]*>/i);
+    const metaDescMatch = htmlContent.match(/<meta[^>]+name=["']description["'][^>]*content=["']([^"']{100,}?)["'][^>]*>/i) ||
+                         htmlContent.match(/<meta[^>]+content=["']([^"']{100,}?)["'][^>]*name=["']description["'][^>]*>/i);
     if (metaDescMatch) {
         results.score++;
         results.passes.push(`${AUDIT_CRITERIA.HAS_META_DESC.description} (${metaDescMatch[1].length} chars)`);
