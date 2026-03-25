@@ -56,7 +56,7 @@ class MetaOptimizer:
             optimized_desc = description[:157] + "..."
 
             # Replace in content
-            pattern = r'(<meta[^>]+name=["\']description["\'][^>]*content=["\'])([^"\']+)(["\'][^>]*/?>')
+            pattern = r'(<meta[^>]+name=["\']description["\'][^>]*content=["\'])([^"\']+)(["\'][^>]*/?>'
 
             def replace_desc(match):
                 nonlocal fixes
