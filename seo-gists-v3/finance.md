@@ -1,4 +1,4 @@
-# Free Finance Calculators 2026
+Free Finance Calculators 2026
 
 Curated list of free, client-side tools. No signup, no tracking.
 
@@ -9,4 +9,4 @@ Curated list of free, client-side tools. No signup, no tracking.
 - [EMI Calculator](https://zovo.one/free-tools/emi-calculator/) - Calculate equated monthly installments for loans with principal and interest breakdown
 - [SIP Calculator](https://zovo.one/free-tools/sip-calculator/) - Project systematic investment plan returns with monthly contributions and compound growth
 
-[All 285+ tools](https://zovo.one/free-tools/) — Built by [Michael Lip](https://zovo.one)
+[All 285+ tools](https://zovo.one/free-tools/), Built by [Michael Lip](https://zovo.one)

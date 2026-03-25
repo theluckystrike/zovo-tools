@@ -1,4 +1,4 @@
-# Free Student Tools 2026
+Free Student Tools 2026
 
 Curated list of free, client-side tools. No signup, no tracking.
 
@@ -9,4 +9,4 @@ Curated list of free, client-side tools. No signup, no tracking.
 - [Paraphrase Tool](https://zovo.one/free-tools/paraphrase-tool/) - Rephrase sentences and paragraphs while preserving meaning, with multiple tone options
 - [Word Counter](https://zovo.one/free-tools/word-counter/) - Count words, characters, sentences, and paragraphs with reading time estimates
 
-[All 285+ tools](https://zovo.one/free-tools/) — Built by [Michael Lip](https://zovo.one)
+[All 285+ tools](https://zovo.one/free-tools/), Built by [Michael Lip](https://zovo.one)

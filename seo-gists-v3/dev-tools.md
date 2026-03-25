@@ -1,4 +1,4 @@
-# Free Developer Tools 2026
+Free Developer Tools 2026
 
 Curated list of free, client-side tools. No signup, no tracking.
 
@@ -10,4 +10,4 @@ Curated list of free, client-side tools. No signup, no tracking.
 - [Hash Generator](https://zovo.one/free-tools/hash-generator/) - Generate MD5, SHA-1, SHA-256, and SHA-512 hashes from text or files using the Web Crypto API
 - [YAML Validator](https://zovo.one/free-tools/yaml-validator/) - Validate YAML syntax, check for errors, and convert between YAML and JSON formats
 
-[All 285+ tools](https://zovo.one/free-tools/) — Built by [Michael Lip](https://zovo.one)
+[All 285+ tools](https://zovo.one/free-tools/), Built by [Michael Lip](https://zovo.one)

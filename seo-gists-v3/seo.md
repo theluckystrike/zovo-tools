@@ -1,4 +1,4 @@
-# Free SEO Tools 2026
+Free SEO Tools 2026
 
 Curated list of free, client-side tools. No signup, no tracking.
 
@@ -7,4 +7,4 @@ Curated list of free, client-side tools. No signup, no tracking.
 - [Schema Generator](https://zovo.one/free-tools/schema-generator/) - Generate JSON-LD structured data for articles, products, FAQs, organizations, and more
 - [Headline Analyzer](https://zovo.one/free-tools/headline-analyzer/) - Score headlines for SEO and engagement with word balance, sentiment, and length analysis
 
-[All 285+ tools](https://zovo.one/free-tools/) — Built by [Michael Lip](https://zovo.one)
+[All 285+ tools](https://zovo.one/free-tools/), Built by [Michael Lip](https://zovo.one)

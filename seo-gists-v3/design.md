@@ -1,4 +1,4 @@
-# Free Design Tools 2026
+Free Design Tools 2026
 
 Curated list of free, client-side tools. No signup, no tracking.
 
@@ -8,4 +8,4 @@ Curated list of free, client-side tools. No signup, no tracking.
 - [Color Contrast Checker](https://zovo.one/free-tools/color-contrast-checker/) - Check WCAG 2.1 AA/AAA contrast ratios between text and background colors for accessibility
 - [Favicon Generator](https://zovo.one/free-tools/favicon-generator/) - Create favicons from text, emoji, or uploaded images in all required sizes and formats
 
-[All 285+ tools](https://zovo.one/free-tools/) — Built by [Michael Lip](https://zovo.one)
+[All 285+ tools](https://zovo.one/free-tools/), Built by [Michael Lip](https://zovo.one)
