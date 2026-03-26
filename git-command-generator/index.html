@@ -237,6 +237,28 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>For large file management, I set up Git LFS early in the project lifecycle rather than retroactively migrating files. Retroactive LFS migration requires rewriting the entire repository history, which is disruptive for all collaborators. Starting with LFS from the beginning avoids this pain entirely.</p>
 <p>I always protect the main branch with branch protection rules that require pull request reviews, passing CI checks, and up-to-date branches before merging. This simple configuration prevents the most common sources of production issues: untested code, unreviewed changes, and integration conflicts.</p>
 </div>
+
+<div class="info-section" style="margin-top:24px;">
+<h2>Common Git Mistakes and How to Avoid Them</h2>
+
+<h3>Committing Sensitive Data</h3>
+<p>One of the most common and costly mistakes is committing API keys, passwords, database credentials, or private keys to a Git repository. Even if you delete the file in a subsequent commit, the sensitive data remains in the repository history and can be extracted by anyone with access. To prevent this, add sensitive file patterns to .gitignore before your first commit (.env, *.pem, credentials.json, config/secrets.yml). Use tools like git-secrets or detect-secrets as pre-commit hooks to scan for sensitive patterns before they enter the repository. If sensitive data has already been committed, rotate the credentials immediately, then use git filter-branch or BFG Repo-Cleaner to remove the data from history.</p>
+
+<h3>Working Directly on Main</h3>
+<p>Committing directly to the main branch bypasses code review, skips CI checks, and makes it difficult to revert changes cleanly. Always create feature branches for new work, even for small changes. This discipline ensures every change goes through your team's review process and provides a clean mechanism for reverting entire features if needed.</p>
+
+<h3>Not Pulling Before Pushing</h3>
+<p>Pushing without first pulling the latest changes from the remote leads to rejected pushes and unnecessary merge commits. Establish the habit of running git pull --rebase before git push. This replays your local commits on top of the remote changes, maintaining a clean linear history and avoiding merge conflicts that could have been resolved earlier.</p>
+
+<h3>Ignoring .gitignore</h3>
+<p>A comprehensive .gitignore file prevents build artifacts, dependency directories (node_modules, vendor), IDE configuration files (.idea, .vscode), operating system files (.DS_Store, Thumbs.db), and temporary files from cluttering your repository. Use gitignore.io or GitHub's .gitignore templates as starting points for your project type. Add project-specific patterns as they arise. Remember that .gitignore only works for untracked files. Files already tracked by Git must be removed with git rm --cached filename before the ignore pattern takes effect.</p>
+
+<h3>Making Commits Too Large or Too Small</h3>
+<p>A commit that changes 50 files across 10 features is nearly impossible to review, difficult to revert, and provides poor history documentation. Conversely, commits that save every minor keystroke create noise in the log. The ideal commit represents a single logical change that can be understood, reviewed, and reverted independently. If you have been working for hours without committing, use git add -p (patch mode) to selectively stage related changes into separate commits.</p>
+
+<h3>Forgetting to Set Up Tracking</h3>
+<p>When creating a new branch and pushing it for the first time, always use git push -u origin branch-name (the -u flag sets up tracking). Without tracking, subsequent git push and git pull commands require you to specify the remote and branch every time. Tracking also enables git status to show how many commits ahead or behind you are relative to the remote branch.</p>
+</div>
 <div class="info-section" style="margin-top:24px;">
 <h2>Related Free Tools</h2>
 <p>Explore more developer and productivity tools from the Zovo collection.</p>
