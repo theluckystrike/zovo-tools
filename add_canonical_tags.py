@@ -5,6 +5,7 @@ Fix Canonical URLs for all zovo-tools pages.
 - Removes orphaned ' href="https://tools.zovo.one/...">' fragments
   (left over from malformed double-href canonical tags)
 - Adds a single correct canonical: https://zovo.one/free-tools/{tool-slug}/
+  inserted after the FIRST </title> tag only
 """
 
 import os
@@ -47,9 +48,9 @@ def fix_canonical_tags():
             original_content = content
 
             # Check current state before changes
-            had_any_canonical = '<link rel="canonical"' in content.lower() or 'rel="canonical"' in content.lower()
-            had_correct_canonical = f'href="{correct_canonical}"' in content
-            had_tools_domain_canonical = 'tools.zovo.one' in content and 'canonical' in content
+            had_any_canonical = bool(re.search(r'<link\s+rel="canonical"', content, re.IGNORECASE))
+            had_correct_canonical = correct_tag in content
+            had_tools_domain = 'tools.zovo.one' in content
 
             # Step 1: Remove ALL existing <link rel="canonical" ...> tags
             # Handles both self-closing (/>) and normal (>) variants
@@ -61,32 +62,31 @@ def fix_canonical_tags():
             )
 
             # Step 2: Remove orphaned href="https://tools.zovo.one/..."
-            # These are bare href attributes NOT inside any HTML tag, left from
-            # malformed double-href canonical tags. Pattern: ' href="https://tools.zovo.one/.../">'
-            # They appear right after a closing /> of the robots meta tag.
+            # These are bare href attributes NOT inside any <a> or <link> tag,
+            # left from malformed double-href canonical tags.
+            # Pattern: ' href="https://tools.zovo.one/.../">' appearing after />
             content = re.sub(
-                r'\s*href="https://tools\.zovo\.one/[^"]*/?"\s*>',
+                r'(?<=/\>)\s*href="https://tools\.zovo\.one/[^"]*/?"\s*>',
+                '',
+                content
+            )
+            # Also catch the variant without the preceding />
+            content = re.sub(
+                r'(?<=robots"/>)\s*href="https://tools\.zovo\.one/[^"]*/?"\s*>',
                 '',
                 content
             )
 
-            # Step 3: Insert the correct canonical tag after </title>
+            # Step 3: Insert the correct canonical tag after the FIRST </title> only
             title_match = re.search(r'(</title>)', content, re.IGNORECASE)
             if title_match:
                 insert_pos = title_match.end()
-                # Check what follows: if it's a space or newline, just insert.
-                # For minified HTML (all on one line), use a space separator.
-                # For multi-line HTML, use newline + indent.
-                after_title = content[insert_pos:insert_pos + 5]
                 if '\n' in content[:200]:
-                    # Multi-line format
                     separator = '\n    '
                 else:
-                    # Single-line / minified format
                     separator = ' '
                 content = content[:insert_pos] + separator + correct_tag + content[insert_pos:]
             else:
-                # Fallback: insert after <head> tag
                 head_match = re.search(r'(<head[^>]*>)', content, re.IGNORECASE)
                 if head_match:
                     insert_pos = head_match.end()
@@ -101,7 +101,7 @@ def fix_canonical_tags():
                 with open(index_path, 'w', encoding='utf-8') as f:
                     f.write(content)
 
-                if had_correct_canonical and not had_tools_domain_canonical:
+                if had_correct_canonical and not had_tools_domain:
                     already_correct += 1
                 elif had_any_canonical:
                     fixed += 1
