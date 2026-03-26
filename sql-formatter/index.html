@@ -280,6 +280,143 @@ FROM
 
 <h3>Overly Long Lines</h3>
 <p>Some developers put all columns in a SELECT list on one line, leading to horizontal scrolling. The formatter places each major clause on its own line, but does not split column lists automatically. For SELECT statements with many columns, consider manually placing each column on its own line.</p>
+
+<h2>SQL Query Optimization and Formatting</h2>
+<p>Formatting a query is often the first step in optimizing it. When you can clearly see the structure of a query, performance bottlenecks become more visible. Here are some optimization patterns that become apparent once a query is properly formatted.</p>
+
+<h3>Identifying Unnecessary Joins</h3>
+<p>When a query is compressed onto a single line, it is easy to miss unnecessary joins. A formatted query shows each join on its own line, making it straightforward to check whether every joined table actually contributes columns to the SELECT list or conditions to the WHERE clause. If a table is joined but none of its columns are used, removing that join can significantly improve performance.</p>
+
+<p>This is particularly common in queries that were originally written for a broader purpose and later modified. The original query might have selected columns from five tables, but a modification reduced it to three. The remaining two joins are dead code that the database still executes. On a table with millions of rows, an unnecessary join can add seconds to query execution time.</p>
+
+<h3>Spotting Missing WHERE Conditions</h3>
+<p>A formatted query with the WHERE clause clearly separated makes it easy to verify that all necessary filter conditions are present. Cross joins (cartesian products) are one of the most common SQL mistakes, and they typically occur when a WHERE condition that connects two tables is accidentally omitted. In a formatted query, you can visually trace each table in the FROM clause and verify that it has a corresponding join or filter condition.</p>
+
+<h3>Recognizing Subquery Optimization Opportunities</h3>
+<p>When subqueries are properly indented, you can see whether a subquery is correlated (references the outer query) or uncorrelated. Uncorrelated subqueries execute once and return a fixed result. Correlated subqueries execute once per row of the outer query, which can be extremely slow on large datasets. Formatted SQL makes this distinction visible by showing the relationship between inner and outer query references.</p>
+
+<p>Many correlated subqueries can be rewritten as joins or window functions. For example, a subquery that finds the maximum order total for each customer can be replaced with a window function like MAX(total) OVER (PARTITION BY customer_id). The formatted version of both approaches makes it clear which one is more fast for your specific use case.</p>
+
+<h3>Evaluating Index Usage</h3>
+<p>A formatted WHERE clause shows the exact conditions being filtered. You can check whether each condition column is indexed. In a multi-column index, the order of columns matters. If your WHERE clause filters on columns A, B, and C, but your composite index is on (A, C, B), the index may not be fully utilized. Formatting the query and comparing it against your index definitions helps identify these mismatches.</p>
+
+<h2>SQL Style Guides and Standards</h2>
+<p>Several organizations and open-source projects have published SQL style guides. While no single standard is universally adopted, most guides agree on the basic principles that this formatter implements.</p>
+
+<h3>The SQL Style Guide by Simon Holywell</h3>
+<p>This widely-referenced guide recommends uppercase keywords, right-aligned keywords (so that the data references all start at the same column), and river formatting where possible. The guide emphasizes that SQL is a declarative language and should be formatted to read like a specification rather than imperative code. While this formatter uses left-aligned keywords (which is more common in practice), the uppercase keyword convention aligns with this guide's recommendation.</p>
+
+<h3>GitLab SQL Style Guide</h3>
+<p>GitLab's internal SQL guide requires lowercase keywords, 4-space indentation, and trailing commas. They recommend CTEs over subqueries and explicit column naming in GROUP BY (rather than positional references like GROUP BY 1, 2, 3). This formatter supports their lowercase keyword preference through the keyword case dropdown.</p>
+
+<h3>Mozilla SQL Style Guide</h3>
+<p>Mozilla's guide uses uppercase keywords, 2-space indentation, and leading commas. They require explicit table aliases, meaningful CTE names, and comments explaining business logic. The guide also addresses specific BigQuery and Spark SQL conventions for data engineering workflows.</p>
+
+<h3>Corporate Database Teams</h3>
+<p>In my experience consulting with enterprise database teams, the most common corporate SQL standard uses uppercase keywords, 4-space indentation, and each column on its own line in SELECT lists. Companies with large data warehouses tend to be the most strict about formatting standards because their queries are frequently reviewed, modified, and shared across multiple teams.</p>
+
+<h2>Working with Large SQL Files</h2>
+<p>This formatter handles individual queries, but many real-world SQL files contain hundreds or thousands of lines with multiple statements. Here are some approaches for managing large SQL files.</p>
+
+<h3>Migration Files</h3>
+<p>Database migration files (used by tools like Flyway, Liquibase, Rails migrations, and Django migrations) often contain multiple DDL statements. Each CREATE TABLE, ALTER TABLE, and CREATE INDEX statement should be separated by a blank line and formatted independently. Comments at the top of the file should explain the purpose of the migration and any dependencies.</p>
+
+<h3>Stored Procedures</h3>
+<p>Stored procedures combine SQL with procedural logic (variables, loops, conditionals). The formatting rules for the SQL portions follow the same principles as standalone queries, but the procedural wrapper code (DECLARE, IF/ELSE, WHILE, BEGIN/END) follows language-specific conventions. MySQL uses DELIMITER to change the statement terminator. PostgreSQL uses $$ dollar-quoting. SQL Server uses BEGIN/END blocks without a delimiter change.</p>
+
+<h3>Seed and Test Data Scripts</h3>
+<p>INSERT statements for test data should be formatted with each VALUES set on its own line. For bulk inserts with many columns, aligning the values with the column names makes it easier to verify correctness. This is especially important when creating test data for complex schemas where foreign key relationships must be maintained.</p>
+
+<h2>SQL Formatting in Different Environments</h2>
+
+<h3>Application Code</h3>
+<p>SQL queries embedded in application code (Python, JavaScript, Java, Go, Ruby) are often written as string literals. Formatting these queries for readability while keeping the application code clean is a challenge. Multi-line strings (template literals in JavaScript, triple-quoted strings in Python, raw strings in Go) allow formatted SQL within application code. This formatter can help you format the SQL before pasting it into your application code.</p>
+
+<h3>ORMs and Query Builders</h3>
+<p>Object-Relational Mappers like SQLAlchemy, ActiveRecord, Django ORM, and Prisma generate SQL from application-level abstractions. When debugging ORM-generated queries, you often need to examine the raw SQL output. This SQL is typically compact and unformatted. Pasting it into this formatter makes it readable, which helps you understand what the ORM is doing and whether it is generating fast queries.</p>
+
+<h3>Database Administration</h3>
+<p>Database administrators frequently work with system queries that inspect database metadata. These queries against information_schema, pg_catalog, sys.tables, and similar system views can be complex. Formatting them reveals the structure and makes it easier to modify them for specific diagnostic tasks. DBA playbooks and runbooks benefit enormously from consistently formatted SQL.</p>
+
+<h3>Data Analysis and Reporting</h3>
+<p>Analysts writing SQL for business intelligence tools like Looker, Mode, Metabase, and Superset need their queries to be readable by both technical and non-technical stakeholders. Formatted SQL with clear column aliases and comments makes it possible for business users to understand what metrics a query calculates and how they are filtered.</p>
+
+<h2>modern SQL Constructs and Formatting</h2>
+
+<h3>Window Functions</h3>
+<p>Window functions (OVER, PARTITION BY, ORDER BY within OVER) are among the most effective SQL features. Formatting window functions on separate lines makes the partitioning and ordering logic clear. A window function like ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY salary DESC) should be broken across lines to show the partition key and sort order separately.</p>
+
+<div class="code-example">SELECT
+    employee_name,
+    department,
+    salary,
+    ROW_NUMBER() OVER (
+        PARTITION BY department
+        ORDER BY salary DESC
+    ) AS rank_in_dept,
+    salary - LAG(salary) OVER (
+        PARTITION BY department
+        ORDER BY salary DESC
+    ) AS gap_to_next
+FROM
+    employees
+WHERE
+    active = 1</div>
+
+<h3>Recursive CTEs</h3>
+<p>Recursive Common Table Expressions are used for hierarchical data like organizational charts, file system trees, and bill of materials. A recursive CTE has two parts separated by UNION ALL: the anchor member (base case) and the recursive member (which references the CTE itself). Formatting these on separate lines with the anchor member clearly distinguished from the recursive member makes the logic understandable.</p>
+
+<div class="code-example">WITH RECURSIVE org_tree AS (
+    -- Anchor: start with the CEO
+    SELECT
+        id,
+        name,
+        manager_id,
+        1 AS level
+    FROM
+        employees
+    WHERE
+        manager_id IS NULL
+
+    UNION ALL
+
+    -- Recursive: find direct reports
+    SELECT
+        e.id,
+        e.name,
+        e.manager_id,
+        t.level + 1
+    FROM
+        employees e
+    INNER JOIN
+        org_tree t ON e.manager_id = t.id
+)
+SELECT * FROM org_tree
+ORDER BY level, name</div>
+
+<h3>MERGE Statements</h3>
+<p>The MERGE statement (also called UPSERT) combines INSERT, UPDATE, and DELETE operations into a single statement. It is most commonly used in SQL Server and Oracle, and PostgreSQL has its own syntax with ON CONFLICT. Formatting a MERGE statement requires clear separation of the MATCHED and NOT MATCHED clauses, with the actions (UPDATE SET, INSERT VALUES, DELETE) indented under each condition.</p>
+
+<h3>PIVOT and UNPIVOT</h3>
+<p>SQL Server's PIVOT and UNPIVOT operators change row-based data into columns and vice versa. These operations have a complex syntax that benefits greatly from formatting. The aggregation function, the column being pivoted, and the IN list of values should each appear on separate lines. Without formatting, PIVOT queries are nearly impossible to read.</p>
+
+<h2>Keyboard Shortcuts and Workflow Tips</h2>
+<p>To format SQL quickly, paste your query into the input area and press the Format button. The output appears instantly with syntax highlighting. Here are some workflow tips for common scenarios.</p>
+
+<p>When working with a slow query log, copy the query from the log, paste it into the input area, select the appropriate dialect, and click Format. The formatted output will make it immediately clear which tables and conditions are involved. Copy the formatted version back for use in your analysis.</p>
+
+<p>For code reviews, paste the SQL from the pull request into the formatter. The formatted version with syntax highlighting is easier to review than a compact string literal in application code. You can then compare the formatted query against the database schema to verify join conditions and column references.</p>
+
+<p>When documenting queries for runbooks or playbooks, format the query here first, then copy the formatted output. Add comments explaining the business logic and any parameters that need to be adjusted. Consistently formatted documentation queries make it possible for on-call engineers to understand and modify queries under pressure.</p>
+
+<h2>Comparing SQL Formatting Tools</h2>
+<p>There are many SQL formatting tools available, each with different strengths. Here is how this formatter compares to common alternatives.</p>
+
+<p>Online formatters like SQLFormat.org, EverSQL, and Instant SQL Formatter are popular choices. Some of these send your SQL to a server for processing, which may not be acceptable for production queries containing sensitive data. This formatter processes everything client-side, making it safe for any query regardless of content.</p>
+
+<p>IDE-based formatters in DataGrip, DBeaver, and Azure Data Studio offer tight integration with database connections and schema awareness. They can auto-complete table and column names and validate queries against the actual schema. However, they require installation and setup. This web-based tool requires no installation and works from any browser.</p>
+
+<p>CLI tools like sqlfluff and pgFormatter can be integrated into git pre-commit hooks to enforce formatting standards automatically. This is ideal for teams that want to ensure all committed SQL follows a consistent style. However, these tools require configuration and may have different formatting rules than what you expect. This web formatter gives you immediate visual feedback on the formatting result.</p>
 </div>
 
 <div class="faq-section">
