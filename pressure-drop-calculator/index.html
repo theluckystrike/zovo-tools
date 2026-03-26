@@ -341,6 +341,158 @@ ul,ol{margin:0 0 14px 20px;color:#c0c0cc}li{margin-bottom:6px}
 </table>
 <p>For fluids not listed here, consult engineering handbooks or the fluid manufacturer's data sheet. Online property databases from NIST are also a good source for verified values.</p>
 
+<h2 id="pump-sizing">Pump Sizing and Selection</h2>
+<p>Pressure drop calculations are directly tied to pump sizing. The pump must provide enough head to overcome all friction losses, elevation changes, and end-use pressure requirements in the system.</p>
+
+<h3>Total adaptable Head</h3>
+<p>The total adaptable head (TDH) that a pump must deliver equals the sum of several components:</p>
+<ul>
+<li>Static head: the vertical distance the fluid must be lifted (positive) or falls (negative)</li>
+<li>Friction head: the head loss due to pipe friction (calculated using Darcy-Weisbach)</li>
+<li>Minor loss head: the head loss from fittings, valves, and other obstructions</li>
+<li>Pressure head: any pressure requirement at the delivery point above atmospheric (such as a spray nozzle requiring 30 psi)</li>
+<li>Velocity head: typically small and often neglected unless the discharge velocity is high</li>
+</ul>
+<div class="formula">TDH = h_static + h_friction + h_minor + h_pressure + h_velocity</div>
+<p>For example, a system pumping water to a tank 20 meters above the pump, through 200 meters of 4-inch Sch 40 steel pipe with 15 meters of friction head loss and 3 meters of minor losses, requires TDH = 20 + 15 + 3 = 38 meters. At a flow rate of 10 liters per second, the hydraulic power is P = rho x g x Q x TDH = 998.2 x 9.81 x 0.010 x 38 = 3,721 watts or about 5 horsepower. With a pump efficiency of 70%, the motor power needed is 5 / 0.70 = 7.1 horsepower, so an engineer would select a 7.5 or 10 HP pump.</p>
+
+<h3>Pump Operating Point</h3>
+<p>A pump does not operate at a single fixed head. Its performance follows a pump curve that shows head decreasing as flow increases. The system curve shows head increasing as flow increases (because friction is proportional to velocity squared). The operating point is where these two curves intersect. If the system has more friction than expected (due to pipe aging, fouling, or undersized pipe), the operating point shifts to lower flow and higher head. Understanding this interaction prevents costly over-sizing or under-sizing.</p>
+
+<h3>Net Positive Suction Head (NPSH)</h3>
+<p>On the suction side of a centrifugal pump, the pressure must remain above the fluid's vapor pressure to prevent cavitation. The available NPSH is the total suction head minus the fluid's vapor pressure. The required NPSH is specified by the pump manufacturer. A safety margin of at least 1 to 2 meters between available and required NPSH is standard practice. Pressure drop in the suction piping directly reduces available NPSH, so suction lines should be short, large in diameter, and have minimal fittings.</p>
+
+<table>
+<tr><th>Pump Type</th><th>Typical Efficiency</th><th>Flow Range</th><th>Head Range</th><th>Best Application</th></tr>
+<tr><td>Centrifugal (end-suction)</td><td>55-85%</td><td>5-5,000 GPM</td><td>10-150 m</td><td>General water transfer, HVAC</td></tr>
+<tr><td>Centrifugal (multistage)</td><td>65-80%</td><td>5-2,000 GPM</td><td>50-600 m</td><td>High pressure, boiler feed</td></tr>
+<tr><td>Positive displacement (gear)</td><td>60-90%</td><td>0.1-500 GPM</td><td>Up to 200 bar</td><td>Viscous fluids, metering</td></tr>
+<tr><td>Positive displacement (piston)</td><td>80-95%</td><td>0.1-100 GPM</td><td>Up to 700 bar</td><td>High pressure, chemical injection</td></tr>
+<tr><td>Submersible</td><td>50-75%</td><td>5-3,000 GPM</td><td>10-300 m</td><td>Wells, sump, wastewater</td></tr>
+</table>
+
+<h2 id="two-phase-flow">Two-Phase Flow Considerations</h2>
+<p>The Darcy-Weisbach equation applies to single-phase flow (all liquid or all gas). When both liquid and gas are present in the pipe simultaneously, the pressure drop behavior changes significantly.</p>
+
+<h3>Flow Patterns</h3>
+<p>Two-phase flow exhibits several distinct patterns depending on the gas and liquid velocities:</p>
+<ul>
+<li>Bubble flow: small gas bubbles dispersed in liquid. Pressure drop is close to single-phase liquid</li>
+<li>Slug flow: large gas plugs alternating with liquid slugs. Causes pressure pulsations and vibration</li>
+<li>Annular flow: liquid film on the pipe wall with gas flowing through the center. Common at high gas velocities</li>
+<li>Stratified flow: liquid flows along the bottom, gas along the top. Only occurs in horizontal or slightly inclined pipes at low velocities</li>
+<li>Mist flow: liquid droplets carried by high-velocity gas. Occurs at very high gas flow rates</li>
+</ul>
+
+<h3>Lockhart-Martinelli Correlation</h3>
+<p>The Lockhart-Martinelli method is the most widely used approach for estimating two-phase pressure drop. It calculates the single-phase pressure drop for each phase flowing alone, then applies a multiplier based on the Martinelli parameter X:</p>
+<div class="formula">X squared = (dP/dL)_liquid / (dP/dL)_gas</div>
+<p>The two-phase multiplier phi is then read from charts or calculated from correlations. The total two-phase pressure drop equals phi squared times the single-phase liquid pressure drop. For preliminary estimates, the two-phase pressure drop is typically 2 to 10 times the single-phase liquid value for the same total mass flow rate.</p>
+
+<h3>Steam Systems</h3>
+<p>Steam piping is a common two-phase application. Condensate forms as steam loses heat, creating a mixture of steam and liquid water. Steam trap stations remove condensate at regular intervals. Between traps, the flow may be two-phase. Steam line sizing typically uses velocity limits: 25-40 m/s for process steam, 40-60 m/s for superheated steam, and under 10 m/s for condensate return lines. The pressure drop for steam at typical industrial conditions (5-15 bar) ranges from 0.1 to 0.5 bar per 100 meters for properly sized lines.</p>
+
+<h2 id="industrial-applications">Industrial Applications and Case Studies</h2>
+<p>Pressure drop analysis is central to the design and operation of virtually every piping system. Here I cover several common industrial scenarios and the specific considerations that apply to each.</p>
+
+<h3>HVAC Hydronic Systems</h3>
+<p>Chilled water and hot water loops in commercial buildings are sized for pressure drops of 1 to 4 feet of head per 100 feet of pipe (the "4 feet per 100" rule of thumb). Total system pressure drop typically ranges from 15 to 80 feet of head, depending on building size and circuit complexity. Variable speed drives on circulation pumps can reduce energy consumption by 50% or more compared to constant-speed pumps with throttling valves, because pump power is proportional to the cube of flow (affinity laws). A building with a design flow of 500 GPM and 60 feet of head at full load may operate at 300 GPM for much of the year, reducing pump power from 11 HP to about 2.4 HP.</p>
+
+<table>
+<tr><th>System Type</th><th>Typical Pipe Material</th><th>Design Velocity (ft/s)</th><th>Max Pressure Drop (ft/100ft)</th><th>Pipe Sizes</th></tr>
+<tr><td>Chilled water</td><td>Carbon steel, Sch 40</td><td>4-8</td><td>1-4</td><td>2" - 16"</td></tr>
+<tr><td>Hot water heating</td><td>Carbon steel, Sch 40</td><td>4-8</td><td>1-4</td><td>1" - 12"</td></tr>
+<tr><td>Condenser water</td><td>Carbon steel, Sch 40</td><td>5-10</td><td>2-5</td><td>4" - 24"</td></tr>
+<tr><td>Domestic hot water</td><td>Copper Type L</td><td>3-5</td><td>2-4</td><td>1/2" - 2"</td></tr>
+<tr><td>Steam (low pressure)</td><td>Carbon steel, Sch 40</td><td>25-40 m/s</td><td>0.5-2 psi/100ft</td><td>2" - 10"</td></tr>
+</table>
+
+<h3>Chemical Process Piping</h3>
+<p>Chemical plants use a wider variety of pipe materials (stainless steel, Hastelloy, FRP, PTFE-lined) with different roughness values. Design velocities are chosen to prevent erosion of expensive alloy pipes. For corrosive services, velocities above 3 m/s in stainless steel and above 2 m/s in PTFE-lined pipe are avoided. The pressure class of flanges and fittings must exceed the sum of operating pressure plus the maximum pressure drop in the system.</p>
+
+<h3>Fire Protection Systems</h3>
+<p>Sprinkler systems are typically designed using the Hazen-Williams formula (C = 120 for steel, C = 150 for CPVC) rather than Darcy-Weisbach, because fire protection codes reference Hazen-Williams directly. However, for verification or unusual fluids (antifreeze solutions), Darcy-Weisbach gives more precise results. Sprinkler system designers must ensure that the residual pressure at the most remote sprinkler head meets the minimum flow and pressure requirements specified by NFPA 13. Total system pressure drops of 40-80 psi are common, and the available water supply must exceed this plus the minimum sprinkler pressure.</p>
+
+<h3>Oil and Gas Pipelines</h3>
+<p>Long-distance pipelines (tens to hundreds of kilometers) have unique design constraints. Pump or compressor stations are spaced at intervals to reboost pressure. For crude oil pipelines, friction losses of 0.5 to 2 psi per mile are typical at normal flow velocities (3-6 ft/s). Gas pipelines use higher velocities (20-60 ft/s) and operate at high pressures (500-1500 psi), so compressibility effects are significant. The general flow equation for compressible gas pipelines accounts for gas expansion along the pipeline length, average pressure and temperature, and gas composition (specific gravity and compressibility factor).</p>
+
+<h2 id="pipe-aging">Pipe Aging, Fouling, and Maintenance</h2>
+<p>New pipes rarely stay at their original roughness. Understanding how pipes degrade over time is important for long-term system performance.</p>
+
+<h3>Corrosion and Scale Buildup</h3>
+<p>Carbon steel pipes carrying water develop internal corrosion products (rust tubercles) that increase roughness from the new-pipe value of 0.045 mm to 1-3 mm over 20 to 40 years. This can increase pressure drop by 3x to 10x compared to the original design. Cast iron pipes may see roughness increase from 0.26 mm to 5-10 mm in severe cases. Hard water deposits (calcium carbonate scale) gradually reduce the inside diameter while increasing roughness, compounding the pressure drop increase.</p>
+
+<table>
+<tr><th>Pipe Age / Condition</th><th>Roughness Multiplier</th><th>Approx. Pressure Drop Increase</th><th>Remediation</th></tr>
+<tr><td>New pipe</td><td>1x (baseline)</td><td>Baseline</td><td>None needed</td></tr>
+<tr><td>5-10 years, treated water</td><td>1.5-2x</td><td>10-30%</td><td>Water treatment adjustment</td></tr>
+<tr><td>10-20 years, untreated</td><td>3-5x</td><td>40-80%</td><td>Chemical cleaning, pigging</td></tr>
+<tr><td>20-40 years, untreated</td><td>5-20x</td><td>100-400%</td><td>Relining or replacement</td></tr>
+<tr><td>Severely tuberculated</td><td>20-50x</td><td>300-1000%</td><td>Replacement required</td></tr>
+</table>
+
+<h3>Biological Fouling</h3>
+<p>Cooling water systems using river, lake, or seawater are susceptible to biological fouling from algae, barnacles, mussels, and biofilm. Biofilm can form within days of commissioning a new system. A biofilm layer just 0.5 mm thick can increase pressure drop by 15-25% due to both roughness increase and diameter reduction. Chemical treatment (chlorination, biocides) and periodic mechanical cleaning (pigging, hydroblasting) are standard maintenance practices. Seawater systems may also use copper-nickel pipe (90/10 CuNi) which has natural antifouling properties.</p>
+
+<h3>Pipe Rehabilitation Methods</h3>
+<p>When a pipe system shows excessive pressure drop due to aging, several rehabilitation methods can restore performance without complete replacement:</p>
+<ul>
+<li>Chemical cleaning: Circulating acid or alkaline solutions dissolves scale deposits. Effective for calcium carbonate scale. Recovery of 60-80% of original capacity is typical.</li>
+<li>Mechanical pigging: Foam, plastic, or steel pigs are pushed through the pipe by fluid pressure. Removes soft deposits and loose corrosion products. Available for pipes from 2 inches up.</li>
+<li>Cement mortar lining: A rotating head applies a thin cement lining inside the pipe. Reduces roughness to about 0.03 mm (smoother than new steel). Common for water mains 4 inches and larger.</li>
+<li>Epoxy lining: Spray-applied epoxy coating creates a smooth, corrosion-resistant interior surface. Roughness of 0.005 mm. Suitable for pipes 4 inches and larger.</li>
+<li>Slip lining: Inserting a smaller HDPE pipe inside the existing pipe. Reduces diameter but provides a new, smooth interior. Often used for gravity sewers and low-pressure water mains.</li>
+</ul>
+
+<h2 id="modern-worked-examples">Additional Worked Examples</h2>
+
+<h3>Example 3: Complete Pump System</h3>
+<p>A pump delivers water at 20 degrees C from a ground-level tank to a rooftop tank 25 meters above. The piping system uses 150 meters of 3-inch Schedule 40 steel pipe (ID = 77.93 mm) with the following fittings: 6 standard 90-degree elbows, 2 gate valves (fully open), 1 check valve (swing), 1 pipe entrance (rounded), and 1 pipe exit. The required flow rate is 5 liters per second.</p>
+<p>Step 1 - Velocity: A = pi/4 x 0.07793 squared = 0.004771 m squared. v = Q/A = 0.005 / 0.004771 = 1.048 m/s</p>
+<p>Step 2 - Reynolds number: Re = 998.2 x 1.048 x 0.07793 / 0.001002 = 81,410 (turbulent)</p>
+<p>Step 3 - Relative roughness: e/D = 0.045 / 77.93 = 0.000577</p>
+<p>Step 4 - Friction factor (Colebrook-White): f = 0.0198</p>
+<p>Step 5 - Friction head loss: h_f = 0.0198 x (150 / 0.07793) x (1.048 squared / (2 x 9.81)) = 0.0198 x 1924.7 x 0.05598 = 2.134 m</p>
+<p>Step 6 - Minor losses: K_total = 6(0.75) + 2(0.17) + 2.00 + 0.03 + 1.00 = 7.84. h_minor = 7.84 x (1.048 squared / (2 x 9.81)) = 7.84 x 0.05598 = 0.439 m</p>
+<p>Step 7 - Total adaptable head: TDH = 25 + 2.134 + 0.439 = 27.57 m</p>
+<p>Step 8 - Pump power: P = 998.2 x 9.81 x 0.005 x 27.57 / 0.70 = 1,930 W = 2.59 HP. Select a 3 HP pump.</p>
+
+<h3>Example 4: Viscous Oil Pipeline</h3>
+<p>SAE 30 oil at 20 degrees C (rho = 876 kg/m cubed, mu = 0.290 Pa s) flows through 30 meters of 2-inch Schedule 40 steel pipe (ID = 52.50 mm) at 0.3 m/s.</p>
+<p>Step 1 - Reynolds number: Re = 876 x 0.3 x 0.0525 / 0.290 = 47.5 (laminar)</p>
+<p>Step 2 - Friction factor: f = 64 / Re = 64 / 47.5 = 1.347</p>
+<p>Step 3 - Pressure drop: dP = 1.347 x (30 / 0.0525) x (876 x 0.3 squared / 2) = 1.347 x 571.4 x 39.42 = 30,346 Pa = 4.40 psi</p>
+<p>Note the extremely high friction factor (1.347) compared to turbulent water flow (typically 0.015-0.030). This is characteristic of laminar flow in viscous fluids. Heating the oil to 60 degrees C would reduce viscosity by a factor of 10 or more, significantly reducing friction loss.</p>
+
+<h3>Example 5: Compressed Air System</h3>
+<p>Compressed air at 7 bar gauge (8 bar absolute) and 25 degrees C flows through 100 meters of 1-inch Schedule 40 steel pipe (ID = 26.64 mm) to supply a pneumatic tool requiring 10 standard liters per second (SLPS).</p>
+<p>Step 1 - Air density at 8 bar absolute: rho = P / (R x T) = 800000 / (287 x 298.15) = 9.35 kg/m cubed</p>
+<p>Step 2 - Actual volume flow: Q_actual = Q_standard x (P_std / P_actual) = 0.010 x (101325 / 800000) = 0.001267 m cubed/s</p>
+<p>Step 3 - Velocity: A = pi/4 x 0.02664 squared = 0.000557 m squared. v = 0.001267 / 0.000557 = 2.274 m/s</p>
+<p>Step 4 - Viscosity of air at 25 degrees C: mu = 0.0000185 Pa s</p>
+<p>Step 5 - Reynolds number: Re = 9.35 x 2.274 x 0.02664 / 0.0000185 = 30,610 (turbulent)</p>
+<p>Step 6 - Friction factor: e/D = 0.045/26.64 = 0.00169. f = 0.0256</p>
+<p>Step 7 - Pressure drop: dP = 0.0256 x (100/0.02664) x (9.35 x 2.274 squared / 2) = 0.0256 x 3754 x 24.16 = 2,321 Pa = 0.023 bar</p>
+<p>The pressure drop is only 0.023 bar out of 8 bar operating pressure (0.29%), which is well within the 10% rule for treating compressed gas as incompressible. This 1-inch pipe is adequately sized for this application.</p>
+
+<h2 id="historical-context">Historical Context of Pipe Flow Research</h2>
+<p>The study of fluid flow through pipes has a rich history stretching back centuries, with contributions from some of the most famous names in science and engineering.</p>
+
+<h3>Early Investigations</h3>
+<p>The Romans built aqueducts spanning hundreds of kilometers to supply water to cities, relying on empirical rules about slope and channel size. Detailed records from Frontinus (circa 97 AD), the water commissioner of Rome, describe the sizes and capacities of the city's water supply lines, but without any understanding of the underlying physics.</p>
+
+<p>Bernoulli published his treatise on fluid dynamics in 1738, establishing the relationship between pressure, velocity, and elevation in flowing fluids. However, Bernoulli's equation does not account for friction losses, making it insufficient for real pipe design.</p>
+
+<h3>The Darcy-Weisbach Equation</h3>
+<p>Henry Darcy, a French engineer, conducted extensive experiments on water flow through pipes in Dijon in the 1850s. His work, combined with earlier research by Julius Weisbach, produced the equation that bears both their names. Darcy's experiments used cast iron pipes of various sizes and ages, which led him to recognize the importance of pipe roughness in determining friction. His 1857 publication documenting these experiments remains one of the most important works in hydraulic engineering.</p>
+
+<p>Julius Weisbach, a German mathematician and mining engineer, independently developed the theoretical framework for pipe friction in the 1840s. He introduced the concept of a friction factor that depends on flow conditions, though the mathematical form of this dependence would not be fully resolved for another century.</p>
+
+<h3>The Moody Chart Era</h3>
+<p>Lewis Moody's 1944 paper, "Friction Factors for Pipe Flow," brought together the theoretical work of Colebrook and White (1939) with Nikuradse's sand-roughness experiments (1933) into a single, easy-to-use chart. This chart became the standard engineering reference and remained so for decades. Even today, with computers readily available for iterative Colebrook-White solutions, the Moody chart is taught in every fluid mechanics course as a visual representation of the relationship between friction factor, Reynolds number, and relative roughness.</p>
+
+<p>Cyril Colebrook and Cedric White, working at Imperial College London, published their implicit friction factor equation in 1939. Unlike Nikuradse's experiments with uniform sand-grain roughness, Colebrook and White worked with commercial pipes that have random, non-uniform roughness. Their equation smoothly transitions between the smooth-wall and fully-rough regimes, matching commercial pipe data much better than earlier formulas.</p>
+
 <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 <h3>What is the Darcy-Weisbach equation used for?</h3>
 <p>The Darcy-Weisbach equation calculates the pressure drop caused by friction as fluid flows through a pipe. It works for any Newtonian fluid (water, air, oil, etc.) in any flow regime (laminar or turbulent). It is the standard method taught in fluid mechanics courses and used in professional piping design.</p>
