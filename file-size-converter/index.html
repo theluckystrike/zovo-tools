@@ -470,6 +470,63 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 
 <h3>Media Storage</h3>
 <p>A professional photographer shooting 500 RAW images per day at 50 MB each generates 25 GB per day, 9 TB per year. A video production studio working with 4K ProRes footage at 1 GB per minute generates 60 GB per hour of shooting, potentially hundreds of TB per year including editing copies and backups. Media storage requirements often drive the adoption of high-capacity NAS systems and object storage services.</p>
+
+<h2>Data Transfer Time Calculations</h2>
+<p>Knowing a file's size is only half the picture. The other half is knowing how long a transfer will take at a given connection speed. Transfer time calculations convert file sizes and bandwidth into practical estimates for uploads, downloads, backups, and replication tasks.</p>
+
+<h3>Bandwidth Units and File Size Units</h3>
+<p>Network speeds are measured in bits per second, while file sizes are measured in bytes. This distinction trips up many people. To convert from megabits per second (Mbps) to megabytes per second (MB/s), divide by 8. A 100 Mbps connection transfers approximately 12.5 MB/s under ideal conditions. In practice, protocol overhead (TCP headers, Ethernet framing) reduces effective throughput by 5-10%, so expect roughly 11-12 MB/s on a 100 Mbps link.</p>
+
+<h3>Common Connection Speeds</h3>
+<p>Home broadband connections in 2024-2026 typically range from 25 Mbps to 1 Gbps (1,000 Mbps). Fiber connections offer symmetrical speeds of 500 Mbps to 10 Gbps. Mobile 5G delivers 100-300 Mbps in real-world conditions, though peak speeds can exceed 1 Gbps. Cloud data center interconnects run at 10-100 Gbps. At 100 Mbps, transferring a 1 GB file takes approximately 80 seconds. At 1 Gbps, the same transfer takes 8 seconds. At 10 Gbps (data center), it takes under 1 second.</p>
+
+<h3>Estimating Backup Window Requirements</h3>
+<p>Backup administrators must ensure data can be copied within a specified time window, often overnight (8-12 hours). A 10 TB dataset backed up over a 10 Gbps link takes approximately 2.2 hours under ideal conditions. Over a 1 Gbps link, the same backup takes 22 hours, which does not fit an overnight window. When the dataset exceeds the backup window at available bandwidth, incremental or differential backup strategies become necessary. Incremental backups transfer only changed blocks, reducing data volume to 1-5% of total size per day for most workloads.</p>
+
+<h3>Cloud Upload Considerations</h3>
+<p>Uploading large datasets to cloud storage requires understanding upstream bandwidth, which is typically lower than downstream for consumer connections. An asymmetric connection with 200 Mbps down and 20 Mbps up means uploading a 100 GB dataset takes approximately 11 hours. For initial cloud migrations of terabyte-scale data, cloud providers offer physical transfer services (AWS Snowball, Azure Data Box, Google Transfer Appliance) where you ship hard drives instead of transmitting data over the network.</p>
+
+<h2>Backup and Redundancy Storage Planning</h2>
+<p>Backup strategies multiply storage requirements. Understanding these multipliers helps plan total storage capacity and budget.</p>
+
+<h3>The 3-2-1 Rule</h3>
+<p>The widely recommended 3-2-1 backup rule states: keep 3 copies of data, on 2 different media types, with 1 copy offsite. This means your primary data requires 3x the storage capacity for full protection. A 2 TB primary dataset needs 6 TB of total storage across all backup locations. Adding incremental backups with 30 days of retention further increases requirements, potentially to 8-10 TB depending on data change rate.</p>
+
+<h3>RAID Storage Overhead</h3>
+<p>RAID configurations trade usable capacity for redundancy and performance. RAID 1 (mirroring) uses 50% of raw capacity for usable storage. RAID 5 (distributed parity) uses 67-94% depending on disk count, calculated as (N-1)/N where N is the number of disks. RAID 6 (double parity) uses (N-2)/N. RAID 10 (mirrored stripes) uses 50%. A NAS with 4 x 8 TB drives (32 TB raw) provides approximately 24 TB usable in RAID 5 and 16 TB usable in RAID 10.</p>
+
+<h3>Snapshot and Versioning Overhead</h3>
+<p>File versioning systems (Time Machine, Volume Shadow Copy, ZFS snapshots) maintain copies of changed data blocks. The storage overhead depends on data change rate. A file server with 1 TB of data and 5% daily change rate using hourly snapshots retained for 7 days might consume an additional 400-600 GB for snapshot data. Object storage versioning (S3, GCS) keeps every version of every object, which can cause storage to grow unexpectedly if applications frequently overwrite large objects.</p>
+
+<h2>File Sizes in Software Development</h2>
+<p>Software developers encounter file sizes at every stage of the development lifecycle, from source code through build artifacts to deployment packages.</p>
+
+<h3>Container Image Sizes</h3>
+<p>Docker container images vary widely in size. A minimal Alpine Linux base image is approximately 5 MB. A standard Ubuntu base image is 72 MB. A Node.js image ranges from 150 MB (Alpine variant) to 900 MB (full Debian). A Python image with common data science libraries (NumPy, pandas, scikit-learn) can reach 1-3 GB. Multi-stage builds and slim base images reduce deployment image sizes by 50-90%, directly impacting deployment speed and container registry storage costs.</p>
+
+<h3>Build Artifact Sizes</h3>
+<p>Compiled applications vary greatly in size depending on language and dependencies. A Go binary with all dependencies statically linked averages 10-30 MB. A Java application's fat JAR with embedded dependencies averages 50-200 MB. A React single-page application after bundling and minification averages 200 KB to 5 MB for JavaScript, plus assets. A mobile app (APK for Android) averages 20-100 MB, with Google Play enforcing a 150 MB limit for APK downloads over cellular.</p>
+
+<h3>CI/CD Pipeline Storage</h3>
+<p>Continuous integration pipelines consume storage for build caches, test artifacts, and versioned releases. A medium-sized team producing 50 builds per day, each generating 200 MB of artifacts with 30 days of retention, requires 300 GB of artifact storage. Adding dependency caches (npm cache averaging 500 MB to 2 GB, Maven cache averaging 200 MB to 1 GB) increases per-pipeline storage needs. Automated cache pruning and artifact retention policies are needed to prevent unbounded storage growth.</p>
+
+<h3>Version Control Repository Sizes</h3>
+<p>Git repositories grow over time as commits accumulate. A typical open-source project with 5 years of history might have a 50-200 MB .git directory. The Linux kernel repository is approximately 4 GB. Large repositories with binary assets (game development, machine learning models) can reach 10-100 GB. Git Large File Storage (LFS) moves large files out of the repository into external storage, keeping the repository's .git directory small while still tracking large assets with pointers.</p>
+
+<h2>File Size Limits Across Platforms</h2>
+<p>Different platforms impose different maximum file size limits. Knowing these limits prevents failed uploads, corrupted data, and frustrated users.</p>
+
+<h3>File System Limits</h3>
+<p>FAT32, still used on USB flash drives and SD cards, has a maximum file size of 4 GB (4,294,967,295 bytes). This means a single video file or disk image larger than 4 GB cannot be stored on FAT32. exFAT supports files up to 128 PB. NTFS supports files up to 16 TB (with default cluster size) or 256 TB. ext4 supports individual files up to 16 TB. APFS (Apple) supports files up to 8 EB. ZFS supports files up to 16 EB.</p>
+
+<h3>Web Platform Limits</h3>
+<p>Email attachments are typically limited to 25-35 MB (Gmail: 25 MB, Outlook: 20-150 MB depending on configuration). Cloud storage individual file limits: Google Drive 5 TB, OneDrive 250 GB, Dropbox 2 GB via web upload (50 GB via desktop app). GitHub repository files have a hard limit of 100 MB per file (with warnings above 50 MB). npm packages have a default publish limit of 60 MB.</p>
+
+<h3>Database Field Limits</h3>
+<p>Database blob and text field sizes vary by engine. MySQL's BLOB and TEXT types have a maximum of 4 GB (LONGBLOB/LONGTEXT). PostgreSQL's TOAST mechanism supports values up to 1 GB per field. MongoDB documents are limited to 16 MB, with GridFS used for larger files. SQLite has a default maximum blob size of 1 GB (configurable at compile time). These limits affect how applications store uploaded files and generated content.</p>
+
+<h3>API and Upload Limits</h3>
+<p>Web server configurations impose upload limits. Nginx defaults to 1 MB (client_max_body_size). Apache defaults to no limit but PHP defaults to 2 MB (upload_max_filesize). AWS API Gateway has a 10 MB payload limit. AWS Lambda has a 6 MB synchronous response limit and a 256 KB asynchronous invocation payload limit. Cloudflare's free plan limits upload POST body to 100 MB. These limits require chunked upload implementations for large file handling.</p>
 </div>
 
 <!-- ===================== FAQ SECTION ===================== -->
