@@ -290,6 +290,78 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>The evolution of storage units mirrors the exponential growth of digital data. In the 1970s, a 5 MB hard drive was the size of a washing machine and cost thousands of dollars. In the 1980s, the first IBM PC hard drive offered 10 MB. In the 1990s, consumer hard drives reached gigabytes. In the 2000s, terabytes became common. Today, individual enterprise SSDs exceed 100 TB, and data centers manage exabytes of total storage.</p>
 
 <p>The cost per gigabyte has fallen from approximately $10,000 per GB in 1981 to under $0.02 per GB for modern HDDs. This roughly 500,000x cost reduction over 40 years follows the exponential trends predicted by Moore's Law and its storage-industry equivalent, Kryder's Law. Understanding file sizes in historical context helps appreciate how rapidly storage technology has modern.</p>
+
+<h2>File Size Optimization Techniques</h2>
+<p>Understanding file sizes is practical for optimizing applications, websites, and data storage. Here are techniques for reducing file sizes in common scenarios.</p>
+
+<h3>Image Compression</h3>
+<p>Images are often the largest component of web pages. A typical high-resolution photograph saved as an uncompressed BMP might be 15-30 MB. The same image as a high-quality JPEG is 3-8 MB. Modern formats like WebP reduce this further to 1-4 MB. AVIF, the newest image format, achieves 30-50% smaller files than WebP at equivalent quality. For web delivery, image compression can reduce total page size from tens of megabytes to under 1 MB.</p>
+
+<p>The key to image optimization is choosing the right format for the content type. Photographs with smooth gradients compress well in JPEG, WebP, and AVIF. Graphics with flat colors, text, and transparency are better served by PNG or WebP. Icons and simple shapes should use SVG, which scales to any resolution at kilobyte-level file sizes.</p>
+
+<h3>Video Compression</h3>
+<p>Raw video data is enormous. A single frame of 4K video at 8 bits per channel requires about 24 MB. At 30 frames per second, one second of raw 4K video is 720 MB, making one minute 43 GB. Video codecs like H.264, H.265 (HEVC), VP9, and AV1 compress video by orders of magnitude. A one-hour 4K movie compressed with H.265 is typically 10-20 GB, a compression ratio of roughly 150:1 compared to raw footage.</p>
+
+<h3>Text and Code Compression</h3>
+<p>Text-based files (HTML, CSS, JavaScript, JSON, XML) compress extremely well because they contain repeated patterns. Gzip compression typically reduces text file sizes by 60-80%. Brotli compression achieves 15-25% better compression than gzip for web content. Enabling server-side compression for text-based responses is one of the most effective performance optimizations for web applications.</p>
+
+<p>Minification (removing whitespace, comments, and shortening variable names) provides an additional 10-30% reduction before compression. A 500 KB JavaScript bundle might minify to 200 KB, then compress to 60 KB with gzip or 45 KB with Brotli. The total reduction from 500 KB to 45 KB (91%) significantly improves page load times.</p>
+
+<h3>Database Storage Optimization</h3>
+<p>Database storage can be optimized through data type selection, normalization, and compression. Using SMALLINT (2 bytes) instead of INTEGER (4 bytes) for columns that never exceed 32,767 saves 2 bytes per row. On a table with 100 million rows, this saves 200 MB per column. Similar optimizations include using VARCHAR(50) instead of TEXT for short strings, and TIMESTAMP instead of DATETIME where timezone information is not needed.</p>
+
+<h2>File Sizes and Memory</h2>
+<p>File size and memory usage are related but different concepts. A file on disk may be compressed, while the same data in memory is uncompressed. Understanding this relationship helps with application performance tuning.</p>
+
+<h3>Memory vs Disk Size</h3>
+<p>A 1 MB JPEG image occupies 1 MB on disk but requires 30-50 MB of memory when loaded as an uncompressed bitmap for display. A 100 KB gzipped JSON file is 100 KB on disk and during network transfer, but becomes 400 KB when decompressed in memory, and may use 1-2 MB when parsed into a JavaScript object graph with string interning overhead.</p>
+
+<h3>Virtual Memory and Swap</h3>
+<p>When an application's memory usage exceeds physical RAM, the operating system uses disk-based swap space. The amount of swap needed is directly related to the size of data being processed. Understanding the relationship between file sizes and memory usage helps you provision appropriate amounts of RAM and swap for your workloads.</p>
+
+<h3>Page File and SSD Considerations</h3>
+<p>Windows uses a page file for virtual memory, typically stored on the system drive. The page file can grow to 1-2x the amount of RAM. On systems with 32 GB or more of RAM, this means the page file can consume 32-64 GB of SSD space. Knowing the page file size in different units helps when planning SSD partitioning and disk space allocation.</p>
+
+<h2>Cloud Storage and File Sizes</h2>
+<p>Cloud storage pricing is directly tied to file sizes. Understanding conversions helps estimate and improve cloud costs.</p>
+
+<h3>AWS S3 Pricing</h3>
+<p>AWS S3 Standard charges approximately $0.023 per GB per month for the first 50 TB. A petabyte of data costs roughly $23,000 per month in storage alone. Data transfer out is additional, at $0.09 per GB for the first 10 TB. Accurately converting between units helps estimate these costs when planning cloud migrations or budgeting for data-heavy applications.</p>
+
+<h3>Backup Storage Estimation</h3>
+<p>Estimating backup storage requirements involves the initial full backup size plus daily incremental changes. If your database is 500 GB and changes 2% per day, daily incrementals are about 10 GB. Keeping 30 days of incrementals plus 12 monthly full backups requires: 500 GB (initial) + 30 x 10 GB (daily) + 11 x 500 GB (monthly) = 6.3 TB of total backup storage.</p>
+
+<h3>CDN and Edge Caching</h3>
+<p>Content Delivery Networks cache files at edge locations worldwide. The total CDN storage is the sum of all unique assets multiplied by the number of edge locations that cache them (though CDNs manage this automatically). Understanding the file size of your static assets helps estimate CDN bandwidth costs, which are typically $0.02-0.15 per GB depending on the provider and region.</p>
+
+<h2>Bits vs Bytes in Networking</h2>
+<p>Network speeds are measured in bits per second (bps), while file sizes are measured in bytes. Since 1 byte = 8 bits, you must divide network speed by 8 to get the file transfer rate in bytes. This is a constant source of confusion that leads people to expect faster file downloads than they actually get.</p>
+
+<h3>Common Network Speeds in Both Units</h3>
+<ul>
+<li>10 Mbps connection = 1.25 MB/s maximum throughput</li>
+<li>100 Mbps connection = 12.5 MB/s maximum throughput</li>
+<li>1 Gbps connection = 125 MB/s maximum throughput</li>
+<li>10 Gbps connection = 1.25 GB/s maximum throughput</li>
+<li>100 Gbps connection = 12.5 GB/s maximum throughput</li>
+</ul>
+
+<p>These are theoretical maximums. Real-world throughput is lower due to protocol overhead (TCP/IP headers, Ethernet framing), network congestion, and server-side limitations. Actual file transfer speeds are typically 70-90% of the theoretical maximum under ideal conditions.</p>
+
+<h3>Download Time Estimation</h3>
+<p>To estimate how long a file download takes, divide the file size in megabytes by the connection speed in megabytes per second. A 700 MB file on a 100 Mbps connection (12.5 MB/s actual throughput, assuming 80% efficiency = 10 MB/s) takes approximately 70 seconds. A 4.7 GB DVD image on the same connection takes about 8 minutes.</p>
+
+<h2>File System Overhead</h2>
+<p>File systems add overhead that reduces the usable capacity of a storage device. Understanding this overhead explains why you never get exactly the advertised storage capacity.</p>
+
+<h3>Cluster Size and Wasted Space</h3>
+<p>File systems allocate space in fixed-size blocks called clusters (NTFS) or blocks (ext4, APFS). A typical cluster size is 4 KB. This means a 1-byte file still uses 4 KB of disk space. A directory with 1,000 small files (each 100 bytes) uses 4 MB of disk space even though the actual data is only 100 KB. This overhead is called slack space or internal fragmentation.</p>
+
+<h3>File System Metadata</h3>
+<p>File systems reserve space for metadata: the Master File Table (NTFS), inode tables (ext4), or catalog files (APFS/HFS+). This metadata typically consumes 1-3% of the total disk capacity. On a 1 TB drive, file system metadata might use 10-30 GB, reducing the usable space beyond the binary/decimal discrepancy.</p>
+
+<h3>RAID Overhead</h3>
+<p>RAID configurations use some storage capacity for redundancy. RAID 1 (mirroring) uses 50% of total capacity for data. RAID 5 uses one drive's worth of capacity for parity. RAID 6 uses two drives' worth. A RAID 5 array with four 1 TB drives has 3 TB of usable capacity (approximately 2.73 TiB in binary). Understanding these conversions is critical for data center storage planning.</p>
 </div>
 
 <!-- ===================== FAQ SECTION ===================== -->
