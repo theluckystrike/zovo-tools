@@ -200,6 +200,43 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>Cleaning up a feature branch before merging: git rebase -i HEAD~n to interactively rebase the last n commits, squash minor commits into logical units, reword commit messages for clarity, then force push the cleaned branch with git push --force-with-lease. This produces a clean, reviewable history for the pull request.</p>
 <p>Recovering a deleted branch: check git reflog for the branch tip commit hash, then git checkout -b recovered-branch commit-hash to recreate the branch pointing to that commit. As long as the commits have not been garbage collected (typically 90 days), recovery is straightforward.</p>
 </div>
+
+<div class="info-section" style="margin-top:24px;">
+<h2>Git Workflows for Different Project Types</h2>
+
+<h3>Open Source Project Workflow</h3>
+<p>Contributing to open source projects follows a fork-and-pull model. First, fork the repository on GitHub (or GitLab) to create your own copy. Clone your fork locally with git clone your-fork-url. Add the original repository as a remote with git remote add upstream original-url. Create a feature branch from the latest upstream main: git fetch upstream, then git checkout -b my-feature upstream/main. Make your changes, commit them, push to your fork, and open a pull request from your fork to the original repository.</p>
+<p>Keeping your fork synchronized requires periodic updates from upstream. Run git fetch upstream to download the latest changes, then git checkout main and git merge upstream/main (or git rebase upstream/main for a cleaner history). Push the updated main to your fork with git push origin main. This ensures your feature branches start from the latest code.</p>
+<p>Many open source projects have specific contribution guidelines regarding commit message format, code style, testing requirements, and documentation. Read the CONTRIBUTING.md file before submitting your first pull request. Some projects require signing a Contributor License Agreement (CLA) or Developer Certificate of Origin (DCO) via git commit --signoff.</p>
+
+<h3>Monorepo Workflow</h3>
+<p>Monorepos store multiple projects, packages, or services in a single Git repository. Companies like Google, Microsoft, and Meta use monorepos to manage millions of files and thousands of developers. Benefits include atomic cross-project changes, simplified dependency management, unified CI/CD, and consistent tooling. Challenges include repository size, build times, and ownership boundaries.</p>
+<p>Tools like Nx, Turborepo, Bazel, and Lerna help manage monorepos by providing incremental builds (only rebuilding what changed), dependency graphs, task orchestration, and code ownership configuration. These tools use Git's changed-files detection to determine which projects are affected by a commit and need to be tested or deployed.</p>
+<p>Sparse checkout is important for monorepo efficiency. Instead of checking out the entire repository, developers configure sparse checkout to include only the projects they work on. Combined with Git's partial clone (--filter=blob:none), this reduces clone time and disk usage by orders of magnitude for large repositories.</p>
+
+<h3>Continuous Integration and Git</h3>
+<p>Modern CI/CD systems like GitHub Actions, GitLab CI, Jenkins, and CircleCI trigger pipelines based on Git events such as pushes, pull requests, tags, and merges. Understanding how these systems interact with Git helps you write effective CI configurations.</p>
+<p>Pull request checks typically include linting, type checking, unit tests, integration tests, build verification, and security scanning. These checks run against the merge result (what the code would look like after merging) rather than just the feature branch, ensuring no regressions from the merge itself. Required status checks prevent merging until all checks pass.</p>
+<p>Tag-based deployments use Git tags to trigger release pipelines. When you push a tag like v1.2.3 (git tag -a v1.2.3 -m "Release 1.2.3" followed by git push origin --tags), the CI system detects the new tag and runs the release pipeline, which might build production artifacts, publish packages to registries, deploy to servers, and create release notes.</p>
+
+<h3>Git Internals and Object Model</h3>
+<p>Understanding Git's internal data model demystifies its behavior and helps debug unusual situations. At its core, Git is a content-addressable filesystem. Every piece of data (file content, directory structure, commits, tags) is stored as an object identified by its SHA-1 hash.</p>
+<p>You can explore Git internals directly. git cat-file -t hash shows an object's type (blob, tree, commit, or tag). git cat-file -p hash pretty-prints the object's content. git rev-parse HEAD resolves a ref to its commit hash. git ls-tree HEAD shows the tree object for the current commit, listing all files and subdirectories with their hashes.</p>
+<p>Packfiles are Git's compression mechanism. Instead of storing every version of every file as a separate blob, Git periodically packs objects together using delta compression, storing only the differences between similar objects. This typically reduces repository size by 90% or more compared to storing individual objects. The git repack command triggers manual repacking.</p>
+
+<h3>Migration to Git</h3>
+<p>Teams migrating from SVN to Git can use git svn to maintain a bridge between the two systems. git svn clone converts an SVN repository to a Git repository, preserving history. During the transition period, git svn dcommit pushes Git commits back to SVN, and git svn rebase pulls SVN changes into Git. Once migration is complete, the SVN bridge can be removed.</p>
+<p>Migrating from Mercurial to Git is supported by git-remote-hg and the hg-fast-export tool, which convert Mercurial history into Git format. Perforce users can use git-p4 for bidirectional synchronization. Regardless of the source system, I recommend cleaning up history during migration: removing large binary files, standardizing line endings, and updating .gitignore.</p>
+
+<h3>Practical Tips I Use Daily</h3>
+<p>I frequently use git log --oneline --graph --all to get a quick visual overview of all branches and their relationships. This single command replaces most of what GUI tools offer for understanding repository state. Aliasing it to git lg saves significant time.</p>
+<p>Before starting any work, I run git fetch --all --prune to download all remote changes and remove references to deleted remote branches. This ensures my local repository reflects the current state of the remote and prevents working against outdated branches.</p>
+<p>I configure git rerere (reuse recorded resolution) with git config --global rerere.enabled true. This feature remembers how you resolved merge conflicts and automatically applies the same resolution if the same conflict appears again. This is particularly valuable during long-running rebases or when merging the same branches repeatedly.</p>
+<p>For reviewing pull requests locally, I use git fetch origin pull/123/head:pr-123 to create a local branch from a GitHub pull request. This lets me test the changes locally, run the full test suite, and examine the code in my preferred editor without affecting my current work.</p>
+<p>I use git worktree extensively when I need to check something on another branch without disrupting my current work. Instead of stashing changes and switching branches, I create a separate worktree for the other branch and can work on both simultaneously in different terminal windows or editor instances.</p>
+<p>For large file management, I set up Git LFS early in the project lifecycle rather than retroactively migrating files. Retroactive LFS migration requires rewriting the entire repository history, which is disruptive for all collaborators. Starting with LFS from the beginning avoids this pain entirely.</p>
+<p>I always protect the main branch with branch protection rules that require pull request reviews, passing CI checks, and up-to-date branches before merging. This simple configuration prevents the most common sources of production issues: untested code, unreviewed changes, and integration conflicts.</p>
+</div>
 <div class="info-section" style="margin-top:24px;">
 <h2>Related Free Tools</h2>
 <p>Explore more developer and productivity tools from the Zovo collection.</p>
