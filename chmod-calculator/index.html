@@ -426,6 +426,40 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>In Ansible, the <code>file</code> module sets permissions declaratively: <code>file: path=/var/www state=directory mode=0755 owner=www-data group=www-data recurse=yes</code>. In a Dockerfile, the <code>COPY --chmod=644</code> directive (available since BuildKit) sets permissions during the image build without needing a separate RUN chmod command.</p>
 
 <p>Monitoring tools can alert on permission changes. Tools like AIDE, Tripwire, and OSSEC maintain a database of expected file permissions and report deviations. Integrating these tools into your security monitoring infrastructure provides early warning if permissions are changed by an unauthorized process or compromised account, which could indicate a security breach or configuration drift.</p>
+
+<h3>Permission Inheritance and Propagation</h3>
+
+<p>Unlike Windows NTFS, Unix permissions are not inherited from parent directories. When you create a file, its permissions are determined by the creating process's umask, not by the parent directory's permissions. This means that setting a directory to <code>755</code> does not cause files created inside it to also be <code>755</code>. The setgid bit on directories is the one exception: it causes new files to inherit the directory's group ownership (but not its permissions).</p>
+
+<p>To propagate permissions to existing files within a directory tree, use the <code>find</code> command with <code>-exec chmod</code>. The pattern <code>find /path -type f -exec chmod 644 {} +</code> sets all files to 644, while <code>find /path -type d -exec chmod 755 {} +</code> sets all directories to 755. Using <code>+</code> instead of <code>\;</code> is significantly faster because it batches multiple files into a single chmod invocation.</p>
+
+<p>The <code>chmod -R</code> (recursive) flag applies the same permission to all files and directories in a tree. This is problematic because files and directories usually need different permissions (files should not have execute permission, directories must have it). Always use separate find commands for files and directories instead of <code>chmod -R</code> with a single permission value.</p>
+
+<h3>Understanding the ls -l Output</h3>
+
+<p>The <code>ls -l</code> command displays file permissions in the first column as a 10-character string. The first character indicates the file type: <code>-</code> for regular files, <code>d</code> for directories, <code>l</code> for symbolic links, <code>c</code> for character devices, <code>b</code> for block devices, <code>p</code> for named pipes, and <code>s</code> for sockets. The remaining nine characters show the permissions for owner, group, and others in three groups of three.</p>
+
+<p>Special permission bits modify the display. When setuid is active, the owner's execute position shows <code>s</code> (if execute is also set) or <code>S</code> (if execute is not set). When setgid is active, the group's execute position shows <code>s</code> or <code>S</code>. When the sticky bit is active, the others' execute position shows <code>t</code> (if execute is also set) or <code>T</code> (if execute is not set). An uppercase letter indicates the special bit is set but the underlying execute permission is not, which is unusual and may indicate a configuration error.</p>
+
+<p>After the permission string, <code>ls -l</code> shows the link count, owner name, group name, file size, modification date, and filename. The link count for directories indicates the number of subdirectories plus 2 (for the <code>.</code> and <code>..</code> entries). For regular files, the link count shows the number of hard links pointing to the file's data on disk.</p>
+
+<h3>Permissions and System Calls</h3>
+
+<p>At the kernel level, permission checks happen during system calls. The <code>open()</code> system call checks read and write permissions based on the flags passed (O_RDONLY, O_WRONLY, O_RDWR). The <code>execve()</code> system call checks execute permission. The <code>access()</code> system call allows a process to check permissions without actually opening the file, which is useful for determining what operations are available before attempting them.</p>
+
+<p>The kernel checks permissions in a specific order. If the process's effective user ID matches the file's owner, the owner permissions apply. If the process's effective group ID (or any supplementary group) matches the file's group, the group permissions apply. Otherwise, the others permissions apply. Note that only one category applies; they do not accumulate. A file owner who has read permission through the owner category but not through the group category can read the file, even if the owner is also a member of the file's group.</p>
+
+<p>The root user (UID 0) bypasses most permission checks. Root can read and write any file regardless of permissions. Execute permission is the one exception: root can only execute a file if at least one of the three execute bits is set. This prevents root from accidentally running data files as programs. However, root can always change permissions with chmod, effectively gaining the ability to execute any file by first adding the execute bit.</p>
+
+<h3>Practical Permission Recipes</h3>
+
+<p>Here are permission configurations I use regularly in production environments. For a web application deployment with Nginx serving static files and proxying to a backend application: the document root is <code>755</code> owned by the deployment user with group <code>www-data</code>, static assets (CSS, JS, images) are <code>644</code>, uploaded files are <code>644</code> in a directory that is <code>775</code> with setgid set so uploads inherit the correct group, and the application configuration file is <code>640</code> readable by the backend process through group membership.</p>
+
+<p>For a shared development server where multiple developers collaborate on projects: the project directory is <code>2775</code> (setgid + rwxrwxr-x) owned by root with the dev team's group. All developers are members of this group. The setgid bit ensures new files inherit the group, and the 775 permission allows all group members to create and modify files. Individual developers' private files can be set to <code>600</code> within their own subdirectories.</p>
+
+<p>For a backup server receiving rsync transfers from multiple sources: the backup directory for each source is <code>700</code> owned by the backup service user, preventing any source from reading another source's backups. Backup scripts are <code>700</code> to prevent tampering. Backup logs are <code>640</code> with group membership granted to the monitoring system. The backup rotation script is <code>700</code> and owned by root to prevent backup deletion by compromised service accounts.</p>
+
+<p>For a database server, the data directory permissions are critical. PostgreSQL requires its data directory to be <code>700</code> and owned by the postgres user. The server will refuse to start if these permissions are wrong. MySQL and MariaDB use <code>750</code> for the data directory. Socket files created by database servers typically need <code>755</code> on the containing directory so client applications can connect through the Unix socket. Always verify data directory permissions after system upgrades, as package managers occasionally reset them to defaults.</p>
 </div>
 
 <div class="faq-section">
