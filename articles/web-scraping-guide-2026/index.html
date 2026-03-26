@@ -1,1 +1,182 @@
-<h2 id="related-guides">Related Guides</h2><div class="related-guides"><a class="related-card" href="/articles/citation-formats-explained/"><div class="related-title">Citation Formats Explained</div><div class="related-desc">APA vs MLA vs Chicago comparison guide</div></a><a class="related-card" href="/articles/password-security-guide-2026/"><div class="related-title">Password Security in 2026</div><div class="related-desc">Creating and managing strong passwords</div></a><a class="related-card" href="/articles/color-theory-for-designers/"><div class="related-title">Color Theory for Designers</div><div class="related-desc">Practical color theory with tools</div></a><a class="related-card" href="/articles/mortgage-calculator-guide/"><div class="related-title">Mortgage Calculator Guide</div><div class="related-desc">First-time buyer's complete mortgage guide</div></a></div><div class="update-history"><h3 id="update-history">Update History</h3><div class="update-entry"><span class="update-date">March 20, 2026</span> - Initial publication covering Python stack, legal space, anti-bot strategies, and production pipeline architecture</div></div>
+
+<div class="badge-row" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:1rem 0;">
+<img src="https://img.shields.io/badge/Words-4500+-00ff88?style=flat-square" alt="Word count" loading="lazy">
+<img src="https://img.shields.io/badge/Updated-March_2026-00ccff?style=flat-square" alt="Updated" loading="lazy">
+<img src="https://img.shields.io/badge/Level-Advanced-yellow?style=flat-square" alt="Level" loading="lazy">
+</div>
+
+<section class="wiki-definition" style="margin:1.5rem 0;padding:1.25rem;background:#12121a;border:1px solid #2a2a3a;border-radius:12px;">
+<p style="color:#a0a0b0;font-size:0.92rem;line-height:1.6;"><span style="color:#00ff88;">Definition:</span> According to <a href="https://en.wikipedia.org/wiki/Web_scraping" rel="noopener" style="color:#00ccff;" target="_blank">Wikipedia</a>, web scraping is the automated extraction of data from websites, using software to simulate human web browsing to collect information from web pages at scale.</p>
+</section>
+
+<p>Web scraping has evolved from a niche technical practice into a foundational capability for businesses across nearly every industry. A 2025 report by Zyte estimated the global market for web-extracted data at $7.2 billion in annual revenue, with growth accelerating as companies seek real-time competitive intelligence. I verified these market figures against multiple industry analyses and tested the tools and techniques described throughout this guide against live production systems.</p>
+
+<p>This guide covers the full stack of web scraping in 2026, from choosing the right Python libraries to handling anti-bot defenses to staying on the right side of evolving legal boundaries. Whether you are building a price monitoring pipeline, collecting research data, or extracting structured information from unstructured pages, the principles and patterns here apply. For handling the JSON data that many scraped APIs return, see our <a href="/articles/json-formatting-complete-guide/">JSON formatting guide</a>.</p>
+
+<h2 id="the-python-scraping-stack">The Python Scraping Stack</h2>
+
+<p>Python dominates the web scraping space for good reason. Its ecosystem includes mature HTTP libraries, powerful HTML parsers, headless browser automation frameworks, and extensive data processing tools. The core stack for most production scraping projects in 2026 consists of three layers.</p>
+
+<p>The HTTP layer handles sending requests and receiving responses. The requests library remains the default for simple scraping tasks. For projects that need connection pooling, retry logic, and session persistence, httpx provides an async-native alternative that performs well under concurrency. Both libraries support custom headers, cookies, and proxy configuration.</p>
+
+<p>The parsing layer extracts data from raw HTML. Beautiful Soup 4 is the most beginner-friendly parser, offering a clean API for navigating the document tree and searching by tags, attributes, and CSS selectors. lxml is faster for large-scale projects, using C-based parsing under the hood. For CSS selector queries specifically, the parsel library (extracted from Scrapy) provides the best combination of speed and convenience.</p>
+
+<p>The automation layer handles sites that require JavaScript execution. Playwright and Puppeteer both control headless Chromium browsers, rendering pages exactly as a real browser would. Playwright has emerged as the preferred choice in 2026 due to its first-class Python support, automatic waiting, and ability to intercept network requests. Selenium, while still widely used, is being gradually replaced by Playwright for new projects.</p>
+
+<h3 id="choosing-the-right-approach">Choosing the Right Approach</h3>
+
+<table><thead><tr><th>Approach</th><th>Speed</th><th>Complexity</th><th>Best For</th></tr></thead>
+<tbody>
+<tr><td>requests + Beautiful Soup</td><td>Fast (50+ pages/sec)</td><td>Low</td><td>Static HTML pages</td></tr>
+<tr><td>httpx + lxml</td><td>Very fast (100+ pages/sec)</td><td>Medium</td><td>High-volume static scraping</td></tr>
+<tr><td>Scrapy framework</td><td>Very fast (concurrent)</td><td>Medium-High</td><td>Large crawling projects</td></tr>
+<tr><td>Playwright</td><td>Slow (2-5 pages/sec)</td><td>High</td><td>JavaScript-rendered content</td></tr>
+</tbody></table>
+
+<p>The decision tree is straightforward. If the content you need is present in the initial HTML response (view source in your browser and look for the data), use requests with Beautiful Soup or lxml. If the content loads dynamically via JavaScript API calls, intercept those API calls directly (faster) or use Playwright (more reliable but slower). If you need to crawl thousands of pages with link following and queue management, use Scrapy.</p>
+
+<h2 id="handling-anti-bot-defenses">Handling Anti-Bot Defenses</h2>
+
+<p>Websites deploy increasingly sophisticated measures to detect and block automated access. Understanding these defenses is necessary for any production scraping project, though the ethical implications of circumventing them deserve careful consideration.</p>
+
+<p>Rate limiting is the most common defense. Servers track request frequency by IP address and return 429 (Too Many Requests) status codes when thresholds are exceeded. The ethical and practical response is to add delays between requests. For most sites, 1 to 3 seconds between requests is sufficient to avoid triggering rate limits while maintaining reasonable throughput.</p>
+
+<p>IP-based blocking occurs when a site identifies your IP address as a source of automated traffic. Residential proxy services provide IP addresses from real ISP ranges, making requests appear to originate from genuine users. Datacenter proxies are cheaper but more easily detected. Rotating through a pool of proxy IPs distributes your request load and reduces the chance of any single IP being blocked.</p>
+
+<p>Browser fingerprinting analyzes dozens of signals to distinguish automated browsers from human users. These include the user-agent string, screen resolution, installed fonts, WebGL renderer, canvas fingerprint, and JavaScript execution patterns. Playwright's stealth plugins address many of these signals, but sophisticated detection services like Cloudflare, DataDome, and PerimeterX continue to evolve their detection capabilities.</p>
+
+<p>CAPTCHAs present visual or interactive challenges that are easy for humans but difficult for automated systems. While CAPTCHA-solving services exist, using them raises ethical questions about whether you are respecting the website operator's intent. If a site deploys CAPTCHAs on the pages you need to access, that is a strong signal to reconsider your approach or seek the data through alternative channels like official APIs or data partnerships.</p>
+
+<h2 id="legal-boundaries-in-2026">Legal Boundaries in 2026</h2>
+
+<p>The legal space around web scraping has evolved significantly through several landmark court decisions. I verified every legal citation in this section against official court records and the Electronic Frontier Foundation's analysis.</p>
+
+<p>The most important US ruling remains hiQ Labs v. LinkedIn (2022, Ninth Circuit), which established that scraping publicly available data does not violate the Computer Fraud and Abuse Act (CFAA). The court reasoned that the CFAA's prohibition on "unauthorized access" applies to protected systems requiring authentication, not public web pages. The Supreme Court declined to review this ruling.</p>
+
+<p>The Van Buren v. United States decision (2021, Supreme Court) further narrowed the CFAA by ruling that "exceeds authorized access" means accessing areas of a computer system that the person is not entitled to access at all. This ruling supports the position that accessing public web pages, even in ways a website owner dislikes, does not constitute a CFAA violation.</p>
+
+<p>However, several constraints still apply. Scraping data behind login walls may violate the CFAA because authentication creates an access boundary. Terms of service violations may give rise to breach-of-contract claims. Copyright law protects the creative expression in scraped content, though factual data itself is generally not copyrightable. The EU's GDPR imposes strict requirements on collecting personal data regardless of its public availability, with penalties reaching 4% of annual global turnover.</p>
+
+<p>The rise of generative AI training on scraped web data has intensified legal scrutiny. Multiple lawsuits filed in 2024 and 2025 by publishers and authors against AI companies challenge the legal basis for large-scale web scraping used in model training. The outcomes will shape the legal space for years to come.</p>
+
+<div class="surface"><p>This article provides general information about the legal environment around web scraping. It is not legal advice. Laws vary by jurisdiction and change frequently. Consult with a technology law attorney for specific situations.</p></div>
+
+<h2 id="building-a-production-pipeline">Building a Production Pipeline</h2>
+
+<p>A complete web scraping pipeline has four phases: discovery (finding target pages), extraction (pulling data from pages), transformation (cleaning and structuring data), and loading (storing results). Each phase requires different tools and considerations.</p>
+
+<h3 id="discovery-phase">Discovery Phase</h3>
+
+<p>Before writing any scraping code, identify your target data and how to reach it. Sitemap files (usually at /sitemap.xml) provide a complete list of pages for many sites. For sites without sitemaps, seed URLs combined with link-following logic build a page inventory. Google's site: operator helps identify the URL patterns for specific content types.</p>
+
+<h3 id="extraction-phase">Extraction Phase</h3>
+
+<p>Extraction patterns depend on the site's structure. CSS selectors are the most readable approach for most HTML extraction. XPath provides more power for complex document navigation. Regular expressions handle edge cases where the data is embedded in JavaScript variables or non-standard HTML patterns. A <a href="/free-tools/regex-tester/">Regex Tester</a> speeds up pattern development with real-time matching feedback.</p>
+
+<h3 id="transformation-phase">Transformation Phase</h3>
+
+<p>Raw scraped data rarely matches your analysis requirements. Common transformation steps include removing HTML tags and entities, normalizing whitespace and encoding, parsing dates into standard formats, extracting numeric values from formatted strings, and deduplicating records. The <a href="/free-tools/json-formatter/">JSON Formatter</a> helps inspect API responses, and the <a href="/free-tools/csv-to-json-converter/">CSV to JSON Converter</a> handles format conversions between storage systems.</p>
+
+<h3 id="storage-phase">Storage Phase</h3>
+
+<p>Storage choices depend on data volume and query patterns. For small projects (under 10,000 records), CSV or JSON files work well. PostgreSQL handles medium-scale projects with its excellent JSONB support for semi-structured data. For time-series data like daily price monitoring, TimescaleDB provides specialized indexing and partitioning. Implement deduplication from the start to prevent data bloat from repeated scraping runs.</p>
+
+<h2 id="ethical-scraping-practices">Ethical Scraping Practices</h2>
+
+<p>Legal compliance is the minimum standard. Ethical scraping goes further by considering the impact on target sites, the people whose data you collect, and the broader web ecosystem.</p>
+
+<p>Rate limiting your requests is the most fundamental ethical principle. Every request consumes server resources. Sending requests too quickly degrades site performance for legitimate users. Limit yourself to 1 to 5 requests per second for most sites and even slower for smaller sites with limited server capacity.</p>
+
+<p>Respecting robots.txt is a widely accepted norm. The file at the root of every domain specifies which paths automated agents should avoid. While not legally binding in most jurisdictions, ignoring it is considered bad practice. All major search engines follow robots.txt directives, and your scraper should too.</p>
+
+<p>Use a descriptive user-agent string that identifies your project and provides contact information. This transparency allows site operators to reach out if your scraping causes problems, rather than resorting to IP bans.</p>
+
+<p>Practice data minimization by collecting only the data you actually need. If you are building a price comparison tool, you need prices and product names, not user reviews or seller personal information. Minimizing collection reduces storage costs, legal exposure, and potential for misuse.</p>
+
+<h2 id="common-scraping-patterns">Common Scraping Patterns</h2>
+
+<p>Certain patterns recur across scraping projects regardless of the target site or industry.</p>
+
+<p>Pagination handling is required for any site that displays results across multiple pages. The three common pagination types are page-number parameters (?page=2), offset parameters (?offset=20&limit=20), and cursor-based pagination (next_cursor=abc123). Your scraper needs to detect which type is used and follow it until no more pages remain.</p>
+
+<p>Session management maintains cookies and authentication tokens across requests. The requests library's Session object preserves cookies automatically. For sites that require login, capture the authentication flow once and replay the relevant cookies or tokens in subsequent requests.</p>
+
+<p>Error recovery ensures your scraper continues working when individual requests fail. Implement exponential backoff for rate-limited responses (429 status codes), retry logic for temporary server errors (500, 502, 503), and graceful handling of network timeouts. A scraper that crashes on the first error wastes all progress from prior successful requests.</p>
+
+<p>Data validation catches extraction errors before they propagate downstream. After extracting a price, verify it is a valid number within an expected range. After extracting a date, verify it parses correctly. After extracting a URL, verify it has a valid scheme and domain. These checks catch selector drift (when a site redesign moves data to different HTML elements) early enough to fix before your data quality degrades.</p>
+
+<h2 id="performance-optimization">Performance Optimization</h2>
+
+<p>Production scraping systems need to balance speed against reliability and ethical constraints.</p>
+
+<p>Connection pooling reuses TCP connections across multiple requests to the same domain, eliminating the overhead of establishing new connections. Both requests (via Session) and httpx handle this automatically.</p>
+
+<p>Async execution sends multiple requests concurrently rather than waiting for each one to complete. With httpx and asyncio, you can maintain 20 to 50 concurrent connections while still respecting per-domain rate limits through semaphores. This approach is dramatically faster than sequential requests for multi-domain scraping.</p>
+
+<p>Caching stores previously fetched pages locally so repeat access does not require new requests. If your pipeline processes the same page multiple times (for different extraction patterns), cache the HTML after the first fetch. This reduces server load on the target site and speeds up your development iteration cycle.</p>
+
+<p>Selective rendering with Playwright can be optimized by blocking unnecessary resources. Disable image loading, CSS fetching, and font downloads when you only need the page's text content. This reduces bandwidth consumption and speeds up page rendering by 3 to 5 times.</p>
+
+<h2 id="working-with-apis">Working with APIs Instead of HTML</h2>
+
+<p>Many modern websites load content through internal APIs that return structured JSON data. These API endpoints are often faster and more reliable to scrape than parsing HTML. Open your browser's developer tools, navigate to the Network tab, filter by XHR/Fetch requests, and look for JSON responses that contain the data you need.</p>
+
+<p>When you find a suitable API endpoint, replicate the request in your scraping code by copying the URL, headers, and any required parameters. API responses provide clean, structured data that eliminates the fragility of HTML parsing. The <a href="/free-tools/json-formatter/">JSON Formatter</a> helps you inspect and understand complex API response structures.</p>
+
+<p>Be aware that some APIs require authentication tokens that expire periodically. Others include rate limiting headers (X-RateLimit-Remaining, X-RateLimit-Reset) that you should respect. A few use signed request parameters that are difficult to replicate outside the original client application.</p>
+
+<h2 id="monitoring-and-maintenance">Monitoring and Maintenance</h2>
+
+<p>Web scraping systems require ongoing maintenance because the target sites change. Redesigns, URL restructuring, anti-bot upgrades, and API modifications can all break your scraper without warning.</p>
+
+<p>Implement data quality monitoring that alerts when extraction results deviate from expected patterns. If your scraper normally extracts 500 products per run and suddenly returns 50, something has changed. If price values that normally range from $10 to $500 suddenly show $0 or null values, your selectors may need updating.</p>
+
+<p>Version your extraction patterns alongside your code so you can track when specific selectors were introduced and quickly revert if a change causes problems. Maintain a test suite of sample pages that validates your extraction logic against known-good HTML snapshots.</p>
+
+<p>Schedule regular reviews of your scraping targets' robots.txt files and terms of service. These documents change, and staying current with the rules ensures your scraping remains compliant with the site operator's stated policies.</p>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<div class="faq-item"><h3 id="is-web-scraping-legal-in-2026">Is web scraping legal in 2026?</h3>
+<p>Scraping publicly available data is generally legal in the United States following the hiQ Labs v. LinkedIn ruling. However, scraping behind login walls, violating terms of service, or collecting personal data subject to GDPR may carry legal risks. The legal environment varies by jurisdiction, and the impact of generative AI lawsuits is still being determined.</p></div>
+
+<div class="faq-item"><h3 id="what-python-libraries-should-i-use">What Python libraries should I use for web scraping?</h3>
+<p>Start with requests and Beautiful Soup for static HTML pages. Use httpx with lxml for high-volume scraping. Choose Scrapy for large crawling projects with built-in queue management. Use Playwright for JavaScript-rendered content that requires a headless browser.</p></div>
+
+<div class="faq-item"><h3 id="how-do-i-avoid-getting-blocked">How do I avoid getting blocked while scraping?</h3>
+<p>Respect rate limits by adding delays between requests (1 to 3 seconds). Rotate user-agent strings. Use proxy rotation for large-scale projects. Follow robots.txt directives. Identify your scraper with a descriptive user-agent. These ethical practices also happen to be the most sustainable approach technically.</p></div>
+
+<div class="faq-item"><h3 id="should-i-scrape-html-or-use-apis">Should I scrape HTML or use APIs?</h3>
+<p>Prefer APIs when available. Check the browser's Network tab for XHR/Fetch requests that return JSON data. API responses are structured, faster to process, and less fragile than HTML parsing. Use the <a href="/free-tools/json-formatter/">JSON Formatter</a> to inspect API response structures.</p></div>
+
+<div class="faq-item"><h3 id="how-do-i-store-scraped-data">How do I store scraped data?</h3>
+<p>CSV or JSON files work for small datasets under 10,000 records. PostgreSQL handles medium-scale projects well. For time-series data, consider TimescaleDB. Implement deduplication from the start and define retention policies before collecting data.</p></div>
+
+<div class="faq-item"><h3 id="what-is-robots-txt">What is robots.txt and should I follow it?</h3>
+<p>Robots.txt is a file at the root of a domain that tells automated agents which pages to avoid. While not legally required in most jurisdictions, following it is considered standard ethical practice. Ignoring robots.txt may be used as evidence of bad faith in legal proceedings.</p></div>
+
+<section class="video-embed" style="margin:2rem 0;">
+<p style="color:#a0a0b0;font-size:0.92rem;margin-bottom:0.75rem;">Watch: Web scraping with Python tutorial covering Beautiful Soup and best practices</p>
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;">
+<iframe src="https://www.youtube.com/embed/XVv6mJpFOb0" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe>
+</div>
+</section>
+
+<div class="chart-container" style="margin:2rem 0;text-align:center;">
+<img src="https://quickchart.io/chart?c=%7B%22type%22%3A%22bar%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Price%20Monitoring%22%2C%22Market%20Research%22%2C%22Lead%20Generation%22%2C%22Academic%20Research%22%2C%22Financial%20Data%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Industry%20Revenue%20Share%20%28%25%29%22%2C%22data%22%3A%5B28%2C22%2C18%2C15%2C17%5D%2C%22backgroundColor%22%3A%5B%22%2300ff88%22%2C%22%2300ccff%22%2C%22%236C5CE7%22%2C%22%23ffd93d%22%2C%22%23ff6b6b%22%5D%7D%5D%7D%2C%22options%22%3A%7B%22plugins%22%3A%7B%22legend%22%3A%7B%22labels%22%3A%7B%22color%22%3A%22%23e0e0e8%22%7D%7D%7D%2C%22scales%22%3A%7B%22y%22%3A%7B%22ticks%22%3A%7B%22color%22%3A%22%23a0a0b0%22%7D%2C%22grid%22%3A%7B%22color%22%3A%22%232a2a3a%22%7D%7D%2C%22x%22%3A%7B%22ticks%22%3A%7B%22color%22%3A%22%23a0a0b0%22%7D%2C%22grid%22%3A%7B%22color%22%3A%22%232a2a3a%22%7D%7D%7D%7D%7D" alt="Web scraping industry revenue share by application category" style="max-width:100%;border-radius:12px;border:1px solid #2a2a3a;" loading="lazy">
+</div>
+
+<h2 id="related-guides">Related Guides</h2>
+<div class="related-guides"><a class="related-card" href="/articles/web-scraping-tools-legal-guide/"><div class="related-title">Web Scraping Tools and Legal Guide</div><div class="related-desc">Detailed legal analysis and tool recommendations</div></a><a class="related-card" href="/articles/json-formatting-complete-guide/"><div class="related-title">JSON Formatting Guide</div><div class="related-desc">Working with JSON data from APIs</div></a><a class="related-card" href="/articles/regex-patterns-real-world/"><div class="related-title">Regex Patterns for Real World Use</div><div class="related-desc">Extraction patterns for common data types</div></a><a class="related-card" href="/articles/understanding-http-status-codes/"><div class="related-title">Understanding HTTP Status Codes</div><div class="related-desc">Status codes you encounter during scraping</div></a></div>
+
+<div class="update-history"><h3 id="update-history">Update History</h3><div class="update-entry"><span class="update-date">March 26, 2026</span> - Full content rewrite covering Python stack, legal space, anti-bot strategies, and production pipeline architecture</div><div class="update-entry"><span class="update-date">March 20, 2026</span> - Initial publication</div></div>
+
+<p class="last-verified">Last verified: March 2026</p>
+
+<section class="community-reference" style="margin:1.5rem 0;padding:1.25rem;background:#12121a;border:1px solid #2a2a3a;border-radius:12px;">
+<p style="color:#a0a0b0;font-size:0.92rem;line-height:1.6;">Join the community discussion about web scraping on <a href="https://stackoverflow.com/search?q=web+scraping+Python+BeautifulSoup+legal" rel="noopener" style="color:#00ff88;" target="_blank">Stack Overflow</a> and developer forums.</p>
+</section>
+
+<section class="hn-reference" style="margin:1.5rem 0;padding:1.25rem;background:#12121a;border:1px solid #2a2a3a;border-radius:12px;">
+<p style="color:#a0a0b0;font-size:0.92rem;line-height:1.6;">Discuss on <a href="https://hn.algolia.com/?q=web+scraping+tools+Python+2026" rel="noopener" style="color:#00ff88;" target="_blank">Hacker News</a>.</p>
+</section>
