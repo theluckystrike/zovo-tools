@@ -537,7 +537,7 @@ Binary patterns in ASCII are deliberate. The two high bits of a 7-bit code class
 <p>These sequences are composed entirely of printable ASCII characters (except for the initial ESC). The digit characters (48-57), semicolon (59), and specific letter terminators (m = 109, H = 72, J = 74) form a mini-language within the ASCII character set. Terminal emulators parse these sequences and apply the formatting instead of displaying the raw characters.</p>
 <h3>Color Support in Modern Terminals</h3>
 <p>Modern terminal emulators support 256-color mode (ESC[38;5;<em>n</em>m for foreground, ESC[48;5;<em>n</em>m for background) and true color (ESC[38;2;<em>r</em>;<em>g</em>;<em>b</em>m). Even these extended sequences use only ASCII characters: digits, semicolons, and the letter m. The entire ANSI color system is built from about a dozen ASCII characters.</p>
-<p>I use ANSI escape sequences in my own development workflow for colored log output, progress bars, and test result formatting. Understanding the underlying ASCII codes helps when debugging situations where escape sequences are not interpreted correctly and appear as raw text.</p>
+<p>I use ANSI escape sequences in my own development workflow for colored log output, progress bars, and test result formatting. Understanding the underlying ASCII codes helps when debugging situations where escape sequences are not interpreted correctly and appear as raw text. This happens frequently when piping output between programs that have different terminal capabilities, or when viewing log files that contain embedded escape codes.</p>
 
 <h3>Practical ASCII Patterns for Developers</h3>
 <p>Here are patterns I have found useful when working with ASCII values in production code.</p>
@@ -561,6 +561,21 @@ Quick Reference: The 22 characters used in hex encoding are: 0 (48), 1 (49), 2 (
 
 <h3>Why is the space character code 32?</h3>
 <p>The space character (code 32) is the first printable ASCII character and sits at the boundary between control characters (0-31) and visible characters (33-126). Its position at 32 (binary 0100000) means it occupies the first code where bit 5 is set and all other bits are 0, which gave it special properties in sorting algorithms and early hardware implementations.</p>
+
+<h3>Can ASCII represent characters from other languages?</h3>
+<p>Standard ASCII (0-127) only includes English letters, digits, and basic punctuation. It cannot represent characters from other languages like accented letters (e, u with accents), Chinese characters, Arabic script, or Cyrillic letters. Extended ASCII (128-255) added some European characters but varied by code page. For true multilingual support, Unicode (specifically UTF-8) is required. UTF-8 is backward-compatible with ASCII, so any ASCII document is automatically valid UTF-8.</p>
+
+<h3>What does ASCII stand for?</h3>
+<p>ASCII stands for American Standard Code for Information Interchange. The name reflects its origins as an American standard (developed by the ASA, later ANSI) designed to facilitate data exchange between different computer systems. The word "interchange" emphasizes that ASCII's primary goal was compatibility, not just character representation.</p>
+
+<h3>How is ASCII different from ANSI?</h3>
+<p>ASCII is a character encoding standard defining 128 characters. ANSI refers to the American National Standards Institute, the organization that published the ASCII standard. The term "ANSI encoding" is often loosely used to refer to Windows-1252 or other Windows code pages, but this is technically imprecise. ANSI is the standards body; ASCII (formally ANSI X3.4) is one specific standard they published.</p>
+
+<h3>What are the most commonly used ASCII characters in English?</h3>
+<p>After the space (code 32), which is by far the most frequent, the most common ASCII characters in English text are: e (101), t (116), a (97), o (111), i (105), n (110), s (115), h (104), and r (114). This frequency distribution is the basis for Huffman coding, Morse code letter assignments, and many cryptanalysis techniques. In typical English prose, the space character accounts for roughly 18% of all characters.</p>
+
+<h3>How do I find the ASCII value of a character on my keyboard?</h3>
+<p>Use the search bar in the ASCII table above. Type any character and the table will filter to show its decimal, hexadecimal, octal, and binary values. Alternatively, type the character in the converter tool and select your preferred output format. In a programming environment, you can use functions like Python's <code>ord()</code> or JavaScript's <code>charCodeAt()</code>.</p>
 
 <h2 id="references">References and Sources</h2>
 <ul style="margin:12px 0;padding-left:20px;color:#b0b0c0;font-size:0.9rem">
