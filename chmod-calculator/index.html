@@ -374,6 +374,58 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>World-readable sensitive files expose credentials and private keys. Database configuration files, API key files, TLS private keys, and SSH private keys should never be world-readable. Set these to <code>600</code> (owner read/write only) or <code>640</code> (owner read/write, group read) if a service running as a different user needs to read them through group membership.</p>
 
 <p>Regular security audits should check for permission anomalies. The command <code>find / -perm -o+w -type f 2>/dev/null</code> lists all world-writable files on the system. Similarly, <code>find / -perm -4000 -type f</code> lists all setuid executables. Any unexpected entries in these lists should be investigated as potential security issues.</p>
+
+<h3>Permissions in CI/CD Pipelines</h3>
+
+<p>Continuous integration and deployment pipelines often encounter permission issues when building, testing, and deploying applications. Build artifacts created inside Docker containers may have root ownership. Files transferred between pipeline stages may lose their execute permissions. SSH keys used for deployment must have exactly <code>600</code> permissions or SSH will refuse to use them.</p>
+
+<p>In GitHub Actions, GitLab CI, and Jenkins pipelines, I include explicit chmod commands after checking out code, extracting archives, or copying files between stages. A common pattern in deployment scripts is to set permissions immediately after extracting the application files: <code>find /app -type d -exec chmod 755 {} \;</code> for directories and <code>find /app -type f -exec chmod 644 {} \;</code> for files, followed by <code>chmod +x /app/bin/*</code> for executables. This ensures consistent permissions regardless of how the files were packaged or transferred.</p>
+
+<p>For secrets management in pipelines, write credential files with restrictive permissions using commands like <code>install -m 600 /dev/null ~/.ssh/deploy_key</code> before writing the key content. The <code>install</code> command creates the file with the specified permissions atomically, avoiding the brief window where a file exists with default permissions before chmod is applied.</p>
+
+<h3>macOS and BSD Permission Differences</h3>
+
+<p>While macOS is built on BSD Unix and uses the same basic permission model, there are notable differences. macOS adds an extended security framework with System Integrity Protection (SIP) that prevents modifications to system files regardless of permissions. Even root cannot modify files protected by SIP. Additionally, macOS uses extended attributes and file flags that can restrict access beyond what standard permissions allow.</p>
+
+<p>The <code>ls -l@</code> command on macOS shows extended attributes, and the <code>ls -lO</code> command shows file flags. The <code>uchg</code> (user immutable) flag prevents the file from being modified, renamed, or deleted. The <code>schg</code> (system immutable) flag provides even stronger protection that can only be removed in single-user mode. These flags work alongside standard Unix permissions to provide defense-in-depth security.</p>
+
+<p>BSD-based systems (FreeBSD, OpenBSD, NetBSD, and macOS) also support the <code>chflags</code> command for setting file flags. The append-only flag (<code>sappnd</code>) allows data to be added to a file but not modified or deleted, which is useful for log files that should be tamper-resistant. The no-unlink flag (<code>sunlnk</code>) prevents file deletion even by the owner.</p>
+
+<h3>Permissions for Common Application Types</h3>
+
+<p>Different application types have established permission conventions. For PHP web applications (WordPress, Laravel, Drupal), the recommended structure is: application files at <code>644</code>, directories at <code>755</code>, configuration files with database credentials at <code>640</code> or <code>600</code>, and upload/cache directories at <code>775</code> with group ownership matching the web server user. WordPress specifically recommends <code>wp-config.php</code> at <code>440</code> or <code>400</code> for maximum security.</p>
+
+<p>For Node.js applications, the pattern is similar: source files at <code>644</code>, directories at <code>755</code>, <code>node_modules</code> at standard permissions (created by npm), the <code>.env</code> file at <code>600</code>, and any executable scripts in the bin directory at <code>755</code>. The application should run as a non-root user with a dedicated service account.</p>
+
+<p>For Python applications, virtual environment directories need <code>755</code> with executables in the bin directory set to <code>755</code>. The application source gets <code>644</code> for modules and <code>755</code> for scripts intended to be run directly. WSGI configuration files (gunicorn.conf.py, uwsgi.ini) get <code>644</code> or <code>640</code> depending on whether they contain sensitive values.</p>
+
+<p>Database file permissions vary by database system. SQLite database files should be <code>660</code> with ownership matching the application user and group. PostgreSQL data directories are typically <code>700</code> with ownership by the postgres system user. MySQL/MariaDB data directories use <code>750</code> by default. These permissions are set automatically during installation, and changing them can cause the database service to fail to start.</p>
+
+<h3>Troubleshooting Permission Errors</h3>
+
+<p>Permission denied errors are among the most common issues on Unix systems. When you encounter "Permission denied," start by checking the file permissions with <code>ls -la</code> and the file ownership. If the permissions look correct, check every directory in the path. Remember that execute permission on every parent directory is required to access a file.</p>
+
+<p>Use the <code>id</code> command to see your current user ID, group memberships, and effective groups. A common mistake is assuming that adding a user to a group takes effect immediately. On most systems, group membership changes require the user to log out and log back in (or start a new shell with <code>newgrp groupname</code>) for the new group to appear in the effective group list.</p>
+
+<p>The <code>stat</code> command provides detailed file information including numeric permissions, owner, group, and timestamps. For debugging path-related permission issues, <code>namei -l /full/path/to/file</code> lists the permissions for every component of the path, making it easy to identify which directory is blocking access.</p>
+
+<p>On SELinux-enabled systems (Red Hat, CentOS, Fedora), standard Unix permissions might look correct but access is still denied due to SELinux security contexts. The <code>ls -Z</code> command shows SELinux contexts, and <code>ausearch -m AVC -ts recent</code> shows recent SELinux denials. Use <code>restorecon -R /path</code> to reset contexts to their expected values for the file's location.</p>
+
+<h3>Permissions and Filesystem Types</h3>
+
+<p>Not all filesystems support Unix permissions equally. Native Linux filesystems (ext4, XFS, Btrfs, ZFS) fully support permissions, ownership, ACLs, and extended attributes. FAT32 and exFAT filesystems (commonly used on USB drives and SD cards) do not support Unix permissions at all. When mounting FAT volumes, Linux uses mount options (<code>fmask</code>, <code>dmask</code>, <code>uid</code>, <code>gid</code>) to assign artificial permissions to all files and directories on the volume.</p>
+
+<p>NTFS (the Windows filesystem) has its own ACL-based permission system. When mounting NTFS on Linux using ntfs-3g, the driver maps NTFS permissions to Unix permissions. The mapping is imperfect, and files may appear with unexpected permissions. For consistent behavior, specify <code>uid</code>, <code>gid</code>, <code>fmask</code>, and <code>dmask</code> in the mount options.</p>
+
+<p>Network filesystems like NFS and CIFS/SMB have their own permission handling. NFS typically maps UIDs directly between client and server, which requires consistent UID numbering across machines. NFSv4 supports ACLs that translate between the client and server. CIFS mounts from Windows servers use mount options to set Unix permissions since the underlying Windows ACLs do not translate directly.</p>
+
+<h3>Automating Permission Management</h3>
+
+<p>For production servers, I manage file permissions through configuration management tools rather than manual chmod commands. Ansible, Chef, Puppet, and Salt all support setting file permissions, ownership, and ACLs as part of their declarative configuration. This ensures permissions are consistent across all servers and are automatically corrected if someone changes them manually.</p>
+
+<p>In Ansible, the <code>file</code> module sets permissions declaratively: <code>file: path=/var/www state=directory mode=0755 owner=www-data group=www-data recurse=yes</code>. In a Dockerfile, the <code>COPY --chmod=644</code> directive (available since BuildKit) sets permissions during the image build without needing a separate RUN chmod command.</p>
+
+<p>Monitoring tools can alert on permission changes. Tools like AIDE, Tripwire, and OSSEC maintain a database of expected file permissions and report deviations. Integrating these tools into your security monitoring infrastructure provides early warning if permissions are changed by an unauthorized process or compromised account, which could indicate a security breach or configuration drift.</p>
 </div>
 
 <div class="faq-section">
