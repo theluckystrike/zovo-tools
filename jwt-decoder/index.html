@@ -419,6 +419,8 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>To comply with data minimization principles, avoid including PII in JWT claims unless the receiving service specifically needs it. Use opaque identifiers (like user IDs) in the <code>sub</code> claim and let the receiving service look up PII from its own database when needed. If PII must be included in the token, consider using JWE (encrypted JWTs) to protect the payload contents from intermediaries.</p>
 
 <p>Audit logging of JWT verification events (successful verifications, expired tokens, invalid signatures) helps meet compliance requirements for access monitoring. Include the <code>jti</code> claim in your tokens to provide a unique identifier for each token that can be correlated across log entries. This makes it possible to trace a specific authentication event through the system for audit purposes.</p>
+
+<p>Data retention policies should address how long JWTs and their associated metadata are stored. Server access logs that contain JWTs in Authorization headers effectively store the full token for the log retention period. Configure your logging infrastructure to redact or truncate Bearer tokens from request headers before storing log entries. This prevents accidental exposure of token contents through log aggregation systems or log analytics platforms. Many web application firewalls (WAFs) and API gateways offer built-in header redaction features for this purpose.</p>
 </div>
 
 <div class="faq-section">
