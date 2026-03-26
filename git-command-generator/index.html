@@ -23,7 +23,7 @@
 {"@context":"https://schema.org","@type":"WebApplication","name":"Git Command Generator","description":"Generate the right git command for any task with clear explanations.","url":"https://zovo.one/free-tools/git-command-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip"}}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Git?","acceptedAnswer":{"@type":"Answer","text":"Git is a distributed version control system that tracks changes in source code during software development. It allows multiple developers to work on the same project simultaneously."}},{"@type":"Question","name":"How do I undo the last commit in Git?","acceptedAnswer":{"@type":"Answer","text":"Use git reset --soft HEAD~1 to undo the last commit while keeping changes staged, or git reset --hard HEAD~1 to discard the commit and all changes completely."}},{"@type":"Question","name":"What is the difference between git pull and git fetch?","acceptedAnswer":{"@type":"Answer","text":"git fetch downloads changes from the remote but does not merge them. git pull is essentially git fetch followed by git merge, so it downloads and integrates remote changes in one step."}},{"@type":"Question","name":"How do I create a new branch in Git?","acceptedAnswer":{"@type":"Answer","text":"Use git checkout -b branch-name to create and switch to a new branch in one step, or git branch branch-name followed by git checkout branch-name."}}]}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Git?","acceptedAnswer":{"@type":"Answer","text":"Git is a distributed version control system that tracks changes in source code during software development. It allows multiple developers to work on the same project simultaneously."}},{"@type":"Question","name":"How do I undo the last commit in Git?","acceptedAnswer":{"@type":"Answer","text":"Use git reset --soft HEAD~1 to undo the last commit while keeping changes staged, or git reset --hard HEAD~1 to discard the commit and all changes completely."}},{"@type":"Question","name":"What is the difference between git pull and git fetch?","acceptedAnswer":{"@type":"Answer","text":"git fetch downloads changes from the remote but does not merge them. git pull is essentially git fetch followed by git merge, so it downloads and integrates remote changes in one step."}},{"@type":"Question","name":"How do I create a new branch in Git?","acceptedAnswer":{"@type":"Answer","text":"Use git checkout -b branch-name to create and switch to a new branch in one step, or git branch branch-name followed by git checkout branch-name."}},{"@type":"Question","name":"What is the difference between git merge and git rebase?","acceptedAnswer":{"@type":"Answer","text":"Git merge creates a new merge commit that combines two branches, preserving the complete history. Git rebase replays your commits on top of another branch, creating a linear history. Merge is safer for shared branches, while rebase creates a cleaner commit log."}}]}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Git Command Generator","item":"https://zovo.one/free-tools/git-command-generator/"}]}
@@ -83,6 +83,113 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <h2>About Git Commands</h2>
 <p>Git is the most widely used version control system. This tool helps you find the right command for common and modern git tasks without memorizing complex syntax. Each command includes a clear explanation and any important warnings.</p>
 <p>All commands shown are standard git commands that work across all operating systems where git is installed.</p>
+</div>
+
+<div class="info-section">
+<h2>Complete Guide to Git Version Control</h2>
+
+<h3>Understanding Git Architecture</h3>
+<p>Git is a distributed version control system designed by Linus Torvalds in 2005 for managing the Linux kernel source code. Unlike centralized version control systems such as SVN or CVS, Git gives every developer a full copy of the repository, including its complete history. This architecture means you can work offline, commit changes, create branches, and review history without any network connection.</p>
+<p>The Git data model consists of four primary object types. Blobs store file contents. Trees represent directories and map names to blobs or other trees. Commits point to a tree (the project snapshot) and contain metadata like the author, timestamp, and a pointer to the parent commit. Tags are named references to specific commits, typically used for release versions.</p>
+<p>Every object in Git is identified by a SHA-1 hash, a 40-character hexadecimal string computed from the object's content. This content-addressable storage means that identical content always produces the same hash, enabling efficient deduplication and integrity verification. If even a single byte of a file changes, its hash changes completely.</p>
+<p>Git maintains three main areas in your local repository. The working directory contains the actual files you edit. The staging area (also called the index) holds a snapshot of what will go into your next commit. The repository (the .git directory) stores the complete object database and reference pointers. Understanding the flow between these three areas is fundamental to using Git effectively.</p>
+
+<h3>Branching Strategies for Teams</h3>
+<p>Branching is one of Git's most valuable features because branches are lightweight and fast to create. Unlike other version control systems where branching copies entire directory trees, a Git branch is simply a 41-byte file containing a commit hash. Creating a branch takes milliseconds regardless of project size.</p>
+<p>Git Flow is a branching model that uses two long-lived branches (main and develop) plus three types of supporting branches (feature, release, and hotfix). Feature branches start from develop and merge back into develop when complete. Release branches allow final testing and version bumping before merging into both main and develop. Hotfix branches start from main for urgent production fixes and merge back into both main and develop. This model works well for projects with scheduled release cycles.</p>
+<p>GitHub Flow is a simpler alternative used by many web applications. It maintains only one long-lived branch (main) that is always deployable. Developers create feature branches from main, push them to the remote, open pull requests for review, and merge into main after approval. Continuous deployment automatically pushes merged changes to production. This model suits teams that deploy frequently.</p>
+<p>Trunk-based development takes simplicity further. All developers commit directly to a single branch (trunk/main) or use very short-lived feature branches that merge within one to two days. Feature flags control visibility of incomplete work in production. Google, Facebook, and LinkedIn use trunk-based development at scale. This model minimizes merge conflicts and integration problems but requires strong automated testing.</p>
+
+<h3>Commit Best Practices</h3>
+<p>A well-crafted commit history serves as documentation for your project. Each commit should represent a single logical change. If you find yourself writing "and" in your commit message, you may be combining unrelated changes that should be separate commits.</p>
+<p>The conventional commits specification provides a structured format for commit messages. The format is: type(scope): description. Common types include feat (new feature), fix (bug fix), docs (documentation), style (formatting), refactor (restructuring without behavior change), test (adding tests), and chore (maintenance). For example: feat(auth): add Google OAuth login. This format enables automated changelog generation and semantic versioning.</p>
+<p>I recommend writing commit messages in the imperative mood ("Add feature" not "Added feature"). The message should complete the sentence: "If applied, this commit will [your message here]." The first line should be 50 characters or fewer, followed by a blank line and a more detailed explanation if needed. Include the motivation for the change and contrast it with the previous behavior.</p>
+<p>Avoid committing large binary files, build artifacts, IDE configuration files, or environment files with secrets. Use .gitignore to exclude these files. A good rule of thumb is that if a file is generated from source code or contains machine-specific configuration, it probably should not be in version control.</p>
+
+<h3>Working with Remote Repositories</h3>
+<p>A remote is a reference to another copy of your repository, typically hosted on a service like GitHub, GitLab, or Bitbucket. The default remote created by git clone is named origin. You can add multiple remotes to track different copies. For example, in open-source projects, origin typically points to your fork while upstream points to the original repository.</p>
+<p>The git fetch command downloads objects and refs from a remote without modifying your working directory. It updates your remote-tracking branches (like origin/main) so you can see what others have pushed. The git pull command is essentially git fetch followed by git merge. For a cleaner history, many developers prefer git pull --rebase, which replays your local commits on top of the fetched changes instead of creating merge commits.</p>
+<p>The git push command uploads local commits to a remote repository. On your first push to a new branch, use git push -u origin branch-name to set up tracking. After that, git push alone is sufficient. If someone else has pushed to the same branch since your last fetch, Git will reject the push. You need to fetch and merge (or rebase) before pushing again.</p>
+<p>Force pushing (git push --force) overwrites the remote branch with your local version, potentially destroying commits that others have pushed. Use git push --force-with-lease instead, which fails if the remote branch has been updated since your last fetch, preventing accidental data loss. Never force push to shared branches like main or develop.</p>
+
+<h3>Undoing Changes in Git</h3>
+<p>Git provides several mechanisms for undoing changes, each appropriate for different situations. Understanding which command to use prevents accidental data loss.</p>
+<p>For uncommitted changes in your working directory, git checkout -- filename (or git restore filename in newer Git versions) discards modifications to a specific file. This permanently removes your changes, so use it carefully. For all tracked files, git checkout -- . discards everything, but untracked files remain.</p>
+<p>For staged changes, git reset HEAD filename (or git restore --staged filename) unstages a file without discarding the modifications. The changes remain in your working directory. This is useful when you accidentally stage files that should not be in the next commit.</p>
+<p>For committed changes that have not been pushed, git reset --soft HEAD~1 removes the last commit but keeps the changes staged. Git reset --mixed HEAD~1 (the default) removes the commit and unstages the changes. Git reset --hard HEAD~1 removes the commit and discards all changes permanently. You can reset multiple commits by changing the number after the tilde.</p>
+<p>For committed changes that have been pushed, git revert commit-hash is the safe option. Revert creates a new commit that undoes the specified commit without rewriting history. This is safe for shared branches because it does not change any existing commits. You can revert multiple commits or revert a range of commits.</p>
+<p>If you accidentally reset or delete commits, git reflog shows a log of all ref updates. You can recover almost any commit within 30 days (the default garbage collection period) by finding its hash in the reflog and checking it out or resetting to it.</p>
+
+<h3>Git Stash for Temporary Storage</h3>
+<p>The stash is a stack-based storage mechanism for temporarily saving uncommitted changes. When you need to switch branches quickly but have work in progress, git stash saves your modifications and reverts your working directory to the last commit. You can apply the stashed changes later with git stash pop (which applies and removes the stash) or git stash apply (which applies but keeps the stash for potential reuse).</p>
+<p>You can maintain multiple stashes and label them for clarity. Git stash save "work on login feature" creates a named stash. Git stash list shows all stashes with their labels and indices. Git stash apply stash@{2} applies a specific stash by index. Git stash drop stash@{0} removes a specific stash. Git stash clear removes all stashes.</p>
+<p>Stash also supports partial stashing. Git stash -p lets you interactively choose which hunks to stash, keeping the rest in your working directory. This is useful when you have mixed changes and want to stash only some of them.</p>
+
+<h3>Advanced Git Techniques</h3>
+<p>Interactive rebase (git rebase -i) allows you to rewrite commit history by squashing, reordering, editing, or dropping commits. This is invaluable for cleaning up a messy feature branch before merging. You can combine five small "WIP" commits into one clean commit, fix typos in commit messages, or reorder commits for logical clarity. Never interactive rebase commits that have been pushed to a shared branch.</p>
+<p>Cherry-pick (git cherry-pick commit-hash) copies a specific commit from one branch to another. This is useful for backporting bug fixes from the development branch to a release branch, or for selectively including specific features. If conflicts arise, you resolve them just as you would during a merge.</p>
+<p>Git bisect automates the process of finding the commit that introduced a bug. You mark a known good commit and a known bad commit, and Git performs a binary search through the commit history, checking out commits for you to test. You mark each as good or bad, and Git narrows down the problematic commit in O(log n) steps. For a history of 1,000 commits, bisect finds the culprit in about 10 steps.</p>
+<p>Git worktrees allow you to check out multiple branches simultaneously in separate directories without cloning the repository again. Git worktree add ../feature-branch feature-branch creates a new working directory linked to the same repository. This is useful when you need to work on two branches at the same time (for example, fixing a bug on main while developing a feature on another branch) without stashing or committing incomplete work.</p>
+
+<h3>Git Hooks for Automation</h3>
+<p>Git hooks are scripts that run automatically before or after specific Git events. They live in the .git/hooks directory (or can be configured to use a shared hooks directory). Common hooks include pre-commit (runs before each commit, often used for linting and formatting), commit-msg (validates commit messages against conventions), pre-push (runs before pushing, often used for running tests), and post-merge (runs after merging, useful for updating dependencies).</p>
+<p>Tools like Husky (for JavaScript projects) and pre-commit (for Python projects) simplify hook management by defining hooks in configuration files that are version-controlled with your project. This ensures all team members use the same hooks without manual setup.</p>
+<p>A well-configured pre-commit hook might run a linter, format code, check for large files, scan for secrets (API keys, passwords), and run quick unit tests. If any check fails, the commit is prevented. This catches issues before they enter the repository, saving time during code review.</p>
+
+<h3>Managing Large Repositories</h3>
+<p>As repositories grow, Git operations can slow down. Several strategies address this. Git LFS (Large File Storage) replaces large binary files (images, videos, compiled assets) with small pointer files in the repository while storing the actual content on a separate server. This keeps the repository small and fast while still tracking large assets.</p>
+<p>Shallow clones (git clone --depth 1) download only the most recent commit history instead of the entire repository. This dramatically reduces clone time and disk usage for large projects. You can deepen a shallow clone later with git fetch --unshallow if you need the full history.</p>
+<p>Sparse checkout allows you to check out only a subset of the repository's files. This is useful in monorepos where you only need a specific project or directory. Git sparse-checkout set path/to/my/project configures which paths to include in your working directory.</p>
+
+<h3>Git Workflow Comparison</h3>
+<p>Choosing the right workflow depends on your team size, release cadence, and deployment strategy. For solo developers or very small teams shipping web applications, GitHub Flow offers simplicity and rapid iteration. For teams with scheduled releases and the need for parallel development streams, Git Flow provides structure. For large organizations with strong CI/CD pipelines and comprehensive test coverage, trunk-based development minimizes integration complexity.</p>
+<p>Regardless of which workflow you adopt, certain practices remain universal. Always write meaningful commit messages. Review code before merging. Automate testing and deployment. Never force push to shared branches. Keep branches short-lived when possible. Delete merged branches to reduce clutter.</p>
+
+<h3>Git Security Considerations</h3>
+<p>Git repositories can inadvertently expose sensitive information. Once a secret (API key, password, private key) is committed, it exists in the repository history even if you delete the file in a subsequent commit. Tools like git-secrets, GitGuardian, and truffleHog scan repositories for accidentally committed secrets. If you discover a committed secret, rotate it immediately and consider using git filter-branch or the BFG Repo Cleaner to remove it from history.</p>
+<p>Signed commits (git commit -S) use GPG or SSH keys to cryptographically verify that a commit was actually created by the claimed author. GitHub, GitLab, and Bitbucket display a "Verified" badge next to signed commits. This prevents commit author spoofing, which is trivially easy because Git allows any user.name and user.email to be configured locally.</p>
+<p>Branch protection rules on hosting platforms prevent direct pushes to important branches, require pull request reviews, enforce status checks (CI/CD passing), and require signed commits. Configuring branch protection for main and develop branches is a baseline security measure for any team.</p>
+
+<h3>Common Git Troubleshooting</h3>
+<p>Merge conflicts occur when Git cannot automatically resolve changes to the same lines. When a conflict arises, Git marks the conflicting sections in the affected files with conflict markers. You manually edit the file to resolve the conflict, stage the resolved file, and complete the merge. Using a visual merge tool (VS Code, IntelliJ, or dedicated tools like P4Merge or Beyond Compare) makes conflict resolution much easier, especially for complex conflicts.</p>
+<p>Detached HEAD state occurs when you checkout a specific commit, tag, or remote branch directly instead of a local branch. In this state, new commits are not attached to any branch and may be garbage collected. To preserve work done in detached HEAD, create a branch with git checkout -b new-branch-name before doing anything else.</p>
+<p>If your repository becomes corrupted or behaves unexpectedly, git fsck (file system check) verifies the integrity of the object database and reports issues. Git gc (garbage collection) cleans up unnecessary files, compresses objects, and can fix some issues. For severe corruption, cloning the repository fresh from the remote is often the fastest fix.</p>
+</div>
+
+<div class="info-section" style="margin-top:24px;">
+<h2>Related Free Tools</h2>
+<p>Explore more developer and productivity tools from the Zovo collection.</p>
+<ul>
+<li><a href="https://zovo.one/free-tools/json-formatter/">JSON Formatter</a> - Format and validate JSON data</li>
+<li><a href="https://zovo.one/free-tools/regex-tester/">Regex Tester</a> - Test regular expressions in real time</li>
+<li><a href="https://zovo.one/free-tools/code-beautifier/">Code Beautifier</a> - Format HTML, CSS, and JavaScript code</li>
+<li><a href="https://zovo.one/free-tools/markdown-editor/">Markdown Editor</a> - Write and preview Markdown documents</li>
+<li><a href="https://zovo.one/free-tools/sql-formatter/">SQL Formatter</a> - Format and beautify SQL queries</li>
+</ul>
+</div>
+
+<div class="info-section" style="margin-top:24px;">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item" style="background:#1a1a2e;border-radius:10px;padding:20px;margin-bottom:12px;border:1px solid #2a2a3e;">
+<h3 style="font-size:1rem;font-weight:600;color:#00ccff;margin-bottom:8px;">What is Git?</h3>
+<p>Git is a distributed version control system that tracks changes in source code during software development. Created by Linus Torvalds in 2005, it allows multiple developers to work on the same project simultaneously without overwriting each other's changes. Every developer has a complete copy of the repository, including its full history.</p>
+</div>
+<div class="faq-item" style="background:#1a1a2e;border-radius:10px;padding:20px;margin-bottom:12px;border:1px solid #2a2a3e;">
+<h3 style="font-size:1rem;font-weight:600;color:#00ccff;margin-bottom:8px;">How do I undo the last commit in Git?</h3>
+<p>Use git reset --soft HEAD~1 to undo the last commit while keeping changes staged, or git reset --hard HEAD~1 to discard the commit and all changes. For pushed commits, use git revert commit-hash to create a new commit that undoes the changes without rewriting history.</p>
+</div>
+<div class="faq-item" style="background:#1a1a2e;border-radius:10px;padding:20px;margin-bottom:12px;border:1px solid #2a2a3e;">
+<h3 style="font-size:1rem;font-weight:600;color:#00ccff;margin-bottom:8px;">What is the difference between git pull and git fetch?</h3>
+<p>git fetch downloads changes from the remote repository but does not merge them into your local branch. git pull combines git fetch and git merge, downloading and integrating remote changes in one step. Many developers prefer git fetch followed by manual merge or rebase for more control.</p>
+</div>
+<div class="faq-item" style="background:#1a1a2e;border-radius:10px;padding:20px;margin-bottom:12px;border:1px solid #2a2a3e;">
+<h3 style="font-size:1rem;font-weight:600;color:#00ccff;margin-bottom:8px;">How do I create a new branch in Git?</h3>
+<p>Use git checkout -b branch-name to create and switch to a new branch in one step. Alternatively, use git branch branch-name to create the branch and git checkout branch-name to switch to it. In newer Git versions, git switch -c branch-name serves the same purpose.</p>
+</div>
+<div class="faq-item" style="background:#1a1a2e;border-radius:10px;padding:20px;margin-bottom:12px;border:1px solid #2a2a3e;">
+<h3 style="font-size:1rem;font-weight:600;color:#00ccff;margin-bottom:8px;">What is the difference between git merge and git rebase?</h3>
+<p>Git merge creates a new merge commit that combines two branches while preserving the complete branching history. Git rebase replays your commits on top of another branch, creating a clean linear history. Merge is safer for shared branches because it never rewrites history, while rebase produces a cleaner commit log for feature branches.</p>
+</div>
 </div>
 </main>
 <footer><div class="container">Built by Michael Lip &middot; <a href="https://zovo.one">zovo.one</a></div></footer>
