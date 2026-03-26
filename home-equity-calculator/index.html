@@ -152,11 +152,11 @@ footer { text-align: center; padding: 32px 24px; color: #555; font-size: 0.85rem
   <a href="https://zovo.one/free-tools/">Free Tools</a><span>></span>
   Home Equity Calculator
 </nav>
-<header>
-  <h1>Home Equity Calculator</h1>
+<header role="banner">
+  <h1 id="main-content">Home Equity Calculator</h1>
   <p class="subtitle">Calculate your home equity, loan-to-value ratio, and potential borrowing power based on your property value and outstanding mortgage debt</p>
 </header>
-<div class="container">
+<main class="container" role="main">
 <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
 <img src="https://img.shields.io/badge/Last%20verified-March%202026-00ff88?style=flat-square" alt="Last verified March 2026"/>
 <img src="https://img.shields.io/badge/Updated-2026--03--26-00ccff?style=flat-square" alt="Updated March 2026"/>
@@ -193,44 +193,83 @@ footer { text-align: center; padding: 32px 24px; color: #555; font-size: 0.85rem
 </div>
 
 
-  <div class="calc-card">
+  <section class="calc-card" aria-labelledby="calculate-equity">
     <h2 id="calculate-equity">Calculate Your Home Equity</h2>
+    <!-- Live regions for screen reader announcements -->
+    <div id="calculation-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <div id="error-summary" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
     <div class="form-grid">
       <div class="form-group">
         <label for="homeValue">Current Home Value ($)</label>
-        <input type="number" id="homeValue" value="450000" min="10000" step="5000"/>
+        <input type="number" id="homeValue" value="450000" min="10000" step="5000"
+               aria-required="true" aria-describedby="homeValue-help"
+               aria-labelledby="homeValue-label" autocomplete="off"/>
+        <div id="homeValue-help" class="sr-only">Enter your home's current market value in dollars. Minimum value is $10,000.</div>
+        <div id="homeValue-error" class="error-message" role="alert"></div>
       </div>
       <div class="form-group">
-        <label for="purchasePrice">Original Purchase Price ($)</label>
-        <input type="number" id="purchasePrice" value="350000" min="0" step="5000"/>
+        <label for="purchasePrice" id="purchasePrice-label">Original Purchase Price ($)</label>
+        <input type="number" id="purchasePrice" value="350000" min="0" step="5000"
+               aria-describedby="purchasePrice-help" aria-labelledby="purchasePrice-label"
+               autocomplete="off"/>
+        <div id="purchasePrice-help" class="sr-only">Enter the original price you paid for your home. Used to calculate appreciation.</div>
+        <div id="purchasePrice-error" class="error-message" role="alert"></div>
       </div>
       <div class="form-group">
-        <label for="mortgageBalance">First Mortgage Balance ($)</label>
-        <input type="number" id="mortgageBalance" value="280000" min="0" step="1000"/>
+        <label for="mortgageBalance" id="mortgageBalance-label">First Mortgage Balance ($)</label>
+        <input type="number" id="mortgageBalance" value="280000" min="0" step="1000"
+               aria-required="true" aria-describedby="mortgageBalance-help"
+               aria-labelledby="mortgageBalance-label" autocomplete="off"/>
+        <div id="mortgageBalance-help" class="sr-only">Enter the current balance on your primary mortgage. Required for equity calculation.</div>
+        <div id="mortgageBalance-error" class="error-message" role="alert"></div>
       </div>
       <div class="form-group">
-        <label for="secondMortgage">Second Mortgage / HELOC Balance ($)</label>
-        <input type="number" id="secondMortgage" value="0" min="0" step="1000"/>
+        <label for="secondMortgage" id="secondMortgage-label">Second Mortgage / HELOC Balance ($)</label>
+        <input type="number" id="secondMortgage" value="0" min="0" step="1000"
+               aria-describedby="secondMortgage-help" aria-labelledby="secondMortgage-label"
+               autocomplete="off"/>
+        <div id="secondMortgage-help" class="sr-only">Enter balance on any second mortgage or home equity line of credit. Enter 0 if none.</div>
+        <div id="secondMortgage-error" class="error-message" role="alert"></div>
       </div>
       <div class="form-group">
-        <label for="otherLiens">Other Liens ($)</label>
-        <input type="number" id="otherLiens" value="0" min="0" step="500"/>
+        <label for="otherLiens" id="otherLiens-label">Other Liens ($)</label>
+        <input type="number" id="otherLiens" value="0" min="0" step="500"
+               aria-describedby="otherLiens-help" aria-labelledby="otherLiens-label"
+               autocomplete="off"/>
+        <div id="otherLiens-help" class="sr-only">Enter balance of any other liens such as property taxes, HOA liens, or contractor liens. Enter 0 if none.</div>
+        <div id="otherLiens-error" class="error-message" role="alert"></div>
       </div>
       <div class="form-group">
-        <label for="improvements">Value of Improvements Made ($)</label>
-        <input type="number" id="improvements" value="25000" min="0" step="1000"/>
+        <label for="improvements" id="improvements-label">Value of Improvements Made ($)</label>
+        <input type="number" id="improvements" value="25000" min="0" step="1000"
+               aria-describedby="improvements-help" aria-labelledby="improvements-label"
+               autocomplete="off"/>
+        <div id="improvements-help" class="sr-only">Enter total cost of improvements made to the property. Used with ROI to estimate added value.</div>
+        <div id="improvements-error" class="error-message" role="alert"></div>
       </div>
       <div class="form-group">
-        <label for="improvementROI">Estimated Improvement ROI (%)</label>
-        <input type="number" id="improvementROI" value="70" min="0" max="200" step="5"/>
+        <label for="improvementROI" id="improvementROI-label">Estimated Improvement ROI (%)</label>
+        <input type="number" id="improvementROI" value="70" min="0" max="200" step="5"
+               aria-describedby="improvementROI-help" aria-labelledby="improvementROI-label"
+               autocomplete="off"/>
+        <div id="improvementROI-help" class="sr-only">Enter expected return on investment percentage for improvements. Typical range is 50% to 150%.</div>
+        <div id="improvementROI-error" class="error-message" role="alert"></div>
       </div>
       <div class="form-group">
-        <label for="annualAppreciation">Annual Appreciation Rate (%)</label>
-        <input type="number" id="annualAppreciation" value="3.0" min="-10" max="20" step="0.5"/>
+        <label for="annualAppreciation" id="annualAppreciation-label">Annual Appreciation Rate (%)</label>
+        <input type="number" id="annualAppreciation" value="3.0" min="-10" max="20" step="0.5"
+               aria-describedby="annualAppreciation-help" aria-labelledby="annualAppreciation-label"
+               autocomplete="off"/>
+        <div id="annualAppreciation-help" class="sr-only">Enter expected annual property value appreciation rate. National average is 3-4% per year.</div>
+        <div id="annualAppreciation-error" class="error-message" role="alert"></div>
       </div>
     </div>
-    <button class="btn-calculate" onclick="calculateEquity()">Calculate Home Equity</button>
-    <div class="results-section" id="results">
+    <button class="btn-calculate" type="button" onclick="calculateEquity()"
+            aria-describedby="calc-button-help" role="button">
+      Calculate Home Equity
+    </button>
+    <div id="calc-button-help" class="sr-only">Calculate your home equity, loan-to-value ratios, and borrowing potential based on entered values.</div>
+    <section class="results-section" id="results" aria-labelledby="results-title" aria-live="polite" role="region">
       <div class="results-grid">
         <div class="result-card">
           <div class="label">Total Home Equity</div>
@@ -668,14 +707,14 @@ function fmt(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
 function calculateEquity(){
   var uc=document.getElementById("usageCounter");if(uc){var cn=parseInt(uc.textContent.replace(/,/g,""))||0;cn++;uc.textContent=cn.toLocaleString("en-US");}
   document.getElementById('calc-count').textContent = (parseInt(document.getElementById('calc-count').textContent.replace(/,/g,''))||0) + 1;
-  var homeValue=parseFloat(document.getElementById('homeValue').value)||0;
-  var purchasePrice=parseFloat(document.getElementById('purchasePrice').value)||0;
-  var mortgageBalance=parseFloat(document.getElementById('mortgageBalance').value)||0;
-  var secondMortgage=parseFloat(document.getElementById('secondMortgage').value)||0;
-  var otherLiens=parseFloat(document.getElementById('otherLiens').value)||0;
-  var improvements=parseFloat(document.getElementById('improvements').value)||0;
-  var improvementROI=parseFloat(document.getElementById('improvementROI').value)/100||0;
-  var annualAppreciation=parseFloat(document.getElementById('annualAppreciation').value)/100||0;
+  var homeValue=Number.parseFloat(document.getElementById('homeValue').value)||0;
+  var purchasePrice=Number.parseFloat(document.getElementById('purchasePrice').value)||0;
+  var mortgageBalance=Number.parseFloat(document.getElementById('mortgageBalance').value)||0;
+  var secondMortgage=Number.parseFloat(document.getElementById('secondMortgage').value)||0;
+  var otherLiens=Number.parseFloat(document.getElementById('otherLiens').value)||0;
+  var improvements=Number.parseFloat(document.getElementById('improvements').value)||0;
+  var improvementROI=Number.parseFloat(document.getElementById('improvementROI').value)/100||0;
+  var annualAppreciation=Number.parseFloat(document.getElementById('annualAppreciation').value)/100||0;
   if(homeValue<=0){alert('Please enter a home value greater than zero.');return;}
   var totalDebt=mortgageBalance+secondMortgage+otherLiens;
   var improvementValue=improvements*improvementROI;
