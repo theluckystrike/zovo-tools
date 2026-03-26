@@ -103,6 +103,19 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 </div>
 <p class="subtitle">Format, beautify, and syntax-highlight SQL queries for MySQL, PostgreSQL, SQLite, and SQL Server. All processing runs in your browser.</p>
 
+<nav style="background:#12121a;border:1px solid #2a2a3e;border-radius:10px;padding:20px 24px;margin:20px 0" aria-label="Table of Contents">
+<h2 style="color:#00ccff;font-size:1.1rem;margin:0 0 12px 0">Table of Contents <span style="color:#888;font-weight:400;font-size:0.85rem">(23 min read)</span></h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 24px">
+<a href="#about-this-sql-formatter" style="color:#e0e0e8;text-decoration:none;font-size:0.9rem;padding:2px 0">About This SQL Formatter</a>
+<a href="#how-sql-formatting-works" style="color:#e0e0e8;text-decoration:none;font-size:0.9rem;padding:2px 0">How SQL Formatting Works</a>
+<a href="#sql-formatting-conventions-by-dialect" style="color:#e0e0e8;text-decoration:none;font-size:0.9rem;padding:2px 0">SQL Formatting Conventions by Dialect</a>
+<a href="#why-sql-formatting-matters" style="color:#e0e0e8;text-decoration:none;font-size:0.9rem;padding:2px 0">Why SQL Formatting Matters</a>
+<a href="#sql-formatting-compared-to-other-approaches" style="color:#e0e0e8;text-decoration:none;font-size:0.9rem;padding:2px 0">SQL Formatting Compared to Other Approaches</a>
+<a href="#tips-for-writing-maintainable-sql" style="color:#e0e0e8;text-decoration:none;font-size:0.9rem;padding:2px 0">Tips for Writing Maintainable SQL</a>
+<a href="#understanding-query-statistics" style="color:#e0e0e8;text-decoration:none;font-size:0.9rem;padding:2px 0">Understanding Query Statistics</a>
+<a href="#frequently-asked-questions" style="color:#e0e0e8;text-decoration:none;font-size:0.9rem;padding:2px 0">Frequently Asked Questions</a>
+</div></nav>
+
 <div class="toolbar">
 <select id="dialect"><option value="standard">Standard SQL</option><option value="mysql">MySQL</option><option value="postgresql">PostgreSQL</option><option value="sqlite">SQLite</option><option value="sqlserver">SQL Server</option></select>
 <select id="indentSize"><option value="2">2 Spaces</option><option value="4" selected>4 Spaces</option><option value="tab">Tab</option></select>
@@ -129,7 +142,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 </div>
 
 <div class="info-section">
-<h2>About This SQL Formatter</h2>
+<h2 id="about-this-sql-formatter">About This SQL Formatter</h2>
 <p>I built this SQL formatter after years of working with database queries across production systems. Whether you are debugging a slow query pulled from a log file, reviewing SQL in a code review, or preparing a query for documentation, having consistently formatted SQL makes everything easier to read and reason about. This tool runs entirely in your browser, which means your queries never leave your machine. There is no server, no logging, and no analytics on the content you paste here.</p>
 
 <p>The formatter supports five dialect modes. Standard SQL covers the ANSI SQL specification that works across most database engines. MySQL mode adds keywords like ENGINE, CHARSET, GROUP_CONCAT, and REGEXP. PostgreSQL mode includes SERIAL, BIGSERIAL, ILIKE, LATERAL, and JSONB. SQLite mode recognizes AUTOINCREMENT, GLOB, and PRAGMA. SQL Server mode handles IDENTITY, NVARCHAR, MERGE, PIVOT, TRY/CATCH, and GO batch separators.</p>
@@ -143,7 +156,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <div class="feature-card"><h3>Query Statistics</h3><p>Instant analysis shows line count, character count, keyword count, table references, join count, and subquery depth for any query you format.</p></div>
 </div>
 
-<h2>How SQL Formatting Works</h2>
+<h2 id="how-sql-formatting-works">How SQL Formatting Works</h2>
 <p>SQL formatting follows a set of conventions that make queries easier to read. The basic principle is that each major clause starts on its own line, and nested elements are indented to show their relationship to the parent clause. Here is how the formatter handles different parts of a query.</p>
 
 <h3>Major Clause Separation</h3>
@@ -200,7 +213,7 @@ FROM
 <h3>Common Table Expressions</h3>
 <p>WITH clauses (CTEs) are formatted with the CTE name and AS keyword on one line, followed by the CTE body indented inside parentheses. Multiple CTEs are separated by commas, with each one starting on a new line. Recursive CTEs follow the same pattern with the RECURSIVE keyword appearing after WITH.</p>
 
-<h2>SQL Formatting Conventions by Dialect</h2>
+<h2 id="sql-formatting-conventions-by-dialect">SQL Formatting Conventions by Dialect</h2>
 
 <h3>MySQL Formatting</h3>
 <p>MySQL has several dialect-specific features that affect formatting. The backtick character is used for identifier quoting instead of double quotes. AUTO_INCREMENT appears in CREATE TABLE statements. MySQL-specific functions like GROUP_CONCAT with SEPARATOR, IFNULL, and the REGEXP operator are recognized and highlighted. The ENGINE and CHARSET clauses in CREATE TABLE statements are formatted on separate lines after the closing parenthesis.</p>
@@ -220,7 +233,7 @@ FROM
 
 <p>The GO batch separator is treated as a statement terminator and always appears on its own line. TRY/CATCH blocks for error handling are formatted with BEGIN and END aligned. EXEC and EXECUTE are recognized for stored procedure calls. PIVOT and UNPIVOT operations are indented to show their relationship to the source data.</p>
 
-<h2>Why SQL Formatting Matters</h2>
+<h2 id="why-sql-formatting-matters">Why SQL Formatting Matters</h2>
 <p>Consistent SQL formatting is not just about aesthetics. It directly impacts code quality, debugging speed, and team collaboration. In my experience working with database-heavy applications, well-formatted SQL reduces the time spent understanding and modifying queries by at least half.</p>
 
 <h3>Readability in Code Reviews</h3>
@@ -235,7 +248,7 @@ FROM
 <h3>Version Control Diffs</h3>
 <p>When SQL files are tracked in version control, consistent formatting produces clean diffs. If one developer formats a query one way and another reformats it differently, the diff shows the entire query as changed even if only one condition was modified. A shared formatting standard eliminates this noise and makes code history meaningful.</p>
 
-<h2>SQL Formatting Compared to Other Approaches</h2>
+<h2 id="sql-formatting-compared-to-other-approaches">SQL Formatting Compared to Other Approaches</h2>
 
 <h3>IDE Built-in Formatters</h3>
 <p>Most database IDEs like DataGrip, DBeaver, and SQL Server Management Studio include built-in SQL formatters. These work well for their specific database dialect but often lack support for other dialects. A web-based formatter like this one is useful when you need to quickly format a query without opening an IDE, or when you are working with a dialect your IDE does not support.</p>
@@ -246,7 +259,7 @@ FROM
 <h3>Editor Extensions</h3>
 <p>VS Code, Sublime Text, and other editors have SQL formatting extensions. These are convenient for formatting SQL within your editor workflow. However, they may not highlight the output or provide query statistics. This tool combines formatting, highlighting, and analysis in a single interface.</p>
 
-<h2>Tips for Writing Maintainable SQL</h2>
+<h2 id="tips-for-writing-maintainable-sql">Tips for Writing Maintainable SQL</h2>
 
 <h3>Use Explicit JOIN Syntax</h3>
 <p>Always use INNER JOIN, LEFT JOIN, and other explicit join keywords instead of comma-separated tables with WHERE conditions. Explicit joins make the query structure clear and separate join conditions from filter conditions. The implicit join syntax (FROM a, b WHERE a.id = b.a_id) is harder to read, easier to get wrong with missing conditions, and deprecated in some contexts.</p>
@@ -263,19 +276,19 @@ FROM
 <h3>Keep Queries Under 50 Lines</h3>
 <p>If a formatted query exceeds about 50 lines, consider breaking it into CTEs or temporary tables. Very long queries are difficult to understand, test, and improve. Each CTE or temporary table can be tested independently, and the database optimizer may handle them differently from deeply nested subqueries.</p>
 
-<h2>Understanding Query Statistics</h2>
+<h2 id="understanding-query-statistics">Understanding Query Statistics</h2>
 <p>This formatter provides six statistics about your query that can help you understand its complexity and potential performance characteristics.</p>
 
 <p>The line count tells you how many lines the formatted query spans. Queries over 50 lines should be reviewed for opportunities to simplify. The character count is useful for checking against database client limits or query size restrictions in some ORMs. The keyword count gives a rough measure of query complexity. The table reference count shows how many tables are accessed, which correlates with the number of potential join operations the database engine needs to perform.</p>
 
 <p>The join count specifically identifies how many JOIN operations appear in the query. Each join adds a potential performance cost, especially on large tables without proper indexes. The subquery count identifies nested SELECT statements, which may be executed once per row of the outer query if they are correlated subqueries.</p>
 
-<h2>Security Considerations</h2>
+<h2 id="security-considerations">Security Considerations</h2>
 <p>This tool processes SQL queries entirely in your browser. No data is transmitted to any server. The page does not use cookies for query data, does not store queries in local storage, and does not include any third-party analytics that could capture input content. This makes it safe to use with production SQL that references real table names, column names, or contains literal values.</p>
 
 <p>However, I recommend being cautious about pasting SQL that contains sensitive literal values such as passwords, API keys, or personally identifiable information. Even though this tool does not transmit data, your browser's autocomplete or clipboard history might retain the values. Consider replacing sensitive literals with placeholder values before formatting.</p>
 
-<h2>Common SQL Formatting Mistakes</h2>
+<h2 id="common-sql-formatting-mistakes">Common SQL Formatting Mistakes</h2>
 
 <h3>Inconsistent Indentation</h3>
 <p>Mixing tabs and spaces, or using different indent levels for the same type of clause, makes queries harder to read. Pick one indentation style (2 spaces, 4 spaces, or tabs) and apply it consistently. This formatter enforces your chosen style across the entire query.</p>
@@ -289,7 +302,7 @@ FROM
 <h3>Overly Long Lines</h3>
 <p>Some developers put all columns in a SELECT list on one line, leading to horizontal scrolling. The formatter places each major clause on its own line, but does not split column lists automatically. For SELECT statements with many columns, consider manually placing each column on its own line.</p>
 
-<h2>SQL Query Optimization and Formatting</h2>
+<h2 id="sql-query-optimization-and-formatting">SQL Query Optimization and Formatting</h2>
 <p>Formatting a query is often the first step in optimizing it. When you can clearly see the structure of a query, performance bottlenecks become more visible. Here are some optimization patterns that become apparent once a query is properly formatted.</p>
 
 <h3>Identifying Unnecessary Joins</h3>
@@ -308,7 +321,7 @@ FROM
 <h3>Evaluating Index Usage</h3>
 <p>A formatted WHERE clause shows the exact conditions being filtered. You can check whether each condition column is indexed. In a multi-column index, the order of columns matters. If your WHERE clause filters on columns A, B, and C, but your composite index is on (A, C, B), the index may not be fully utilized. Formatting the query and comparing it against your index definitions helps identify these mismatches.</p>
 
-<h2>SQL Style Guides and Standards</h2>
+<h2 id="sql-style-guides-and-standards">SQL Style Guides and Standards</h2>
 <p>Several organizations and open-source projects have published SQL style guides. While no single standard is universally adopted, most guides agree on the basic principles that this formatter implements.</p>
 
 <h3>The SQL Style Guide by Simon Holywell</h3>
@@ -323,7 +336,7 @@ FROM
 <h3>Corporate Database Teams</h3>
 <p>In my experience consulting with enterprise database teams, the most common corporate SQL standard uses uppercase keywords, 4-space indentation, and each column on its own line in SELECT lists. Companies with large data warehouses tend to be the most strict about formatting standards because their queries are frequently reviewed, modified, and shared across multiple teams.</p>
 
-<h2>Working with Large SQL Files</h2>
+<h2 id="working-with-large-sql-files">Working with Large SQL Files</h2>
 <p>This formatter handles individual queries, but many real-world SQL files contain hundreds or thousands of lines with multiple statements. Here are some approaches for managing large SQL files.</p>
 
 <h3>Migration Files</h3>
@@ -335,7 +348,7 @@ FROM
 <h3>Seed and Test Data Scripts</h3>
 <p>INSERT statements for test data should be formatted with each VALUES set on its own line. For bulk inserts with many columns, aligning the values with the column names makes it easier to verify correctness. This is especially important when creating test data for complex schemas where foreign key relationships must be maintained.</p>
 
-<h2>SQL Formatting in Different Environments</h2>
+<h2 id="sql-formatting-in-different-environments">SQL Formatting in Different Environments</h2>
 
 <h3>Application Code</h3>
 <p>SQL queries embedded in application code (Python, JavaScript, Java, Go, Ruby) are often written as string literals. Formatting these queries for readability while keeping the application code clean is a challenge. Multi-line strings (template literals in JavaScript, triple-quoted strings in Python, raw strings in Go) allow formatted SQL within application code. This formatter can help you format the SQL before pasting it into your application code.</p>
@@ -349,7 +362,7 @@ FROM
 <h3>Data Analysis and Reporting</h3>
 <p>Analysts writing SQL for business intelligence tools like Looker, Mode, Metabase, and Superset need their queries to be readable by both technical and non-technical stakeholders. Formatted SQL with clear column aliases and comments makes it possible for business users to understand what metrics a query calculates and how they are filtered.</p>
 
-<h2>modern SQL Constructs and Formatting</h2>
+<h2 id="modern-sql-constructs-and-formatting">modern SQL Constructs and Formatting</h2>
 
 <h3>Window Functions</h3>
 <p>Window functions (OVER, PARTITION BY, ORDER BY within OVER) are among the most effective SQL features. Formatting window functions on separate lines makes the partitioning and ordering logic clear. A window function like ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY salary DESC) should be broken across lines to show the partition key and sort order separately.</p>
@@ -408,7 +421,7 @@ ORDER BY level, name</div>
 <h3>PIVOT and UNPIVOT</h3>
 <p>SQL Server's PIVOT and UNPIVOT operators change row-based data into columns and vice versa. These operations have a complex syntax that benefits greatly from formatting. The aggregation function, the column being pivoted, and the IN list of values should each appear on separate lines. Without formatting, PIVOT queries are nearly impossible to read.</p>
 
-<h2>Keyboard Shortcuts and Workflow Tips</h2>
+<h2 id="keyboard-shortcuts-and-workflow-tips">Keyboard Shortcuts and Workflow Tips</h2>
 <p>To format SQL quickly, paste your query into the input area and press the Format button. The output appears instantly with syntax highlighting. Here are some workflow tips for common scenarios.</p>
 
 <p>When working with a slow query log, copy the query from the log, paste it into the input area, select the appropriate dialect, and click Format. The formatted output will make it immediately clear which tables and conditions are involved. Copy the formatted version back for use in your analysis.</p>
@@ -417,7 +430,7 @@ ORDER BY level, name</div>
 
 <p>When documenting queries for runbooks or playbooks, format the query here first, then copy the formatted output. Add comments explaining the business logic and any parameters that need to be adjusted. Consistently formatted documentation queries make it possible for on-call engineers to understand and modify queries under pressure.</p>
 
-<h2>Comparing SQL Formatting Tools</h2>
+<h2 id="comparing-sql-formatting-tools">Comparing SQL Formatting Tools</h2>
 <p>There are many SQL formatting tools available, each with different strengths. Here is how this formatter compares to common alternatives.</p>
 
 <p>Online formatters like SQLFormat.org, EverSQL, and Instant SQL Formatter are popular choices. Some of these send your SQL to a server for processing, which may not be acceptable for production queries containing sensitive data. This formatter processes everything client-side, making it safe for any query regardless of content.</p>
@@ -426,7 +439,7 @@ ORDER BY level, name</div>
 
 <p>CLI tools like sqlfluff and pgFormatter can be integrated into git pre-commit hooks to enforce formatting standards automatically. This is ideal for teams that want to ensure all committed SQL follows a consistent style. However, these tools require configuration and may have different formatting rules than what you expect. This web formatter gives you immediate visual feedback on the formatting result.</p>
 
-<h2>SQL Formatting for Specific Use Cases</h2>
+<h2 id="sql-formatting-for-specific-use-cases">SQL Formatting for Specific Use Cases</h2>
 
 <h3>Data Warehouse Queries</h3>
 <p>Data warehouse environments like Snowflake, BigQuery, Redshift, and Databricks use SQL with platform-specific extensions. Snowflake adds QUALIFY for filtering window function results. BigQuery uses STRUCT and ARRAY types extensively. Redshift extends PostgreSQL syntax with distribution keys and sort keys. While this formatter does not include these platform-specific keywords in its highlighting, the core formatting logic works correctly for all of these platforms because they are built on standard SQL foundations.</p>
@@ -464,14 +477,14 @@ CREATE INDEX idx_orders_status ON orders (status) WHERE status != 'cancelled';</
 <h3>Reporting and Analytics Queries</h3>
 <p>Business intelligence queries frequently use GROUP BY with multiple aggregate functions, CASE expressions for conditional counting, and date functions for period-over-period comparisons. Formatting these queries reveals the calculation logic that produces each metric. When a stakeholder questions a number in a report, having the formatted query available makes it possible to trace the calculation back to its source data.</p>
 
-<h2>Performance Analysis with Formatted SQL</h2>
+<h2 id="performance-analysis-with-formatted-sql">Performance Analysis with Formatted SQL</h2>
 <p>Database performance tuning starts with understanding the query. EXPLAIN ANALYZE output shows how the database engine executes a query, including scan types, join methods, and row estimates. But before you can interpret an execution plan, you need to understand the query itself. Formatting the query first, then running EXPLAIN ANALYZE, creates a clear mental model of what the query should do. You can then compare this expectation against what the execution plan reveals.</p>
 
 <p>Common performance patterns to look for in formatted queries include full table scans (queries without WHERE conditions on indexed columns), nested loop joins on large tables (which may indicate a missing index), and sorting operations on non-indexed columns. The formatted query makes these patterns visible because the relevant clauses are separated and indented.</p>
 
 <p>Another performance consideration is query complexity. A query with five or more joins, multiple subqueries, and complex WHERE conditions may benefit from being split into multiple simpler queries or materialized as a view. The formatted version of the query makes it possible to count these complexity factors and make an informed decision about whether to refactor.</p>
 
-<h2>History of SQL Formatting</h2>
+<h2 id="history-of-sql-formatting">History of SQL Formatting</h2>
 <p>SQL was originally designed in the 1970s at IBM as a human-readable query language. The original papers used uppercase keywords and lowercase identifiers, a convention that persists today. Early SQL formatting was influenced by the limited screen space of terminals (typically 80 columns wide and 24 rows tall), which encouraged compact formatting.</p>
 
 <p>As database systems grew more complex and queries became longer, the need for formatting tools grew. The first SQL formatters were simple scripts that added line breaks before major keywords. Modern formatters like this one parse the SQL into tokens and apply formatting rules based on the syntactic role of each token, producing more precise and consistent results.</p>
@@ -480,7 +493,7 @@ CREATE INDEX idx_orders_status ON orders (status) WHERE status != 'cancelled';</
 </div>
 
 <div class="faq-section">
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 
 <div class="faq-item">
 <h3>What SQL dialects does this formatter support?</h3>
@@ -509,7 +522,7 @@ CREATE INDEX idx_orders_status ON orders (status) WHERE status != 'cancelled';</
 </div>
 
 <div class="related-tools">
-<h2>Related Developer Tools</h2>
+<h2 id="related-developer-tools">Related Developer Tools</h2>
 <div class="related-grid">
 <a href="https://zovo.one/free-tools/api-response-formatter/">API Response Formatter<span>Format JSON and XML API responses with syntax highlighting</span></a>
 <a href="https://zovo.one/free-tools/json-formatter/">JSON Formatter<span>Pretty-print and validate JSON data with tree view</span></a>

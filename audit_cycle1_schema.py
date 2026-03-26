@@ -2,6 +2,7 @@
 """
 Cycle 1: Schema Markup Validation Audit
 Scans all tool pages for JSON-LD schema markup quality issues.
+Fixes broken JSON, removes duplicates, cleans up junk blocks.
 """
 
 import os
@@ -23,7 +24,6 @@ REPORT = {
     "missing_type": 0,
     "missing_name_on_webapp": 0,
     "fixes_applied": 0,
-    "issues": [],
     "pages_without_schema_list": [],
 }
 
@@ -33,12 +33,12 @@ def find_tool_pages():
     for entry in sorted(os.listdir(BASE_DIR)):
         full = BASE_DIR / entry
         if full.is_dir() and (full / "index.html").exists():
-            # Skip known non-tool directories
-            if entry in ("cleanup", "recovery_documentation", "categories", "articles"):
+            if entry in ("cleanup", "recovery_documentation", "categories"):
                 continue
+            if entry == "articles":
+                continue  # handled below
             pages.append(full / "index.html")
 
-    # Also scan articles
     articles_dir = BASE_DIR / "articles"
     if articles_dir.exists():
         for entry in sorted(os.listdir(articles_dir)):
@@ -48,20 +48,70 @@ def find_tool_pages():
 
     return pages
 
-def extract_json_ld(html_content):
-    """Extract all JSON-LD blocks from HTML."""
+def extract_json_ld_with_positions(html_content):
+    """Extract all JSON-LD blocks with their start/end positions in the HTML."""
     pattern = r'<script\s+type=["\']application/ld\+json["\']>\s*(.*?)\s*</script>'
-    matches = re.findall(pattern, html_content, re.DOTALL | re.IGNORECASE)
-    return matches
+    results = []
+    for m in re.finditer(pattern, html_content, re.DOTALL | re.IGNORECASE):
+        results.append({
+            "full_match": m.group(0),
+            "json_content": m.group(1),
+            "start": m.start(),
+            "end": m.end(),
+        })
+    return results
 
 def try_fix_json(raw_json):
     """Attempt to fix common JSON issues."""
     fixed = raw_json.strip()
 
+    # If it contains escaped </script> tags or HTML after JSON, try to extract just the JSON part
+    # Look for the pattern where valid JSON ends and junk begins
+    if '<\\/' in fixed or '</' in fixed:
+        # Try to find where the JSON object/array ends
+        brace_depth = 0
+        bracket_depth = 0
+        in_string = False
+        escape_next = False
+        for i, c in enumerate(fixed):
+            if escape_next:
+                escape_next = False
+                continue
+            if c == '\\':
+                escape_next = True
+                continue
+            if c == '"' and not escape_next:
+                in_string = not in_string
+                continue
+            if in_string:
+                continue
+            if c == '{':
+                brace_depth += 1
+            elif c == '}':
+                brace_depth -= 1
+                if brace_depth == 0 and bracket_depth == 0:
+                    candidate = fixed[:i+1]
+                    try:
+                        parsed = json.loads(candidate)
+                        return candidate, parsed
+                    except:
+                        pass
+            elif c == '[':
+                bracket_depth += 1
+            elif c == ']':
+                bracket_depth -= 1
+                if bracket_depth == 0 and brace_depth == 0:
+                    candidate = fixed[:i+1]
+                    try:
+                        parsed = json.loads(candidate)
+                        return candidate, parsed
+                    except:
+                        pass
+
     # Remove trailing commas before } or ]
     fixed = re.sub(r',\s*([}\]])', r'\1', fixed)
 
-    # Fix unclosed brackets - count opening vs closing
+    # Fix unclosed brackets
     open_braces = fixed.count('{')
     close_braces = fixed.count('}')
     open_brackets = fixed.count('[')
@@ -72,7 +122,6 @@ def try_fix_json(raw_json):
     if open_brackets > close_brackets:
         fixed += ']' * (open_brackets - close_brackets)
 
-    # Try to parse
     try:
         parsed = json.loads(fixed)
         return fixed, parsed
@@ -82,64 +131,58 @@ def try_fix_json(raw_json):
 def validate_page(filepath):
     """Validate all JSON-LD blocks in a single page."""
     page_issues = []
-    page_fixes = []
+    modified = False
 
     try:
         with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
             content = f.read()
     except Exception as e:
         page_issues.append(f"Could not read file: {e}")
-        return page_issues, page_fixes, content if 'content' in dir() else ""
+        return page_issues, False, ""
 
-    blocks = extract_json_ld(content)
+    original_content = content
+    blocks = extract_json_ld_with_positions(content)
 
     if not blocks:
         REPORT["pages_without_schema"] += 1
         rel_path = str(filepath.relative_to(BASE_DIR))
         REPORT["pages_without_schema_list"].append(rel_path)
-        return page_issues, page_fixes, content
+        return page_issues, False, content
 
     REPORT["pages_with_schema"] += 1
 
-    faq_blocks = []
-    webapp_blocks = []
-    parsed_blocks = []
+    faq_blocks = []  # (full_match, parsed)
+    blocks_to_remove = []  # full_match strings to remove
 
-    for i, block in enumerate(blocks):
+    for i, block_info in enumerate(blocks):
+        raw = block_info["json_content"]
+        full_match = block_info["full_match"]
+
         # Try to parse as-is
         try:
-            parsed = json.loads(block)
+            parsed = json.loads(raw)
             REPORT["valid_json_blocks"] += 1
-            parsed_blocks.append((i, block, parsed))
         except json.JSONDecodeError as e:
             # Try to fix
-            fixed_str, fixed_parsed = try_fix_json(block)
+            fixed_str, fixed_parsed = try_fix_json(raw)
             if fixed_parsed:
                 REPORT["valid_json_blocks"] += 1
-                page_issues.append(f"Block {i}: Invalid JSON fixed (was: {str(e)[:80]})")
-                # Apply fix in content
-                content = content.replace(
-                    f'>{block}</script>',
-                    f'>{fixed_str}</script>',
-                    1
-                )
-                page_fixes.append("fixed_json")
+                # Replace the block with the fixed version
+                new_script = f'<script type="application/ld+json">{fixed_str}</script>'
+                content = content.replace(full_match, new_script, 1)
+                modified = True
                 REPORT["fixes_applied"] += 1
-                parsed_blocks.append((i, fixed_str, fixed_parsed))
+                page_issues.append(f"Block {i}: Fixed invalid JSON ({str(e)[:60]})")
+                parsed = fixed_parsed
             else:
                 REPORT["invalid_json_blocks"] += 1
-                page_issues.append(f"Block {i}: Broken JSON that could not be auto-fixed: {str(e)[:100]}")
-                # Remove the broken block
-                broken_script = f'<script type="application/ld+json">{block}</script>'
-                if broken_script in content:
-                    content = content.replace(broken_script, '', 1)
-                    page_fixes.append("removed_broken_block")
-                    REPORT["fixes_applied"] += 1
-                    page_issues.append(f"Block {i}: Removed unfixable broken JSON-LD block")
+                # Remove the broken block entirely
+                blocks_to_remove.append(full_match)
+                page_issues.append(f"Block {i}: Removed unfixable broken JSON-LD ({str(e)[:60]})")
+                REPORT["fixes_applied"] += 1
+                continue
 
-    # Validate required fields and check for duplicates
-    for i, block_str, parsed in parsed_blocks:
-        schema_type = None
+        # Validate required fields
         if isinstance(parsed, dict):
             if "@context" not in parsed:
                 REPORT["missing_context"] += 1
@@ -148,56 +191,65 @@ def validate_page(filepath):
                 REPORT["missing_type"] += 1
                 page_issues.append(f"Block {i}: Missing @type")
             else:
-                schema_type = parsed["@type"]
-
-            if schema_type == "FAQPage":
-                faq_blocks.append((i, block_str, parsed))
-            if schema_type == "WebApplication":
-                if "name" not in parsed:
-                    REPORT["missing_name_on_webapp"] += 1
-                    page_issues.append(f"Block {i}: WebApplication schema missing 'name' field")
-                    webapp_blocks.append((i, block_str, parsed))
+                if parsed["@type"] == "FAQPage":
+                    entities = parsed.get("mainEntity", [])
+                    count = len(entities) if isinstance(entities, list) else 0
+                    faq_blocks.append((full_match, parsed, count))
+                if parsed["@type"] == "WebApplication":
+                    if "name" not in parsed:
+                        REPORT["missing_name_on_webapp"] += 1
+                        page_issues.append(f"Block {i}: WebApplication missing 'name'")
         elif isinstance(parsed, list):
-            # Some schemas use an array at root
             for item in parsed:
                 if isinstance(item, dict):
                     if "@type" not in item:
                         REPORT["missing_type"] += 1
                     if item.get("@type") == "FAQPage":
-                        faq_blocks.append((i, block_str, item))
+                        entities = item.get("mainEntity", [])
+                        count = len(entities) if isinstance(entities, list) else 0
+                        faq_blocks.append((full_match, item, count))
 
-    # Handle duplicate FAQPage schemas - keep only the one with most questions
+    # Remove broken blocks
+    for full_match in blocks_to_remove:
+        if full_match in content:
+            content = content.replace(full_match, '', 1)
+            modified = True
+
+    # Handle duplicate FAQPage schemas
     if len(faq_blocks) > 1:
         REPORT["duplicate_faq_pages"] += 1
         page_issues.append(f"Found {len(faq_blocks)} duplicate FAQPage schemas")
 
-        # Find the best one (most mainEntity questions)
-        best_idx = 0
-        best_count = 0
-        for idx, (block_i, block_str, parsed_faq) in enumerate(faq_blocks):
-            entities = parsed_faq.get("mainEntity", [])
-            count = len(entities) if isinstance(entities, list) else 0
-            if count > best_count:
-                best_count = count
-                best_idx = idx
+        # Find the best one (most questions)
+        best_idx = max(range(len(faq_blocks)), key=lambda i: faq_blocks[i][2])
+        best_count = faq_blocks[best_idx][2]
 
-        # Remove all but the best
-        for idx, (block_i, block_str, parsed_faq) in enumerate(faq_blocks):
-            if idx != best_idx:
-                removal_target = f'<script type="application/ld+json">{block_str}</script>'
-                # Also try with extra whitespace variations
-                removal_target_ws = f'<script type="application/ld+json"> {block_str} </script>'
-                if removal_target in content:
-                    content = content.replace(removal_target, '', 1)
-                    page_fixes.append("removed_duplicate_faq")
-                    REPORT["fixes_applied"] += 1
-                    page_issues.append(f"Removed duplicate FAQPage schema (block {block_i}), kept best with {best_count} questions")
-                elif removal_target_ws in content:
-                    content = content.replace(removal_target_ws, '', 1)
-                    page_fixes.append("removed_duplicate_faq")
-                    REPORT["fixes_applied"] += 1
+        # Collect unique full_match strings to remove (skip the best one)
+        seen = set()
+        for idx, (full_match, parsed_faq, count) in enumerate(faq_blocks):
+            if idx == best_idx:
+                continue
+            if full_match in seen:
+                continue
+            seen.add(full_match)
 
-    return page_issues, page_fixes, content
+        # Remove all duplicate FAQPage blocks (not the best)
+        removed = 0
+        for fm in seen:
+            # Count how many times this exact block appears
+            while fm in content:
+                # But keep one instance if it's the same as the best
+                if fm == faq_blocks[best_idx][0]:
+                    break
+                content = content.replace(fm, '', 1)
+                removed += 1
+                modified = True
+                REPORT["fixes_applied"] += 1
+
+        if removed > 0:
+            page_issues.append(f"Removed {removed} duplicate FAQPage blocks, kept best with {best_count} questions")
+
+    return page_issues, modified, content
 
 def main():
     pages = find_tool_pages()
@@ -210,20 +262,16 @@ def main():
         REPORT["total_pages_scanned"] += 1
         rel_path = str(filepath.relative_to(BASE_DIR))
 
-        issues, fixes, new_content = validate_page(filepath)
+        issues, modified, new_content = validate_page(filepath)
 
         if issues:
             all_issues.append((rel_path, issues))
 
-        if fixes:
-            # Write back fixed content
+        if modified:
             try:
-                with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
-                    original = f.read()
-                if new_content != original:
-                    with open(filepath, 'w', encoding='utf-8') as f:
-                        f.write(new_content)
-                    files_modified += 1
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    f.write(new_content)
+                files_modified += 1
             except Exception as e:
                 print(f"  ERROR writing {rel_path}: {e}")
 
@@ -257,11 +305,23 @@ def main():
         if len(REPORT["pages_without_schema_list"]) > 20:
             print(f"  ... and {len(REPORT['pages_without_schema_list']) - 20} more")
 
-    # Save full report as JSON
+    # Save full report
     report_path = BASE_DIR / "audit_cycle1_report.json"
     with open(report_path, 'w') as f:
         json.dump({
-            "stats": {k: v for k, v in REPORT.items() if k != "issues" and k != "pages_without_schema_list"},
+            "stats": {
+                "total_pages_scanned": REPORT["total_pages_scanned"],
+                "pages_with_schema": REPORT["pages_with_schema"],
+                "pages_without_schema": REPORT["pages_without_schema"],
+                "valid_json_blocks": REPORT["valid_json_blocks"],
+                "invalid_json_blocks": REPORT["invalid_json_blocks"],
+                "duplicate_faq_pages": REPORT["duplicate_faq_pages"],
+                "missing_context": REPORT["missing_context"],
+                "missing_type": REPORT["missing_type"],
+                "missing_name_on_webapp": REPORT["missing_name_on_webapp"],
+                "fixes_applied": REPORT["fixes_applied"],
+                "files_modified": files_modified,
+            },
             "pages_without_schema": REPORT["pages_without_schema_list"],
             "issues": [(p, i) for p, i in all_issues],
         }, f, indent=2)

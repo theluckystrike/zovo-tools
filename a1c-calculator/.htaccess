@@ -1,0 +1,81 @@
+# PRECISION AGENT DELTA - MILITARY-GRADE SECURITY HEADERS
+# Zero vulnerability tolerance security implementation
+
+<IfModule mod_headers.c>
+    # Content Security Policy - Prevent XSS attacks
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'"
+
+    # X-Frame-Options - Prevent clickjacking attacks
+    Header always set X-Frame-Options "DENY"
+
+    # X-Content-Type-Options - Prevent MIME type confusion
+    Header always set X-Content-Type-Options "nosniff"
+
+    # X-XSS-Protection - Enable XSS filtering
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Strict-Transport-Security - Force HTTPS (uncomment for production)
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Referrer-Policy - Control referrer information
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Permissions-Policy - Restrict dangerous features
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), accelerometer=(), gyroscope=()"
+
+    # Cross-Origin-Embedder-Policy - Isolate resources
+    Header always set Cross-Origin-Embedder-Policy "require-corp"
+
+    # Cross-Origin-Opener-Policy - Prevent cross-origin access
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+
+    # Cross-Origin-Resource-Policy - Control resource sharing
+    Header always set Cross-Origin-Resource-Policy "same-origin"
+</IfModule>
+
+# Prevent access to sensitive files
+<FilesMatch "\.(env|log|backup|bak|tmp|temp|old|orig|save|swp|swo|config|conf|ini|sql|db|sqlite)$">
+    Require all denied
+</FilesMatch>
+
+# Block common attack patterns
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block SQL injection attempts
+    RewriteCond %{QUERY_STRING} [^\w\s]*(\bselect|insert|update|delete|drop|create|alter)\b [NC]
+    RewriteRule .* - [F,L]
+
+    # Block XSS attempts
+    RewriteCond %{QUERY_STRING} [^\w\s]*(<script|javascript:|vbscript:|onload|onerror) [NC]
+    RewriteRule .* - [F,L]
+
+    # Block file inclusion attempts
+    RewriteCond %{QUERY_STRING} [^\w\s]*(\.\.|\/|\\) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# Security through obscurity
+ServerTokens Prod
+ServerSignature Off
+
+# Content compression for performance
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Cache optimization with security
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html "access plus 1 hour"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
