@@ -91,8 +91,8 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <h3>Understanding Git Architecture</h3>
 <p>Git is a distributed version control system designed by Linus Torvalds in 2005 for managing the Linux kernel source code. Unlike centralized version control systems such as SVN or CVS, Git gives every developer a full copy of the repository, including its complete history. This architecture means you can work offline, commit changes, create branches, and review history without any network connection.</p>
 <p>The Git data model consists of four primary object types. Blobs store file contents. Trees represent directories and map names to blobs or other trees. Commits point to a tree (the project snapshot) and contain metadata like the author, timestamp, and a pointer to the parent commit. Tags are named references to specific commits, typically used for release versions.</p>
-<p>Every object in Git is identified by a SHA-1 hash, a 40-character hexadecimal string computed from the object's content. This content-addressable storage means that identical content always produces the same hash, enabling efficient deduplication and integrity verification. If even a single byte of a file changes, its hash changes completely.</p>
-<p>Git maintains three main areas in your local repository. The working directory contains the actual files you edit. The staging area (also called the index) holds a snapshot of what will go into your next commit. The repository (the .git directory) stores the complete object database and reference pointers. Understanding the flow between these three areas is fundamental to using Git effectively.</p>
+<p>Every object in Git is identified by a SHA-1 hash, a 40-character hexadecimal string computed from the object's content. This content-addressable storage means that identical content always produces the same hash, enabling fast deduplication and integrity verification. If even a single byte of a file changes, its hash changes completely.</p>
+<p>Git maintains three main areas in your local repository. The working directory contains the actual files you edit. The staging area (also called the index) holds a snapshot of what will go into your next commit. The repository (the .git directory) stores the complete object database and reference pointers. Understanding the flow between these three areas is basic to using Git effectively.</p>
 
 <h3>Branching Strategies for Teams</h3>
 <p>Branching is one of Git's most valuable features because branches are lightweight and fast to create. Unlike other version control systems where branching copies entire directory trees, a Git branch is simply a 41-byte file containing a commit hash. Creating a branch takes milliseconds regardless of project size.</p>
@@ -125,7 +125,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>You can maintain multiple stashes and label them for clarity. Git stash save "work on login feature" creates a named stash. Git stash list shows all stashes with their labels and indices. Git stash apply stash@{2} applies a specific stash by index. Git stash drop stash@{0} removes a specific stash. Git stash clear removes all stashes.</p>
 <p>Stash also supports partial stashing. Git stash -p lets you interactively choose which hunks to stash, keeping the rest in your working directory. This is useful when you have mixed changes and want to stash only some of them.</p>
 
-<h3>Advanced Git Techniques</h3>
+<h3>modern Git Techniques</h3>
 <p>Interactive rebase (git rebase -i) allows you to rewrite commit history by squashing, reordering, editing, or dropping commits. This is invaluable for cleaning up a messy feature branch before merging. You can combine five small "WIP" commits into one clean commit, fix typos in commit messages, or reorder commits for logical clarity. Never interactive rebase commits that have been pushed to a shared branch.</p>
 <p>Cherry-pick (git cherry-pick commit-hash) copies a specific commit from one branch to another. This is useful for backporting bug fixes from the development branch to a release branch, or for selectively including specific features. If conflicts arise, you resolve them just as you would during a merge.</p>
 <p>Git bisect automates the process of finding the commit that introduced a bug. You mark a known good commit and a known bad commit, and Git performs a binary search through the commit history, checking out commits for you to test. You mark each as good or bad, and Git narrows down the problematic commit in O(log n) steps. For a history of 1,000 commits, bisect finds the culprit in about 10 steps.</p>
@@ -142,7 +142,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>Sparse checkout allows you to check out only a subset of the repository's files. This is useful in monorepos where you only need a specific project or directory. Git sparse-checkout set path/to/my/project configures which paths to include in your working directory.</p>
 
 <h3>Git Workflow Comparison</h3>
-<p>Choosing the right workflow depends on your team size, release cadence, and deployment strategy. For solo developers or very small teams shipping web applications, GitHub Flow offers simplicity and rapid iteration. For teams with scheduled releases and the need for parallel development streams, Git Flow provides structure. For large organizations with strong CI/CD pipelines and comprehensive test coverage, trunk-based development minimizes integration complexity.</p>
+<p>Choosing the right workflow depends on your team size, release cadence, and deployment strategy. For solo developers or very small teams shipping web applications, GitHub Flow offers simplicity and rapid iteration. For teams with scheduled releases and the need for parallel development streams, Git Flow provides structure. For large organizations with strong CI/CD pipelines and complete test coverage, trunk-based development minimizes integration complexity.</p>
 <p>Regardless of which workflow you adopt, certain practices remain universal. Always write meaningful commit messages. Review code before merging. Automate testing and deployment. Never force push to shared branches. Keep branches short-lived when possible. Delete merged branches to reduce clutter.</p>
 
 <h3>Git Security Considerations</h3>
@@ -156,6 +156,50 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>If your repository becomes corrupted or behaves unexpectedly, git fsck (file system check) verifies the integrity of the object database and reports issues. Git gc (garbage collection) cleans up unnecessary files, compresses objects, and can fix some issues. For severe corruption, cloning the repository fresh from the remote is often the fastest fix.</p>
 </div>
 
+<div class="info-section" style="margin-top:24px;">
+<h2>Git Command Reference by Category</h2>
+
+<h3>Configuration Commands</h3>
+<p>Before using Git, configure your identity with git config --global user.name "Your Name" and git config --global user.email "your@email.com". These values are embedded in every commit you create. Use --global to apply settings across all repositories, or omit it to configure only the current repository. View all settings with git config --list.</p>
+<p>Configure your default editor with git config --global core.editor "code --wait" (for VS Code) or vim, nano, or your preferred editor. Set your default branch name with git config --global init.defaultBranch main. Configure line ending handling with git config --global core.autocrlf true (Windows) or input (Mac/Linux) to prevent cross-platform issues.</p>
+<p>Create aliases for frequently used commands with git config --global alias.co checkout, git config --global alias.br branch, git config --global alias.st status, and git config --global alias.lg "log --oneline --graph --all". Aliases significantly speed up daily Git usage. I use git lg dozens of times per day to quickly review branch history.</p>
+
+<h3>Inspection and Comparison Commands</h3>
+<p>git log has extensive formatting options. Use git log --oneline for compact output. Add --graph to visualize branch topology. Use --author="name" to filter by author. Add --since="2 weeks ago" or --after="2024-01-01" for date filtering. Combine --stat to see file change summaries, or -p for full diffs.</p>
+<p>git diff shows unstaged changes in your working directory. git diff --staged (or --cached) shows staged changes ready for commit. git diff branch1..branch2 compares two branches. git diff HEAD~3..HEAD shows changes across the last three commits. Add --name-only to see just the filenames that changed.</p>
+<p>git show commit-hash displays the details and diff of a specific commit. git show HEAD:path/to/file shows a file's content at a specific commit without checking it out. This is useful for viewing previous versions without switching branches.</p>
+<p>git log -S"search term" (the pickaxe) finds commits where the number of occurrences of a string changed. This is excellent for finding when a specific function or variable was added or removed. git log -G"regex" does the same with regular expressions.</p>
+
+<h3>Collaboration and Code Review Commands</h3>
+<p>git request-pull generates a summary of changes between two commits, formatted as an email requesting that changes be pulled from your repository. While pull requests on GitHub and GitLab have largely replaced this workflow, understanding the underlying mechanism provides insight into Git's design philosophy.</p>
+<p>git format-patch creates patch files from commits that can be emailed and applied to another repository with git am (apply mailbox). This workflow predates web-based pull requests and is still used in the Linux kernel development process. Each patch file contains the commit message, author information, and the actual changes.</p>
+<p>git shortlog -sn summarizes commit counts by author, useful for understanding contribution patterns. git log --format="%aN" | sort | uniq -c | sort -rn provides similar information. These commands help project maintainers understand team activity and identify bottlenecks.</p>
+
+<h3>Maintenance and Recovery Commands</h3>
+<p>git gc (garbage collection) removes unreachable objects, compresses file revisions, and optimizes the repository. Git runs gc automatically in the background, but you can trigger it manually after major operations like large merges or rebases. git gc --aggressive performs more thorough optimization at the cost of longer execution time.</p>
+<p>git fsck (file system check) verifies the integrity of the Git object database. It reports dangling objects (not referenced by any branch or tag), missing objects, and other inconsistencies. Run git fsck periodically or whenever you suspect repository corruption.</p>
+<p>git reflog shows a chronological log of where HEAD and other refs have pointed. This is your safety net for recovering from almost any mistake. Lost commits from resets, rebases, or branch deletions can typically be recovered by finding the hash in the reflog and creating a new branch pointing to it. Reflog entries are kept for 90 days by default.</p>
+<p>git clean -fd removes untracked files and directories. Add -n (dry run) first to see what would be deleted without actually deleting anything. git clean -fX removes only files matched by .gitignore. git clean -fx removes all untracked files including those in .gitignore. Always dry run first to avoid accidental data loss.</p>
+
+<h3>Submodules and Subtrees</h3>
+<p>Git submodules allow you to embed one Git repository inside another as a subdirectory. This is useful for including shared libraries, frameworks, or third-party dependencies. git submodule add url path adds a submodule. git submodule update --init --recursive initializes and updates all submodules after cloning. The parent repository tracks which commit of the submodule to use.</p>
+<p>Git subtrees offer an alternative to submodules that merges an external repository's history directly into your repository. The subtree approach is simpler for consumers (no special initialization needed after cloning) but more complex for contributors who need to push changes back to the original repository. Use git subtree add --prefix=path url branch to add a subtree.</p>
+
+<h3>modern Searching with git grep</h3>
+<p>git grep searches for patterns in tracked files. Unlike regular grep, git grep only searches files tracked by Git (respecting .gitignore) and can search across branches and commits. git grep "pattern" searches the working directory. git grep "pattern" HEAD~5 searches the state of the repository five commits ago. git grep -n "pattern" includes line numbers. git grep -c "pattern" shows match counts per file.</p>
+<p>Combine git grep with git log for effective history searching. git log -p -S"function_name" shows all commits where the function was added or removed, along with the full diff. This is invaluable for understanding when and why code was changed.</p>
+
+<h3>Performance Tips for Large Projects</h3>
+<p>For repositories with many files, enable the filesystem monitor with git config core.fsmonitor true. This uses your operating system's file change notification system instead of scanning the entire working directory, dramatically speeding up git status and git diff.</p>
+<p>The commit graph accelerates commands that walk the commit history (log, merge-base, etc.). Enable it with git config fetch.writeCommitGraph true. Git will maintain an optimized data structure that makes history traversal faster, particularly beneficial for repositories with tens of thousands of commits.</p>
+<p>Use git maintenance start to configure background maintenance tasks that keep your repository optimized automatically. This includes periodic gc, commit-graph updates, and prefetching from remotes. The tasks run in the background and do not interfere with your workflow.</p>
+
+<h3>Practical Workflow Examples</h3>
+<p>Starting a new feature typically follows this sequence: git checkout main to switch to main, git pull origin main to get the latest changes, git checkout -b feature/my-feature to create a feature branch, make your changes and commit them, git push -u origin feature/my-feature to push the branch, then open a pull request on your hosting platform.</p>
+<p>Resolving a merge conflict follows this sequence: git merge feature-branch triggers the merge and reports conflicts, open the conflicted files and look for conflict markers, edit the files to resolve the conflicts (choosing which changes to keep), git add the resolved files, git commit to complete the merge. Some developers prefer git mergetool which opens a visual merge tool.</p>
+<p>Cleaning up a feature branch before merging: git rebase -i HEAD~n to interactively rebase the last n commits, squash minor commits into logical units, reword commit messages for clarity, then force push the cleaned branch with git push --force-with-lease. This produces a clean, reviewable history for the pull request.</p>
+<p>Recovering a deleted branch: check git reflog for the branch tip commit hash, then git checkout -b recovered-branch commit-hash to recreate the branch pointing to that commit. As long as the commits have not been garbage collected (typically 90 days), recovery is straightforward.</p>
+</div>
 <div class="info-section" style="margin-top:24px;">
 <h2>Related Free Tools</h2>
 <p>Explore more developer and productivity tools from the Zovo collection.</p>

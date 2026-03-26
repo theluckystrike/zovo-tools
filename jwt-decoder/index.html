@@ -337,6 +337,88 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>When the token approaches expiration, the client uses a refresh token to obtain a new access token. The authentication server verifies the refresh token, checks that it has not been revoked, and issues a new access token. Some implementations also rotate the refresh token at this point, issuing a new refresh token and invalidating the old one. This refresh token rotation prevents stolen refresh tokens from being used indefinitely.</p>
 
 <p>The lifecycle ends when the user logs out. The client discards the access token and sends the refresh token to a revocation endpoint. The authentication server adds the refresh token to a revocation list so it cannot be used to obtain new access tokens. Access tokens that have already been issued continue to be valid until they expire, unless the server maintains an access token blocklist as well.</p>
+
+<h3>JWT Header Parameters Beyond alg and typ</h3>
+
+<p>While <code>alg</code> and <code>typ</code> are the most common header parameters, the JWT specification and related RFCs define several additional parameters. The <code>kid</code> (Key ID) parameter identifies which key was used to sign the token. In systems with multiple signing keys or during key rotation, the <code>kid</code> allows the verifying service to select the correct key from a key set without trying each key sequentially.</p>
+
+<p>The <code>jku</code> (JWK Set URL) parameter provides a URL where the verifying service can fetch the signer's public keys in JWK Set format. The <code>jwk</code> parameter embeds the public key directly in the header. The <code>x5u</code> parameter provides a URL to an X.509 certificate chain, and <code>x5c</code> embeds the certificate chain directly. These parameters are used in enterprise environments with certificate-based authentication infrastructure.</p>
+
+<p>The <code>cty</code> (Content Type) parameter is used in nested JWTs, where a JWT is the payload of another JWT. Setting <code>cty</code> to "JWT" indicates that the payload should be decoded as another JWT. This nesting is rare in practice but appears in some enterprise identity federation scenarios.</p>
+
+<h3>JWT Claim Best Practices</h3>
+
+<p>When designing the claims structure for your application, follow several important principles. Keep the payload minimal by including only claims that the receiving service needs for its immediate authorization decisions. Each additional claim increases token size and exposes more data if the token is intercepted. Store detailed user profiles in your database and reference them by the <code>sub</code> claim rather than embedding all profile fields.</p>
+
+<p>Use standard claim names whenever possible rather than inventing custom names for the same concept. Using <code>sub</code> for the user identifier, <code>iss</code> for the issuer, and <code>roles</code> for role-based access control is more interoperable than custom claim names like <code>userId</code>, <code>issuedBy</code>, or <code>userRoles</code>. Standard claim names are recognized by JWT libraries and tools, making debugging easier.</p>
+
+<p>Namespace custom claims to avoid collisions with other services. If your application uses a custom claim for subscription tier, name it <code>https://myapp.com/subscription</code> or <code>myapp.subscription</code> rather than just <code>subscription</code>. This prevents conflicts when your tokens are consumed by third-party services that might define their own <code>subscription</code> claim.</p>
+
+<p>Set reasonable expiration times based on the sensitivity of the operations the token authorizes. Tokens for reading public data might expire in 24 hours. Tokens for modifying user data should expire in 15 to 60 minutes. Tokens for administrative operations or financial transactions should expire in 5 to 15 minutes. Shorter expiration times reduce the window of opportunity if a token is compromised.</p>
+
+<h3>Cross-Origin JWT Authentication</h3>
+
+<p>When your frontend application and API are on different domains, JWT authentication requires careful handling of Cross-Origin Resource Sharing (CORS) headers. The API server must include <code>Access-Control-Allow-Origin</code> with the frontend's domain, <code>Access-Control-Allow-Headers</code> with "Authorization" included, and <code>Access-Control-Allow-Methods</code> with the HTTP methods your API supports.</p>
+
+<p>For preflight requests (OPTIONS), the browser sends a preliminary request to check CORS permissions before sending the actual request with the JWT. Your API server must handle OPTIONS requests correctly and return the appropriate CORS headers. If the preflight fails, the browser blocks the actual request without sending the JWT, resulting in authentication errors that appear on the client as network failures rather than 401 responses.</p>
+
+<p>When using cookies for JWT storage (which provides XSS protection), you need to configure the cookie with <code>SameSite=None</code> and <code>Secure</code> for cross-origin scenarios. This allows the cookie to be sent with cross-origin requests but only over HTTPS. The <code>Access-Control-Allow-Credentials: true</code> header must also be set on the API, and the frontend's fetch request must include <code>credentials: 'include'</code>.</p>
+
+<h3>JWT in Serverless and Edge Computing</h3>
+
+<p>JWTs are particularly well-suited for serverless architectures (AWS Lambda, Cloudflare Workers, Vercel Edge Functions) because they can be verified without database access. A serverless function that verifies JWTs only needs the public key or shared secret, which can be provided as an environment variable or fetched and cached from a JWKS endpoint.</p>
+
+<p>Edge computing platforms process requests at locations geographically close to the user. Verifying a JWT at the edge takes microseconds, while making a database call to a centralized session store would add tens or hundreds of milliseconds of latency. This makes JWT-based authentication the natural choice for edge-first architectures where low latency is a priority.</p>
+
+<p>For caching at the edge, the JWT's <code>exp</code> claim can inform cache duration decisions. An edge function might cache personalized content for a user until their token expires, then require re-authentication for the next request. This approach provides per-user caching without maintaining a centralized session database at each edge location.</p>
+
+<h3>Testing and Generating JWTs</h3>
+
+<p>During development, you often need to create test JWTs with specific claims and expiration times. Most JWT libraries provide encoding functions that accept a payload object, a signing key, and algorithm options. In Node.js with the jsonwebtoken package, creating a test token is as simple as calling <code>jwt.sign({ sub: '123', role: 'admin' }, secret, { expiresIn: '1h' })</code>.</p>
+
+<p>For automated testing, generate tokens with known claims and verify that your application handles each scenario correctly. Test with expired tokens to verify 401 responses. Test with invalid signatures to verify rejection. Test with missing required claims to verify appropriate error messages. Test with the <code>none</code> algorithm to verify that your application rejects unsigned tokens. Test with tokens issued in the future (iat in the future) to verify clock skew handling.</p>
+
+<p>Integration tests should verify the entire authentication flow, from login to token issuance to API access to token refresh to logout. Mock the authentication server to control the tokens it issues, allowing you to test edge cases like expired refresh tokens, revoked tokens, and algorithm changes without depending on an external service.</p>
+
+<h3>JWT Alternatives</h3>
+
+<p>While JWTs are the dominant token format for API authentication, alternatives exist for specific use cases. PASETO (Platform-Agnostic Security Tokens) is a more opinionated standard that eliminates the algorithm confusion vulnerability by not including the algorithm in the token itself. Instead, the algorithm is determined by the token version. PASETO v4 uses XChaCha20-Poly1305 for local (symmetric) tokens and Ed25519 for public (asymmetric) tokens.</p>
+
+<p>Macaroons are another token format that supports caveats (conditions that restrict the token's use). Caveats can limit a token to specific IP addresses, time windows, or resource scopes, and anyone holding the token can add more restrictions (but cannot remove existing ones). This delegation model is useful for distributed systems where intermediate services need to pass tokens with reduced permissions.</p>
+
+<p>Opaque tokens (random strings with no embedded data) remain common in traditional web applications. They require a server-side lookup on every request but support immediate revocation and do not expose any data if intercepted. The choice between JWTs and opaque tokens depends on whether statelessness or immediate revocability is more important for your application.</p>
+
+<h3>JSON Web Key Sets (JWKS)</h3>
+
+<p>A JSON Web Key Set (JWKS) is a JSON document that contains the public keys used to verify JWT signatures. The JWKS format is defined in RFC 7517 and is the standard mechanism for distributing signing keys in OAuth 2.0 and OpenID Connect implementations. The keys are typically served from a well-known endpoint such as <code>https://auth.example.com/.well-known/jwks.json</code>.</p>
+
+<p>Each key in the JWKS includes a key ID (<code>kid</code>), key type (<code>kty</code>, such as RSA or EC), algorithm (<code>alg</code>), and the key material itself (for RSA keys, the modulus <code>n</code> and exponent <code>e</code>). When verifying a JWT, the application reads the <code>kid</code> from the token header, fetches the JWKS from the authentication server, finds the matching key, and uses it for signature verification.</p>
+
+<p>JWKS endpoints should be cached by the verifying application to avoid making a network request on every token verification. A common caching strategy is to cache the JWKS for a fixed duration (e.g., 1 hour) and refresh it if a token arrives with a <code>kid</code> that is not in the cached key set. This handles key rotation gracefully while minimizing latency from JWKS fetches.</p>
+
+<h3>Key Rotation Strategies</h3>
+
+<p>Periodic key rotation is a security best practice that limits the impact of key compromise. The rotation process involves generating a new key pair, adding the new public key to the JWKS endpoint alongside the old key, switching the authentication server to sign tokens with the new private key, and eventually removing the old public key from the JWKS after all tokens signed with it have expired.</p>
+
+<p>During the overlap period (when both old and new keys are in the JWKS), tokens signed with either key can be verified. The <code>kid</code> header parameter tells the verifying service which key to use. This ensures zero downtime during rotation. The overlap period should be at least as long as the maximum token lifetime to prevent valid tokens from becoming unverifiable.</p>
+
+<p>Automated key rotation is supported by most identity platforms. Auth0 rotates signing keys automatically and provides APIs to trigger rotation on demand. AWS Cognito rotates keys periodically and publishes them at the JWKS endpoint. If you manage your own authentication server, implement a key rotation schedule (quarterly or semi-annually) and automate the process to reduce the risk of human error.</p>
+
+<h3>JWT in GraphQL APIs</h3>
+
+<p>GraphQL APIs use JWTs the same way REST APIs do, typically receiving the token in the Authorization header and verifying it before processing the query. The main difference is that GraphQL has a single endpoint, so authorization must be handled at the resolver level rather than the route level.</p>
+
+<p>In a GraphQL context, the decoded JWT claims are typically attached to the request context object, making them available to all resolvers. Individual resolvers can then check the user's roles or permissions before returning data. Directive-based authorization (using custom GraphQL directives like @auth or @hasRole) provides a declarative way to protect specific fields and types based on JWT claims.</p>
+
+<p>Subscription authentication in GraphQL adds complexity because WebSocket connections are long-lived. The JWT is typically sent during the WebSocket handshake (in the connection_init message) and verified once. Since the connection may outlive the token's expiration, some implementations re-verify the token periodically or require the client to send a new token when the current one expires.</p>
+
+<h3>Compliance and Regulatory Considerations</h3>
+
+<p>When JWTs contain personally identifiable information (PII) such as names, email addresses, or phone numbers, they fall under data protection regulations like GDPR, CCPA, and HIPAA. Since JWT payloads are only encoded (not encrypted), any intermediary that handles the token can read the PII. This has implications for logging, caching, and data retention policies.</p>
+
+<p>To comply with data minimization principles, avoid including PII in JWT claims unless the receiving service specifically needs it. Use opaque identifiers (like user IDs) in the <code>sub</code> claim and let the receiving service look up PII from its own database when needed. If PII must be included in the token, consider using JWE (encrypted JWTs) to protect the payload contents from intermediaries.</p>
+
+<p>Audit logging of JWT verification events (successful verifications, expired tokens, invalid signatures) helps meet compliance requirements for access monitoring. Include the <code>jti</code> claim in your tokens to provide a unique identifier for each token that can be correlated across log entries. This makes it possible to trace a specific authentication event through the system for audit purposes.</p>
 </div>
 
 <div class="faq-section">
