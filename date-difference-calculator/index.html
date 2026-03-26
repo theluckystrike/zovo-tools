@@ -403,6 +403,67 @@ footer a:hover { text-decoration: underline; }
     <p>All calculations run entirely in your browser. No data is sent to any server.</p>
   </div>
 
+
+  <div class="info-section">
+    <h2>Complete Guide to Date Calculations and Calendar Systems</h2>
+
+    <h3>How Date Difference Calculation Works</h3>
+    <p>Calculating the difference between two dates involves more than simple subtraction. The unequal length of months (28, 29, 30, or 31 days), leap years, and the ambiguity of "one month" all create complexity that this calculator handles automatically.</p>
+    <p>The total days calculation is straightforward: convert both dates to their Julian Day Number (a continuous count of days since January 1, 4713 BC) and subtract. This method avoids month-length complications entirely and produces exact day counts. The JavaScript Date object internally uses milliseconds since January 1, 1970 (the Unix epoch), and dividing the millisecond difference by 86,400,000 (milliseconds per day) gives the exact number of days.</p>
+    <p>Converting total days to years, months, and days requires a different approach. This calculator uses calendar arithmetic: starting from the earlier date, it counts complete years, then complete months, then remaining days. A period from January 31 to March 1 is "1 month and 1 day" (February has 28 days) in a non-leap year, but "1 month and 0 days" would be wrong because February 28 + 1 day = March 1. These edge cases are why date libraries exist and why I recommend using tested implementations rather than writing date arithmetic from scratch.</p>
+
+    <h3>Business Days vs Calendar Days</h3>
+    <p>Business days (also called working days or weekdays) exclude Saturdays and Sundays. This calculator counts business days by iterating through each day in the range and checking whether it falls on a Saturday or Sunday. For a standard 5-day work week, approximately 71.4% of calendar days are business days (5 out of 7).</p>
+    <p>As a quick estimation: multiply calendar days by 5/7 (or 0.7143) for an approximate business day count. For 30 calendar days, expect approximately 21-22 business days. For 365 calendar days, expect approximately 261 business days. The actual count varies by 1-2 days depending on which day of the week the period starts and ends.</p>
+    <p>Some industries and jurisdictions add public holidays to the exclusion list, further reducing the "working days" count. This calculator counts weekdays only. For calculations that also exclude public holidays, you would need to specify which country and state/province holidays apply, as these vary significantly across jurisdictions. The US has 11 federal holidays, the UK has 8 bank holidays, and some countries observe 15+ national holidays.</p>
+    <p>Contract and legal deadlines often specify "calendar days" or "business days" explicitly. A 30 calendar day deadline from March 1 expires on March 31 regardless of weekends and holidays. A 30 business day deadline from March 1 would extend to approximately April 12 (accounting for weekends but not holidays). Misinterpreting which type of day count applies can have significant legal consequences.</p>
+
+    <h3>Understanding Leap Years</h3>
+    <p>A leap year occurs every 4 years with these rules: a year is a leap year if it is divisible by 4, except years divisible by 100, which are not leap years, except years divisible by 400, which are leap years. So 2024 is a leap year (divisible by 4), 1900 was not (divisible by 100 but not 400), and 2000 was (divisible by 400).</p>
+    <p>Leap years add February 29, making that year 366 days instead of 365. This correction accounts for the fact that Earth's orbital period is approximately 365.2422 days. Without leap years, the calendar would drift by about one day every four years, and after 700 years, January would occur in what is now July's weather.</p>
+    <p>The Gregorian calendar correction (100-year and 400-year rules) further refines accuracy. The Julian calendar (used before 1582) simply added a leap day every 4 years, producing a year length of 365.25 days. Over centuries, this excess of 0.0078 days per year accumulated to a 10-day discrepancy by the 16th century. The Gregorian calendar's more complex leap year rules produce an average year length of 365.2425 days, accurate to within one day every 3,236 years.</p>
+    <p>Date calculations spanning the Julian-to-Gregorian transition (October 4, 1582 was followed by October 15, 1582 in countries that adopted the reform immediately) require special handling. Most modern software assumes the Gregorian calendar for all dates, which is accurate for dates after 1582 in Western countries. Other regions adopted the Gregorian calendar at different times: Britain in 1752, Russia in 1918, and Greece in 1923.</p>
+
+    <h3>Common Date Calculation Use Cases</h3>
+    <p>Project management frequently requires calculating deadlines. "This phase should take 45 business days" translates to approximately 63 calendar days (9 weeks). Add this duration to the start date to determine the deadline. Working backward from a fixed deadline, you can determine the latest possible start date by subtracting the required duration.</p>
+    <p>Legal deadlines have strict date requirements. Statutes of limitations (the maximum time after an event within which legal proceedings may be initiated) vary by claim type and jurisdiction but are specified as specific numbers of years or days. Personal injury claims typically have a 2-3 year statute of limitations; contract claims often have 4-6 years. Calculating these deadlines accurately is critical.</p>
+    <p>Age calculation is a date difference with specific conventions. In most Western jurisdictions, you turn a specific age on the anniversary of your birth date, regardless of whether the current year is a leap year. A person born on February 29 celebrates their birthday on February 28 (or March 1) in non-leap years, depending on the jurisdiction. Some legal systems consider March 1 the birthday in non-leap years, while others use February 28.</p>
+    <p>Pregnancy due date estimation uses Naegele's rule: add 280 days (40 weeks) to the first day of the last menstrual period, or equivalently, add 266 days (38 weeks) to the estimated conception date. This calculator can compute both calculations using the Add Days feature.</p>
+    <p>Financial calculations use date differences for interest accrual, payment schedules, and maturity dates. Bonds, loans, and certificates of deposit all specify maturity dates. The day count convention (how fractional years are calculated) varies: 30/360 assumes 30-day months and 360-day years, Actual/365 uses actual days and a 365-day year, and Actual/360 uses actual days with a 360-day year. Each convention produces slightly different interest calculations.</p>
+
+    <h3>Time Zone Considerations in Date Calculations</h3>
+    <p>This calculator performs all calculations in local time (your browser's time zone) without time zone conversion. For most date difference calculations, this is correct because you are comparing calendar dates, not specific moments in time. The difference between January 1 and March 15 is always 73 days (or 74 in a leap year) regardless of time zone.</p>
+    <p>However, when the exact moment matters (for legal deadlines measured in hours, or for events near midnight in different time zones), time zone awareness becomes critical. A document filed at 11:30 PM on March 31 in New York is filed on April 1 in London. The International Date Line creates situations where the same moment in time falls on different calendar dates depending on location.</p>
+    <p>Daylight saving time transitions create days that are 23 hours long (spring forward) or 25 hours long (fall back). These transitions do not affect calendar date differences (a day is always one day regardless of its actual duration), but they do affect calculations involving specific times or hourly durations. A 24-hour countdown starting at 2 PM on the day before "spring forward" ends at 3 PM (not 2 PM) the next day.</p>
+
+    <h3>Historical Date Calculations</h3>
+    <p>Calculating dates far in the past requires understanding which calendar system was in use. The Gregorian calendar (our current calendar) was adopted in 1582 by Catholic countries and gradually adopted by others over the following centuries. Dates before the local adoption of the Gregorian calendar were recorded in the Julian calendar, which has a different leap year rule.</p>
+    <p>When historians reference dates, they often specify "Old Style" (Julian) or "New Style" (Gregorian) to avoid confusion. George Washington's birthday, for example, was February 11, 1731/32 Old Style (the British year began on March 25 at the time), which is February 22, 1732 New Style (Gregorian). Modern date calculators assume the Gregorian calendar, so very old dates may not align with historical records.</p>
+    <p>For astronomical calculations and very long date ranges, the Julian Day Number system avoids calendar complications entirely. It counts days continuously from January 1, 4713 BC (Julian calendar) and is used by astronomers, historians, and chronologists worldwide. January 1, 2026 is Julian Day 2,461,042.</p>
+
+    <h3>Date Arithmetic in Programming</h3>
+    <p>JavaScript (which powers this calculator) represents dates as milliseconds since January 1, 1970 00:00:00 UTC. This gives a range of approximately 285,000 years before and after the epoch. Date arithmetic is performed by converting to milliseconds, performing the calculation, and converting back. The Date object handles month boundaries, leap years, and varying month lengths automatically.</p>
+    <p>Common pitfalls in programming date calculations include: treating months as zero-indexed (January is 0, December is 11 in JavaScript), forgetting that Date.parse interprets date strings differently across browsers, not accounting for daylight saving time when adding hours, and assuming months are always 30 days. Libraries like Luxon, Day.js, and date-fns provide safer abstractions for date manipulation.</p>
+    <p>ISO 8601 format (YYYY-MM-DD) is the standard for representing dates in programming and data exchange. It sorts correctly as a string, avoids the ambiguity of MM/DD/YYYY versus DD/MM/YYYY conventions, and is universally understood across locales and programming languages. This calculator uses ISO 8601 format internally for all date processing.</p>
+
+    <h3>Calendar Systems Around the World</h3>
+    <p>The Gregorian calendar is the most widely used civil calendar internationally, but many cultures maintain parallel calendar systems for religious, cultural, or agricultural purposes. The Islamic (Hijri) calendar is a lunar calendar with 12 months of 29 or 30 days, producing a year of 354 or 355 days. This means Islamic dates drift through the Gregorian calendar, with months occurring in different seasons across a 33-year cycle.</p>
+    <p>The Hebrew calendar is a lunisolar calendar that adds a 13th leap month (Adar II) seven times in a 19-year cycle to keep months aligned with seasons while maintaining lunar month lengths. This is why Jewish holidays like Hanukkah and Passover fall on different Gregorian dates each year but always in the same season.</p>
+    <p>The Chinese calendar is also lunisolar, with months beginning on the new moon and an intercalary month added periodically. Chinese New Year falls on the second new moon after the winter solstice (between January 21 and February 20 on the Gregorian calendar). The 12-year cycle of animal zodiac signs is a cultural overlay on the calendar system.</p>
+    <p>The Ethiopian calendar has 13 months: twelve months of 30 days each and a 13th month of 5 days (6 in a leap year). The Ethiopian calendar is approximately 7-8 years behind the Gregorian calendar, so what the rest of the world calls 2026 is 2018 or 2019 in Ethiopia depending on the month.</p>
+  </div>
+
+  <div class="info-section">
+    <h2>Related Free Tools</h2>
+    <p>Explore more time and calculation tools from the Zovo collection.</p>
+    <ul>
+      <li><a href="https://zovo.one/free-tools/age-calculator/">Age Calculator</a> - Calculate exact age in years, months, and days</li>
+      <li><a href="https://zovo.one/free-tools/time-zone-converter/">Time Zone Converter</a> - Convert times between time zones</li>
+      <li><a href="https://zovo.one/free-tools/unix-timestamp-converter/">Unix Timestamp Converter</a> - Convert Unix timestamps to dates</li>
+      <li><a href="https://zovo.one/free-tools/countdown-timer/">Countdown Timer</a> - Count down to important events</li>
+      <li><a href="https://zovo.one/free-tools/percentage-calculator/">Percentage Calculator</a> - Calculate percentages, increases, and decreases</li>
+    </ul>
+  </div>
   <div class="info-section">
     <h2>Frequently Asked Questions</h2>
     <div class="faq-item">
