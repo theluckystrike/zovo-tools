@@ -362,6 +362,70 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 
 <h3>RAID Overhead</h3>
 <p>RAID configurations use some storage capacity for redundancy. RAID 1 (mirroring) uses 50% of total capacity for data. RAID 5 uses one drive's worth of capacity for parity. RAID 6 uses two drives' worth. A RAID 5 array with four 1 TB drives has 3 TB of usable capacity (approximately 2.73 TiB in binary). Understanding these conversions is critical for data center storage planning.</p>
+
+<h2>Storage Technologies Compared</h2>
+<p>Different storage technologies have different capacity ranges, performance characteristics, and cost profiles. Understanding file sizes in the context of storage technology helps make informed purchasing and architecture decisions.</p>
+
+<h3>Hard Disk Drives (HDD)</h3>
+<p>HDDs use spinning magnetic platters and are the most cost-effective storage for large capacities. Modern consumer HDDs range from 1 TB to 24 TB, with prices around $15-25 per TB. Enterprise HDDs reach higher capacities with features like helium filling (reduces internal friction, enables more platters) and shingled magnetic recording (SMR, which overlaps tracks for higher density). HDDs are best for archival storage, media libraries, and backup where sequential access patterns dominate.</p>
+
+<h3>Solid State Drives (SSD)</h3>
+<p>SSDs use NAND flash memory with no moving parts, providing dramatically faster random read/write performance compared to HDDs. Consumer SSDs range from 250 GB to 8 TB, with NVMe SSDs achieving read speeds of 5,000-7,000 MB/s. Enterprise SSDs can reach 100 TB in a single unit. SSD pricing is approximately $50-100 per TB for consumer drives, roughly 3-4x the cost of HDDs. SSDs are ideal for operating systems, databases, and applications that benefit from fast random I/O.</p>
+
+<h3>NVMe vs SATA</h3>
+<p>SATA SSDs connect through the SATA interface, which is limited to approximately 550 MB/s. NVMe SSDs connect through PCIe lanes, achieving 3,500-7,000 MB/s for PCIe Gen 4 and up to 14,000 MB/s for PCIe Gen 5. The capacity ranges are similar, but the performance difference is dramatic for workloads that involve many concurrent I/O operations, such as database servers and virtual machine hosts.</p>
+
+<h3>Cloud Object Storage</h3>
+<p>Cloud object storage services like AWS S3, Google Cloud Storage, and Azure Blob Storage provide virtually unlimited capacity with pay-per-use pricing. Storage classes with different access latencies (standard, infrequent access, archival) offer different price points. Standard storage costs about $0.023/GB/month, infrequent access $0.0125/GB/month, and archival (Glacier) as low as $0.004/GB/month. For large datasets, archival storage can be 5x cheaper than standard storage.</p>
+
+<h2>Data Growth and Future Projections</h2>
+<p>Global data creation is growing exponentially. Understanding the scale of data in the world puts file size conversions in context.</p>
+
+<h3>Global Data Volume</h3>
+<p>The total amount of data created, captured, copied, and consumed globally reached approximately 120 zettabytes (120,000 exabytes) by 2023 and is projected to reach 180 zettabytes by 2025. To put this in perspective, 1 zettabyte = 1,000 exabytes = 1,000,000 petabytes = 1,000,000,000 terabytes. If each terabyte were a kilometer, a zettabyte would stretch from Earth to the Sun over 6 times.</p>
+
+<h3>Data Center Scale</h3>
+<p>A large cloud data center might house 50,000 to 100,000 servers, each with multiple storage drives. A single rack of servers can contain hundreds of terabytes. A full data center might manage 1-10 exabytes of total storage. Hyperscale providers like AWS, Google, and Microsoft operate dozens of such data centers worldwide, collectively managing hundreds of exabytes.</p>
+
+<h3>Personal Data Generation</h3>
+<p>An average smartphone user generates about 6 GB of data per month through photos, videos, app data, and backups. A household with multiple devices, security cameras, and media streaming might generate 50-100 GB per month. Over a year, that is 600 GB to 1.2 TB of new data. This personal data growth drives consumer storage demand and explains why cloud storage services have become essential for most users.</p>
+
+<h2>Precision and Rounding in File Size Display</h2>
+<p>How file sizes are displayed depends on the application and the precision needed. This converter shows results with appropriate significant digits for each range.</p>
+
+<h3>Significant Figures</h3>
+<p>For values above 100, two decimal places provide sufficient precision (1,234.56 MB). For values between 1 and 100, up to six decimal places may be needed (1.234567 GB). For values below 0.000001, scientific notation (1.2345e-7) is used to avoid long strings of zeros. These formatting choices balance readability with precision.</p>
+
+<h3>Rounding Conventions</h3>
+<p>Operating systems round file sizes differently. Windows rounds to two decimal places and drops trailing zeros. macOS rounds to one decimal place. Linux ls -h uses no decimal places below 10 and one decimal place above. Cloud storage billing may use six or more decimal places for fractional GB charges. Understanding your platform's rounding convention helps interpret file size displays correctly.</p>
+
+<h3>Exact vs Approximate Values</h3>
+<p>Some conversions produce exact values (1 KB = exactly 1,024 bytes in binary). Others produce repeating decimals (1 byte = 0.0009765625 KB in binary). This converter uses JavaScript's 64-bit floating-point arithmetic, which provides more than enough precision for all practical file size calculations. The displayed values may be rounded for readability, but the underlying calculations are as precise as the IEEE 754 standard allows.</p>
+
+<h2>Common Conversion Reference</h2>
+<p>Here are frequently needed conversions for quick reference. These values assume binary (1024) measurement unless otherwise noted.</p>
+
+<ul>
+<li>1 KB = 1,024 bytes</li>
+<li>1 MB = 1,048,576 bytes = 1,024 KB</li>
+<li>1 GB = 1,073,741,824 bytes = 1,024 MB</li>
+<li>1 TB = 1,099,511,627,776 bytes = 1,024 GB</li>
+<li>1 PB = 1,125,899,906,842,624 bytes = 1,024 TB</li>
+<li>1 EB = 1,152,921,504,606,846,976 bytes = 1,024 PB</li>
+</ul>
+
+<p>For decimal (1000) measurement:</p>
+
+<ul>
+<li>1 kB = 1,000 bytes</li>
+<li>1 MB = 1,000,000 bytes = 1,000 kB</li>
+<li>1 GB = 1,000,000,000 bytes = 1,000 MB</li>
+<li>1 TB = 1,000,000,000,000 bytes = 1,000 GB</li>
+<li>1 PB = 1,000,000,000,000,000 bytes = 1,000 TB</li>
+<li>1 EB = 1,000,000,000,000,000,000 bytes = 1,000 PB</li>
+</ul>
+
+<p>The binary-to-decimal conversion factor at each level: 1 KiB = 1.024 kB, 1 MiB = 1.049 MB, 1 GiB = 1.074 GB, 1 TiB = 1.100 TB. These factors are useful for quick mental conversions between the two standards. When a manufacturer says "1 TB," multiply by 0.909 to get the approximate binary equivalent (931 GiB).</p>
 </div>
 
 <!-- ===================== FAQ SECTION ===================== -->
