@@ -500,6 +500,18 @@ S3_BUCKET=my-app-uploads</div>
 
 <h3>Missing Documentation</h3>
 <p>Every variable in .env.example should have a comment explaining what it does, what format it expects, and where to obtain the value. A bare list of KEY=placeholder entries forces new team members to search through documentation or ask colleagues for context. Well-documented .env.example files reduce onboarding time significantly.</p>
+
+<h2>Environment Variables and Microservices</h2>
+<p>In a microservices architecture, each service has its own set of environment variables. This creates a multiplication effect: if you have 10 services with 20 variables each, you are managing 200 variables across each environment. Naming conventions become critical in this context.</p>
+
+<h3>Service-Specific Prefixes</h3>
+<p>When multiple services share a deployment environment, prefix variables with the service name to avoid collisions. AUTH_SERVICE_PORT=3001, PAYMENT_SERVICE_PORT=3002, NOTIFICATION_SERVICE_PORT=3003. This prevents one service's PORT variable from conflicting with another.</p>
+
+<h3>Shared Configuration</h3>
+<p>Some variables are shared across all services (logging configuration, tracing endpoints, environment name). Store these in a shared configuration source and inject them into each service. This prevents the common problem of updating a shared value in one service's .env but forgetting to update the others.</p>
+
+<h3>Service Discovery</h3>
+<p>In microservice environments, service URLs are often dynamically assigned. Instead of hardcoding URLs in .env files, services register themselves with a service discovery mechanism (Consul, Kubernetes DNS, AWS Cloud Map) and other services look them up at runtime. This eliminates an entire category of .env variables and reduces configuration maintenance.</p>
 </div>
 
 <!-- ===================== FAQ SECTION ===================== -->
