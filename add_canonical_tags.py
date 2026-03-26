@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
 Fix Canonical URLs for all zovo-tools pages.
-- Removes all existing canonical tags (including malformed double-href ones)
-- Removes orphaned href="https://tools.zovo.one/..." fragments
+- Removes all existing <link rel="canonical" ...> tags
+- Removes orphaned ' href="https://tools.zovo.one/...">' fragments
+  (left over from malformed double-href canonical tags)
 - Adds a single correct canonical: https://zovo.one/free-tools/{tool-slug}/
 """
 
@@ -14,15 +15,11 @@ from pathlib import Path
 def fix_canonical_tags():
     base_dir = Path("/Users/mike/zovo-workspaces/zovo-tools")
 
-    # Directories/files to skip (not tool directories)
-    skip = {
+    # Skip known non-tool entries at root level
+    skip_names = {
         '.git', '.github', 'node_modules', '__pycache__', '.DS_Store',
         'cleanup', 'sitemap.xml', 'robots.txt', 'CNAME', '404.html',
-        'index.html',  # root index
     }
-
-    # Also skip any Python scripts and non-directory files at root level
-    skip_extensions = {'.py', '.json', '.md', '.txt', '.xml', '.yml', '.yaml', '.sh', '.js'}
 
     fixed = 0
     added = 0
@@ -30,10 +27,9 @@ def fix_canonical_tags():
     errors = 0
 
     for entry in sorted(base_dir.iterdir()):
-        # Skip non-directories and known non-tool entries
         if not entry.is_dir():
             continue
-        if entry.name in skip or entry.name.startswith('.'):
+        if entry.name in skip_names or entry.name.startswith('.'):
             continue
 
         index_path = entry / 'index.html'
@@ -50,101 +46,64 @@ def fix_canonical_tags():
 
             original_content = content
 
-            # Step 1: Remove ALL existing canonical link tags (any format, any domain)
-            # This handles: <link rel="canonical" href="..."> and <link rel="canonical" href="..."/>
+            # Check current state before changes
+            had_any_canonical = '<link rel="canonical"' in content.lower() or 'rel="canonical"' in content.lower()
+            had_correct_canonical = f'href="{correct_canonical}"' in content
+            had_tools_domain_canonical = 'tools.zovo.one' in content and 'canonical' in content
+
+            # Step 1: Remove ALL existing <link rel="canonical" ...> tags
+            # Handles both self-closing (/>) and normal (>) variants
             content = re.sub(
-                r'<link\s+rel="canonical"\s+href="[^"]*"\s*/?\s*>',
+                r'\s*<link\s+rel="canonical"\s+href="[^"]*"\s*/?\s*>',
                 '',
                 content,
                 flags=re.IGNORECASE
             )
 
-            # Step 2: Remove orphaned href="https://tools.zovo.one/..." fragments
-            # These appear as: > href="https://tools.zovo.one/some-tool/">
-            # or just: href="https://tools.zovo.one/some-tool/">
-            # They are remnants from malformed double-href canonical tags
+            # Step 2: Remove orphaned href="https://tools.zovo.one/..."
+            # These are bare href attributes NOT inside any HTML tag, left from
+            # malformed double-href canonical tags. Pattern: ' href="https://tools.zovo.one/.../">'
+            # They appear right after a closing /> of the robots meta tag.
             content = re.sub(
-                r'\s*href="https://tools\.zovo\.one/[^"]*">\s*',
+                r'\s*href="https://tools\.zovo\.one/[^"]*/?"\s*>',
                 '',
                 content
             )
 
-            # Step 3: Also remove any bare href fragments pointing to tools.zovo.one
-            # that might appear as standalone attributes without a tag
-            content = re.sub(
-                r'\s*href="https://tools\.zovo\.one/[^"]*"\s*',
-                ' ',
-                content
-            )
-
-            # Step 4: Insert the correct canonical tag after <title>...</title>
+            # Step 3: Insert the correct canonical tag after </title>
             title_match = re.search(r'(</title>)', content, re.IGNORECASE)
             if title_match:
                 insert_pos = title_match.end()
-                content = content[:insert_pos] + '\n    ' + correct_tag + content[insert_pos:]
+                # Check what follows: if it's a space or newline, just insert.
+                # For minified HTML (all on one line), use a space separator.
+                # For multi-line HTML, use newline + indent.
+                after_title = content[insert_pos:insert_pos + 5]
+                if '\n' in content[:200]:
+                    # Multi-line format
+                    separator = '\n    '
+                else:
+                    # Single-line / minified format
+                    separator = ' '
+                content = content[:insert_pos] + separator + correct_tag + content[insert_pos:]
             else:
-                # If no title tag, insert after <head> or <head ...>
+                # Fallback: insert after <head> tag
                 head_match = re.search(r'(<head[^>]*>)', content, re.IGNORECASE)
                 if head_match:
                     insert_pos = head_match.end()
                     content = content[:insert_pos] + '\n    ' + correct_tag + content[insert_pos:]
                 else:
-                    print(f"  SKIP {tool_name}: No <title> or <head> found")
+                    print(f"  SKIP {tool_name}: No <title> or <head> tag found")
                     errors += 1
                     continue
 
-            # Step 5: Clean up any double spaces or empty lines created by removal
-            content = re.sub(r'  +', ' ', content)
-            # But don't collapse spaces inside <pre> or <script> tags -
-            # actually the above is too aggressive. Let's be more targeted:
-            # Only clean up the specific artifacts
-            # Revert the aggressive space cleanup
-            content = original_content  # Reset and redo more carefully
-
-            # Redo with more careful approach
-            # Step 1: Remove ALL existing canonical link tags
-            content = re.sub(
-                r'\s*<link\s+rel="canonical"\s+href="[^"]*"\s*/?\s*>\s*',
-                ' ',
-                content,
-                flags=re.IGNORECASE
-            )
-
-            # Step 2: Remove orphaned href="https://tools.zovo.one/..." fragments
-            # Pattern: optional whitespace, href="https://tools.zovo.one/...", optional >
-            content = re.sub(
-                r'\s*href="https://tools\.zovo\.one/[^"]*">\s*',
-                ' ',
-                content
-            )
-
-            # Step 3: Insert correct canonical after </title>
-            title_match = re.search(r'(</title>)', content, re.IGNORECASE)
-            if title_match:
-                insert_pos = title_match.end()
-                content = content[:insert_pos] + ' ' + correct_tag + content[insert_pos:]
-            else:
-                head_match = re.search(r'(<head[^>]*>)', content, re.IGNORECASE)
-                if head_match:
-                    insert_pos = head_match.end()
-                    content = content[:insert_pos] + '\n    ' + correct_tag + content[insert_pos:]
-                else:
-                    print(f"  SKIP {tool_name}: No <title> or <head> found")
-                    errors += 1
-                    continue
-
+            # Write if changed
             if content != original_content:
                 with open(index_path, 'w', encoding='utf-8') as f:
                     f.write(content)
 
-                # Determine what changed
-                had_canonical = 'rel="canonical"' in original_content
-                had_tools_domain = 'tools.zovo.one' in original_content
-                had_correct = f'href="{correct_canonical}"' in original_content
-
-                if had_correct and not had_tools_domain:
+                if had_correct_canonical and not had_tools_domain_canonical:
                     already_correct += 1
-                elif had_canonical:
+                elif had_any_canonical:
                     fixed += 1
                 else:
                     added += 1
@@ -155,12 +114,13 @@ def fix_canonical_tags():
             print(f"  ERROR {tool_name}: {e}")
             errors += 1
 
+    total = fixed + added + already_correct + errors
     print(f"\nCanonical Tag Fix Summary:")
     print(f"  Fixed (wrong domain/malformed): {fixed}")
     print(f"  Added (was missing):            {added}")
-    print(f"  Already correct (refreshed):    {already_correct}")
+    print(f"  Refreshed (were correct):       {already_correct}")
     print(f"  Errors/skipped:                 {errors}")
-    print(f"  Total processed:                {fixed + added + already_correct + errors}")
+    print(f"  Total processed:                {total}")
 
 
 if __name__ == "__main__":
