@@ -426,6 +426,50 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 </ul>
 
 <p>The binary-to-decimal conversion factor at each level: 1 KiB = 1.024 kB, 1 MiB = 1.049 MB, 1 GiB = 1.074 GB, 1 TiB = 1.100 TB. These factors are useful for quick mental conversions between the two standards. When a manufacturer says "1 TB," multiply by 0.909 to get the approximate binary equivalent (931 GiB).</p>
+
+<h2>File Size in Mobile and IoT Contexts</h2>
+<p>Mobile devices and IoT sensors have specific file size considerations driven by limited storage, bandwidth constraints, and power consumption tied to data transmission.</p>
+
+<h3>Mobile App Storage</h3>
+<p>Smartphone storage ranges from 64 GB to 1 TB. After the operating system (10-15 GB) and pre-installed apps (5-10 GB), available storage is 40-975 GB. A typical user's storage breakdown might be: photos and videos (40-60%), apps and games (20-30%), music and podcasts (5-10%), and system cache (5-10%). Understanding these proportions helps when advising users on storage management or designing apps that minimize storage footprint.</p>
+
+<h3>Mobile Data Usage</h3>
+<p>Mobile data plans are typically measured in gigabytes per month. Understanding what consumes data helps users manage their plans. Streaming music at standard quality uses about 1 MB per minute (approximately 1.5 GB per month for 2 hours daily). Streaming video at 480p uses about 700 MB per hour. Social media browsing uses approximately 100-200 MB per hour. Video calls consume 500 MB to 1.5 GB per hour depending on quality settings.</p>
+
+<h3>IoT Data Volumes</h3>
+<p>IoT sensors generate surprisingly small amounts of data individually but massive volumes collectively. A temperature sensor reporting every minute produces about 50 KB per day (a timestamp and a float value per reading). However, a factory with 10,000 sensors produces 500 MB per day, 15 GB per month, and 180 GB per year. At city scale with millions of sensors, the data volume reaches petabytes annually.</p>
+
+<h3>Edge Computing Storage</h3>
+<p>Edge computing devices process data close to where it is generated rather than sending everything to the cloud. Edge storage is typically limited (256 GB to 8 TB) and must balance between buffering incoming data, caching processed results, and storing ML models for local inference. File size awareness helps design edge computing systems that operate within these constraints.</p>
+
+<h2>Compression Ratios by File Type</h2>
+<p>Different file types compress at different ratios. Understanding these ratios helps estimate compressed file sizes and storage savings.</p>
+
+<h3>Already-Compressed Files</h3>
+<p>Files that are already compressed (JPEG, PNG, MP3, MP4, ZIP, GZIP) show minimal size reduction when compressed again. Compressing a ZIP file might reduce it by 1-3%, which is not worth the processing overhead. Similarly, compressing an MP4 video achieves almost no reduction because the video codec has already removed all redundancy.</p>
+
+<h3>Text-Based Files</h3>
+<p>Plain text, HTML, CSS, JavaScript, JSON, XML, CSV, and log files compress extremely well because they contain repeated character patterns. Typical compression ratios: gzip achieves 60-80% reduction, Brotli achieves 65-85% reduction, Zstandard achieves 60-80% reduction with faster decompression than gzip. A 1 MB log file might compress to 150-200 KB.</p>
+
+<h3>Database Dumps</h3>
+<p>SQL database dumps compress very well because they contain repeated SQL keywords, table names, and structured data. A 10 GB PostgreSQL dump might compress to 1-2 GB with gzip, a 5-10x reduction. Binary database formats (pg_dump custom format) include built-in compression and are typically 3-5x smaller than SQL text dumps.</p>
+
+<h3>Source Code Archives</h3>
+<p>Source code repositories compress well because code contains many repeated keywords, indentation, and structural patterns. A Git repository's .git directory stores objects in compressed form. A 100 MB working directory might have a 30-50 MB .git directory. Clone sizes are smaller than total repository history because Git uses delta compression between similar objects.</p>
+
+<h2>Practical Size Estimation for Common Workloads</h2>
+
+<h3>Email Storage</h3>
+<p>A plain text email averages 5-20 KB. An email with a typical signature and formatting averages 20-50 KB. An email with one attached document averages 500 KB to 5 MB. A corporate email account receiving 50 emails per day generates approximately 25-50 MB per day, 750 MB to 1.5 GB per month, and 9-18 GB per year. Enterprise email archival for compliance purposes can require terabytes of storage for large organizations.</p>
+
+<h3>Web Application Databases</h3>
+<p>A small web application with 10,000 users and 100,000 records might use 500 MB to 2 GB of database storage. A medium application with 100,000 users and millions of records typically uses 10-50 GB. A large SaaS platform with millions of users can require 100 GB to multiple TB. These estimates help with capacity planning and cost forecasting for cloud database services.</p>
+
+<h3>Log Files</h3>
+<p>Application log files grow continuously and can consume significant storage if not managed. A web server processing 1,000 requests per second with a 200-byte log line per request generates 200 KB per second, 17 GB per day, and 500 GB per month. Log rotation, compression, and retention policies must account for these volumes. Centralized logging services charge based on log volume ingested, making log size directly tied to costs.</p>
+
+<h3>Media Storage</h3>
+<p>A professional photographer shooting 500 RAW images per day at 50 MB each generates 25 GB per day, 9 TB per year. A video production studio working with 4K ProRes footage at 1 GB per minute generates 60 GB per hour of shooting, potentially hundreds of TB per year including editing copies and backups. Media storage requirements often drive the adoption of high-capacity NAS systems and object storage services.</p>
 </div>
 
 <!-- ===================== FAQ SECTION ===================== -->
