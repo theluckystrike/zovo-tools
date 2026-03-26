@@ -381,6 +381,46 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>Browser developer tools provide gradient visualization in the CSS inspector. Chrome and Firefox both show a color swatch next to gradient declarations. Clicking the swatch opens a visual editor that lets you adjust colors, positions, and angles directly in the inspector. This is invaluable for debugging and fine-tuning gradients without switching between your editor and browser.</p>
 
 <p>When gradients appear banded (showing visible color steps instead of smooth transitions), the cause is usually a large transition area between very similar colors. The solution is to either increase the color difference between stops, reduce the element size, or add an intermediate stop to smooth the transition. Banding is most visible on large monitors with limited color depth (6-bit panels), so test on multiple displays when possible.</p>
+
+<h3>Using Gradients for Data Visualization</h3>
+
+<p>Beyond decorative uses, gradients serve practical purposes in data visualization. Heat maps use gradients to represent intensity, transitioning from cool colors (blue) through neutral (yellow) to hot colors (red) as values increase. Temperature scales, population density maps, and performance dashboards all benefit from gradient-based color mapping that conveys relative magnitude at a glance.</p>
+
+<p>In chart design, gradient fills under line charts create area charts that feel more polished than solid fills. A gradient that fades from the line color at the top to transparent at the bottom (for example, <code>linear-gradient(to bottom, rgba(0,255,136,0.3), transparent)</code>) draws attention to the data trend without overwhelming the chart with color. This technique works particularly well in dark-themed dashboards where the gradient glow adds visual interest.</p>
+
+<p>Progress indicators benefit from multi-stop gradients that change color as completion increases. A download progress bar might transition from red (0%) through yellow (50%) to green (100%), giving the user an easy to use visual cue about the status without needing to read the percentage value. The CSS for this pattern uses hard stops positioned according to the current progress value, updated dynamically with JavaScript.</p>
+
+<h3>Gradients and the New CSS Color Spaces</h3>
+
+<p>CSS Color Level 4 introduced new color functions and spaces that improve gradient quality. The <code>oklch()</code> function provides perceptually uniform lightness, meaning gradients through oklch colors appear smoother to the human eye than equivalent RGB gradients. The <code>color-mix()</code> function allows blending two colors in any color space, which can produce intermediate values that look more natural.</p>
+
+<p>The <code>color(display-p3 ...)</code> function accesses the wider P3 color gamut available on modern displays, including Apple devices and many recent Android phones. Gradients using P3 colors can include more vivid greens, reds, and oranges than the standard sRGB gamut allows. When P3 colors are used in gradients, the transitions between them are calculated in the display-p3 color space, producing richer mid-tones.</p>
+
+<p>To use these new color spaces in gradients, you can specify an interpolation space with the <code>in</code> keyword. For example, <code>linear-gradient(in oklch, red, blue)</code> interpolates through the oklch color space instead of the default sRGB. This avoids the desaturated gray mid-tones that often appear in sRGB interpolation between complementary colors. The oklch color space moves through more vivid intermediate hues, producing gradients that feel more alive.</p>
+
+<h3>Gradient Performance in CSS Animations</h3>
+
+<p>Animating the gradient itself (changing colors or positions over time) forces the browser to recalculate and repaint the gradient on every frame. This can cause performance issues, especially on mobile devices or low-end hardware. The GPU-accelerated properties in CSS are limited to <code>change</code> and <code>opacity</code>. Since gradients are painted by the compositor, changing them triggers layout or paint operations that bypass GPU acceleration.</p>
+
+<p>The preferred approach for animated gradients is the pseudo-element technique. Create a pseudo-element (<code>::before</code> or <code>::after</code>) that is larger than the parent element, apply the gradient to it, and animate its <code>change: translateX()</code> or similar property. The gradient itself never changes, only its position, which the GPU handles efficiently. Combine this with <code>overflow: hidden</code> on the parent to mask the overflow.</p>
+
+<p>For shimmer loading effects, the standard implementation uses a gradient of transparent, semi-transparent white, and transparent applied to a pseudo-element, animated with a translateX from -100% to 100%. The keyframe animation runs infinitely on a duration of 1.5 to 2 seconds. This pattern is used by Facebook, LinkedIn, YouTube, and many other platforms for their loading skeleton screens.</p>
+
+<h3>When to Use Gradients vs. Images</h3>
+
+<p>CSS gradients are the better choice when you need expandable backgrounds, geometric patterns, smooth color transitions, or decorative overlays. They require zero HTTP requests, scale to any resolution, and can be modified with CSS variables for theming. Use gradients for UI backgrounds, button states, loading indicators, and simple patterns.</p>
+
+<p>Images are the better choice when you need photographic content, complex illustrations, textures with organic detail (like paper or fabric), or patterns with hundreds of unique elements. A photograph of a sunset will always look more natural than a gradient attempting to approximate it. Similarly, detailed textures like brushed metal, wood grain, or watercolor washes require image assets.</p>
+
+<p>The hybrid approach, combining an image background with a gradient overlay, gives you the best of both worlds. The image provides visual richness while the gradient controls contrast, adds a color tint, or creates a vignette effect. This combination is the standard approach for hero sections, card backgrounds, and promotional banners in modern web design.</p>
+
+<h3>Building a Gradient Design System</h3>
+
+<p>For large projects with consistent branding, I define gradients as part of the design system alongside colors, typography, and spacing. A typical gradient system includes three to five named gradients. The primary gradient uses the brand's signature colors and appears on CTAs, hero sections, and promotional elements. The secondary gradient uses supporting palette colors for cards, backgrounds, and secondary UI elements. The neutral gradient uses shades of gray or the brand's base color for subtle depth effects on dark surfaces.</p>
+
+<p>Store these gradients as CSS custom properties for consistency and easy updates. For example, a design system might define <code>--gradient-brand: linear-gradient(135deg, #6C5CE7, #00ff88)</code>, <code>--gradient-surface: linear-gradient(180deg, #1a1a2e, #12121a)</code>, and <code>--gradient-highlight: radial-gradient(circle at 30% 0%, rgba(0,255,136,0.08), transparent 50%)</code>. Components reference these variables instead of hard-coding gradient values, making it possible to update the entire visual system by changing a few root-level declarations.</p>
+
+<p>Document gradient usage guidelines alongside color guidelines. Specify which gradients are appropriate for backgrounds versus text, which should be used for interactive elements, and which are reserved for marketing materials. Clear documentation prevents gradients from being applied inconsistently across a large team and maintains the visual coherence that makes a design system effective.</p>
 </div>
 
 <div class="faq-section">
