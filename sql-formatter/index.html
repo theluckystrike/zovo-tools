@@ -417,6 +417,58 @@ ORDER BY level, name</div>
 <p>IDE-based formatters in DataGrip, DBeaver, and Azure Data Studio offer tight integration with database connections and schema awareness. They can auto-complete table and column names and validate queries against the actual schema. However, they require installation and setup. This web-based tool requires no installation and works from any browser.</p>
 
 <p>CLI tools like sqlfluff and pgFormatter can be integrated into git pre-commit hooks to enforce formatting standards automatically. This is ideal for teams that want to ensure all committed SQL follows a consistent style. However, these tools require configuration and may have different formatting rules than what you expect. This web formatter gives you immediate visual feedback on the formatting result.</p>
+
+<h2>SQL Formatting for Specific Use Cases</h2>
+
+<h3>Data Warehouse Queries</h3>
+<p>Data warehouse environments like Snowflake, BigQuery, Redshift, and Databricks use SQL with platform-specific extensions. Snowflake adds QUALIFY for filtering window function results. BigQuery uses STRUCT and ARRAY types extensively. Redshift extends PostgreSQL syntax with distribution keys and sort keys. While this formatter does not include these platform-specific keywords in its highlighting, the core formatting logic works correctly for all of these platforms because they are built on standard SQL foundations.</p>
+
+<p>Data warehouse queries tend to be longer and more complex than transactional queries. They often involve multiple CTEs, window functions, and aggregate calculations across large fact tables. Formatting these queries is not optional; it is a prerequisite for understanding and maintaining them. A 200-line analytical query without formatting is effectively unreadable.</p>
+
+<h3>ETL Pipeline Queries</h3>
+<p>Extract-Transform-Load pipelines use SQL for data transformation steps. These queries often include CASE expressions for data mapping, COALESCE for null handling, string functions for data cleaning, and date functions for time-based partitioning. Formatting ETL queries clearly shows the transformation logic, making it easier to debug data quality issues and modify transformation rules.</p>
+
+<p>A common pattern in ETL pipelines is a staging query that cleans raw data, followed by a merge query that upserts the cleaned data into a target table. Formatting both queries consistently and adding comments that explain the business rules behind each transformation makes the pipeline maintainable by team members who did not write the original code.</p>
+
+<h3>Database Schema Definition</h3>
+<p>CREATE TABLE statements benefit from formatting that aligns column definitions, constraints, and data types. Each column should appear on its own line with the data type and constraints aligned. Primary key and foreign key constraints should be clearly separated from column definitions. Index creation statements that accompany table definitions should be formatted with the index columns clearly visible.</p>
+
+<div class="code-example">CREATE TABLE orders (
+    id              SERIAL PRIMARY KEY,
+    customer_id     INTEGER NOT NULL,
+    order_date      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status          VARCHAR(20) NOT NULL DEFAULT 'pending',
+    total_amount    DECIMAL(12, 2) NOT NULL,
+    shipping_addr   TEXT,
+    notes           TEXT,
+    CONSTRAINT fk_customer
+        FOREIGN KEY (customer_id)
+        REFERENCES customers (id)
+        ON DELETE RESTRICT,
+    CONSTRAINT chk_status
+        CHECK (status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled'))
+);
+
+CREATE INDEX idx_orders_customer ON orders (customer_id);
+CREATE INDEX idx_orders_date ON orders (order_date);
+CREATE INDEX idx_orders_status ON orders (status) WHERE status != 'cancelled';</div>
+
+<h3>Reporting and Analytics Queries</h3>
+<p>Business intelligence queries frequently use GROUP BY with multiple aggregate functions, CASE expressions for conditional counting, and date functions for period-over-period comparisons. Formatting these queries reveals the calculation logic that produces each metric. When a stakeholder questions a number in a report, having the formatted query available makes it possible to trace the calculation back to its source data.</p>
+
+<h2>Performance Analysis with Formatted SQL</h2>
+<p>Database performance tuning starts with understanding the query. EXPLAIN ANALYZE output shows how the database engine executes a query, including scan types, join methods, and row estimates. But before you can interpret an execution plan, you need to understand the query itself. Formatting the query first, then running EXPLAIN ANALYZE, creates a clear mental model of what the query should do. You can then compare this expectation against what the execution plan reveals.</p>
+
+<p>Common performance patterns to look for in formatted queries include full table scans (queries without WHERE conditions on indexed columns), nested loop joins on large tables (which may indicate a missing index), and sorting operations on non-indexed columns. The formatted query makes these patterns visible because the relevant clauses are separated and indented.</p>
+
+<p>Another performance consideration is query complexity. A query with five or more joins, multiple subqueries, and complex WHERE conditions may benefit from being split into multiple simpler queries or materialized as a view. The formatted version of the query makes it possible to count these complexity factors and make an informed decision about whether to refactor.</p>
+
+<h2>History of SQL Formatting</h2>
+<p>SQL was originally designed in the 1970s at IBM as a human-readable query language. The original papers used uppercase keywords and lowercase identifiers, a convention that persists today. Early SQL formatting was influenced by the limited screen space of terminals (typically 80 columns wide and 24 rows tall), which encouraged compact formatting.</p>
+
+<p>As database systems grew more complex and queries became longer, the need for formatting tools grew. The first SQL formatters were simple scripts that added line breaks before major keywords. Modern formatters like this one parse the SQL into tokens and apply formatting rules based on the syntactic role of each token, producing more accurate and consistent results.</p>
+
+<p>The emergence of version control systems like Git made consistent SQL formatting more important. Inconsistent formatting creates noisy diffs where whitespace changes obscure logical changes. Teams that adopt automated SQL formatting report fewer merge conflicts and more meaningful code review comments on their SQL files.</p>
 </div>
 
 <div class="faq-section">
