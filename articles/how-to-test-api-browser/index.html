@@ -1,6 +1,3 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>How to Test REST APIs Directly in Your Browser</title>
-<meta name="description" content="Complete guide to testing REST APIs in your browser using fetch(), curl, Hoppscotch, Thunder Client, Postman, and lightweight Chrome extensions. Covers GET, POST, authentication headers, CORS, and common mistakes."/><meta content="Michael Lip" name="author"/><link rel="canonical" href="https://zovo.one/articles/how-to-test-api-browser/"/><link href="https://zovo.one/favicon.ico" rel="icon" type="image/x-icon"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><meta content="How to Test REST APIs Directly in Your Browser" property="og:title"/><meta content="Complete guide to testing REST APIs in your browser using fetch(), curl, Hoppscotch, Thunder Client, Postman, and lightweight Chrome extensions." property="og:description"/><meta content="article" property="og:type"/><meta content="https://zovo.one/articles/how-to-test-api-browser/" property="og:url"/><meta content="Zovo Tools" property="og:site_name"/><meta content="summary_large_image" name="twitter:card"/><meta content="How to Test REST APIs Directly in Your Browser" name="twitter:title"/><meta content="Complete guide to testing REST APIs in your browser using fetch(), curl, Hoppscotch, Thunder Client, Postman, and lightweight Chrome extensions." name="twitter:description"/><style> * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #e0e0e8; line-height: 1.8; font-size: 16px; } a { color: #00ff88; text-decoration: none; } a:hover { text-decoration: underline; } .container { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 4rem; } h2 { font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-top: 3rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #2a2a3a; } h3 { font-size: 1.2rem; font-weight: 600; color: #ffffff; margin-top: 2rem; margin-bottom: 0.75rem; } p { margin-bottom: 1.2rem; color: #c0c0cc; } .meta { color: #8888a0; font-size: 0.9rem; margin-bottom: 2rem; } .breadcrumb { font-size: 0.85rem; color: #8888a0; margin-bottom: 1.5rem; } .breadcrumb a { color: #00ff88; } .breadcrumb span { margin: 0 0.5rem; } .quick-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; background: #12121a; border: 1px solid #2a2a3a; border-radius: 12px; padding: 1.5rem; margin: 2rem 0; } .quick-facts .fact { text-align: center; } .quick-facts .fact-number { font-size: 1.8rem; font-weight: 800; color: #00ff88; } .quick-facts .fact-label { font-size: 0.75rem; color: #8888a0; margin-top: 0.25rem; } .wiki-block { background: #12121a; border-left: 4px solid #00ff88; border-radius: 0 8px 8px 0; padding: 1.25rem 1.5rem; margin: 2rem 0; } .wiki-block .wiki-title { font-weight: 700; color: #ffffff; margin-bottom: 0.5rem; font-size: 0.95rem; } .wiki-block .wiki-text { color: #c0c0cc; font-size: 0.9rem; line-height: 1.7; } .wiki-block .wiki-source { font-size: 0.75rem; color: #8888a0; margin-top: 0.75rem; } .so-block { background: #12121a; border-left: 4px solid #f48024; border-radius: 0 8px 8px 0; padding: 1.25rem 1.5rem; margin: 2rem 0; } .so-block .so-title { font-weight: 700; color: #ffffff; margin-bottom: 0.75rem; font-size: 0.95rem; } .so-block a { color: #f48024; } .so-block ul { list-style: none; padding: 0; } .so-block li { padding: 0.4rem 0; font-size: 0.9rem; color: #c0c0cc; } table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; } th { background: #12121a; color: #00ff88; padding: 0.75rem 1rem; text-align: left; border-bottom: 2px solid #2a2a3a; font-weight: 600; } td { padding: 0.75rem 1rem; border-bottom: 1px solid #1a1a2a; color: #c0c0cc; } tr:hover td { background: #12121a; } .faq-item { margin-bottom: 1.5rem; } .faq-q { font-weight: 600; color: #ffffff; margin-bottom: 0.5rem; font-size: 1.05rem; } .faq-a { color: #c0c0cc; } .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.5rem 0; } .tool-card { background: #12121a; border: 1px solid #2a2a3a; border-radius: 8px; padding: 1.25rem; transition: border-color 0.2s; } .tool-card:hover { border-color: #00ff88; } .tool-card .tool-name { font-weight: 600; color: #00ff88; margin-bottom: 0.4rem; } .tool-card .tool-desc { font-size: 0.85rem; color: #8888a0; } .related-guides { background: #12121a; border: 1px solid #2a2a3a; border-radius: 12px; padding: 1.5rem; margin: 3rem 0; } .related-guides h3 { margin-top: 0; } .related-guides ul { list-style: none; padding: 0; } .related-guides li { padding: 0.5rem 0; border-bottom: 1px solid #1a1a2a; } .related-guides li:last-child { border-bottom: none; } .author-box { background: #12121a; border: 1px solid #2a2a3a; border-radius: 12px; padding: 1.5rem; margin: 3rem 0; display: flex; gap: 1.25rem; align-items: center; } .author-avatar { width: 64px; height: 64px; border-radius: 50%; background: #00ff88; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem; color: #0a0a0f; flex-shrink: 0; } .author-info .author-name { font-weight: 700; color: #ffffff; } .author-info .author-bio { font-size: 0.85rem; color: #8888a0; margin-top: 0.25rem; } .update-history { font-size: 0.85rem; color: #8888a0; border-top: 1px solid #2a2a3a; padding-top: 1rem; margin-top: 2rem; } .site-footer { text-align: center; padding: 2rem; border-top: 1px solid #2a2a3a; font-size: 0.8rem; color: #8888a0; margin-top: 3rem; } ul, ol { margin-bottom: 1.2rem; padding-left: 1.5rem; } li { margin-bottom: 0.4rem; color: #c0c0cc; } code { background: #1a1a2a; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9rem; color: #00ff88; } pre { background: #12121a; border: 1px solid #2a2a3a; border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin: 1.5rem 0; font-size: 0.85rem; line-height: 1.6; } pre code { background: none; padding: 0; } .cta-box { background: linear-gradient(135deg, #12121a 0%, #1a1a2e 100%); border: 1px solid #00ff88; border-radius: 12px; padding: 1.5rem; margin: 2rem 0; text-align: center; } .cta-box .cta-title { font-weight: 700; color: #ffffff; font-size: 1.1rem; margin-bottom: 0.5rem; } .cta-box .cta-text { color: #c0c0cc; font-size: 0.9rem; margin-bottom: 1rem; } .cta-box a.cta-button { display: inline-block; background: #00ff88; color: #0a0a0f; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: opacity 0.2s; } .cta-box a.cta-button:hover { opacity: 0.85; text-decoration: none; } @media (max-width: 768px) { .quick-facts { grid-template-columns: repeat(2, 1fr); } .tool-grid { grid-template-columns: 1fr; } } </style></head><body><div style="padding:0.6rem 1.5rem;background:#0a0a0f;border-bottom:1px solid #1a1a2a;display:flex;justify-content:space-between;align-items:center;"><a href="/free-tools/" style="text-decoration:none;"><span style="font-size:1.1rem;font-weight:700;color:#00ff88;">Zovo</span><span style="font-size:0.75rem;color:#8888a0;">Tools</span></a><nav style="display:flex;gap:1.5rem;font-size:0.8rem;"><a href="/free-tools/" style="color:#8888a0;text-decoration:none;">All Tools</a><a href="https://zovo.one" style="color:#8888a0;text-decoration:none;">zovo.one</a></nav></div><div class="container"><div class="breadcrumb"><a href="/free-tools/">Zovo Tools</a><span>/</span><a href="/free-tools/articles/">Guides</a><span>/</span>How to Test REST APIs Directly in Your Browser</div><div class="meta">By <a href="https://zovo.one">Michael Lip</a> &middot; Published March 26, 2026 &middot; 18 min read</div>
-
 <div class="quick-facts"><div class="fact"><div class="fact-number">6</div><div class="fact-label">Tools compared</div></div><div class="fact"><div class="fact-number">REST</div><div class="fact-label">GraphQL &middot; WebSocket</div></div><div class="fact"><div class="fact-number">0</div><div class="fact-label">Cost for every tool listed</div></div><div class="fact"><div class="fact-number">9</div><div class="fact-label">Common mistakes covered</div></div></div>
 
 <p>I have spent the better part of six years building Chrome extensions and web tools, and every one of those projects started the same way. Before I wrote a single line of integration code, I tested the target API by hand. Not because I lacked confidence in the documentation, but because documentation lies. Endpoints change. Authentication flows have quirks that no README ever captures. Rate limits kick in at thresholds different from what the docs promise.</p>
@@ -9,7 +6,7 @@
 
 <div class="wiki-block"><div class="wiki-title">Representational State Transfer (REST)</div><div class="wiki-text">REST is an architectural style for distributed hypermedia systems. It was first defined by Roy Fielding in his 2000 doctoral dissertation at UC Irvine. RESTful APIs use HTTP methods (GET, POST, PUT, PATCH, DELETE) to perform operations on resources identified by URIs. The style emphasizes statelessness, uniform interfaces, and the separation of client and server concerns. While REST is not a formal protocol, its conventions have become the dominant approach for web API design, with JSON as the standard data interchange format since approximately 2012.</div><div class="wiki-source">Source: <a href="https://en.wikipedia.org/wiki/REST">Wikipedia - Representational state transfer</a> &middot; Verified March 2026</div></div>
 
-<h2>Why Testing APIs Matters Before Writing Integration Code</h2>
+<h2 id="why-testing-apis-matters-before-writing-integration-code">Why Testing APIs Matters Before Writing Integration Code</h2>
 
 <p>The gap between API documentation and actual API behavior is wider than most developers expect. I have worked with APIs where the documented response schema was three versions behind the live endpoint. I have seen APIs that returned 200 status codes for error conditions, with the actual error buried inside a nested JSON property. I have encountered rate-limiting behavior that differed between staging and production environments with no documentation about the difference.</p>
 
@@ -19,11 +16,11 @@
 
 <p>The tools I cover in this guide range from zero-install (your browser console) to full-featured desktop applications. Each has a legitimate place in the workflow. The right choice depends on what you are testing, how often you will repeat the test, and whether you need to share the results with a team.</p>
 
-<h2>Using fetch() in the DevTools Console</h2>
+<h2 id="using-fetch-in-the-devtools-console">Using fetch() in the DevTools Console</h2>
 
 <p>Every modern browser ships with a fully functional HTTP client built into the developer console. The Fetch API, available in every browser since 2015, lets you send GET, POST, PUT, PATCH, and DELETE requests without installing anything at all. I use this approach more than any other tool when I am exploring a new API for the first time.</p>
 
-<h3>Sending a GET request</h3>
+<h3 id="sending-a-get-request">Sending a GET request</h3>
 
 <p>Open DevTools with <code>F12</code> or <code>Ctrl+Shift+J</code> (Windows/Linux) or <code>Cmd+Option+J</code> (macOS). Click the Console tab. Type or paste the following:</p>
 
@@ -50,7 +47,7 @@
 
 <p>This version gives you the status code, response headers, and body in separate console entries, which makes it easier to inspect each piece independently.</p>
 
-<h3>Sending a POST request with JSON body</h3>
+<h3 id="sending-a-post-request-with-json-body">Sending a POST request with JSON body</h3>
 
 <p>POST requests require additional configuration for the method, headers, and body:</p>
 
@@ -73,7 +70,7 @@
 
 <p>The <code>Content-Type: application/json</code> header is critical. Without it, many APIs will reject the request or misparse the body. I have seen developers spend an hour debugging a 400 Bad Request error that was caused entirely by a missing Content-Type header.</p>
 
-<h3>Sending requests with authentication</h3>
+<h3 id="sending-requests-with-authentication">Sending requests with authentication</h3>
 
 <p>Bearer token authentication is the most common pattern for REST APIs:</p>
 
@@ -98,17 +95,17 @@
   console.log(data);
 })();</code></pre>
 
-<h3>Limitations of the console approach</h3>
+<h3 id="limitations-of-the-console-approach">Limitations of the console approach</h3>
 
 <p>The DevTools console has real constraints. CORS (Cross-Origin Resource Sharing) policies will block requests to APIs that do not include your origin in their <code>Access-Control-Allow-Origin</code> header. If you are on <code>https://google.com</code> and try to fetch from <code>https://api.github.com</code>, the browser will block the request. You can partially work around this by navigating to the API's own domain first, or by opening a blank tab (<code>about:blank</code>) which has a null origin. But CORS restrictions remain the primary reason developers reach for dedicated API testing tools.</p>
 
 <p>There is also no built-in way to save requests, organize them into collections, or share them with teammates. Each session is ephemeral. For one-off exploration, that is perfectly fine. For repeated testing, you need something more structured.</p>
 
-<h2>The curl Command Line Approach</h2>
+<h2 id="the-curl-command-line-approach">The curl Command Line Approach</h2>
 
 <p>curl is the universal HTTP client. It ships preinstalled on macOS and most Linux distributions. Windows 10 and later include it as well. If you have a terminal open, you have curl.</p>
 
-<h3>Basic GET request</h3>
+<h3 id="basic-get-request">Basic GET request</h3>
 
 <pre><code>curl https://jsonplaceholder.typicode.com/posts/1</code></pre>
 
@@ -118,7 +115,7 @@
 
 <p>The output now shows the HTTP status line, all response headers, and then the body. This is invaluable for debugging caching behavior, checking rate-limit headers, and verifying content types.</p>
 
-<h3>POST request with JSON</h3>
+<h3 id="post-request-with-json">POST request with JSON</h3>
 
 <pre><code>curl -X POST https://jsonplaceholder.typicode.com/posts \
   -H "Content-Type: application/json" \
@@ -126,7 +123,7 @@
 
 <p>The <code>-X</code> flag specifies the HTTP method. <code>-H</code> adds a header. <code>-d</code> sends data in the request body. The backslashes at the end of each line are line continuations for readability; you can write the entire command on one line if you prefer.</p>
 
-<h3>Authentication with curl</h3>
+<h3 id="authentication-with-curl">Authentication with curl</h3>
 
 <pre><code># Bearer token
 curl -H "Authorization: Bearer YOUR_TOKEN" \
@@ -140,11 +137,11 @@ curl -u username:password \
 curl -H "X-API-Key: YOUR_API_KEY" \
   https://api.example.com/data</code></pre>
 
-<h3>Useful curl flags for API testing</h3>
+<h3 id="useful-curl-flags-for-api-testing">Useful curl flags for API testing</h3>
 
 <table><tr><th>Flag</th><th>Purpose</th><th>Example</th></tr><tr><td><code>-i</code></td><td>Include response headers in output</td><td><code>curl -i https://api.example.com/status</code></td></tr><tr><td><code>-v</code></td><td>Verbose output including request headers, TLS handshake</td><td><code>curl -v https://api.example.com/status</code></td></tr><tr><td><code>-o file</code></td><td>Write response body to a file</td><td><code>curl -o response.json https://api.example.com/data</code></td></tr><tr><td><code>-w "%{http_code}"</code></td><td>Print just the HTTP status code</td><td><code>curl -s -o /dev/null -w "%{http_code}" https://api.example.com</code></td></tr><tr><td><code>-X METHOD</code></td><td>Specify HTTP method (PUT, PATCH, DELETE)</td><td><code>curl -X DELETE https://api.example.com/posts/1</code></td></tr><tr><td><code>--max-time 10</code></td><td>Set timeout in seconds</td><td><code>curl --max-time 10 https://slow-api.example.com</code></td></tr><tr><td><code>-s</code></td><td>Silent mode, suppress progress bars</td><td><code>curl -s https://api.example.com/data | jq .</code></td></tr></table>
 
-<h3>Formatting curl output with jq</h3>
+<h3 id="formatting-curl-output-with-jq">Formatting curl output with jq</h3>
 
 <p>Raw JSON output from curl is hard to read. Pipe it through <code>jq</code> for formatted, syntax-highlighted output:</p>
 
@@ -162,17 +159,17 @@ curl -s https://jsonplaceholder.typicode.com/posts | jq '[.[] | select(.userId =
 
 <p>curl excels at scripting and automation. You can save complex requests as shell scripts, chain them together with pipes, and integrate them into CI/CD pipelines. The tradeoff is that curl lacks a graphical interface, making it slower for exploratory work where you want to rapidly tweak parameters and inspect responses visually.</p>
 
-<h2>Hoppscotch as a Free Postman Alternative</h2>
+<h2 id="hoppscotch-as-a-free-postman-alternative">Hoppscotch as a Free Postman Alternative</h2>
 
 <p>Hoppscotch (formerly Postwoman) is a free, open-source API testing platform that runs entirely in the browser. Navigate to <a href="https://hoppscotch.io">hoppscotch.io</a> and you have a complete API testing environment without installing anything or creating an account.</p>
 
-<h3>What makes Hoppscotch stand out</h3>
+<h3 id="what-makes-hoppscotch-stand-out">What makes Hoppscotch stand out</h3>
 
 <p>The interface loads in under two seconds. There is no Electron wrapper, no multi-gigabyte install, and no sign-in gate blocking basic functionality. You type a URL, select a method, add headers if needed, and send. The response appears with syntax highlighting, response time measurement, and size calculation.</p>
 
 <p>Hoppscotch supports REST, GraphQL, WebSocket, SSE (Server-Sent Events), Socket.IO, and MQTT. For most developers, the REST and GraphQL features are the primary draw, but having WebSocket testing in the same tool eliminates the need for separate WebSocket debugging utilities.</p>
 
-<h3>Key features for API testing</h3>
+<h3 id="key-features-for-api-testing">Key features for API testing</h3>
 
 <ul>
 <li>Environment variables for switching between development, staging, and production endpoints without editing each request</li>
@@ -183,31 +180,31 @@ curl -s https://jsonplaceholder.typicode.com/posts | jq '[.[] | select(.userId =
 <li>Team collaboration with shared workspaces (requires free account)</li>
 </ul>
 
-<h3>GraphQL testing in Hoppscotch</h3>
+<h3 id="graphql-testing-in-hoppscotch">GraphQL testing in Hoppscotch</h3>
 
 <p>The GraphQL tab provides schema introspection, query auto-completion, and variable management. Point it at any GraphQL endpoint and it fetches the schema automatically, then offers IntelliSense-style suggestions as you type your query. This is noticeably faster than building GraphQL queries in a generic REST client where you have to refer to the schema documentation separately.</p>
 
-<h3>Self-hosted option</h3>
+<h3 id="self-hosted-option">Self-hosted option</h3>
 
 <p>For teams working with internal APIs that cannot be tested through a public website, Hoppscotch offers a self-hosted community edition. Deploy it on your own infrastructure and test private endpoints without routing requests through third-party servers. The self-hosted version is the same codebase as the public site, with Docker and Docker Compose deployment configurations provided.</p>
 
 <p>The main limitation of Hoppscotch is the same CORS constraint that affects the DevTools console. Requests sent from the browser tab are subject to the browser's same-origin policy. Hoppscotch provides a browser extension proxy and a CLI tool to bypass this, but those require additional installation steps.</p>
 
-<h2>Thunder Client in VS Code</h2>
+<h2 id="thunder-client-in-vs-code">Thunder Client in VS Code</h2>
 
 <p>If you spend most of your working hours in Visual Studio Code, Thunder Client integrates API testing directly into your editor. Install it from the VS Code extension marketplace (the extension ID is <code>rangav.vscode-thunder-client</code>), and a lightning bolt icon appears in the activity bar.</p>
 
-<h3>Why developers prefer Thunder Client</h3>
+<h3 id="why-developers-prefer-thunder-client">Why developers prefer Thunder Client</h3>
 
 <p>Context switching is expensive. Opening a separate application to test an API, then switching back to your editor to write integration code, then switching back to the testing tool to verify a different endpoint, fragments your attention. Thunder Client keeps everything in one window. You write code in one pane and test the API in another. Copy a response value, paste it into your code, and continue working.</p>
 
-<h3>Features that matter for daily use</h3>
+<h3 id="features-that-matter-for-daily-use">Features that matter for daily use</h3>
 
 <p>Thunder Client supports collections, environment variables, request chaining (where the output of one request feeds into another), and local storage of all data. The lightweight design is intentional. Where Postman has grown into a full API development platform with mock servers, monitoring, and team management features, Thunder Client focuses on the core task of sending HTTP requests and reading responses.</p>
 
 <p>The free tier covers individual use with unlimited requests, collections, and environments stored locally. The paid tier adds Git sync and team collaboration features. For solo developers and small teams, the free version is sufficient.</p>
 
-<h3>Testing workflows in Thunder Client</h3>
+<h3 id="testing-workflows-in-thunder-client">Testing workflows in Thunder Client</h3>
 
 <p>A typical workflow involves creating a collection for each API you integrate with, organizing requests by resource type, and using environment variables for base URLs and authentication tokens. When you switch from development to staging, you change one environment selection instead of editing every request.</p>
 
@@ -222,17 +219,17 @@ curl -s https://jsonplaceholder.typicode.com/posts | jq '[.[] | select(.userId =
 
 <p>Thunder Client also supports scripting with JavaScript in pre-request and post-request hooks, which is useful for generating OAuth signatures, extracting tokens from login responses, and validating response schemas.</p>
 
-<h2>Postman for the Full Suite</h2>
+<h2 id="postman-for-the-full-suite">Postman for the Full Suite</h2>
 
 <p>Postman has been the default API testing tool for over a decade. It started as a Chrome extension in 2012, evolved into a standalone Electron application, and has since grown into a comprehensive API development platform. As of 2026, Postman reports over 30 million registered users.</p>
 
-<h3>When Postman is the right choice</h3>
+<h3 id="when-postman-is-the-right-choice">When Postman is the right choice</h3>
 
 <p>Postman is the right tool when your API testing needs extend beyond sending individual requests. If you need to create mock servers that simulate API responses before the backend is built, Postman handles that. If you need to monitor APIs on a schedule and get alerts when response times degrade or schemas change, Postman handles that. If you need to generate API documentation from your request collections, Postman handles that.</p>
 
 <p>For teams, Postman's workspace sharing lets developers collaborate on API testing without emailing curl commands or sharing JSON files. A QA engineer can run the same collection against a staging environment. A frontend developer can use mock servers to build against an API that does not exist yet. A technical writer can generate documentation directly from tested requests.</p>
 
-<h3>The complexity tradeoff</h3>
+<h3 id="the-complexity-tradeoff">The complexity tradeoff</h3>
 
 <p>Postman's comprehensiveness comes with weight. The desktop application is an Electron app that typically consumes 400-800 MB of memory. The interface has accumulated features across a dozen years of development, and new users often find it overwhelming. The free tier now requires sign-in, and certain features that were previously free have moved to paid plans.</p>
 
@@ -240,17 +237,17 @@ curl -s https://jsonplaceholder.typicode.com/posts | jq '[.[] | select(.userId =
 
 <table><tr><th>Feature</th><th>Hoppscotch</th><th>Thunder Client</th><th>Postman</th></tr><tr><td>Install required</td><td>No (web app)</td><td>VS Code extension</td><td>Desktop app (Electron)</td></tr><tr><td>Memory usage</td><td>Browser tab (~100 MB)</td><td>~30 MB in VS Code</td><td>400-800 MB standalone</td></tr><tr><td>Account required</td><td>No (optional for teams)</td><td>No</td><td>Yes (free tier available)</td></tr><tr><td>REST support</td><td>Full</td><td>Full</td><td>Full</td></tr><tr><td>GraphQL support</td><td>Full with schema introspection</td><td>Basic</td><td>Full</td></tr><tr><td>WebSocket support</td><td>Yes</td><td>No</td><td>Yes</td></tr><tr><td>Collections</td><td>Yes</td><td>Yes</td><td>Yes</td></tr><tr><td>Environment variables</td><td>Yes</td><td>Yes</td><td>Yes</td></tr><tr><td>Mock servers</td><td>No</td><td>No</td><td>Yes</td></tr><tr><td>API monitoring</td><td>No</td><td>No</td><td>Yes (paid)</td></tr><tr><td>Import from Postman</td><td>Yes</td><td>Yes</td><td>N/A</td></tr><tr><td>Open source</td><td>Yes (MIT)</td><td>No</td><td>No</td></tr><tr><td>Price</td><td>Free</td><td>Free (paid team tier)</td><td>Free tier, paid plans from $14/mo</td></tr></table>
 
-<h2>API Testing PRO for In-Browser Testing</h2>
+<h2 id="api-testing-pro-for-in-browser-testing">API Testing PRO for In-Browser Testing</h2>
 
 <p>I built API Testing PRO as a Chrome extension because I wanted a middle ground that none of the existing tools occupied. DevTools fetch() is too ephemeral. Hoppscotch is a separate browser tab that cannot access the cookies and session state of the page I am currently working on. Postman is a separate application entirely. Thunder Client requires VS Code to be open. What I wanted was a lightweight testing interface that lives inside the browser, runs in the context of the current tab, and handles REST, GraphQL, and WebSocket connections without the overhead of a full application.</p>
 
-<h3>What API Testing PRO does</h3>
+<h3 id="what-api-testing-pro-does">What API Testing PRO does</h3>
 
 <p>The extension adds an API testing panel accessible from the browser toolbar. You select a method (GET, POST, PUT, PATCH, DELETE), enter the URL, configure headers and body, and send. The response is displayed with syntax highlighting, status code, timing, and header inspection. It is essentially the fetch() console approach with a proper interface wrapped around it.</p>
 
 <p>The key difference from web-based tools is execution context. Because the extension runs inside the browser, it can access cookies and session storage from the current domain. If you are logged into a web application and want to test an API endpoint that requires the same session cookie, the extension inherits that authentication automatically. You do not need to manually extract a token and paste it into a header field.</p>
 
-<h3>REST, GraphQL, and WebSocket support</h3>
+<h3 id="rest-graphql-and-websocket-support">REST, GraphQL, and WebSocket support</h3>
 
 <p>REST testing covers all standard HTTP methods with full control over headers, query parameters, and request bodies. JSON bodies are auto-formatted with syntax highlighting in both the request and response panes.</p>
 
@@ -258,7 +255,7 @@ curl -s https://jsonplaceholder.typicode.com/posts | jq '[.[] | select(.userId =
 
 <p>WebSocket testing lets you establish connections, send messages, and view the bidirectional message stream in real time. This is useful for debugging chat applications, live notification systems, and real-time data feeds without writing client code.</p>
 
-<h3>Lightweight by design</h3>
+<h3 id="lightweight-by-design">Lightweight by design</h3>
 
 <p>The extension uses Manifest V3 with a minimal permission set. It does not run background processes when you are not using it. The install size is under 500 KB, compared to Postman's multi-hundred-megabyte footprint. It stays out of your way until you need it, then provides a clean testing interface without loading a separate application or tab.</p>
 
@@ -266,11 +263,11 @@ curl -s https://jsonplaceholder.typicode.com/posts | jq '[.[] | select(.userId =
 
 <div class="cta-box"><div class="cta-title">Try API Testing PRO</div><div class="cta-text">REST, GraphQL, and WebSocket testing directly in your browser tab. No sign-in. No bloat. Under 500 KB.</div><a class="cta-button" href="https://chromewebstore.google.com/detail/api-tester-pro-rest-clien/oelgmpmdeafljelabhkohjiaifomlnla" rel="noopener" target="_blank">Install from Chrome Web Store</a></div>
 
-<h2>Reading API Documentation Effectively</h2>
+<h2 id="reading-api-documentation-effectively">Reading API Documentation Effectively</h2>
 
 <p>Good API testing starts before you send your first request. Reading documentation effectively is a skill that saves hours of trial and error, and most developers underinvest in it.</p>
 
-<h3>What to look for first</h3>
+<h3 id="what-to-look-for-first">What to look for first</h3>
 
 <p>Start with the authentication section. Every other part of the documentation is useless if you cannot authenticate. Identify whether the API uses API keys, OAuth 2.0, Bearer tokens, Basic auth, or session cookies. Note where credentials go: headers, query parameters, or request body. Some APIs use multiple authentication methods for different endpoints or permission levels.</p>
 
@@ -278,35 +275,35 @@ curl -s https://jsonplaceholder.typicode.com/posts | jq '[.[] | select(.userId =
 
 <p>Then review the error response format. A well-documented API describes its error codes and response structures. Knowing that a 422 means validation failed with field-specific error messages, while a 401 means your token expired, prevents unnecessary debugging. Pay attention to whether errors follow a consistent structure or vary by endpoint.</p>
 
-<h3>Base URL and versioning</h3>
+<h3 id="base-url-and-versioning">Base URL and versioning</h3>
 
 <p>Most APIs use versioned base URLs like <code>https://api.example.com/v2/</code>. Some use header-based versioning where you send <code>Accept: application/vnd.example.v2+json</code>. A few use query parameter versioning like <code>?version=2</code>. Identify the versioning strategy before testing, because sending requests to the wrong version produces confusing results that look almost correct.</p>
 
-<h3>Pagination patterns</h3>
+<h3 id="pagination-patterns">Pagination patterns</h3>
 
 <p>APIs that return collections almost always paginate. Common patterns include offset-based (<code>?offset=20&limit=10</code>), cursor-based (<code>?cursor=abc123&limit=10</code>), and page-based (<code>?page=3&per_page=10</code>). Cursor-based pagination is more reliable for data that changes frequently. The documentation should specify which pattern each endpoint uses, what the default page size is, and what the maximum allowed page size is.</p>
 
-<h3>Testing against sandbox environments</h3>
+<h3 id="testing-against-sandbox-environments">Testing against sandbox environments</h3>
 
 <p>Many APIs provide sandbox or test environments with separate base URLs and credentials. Stripe uses <code>https://api.stripe.com</code> with test-mode API keys that start with <code>sk_test_</code>. PayPal provides a sandbox at <code>https://api-m.sandbox.paypal.com</code>. Always test against sandbox environments first. Sending test requests to production APIs risks creating real data, triggering real charges, or hitting production rate limits that affect actual users.</p>
 
-<h2>Common API Testing Mistakes</h2>
+<h2 id="common-api-testing-mistakes">Common API Testing Mistakes</h2>
 
 <p>After years of testing APIs and helping other developers debug their integrations, I see the same mistakes repeatedly. Here are the nine that cause the most wasted time.</p>
 
-<h3>Forgetting the Content-Type header</h3>
+<h3 id="forgetting-the-content-type-header">Forgetting the Content-Type header</h3>
 
 <p>This is the most common mistake by a wide margin. You send a POST request with a JSON body but forget to include <code>Content-Type: application/json</code>. The server receives the body as plain text, fails to parse it, and returns a 400 or 415 error. The fix is trivially simple, but the error message often does not mention Content-Type specifically, so developers waste time reviewing their JSON structure instead of their headers.</p>
 
-<h3>Sending the wrong Content-Type for the body format</h3>
+<h3 id="sending-the-wrong-content-type-for-the-body-format">Sending the wrong Content-Type for the body format</h3>
 
 <p>Related to the above: sending <code>Content-Type: application/x-www-form-urlencoded</code> when the body is JSON, or vice versa. Form-encoded data uses <code>key=value&key2=value2</code> format. JSON uses <code>{"key":"value"}</code>. Sending the wrong Content-Type for your body format produces parsing errors that are not always descriptive.</p>
 
-<h3>Ignoring CORS errors in the browser</h3>
+<h3 id="ignoring-cors-errors-in-the-browser">Ignoring CORS errors in the browser</h3>
 
 <p>CORS errors in the DevTools console do not mean the API is broken. They mean the browser is blocking the response because the API's server did not include the appropriate <code>Access-Control-Allow-Origin</code> header. The request actually reached the server and may have executed successfully. The browser simply refuses to expose the response to your JavaScript code. Use curl, Hoppscotch's proxy, or a dedicated API testing tool to bypass CORS when testing.</p>
 
-<h3>Not checking the HTTP status code</h3>
+<h3 id="not-checking-the-http-status-code">Not checking the HTTP status code</h3>
 
 <p>The Fetch API does not throw an error for 4xx or 5xx responses. A <code>fetch()</code> call that returns a 404 still resolves the promise successfully. You must check <code>response.ok</code> or <code>response.status</code> explicitly. Many developers assume that the absence of a catch() handler means the request succeeded, then spend time confused about why their response data is empty or contains an error message.</p>
 
@@ -322,15 +319,15 @@ if (!response.ok) {
 }
 const data = await response.json();</code></pre>
 
-<h3>Hardcoding authentication tokens</h3>
+<h3 id="hardcoding-authentication-tokens">Hardcoding authentication tokens</h3>
 
 <p>Pasting a token directly into a fetch() call in the console is fine for a quick test. Hardcoding that same token into source code, committing it to a repository, and pushing to GitHub is a security incident. Even private repositories should not contain raw tokens. Use environment variables, secrets managers, or configuration files excluded from version control.</p>
 
-<h3>Testing only the happy path</h3>
+<h3 id="testing-only-the-happy-path">Testing only the happy path</h3>
 
 <p>Sending a well-formed request with valid data and confirming it works is step one. It is not the complete test. Send requests with missing required fields. Send strings where numbers are expected. Send dates in the wrong format. Omit the authentication header. Send a request body that exceeds the size limit. These edge cases reveal how the API behaves under error conditions, which is exactly the information you need when building error handling in your integration code.</p>
 
-<h3>Not URL-encoding query parameters</h3>
+<h3 id="not-url-encoding-query-parameters">Not URL-encoding query parameters</h3>
 
 <p>Special characters in query parameter values must be URL-encoded. A space becomes <code>%20</code> or <code>+</code>. An ampersand becomes <code>%26</code>. Failing to encode these characters corrupts the query string. In JavaScript, use <code>encodeURIComponent()</code> for individual values or the <code>URLSearchParams</code> API for building complete query strings:</p>
 
@@ -342,17 +339,17 @@ const data = await response.json();</code></pre>
 const url = `https://api.example.com/search?${params.toString()}`;
 // Result: https://api.example.com/search?query=hello+world+%26+goodbye&limit=10&offset=0</code></pre>
 
-<h3>Assuming all 200 responses mean success</h3>
+<h3 id="assuming-all-200-responses-mean-success">Assuming all 200 responses mean success</h3>
 
 <p>Some APIs return 200 OK for every response and indicate success or failure in the response body. The Slack Web API is a well-known example: every response returns 200, and you must check the <code>ok</code> field in the JSON body to determine whether the operation succeeded. Always inspect the response body, not just the status code.</p>
 
-<h3>Ignoring response headers</h3>
+<h3 id="ignoring-response-headers">Ignoring response headers</h3>
 
 <p>Response headers carry important metadata that developers often overlook. Rate-limit headers tell you how many requests remain before throttling. Pagination headers (like GitHub's <code>Link</code> header) provide URLs for the next and last pages. Cache headers indicate whether responses are stale. The <code>Retry-After</code> header tells you exactly how long to wait before retrying a rate-limited request. Inspect headers during testing so your integration code handles them properly.</p>
 
 <div class="so-block"><div class="so-title">Stack Overflow Community Discussions</div><ul><li><a href="https://stackoverflow.com/questions/36840396/fetch-api-with-cookie">How to send cookies with Fetch API requests</a> - Understanding credentials mode for session-based auth</li><li><a href="https://stackoverflow.com/questions/43262121/trying-to-use-fetch-and-pass-in-mode-no-cors">Fetch with mode: no-cors and its limitations</a> - Why no-cors does not solve CORS problems</li><li><a href="https://stackoverflow.com/questions/29775797/fetch-post-json-body">How to properly fetch() with POST and JSON body</a> - Correct headers and body formatting</li></ul></div>
 
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 
 <div class="faq-item"><div class="faq-q">What is the fastest way to test an API in the browser?</div><div class="faq-a">Open DevTools with F12, go to the Console tab, and use <code>fetch()</code> with <code>await</code> inside an async IIFE. This requires zero installation, works in any browser, and returns formatted responses directly in the console. For APIs that block browser requests due to CORS, use a Chrome extension like API Testing PRO that can bypass origin restrictions.</div></div>
 
@@ -372,81 +369,6 @@ const url = `https://api.example.com/search?${params.toString()}`;
 
 <div class="faq-item"><div class="faq-q">What API should I practice testing with?</div><div class="faq-a">JSONPlaceholder (<code>jsonplaceholder.typicode.com</code>) is the standard free fake API for testing. It supports GET, POST, PUT, PATCH, and DELETE operations with realistic response data. The GitHub API is excellent for testing authenticated requests with real data. httpbin.org echoes back whatever you send, making it ideal for verifying that your requests are formatted correctly.</div></div>
 
-<div class="author-box"><div class="author-avatar">ML</div><div class="author-info"><div class="author-name">Michael Lip</div><div class="author-bio">Developer of 20+ Chrome extensions with 5,000+ users at <a href="https://zovo.one">zovo.one</a>. Building fast, private, and accessible web tools that respect user privacy.</div></div></div>
+<div class="related-guides"><h3 id="related-guides">Related Guides</h3><ul><li><a href="/articles/chrome-extensions-for-developers-2026/">Best Chrome Extensions for Developers in 2026</a></li><li><a href="/articles/understanding-http-status-codes/">Understanding HTTP Status Codes</a></li><li><a href="/articles/how-to-format-json-complete-guide/">How to Format JSON - A Complete Developer Guide</a></li><li><a href="/articles/javascript-performance-tips/">JavaScript Performance Tips</a></li></ul></div>
 
-<div class="related-guides"><h3>Related Guides</h3><ul><li><a href="/free-tools/articles/chrome-extensions-for-developers-2026/">Best Chrome Extensions for Developers in 2026</a></li><li><a href="/free-tools/articles/understanding-http-status-codes/">Understanding HTTP Status Codes</a></li><li><a href="/free-tools/articles/how-to-format-json-complete-guide/">How to Format JSON - A Complete Developer Guide</a></li><li><a href="/free-tools/articles/javascript-performance-tips/">JavaScript Performance Tips</a></li></ul></div>
-
-<div class="update-history"><p>Update History</p><ul><li>March 26, 2026 - Initial publication covering 6 API testing tools with practical examples</li></ul></div></div>
-
-<div class="site-footer"><p>Built by Michael Lip at <a href="https://zovo.one">zovo.one</a> - 250+ free tools, no tracking</p><p style="margin-top:0.5rem;">March 26, 2026</p></div>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "How to Test REST APIs Directly in Your Browser",
-  "description": "Complete guide to testing REST APIs in your browser using fetch(), curl, Hoppscotch, Thunder Client, Postman, and lightweight Chrome extensions.",
-  "author": {
-    "@type": "Person",
-    "name": "Michael Lip",
-    "url": "https://zovo.one"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Zovo Tools",
-    "url": "https://zovo.one"
-  },
-  "datePublished": "2026-03-26",
-  "dateModified": "2026-03-26",
-  "mainEntityOfPage": "https://zovo.one/articles/how-to-test-api-browser/"
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is the fastest way to test an API in the browser?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Open DevTools with F12, go to the Console tab, and use fetch() with await inside an async IIFE. This requires zero installation, works in any browser, and returns formatted responses directly in the console."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is Hoppscotch really free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Hoppscotch is open source under the MIT license. The web version at hoppscotch.io is free with no account required for individual use."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Why do I get CORS errors when testing APIs in the browser?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "CORS errors occur when the API server does not include your browser's origin in its Access-Control-Allow-Origin response header. This is a browser security feature, not an API bug. Use curl, Postman, or a browser extension to bypass this restriction."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Should I use Postman or a lightweight alternative?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Use Postman when you need mock servers, automated test suites, API monitoring, or team collaboration features. For individual developers who primarily need to send requests and inspect responses, lighter tools like Hoppscotch or Thunder Client consume fewer resources."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What API should I practice testing with?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "JSONPlaceholder (jsonplaceholder.typicode.com) is the standard free fake API for testing. The GitHub API is excellent for testing authenticated requests. httpbin.org echoes back whatever you send."
-      }
-    }
-  ]
-}
-</script>
-</body></html>
+<div class="update-history"><p>Update History</p><ul><li>March 26, 2026 - Initial publication covering 6 API testing tools with practical examples</li></ul></div>

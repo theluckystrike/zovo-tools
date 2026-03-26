@@ -1,50 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>The Complete Guide to Viewing JSON in Chrome</title>
-<meta name="description" content="Every method for viewing JSON in Chrome. DevTools Network tab, Console manipulation, Application panel, chrome.storage, opening JSON files, and JSON Formatter Pro for automatic formatting."/>
-<meta content="json viewer chrome guide, view json in chrome, json chrome extension guide" name="keywords"/>
-<meta content="Michael Lip" name="author"/>
-<meta content="index, follow" name="robots"/>
-<link rel="canonical" href="https://zovo.one/articles/json-viewer-chrome-guide/"/>
-<meta content="The Complete Guide to Viewing JSON in Chrome" property="og:title"/>
-<meta content="Every method for viewing JSON in Chrome. DevTools Network tab, Console manipulation, Application panel, chrome.storage, and JSON Formatter Pro for automatic formatting." property="og:description"/>
-<meta content="https://zovo.one/articles/json-viewer-chrome-guide/" property="og:url"/>
-<meta content="article" property="og:type"/>
-<meta content="Zovo" property="og:site_name"/>
-<meta content="summary_large_image" name="twitter:card"/>
-<meta content="The Complete Guide to Viewing JSON in Chrome" name="twitter:title"/>
-<meta content="Every method for viewing JSON in Chrome, from DevTools panels to automatic formatting extensions. Covers Network tab, Console, Application panel, and JSON Formatter Pro." name="twitter:description"/>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Article","headline":"The Complete Guide to Viewing JSON in Chrome","author":{"@type":"Person","name":"Michael Lip"},"publisher":{"@type":"Organization","name":"Zovo"},"datePublished":"2026-03-26","dateModified":"2026-03-26"}
-</script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.8;max-width:780px;margin:0 auto;padding:2rem 1.5rem}
-h2{color:#00ff88;margin-top:2.5rem;margin-bottom:1rem;font-size:1.5rem}
-h3{color:#00ccff;margin-top:1.8rem;margin-bottom:0.8rem;font-size:1.2rem}
-p{margin-bottom:1.2rem}
-a{color:#00ccff;text-decoration:none}
-a:hover{text-decoration:underline}
-blockquote{border-left:3px solid #00ff88;padding:1rem 1.5rem;margin:1.5rem 0;background:#12121a;border-radius:0 8px 8px 0}
-pre{background:#12121a;padding:1.2rem;border-radius:8px;overflow-x:auto;border:1px solid #1e1e2e;margin:1.5rem 0}
-code{font-family:'JetBrains Mono',monospace;font-size:0.9rem}
-p code,li code{background:#12121a;padding:0.15rem 0.4rem;border-radius:4px;color:#00ff88}
-pre code{background:none;padding:0;color:#e0e0e8}
-table{width:100%;border-collapse:collapse;margin:1.5rem 0}
-th,td{padding:0.75rem 1rem;border:1px solid #1e1e2e;text-align:left}
-th{background:#12121a;color:#00ff88}
-ul,ol{margin:0 0 1.2rem 1.5rem}
-li{margin-bottom:0.5rem}
-.faq-q{font-weight:600;color:#00ff88;margin-top:1.5rem;margin-bottom:0.4rem}
-.cta-box{background:#12121a;border:1px solid #00ff88;border-radius:8px;padding:1.5rem;margin:1.5rem 0;text-align:center}
-.cta-box a{color:#00ff88;font-weight:600;font-size:1.05rem}
-</style>
-</head>
-<body>
-<article>
 <!-- NO h1 tag - title comes from DB -->
 <blockquote><p>18 min read</p></blockquote>
 
@@ -52,13 +5,13 @@ li{margin-bottom:0.5rem}
 
 <p>This guide covers the complete picture. I am not going to repeat the same "paste it into an online formatter" advice you have already seen in a dozen other articles. Instead, I want to walk through every built-in Chrome capability for working with JSON, from the Network tab to the Application panel to the Console, and then cover the extension-based approaches that fill in the gaps where Chrome's native tools fall short. By the end, you will have a workflow for handling any JSON scenario Chrome can throw at you.</p>
 
-<h2>JSON Is Everywhere in the Browser</h2>
+<h2 id="json-is-everywhere-in-the-browser">JSON Is Everywhere in the Browser</h2>
 
 <p>Before getting into specific tools, it helps to understand just how many places JSON shows up inside Chrome. Most developers think of API responses when they hear "JSON in the browser," but that is only the beginning.</p>
 
 <p>Every fetch or XMLHttpRequest call that returns <code>application/json</code> produces JSON in the Network tab. That one is obvious. But localStorage and sessionStorage are key-value stores where both keys and values are strings, and those strings are almost always serialized JSON. Cookies frequently contain JSON-encoded data, especially session tokens and user preference objects. Chrome extensions store their data using <code>chrome.storage.local</code> and <code>chrome.storage.sync</code>, both of which serialize to JSON internally. Web Workers and Service Workers exchange messages using the structured clone algorithm, which maps closely to JSON. IndexedDB stores JavaScript objects that are JSON-compatible. And if you open a <code>.json</code> file directly in a Chrome tab, you get Chrome's built-in JSON renderer.</p>
 
-<p>Each of these locations requires a different approach to view and inspect the JSON data. The Network tab shows you API response bodies. The Application panel shows you storage contents. The Console lets you parse, query, and transform JSON programmatically. And browser extensions can intercept and format JSON before you even see it.</p>
+<p>Each of these locations requires a different approach to view and inspect the JSON data. The Network tab shows you API response bodies. The Application panel shows you storage contents. The Console lets you parse, query, and transform JSON programmatically. And browser extensions can intercept and <a href="/articles/how-to-format-json-chrome/">format JSON in Chrome</a> before you even see it.</p>
 
 <p>Here is a quick reference for where JSON lives inside Chrome and how to access it.</p>
 
@@ -77,33 +30,33 @@ li{margin-bottom:0.5rem}
 
 <p>Let me walk through each of these one at a time, starting with the tool most developers reach for first.</p>
 
-<h2>Chrome DevTools Network Tab for JSON Preview</h2>
+<h2 id="chrome-devtools-network-tab-for-json-preview">Chrome DevTools Network Tab for JSON Preview</h2>
 
 <p>The Network tab is the first place I look whenever I need to see what an API is actually returning. Open DevTools with <code>F12</code> or <code>Cmd+Option+I</code> on macOS, click the Network tab, and then trigger the request you want to inspect. Every HTTP request the page makes appears as a row in the request log.</p>
 
 <p>Click any request that returns JSON, and Chrome opens a detail panel with several tabs. The one you want is Preview. Chrome automatically detects <code>application/json</code> response headers and renders the response body as a collapsible tree. You can expand and collapse objects and arrays, which makes navigating nested structures manageable even when the response is thousands of lines deep.</p>
 
-<h3>Filtering for JSON responses</h3>
+<h3 id="filtering-for-json-responses">Filtering for JSON responses</h3>
 
 <p>When a page makes dozens or hundreds of requests, finding the JSON responses you care about can be tedious. The Network tab offers several filtering strategies. Click the "Fetch/XHR" filter button to show only AJAX requests, which eliminates images, stylesheets, fonts, and scripts from the list. You can also type directly in the filter box. Entering <code>method:POST</code> shows only POST requests. Entering <code>status-code:200</code> shows only successful responses. Entering part of a URL path narrows the list to matching requests.</p>
 
 <p>For API debugging specifically, I use a combination of the XHR filter and a URL path fragment. If I am working on a user profile feature and the API endpoint is <code>/api/v2/users/profile</code>, typing "profile" in the filter box shows only matching requests. This is significantly faster than scrolling through the full request log.</p>
 
-<h3>Copying JSON from the Network tab</h3>
+<h3 id="copying-json-from-the-network-tab">Copying JSON from the Network tab</h3>
 
 <p>Chrome gives you several ways to copy JSON data from a network response. Right-click the request row and you will see "Copy response" which copies the raw JSON text to your clipboard. You can also right-click inside the Preview tab and select "Copy value" on any specific node to copy just that portion of the JSON tree. For the complete request including headers, select "Copy as cURL" to get a command you can paste into a terminal to replay the request.</p>
 
 <p>There is a less obvious option that I find useful regularly. Right-click the request and select "Copy as fetch." This gives you a JavaScript <code>fetch()</code> call with all the original headers, body, and credentials, which you can paste directly into the Console to re-execute the request and inspect the response programmatically.</p>
 
-<h3>Searching within large responses</h3>
+<h3 id="searching-within-large-responses">Searching within large responses</h3>
 
 <p>Chrome's Network tab Preview does not have a built-in search for the JSON tree. If you are looking for a specific key or value inside a large API response, switch from the Preview tab to the Response tab, which shows the raw JSON text. Then press <code>Cmd+F</code> or <code>Ctrl+F</code> to open the search bar within that response. This text search works across the entire response body and highlights matches as you type. It is not as convenient as tree-based searching, but it works reliably on responses of any size.</p>
 
-<h2>DevTools Console for JSON Manipulation</h2>
+<h2 id="devtools-console-for-json-manipulation">DevTools Console for JSON Manipulation</h2>
 
 <p>The Console is where Chrome's JSON capabilities become genuinely powerful. While the Network tab is limited to viewing, the Console lets you parse, transform, filter, and restructure JSON using the full JavaScript language.</p>
 
-<h3>Parsing raw JSON strings</h3>
+<h3 id="parsing-raw-json-strings">Parsing raw JSON strings</h3>
 
 <p>If you have a JSON string from any source, clipboard, log file, API documentation, paste it into the Console wrapped in <code>JSON.parse()</code> and Chrome gives you an interactive object you can expand and explore.</p>
 
@@ -112,7 +65,7 @@ console.table(data.users);</code></pre>
 
 <p>The <code>console.table()</code> method is one of the most underused tools in DevTools. Instead of rendering the data as an expandable tree, it displays it as a sortable HTML table. For arrays of objects with consistent keys, this is dramatically easier to read than the tree view. I use it constantly when debugging API responses that return lists.</p>
 
-<h3>Storing Network responses as variables</h3>
+<h3 id="storing-network-responses-as-variables">Storing Network responses as variables</h3>
 
 <p>Here is a technique that changed how I debug APIs. In the Network tab, right-click any request and select "Store as global variable." Chrome creates a variable called <code>temp1</code> (or <code>temp2</code>, <code>temp3</code>, and so on) in the Console that holds the response body as a parsed JavaScript object. You can then run any JavaScript against that data without leaving DevTools.</p>
 
@@ -124,7 +77,7 @@ JSON.stringify(temp1.users[0], null, 2)</code></pre>
 
 <p>This is the fastest way I have found to explore a large API response interactively. Instead of visually scanning through a collapsed tree, I can filter, sort, map, and query the data using the array methods I already know.</p>
 
-<h3>Pretty printing in the Console</h3>
+<h3 id="pretty-printing-in-the-console">Pretty printing in the Console</h3>
 
 <p>When you need to see a formatted version of a JSON object in the Console, <code>JSON.stringify()</code> with the indentation parameter is the standard approach.</p>
 
@@ -136,15 +89,15 @@ console.log(JSON.stringify(someObject, ['name', 'email', 'id'], 2));</code></pre
 
 <p>The second argument to <code>JSON.stringify()</code> is a replacer, which can be either a function or an array of key names. When you pass an array, the output includes only those keys. This is useful when an object has 30 fields and you only care about three of them.</p>
 
-<h3>Live expression monitoring</h3>
+<h3 id="live-expression-monitoring">Live expression monitoring</h3>
 
 <p>Chrome DevTools has a "Live expressions" feature, accessible via the eye icon above the Console. You can enter a JavaScript expression and Chrome evaluates it continuously, updating the result in real time. For monitoring a value that changes, such as a localStorage key that gets updated by your application, you can enter something like <code>JSON.parse(localStorage.getItem('userPrefs'))</code> and watch it update without repeatedly typing the command.</p>
 
-<h2>Chrome DevTools Application Tab</h2>
+<h2 id="chrome-devtools-application-tab">Chrome DevTools Application Tab</h2>
 
 <p>The Application panel is where Chrome exposes all client-side storage mechanisms. For JSON specifically, the relevant sections are localStorage, sessionStorage, Cookies, IndexedDB, and Cache Storage.</p>
 
-<h3>localStorage and sessionStorage</h3>
+<h3 id="localstorage-and-sessionstorage">localStorage and sessionStorage</h3>
 
 <p>Navigate to Application, then expand "Local Storage" in the left sidebar. Click your origin (domain) and Chrome shows a two-column table of all stored key-value pairs. Both keys and values are strings, and in most web applications, the values are JSON strings.</p>
 
@@ -169,7 +122,7 @@ Object.entries(localStorage).forEach(([key, value]) => {
 
 <p>The try/catch is important because not every localStorage value is valid JSON. Some values are plain strings, numbers, or other formats. The catch block handles those gracefully by logging the raw value.</p>
 
-<h3>Cookies with JSON values</h3>
+<h3 id="cookies-with-json-values">Cookies with JSON values</h3>
 
 <p>Cookies appear under Application, then "Cookies" in the left sidebar. Chrome shows a detailed table with columns for name, value, domain, path, expiration, size, HttpOnly, Secure, SameSite, and priority. Many modern applications store JSON-encoded data in cookies, particularly for session state, user preferences, or A/B test assignments.</p>
 
@@ -186,33 +139,33 @@ JSON.parse(decodeURIComponent(document.cookie
 
 <p>This looks verbose, and it is. The cookie API in JavaScript is famously awkward. But this pattern handles the common case of a URL-encoded JSON string stored in a named cookie. I keep a Console snippet saved for this exact pattern.</p>
 
-<h3>IndexedDB</h3>
+<h3 id="indexeddb">IndexedDB</h3>
 
 <p>IndexedDB is Chrome's structured client-side database. Under Application, expand "IndexedDB" to see all databases for the current origin. Each database contains object stores (similar to tables), and each object store contains records. Chrome renders these records as expandable JavaScript objects in the right panel.</p>
 
 <p>The IndexedDB viewer in DevTools is actually one of the better JSON viewing experiences Chrome offers natively. Records are displayed as interactive objects with full expand/collapse support. You can right-click any record to copy it, delete it, or store it as a global variable for Console manipulation.</p>
 
-<h2>Viewing JSON Files Opened in a Chrome Tab</h2>
+<h2 id="viewing-json-files-opened-in-a-chrome-tab">Viewing JSON Files Opened in a Chrome Tab</h2>
 
 <p>When you open a <code>.json</code> file directly in Chrome, either by dragging a file into the browser, using <code>File > Open</code>, or navigating to a URL that serves raw JSON, Chrome renders it with its built-in JSON viewer. As of Chrome 134, this built-in viewer provides basic syntax highlighting and a raw text display. It is functional but minimal.</p>
 
 <p>The built-in viewer does not offer tree collapse/expand, search, path copying, or any form of interactive navigation. For a 20-line configuration file, it is perfectly adequate. For a 5,000-line API response dump, it is nearly useless.</p>
 
-<h3>What Chrome shows by default</h3>
+<h3 id="what-chrome-shows-by-default">What Chrome shows by default</h3>
 
 <p>Chrome detects that the content type is <code>application/json</code> (or that the file extension is <code>.json</code>) and renders the content with basic formatting. The output preserves the indentation from the source file and applies minimal coloring to distinguish strings, numbers, booleans, and null values. There are no interactive elements. No collapsing. No filtering. No search.</p>
 
-<h3>Improving the experience</h3>
+<h3 id="improving-the-experience">Improving the experience</h3>
 
 <p>If you frequently open JSON files or API endpoints in Chrome tabs, the built-in viewer's limitations become a real bottleneck. You end up copying the JSON, pasting it into an external tool, and switching back and forth between windows. That context switching adds up fast when you are debugging an issue that requires checking multiple API endpoints in sequence.</p>
 
-<p>This is exactly the problem that JSON formatting extensions solve. They intercept the <code>application/json</code> response before Chrome's default renderer handles it and replace the static text with an interactive tree view. I will cover the best option I have found for this in the JSON Formatter Pro section below.</p>
+<p>This is exactly the problem that JSON formatting extensions solve. They intercept the <code>application/json</code> response before Chrome's default renderer handles it and replace the static text with an interactive tree view. I will cover the best option I have found for this in the <a href="https://tools.zovo.one/json-formatter/">JSON formatter</a> Pro section below.</p>
 
-<h2>Using chrome.storage for Extension Developers</h2>
+<h2 id="using-chrome-storage-for-extension-developers">Using chrome.storage for Extension Developers</h2>
 
 <p>If you build Chrome extensions, you encounter <code>chrome.storage</code> constantly. It is the primary way extensions persist data across browser sessions, and everything it stores is serialized as JSON internally. Viewing that data requires a different approach than regular web storage.</p>
 
-<h3>Inspecting extension storage</h3>
+<h3 id="inspecting-extension-storage">Inspecting extension storage</h3>
 
 <p>Open the extension's background page or service worker by navigating to <code>chrome://extensions</code>, enabling Developer Mode, and clicking "Inspect views" next to your extension. This opens a dedicated DevTools window for the extension context. From the Console in that window, you can query storage directly.</p>
 
@@ -233,13 +186,13 @@ chrome.storage.local.get('userSettings', (data) => {
 
 <p>The <code>null</code> parameter in <code>chrome.storage.local.get(null, callback)</code> means "get everything." This is the quickest way to dump the complete storage contents for an extension. The callback receives a plain JavaScript object, which you can inspect, stringify, or manipulate in the Console.</p>
 
-<h3>Storage area differences</h3>
+<h3 id="storage-area-differences">Storage area differences</h3>
 
 <p><code>chrome.storage.local</code> persists to the local machine with no size limit beyond what Chrome allows (typically around 10 MB by default, configurable with the <code>unlimitedStorage</code> permission). <code>chrome.storage.sync</code> synchronizes across the user's signed-in Chrome instances but has a strict 100 KB total limit and a 8 KB per-item limit. <code>chrome.storage.session</code> was introduced in Manifest V3 and persists only for the browser session, similar to sessionStorage but scoped to the extension.</p>
 
 <p>When debugging storage issues in extensions, the most common problem I encounter is exceeding the sync storage quota. The error message Chrome gives is not particularly descriptive. Running <code>chrome.storage.sync.getBytesInUse(null, console.log)</code> in the extension's Console tells you exactly how many bytes you are using out of the 102,400 byte limit.</p>
 
-<h3>Monitoring storage changes</h3>
+<h3 id="monitoring-storage-changes">Monitoring storage changes</h3>
 
 <p>Chrome's storage API fires events when values change. You can listen for these in the extension Console to monitor storage updates in real time.</p>
 
@@ -253,29 +206,29 @@ chrome.storage.local.get('userSettings', (data) => {
 
 <p>This listener shows every storage mutation as it happens, which is invaluable when tracking down bugs where storage values are being overwritten unexpectedly.</p>
 
-<h2>JSON Formatter Pro for Automatic Formatting</h2>
+<h2 id="json-formatter-pro-for-automatic-formatting">JSON Formatter Pro for Automatic Formatting</h2>
 
 <p>I have tested every major JSON extension on the Chrome Web Store. After going through them all, the one I keep installed is <a href="https://chromewebstore.google.com/detail/json-formatter-pro-viewer/gbnadjkeegkhbcoeaeaoedpojlcknnhp">JSON Formatter Pro</a>. It does the things Chrome's built-in tools do not do, and it does them automatically.</p>
 
-<h3>What it does</h3>
+<h3 id="what-it-does">What it does</h3>
 
-<p>JSON Formatter Pro auto-detects when a browser tab contains JSON data and transforms it from a flat wall of text into a formatted, syntax-highlighted, interactive view. This happens automatically on any page that serves <code>application/json</code>, any raw JSON file opened in a tab, and any API endpoint you navigate to directly. You do not need to copy the JSON somewhere else. You do not need to open DevTools. It just works.</p>
+<p><a href="https://tools.zovo.one/json-formatter/">JSON formatter</a> Pro auto-detects when a browser tab contains JSON data and transforms it from a flat wall of text into a formatted, syntax-highlighted, interactive view. This happens automatically on any page that serves <code>application/json</code>, any raw JSON file opened in a tab, and any API endpoint you navigate to directly. You do not need to copy the JSON somewhere else. You do not need to open DevTools. It just works.</p>
 
-<h3>Tree view and raw toggle</h3>
+<h3 id="tree-view-and-raw-toggle">Tree view and raw toggle</h3>
 
 <p>The extension provides two viewing modes. The tree view renders JSON as a collapsible hierarchy where you can expand and collapse individual objects and arrays. Every level of nesting is indented and color-coded, so you can trace the structure visually even in deeply nested documents. The raw view shows the formatted plain text with syntax highlighting, similar to what a code editor would display.</p>
 
 <p>I switch between these modes depending on the task. When I am exploring an unfamiliar API response and trying to understand the data shape, the tree view is faster because I can collapse the branches I do not care about. When I need to copy a section of JSON or search for a specific string, the raw view is better because it behaves like normal text.</p>
 
-<h3>Search and filtering</h3>
+<h3 id="search-and-filtering">Search and filtering</h3>
 
 <p>The built-in search lets you find keys or values within the JSON document. Type a search term and the extension highlights all matching nodes in the tree, dimming everything else. This is the feature I use most. When a response contains 200 user records and I need to find the one with a specific email address, searching in the formatted tree is orders of magnitude faster than scrolling through the raw text or switching to the Console to run a filter.</p>
 
-<h3>Performance on large documents</h3>
+<h3 id="performance-on-large-documents">Performance on large documents</h3>
 
 <p>One concern with JSON formatting extensions is performance on large payloads. I have tested JSON Formatter Pro with responses up to 5 MB and the rendering remained responsive. The extension handles the common case of API responses between 1 KB and 500 KB without any perceptible delay. For truly massive JSON files (tens of megabytes), you are better off using a dedicated desktop tool like jq, but for typical web development workflows, the extension handles everything smoothly.</p>
 
-<h3>Install and ratings</h3>
+<h3 id="install-and-ratings">Install and ratings</h3>
 
 <p>JSON Formatter Pro has 124 users and a 4.79-star rating on the Chrome Web Store. The user count is modest because it is a focused, single-purpose tool that has not been aggressively marketed. The high rating reflects the fact that it does its job well without bloating the browser or requesting unnecessary permissions. It does not track you. It does not inject ads. It does not require access to "all sites" unless you want auto-detection to work on every page.</p>
 
@@ -284,11 +237,11 @@ chrome.storage.local.get('userSettings', (data) => {
 <p style="margin-top:0.5rem;color:#8888a0;font-size:0.85rem;">124 users, 4.79 stars. Automatic JSON detection, tree view, search, syntax highlighting.</p>
 </div>
 
-<h2>Working with Nested JSON and Path Navigation</h2>
+<h2 id="working-with-nested-json-and-path-navigation">Working with Nested JSON and Path Navigation</h2>
 
 <p>Nested JSON is where most viewing tools start to struggle. A flat object with ten keys is easy to read anywhere. An object with four levels of nesting, arrays of objects within arrays, and 300 total nodes requires real tooling to navigate efficiently.</p>
 
-<h3>Understanding JSON paths</h3>
+<h3 id="understanding-json-paths">Understanding JSON paths</h3>
 
 <p>Every value in a JSON document has a unique path from the root. These paths are expressed using dot notation for object properties and bracket notation for array indices. For example, in the following structure, the phone number "555-0102" lives at the path <code>users[1].contacts.phone</code>.</p>
 
@@ -313,7 +266,7 @@ chrome.storage.local.get('userSettings', (data) => {
 
 <p>Knowing the path to a value matters for several practical reasons. When you write code that extracts data from an API response, the path is what your code navigates. When you file a bug report about incorrect data, the path tells the backend developer exactly which field is wrong. When you build a JSON transformation pipeline, paths define the mapping between input and output.</p>
 
-<h3>Navigating nested structures in DevTools</h3>
+<h3 id="navigating-nested-structures-in-devtools">Navigating nested structures in DevTools</h3>
 
 <p>In the Network tab Preview, Chrome renders nested JSON as a collapsible tree. Click the triangle next to any object or array to expand it. The tree remembers your expand/collapse state, so you can open the branches you care about and leave the rest closed.</p>
 
@@ -331,7 +284,7 @@ temp1.users.map(u => u.contacts.phone)
 // Find users where phone starts with "555-01"
 temp1.users.filter(u => u.contacts.phone.startsWith('555-01'))</code></pre>
 
-<h3>Extracting paths from complex documents</h3>
+<h3 id="extracting-paths-from-complex-documents">Extracting paths from complex documents</h3>
 
 <p>When I am dealing with a deeply nested API response for the first time and I need to understand its shape, I use a recursive function in the Console that prints all paths and their types.</p>
 
@@ -355,7 +308,7 @@ printPaths(temp1);</code></pre>
 
 <p>This outputs every leaf path in the document along with its type, which gives me a complete map of the data structure in seconds. It is faster than manually expanding every branch in the tree view, especially for documents with dozens of fields per object.</p>
 
-<h2>JSON Viewer Comparison</h2>
+<h2 id="json-viewer-comparison">JSON Viewer Comparison</h2>
 
 <p>I have tested every mainstream option for viewing JSON in Chrome. Here is how they compare across the features that actually matter for daily development work.</p>
 
@@ -373,15 +326,15 @@ printPaths(temp1);</code></pre>
 
 <p>For most web developers, the ideal setup is JSON Formatter Pro for automatic in-browser formatting combined with Console techniques for deeper analysis and jq for anything that exceeds browser capabilities.</p>
 
-<h3>When each tool fits best</h3>
+<h3 id="when-each-tool-fits-best">When each tool fits best</h3>
 
 <p>I use the Network tab Preview when I am debugging a specific API call and need to see the response structure alongside the request headers, timing, and status code. I use the Console when I need to extract, filter, or transform data from an API response. I use JSON Formatter Pro when I navigate directly to an API endpoint in the browser or open a JSON file and want to see the data formatted immediately without any manual steps. And I use jq on the command line when I am processing log files, comparing large datasets, or building data transformation pipelines.</p>
 
 <p>The point is not to pick one tool and use it exclusively. Each one excels at a different part of the JSON workflow, and switching between them based on the task at hand is faster than trying to force any single tool to do everything.</p>
 
-<h2>Advanced Techniques for JSON in Chrome</h2>
+<h2 id="advanced-techniques-for-json-in-chrome">Advanced Techniques for JSON in Chrome</h2>
 
-<h3>Console snippets for repeated tasks</h3>
+<h3 id="console-snippets-for-repeated-tasks">Console snippets for repeated tasks</h3>
 
 <p>Chrome DevTools lets you save JavaScript snippets under Sources, then Snippets. These persist across sessions and work on any page. I keep a collection of JSON utility snippets that I run regularly.</p>
 
@@ -400,7 +353,7 @@ console.log('All localStorage copied to clipboard');</code></pre>
 
 <p>The <code>copy()</code> function is a DevTools-specific API that copies a string to the system clipboard. Combined with <code>JSON.stringify()</code>, it gives you a one-command way to extract formatted JSON from any data source in the browser and paste it into an editor, a Slack message, or a bug report.</p>
 
-<h3>Network tab HAR export for JSON analysis</h3>
+<h3 id="network-tab-har-export-for-json-analysis">Network tab HAR export for JSON analysis</h3>
 
 <p>If you need to capture all API responses from a session for offline analysis, the Network tab supports HAR (HTTP Archive) export. Right-click anywhere in the request list and select "Save all as HAR with content." This produces a JSON file (the HAR format is itself JSON) containing every request and response, including headers, timing, and response bodies. You can then process this file with jq, Python, or any JSON tool to extract the data you need.</p>
 
@@ -409,29 +362,29 @@ cat session.har | jq '.log.entries[]
   | select(.response.content.mimeType == "application/json")
   | {url: .request.url, body: .response.content.text}'</code></pre>
 
-<h3>Overriding API responses for testing</h3>
+<h3 id="overriding-api-responses-for-testing">Overriding API responses for testing</h3>
 
 <p>Chrome DevTools lets you override network responses without modifying your server. In the Sources panel, set up a local override folder. Then in the Network tab, right-click any request and select "Override content." Chrome saves the response body to your local file system and serves your modified version on subsequent requests. This is incredibly useful for testing how your frontend handles different JSON structures, edge cases, or error responses.</p>
 
 <p>For example, if you want to test how your UI handles an empty array in the <code>users</code> field, override the API response to return <code>{"users": []}</code> instead of the real data. The override persists across page reloads until you disable it, so you can test thoroughly without touching the backend.</p>
 
-<h3>Using the Performance tab to find slow JSON parsing</h3>
+<h3 id="using-the-performance-tab-to-find-slow-json-parsing">Using the Performance tab to find slow JSON parsing</h3>
 
 <p>If your application parses large JSON payloads and you suspect it is causing performance issues, the Performance tab can confirm it. Record a performance profile during the JSON parsing operation. In the flame chart, look for <code>JSON.parse</code> calls. Chrome shows exactly how long each parse operation takes. If you see a <code>JSON.parse</code> call taking more than 50ms, you are blocking the main thread long enough to cause noticeable UI jank.</p>
 
 <p>The fix for slow JSON parsing depends on the situation. For API responses, consider paginating to reduce payload size. For local data, consider using IndexedDB instead of parsing a large JSON blob from localStorage on every page load. For truly large datasets, consider streaming JSON parsers or Web Workers to move the parsing off the main thread.</p>
 
-<h2>Common JSON Viewing Pitfalls</h2>
+<h2 id="common-json-viewing-pitfalls">Common JSON Viewing Pitfalls</h2>
 
-<h3>Truncated previews</h3>
+<h3 id="truncated-previews">Truncated previews</h3>
 
 <p>Chrome's Network tab Preview truncates very long strings and very large arrays. If a response contains a 50,000-character string value or an array with 10,000 elements, the Preview tab might show only a portion. The Response tab always shows the complete content, so switch to it when you suspect truncation.</p>
 
-<h3>Encoding issues</h3>
+<h3 id="encoding-issues">Encoding issues</h3>
 
 <p>JSON supports Unicode, but some servers return JSON with incorrect content-type headers, BOM (Byte Order Mark) characters, or non-UTF-8 encodings. When Chrome shows garbled characters in a JSON response, check the response headers for the charset declaration. If it says <code>charset=iso-8859-1</code> but the data contains UTF-8 encoded characters, you will see encoding artifacts. This is a server-side problem, but knowing where to look saves debugging time.</p>
 
-<h3>JSONP responses</h3>
+<h3 id="jsonp-responses">JSONP responses</h3>
 
 <p>Some older APIs return JSONP (JSON with Padding) instead of plain JSON. A JSONP response wraps the JSON data in a function call, like <code>callback({"data": "value"})</code>. Chrome's JSON preview does not handle JSONP. The content-type is usually <code>application/javascript</code> rather than <code>application/json</code>, so auto-detection also fails. To extract the JSON from a JSONP response, use the Console to strip the function wrapper.</p>
 
@@ -440,11 +393,11 @@ const jsonp = 'callback({"users": [1, 2, 3]})';
 const json = jsonp.slice(jsonp.indexOf('(') + 1, jsonp.lastIndexOf(')'));
 const data = JSON.parse(json);</code></pre>
 
-<h3>Content Security Policy blocking extensions</h3>
+<h3 id="content-security-policy-blocking-extensions">Content Security Policy blocking extensions</h3>
 
 <p>Some websites set strict Content Security Policy headers that prevent browser extensions from injecting scripts into the page. When this happens, a JSON formatting extension might fail silently on specific domains. If JSON Formatter Pro or any other extension does not activate on a particular page, check the Console for CSP violation errors. The workaround is to copy the JSON and open it in a new blank tab, or use the DevTools Console approach instead.</p>
 
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 
 <p class="faq-q">How do I view JSON in Chrome without an extension</p>
 <p>Open DevTools with F12, go to the Network tab, click the request that returns JSON, and select the Preview tab. Chrome renders the response as a collapsible tree. For JSON files, you can open them directly in a Chrome tab and Chrome will apply basic syntax highlighting. For JSON strings in localStorage or cookies, use the Console with <code>JSON.parse()</code> to view them as interactive objects.</p>
@@ -479,7 +432,3 @@ const data = JSON.parse(json);</code></pre>
 <blockquote>
 <p>JSON shows up in more places inside Chrome than most developers realize. Between the Network tab, Console, Application panel, and a focused extension like <a href="https://chromewebstore.google.com/detail/json-formatter-pro-viewer/gbnadjkeegkhbcoeaeaoedpojlcknnhp">JSON Formatter Pro</a>, you have a complete toolkit for viewing, searching, and manipulating JSON data without ever leaving the browser. The key is knowing which tool to reach for in each situation, and this guide should give you that map.</p>
 </blockquote>
-
-</article>
-</body>
-</html>
