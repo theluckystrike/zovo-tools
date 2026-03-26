@@ -400,15 +400,15 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 
 <h3>Gradient Performance in CSS Animations</h3>
 
-<p>Animating the gradient itself (changing colors or positions over time) forces the browser to recalculate and repaint the gradient on every frame. This can cause performance issues, especially on mobile devices or low-end hardware. The GPU-accelerated properties in CSS are limited to <code>change</code> and <code>opacity</code>. Since gradients are painted by the compositor, changing them triggers layout or paint operations that bypass GPU acceleration.</p>
+<p>Animating the gradient itself (changing colors or positions over time) forces the browser to recalculate and repaint the gradient on every frame. This can cause performance issues, especially on mobile devices or low-end hardware. The GPU-accelerated properties in CSS are limited to <code>transform</code> and <code>opacity</code>. Since gradients are painted by the compositor, changing them triggers layout or paint operations that bypass GPU acceleration.</p>
 
-<p>The preferred approach for animated gradients is the pseudo-element technique. Create a pseudo-element (<code>::before</code> or <code>::after</code>) that is larger than the parent element, apply the gradient to it, and animate its <code>change: translateX()</code> or similar property. The gradient itself never changes, only its position, which the GPU handles efficiently. Combine this with <code>overflow: hidden</code> on the parent to mask the overflow.</p>
+<p>The preferred approach for animated gradients is the pseudo-element technique. Create a pseudo-element (<code>::before</code> or <code>::after</code>) that is larger than the parent element, apply the gradient to it, and animate its <code>transform: translateX()</code> or similar property. The gradient itself never changes, only its position, which the GPU handles efficiently. Combine this with <code>overflow: hidden</code> on the parent to mask the overflow.</p>
 
 <p>For shimmer loading effects, the standard implementation uses a gradient of transparent, semi-transparent white, and transparent applied to a pseudo-element, animated with a translateX from -100% to 100%. The keyframe animation runs infinitely on a duration of 1.5 to 2 seconds. This pattern is used by Facebook, LinkedIn, YouTube, and many other platforms for their loading skeleton screens.</p>
 
 <h3>When to Use Gradients vs. Images</h3>
 
-<p>CSS gradients are the better choice when you need expandable backgrounds, geometric patterns, smooth color transitions, or decorative overlays. They require zero HTTP requests, scale to any resolution, and can be modified with CSS variables for theming. Use gradients for UI backgrounds, button states, loading indicators, and simple patterns.</p>
+<p>CSS gradients are the better choice when you need resolution-independent backgrounds, geometric patterns, smooth color transitions, or decorative overlays. They require zero HTTP requests, scale to any resolution, and can be modified with CSS variables for theming. Use gradients for UI backgrounds, button states, loading indicators, and simple patterns.</p>
 
 <p>Images are the better choice when you need photographic content, complex illustrations, textures with organic detail (like paper or fabric), or patterns with hundreds of unique elements. A photograph of a sunset will always look more natural than a gradient attempting to approximate it. Similarly, detailed textures like brushed metal, wood grain, or watercolor washes require image assets.</p>
 
@@ -421,6 +421,14 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <p>Store these gradients as CSS custom properties for consistency and easy updates. For example, a design system might define <code>--gradient-brand: linear-gradient(135deg, #6C5CE7, #00ff88)</code>, <code>--gradient-surface: linear-gradient(180deg, #1a1a2e, #12121a)</code>, and <code>--gradient-highlight: radial-gradient(circle at 30% 0%, rgba(0,255,136,0.08), transparent 50%)</code>. Components reference these variables instead of hard-coding gradient values, making it possible to update the entire visual system by changing a few root-level declarations.</p>
 
 <p>Document gradient usage guidelines alongside color guidelines. Specify which gradients are appropriate for backgrounds versus text, which should be used for interactive elements, and which are reserved for marketing materials. Clear documentation prevents gradients from being applied inconsistently across a large team and maintains the visual coherence that makes a design system effective.</p>
+
+<h3>Gradient Fallback Strategies</h3>
+
+<p>When building for the broadest possible audience, always include a fallback for CSS gradients. The simplest approach is placing a <code>background-color</code> declaration immediately before the <code>background</code> gradient declaration. Browsers that understand gradients will use the gradient and ignore the solid color. Browsers that do not understand gradients will apply the solid color and skip the gradient line. This pattern has been the standard fallback approach since gradients were first introduced in CSS3.</p>
+
+<p>For conic gradients specifically, which have lower browser support than linear and radial types, consider using a feature query with <code>@supports</code>. Inside the supports block, apply the conic gradient. Outside it, define the fallback, which could be a linear gradient or solid color. This gives you fine-grained control over which rendering path each browser follows and prevents unexpected visual results in unsupported environments.</p>
+
+<p>Progressive enhancement with gradients extends beyond simple fallbacks. You might define three levels of visual richness. The base level uses solid colors for the oldest browsers. The middle level adds linear and radial gradients for browsers supporting CSS3 properties. The top level layers conic gradients, backdrop filters, and color-mix functions for the most capable browsers. Each level builds on the previous one, so every visitor sees a complete, functional design while modern browsers get the richest visual experience.</p>
 </div>
 
 <div class="faq-section">
