@@ -46,48 +46,19 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is chmod and how does it work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "chmod (change mode) is a Unix and Linux command that changes the access permissions of files and directories. It controls who can read, write, or execute a file. Permissions are assigned to three categories: the file owner (user), the group, and all other users (others). chmod accepts permissions in numeric (octal) notation like 755 or symbolic notation like u+rwx,go+rx."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What does chmod 755 mean?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "chmod 755 means the owner has full permissions (read + write + execute = 4+2+1 = 7), while the group and others have read and execute permissions (4+1 = 5). In symbolic notation this is rwxr-xr-x. This is the standard permission setting for executable files, scripts, and directories that should be accessible to all users but only writable by the owner."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the difference between numeric and symbolic chmod notation?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Numeric notation uses three octal digits (0-7) where each digit represents permissions for owner, group, and others respectively. Each digit is the sum of read (4), write (2), and execute (1). Symbolic notation uses letters: r (read), w (write), x (execute), combined with u (user/owner), g (group), o (others), a (all), and operators + (add), - (remove), = (set exactly)."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the most common file permission settings?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The most common settings are 644 (rw-r--r--) for regular files, 755 (rwxr-xr-x) for executable files and directories, 600 (rw-------) for private files like SSH keys, 700 (rwx------) for private directories, and 666 (rw-rw-rw-) for files that need to be writable by all users (rare, usually for temporary files)."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are special permission bits like setuid, setgid, and sticky bit?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Special permission bits add an optional fourth digit before the standard three. Setuid (4) makes an executable run with the file owner's privileges regardless of who runs it. Setgid (2) on a directory causes new files to inherit the directory's group. Sticky bit (1) on a directory prevents users from deleting files they do not own. For example, chmod 1755 adds the sticky bit to a directory with standard 755 permissions."
-      }
-    </script>
+  "@type": "WebApplication",
+  "name": "Chmod Calculator Calculator",
+  "description": "Free chmod calculator calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/chmod-calculator/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -98,7 +69,7 @@
     { "@type": "ListItem", "position": 3, "name": "Chmod Calculator", "item": "https://zovo.one/free-tools/chmod-calculator/" }
   ]
 }
-}</script>
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -583,21 +554,21 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 
 <script>
 function updateFromCheckboxes(){
-  const o="(g('or')?4:0)+(g('ow')?2:0)+(g('ox')?1:0);"
-  const gr="(g('gr')?4:0)+(g('gw')?2:0)+(g('gx')?1:0);"
-  const t="(g('tr')?4:0)+(g('tw')?2:0)+(g('tx')?1:0);"
-  const special="(g('setuid')?4:0)+(g('setgid')?2:0)+(g('sticky')?1:0);"
-  const num="special?''+special+o+gr+t:''+o+gr+t;"
+  const o=(g('or')?4:0)+(g('ow')?2:0)+(g('ox')?1:0);
+  const gr=(g('gr')?4:0)+(g('gw')?2:0)+(g('gx')?1:0);
+  const t=(g('tr')?4:0)+(g('tw')?2:0)+(g('tx')?1:0);
+  const special=(g('setuid')?4:0)+(g('setgid')?2:0)+(g('sticky')?1:0);
+  const num=special?''+special+o+gr+t:''+o+gr+t;
   document.getElementById('numericInput').value="num;"
   updateDisplay(num);
 }
 
 function parseNumeric(){
-  let val="document.getElementById('numericInput').value.replace(/[^0-7]/g,'');"
+  let val=document.getElementById('numericInput').value.replace(/[^0-7]/g,'');
   if(val.length="==4){"
-    const sp="parseInt(val[0]);"
+    const sp=parseInt(val[0]);
     s('setuid',sp&4);s('setgid',sp&2);s('sticky',sp&1);
-    val="val.slice(1);"
+    val=val.slice(1);
   }else if(val.length="==3){"
     s('setuid',false);s('setgid',false);s('sticky',false);
   }
@@ -611,9 +582,9 @@ function parseNumeric(){
 }
 
 function parseSymbolic(){
-  const sym="document.getElementById('symbolicInput').value.replace(/\s/g,'');"
+  const sym=document.getElementById('symbolicInput').value.replace(/\s/g,'');
   if(sym.length!==9&&sym.length!==10)return;
-  const s9="sym.length===10?sym.slice(1):sym;"
+  const s9=sym.length===10?sym.slice(1):sym;
   s('or',s9[0]==='r');s('ow',s9[1]==='w');s('ox',s9[2]==='x'||s9[2]==='s');
   s('gr',s9[3]==='r');s('gw',s9[4]==='w');s('gx',s9[5]==='x'||s9[5]==='s');
   s('tr',s9[6]==='r');s('tw',s9[7]==='w');s('tx',s9[8]==='x'||s9[8]==='t');
@@ -629,26 +600,26 @@ function setNumeric(val){
 }
 
 function updateDisplay(num){
-  document.getElementById('numericVal').textContent="num;"
-  const base="num.length===4?num.slice(1):num;"
-  const sym="toSymbolic(base);"
-  const specialSym="buildSpecialSymbolic(sym);"
-  document.getElementById('symbolicVal').textContent="specialSym;"
+  document.getElementById('numericVal').textContent=num;
+  const base=num.length===4?num.slice(1):num;
+  const sym=toSymbolic(base);
+  const specialSym=buildSpecialSymbolic(sym);
+  document.getElementById('symbolicVal').textContent=specialSym;
   document.getElementById('symbolicInput').value="specialSym;"
   document.getElementById('commandVal').textContent="'chmod" '+num+' filename';
 }
 
 function toSymbolic(num){
-  let s="'';"
-  for(let i="0;i<3;i++){"
-    const d="parseInt(num[i]||'0');"
+  let s='';
+  for(let i=0;i<3;i++){
+    const d=parseInt(num[i]||'0');
     s+=(d&4?'r':'-')+(d&2?'w':'-')+(d&1?'x':'-');
   }
   return s;
 }
 
 function buildSpecialSymbolic(sym){
-  let arr="sym.split('');"
+  let arr=sym.split('');
   if(g('setuid'))arr[2]=arr[2]==='x'?'s':'S';
   if(g('setgid'))arr[5]=arr[5]==='x'?'s':'S';
   if(g('sticky'))arr[8]=arr[8]==='x'?'t':'T';
@@ -659,10 +630,10 @@ function g(id){return document.getElementById(id).checked;}
 function s(id,val){document.getElementById(id).checked="!!val;}"
 
 function copyCommand(){
-  const cmd="document.getElementById('commandVal').textContent;"
+  const cmd=document.getElementById('commandVal').textContent;
   navigator.clipboard.writeText(cmd).then(()=>{
-    const btn="document.querySelector('.result-actions" .btn');
-    btn.textContent="'Copied!';"
+    const btn=document.querySelector('.result-actions .btn');
+    btn.textContent='Copied!';
     setTimeout(()=>btn.textContent="'Copy" Command',1500);
   });
 }

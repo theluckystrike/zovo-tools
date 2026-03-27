@@ -100,10 +100,10 @@ p{margin:10px 0;color:#c8c8d0}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Effective Tax Rate Calculator","item":"https://zovo.one/free-tools/effective-tax-rate-calculator/"}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between marginal and effective tax rate?","acceptedAnswer":{"@type":"Answer","text":"Your marginal tax rate is the percentage applied to your last dollar of taxable income. Your effective tax rate is the average rate across all your income, calculated by dividing total tax owed by total gross income. The effective rate is always lower than the marginal rate because the initial portions of your income are taxed at lower brackets under the U.S. progressive tax system."}},{"@type":"Question","name":"Can a raise push me into a higher tax bracket and cost me money?","acceptedAnswer":{"@type":"Answer","text":"No. The U.S. uses a progressive tax system where only the income within each bracket is taxed at that rate. If a raise pushes you from the 22% to the 24% bracket, only the dollars above the 24% threshold are taxed at 24%. You will always take home more money with a raise."}},{"@type":"Question","name":"What are the 2025 federal tax brackets for single filers?","acceptedAnswer":{"@type":"Answer","text":"For 2025, single filers have seven brackets: 10% on income up to $11,925, 12% from $11,926 to $48,475, 22% from $48,476 to $103,350, 24% from $103,351 to $197,300, 32% from $197,301 to $250,525, 35% from $250,526 to $626,350, and 37% on income over $626,350. The standard deduction is $15,000."}},{"@type":"Question","name":"How does filing status affect my effective tax rate?","acceptedAnswer":{"@type":"Answer","text":"Filing status changes both the standard deduction amount and where bracket thresholds fall. Married filing jointly generally has the widest brackets and largest standard deduction ($30,000 in 2025), resulting in lower effective rates at the same income level. Head of Household offers a $22,500 standard deduction and wider lower brackets than single filers."}},{"@type":"Question","name":"Does this calculator include FICA and state taxes?","acceptedAnswer":{"@type":"Answer","text":"This calculator focuses on federal income tax brackets and includes an optional flat-rate state tax estimate. FICA taxes (6.2% Social Security plus 1.45% Medicare for employees) are not included as they are separate payroll taxes. For a complete picture including all payroll deductions, use a net income calculator."}}]}
-}</script>
+</script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2K8JLFQ5H"></script>
 <script>
@@ -675,7 +675,7 @@ Privacy Note - This calculator runs entirely in your browser. No income data, ta
 
 <script>
 (function(){
-let v="parseInt(localStorage.getItem('etr_visits')||'0',10)+1;"
+let v=parseInt(localStorage.getItem('etr_visits')||'0',10)+1;
 localStorage.setItem('etr_visits',v.toString());
 })();
 
@@ -718,61 +718,61 @@ headOfHousehold:[
 ]
 };
 
-const standardDeductions="{single:14600,married:29200,marriedSeparate:14600,headOfHousehold:21900};"
+const standardDeductions={single:14600,married:29200,marriedSeparate:14600,headOfHousehold:21900};
 
 function toggleCustomDeduction(){
-const dt="document.getElementById('deductionType').value;"
+const dt=document.getElementById('deductionType').value;
 document.getElementById('customDeductionGroup').style.display="dt="=='itemized'?'block':'none';""
 }
 
 function calculateEffective(){
-const gross="parseFloat(document.getElementById('grossIncome').value)||0;"
-const status="document.getElementById('filingStatus').value;"
-const deductionType="document.getElementById('deductionType').value;"
-const stateRate="parseFloat(document.getElementById('stateRateInput').value)/100||0;"
+const gross=parseFloat(document.getElementById('grossIncome').value)||0;
+const status=document.getElementById('filingStatus').value;
+const deductionType=document.getElementById('deductionType').value;
+const stateRate=parseFloat(document.getElementById('stateRateInput').value)/100||0;
 
-let deduction="standardDeductions[status];"
+let deduction=standardDeductions[status];
 if(deductionType="=='itemized'){"
-deduction="parseFloat(document.getElementById('customDeduction').value)||0;"
+deduction=parseFloat(document.getElementById('customDeduction').value)||0;
 }
 
-const taxableIncome="Math.max(0,gross-deduction);"
-const bracks="brackets2025[status];"
+const taxableIncome=Math.max(0,gross-deduction);
+const bracks=brackets2025[status];
 
-let totalTax="0;"
-let marginalRate="0.10;"
-const bracketDetails="[];"
+let totalTax=0;
+let marginalRate=0.10;
+const bracketDetails=[];
 
-for(let i="0;i<bracks.length;i++){"
-const b="bracks[i];"
+for(let i=0;i<bracks.length;i++){
+const b=bracks[i];
 if(taxableIncome<=b.min) break;
-const taxableInBracket="Math.min(taxableIncome,b.max)-b.min;"
-const taxInBracket="taxableInBracket*b.rate;"
+const taxableInBracket=Math.min(taxableIncome,b.max)-b.min;
+const taxInBracket=taxableInBracket*b.rate;
 totalTax+=taxInBracket;
-marginalRate="b.rate;"
+marginalRate=b.rate;
 bracketDetails.push({rate:b.rate,income:taxableInBracket,tax:taxInBracket,min:b.min,max:b.max});
 }
 
 const effectiveRate="gross">0?Math.round((totalTax/gross)*10000)/100:0;
-const stateTax="taxableIncome*stateRate;"
-const totalWithState="totalTax+stateTax;"
+const stateTax=taxableIncome*stateRate;
+const totalWithState=totalTax+stateTax;
 const combinedEffective="gross">0?Math.round((totalWithState/gross)*10000)/100:0;
 
-document.getElementById('marginalRate').textContent="(marginalRate*100).toFixed(0)+'%';"
-document.getElementById('effectiveRate').textContent="effectiveRate.toFixed(1)+'%';"
-document.getElementById('rGross').textContent="'$'+gross.toLocaleString();"
-document.getElementById('rDeduction').textContent="'$'+deduction.toLocaleString();"
-document.getElementById('rTaxable').textContent="'$'+taxableIncome.toLocaleString();"
-document.getElementById('rFedTax').textContent="'$'+totalTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});"
-document.getElementById('rStateTax').textContent="'$'+stateTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});"
-document.getElementById('rTotalTax').textContent="'$'+totalWithState.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});"
-document.getElementById('rCombinedEff').textContent="combinedEffective.toFixed(1)+'%';"
-document.getElementById('results').style.display="'block';"
+document.getElementById('marginalRate').textContent=(marginalRate*100).toFixed(0)+'%';
+document.getElementById('effectiveRate').textContent=effectiveRate.toFixed(1)+'%';
+document.getElementById('rGross').textContent='$'+gross.toLocaleString();
+document.getElementById('rDeduction').textContent='$'+deduction.toLocaleString();
+document.getElementById('rTaxable').textContent='$'+taxableIncome.toLocaleString();
+document.getElementById('rFedTax').textContent='$'+totalTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('rStateTax').textContent='$'+stateTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('rTotalTax').textContent='$'+totalWithState.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('rCombinedEff').textContent=combinedEffective.toFixed(1)+'%';
+document.getElementById('results').style.display='block';
 
-const breakdownEl="document.getElementById('bracketBreakdown');"
-let html="'';"
-const maxTax="Math.max(...bracketDetails.map(function(d){return" d.tax;}));
-const colors="['#00ff88','#00ccff','#6C5CE7','#ff6b9d','#ffa500','#ff4444','#cc3333'];"
+const breakdownEl=document.getElementById('bracketBreakdown');
+let html='';
+const maxTax=Math.max(...bracketDetails.map(function(d){return d.tax;}));
+const colors=['#00ff88','#00ccff','#6C5CE7','#ff6b9d','#ffa500','#ff4444','#cc3333'];
 bracketDetails.forEach(function(d,i){
 const pct="maxTax">0?(d.tax/maxTax)*100:0;
 html+='<div class="bracket-bar">';
@@ -781,16 +781,16 @@ html+='<div style="flex:1;background:#1e1e2e;border-radius:4px;overflow:hidden">
 html+='<span class="bar-amount">$'+d.tax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})+'</span>';
 html+='</div>';
 });
-breakdownEl.innerHTML="html;"
+breakdownEl.innerHTML=html;
 
 updateChart(bracketDetails);
 }
 
 function updateChart(details){
-const labels="details.map(function(d){return(d.rate*100)+'%';});"
+const labels=details.map(function(d){return(d.rate*100)+'%';});
 const data="details.map(function(d){return" d.tax.toFixed(0);});
 const bgColors="details.map(function(d,i){"
-var c="['#00ff88','#00ccff','#6C5CE7','#ff6b9d','#ffa500','#ff4444','#cc3333'];"
+var c=['#00ff88','#00ccff','#6C5CE7','#ff6b9d','#ffa500','#ff4444','#cc3333'];
 return c[i%c.length];
 });
 const chartUrl="'https://quickchart.io/chart?c="'+encodeURIComponent(JSON.stringify({"

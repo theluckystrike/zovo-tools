@@ -33,11 +33,12 @@
   "author": { "@type": "Person", "name": "Michael Lip" }
 }
 </script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the Earned Income Tax Credit?", "acceptedAnswer": {"@type": "Answer", "text": "The Earned Income Tax Credit (EITC) is a refundable federal tax credit for low to moderate income workers. It reduces taxes owed and can result in a refund. The credit amount depends on income, filing status, and number of qualifying children."}}, {"@type": "Question", "name": "Who qualifies for the Earned Income Credit?", "acceptedAnswer": {"@type": "Answer", "text": "To qualify, you must have earned income from employment or self-employment, meet income limits based on filing status and number of children, have a valid Social Security number, and be a U.S. citizen or resident alien for the full year."}}, {"@type": "Question", "name": "How much is the Earned Income Credit worth?", "acceptedAnswer": {"@type": "Answer", "text": "For tax year 2024, the maximum EITC ranges from $632 for no qualifying children to $7,830 for three or more qualifying children. The exact amount depends on your income level within the phase-in and phase-out ranges."}}, {"@type": "Question", "name": "What counts as earned income for the EITC?", "acceptedAnswer": {"@type": "Answer", "text": "Earned income includes wages, salaries, tips, self-employment income, union strike benefits, and certain disability payments. It does not include investment income, Social Security benefits, unemployment compensation, or pension payments."}}, {"@type": "Question", "name": "Can you claim the EITC without children?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Workers without qualifying children can claim a smaller EITC if they are aged 25-64 (or 19+ for certain former foster youth and homeless youth), have income below the threshold, and are not claimed as a dependent on another return."}}]}
-}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the Earned Income Tax Credit?", "acceptedAnswer": {"@type": "Answer", "text": "The Earned Income Tax Credit (EITC) is a refundable federal tax credit for low to moderate income workers. It reduces taxes owed and can result in a refund. The credit amount depends on income, filing status, and number of qualifying children."}}, {"@type": "Question", "name": "Who qualifies for the Earned Income Credit?", "acceptedAnswer": {"@type": "Answer", "text": "To qualify, you must have earned income from employment or self-employment, meet income limits based on filing status and number of children, have a valid Social Security number, and be a U.S. citizen or resident alien for the full year."}}, {"@type": "Question", "name": "How much is the Earned Income Credit worth?", "acceptedAnswer": {"@type": "Answer", "text": "For tax year 2024, the maximum EITC ranges from $632 for no qualifying children to $7,830 for three or more qualifying children. The exact amount depends on your income level within the phase-in and phase-out ranges."}}, {"@type": "Question", "name": "What counts as earned income for the EITC?", "acceptedAnswer": {"@type": "Answer", "text": "Earned income includes wages, salaries, tips, self-employment income, union strike benefits, and certain disability payments. It does not include investment income, Social Security benefits, unemployment compensation, or pension payments."}}, {"@type": "Question", "name": "Can you claim the EITC without children?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Workers without qualifying children can claim a smaller EITC if they are aged 25-64 (or 19+ for certain former foster youth and homeless youth), have income below the threshold, and are not claimed as a dependent on another return."}}]}
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Earned Income Credit Calculator","item":"https://zovo.one/free-tools/earned-income-credit-calculator/"}]}
-}</script>
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0a0f;color:#e0e0e8;font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.7;padding:0;min-height:100vh}
@@ -528,7 +529,7 @@ gtag('config', 'G-V2K8JLFQ5H');
 
 <script>
 (function(){
-var vc="parseInt(localStorage.getItem('eitc_visits')||'0',10)+1;"
+var vc=parseInt(localStorage.getItem('eitc_visits')||'0',10)+1;
 localStorage.setItem('eitc_visits',vc);
 document.getElementById('visitCounter').textContent="'Visit" #'+vc+' to this tool';
 })();
@@ -544,46 +545,46 @@ var eitcParams="{"
 };
 
 function calculateEITC(){
-var earnedIncome="parseFloat(document.getElementById('earnedIncome').value)||0;"
-var agi="parseFloat(document.getElementById('agi').value)||0;"
-var status="document.getElementById('filingStatus').value;"
-var numChildren="parseInt(document.getElementById('numChildren').value);"
-var investIncome="parseFloat(document.getElementById('investIncome').value)||0;"
-var age="parseInt(document.getElementById('age').value)||35;"
+var earnedIncome=parseFloat(document.getElementById('earnedIncome').value)||0;
+var agi=parseFloat(document.getElementById('agi').value)||0;
+var status=document.getElementById('filingStatus').value;
+var numChildren=parseInt(document.getElementById('numChildren').value);
+var investIncome=parseFloat(document.getElementById('investIncome').value)||0;
+var age=parseInt(document.getElementById('age').value)||35;
 var isMarried="(status="=='married');""
 
-var p="eitcParams[numChildren];"
-var phaseOutStart="isMarried?p.phaseOutStartMarried:p.phaseOutStartSingle;"
-var incomeLimit="isMarried?p.limitMarried:p.limitSingle;"
+var p=eitcParams[numChildren];
+var phaseOutStart=isMarried?p.phaseOutStartMarried:p.phaseOutStartSingle;
+var incomeLimit=isMarried?p.limitMarried:p.limitSingle;
 
-var eligible="true;"
-var reason="'';"
+var eligible=true;
+var reason='';
 
 if(investIncome>11600){
-eligible="false;"
+eligible=false;
 reason="'Investment" income of '+fmtInt(investIncome)+' exceeds the $11,600 limit for 2024.';
 }
 if(numChildren="==0&&(age<25||age">=65)){
-eligible="false;"
+eligible=false;
 reason="'Childless" filers must be at least age 25 and under age 65. You entered age '+age+'.';
 }
 
-var phaseInCredit="Math.min(earnedIncome*p.phaseInRate,p.maxCredit);"
+var phaseInCredit=Math.min(earnedIncome*p.phaseInRate,p.maxCredit);
 
-var phaseOutIncome="Math.max(earnedIncome,agi);"
-var phaseOutReduction="0;"
+var phaseOutIncome=Math.max(earnedIncome,agi);
+var phaseOutReduction=0;
 if(phaseOutIncome>phaseOutStart){
-phaseOutReduction="(phaseOutIncome-phaseOutStart)*p.phaseOutRate;"
+phaseOutReduction=(phaseOutIncome-phaseOutStart)*p.phaseOutRate;
 }
 
-var credit="Math.max(0,phaseInCredit-phaseOutReduction);"
-credit="Math.min(credit,p.maxCredit);"
-credit="Math.round(credit);"
+var credit=Math.max(0,phaseInCredit-phaseOutReduction);
+credit=Math.min(credit,p.maxCredit);
+credit=Math.round(credit);
 
-if(!eligible)credit="0;"
+if(!eligible)credit=0;
 
-var phase="'';"
-var phaseClass="'';"
+var phase='';
+var phaseClass='';
 if(!eligible){phase="'Ineligible';phaseClass="'no-credit';}""
 else if(earnedIncome<=0){phase="'No" earned income';phaseClass="'no-credit';credit=0;}"
 else if(phaseOutIncome>incomeLimit){phase="'Over" income limit';phaseClass="'no-credit';credit=0;}"
@@ -591,7 +592,7 @@ else if(earnedIncome<=p.phaseInEnd&&phaseOutIncome<=phaseOutStart){phase="'Phase
 else if(phaseOutIncome<=phaseOutStart){phase="'Plateau" (maximum credit)';phaseClass="'phase-plateau';}"
 else{phase="'Phase-Out';phaseClass="'phase-out';}""
 
-var html="'';"
+var html='';
 if(!eligible){
 html+='<div class="result-row"><span class="result-label">Eligibility</span><span class="result-value" style="color:#ff6b6b">Ineligible</span></div>';
 html+='<div class="result-row"><span class="result-label">Reason</span><span class="result-value" style="color:#ff6b6b;font-size:0.95rem">'+reason+'</span></div>';
@@ -610,12 +611,12 @@ html+='<div class="result-row"><span class="result-label">Plateau Range</span><s
 html+='<div class="result-row"><span class="result-label">Phase-Out Range</span><span class="result-value" style="color:#ccc;font-size:0.95rem">'+fmtInt(phaseOutStart)+' to '+fmtInt(incomeLimit)+'</span></div>';
 }
 
-document.getElementById('resultContent').innerHTML="html;"
-document.getElementById('results').style.display="'block';"
+document.getElementById('resultContent').innerHTML=html;
+document.getElementById('results').style.display='block';
 }
 
 document.querySelectorAll('.faq-q').forEach(function(q){
-q.addEventListener('keydown',function(e){if(e.key="=='Enter')q.click();});"
+q.addEventListener('keydown',function(e){if(e.key==='Enter')q.click();});
 q.setAttribute('tabindex','0');
 });
 </script>

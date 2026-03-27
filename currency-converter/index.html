@@ -46,48 +46,19 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Are these exchange rates live or real-time?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "These rates are realistic reference rates based on recent market data but are not live. They are updated periodically and intended for estimation and educational purposes. For actual financial transactions, always verify the current rate with your bank, credit card company, or exchange service, as rates fluctuate throughout the trading day."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is an exchange rate and how is it determined?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "An exchange rate is the price of one currency expressed in terms of another. For example, a USD/EUR rate of 0.92 means 1 US dollar equals 0.92 euros. Exchange rates are determined by supply and demand in the foreign exchange (forex) market, influenced by interest rates, inflation, trade balances, political stability, and economic performance. Central bank policies have the largest single impact on exchange rates."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Why do banks offer different rates than the mid-market rate?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Banks add a spread (markup) to the mid-market rate to cover operating costs and generate profit. The mid-market rate is the midpoint between the buy and sell price on the forex market. Bank spreads typically range from 1% to 5% depending on the currency pair, transaction size, and provider. Online transfer services often offer rates closer to the mid-market rate than traditional banks."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the most traded currency pairs in the world?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The most actively traded currency pairs are EUR/USD (Euro/US Dollar), USD/JPY (US Dollar/Japanese Yen), GBP/USD (British Pound/US Dollar), and USD/CHF (US Dollar/Swiss Franc). These four major pairs account for over 50% of all forex trading volume. EUR/USD alone represents approximately 24% of global forex turnover, making it the single most liquid currency pair."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How can I get the best exchange rate when traveling abroad?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Use a credit card with no foreign transaction fees for purchases, which typically provides rates close to the mid-market rate. Avoid airport and hotel exchange counters, which offer the worst rates. Use ATMs from major banks at your destination to withdraw local currency, but check for withdrawal fees. Compare rates from multiple providers before exchanging large amounts. Online transfer services like Wise or Revolut often offer the most competitive rates for large transfers."
-      }
-    </script>
+  "@type": "WebApplication",
+  "name": "Currency Converter Calculator",
+  "description": "Free currency converter calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/currency-converter/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -98,7 +69,7 @@
     { "@type": "ListItem", "position": 3, "name": "Currency Converter", "item": "https://zovo.one/free-tools/currency-converter/" }
   ]
 }
-}</script>
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0a0a0f;--surface:#12121a;--card:#1a1a2e;--text:#e0e0e8;--heading:#fff;--accent:#00ff88;--link:#00ccff;--border:#2a2a3e;--input-bg:#12121a}
@@ -567,22 +538,22 @@ var popularPairs="["
 ];
 
 function init(){
-  var f="document.getElementById('fromCur');"
-  var t="document.getElementById('toCur');"
-  var codes="Object.keys(RATES);"
+  var f=document.getElementById('fromCur');
+  var t=document.getElementById('toCur');
+  var codes=Object.keys(RATES);
 
   codes.forEach(function(c){
     f.innerHTML+='<option value="'+c+'"'+(c="=='USD'?'" selected':'')+'>'+c+' - '+RATES[c].name+'</option>';
     t.innerHTML+='<option value="'+c+'"'+(c="=='EUR'?'" selected':'')+'>'+c+' - '+RATES[c].name+'</option>';
   });
 
-  var grid="document.getElementById('popularGrid');"
+  var grid=document.getElementById('popularGrid');
   popularPairs.forEach(function(p){
-    var r="conv(1,p[0],p[1]);"
-    var d="document.createElement('div');"
-    d.className="'pop-card';"
+    var r=conv(1,p[0],p[1]);
+    var d=document.createElement('div');
+    d.className='pop-card';
     d.innerHTML="'<div" class="pair">'+p[0]+'/'+p[1]+'</div><div class="prate">'+r.toFixed(4)+'</div>';
-    d.onclick="function(){"
+    d.onclick=function(){
       document.getElementById('fromCur').value="p[0];"
       document.getElementById('toCur').value="p[1];"
       doConvert();
@@ -590,11 +561,11 @@ function init(){
     grid.appendChild(d);
   });
 
-  var tbody="document.getElementById('rateTableBody');"
+  var tbody=document.getElementById('rateTableBody');
   codes.forEach(function(c){
-    if(c="=='USD')return;"
-    var r="RATES[c].rate;"
-    var row="document.createElement('tr');"
+    if(c==='USD')return;
+    var r=RATES[c].rate;
+    var row=document.createElement('tr');
     row.innerHTML="'<td">'+RATES[c].name+'</td><td style="font-family:Courier New,monospace;font-weight:600;color:var(--accent)">'+c+'</td><td>'+(r>=100?r.toFixed(2):r.toFixed(4))+'</td><td>'+(1/r).toFixed(4)+'</td>';
     tbody.appendChild(row);
   });
@@ -610,12 +581,12 @@ function conv(a,from,to){
 }
 
 function doConvert(){
-  var a="parseFloat(document.getElementById('amount').value)||0;"
-  var from="document.getElementById('fromCur').value;"
-  var to="document.getElementById('toCur').value;"
-  var result="conv(a,from,to);"
-  var r1="conv(1,from,to);"
-  var r2="conv(1,to,from);"
+  var a=parseFloat(document.getElementById('amount').value)||0;
+  var from=document.getElementById('fromCur').value;
+  var to=document.getElementById('toCur').value;
+  var result=conv(a,from,to);
+  var r1=conv(1,from,to);
+  var r2=conv(1,to,from);
 
   document.getElementById('fromDisplay').textContent="a.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'" '+from+' =';
   document.getElementById('toDisplay').textContent="result.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'" '+to;
@@ -623,9 +594,9 @@ function doConvert(){
 }
 
 function swapCurrencies(){
-  var f="document.getElementById('fromCur');"
-  var t="document.getElementById('toCur');"
-  var tmp="f.value;"
+  var f=document.getElementById('fromCur');
+  var t=document.getElementById('toCur');
+  var tmp=f.value;
   f.value="t.value;"
   t.value="tmp;"
   doConvert();

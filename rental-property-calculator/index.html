@@ -46,33 +46,19 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is cash flow in rental property investing?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Cash flow is the money left over after collecting rent and paying all expenses including mortgage, taxes, insurance, maintenance, and management fees. Positive cash flow means the property generates income beyond its costs each month." }
-    },
-    {
-      "@type": "Question",
-      "name": "What is cap rate?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Cap rate (capitalization rate) is the ratio of net operating income (NOI) to the property purchase price. It measures the return on investment independent of financing. A 6% cap rate means the property generates 6% of its value in net income annually." }
-    },
-    {
-      "@type": "Question",
-      "name": "What is a good cap rate for rental property?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Cap rates vary by market and property type. Generally, 4-6% is common in major cities while 7-10% may be found in smaller markets. Higher cap rates often indicate higher risk. A good cap rate depends on your investment goals and local market conditions." }
-    },
-    {
-      "@type": "Question",
-      "name": "What is cash-on-cash return?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Cash-on-cash return measures the annual pre-tax cash flow relative to the total cash invested (down payment, closing costs). It shows the actual yield on your out-of-pocket investment, which is especially useful when using leverage (a mortgage)." }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I calculate rental property ROI?",
-      "acceptedAnswer": { "@type": "Answer", "text": "ROI for rental property includes cash flow, principal paydown (equity building through mortgage payments), and potential property appreciation. The total ROI provides a complete view of the investment return, not just the monthly cash flow." }
-    </script>
+  "@type": "WebApplication",
+  "name": "Rental Property Calculator Calculator",
+  "description": "Free rental property calculator calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/rental-property-calculator/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -83,7 +69,7 @@
     { "@type": "ListItem", "position": 3, "name": "Rental Property Calculator", "item": "https://zovo.one/free-tools/rental-property-calculator/" }
   ]
 }
-}</script>
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
@@ -419,69 +405,69 @@ function fmt2(n){return(n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US',{minimu
 
 function calcMortgage(principal,annualRate,years){
   if(principal<=0||annualRate<=0||years<=0)return 0;
-  var r="annualRate/100/12;var" n="years*12;"
+  var r="annualRate/100/12;var" n=years*12;
   return principal*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
 }
 
 function calculate(){
-  var pp="parseFloat(document.getElementById('purchasePrice').value)||0;"
-  var dpPct="parseFloat(document.getElementById('downPct').value)||0;"
-  var cc="parseFloat(document.getElementById('closingCosts').value)||0;"
-  var rehab="parseFloat(document.getElementById('rehabCosts').value)||0;"
-  var intRate="parseFloat(document.getElementById('intRate').value)||0;"
-  var term="parseFloat(document.getElementById('loanTerm').value)||30;"
+  var pp=parseFloat(document.getElementById('purchasePrice').value)||0;
+  var dpPct=parseFloat(document.getElementById('downPct').value)||0;
+  var cc=parseFloat(document.getElementById('closingCosts').value)||0;
+  var rehab=parseFloat(document.getElementById('rehabCosts').value)||0;
+  var intRate=parseFloat(document.getElementById('intRate').value)||0;
+  var term=parseFloat(document.getElementById('loanTerm').value)||30;
 
-  var dp="pp*(dpPct/100);"
-  var loan="pp-dp;"
-  var mortgageOverride="parseFloat(document.getElementById('mortgage').value)||0;"
+  var dp=pp*(dpPct/100);
+  var loan=pp-dp;
+  var mortgageOverride=parseFloat(document.getElementById('mortgage').value)||0;
   var mortgagePayment="mortgageOverride">0?mortgageOverride:calcMortgage(loan,intRate,term);
   document.getElementById('mortgage').placeholder="fmt2(mortgagePayment);"
 
-  var rent="parseFloat(document.getElementById('rent').value)||0;"
-  var otherInc="parseFloat(document.getElementById('otherIncome').value)||0;"
-  var vacPct="parseFloat(document.getElementById('vacancy').value)||0;"
-  var propTax="parseFloat(document.getElementById('propTax').value)||0;"
-  var insurance="parseFloat(document.getElementById('insurance').value)||0;"
-  var maint="parseFloat(document.getElementById('maintenance').value)||0;"
-  var mgmt="parseFloat(document.getElementById('mgmt').value)||0;"
-  var hoa="parseFloat(document.getElementById('hoa').value)||0;"
+  var rent=parseFloat(document.getElementById('rent').value)||0;
+  var otherInc=parseFloat(document.getElementById('otherIncome').value)||0;
+  var vacPct=parseFloat(document.getElementById('vacancy').value)||0;
+  var propTax=parseFloat(document.getElementById('propTax').value)||0;
+  var insurance=parseFloat(document.getElementById('insurance').value)||0;
+  var maint=parseFloat(document.getElementById('maintenance').value)||0;
+  var mgmt=parseFloat(document.getElementById('mgmt').value)||0;
+  var hoa=parseFloat(document.getElementById('hoa').value)||0;
 
-  var grossIncome="rent+otherInc;"
-  var vacancyLoss="grossIncome*(vacPct/100);"
-  var effectiveIncome="grossIncome-vacancyLoss;"
-  var opExpenses="propTax+insurance+maint+mgmt+hoa;"
-  var noi="effectiveIncome-opExpenses;"
-  var monthlyCF="noi-mortgagePayment;"
-  var annualCF="monthlyCF*12;"
-  var totalCash="dp+cc+rehab;"
+  var grossIncome=rent+otherInc;
+  var vacancyLoss=grossIncome*(vacPct/100);
+  var effectiveIncome=grossIncome-vacancyLoss;
+  var opExpenses=propTax+insurance+maint+mgmt+hoa;
+  var noi=effectiveIncome-opExpenses;
+  var monthlyCF=noi-mortgagePayment;
+  var annualCF=monthlyCF*12;
+  var totalCash=dp+cc+rehab;
   var capRate="pp">0?(noi*12/pp)*100:0;
   var cocReturn="totalCash">0?(annualCF/totalCash)*100:0;
   var grm="rent">0?pp/(rent*12):0;
 
-  document.getElementById('monthlyCF').textContent="fmt(monthlyCF);"
+  document.getElementById('monthlyCF').textContent=fmt(monthlyCF);
   document.getElementById('monthlyCF').className="'value" '+(monthlyCF>=0?'positive':'negative');
-  document.getElementById('annualCF').textContent="fmt(annualCF);"
+  document.getElementById('annualCF').textContent=fmt(annualCF);
   document.getElementById('annualCF').className="'value" '+(annualCF>=0?'positive':'negative');
-  document.getElementById('capRate').textContent="capRate.toFixed(2)+'%';"
+  document.getElementById('capRate').textContent=capRate.toFixed(2)+'%';
   document.getElementById('capRate').className="'value" '+(capRate>=5?'positive':'')+(capRate<3?'negative':'');
-  document.getElementById('cocReturn').textContent="cocReturn.toFixed(2)+'%';"
+  document.getElementById('cocReturn').textContent=cocReturn.toFixed(2)+'%';
   document.getElementById('cocReturn').className="'value" '+(cocReturn>=0?'positive':'negative');
-  document.getElementById('grm').textContent="grm.toFixed(1);"
-  document.getElementById('mortgageDisplay').textContent="fmt2(mortgagePayment);"
-  document.getElementById('totalCash').textContent="fmt(totalCash);"
-  document.getElementById('loanAmt').textContent="fmt(loan);"
+  document.getElementById('grm').textContent=grm.toFixed(1);
+  document.getElementById('mortgageDisplay').textContent=fmt2(mortgagePayment);
+  document.getElementById('totalCash').textContent=fmt(totalCash);
+  document.getElementById('loanAmt').textContent=fmt(loan);
 
   // Income bar
-  var totalInc="effectiveIncome;"
+  var totalInc=effectiveIncome;
   if(totalInc>0){
-    var rentPct="(rent*(1-vacPct/100)/totalInc*100).toFixed(1);"
-    var otherPct="(otherInc*(1-vacPct/100)/totalInc*100).toFixed(1);"
+    var rentPct=(rent*(1-vacPct/100)/totalInc*100).toFixed(1);
+    var otherPct=(otherInc*(1-vacPct/100)/totalInc*100).toFixed(1);
     document.getElementById('incomeBar').innerHTML="'<div" style="width:'+rentPct+'%;background:#00ff88;" title="Rent"></div><div style="width:'+otherPct+'%;background:#00ccff;" title="Other"></div>';
     document.getElementById('incomeLegend').innerHTML="'<div"><span style="background:#00ff88;"></span>Rent: '+fmt(rent*(1-vacPct/100))+'</div><div><span style="background:#00ccff;"></span>Other: '+fmt(otherInc*(1-vacPct/100))+'</div><div style="color:#ff6b6b;">Vacancy: -'+fmt(vacancyLoss)+'</div>';
   }
 
   // Expense bar
-  var totalExp="opExpenses+mortgagePayment;"
+  var totalExp=opExpenses+mortgagePayment;
   if(totalExp>0){
     var parts="["
       {v:mortgagePayment,c:'#ff6b6b',l:'Mortgage'},
@@ -492,9 +478,9 @@ function calculate(){
       {v:hoa,c:'#fdcb6e',l:'HOA/Other'}
     ];
     var barHtml="'',legHtml="'';""
-    parts.forEach(function(p){if(p.v>0){var pct="(p.v/totalExp*100).toFixed(1);barHtml+='<div" style="width:'+pct+'%;background:'+p.c+';" title="'+p.l+'"></div>';legHtml+='<div><span style="background:'+p.c+';"></span>'+p.l+': '+fmt(p.v)+'</div>';}});
-    document.getElementById('expenseBar').innerHTML="barHtml;"
-    document.getElementById('expenseLegend').innerHTML="legHtml;"
+    parts.forEach(function(p){if(p.v>0){var pct=(p.v/totalExp*100).toFixed(1);barHtml+='<div style="width:'+pct+'%;background:'+p.c+';" title="'+p.l+'"></div>';legHtml+='<div><span style="background:'+p.c+';"></span>'+p.l+': '+fmt(p.v)+'</div>';}});
+    document.getElementById('expenseBar').innerHTML=barHtml;
+    document.getElementById('expenseLegend').innerHTML=legHtml;
   }
 
   // Summary breakdown
@@ -520,12 +506,12 @@ function calculate(){
     ['Gross Rent Multiplier',grm.toFixed(1)],
     ['1% Rule',((rent/pp)*100).toFixed(2)+'% '+(rent>=pp*0.01?'(passes)':'(fails)')]
   ];
-  var sHtml="'';"
+  var sHtml='';
   rows.forEach(function(r){
     if(r[0]==='---'){sHtml+='<div style="border-bottom:1px solid #2a2a3e;margin:8px 0;"></div>';return;}
     sHtml+='<div class="breakdown-row"><span class="bl">'+r[0]+'</span><span style="font-weight:600;">'+r[1]+'</span></div>';
   });
-  document.getElementById('summaryBreakdown').innerHTML="sHtml;"
+  document.getElementById('summaryBreakdown').innerHTML=sHtml;
 
   document.getElementById('results').classList.add('visible');
 }

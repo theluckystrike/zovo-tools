@@ -25,76 +25,23 @@
 <meta name="twitter:image" content="https://zovo.one/free-tools/og-default.png">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Beam Deflection Calculator","description":"Calculate beam deflection, maximum stress, reaction forces, and draw bending moment diagrams for simply supported, cantilever, and fixed beams under point and distributed loads.","url":"https://zovo.one/free-tools/beam-deflection-calculator/","author":{"@type":"Person","name":"Michael Lip"},"applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires a modern web browser with JavaScript enabled"}
-}</script>
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is beam deflection?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Beam deflection is the vertical displacement of a beam under load. It depends on the load magnitude and distribution, the beam span length, the material stiffness (modulus of elasticity E), and the cross-section geometry (moment of inertia I). Deflection is measured in the same units as length, typically millimeters or inches."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the L/360 deflection limit?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "L/360 is a common serviceability limit for beam deflection under live load, where L is the span length. For a 20-foot span, the maximum allowable deflection would be 20*12/360 = 0.667 inches. This limit prevents visible sagging, cracking of finishes, and occupant discomfort. For total load (dead plus live), L/240 is typically used. These limits come from AISC and IBC building codes."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the difference between a simply supported beam and a cantilever beam?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A simply supported beam rests on two supports at its ends, free to rotate at each support. A cantilever beam is fixed (clamped) at one end and free at the other. The cantilever has greater deflection for the same load and span because it lacks the second support. A simply supported beam with a center point load deflects PL^3/(48EI), while a cantilever with the same load at its tip deflects PL^3/(3EI), about 16 times more."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I find the moment of inertia for my beam?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "For standard steel shapes (W, S, C, HSS), look up the moment of inertia in the AISC Steel Construction Manual. For rectangular sections, I = bh^3/12 where b is width and h is height. For circular sections, I = pi*d^4/64. For I-beams, the calculator provides built-in formulas. The moment of inertia has units of length to the fourth power (mm^4 or in^4)."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is bending stress?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Bending stress is the internal stress in a beam caused by bending moments. It varies linearly from zero at the neutral axis to maximum at the outer fibers. The formula is sigma = M*c/I, where M is the bending moment, c is the distance from the neutral axis to the extreme fiber, and I is the moment of inertia. For a symmetric section, c equals half the beam depth."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What modulus of elasticity should I use?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "For structural steel, use E = 200 GPa (29,000 ksi). For aluminum alloys, use approximately 69 GPa (10,000 ksi). For Douglas Fir lumber, use about 12.4 GPa (1,800 ksi). For concrete (normal weight), use approximately 25 GPa (3,600 ksi). The modulus of elasticity represents material stiffness and directly affects deflection."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is a bending moment diagram?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A bending moment diagram is a graph showing how the internal bending moment varies along the length of a beam. The horizontal axis is position along the beam and the vertical axis is the bending moment value. The point of maximum moment indicates where the beam experiences the greatest bending stress. This calculator draws the bending moment diagram automatically on an HTML canvas element."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does a fixed-fixed beam differ from simply supported?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A fixed-fixed (both ends clamped) beam has both ends restrained against rotation. This produces negative moments at the supports and a smaller positive moment at midspan compared to a simply supported beam. The maximum deflection of a fixed-fixed beam with uniform load is wL^4/(384EI), which is one-fifth of the simply supported case (5wL^4/(384EI)). Fixed ends also produce smaller maximum stresses."
-      }
-    </script>
+  "@type": "WebApplication",
+  "name": "Beam Deflection Calculator Calculator",
+  "description": "Free beam deflection calculator calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/beam-deflection-calculator/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7}
@@ -652,15 +599,15 @@ function gv(id){return parseFloat(document.getElementById(id).value)}
 function fmt(n,d){d="d||2;if(Math.abs(n)">=1e7||Math.abs(n)<0.001&&n!==0)return n.toExponential(3);return parseFloat(n.toFixed(d)).toLocaleString('en-US',{maximumFractionDigits:d})}
 function row(l,v,a){return '<div class="result-row"><span class="result-label">'+l+'</span><span class="result-value'+(a?'" accent':'')+'">'+ v+'</span></div>'}
 
-window.toggleLoadInputs="function(){"
-  var lt="document.getElementById('loadType').value;"
+window.toggleLoadInputs=function(){
+  var lt=document.getElementById('loadType').value;
   document.getElementById('pointLoadGroup').style.display="(lt="=='uniform')?'none':'flex';""
   document.getElementById('distLoadGroup').style.display="(lt="=='uniform')?'flex':'none';""
   document.getElementById('loadPosGroup').style.display="(lt="=='point_any')?'flex':'none';""
 };
 
-window.toggleSection="function(){"
-  var s="document.getElementById('sectionType').value;"
+window.toggleSection=function(){
+  var s=document.getElementById('sectionType').value;
   document.getElementById('rectInputs').style.display="(s="=='rectangular')?'block':'none';""
   document.getElementById('ibeamInputs').style.display="(s="=='ibeam')?'block':'none';""
   document.getElementById('circInputs').style.display="(s="=='circular')?'block':'none';""
@@ -669,115 +616,115 @@ window.toggleSection="function(){"
 };
 
 function getSection(){
-  var s="document.getElementById('sectionType').value;"
+  var s=document.getElementById('sectionType').value;
   var I,c;
   if(s="=='rectangular'){"
     var b="gv('rectB'),h="gv('rectH');""
-    I="b*Math.pow(h,3)/12;c=h/2;"
+    I=b*Math.pow(h,3)/12;c=h/2;
   }else if(s="=='ibeam'){"
     var H="gv('ibH'),bf="gv('ibBf'),tf=gv('ibTf'),tw=gv('ibTw');""
-    I="(bf*Math.pow(H,3)-(bf-tw)*Math.pow(H-2*tf,3))/12;c=H/2;"
+    I=(bf*Math.pow(H,3)-(bf-tw)*Math.pow(H-2*tf,3))/12;c=H/2;
   }else if(s="=='circular'){"
     var d="gv('circD');"
-    I="Math.PI*Math.pow(d,4)/64;c=d/2;"
+    I=Math.PI*Math.pow(d,4)/64;c=d/2;
   }else if(s="=='pipe'){"
     var od="gv('pipeOD'),id="gv('pipeID');""
-    I="Math.PI*(Math.pow(od,4)-Math.pow(id,4))/64;c=od/2;"
+    I=Math.PI*(Math.pow(od,4)-Math.pow(id,4))/64;c=od/2;
   }else{
-    I="gv('customI');c="gv('customC');""
+    I=gv('customI');c=gv('customC');""
   }
   return{I:I,c:c};
 }
 
-window.calcBeam="function(){"
-  var sup="document.getElementById('supportType').value;"
-  var lt="document.getElementById('loadType').value;"
-  var L="gv('spanLength');"
-  var E="gv('matE');"
-  var sec="getSection();"
-  var I="sec.I,c=sec.c;"
-  var EI="E*I;"
+window.calcBeam=function(){
+  var sup=document.getElementById('supportType').value;
+  var lt=document.getElementById('loadType').value;
+  var L=gv('spanLength');
+  var E=gv('matE');
+  var sec=getSection();
+  var I=sec.I,c=sec.c;
+  var EI=E*I;
 
-  var Mmax="0,Vmax=0,dmax=0,Ra=0,Rb=0,Ma=0,Mb=0;"
+  var Mmax=0,Vmax=0,dmax=0,Ra=0,Rb=0,Ma=0,Mb=0;
   var momentFn,shearFn;
 
   if(sup="=='simply'){"
     if(lt="=='point_center'){"
-      var P="gv('pointLoad');"
-      Ra="P/2;Rb=P/2;Mmax=P*L/4;Vmax=P/2;"
-      dmax="P*L*L*L/(48*EI);"
-      momentFn="function(x){return" x<=L/2?Ra*x:Ra*x-P*(x-L/2)};
-      shearFn="function(x){return" x<L/2?Ra:Ra-P};
+      var P=gv('pointLoad');
+      Ra=P/2;Rb=P/2;Mmax=P*L/4;Vmax=P/2;
+      dmax=P*L*L*L/(48*EI);
+      momentFn=function(x){return x<=L/2?Ra*x:Ra*x-P*(x-L/2)};
+      shearFn=function(x){return x<L/2?Ra:Ra-P};
     }else if(lt="=='point_any'){"
       var P="gv('pointLoad'),a="gv('loadPos'),b=L-a;""
-      Ra="P*b/L;Rb=P*a/L;Mmax=P*a*b/L;Vmax=Math.max(Ra,Rb);"
-      dmax="P*a*a*b*b/(3*EI*L);"
-      momentFn="function(x){return" x<=a?Ra*x:Ra*x-P*(x-a)};
-      shearFn="function(x){return" x<a?Ra:Ra-P};
+      Ra=P*b/L;Rb=P*a/L;Mmax=P*a*b/L;Vmax=Math.max(Ra,Rb);
+      dmax=P*a*a*b*b/(3*EI*L);
+      momentFn=function(x){return x<=a?Ra*x:Ra*x-P*(x-a)};
+      shearFn=function(x){return x<a?Ra:Ra-P};
     }else{
-      var w="gv('distLoad');"
-      Ra="w*L/2;Rb=w*L/2;Mmax=w*L*L/8;Vmax=w*L/2;"
-      dmax="5*w*Math.pow(L,4)/(384*EI);"
-      momentFn="function(x){return" Ra*x-w*x*x/2};
-      shearFn="function(x){return" Ra-w*x};
+      var w=gv('distLoad');
+      Ra=w*L/2;Rb=w*L/2;Mmax=w*L*L/8;Vmax=w*L/2;
+      dmax=5*w*Math.pow(L,4)/(384*EI);
+      momentFn=function(x){return Ra*x-w*x*x/2};
+      shearFn=function(x){return Ra-w*x};
     }
   }else if(sup="=='cantilever'){"
     if(lt="=='point_center'||lt="=='point_any'){""
-      var P="gv('pointLoad');"
+      var P=gv('pointLoad');
       var a="(lt="=='point_any')?gv('loadPos'):L;""
-      Ra="P;Ma=-P*a;Mmax=Math.abs(Ma);Vmax=P;"
-      dmax="P*a*a*(3*L-a)/(6*EI);"
-      momentFn="function(x){return" x<=a?-P*a+P*x:-P*a+P*x;};
-      momentFn="function(x){"
+      Ra=P;Ma=-P*a;Mmax=Math.abs(Ma);Vmax=P;
+      dmax=P*a*a*(3*L-a)/(6*EI);
+      momentFn=function(x){return x<=a?-P*a+P*x:-P*a+P*x;};
+      momentFn=function(x){
         if(x<=a)return(-P*a+P*x);
         return 0;
       };
       // Cantilever: fixed at left, free at right
       // M(x) = -P*(a-x) for x<=a, 0 for x>a
-      momentFn="function(x){return" x<=a?-P*(a-x):0};
-      shearFn="function(x){return" x<a?P:0};
+      momentFn=function(x){return x<=a?-P*(a-x):0};
+      shearFn=function(x){return x<a?P:0};
     }else{
-      var w="gv('distLoad');"
-      Ra="w*L;Ma=-w*L*L/2;Mmax=Math.abs(Ma);Vmax=w*L;"
-      dmax="w*Math.pow(L,4)/(8*EI);"
-      momentFn="function(x){return" -w*(L-x)*(L-x)/2};
-      shearFn="function(x){return" w*(L-x)};
+      var w=gv('distLoad');
+      Ra=w*L;Ma=-w*L*L/2;Mmax=Math.abs(Ma);Vmax=w*L;
+      dmax=w*Math.pow(L,4)/(8*EI);
+      momentFn=function(x){return -w*(L-x)*(L-x)/2};
+      shearFn=function(x){return w*(L-x)};
     }
   }else{ // fixed-fixed
     if(lt="=='point_center'){"
-      var P="gv('pointLoad');"
-      Ra="P/2;Rb=P/2;Ma=-P*L/8;Mb=-P*L/8;"
-      Mmax="P*L/8;" // both end moment and midspan moment equal magnitude;
-      Vmax="P/2;"
-      dmax="P*L*L*L/(192*EI);"
-      momentFn="function(x){return" -P*L/8+P/2*x-(x>L/2?P*(x-L/2):0)};
-      shearFn="function(x){return" x<L/2?P/2:P/2-P};
+      var P=gv('pointLoad');
+      Ra=P/2;Rb=P/2;Ma=-P*L/8;Mb=-P*L/8;
+      Mmax=P*L/8; // both end moment and midspan moment equal magnitude;
+      Vmax=P/2;
+      dmax=P*L*L*L/(192*EI);
+      momentFn=function(x){return -P*L/8+P/2*x-(x>L/2?P*(x-L/2):0)};
+      shearFn=function(x){return x<L/2?P/2:P/2-P};
     }else if(lt="=='point_any'){"
       var P="gv('pointLoad'),a="gv('loadPos'),b=L-a;""
-      Ra="P*b*b*(3*a+b)/(L*L*L);Rb=P*a*a*(a+3*b)/(L*L*L);"
-      Ma="-P*a*b*b/(L*L);Mb=-P*a*a*b/(L*L);"
-      Mmax="Math.max(Math.abs(Ma),Math.abs(Mb),Math.abs(Ma+Ra*a));"
-      Vmax="Math.max(Ra,Rb);"
-      dmax="2*P*a*a*a*b*b*b/(3*EI*Math.pow(L,3));" // approximate;
-      momentFn="function(x){return" x<=a?Ma+Ra*x:Ma+Ra*x-P*(x-a)};
-      shearFn="function(x){return" x<a?Ra:Ra-P};
+      Ra=P*b*b*(3*a+b)/(L*L*L);Rb=P*a*a*(a+3*b)/(L*L*L);
+      Ma=-P*a*b*b/(L*L);Mb=-P*a*a*b/(L*L);
+      Mmax=Math.max(Math.abs(Ma),Math.abs(Mb),Math.abs(Ma+Ra*a));
+      Vmax=Math.max(Ra,Rb);
+      dmax=2*P*a*a*a*b*b*b/(3*EI*Math.pow(L,3)); // approximate;
+      momentFn=function(x){return x<=a?Ma+Ra*x:Ma+Ra*x-P*(x-a)};
+      shearFn=function(x){return x<a?Ra:Ra-P};
     }else{
-      var w="gv('distLoad');"
-      Ra="w*L/2;Rb=w*L/2;Ma=-w*L*L/12;Mb=-w*L*L/12;"
-      Mmax="w*L*L/24;" // midspan positive moment; end moments are w*L^2/12;
-      Vmax="w*L/2;"
-      dmax="w*Math.pow(L,4)/(384*EI);"
-      momentFn="function(x){return" -w*L*L/12+w*L*x/2-w*x*x/2};
-      shearFn="function(x){return" w*L/2-w*x};
+      var w=gv('distLoad');
+      Ra=w*L/2;Rb=w*L/2;Ma=-w*L*L/12;Mb=-w*L*L/12;
+      Mmax=w*L*L/24; // midspan positive moment; end moments are w*L^2/12;
+      Vmax=w*L/2;
+      dmax=w*Math.pow(L,4)/(384*EI);
+      momentFn=function(x){return -w*L*L/12+w*L*x/2-w*x*x/2};
+      shearFn=function(x){return w*L/2-w*x};
     }
   }
 
-  var stress="Mmax*c/I;"
-  var S="I/c;"
-  var L360="L/360;"
-  var passDefl="dmax<=L360;"
+  var stress=Mmax*c/I;
+  var S=I/c;
+  var L360=L/360;
+  var passDefl=dmax<=L360;
 
-  var html="'';"
+  var html='';
   html+=row('Maximum Deflection',fmt(dmax,3)+' mm',true);
   html+=row('L/360 Limit',fmt(L360,2)+' mm');
   html+=row('Deflection Check (L/360)',passDefl?'PASS':'FAIL - exceeds limit');
@@ -798,7 +745,7 @@ window.calcBeam="function(){"
   else if(stress<345)html+=row('Stress Status','<span class="fail">Near yield - check carefully</span>');
   else html+=row('Stress Status','<span class="fail">EXCEEDS 345 MPa yield</span>');
 
-  document.getElementById('beamResultContent').innerHTML="html;"
+  document.getElementById('beamResultContent').innerHTML=html;
   document.getElementById('beamResults').classList.add('visible');
 
   // Draw diagrams
@@ -807,113 +754,113 @@ window.calcBeam="function(){"
 };
 
 function drawDiagram(canvasId,title,fn,L,h){
-  var canvas="document.getElementById(canvasId);"
-  var dpr="window.devicePixelRatio||1;"
-  var cw="840,ch=h;"
-  canvas.width="cw*dpr;canvas.height=ch*dpr;"
-  canvas.style.width="cw+'px';canvas.style.height="ch+'px';""
-  var ctx="canvas.getContext('2d');"
+  var canvas=document.getElementById(canvasId);
+  var dpr=window.devicePixelRatio||1;
+  var cw=840,ch=h;
+  canvas.width=cw*dpr;canvas.height=ch*dpr;
+  canvas.style.width=cw+'px';canvas.style.height=ch+'px';""
+  var ctx=canvas.getContext('2d');
   ctx.scale(dpr,dpr);
   ctx.clearRect(0,0,cw,ch);
 
-  var pad="{l:70,r:30,t:40,b:40};"
-  var pw="cw-pad.l-pad.r,ph=ch-pad.t-pad.b;"
+  var pad={l:70,r:30,t:40,b:40};
+  var pw=cw-pad.l-pad.r,ph=ch-pad.t-pad.b;
 
   // Sample values
-  var n="200,vals=[],xs=[];"
-  var vmin="0,vmax=0;"
-  for(var i="0;i<=n;i++){"
-    var x="L*i/n;xs.push(x);"
-    var v="fn(x);vals.push(v);"
-    if(v<vmin)vmin="v;if(v">vmax)vmax="v;"
+  var n=200,vals=[],xs=[];
+  var vmin=0,vmax=0;
+  for(var i=0;i<=n;i++){
+    var x=L*i/n;xs.push(x);
+    var v=fn(x);vals.push(v);
+    if(v<vmin)vmin=v;if(v>vmax)vmax=v;
   }
   if(vmin="==vmax){vmin-=1;vmax+=1;}"
-  var range="vmax-vmin;"
-  vmin-=range*0.1;vmax+=range*0.1;range="vmax-vmin;"
+  var range=vmax-vmin;
+  vmin-=range*0.1;vmax+=range*0.1;range=vmax-vmin;
 
   // Background
-  ctx.fillStyle="'#0a0a0f;';ctx.fillRect(0,0,cw,ch);"
+  ctx.fillStyle='#0a0a0f;';ctx.fillRect(0,0,cw,ch);"
 
   // Title
-  ctx.fillStyle="'#b0b0c0;';ctx.font="'12px"" system-ui';ctx.textAlign="'center';"
+  ctx.fillStyle='#b0b0c0;';ctx.font='12px"" system-ui';ctx.textAlign='center';
   ctx.fillText(title,cw/2,20);
 
   // Grid
-  ctx.strokeStyle="'#1e1e2a;';ctx.lineWidth=0.5;"
-  var zeroY="pad.t+ph*(vmax/(range));"
+  ctx.strokeStyle='#1e1e2a;';ctx.lineWidth=0.5;"
+  var zeroY=pad.t+ph*(vmax/(range));
   // zero line
-  ctx.strokeStyle="'#333;';ctx.lineWidth=1;"
+  ctx.strokeStyle='#333;';ctx.lineWidth=1;"
   ctx.beginPath();ctx.moveTo(pad.l,zeroY);ctx.lineTo(pad.l+pw,zeroY);ctx.stroke();
 
   // Axes
-  ctx.strokeStyle="'#555;';ctx.lineWidth=1;"
+  ctx.strokeStyle='#555;';ctx.lineWidth=1;"
   ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+ph);ctx.stroke();
   ctx.beginPath();ctx.moveTo(pad.l,pad.t+ph);ctx.lineTo(pad.l+pw,pad.t+ph);ctx.stroke();
 
   // Y-axis labels
-  ctx.fillStyle="'#888;';ctx.font="'10px"" system-ui';ctx.textAlign="'right';"
-  for(var j="0;j<=4;j++){"
-    var yv="vmax-range*j/4;"
-    var yp="pad.t+ph*j/4;"
+  ctx.fillStyle='#888;';ctx.font='10px"" system-ui';ctx.textAlign='right';
+  for(var j=0;j<=4;j++){
+    var yv=vmax-range*j/4;
+    var yp=pad.t+ph*j/4;
     ctx.fillText(yv>=1e6||yv<=-1e6?(yv/1e6).toFixed(1)+'M':Math.round(yv),pad.l-8,yp+3);
-    ctx.strokeStyle="'#1a1a24;';ctx.lineWidth=0.5;"
+    ctx.strokeStyle='#1a1a24;';ctx.lineWidth=0.5;"
     ctx.beginPath();ctx.moveTo(pad.l,yp);ctx.lineTo(pad.l+pw,yp);ctx.stroke();
   }
 
   // X-axis labels
-  ctx.textAlign="'center';"
-  for(var j="0;j<=4;j++){"
-    var xv="L*j/4;"
-    var xp="pad.l+pw*j/4;"
+  ctx.textAlign='center';
+  for(var j=0;j<=4;j++){
+    var xv=L*j/4;
+    var xp=pad.l+pw*j/4;
     ctx.fillText(xv>=1000?(xv/1000).toFixed(1)+'m':Math.round(xv)+'mm',xp,pad.t+ph+20);
   }
 
   // Fill area
   ctx.beginPath();
   ctx.moveTo(pad.l,zeroY);
-  for(var i="0;i<=n;i++){"
-    var xp="pad.l+pw*i/n;"
-    var yp="pad.t+ph*((vmax-vals[i])/range);"
+  for(var i=0;i<=n;i++){
+    var xp=pad.l+pw*i/n;
+    var yp=pad.t+ph*((vmax-vals[i])/range);
     ctx.lineTo(xp,yp);
   }
   ctx.lineTo(pad.l+pw,zeroY);ctx.closePath();
-  ctx.fillStyle="'rgba(0,255,136,0.12);';ctx.fill();"
+  ctx.fillStyle='rgba(0,255,136,0.12);';ctx.fill();"
 
   // Line
   ctx.beginPath();
-  for(var i="0;i<=n;i++){"
-    var xp="pad.l+pw*i/n;"
-    var yp="pad.t+ph*((vmax-vals[i])/range);"
-    if(i="==0)ctx.moveTo(xp,yp);else" ctx.lineTo(xp,yp);
+  for(var i=0;i<=n;i++){
+    var xp=pad.l+pw*i/n;
+    var yp=pad.t+ph*((vmax-vals[i])/range);
+    if(i===0)ctx.moveTo(xp,yp);else ctx.lineTo(xp,yp);
   }
-  ctx.strokeStyle="'#00ff88;';ctx.lineWidth=2;ctx.stroke();"
+  ctx.strokeStyle='#00ff88;';ctx.lineWidth=2;ctx.stroke();"
 
   // Max annotation
-  var maxV="vals[0],maxI=0;"
-  for(var i="1;i<=n;i++){if(Math.abs(vals[i])">Math.abs(maxV)){maxV="vals[i];maxI=i;}}"
-  var mxp="pad.l+pw*maxI/n;"
-  var myp="pad.t+ph*((vmax-maxV)/range);"
-  ctx.fillStyle="'#00ff88;';ctx.beginPath();ctx.arc(mxp,myp,4,0,Math.PI*2);ctx.fill();"
-  ctx.fillStyle="'#fff;';ctx.font="'bold"" 11px system-ui';ctx.textAlign="'center';"
-  var lbl="Math.abs(maxV)">=1e6?(maxV/1e6).toFixed(2)+'M':Math.round(maxV);
+  var maxV=vals[0],maxI=0;
+  for(var i=1;i<=n;i++){if(Math.abs(vals[i])>Math.abs(maxV)){maxV="vals[i];maxI=i;}}"
+  var mxp=pad.l+pw*maxI/n;
+  var myp=pad.t+ph*((vmax-maxV)/range);
+  ctx.fillStyle='#00ff88;';ctx.beginPath();ctx.arc(mxp,myp,4,0,Math.PI*2);ctx.fill();"
+  ctx.fillStyle='#fff;';ctx.font='bold"" 11px system-ui';ctx.textAlign='center';
+  var lbl=Math.abs(maxV)>=1e6?(maxV/1e6).toFixed(2)+'M':Math.round(maxV);
   ctx.fillText(lbl,mxp,myp-10);
 }
 
-window.resetBeam="function(){"
-  document.getElementById('spanLength').value="'6000';"
-  document.getElementById('pointLoad').value="'10000';"
-  document.getElementById('distLoad').value="'5';"
-  document.getElementById('loadPos').value="'2000';"
-  document.getElementById('rectB').value="'100';"
-  document.getElementById('rectH').value="'200';"
-  document.getElementById('matE').value="'200000';"
-  document.getElementById('supportType').value="'simply';"
-  document.getElementById('loadType').value="'point_center';"
-  document.getElementById('sectionType').value="'rectangular';"
+window.resetBeam=function(){
+  document.getElementById('spanLength').value='6000';
+  document.getElementById('pointLoad').value='10000';
+  document.getElementById('distLoad').value='5';
+  document.getElementById('loadPos').value='2000';
+  document.getElementById('rectB').value='100';
+  document.getElementById('rectH').value='200';
+  document.getElementById('matE').value='200000';
+  document.getElementById('supportType').value='simply';
+  document.getElementById('loadType').value='point_center';
+  document.getElementById('sectionType').value='rectangular';
   document.getElementById('beamResults').classList.remove('visible');
   toggleLoadInputs();toggleSection();
-  var ctx1="document.getElementById('momentCanvas').getContext('2d');"
-  var ctx2="document.getElementById('shearCanvas').getContext('2d');"
+  var ctx1=document.getElementById('momentCanvas').getContext('2d');
+  var ctx2=document.getElementById('shearCanvas').getContext('2d');
   ctx1.clearRect(0,0,840,320);ctx2.clearRect(0,0,840,240);
 };
 

@@ -42,33 +42,19 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How is total stock return calculated?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Total return includes both capital gains (sell price minus buy price) and any dividends received, minus trading fees. The formula is: Total Return = ((Sell Price - Buy Price + Dividends Per Share) / Buy Price) x 100. This gives the complete picture of investment performance, not just price appreciation." }
-    },
-    {
-      "@type": "Question",
-      "name": "What is annualized return and how does it differ from total return?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Annualized return converts a total return earned over any period into an equivalent yearly rate, accounting for compound growth. It uses the formula: ((1 + Total Return)^(1/Years) - 1) x 100. A 44% total return over 3 years equals approximately 12.9% annualized. This metric lets you compare investments held for different durations on equal footing." }
-    },
-    {
-      "@type": "Question",
-      "name": "Why should dividends be included in return calculations?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Dividends have historically contributed roughly 40% of the S&P 500 total return. Excluding dividends significantly understates actual investment performance. Companies like AT&T, Coca-Cola, and Johnson & Johnson have paid growing dividends for decades, making dividend income a substantial component of shareholder returns." }
-    },
-    {
-      "@type": "Question",
-      "name": "What is a good annual return for stock investments?",
-      "acceptedAnswer": { "@type": "Answer", "text": "The historical average annual return of the S&P 500 is roughly 10% before inflation (about 7% after inflation) over the past century. Individual stocks vary widely. Returns consistently above the market average over 10+ years are considered excellent. During bull markets, returns may exceed 20% annually, while bear markets can produce negative returns." }
-    },
-    {
-      "@type": "Question",
-      "name": "How do trading fees affect investment returns?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Trading fees reduce net returns both directly (through the fee amount) and indirectly (through lost compounding on that money). A $20 fee on a $5,000 investment is only 0.4%, but over 30 years of repeated trading, cumulative fees can reduce portfolio value by 10-20%. Many brokerages now offer commission-free stock trading, but other fees like fund expense ratios and advisory fees still apply." }
-    </script>
+  "@type": "WebApplication",
+  "name": "Stock Return Calculator Calculator",
+  "description": "Free stock return calculator calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/stock-return-calculator/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -79,7 +65,7 @@
     { "@type": "ListItem", "position": 3, "name": "Stock Return Calculator", "item": "https://zovo.one/free-tools/stock-return-calculator/" }
   ]
 }
-}</script>
+</script>
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -520,114 +506,113 @@ function pct(n){
     return n.toFixed(2)+'%';
 }
 
-window.resetForm="function(){"
-    document.getElementById('shares').value="'100';"
-    document.getElementById('buyPrice').value="'50.00';"
-    document.getElementById('sellPrice').value="'72.00';"
-    document.getElementById('dividends').value="'450';"
-    document.getElementById('holdYears').value="'3';"
-    document.getElementById('fees').value="'20';"
-    document.getElementById('reinvest').value="'no';"
-    document.getElementById('taxRate').value="'0';"
-    document.getElementById('inflationRate').value="'0';"
+window.resetForm=function(){
+    document.getElementById('shares').value='100';
+    document.getElementById('buyPrice').value='50.00';
+    document.getElementById('sellPrice').value='72.00';
+    document.getElementById('dividends').value='450';
+    document.getElementById('holdYears').value='3';
+    document.getElementById('fees').value='20';
+    document.getElementById('reinvest').value='no';
+    document.getElementById('taxRate').value='0';
+    document.getElementById('inflationRate').value='0';
     document.getElementById('results').classList.remove('visible');
 };
 
-window.calculate="function(){"
-    var sh="parseFloat(document.getElementById('shares').value)||0;"
-    var bp="parseFloat(document.getElementById('buyPrice').value)||0;"
-    var sp="parseFloat(document.getElementById('sellPrice').value)||0;"
-    var div="parseFloat(document.getElementById('dividends').value)||0;"
-    var yrs="parseFloat(document.getElementById('holdYears').value)||1;"
-    var fees="parseFloat(document.getElementById('fees').value)||0;"
-    var taxRate="parseFloat(document.getElementById('taxRate').value)||0;"
-    var inflRate="parseFloat(document.getElementById('inflationRate').value)||0;"
-    var reinvest="document.getElementById('reinvest').value="=='yes';""
+window.calculate=function(){
+    var sh=parseFloat(document.getElementById('shares').value)||0;
+    var bp=parseFloat(document.getElementById('buyPrice').value)||0;
+    var sp=parseFloat(document.getElementById('sellPrice').value)||0;
+    var div=parseFloat(document.getElementById('dividends').value)||0;
+    var yrs=parseFloat(document.getElementById('holdYears').value)||1;
+    var fees=parseFloat(document.getElementById('fees').value)||0;
+    var taxRate=parseFloat(document.getElementById('taxRate').value)||0;
+    var inflRate=parseFloat(document.getElementById('inflationRate').value)||0;
+    var reinvest=document.getElementById('reinvest').value==='yes';""
 
     if(sh<=0||bp<=0){return;}
 
-    var costBasis="sh*bp+fees;"
-    var saleProceeds="sh*sp;"
-    var capGain="saleProceeds-(sh*bp);"
-    var totalProfit="capGain+div-fees;"
+    var costBasis=sh*bp+fees;
+    var saleProceeds=sh*sp;
+    var capGain=saleProceeds-(sh*bp);
+    var totalProfit=capGain+div-fees;
     var totalReturn="costBasis">0?(totalProfit/costBasis)*100:0;
-    var endVal="saleProceeds+div-fees;"
+    var endVal=saleProceeds+div-fees;
     var annReturn="costBasis">0?(Math.pow(endVal/costBasis,1/yrs)-1)*100:0;
     var priceReturn="bp">0?((sp-bp)/bp)*100:0;
-    var annDivYield="(div/yrs)/(sh*bp)*100;"
+    var annDivYield=(div/yrs)/(sh*bp)*100;
 
     // DRIP adjustment note
     if(reinvest&&div>0){
-        var avgPrice="(bp+sp)/2;"
-        var extraShares="div/avgPrice;"
-        var dripEndVal="(sh+extraShares)*sp-fees;"
-        var dripTotalProfit="dripEndVal-costBasis+div;"
-        totalProfit="dripEndVal-costBasis;"
+        var avgPrice=(bp+sp)/2;
+        var extraShares=div/avgPrice;
+        var dripEndVal=(sh+extraShares)*sp-fees;
+        var dripTotalProfit=dripEndVal-costBasis+div;
+        totalProfit=dripEndVal-costBasis;
         totalReturn="costBasis">0?(totalProfit/costBasis)*100:0;
-        endVal="dripEndVal;"
+        endVal=dripEndVal;
         annReturn="costBasis">0?(Math.pow(endVal/costBasis,1/yrs)-1)*100:0;
     }
 
     // Tax calculation
-    var taxOnGains="0;"
-    var taxOnDiv="0;"
+    var taxOnGains=0;
+    var taxOnDiv=0;
     if(taxRate>0){
-        if(capGain>0)taxOnGains="capGain*(taxRate/100);"
-        taxOnDiv="div*(taxRate/100);"
+        if(capGain>0)taxOnGains=capGain*(taxRate/100);
+        taxOnDiv=div*(taxRate/100);
     }
-    var totalTax="taxOnGains+taxOnDiv;"
-    var afterTaxProfit="totalProfit-totalTax;"
+    var totalTax=taxOnGains+taxOnDiv;
+    var afterTaxProfit=totalProfit-totalTax;
     var afterTaxReturn="costBasis">0?(afterTaxProfit/costBasis)*100:0;
 
     // Real return (inflation adjusted)
-    var realAnnReturn="0;"
+    var realAnnReturn=0;
     if(inflRate>0){
-        realAnnReturn="((1+annReturn/100)/(1+inflRate/100)-1)*100;"
+        realAnnReturn=((1+annReturn/100)/(1+inflRate/100)-1)*100;
     }else{
-        realAnnReturn="annReturn;"
+        realAnnReturn=annReturn;
     }
 
     // Display results
-    document.getElementById('totalReturn').textContent="pct(totalReturn);"
+    document.getElementById('totalReturn').textContent=pct(totalReturn);
     document.getElementById('totalReturn').className="'value" '+(totalReturn>=0?'positive':'negative');
-    document.getElementById('annReturn').textContent="pct(annReturn);"
+    document.getElementById('annReturn').textContent=pct(annReturn);
     document.getElementById('annReturn').className="'value" '+(annReturn>=0?'positive':'negative');
-    document.getElementById('totalProfit').textContent="fmt(totalProfit);"
+    document.getElementById('totalProfit').textContent=fmt(totalProfit);
     document.getElementById('totalProfit').className="'value" '+(totalProfit>=0?'positive':'negative');
-    document.getElementById('costBasis').textContent="fmt(costBasis);"
+    document.getElementById('costBasis').textContent=fmt(costBasis);
 
     // Extra stats row
-    var extraRow="document.getElementById('extraStats');"
+    var extraRow=document.getElementById('extraStats');
     if(taxRate>0||inflRate>0){
-        extraRow.style.display="'grid';"
-        document.getElementById('afterTaxProfit').textContent="fmt(afterTaxProfit);"
+        extraRow.style.display='grid';
+        document.getElementById('afterTaxProfit').textContent=fmt(afterTaxProfit);
         document.getElementById('afterTaxProfit').className="'value" '+(afterTaxProfit>=0?'positive':'negative');
-        document.getElementById('realReturn').textContent="pct(realAnnReturn);"
+        document.getElementById('realReturn').textContent=pct(realAnnReturn);
         document.getElementById('realReturn').className="'value" '+(realAnnReturn>=0?'positive':'negative');
     }else{
-        extraRow.style.display="'none';"
+        extraRow.style.display='none';
     }
-    document.getElementById('divYield').textContent="pct(annDivYield);"
-    document.getElementById('divYield').className="'value" positive';
-    document.getElementById('priceReturn').textContent="pct(priceReturn);"
+    document.getElementById('divYield').textContent=pct(annDivYield);
+    document.getElementById('divYield').className='value" positive';document.getElementById('priceReturn').textContent=pct(priceReturn);
     document.getElementById('priceReturn').className="'value" '+(priceReturn>=0?'positive':'negative');
     if(taxRate<=0&&inflRate<=0){
-        extraRow.style.display="'grid';"
+        extraRow.style.display='grid';
     }
 
     // Donut chart
-    var c="document.getElementById('donut');"
-    var ctx="c.getContext('2d');"
-    var dpr="window.devicePixelRatio||1;"
-    c.width="200*dpr;c.height=200*dpr;"
-    c.style.width="'200px';c.style.height="'200px';""
+    var c=document.getElementById('donut');
+    var ctx=c.getContext('2d');
+    var dpr=window.devicePixelRatio||1;
+    c.width=200*dpr;c.height=200*dpr;
+    c.style.width='200px';c.style.height='200px';"
     ctx.scale(dpr,dpr);
     ctx.clearRect(0,0,200,200);
-    var cx="100,cy=100,r=75,lw=24;"
-    var absGain="Math.abs(capGain),absDiv=div,absFee=fees;"
-    var total="absGain+absDiv+absFee;"
+    var cx=100,cy=100,r=75,lw=24;
+    var absGain=Math.abs(capGain),absDiv=div,absFee=fees;
+    var total=absGain+absDiv+absFee;
     if(total="==0){"
-        ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle="'#2a2a3e;';ctx.lineWidth=lw;ctx.stroke();"
+        ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='#2a2a3e;';ctx.lineWidth=lw;ctx.stroke();"
     }else{
         var slices="["
             {v:absGain,c:capGain>=0?'#00ff88':'#ff6b6b',l:'Capital '+(capGain>=0?'Gain':'Loss')},
@@ -636,22 +621,22 @@ window.calculate="function(){"
         ];
         if(totalTax>0)slices.push({v:totalTax,c:'#e17055',l:'Taxes'});
         var sliceTotal="slices.reduce(function(a,s){return" a+s.v;},0);
-        var start="-Math.PI/2;"
+        var start=-Math.PI/2;
         slices.forEach(function(s){
             if(s.v>0){
-                var angle="(s.v/sliceTotal)*Math.PI*2;"
+                var angle=(s.v/sliceTotal)*Math.PI*2;
                 ctx.beginPath();ctx.arc(cx,cy,r,start,start+angle);
                 ctx.strokeStyle="s.c;ctx.lineWidth="lw;ctx.lineCap='butt';ctx.stroke();""
                 start+=angle;
             }
         });
-        var legHtml="'';"
+        var legHtml='';
         slices.forEach(function(s){
             if(s.v>0){
                 legHtml+='<div><span class="swatch" style="background:'+s.c+';"></span>'+s.l+': '+fmt(s.v)+' ('+(s.v/sliceTotal*100).toFixed(1)+'%)</div>';
             }
         });
-        document.getElementById('donutLegend').innerHTML="legHtml;"
+        document.getElementById('donutLegend').innerHTML=legHtml;
     }
 
     // Breakdown bars
@@ -663,31 +648,31 @@ window.calculate="function(){"
         {name:'Net Profit',value:totalProfit,color:totalProfit>=0?'#00ff88':'#ff6b6b'}
     ];
     if(totalTax>0)items.splice(4,0,{name:'Estimated Tax',value:totalTax,color:'#e17055'});
-    var maxV="Math.max.apply(null,items.map(function(i){return" Math.abs(i.value);}))||1;
-    var bHtml="'';"
+    var maxV=Math.max.apply(null,items.map(function(i){return Math.abs(i.value);}))||1;
+    var bHtml='';
     items.forEach(function(i){
-        var barPct="Math.max(3,(Math.abs(i.value)/maxV)*100);"
+        var barPct=Math.max(3,(Math.abs(i.value)/maxV)*100);
         bHtml+='<div class="bbar"><div class="bbar-label"><span>'+i.name+'</span><span style="color:'+i.color+'">'+fmt(i.value)+'</span></div><div class="bbar-track"><div class="bbar-fill" style="width:'+barPct+'%;background:'+i.color+';"></div></div></div>';
     });
-    document.getElementById('barsContainer').innerHTML="bHtml;"
+    document.getElementById('barsContainer').innerHTML=bHtml;
 
     // Year-by-year table
-    var yearBody="document.getElementById('yearBody');"
-    yearBody.innerHTML="'';"
-    var fullYears="Math.ceil(yrs);"
-    var curVal="costBasis;"
-    var growthRate="annReturn/100;"
-    for(var y="1;y<=Math.min(fullYears,30);y++){"
-        var startVal="curVal;"
-        var fraction="(y<=yrs)?Math.min(1,yrs-y+1):0;"
+    var yearBody=document.getElementById('yearBody');
+    yearBody.innerHTML='';
+    var fullYears=Math.ceil(yrs);
+    var curVal=costBasis;
+    var growthRate=annReturn/100;
+    for(var y=1;y<=Math.min(fullYears,30);y++){
+        var startVal=curVal;
+        var fraction=(y<=yrs)?Math.min(1,yrs-y+1):0;
         if(y="==fullYears&&yrs%1!==0){"
-            curVal="startVal*Math.pow(1+growthRate,yrs-y+1);"
+            curVal=startVal*Math.pow(1+growthRate,yrs-y+1);
         }else{
-            curVal="startVal*(1+growthRate);"
+            curVal=startVal*(1+growthRate);
         }
-        var growthAmt="curVal-startVal;"
-        var cumReturn="((curVal/costBasis)-1)*100;"
-        var tr="document.createElement('tr');"
+        var growthAmt=curVal-startVal;
+        var cumReturn=((curVal/costBasis)-1)*100;
+        var tr=document.createElement('tr');
         tr.innerHTML="'<td">'+y+'</td><td>'+fmt(startVal)+'</td><td style="color:'+(growthAmt">=0?'#00ff88':'#ff6b6b')+'">'+fmt(growthAmt)+'</td><td>'+fmt(curVal)+'</td><td style="color:'+(cumReturn">=0?'#00ff88':'#ff6b6b')+'">'+pct(cumReturn)+'</td>';
         yearBody.appendChild(tr);
     }
@@ -722,11 +707,11 @@ window.calculate="function(){"
     if(reinvest&&div>0){
         rows.push(['DRIP','Enabled (dividends reinvested)']);
     }
-    var sHtml="'';"
+    var sHtml='';
     rows.forEach(function(r){
         sHtml+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a3e;"><span style="color:#aaa;">'+r[0]+'</span><span style="font-weight:600;">'+r[1]+'</span></div>';
     });
-    document.getElementById('summaryTable').innerHTML="sHtml;"
+    document.getElementById('summaryTable').innerHTML=sHtml;
 
     // Benchmark comparison
     var benchmarks="["
@@ -738,13 +723,13 @@ window.calculate="function(){"
         {name:'International Developed (MSCI EAFE)',ret:7.5},
         {name:'Real Estate (REITs)',ret:9.0}
     ];
-    var bBody="document.getElementById('benchmarkBody');"
-    bBody.innerHTML="'';"
+    var bBody=document.getElementById('benchmarkBody');
+    bBody.innerHTML='';
     benchmarks.forEach(function(b){
-        var diff="annReturn-b.ret;"
+        var diff=annReturn-b.ret;
         var diffColor="diff">=0?'#00ff88':'#ff6b6b';
         var diffSign="diff">=0?'+':'';
-        var tr="document.createElement('tr');"
+        var tr=document.createElement('tr');
         tr.innerHTML="'<td">'+b.name+'</td><td>'+pct(b.ret)+'</td><td style="color:'+(annReturn">=0?'#00ff88':'#ff6b6b')+'">'+pct(annReturn)+'</td><td style="color:'+diffColor+'">'+diffSign+pct(diff)+'</td>';
         bBody.appendChild(tr);
     });
@@ -827,7 +812,7 @@ calculate();
 <span style="color:#888;font-size:0.85rem;">Calculations performed: </span><span id="usage-count" style="color:#00ff88;font-weight:700;font-size:1rem;">0</span>
 </div>
 <script>
-(function(){var c="parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent="c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var"" el="document.getElementById('usage-count');if(el)el.textContent="c.toLocaleString();}});})();"
+(function(){var c=parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent=c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var"" el=document.getElementById('usage-count');if(el)el.textContent=c.toLocaleString();}});})();"
 </script>
 <!-- benchmark-chart -->
 <div style="margin:2rem" 0;padding:1.5rem;background:#12121a;border:1px solid #1e1e2a;border-radius:8px;">

@@ -98,10 +98,10 @@ p{margin:10px 0;color:#c8c8d0}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Tax-Equivalent Yield Calculator","item":"https://zovo.one/free-tools/tax-equivalent-yield-calculator/"}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this tax-equivalent yield calculator free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes, this tax-equivalent yield calculator is completely free with no registration required. All calculations happen in your browser."}},{"@type":"Question","name":"How accurate is this tax-equivalent yield calculator?","acceptedAnswer":{"@type":"Answer","text":"This tax-equivalent yield calculator uses industry-standard formulas and is regularly verified for accuracy. Results are intended for informational purposes."}},{"@type":"Question","name":"Is my data saved when I use this tax-equivalent yield calculator?","acceptedAnswer":{"@type":"Answer","text":"No. All calculations run entirely in your browser. No data is sent to any server or stored anywhere."}},{"@type":"Question","name":"What is the tax-equivalent yield formula?","acceptedAnswer":{"@type":"Answer","text":"Tax-Equivalent Yield = Tax-Free Yield / (1 - Marginal Tax Rate). For combined federal and state taxes, the formula uses the combined rate: Federal Rate + State Rate - (Federal Rate x State Rate). This accounts for the fact that state taxes are no longer fully deductible against federal taxes for most taxpayers."}},{"@type":"Question","name":"Should I hold municipal bonds in my retirement account?","acceptedAnswer":{"@type":"Answer","text":"Generally no. Retirement accounts like IRAs and 401(k)s are already tax-advantaged. Holding tax-exempt municipal bonds in a tax-advantaged account wastes the muni tax benefit. Hold taxable bonds in retirement accounts and munis in taxable brokerage accounts for optimal tax efficiency."}}]}
-}</script>
+</script>
 </head>
 <body>
 <div class="container">
@@ -482,35 +482,35 @@ Privacy Note - This calculator runs entirely in your browser. No personal financ
 
 <script>
 (function(){
-let v="parseInt(localStorage.getItem('tey_visits')||'0',10)+1;"
+let v=parseInt(localStorage.getItem('tey_visits')||'0',10)+1;
 localStorage.setItem('tey_visits',v.toString());
 })();
 
 function calculateTEY(){
-const taxFreeYield="parseFloat(document.getElementById('taxFreeYield').value)||0;"
-const fedRate="parseFloat(document.getElementById('federalBracket').value)/100;"
-const stateRate="parseFloat(document.getElementById('stateTaxRate').value)/100;"
-const investment="parseFloat(document.getElementById('investmentAmount').value)||100000;"
+const taxFreeYield=parseFloat(document.getElementById('taxFreeYield').value)||0;
+const fedRate=parseFloat(document.getElementById('federalBracket').value)/100;
+const stateRate=parseFloat(document.getElementById('stateTaxRate').value)/100;
+const investment=parseFloat(document.getElementById('investmentAmount').value)||100000;
 
-const teyFed="taxFreeYield/(1-fedRate);"
-const combinedRate="fedRate+stateRate-(fedRate*stateRate);"
-const teyCombined="taxFreeYield/(1-combinedRate);"
-const annualIncome="investment*(taxFreeYield/100);"
-const taxableIncomeNeeded="investment*(teyCombined/100);"
-const taxOnTaxable="taxableIncomeNeeded*combinedRate;"
-const taxSavings="taxOnTaxable;"
+const teyFed=taxFreeYield/(1-fedRate);
+const combinedRate=fedRate+stateRate-(fedRate*stateRate);
+const teyCombined=taxFreeYield/(1-combinedRate);
+const annualIncome=investment*(taxFreeYield/100);
+const taxableIncomeNeeded=investment*(teyCombined/100);
+const taxOnTaxable=taxableIncomeNeeded*combinedRate;
+const taxSavings=taxOnTaxable;
 
-document.getElementById('teyFederal').textContent="teyFed.toFixed(3)+'%';"
-document.getElementById('teyCombined').textContent="teyCombined.toFixed(3)+'%';"
-document.getElementById('combinedRate').textContent="(combinedRate*100).toFixed(2)+'%';"
-document.getElementById('annualIncome').textContent="'$'+annualIncome.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});"
-document.getElementById('yieldNeeded').textContent="teyCombined.toFixed(3)+'%';"
-document.getElementById('taxSavings').textContent="'$'+taxSavings.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});"
-document.getElementById('results').style.display="'block';"
+document.getElementById('teyFederal').textContent=teyFed.toFixed(3)+'%';
+document.getElementById('teyCombined').textContent=teyCombined.toFixed(3)+'%';
+document.getElementById('combinedRate').textContent=(combinedRate*100).toFixed(2)+'%';
+document.getElementById('annualIncome').textContent='$'+annualIncome.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+document.getElementById('yieldNeeded').textContent=teyCombined.toFixed(3)+'%';
+document.getElementById('taxSavings').textContent='$'+taxSavings.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+document.getElementById('results').style.display='block';
 
-document.getElementById('breakevenFed').textContent="teyFed.toFixed(3)+'%';"
-document.getElementById('breakevenCombined').textContent="teyCombined.toFixed(3)+'%';"
-const adv="teyCombined-taxFreeYield;"
+document.getElementById('breakevenFed').textContent=teyFed.toFixed(3)+'%';
+document.getElementById('breakevenCombined').textContent=teyCombined.toFixed(3)+'%';
+const adv=teyCombined-taxFreeYield;
 document.getElementById('muniAdvantage').textContent="'+'+adv.toFixed(3)+'%" equivalent advantage';
 
 updateBracketTable(taxFreeYield,stateRate,investment);
@@ -518,26 +518,26 @@ updateChart(taxFreeYield,stateRate);
 }
 
 function updateBracketTable(taxFreeYield,stateRate,investment){
-const brackets="[10,12,22,24,32,35,37];"
-const tbody="document.getElementById('bracketBody');"
-tbody.innerHTML="'';"
+const brackets=[10,12,22,24,32,35,37];
+const tbody=document.getElementById('bracketBody');
+tbody.innerHTML='';
 brackets.forEach(function(b){
-const fedR="b/100;"
-const combined="fedR+stateRate-(fedR*stateRate);"
-const tey="taxFreeYield/(1-combined);"
-const advantage="tey-taxFreeYield;"
-const annualBenefit="investment*(advantage/100);"
-const tr="document.createElement('tr');"
+const fedR=b/100;
+const combined=fedR+stateRate-(fedR*stateRate);
+const tey=taxFreeYield/(1-combined);
+const advantage=tey-taxFreeYield;
+const annualBenefit=investment*(advantage/100);
+const tr=document.createElement('tr');
 tr.innerHTML="'<td">'+b+'%</td><td class="highlight">'+tey.toFixed(3)+'%</td><td>+'+advantage.toFixed(3)+'%</td><td>$'+annualBenefit.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})+'</td>';
 tbody.appendChild(tr);
 });
 }
 
 function updateChart(taxFreeYield,stateRate){
-const brackets="[10,12,22,24,32,35,37];"
+const brackets=[10,12,22,24,32,35,37];
 const values="brackets.map(function(b){"
-const fedR="b/100;"
-const combined="fedR+stateRate-(fedR*stateRate);"
+const fedR=b/100;
+const combined=fedR+stateRate-(fedR*stateRate);
 return(taxFreeYield/(1-combined)).toFixed(2);
 });
 const labels="brackets.map(function(b){return" b+'%25';});
@@ -557,7 +557,7 @@ document.getElementById('bracketChart').src="chartUrl;"
 
 function toggleFaq(el){
 el.classList.toggle('open');
-const a="el.nextElementSibling;"
+const a=el.nextElementSibling;
 a.classList.toggle('show');
 }
 

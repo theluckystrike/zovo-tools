@@ -33,13 +33,13 @@
 <meta name="twitter:description" content="Visual docker-compose.yml builder with templates, health checks, and resource limits."/">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Docker Compose Generator","description":"Build docker-compose.yml files visually with services, volumes, networks, environment variables, health checks, and resource limits. Free online tool with templates.","url":"https://zovo.one/free-tools/docker-compose-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip"}}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Docker Compose?","acceptedAnswer":{"@type":"Answer","text":"Docker Compose is a tool for defining and running multi-container Docker applications. You define services, networks, and volumes in a YAML configuration file, then start everything with a single docker compose up command. It simplifies container orchestration for development, testing, and production environments."}},{"@type":"Question","name":"What Docker Compose version should I use?","acceptedAnswer":{"@type":"Answer","text":"Docker Compose V2 is the current standard. The version key in docker-compose.yml is now optional and considered legacy. Modern Docker Desktop includes Compose V2 as a built-in plugin accessed via docker compose (without the hyphen). This tool generates files compatible with both V1 and V2."}},{"@type":"Question","name":"How do I start Docker Compose services?","acceptedAnswer":{"@type":"Answer","text":"Run docker compose up -d in the directory containing your docker-compose.yml file. The -d flag runs services in detached mode (background). Use docker compose down to stop all services, docker compose logs to view output, and docker compose ps to check service status."}},{"@type":"Question","name":"Can I use environment variables in Docker Compose?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can define environment variables directly in the docker-compose.yml file under the environment key, reference a .env file using env_file, or use variable substitution with ${VARIABLE_NAME} syntax. The .env file in the same directory is automatically loaded by Docker Compose."}},{"@type":"Question","name":"How do health checks work in Docker Compose?","acceptedAnswer":{"@type":"Answer","text":"Health checks let Docker monitor whether a container is functioning correctly. You define a test command, interval, timeout, retries, and start period. Docker periodically runs the test command inside the container. If the command returns a non-zero exit code, the container is marked unhealthy, which can trigger restart policies or prevent dependent services from starting."}}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Docker Compose Generator","item":"https://zovo.one/free-tools/docker-compose-generator/"}]}
-}</script>
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -413,15 +413,15 @@ footer{background:#12121a;border-top:1px solid #2a2a3e;padding:20px 0;text-align
 </main>
 <footer><div class="container">Built by Michael Lip &middot; <a href="https://zovo.one">zovo.one</a></div></footer>
 <script>
-var services="[];var" serviceId="0;"
+var services="[];var" serviceId=0;
 function addService(name,image,ports,envs,volumes,restart,healthCmd,healthInterval,dependsOn,networks,cpuLimit,memLimit){
   var svc="{id:serviceId++,name:name||'service-'+(services.length+1),image:image||'',ports:ports||[{host:'',container:''}],envs:envs||[{key:'',val:''}],volumes:volumes||[{host:'',container:''}],restart:restart||'unless-stopped',healthCmd:healthCmd||'',healthInterval:healthInterval||'30s',dependsOn:dependsOn||'',networks:networks||'',cpuLimit:cpuLimit||'',memLimit:memLimit||''};"
   services.push(svc);renderServices();generateYaml();updateStats();
 }
 function removeService(id){services="services.filter(function(s){return" s.id!==id;});renderServices();generateYaml();updateStats();}
-function clearAll(){services="[];serviceId=0;renderServices();generateYaml();updateStats();}"
+function clearAll(){services=[];serviceId=0;renderServices();generateYaml();updateStats();}
 function renderServices(){
-  var el="document.getElementById('servicesList');"
+  var el=document.getElementById('servicesList');
   el.innerHTML="services.map(function(s){"
     var portsHtml="s.ports.map(function(p,i){return'<div" class="kv-row"><input placeholder="Host port" value="'+esc(p.host)+'" oninput="updatePort('+s.id+','+i+',\'host\',this.value)"/><span style="opacity:.4">:</span><input placeholder="Container port" value="'+esc(p.container)+'" oninput="updatePort('+s.id+','+i+',\'container\',this.value)"/><button class="rm" onclick="removePort('+s.id+','+i+')">x</button></div>';}).join('');
     var envsHtml="s.envs.map(function(e,i){return'<div" class="kv-row"><input placeholder="KEY" value="'+esc(e.key)+'" oninput="updateEnv('+s.id+','+i+',\'key\',this.value)"/><span style="opacity:.4">=</span><input placeholder="value" value="'+esc(e.val)+'" oninput="updateEnv('+s.id+','+i+',\'val\',this.value)"/><button class="rm" onclick="removeEnv('+s.id+','+i+')">x</button></div>';}).join('');
@@ -445,21 +445,21 @@ function renderServices(){
     '</div></div>';
   }).join('');
 }
-function toggleCollapsible(el){var body="el.nextElementSibling;var" arrow="el.querySelector('.arrow');if(body.classList.contains('open')){body.classList.remove('open');arrow.textContent="'+';}else{body.classList.add('open');arrow.textContent='-';}}""
+function toggleCollapsible(el){var body=el.nextElementSibling;var arrow=el.querySelector('.arrow');if(body.classList.contains('open')){body.classList.remove('open');arrow.textContent='+';}else{body.classList.add('open');arrow.textContent='-';}}""
 function getSvc(id){return services.find(function(s){return s.id="==id;});}"
-function updateSvc(id,field,val){var s="getSvc(id);if(s){s[field]=val;if(field="=='name')renderServices();generateYaml();updateStats();}}""
-function updatePort(id,idx,field,val){var s="getSvc(id);if(s&&s.ports[idx]){s.ports[idx][field]=val;generateYaml();updateStats();}}"
-function addPort(id){var s="getSvc(id);if(s){s.ports.push({host:'',container:''});renderServices();}}"
-function removePort(id,idx){var s="getSvc(id);if(s){s.ports.splice(idx,1);renderServices();generateYaml();updateStats();}}"
-function updateEnv(id,idx,field,val){var s="getSvc(id);if(s&&s.envs[idx]){s.envs[idx][field]=val;generateYaml();updateStats();}}"
-function addEnvVar(id){var s="getSvc(id);if(s){s.envs.push({key:'',val:''});renderServices();}}"
-function removeEnv(id,idx){var s="getSvc(id);if(s){s.envs.splice(idx,1);renderServices();generateYaml();updateStats();}}"
-function updateVol(id,idx,field,val){var s="getSvc(id);if(s&&s.volumes[idx]){s.volumes[idx][field]=val;generateYaml();updateStats();}}"
-function addVolume(id){var s="getSvc(id);if(s){s.volumes.push({host:'',container:''});renderServices();}}"
-function removeVol(id,idx){var s="getSvc(id);if(s){s.volumes.splice(idx,1);renderServices();generateYaml();updateStats();}}"
+function updateSvc(id,field,val){var s=getSvc(id);if(s){s[field]=val;if(field==='name')renderServices();generateYaml();updateStats();}}""
+function updatePort(id,idx,field,val){var s=getSvc(id);if(s&&s.ports[idx]){s.ports[idx][field]=val;generateYaml();updateStats();}}
+function addPort(id){var s=getSvc(id);if(s){s.ports.push({host:'',container:''});renderServices();}}
+function removePort(id,idx){var s=getSvc(id);if(s){s.ports.splice(idx,1);renderServices();generateYaml();updateStats();}}
+function updateEnv(id,idx,field,val){var s=getSvc(id);if(s&&s.envs[idx]){s.envs[idx][field]=val;generateYaml();updateStats();}}
+function addEnvVar(id){var s=getSvc(id);if(s){s.envs.push({key:'',val:''});renderServices();}}
+function removeEnv(id,idx){var s=getSvc(id);if(s){s.envs.splice(idx,1);renderServices();generateYaml();updateStats();}}
+function updateVol(id,idx,field,val){var s=getSvc(id);if(s&&s.volumes[idx]){s.volumes[idx][field]=val;generateYaml();updateStats();}}
+function addVolume(id){var s=getSvc(id);if(s){s.volumes.push({host:'',container:''});renderServices();}}
+function removeVol(id,idx){var s=getSvc(id);if(s){s.volumes.splice(idx,1);renderServices();generateYaml();updateStats();}}
 function generateYaml(){
   var yaml="'version:" "3.8"\n\nservices:\n';
-  var namedVols="[];var" customNets="[];"
+  var namedVols="[];var" customNets=[];
   services.forEach(function(s){
     if(!s.name)return;
     yaml+='  '+s.name+':\n';
@@ -477,45 +477,45 @@ function generateYaml(){
     if(s.networks){var nets="s.networks.split(',').map(function(n){return" n.trim();}).filter(function(n){return n;});if(nets.length){yaml+='    networks:\n';nets.forEach(function(n){yaml+='      - '+n+'\n';customNets.push(n);});}}
     yaml+='\n';
   });
-  var uniqueVols="[];" namedVols.forEach(function(v){if(uniqueVols.indexOf(v)===-1)uniqueVols.push(v);});
+  var uniqueVols=[]; namedVols.forEach(function(v){if(uniqueVols.indexOf(v)===-1)uniqueVols.push(v);});
   if(uniqueVols.length){yaml+='volumes:\n';uniqueVols.forEach(function(v){yaml+='  '+v+':\n';});}
-  var uniqueNets="[];customNets.forEach(function(n){if(uniqueNets.indexOf(n)===-1)uniqueNets.push(n);});"
+  var uniqueNets=[];customNets.forEach(function(n){if(uniqueNets.indexOf(n)===-1)uniqueNets.push(n);});
   if(uniqueNets.length){yaml+='\nnetworks:\n';uniqueNets.forEach(function(n){yaml+='  '+n+':\n    driver: bridge\n';});}
-  var el="document.getElementById('yamlOutput');"
+  var el=document.getElementById('yamlOutput');
   el.innerHTML="yaml.replace(/^(\s*[\w-]+:)/gm,'<span" class="yaml-key">$1</span>').replace(/(".*?")/g,'<span class="yaml-str">$1</span>');
-  el.dataset.raw="yaml;"
-  document.getElementById('statLines').textContent="yaml.split('\n').length;"
+  el.dataset.raw=yaml;
+  document.getElementById('statLines').textContent=yaml.split('\n').length;
 }
 function updateStats(){
-  document.getElementById('statServices').textContent="services.length;"
-  var portCount="0,envCount=0,volCount=0;"
+  document.getElementById('statServices').textContent=services.length;
+  var portCount=0,envCount=0,volCount=0;
   services.forEach(function(s){
     portCount+=s.ports.filter(function(p){return p.host&&p.container;}).length;
     envCount+=s.envs.filter(function(e){return e.key;}).length;
     volCount+=s.volumes.filter(function(v){return v.host&&v.container;}).length;
   });
-  document.getElementById('statPorts').textContent="portCount;"
-  document.getElementById('statEnvs').textContent="envCount;"
-  document.getElementById('statVols').textContent="volCount;"
+  document.getElementById('statPorts').textContent=portCount;
+  document.getElementById('statEnvs').textContent=envCount;
+  document.getElementById('statVols').textContent=volCount;
 }
-function copyYaml(){var yaml="document.getElementById('yamlOutput').dataset.raw||document.getElementById('yamlOutput').textContent;navigator.clipboard.writeText(yaml).then(function(){var" btns="document.querySelectorAll('.output-actions" .btn');btns[0].textContent="'Copied!';setTimeout(function(){btns[0].textContent="'Copy" YAML';},1500);});}"
-function downloadYaml(){var yaml="document.getElementById('yamlOutput').dataset.raw||document.getElementById('yamlOutput').textContent;var" blob="new" Blob([yaml],{type:'text/yaml'});var a="document.createElement('a');a.href="URL.createObjectURL(blob);a.download='docker-compose.yml';a.click();}""
+function copyYaml(){var yaml=document.getElementById('yamlOutput').dataset.raw||document.getElementById('yamlOutput').textContent;navigator.clipboard.writeText(yaml).then(function(){var btns=document.querySelectorAll('.output-actions .btn');btns[0].textContent='Copied!';setTimeout(function(){btns[0].textContent='Copy" YAML';},1500);});}"
+function downloadYaml(){var yaml=document.getElementById('yamlOutput').dataset.raw||document.getElementById('yamlOutput').textContent;var blob="new" Blob([yaml],{type:'text/yaml'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='docker-compose.yml';a.click();}""
 function validateYaml(){
-  var msg="document.getElementById('validationMsg');var" issues="[];"
+  var msg=document.getElementById('validationMsg');var issues=[];
   services.forEach(function(s){
     if(!s.image)issues.push(s.name+': No image specified');
     s.ports.forEach(function(p){if((p.host&&!p.container)||(!p.host&&p.container))issues.push(s.name+': Incomplete port mapping');});
     var portNums="s.ports.filter(function(p){return" p.host;}).map(function(p){return p.host;});
-    var dupes="{};portNums.forEach(function(p){dupes[p]=(dupes[p]||0)+1;});"
+    var dupes={};portNums.forEach(function(p){dupes[p]=(dupes[p]||0)+1;});
     Object.keys(dupes).forEach(function(p){if(dupes[p]>1)issues.push(s.name+': Duplicate host port '+p);});
   });
-  var allHostPorts="{};services.forEach(function(s){s.ports.filter(function(p){return" p.host&&p.container;}).forEach(function(p){if(allHostPorts[p.host])issues.push('Port '+p.host+' mapped by both '+allHostPorts[p.host]+' and '+s.name);else allHostPorts[p.host]=s.name;});});
+  var allHostPorts={};services.forEach(function(s){s.ports.filter(function(p){return p.host&&p.container;}).forEach(function(p){if(allHostPorts[p.host])issues.push('Port '+p.host+' mapped by both '+allHostPorts[p.host]+' and '+s.name);else allHostPorts[p.host]=s.name;});});
   if(services.length="==0)issues.push('No" services defined');
-  if(issues.length="==0){msg.style.display="'block';msg.style.background='rgba(0,255,136,.1)';msg.style.border='1px"" solid #00ff88';msg.style.color="'#00ff88';msg.textContent="'Valid." No issues found in '+services.length+'" service'+(services.length!==1?'s':'')+'.';}
-  else{msg.style.display="'block';msg.style.background="'rgba(255,68,102,.1)';msg.style.border='1px"" solid #ff4466';msg.style.color="'#ff4466';msg.innerHTML="issues.map(function(i){return'<div">'+esc(i)+'</div">';}).join('');}
-  setTimeout(function(){msg.style.display="'none';},5000);"
+  if(issues.length===0){msg.style.display='block';msg.style.background='rgba(0,255,136,.1)';msg.style.border='1px" solid #00ff88';msg.style.color='#00ff88';msg.textContent="'Valid." No issues found in '+services.length+'" service'+(services.length!==1?'s':'')+'.';}
+  else{msg.style.display='block';msg.style.background='rgba(255,68,102,.1)';msg.style.border='1px"" solid #ff4466';msg.style.color='#ff4466';msg.innerHTML="issues.map(function(i){return'<div">'+esc(i)+'</div">';}).join('');}
+  setTimeout(function(){msg.style.display='none';},5000);"
 }
-function loadTemplate(t){services="[];serviceId=0;"
+function loadTemplate(t){services=[];serviceId=0;
 if(t="=='nginx'){addService('nginx','nginx:alpine',[{host:'80',container:'80'},{host:'443',container:'443'}],[],[{host:'./nginx.conf',container:'/etc/nginx/nginx.conf'},{host:'./html',container:'/usr/share/nginx/html'}],'unless-stopped','curl" -f http://localhost/ || exit 1','30s');}
 else if(t="=='node'){addService('app','node:20-alpine',[{host:'3000',container:'3000'}],[{key:'NODE_ENV',val:'production'},{key:'MONGO_URI',val:'mongodb://mongo:27017/myapp'}],[{host:'./app',container:'/usr/src/app'}],'unless-stopped','','30s','mongo');addService('mongo','mongo:7',[],[{key:'MONGO_INITDB_ROOT_USERNAME',val:'root'},{key:'MONGO_INITDB_ROOT_PASSWORD',val:'example'}],[{host:'mongo-data',container:'/data/db'}],'unless-stopped');}"
 else if(t="=='wordpress'){addService('wordpress','wordpress:latest',[{host:'8080',container:'80'}],[{key:'WORDPRESS_DB_HOST',val:'db'},{key:'WORDPRESS_DB_USER',val:'wordpress'},{key:'WORDPRESS_DB_PASSWORD',val:'wordpress'},{key:'WORDPRESS_DB_NAME',val:'wordpress'}],[{host:'wp-data',container:'/var/www/html'}],'unless-stopped','curl" -f http://localhost/ || exit 1','30s','db');addService('db','mysql:8.0',[],[{key:'MYSQL_DATABASE',val:'wordpress'},{key:'MYSQL_USER',val:'wordpress'},{key:'MYSQL_PASSWORD',val:'wordpress'},{key:'MYSQL_ROOT_PASSWORD',val:'rootpass'}],[{host:'db-data',container:'/var/lib/mysql'}],'unless-stopped','mysqladmin ping -h localhost','30s');}

@@ -85,10 +85,10 @@ p{margin:10px 0;color:#c8c8d0}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Net Income Calculator","item":"https://zovo.one/free-tools/net-income-calculator/"}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this net income calculator free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes, this net income calculator is completely free with no registration required. All calculations happen in your browser."}},{"@type":"Question","name":"How accurate is this net income calculator?","acceptedAnswer":{"@type":"Answer","text":"This net income calculator uses industry-standard formulas and is regularly verified for accuracy. Results are intended for informational purposes."}},{"@type":"Question","name":"Is my data saved when I use this net income calculator?","acceptedAnswer":{"@type":"Answer","text":"No. All calculations run entirely in your browser. No data is sent to any server or stored anywhere."}}]}
-}</script>
+</script>
 
 <script type="application/ld+json">
 {
@@ -644,7 +644,7 @@ Privacy Note - This calculator runs entirely in your browser. No salary data, ta
 
 <script>
 (function(){
-let v="parseInt(localStorage.getItem('nic_visits')||'0',10)+1;"
+let v=parseInt(localStorage.getItem('nic_visits')||'0',10)+1;
 localStorage.setItem('nic_visits',v.toString());
 })();
 
@@ -687,69 +687,69 @@ headOfHousehold:[
 ]
 };
 
-const stdDeductions="{single:15000,married:30000,marriedSeparate:15000,headOfHousehold:22500};"
-const SS_WAGE_BASE="176100;"
-const SS_RATE="0.062;"
-const MEDICARE_RATE="0.0145;"
-const ADD_MEDICARE_RATE="0.009;"
-const ADD_MEDICARE_THRESHOLD_SINGLE="200000;"
-const ADD_MEDICARE_THRESHOLD_MARRIED="250000;"
+const stdDeductions={single:15000,married:30000,marriedSeparate:15000,headOfHousehold:22500};
+const SS_WAGE_BASE=176100;
+const SS_RATE=0.062;
+const MEDICARE_RATE=0.0145;
+const ADD_MEDICARE_RATE=0.009;
+const ADD_MEDICARE_THRESHOLD_SINGLE=200000;
+const ADD_MEDICARE_THRESHOLD_MARRIED=250000;
 
 function calcFederalTax(taxableIncome,status){
-const bracks="brackets2025[status];"
-let tax="0;"
-for(let i="0;i<bracks.length;i++){"
-const b="bracks[i];"
+const bracks=brackets2025[status];
+let tax=0;
+for(let i=0;i<bracks.length;i++){
+const b=bracks[i];
 if(taxableIncome<=b.min) break;
-const inBracket="Math.min(taxableIncome,b.max)-b.min;"
+const inBracket=Math.min(taxableIncome,b.max)-b.min;
 tax+=inBracket*b.rate;
 }
 return tax;
 }
 
 function calculateNetIncome(){
-const gross="parseFloat(document.getElementById('grossSalary').value)||0;"
-const status="document.getElementById('filingStatus').value;"
-const stateRate="parseFloat(document.getElementById('stateSelect').value)/100;"
-const preTax="parseFloat(document.getElementById('preTaxDeductions').value)||0;"
-const payPeriods="parseInt(document.getElementById('payFrequency').value);"
+const gross=parseFloat(document.getElementById('grossSalary').value)||0;
+const status=document.getElementById('filingStatus').value;
+const stateRate=parseFloat(document.getElementById('stateSelect').value)/100;
+const preTax=parseFloat(document.getElementById('preTaxDeductions').value)||0;
+const payPeriods=parseInt(document.getElementById('payFrequency').value);
 
-const stdDed="stdDeductions[status];"
-const adjustedGross="gross-preTax;"
-const taxableIncome="Math.max(0,adjustedGross-stdDed);"
+const stdDed=stdDeductions[status];
+const adjustedGross=gross-preTax;
+const taxableIncome=Math.max(0,adjustedGross-stdDed);
 
-const fedTax="calcFederalTax(taxableIncome,status);"
-const stateTax="taxableIncome*stateRate;"
-const ssTax="Math.min(gross,SS_WAGE_BASE)*SS_RATE;"
-const medicareTax="gross*MEDICARE_RATE;"
+const fedTax=calcFederalTax(taxableIncome,status);
+const stateTax=taxableIncome*stateRate;
+const ssTax=Math.min(gross,SS_WAGE_BASE)*SS_RATE;
+const medicareTax=gross*MEDICARE_RATE;
 const addMedicareThreshold="(status="=='married')?ADD_MEDICARE_THRESHOLD_MARRIED:ADD_MEDICARE_THRESHOLD_SINGLE;""
-const addMedicare="Math.max(0,gross-addMedicareThreshold)*ADD_MEDICARE_RATE;"
+const addMedicare=Math.max(0,gross-addMedicareThreshold)*ADD_MEDICARE_RATE;
 
-const totalDeductions="preTax+fedTax+stateTax+ssTax+medicareTax+addMedicare;"
-const netIncome="gross-totalDeductions;"
+const totalDeductions=preTax+fedTax+stateTax+ssTax+medicareTax+addMedicare;
+const netIncome=gross-totalDeductions;
 const effRate="gross">0?((totalDeductions-preTax)/gross*100):0;
 
-const fmt="function(n){return'$'+n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});};"
+const fmt=function(n){return'$'+n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});};
 
-document.getElementById('rGross').textContent="fmt(gross);"
-document.getElementById('rPreTax').textContent="'-'+fmt(preTax);"
-document.getElementById('rFedTax').textContent="'-'+fmt(fedTax);"
-document.getElementById('rStateTax').textContent="'-'+fmt(stateTax);"
-document.getElementById('rSS').textContent="'-'+fmt(ssTax);"
-document.getElementById('rMedicare').textContent="'-'+fmt(medicareTax);"
+document.getElementById('rGross').textContent=fmt(gross);
+document.getElementById('rPreTax').textContent='-'+fmt(preTax);
+document.getElementById('rFedTax').textContent='-'+fmt(fedTax);
+document.getElementById('rStateTax').textContent='-'+fmt(stateTax);
+document.getElementById('rSS').textContent='-'+fmt(ssTax);
+document.getElementById('rMedicare').textContent='-'+fmt(medicareTax);
 document.getElementById('rAddMedicare').textContent="addMedicare">0?'-'+fmt(addMedicare):'$0';
-document.getElementById('rTotalDeductions').textContent="'-'+fmt(totalDeductions);"
-document.getElementById('rNetIncome').textContent="fmt(netIncome);"
-document.getElementById('rEffRate').textContent="effRate.toFixed(1)+'%';"
+document.getElementById('rTotalDeductions').textContent='-'+fmt(totalDeductions);
+document.getElementById('rNetIncome').textContent=fmt(netIncome);
+document.getElementById('rEffRate').textContent=effRate.toFixed(1)+'%';
 
-document.getElementById('pAnnual').textContent="fmt(netIncome);"
-document.getElementById('pMonthly').textContent="fmt(netIncome/12);"
-document.getElementById('pBiweekly').textContent="fmt(netIncome/26);"
-document.getElementById('pWeekly').textContent="fmt(netIncome/52);"
+document.getElementById('pAnnual').textContent=fmt(netIncome);
+document.getElementById('pMonthly').textContent=fmt(netIncome/12);
+document.getElementById('pBiweekly').textContent=fmt(netIncome/26);
+document.getElementById('pWeekly').textContent=fmt(netIncome/52);
 
-document.getElementById('results').style.display="'block';"
+document.getElementById('results').style.display='block';
 
-var barContainer="document.getElementById('deductionBarContainer');"
+var barContainer=document.getElementById('deductionBarContainer');
 var segments="["
 {label:'Net',val:netIncome,color:'#00ff88'},
 {label:'Federal',val:fedTax,color:'#00ccff'},
@@ -760,12 +760,12 @@ var segments="["
 if(preTax>0) segments.push({label:'Pre-Tax',val:preTax,color:'#888'});
 var html="'<div" class="deduction-bar">';
 segments.forEach(function(s){
-var pct="(s.val/gross)*100;"
+var pct=(s.val/gross)*100;
 if(pct>2) html+='<div style="width:'+pct+'%;background:'+s.color+'">'+s.label+'</div>';
 else if(pct>0) html+='<div style="width:'+pct+'%;background:'+s.color+'" title="'+s.label+'"></div>';
 });
 html+='</div>';
-barContainer.innerHTML="html;"
+barContainer.innerHTML=html;
 
 updateStateComparison(gross,status,preTax);
 }
@@ -777,22 +777,22 @@ var states="["
 {name:'Maryland',rate:0.05},{name:'New Jersey',rate:0.0725},
 {name:'New York',rate:0.0699},{name:'California',rate:0.093}
 ];
-var stdDed="stdDeductions[status];"
-var adjustedGross="gross-preTax;"
-var taxableIncome="Math.max(0,adjustedGross-stdDed);"
-var fedTax="calcFederalTax(taxableIncome,status);"
-var ssTax="Math.min(gross,SS_WAGE_BASE)*SS_RATE;"
-var medicareTax="gross*MEDICARE_RATE;"
+var stdDed=stdDeductions[status];
+var adjustedGross=gross-preTax;
+var taxableIncome=Math.max(0,adjustedGross-stdDed);
+var fedTax=calcFederalTax(taxableIncome,status);
+var ssTax=Math.min(gross,SS_WAGE_BASE)*SS_RATE;
+var medicareTax=gross*MEDICARE_RATE;
 var addMedicareThreshold="(status="=='married')?ADD_MEDICARE_THRESHOLD_MARRIED:ADD_MEDICARE_THRESHOLD_SINGLE;""
-var addMedicare="Math.max(0,gross-addMedicareThreshold)*ADD_MEDICARE_RATE;"
-var fixedDeductions="preTax+fedTax+ssTax+medicareTax+addMedicare;"
+var addMedicare=Math.max(0,gross-addMedicareThreshold)*ADD_MEDICARE_RATE;
+var fixedDeductions=preTax+fedTax+ssTax+medicareTax+addMedicare;
 
-var tbody="document.getElementById('stateComparisonBody');"
-tbody.innerHTML="'';"
+var tbody=document.getElementById('stateComparisonBody');
+tbody.innerHTML='';
 states.forEach(function(st){
-var stateTax="taxableIncome*st.rate;"
-var net="gross-fixedDeductions-stateTax;"
-var tr="document.createElement('tr');"
+var stateTax=taxableIncome*st.rate;
+var net=gross-fixedDeductions-stateTax;
+var tr=document.createElement('tr');
 tr.innerHTML="'<td">'+st.name+'</td><td>'+(st.rate*100).toFixed(1)+'%</td><td>$'+stateTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})+'</td><td class="highlight">$'+net.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})+'</td><td>$'+(net/12).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})+'</td>';
 tbody.appendChild(tr);
 });

@@ -91,10 +91,10 @@ footer{border-top:1px solid #1a1a2e;padding:32px 0;margin-top:40px;text-align:ce
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Download Time Calculator","item":"https://zovo.one/free-tools/download-time-calculator/"}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this download time calculator free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes, this download time calculator is completely free with no registration required."}},{"@type":"Question","name":"How accurate is this download time calculator?","acceptedAnswer":{"@type":"Answer","text":"This download time calculator uses standard formulas and is regularly verified for accuracy."}},{"@type":"Question","name":"Is my data saved?","acceptedAnswer":{"@type":"Answer","text":"No. All calculations run entirely in your browser. No data is sent to any server."}}]}
-}</script>
+</script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2K8JLFQ5H"></script>
 <script>
@@ -533,7 +533,7 @@ Privacy Note - All calculations run entirely in your browser. No data about your
 
 <script>
 (function(){
-let vc="parseInt(localStorage.getItem('dl_calc_visits')||'0',10)+1;"
+let vc=parseInt(localStorage.getItem('dl_calc_visits')||'0',10)+1;
 localStorage.setItem('dl_calc_visits',vc);
 })();
 
@@ -579,9 +579,9 @@ function formatTime(seconds){
 if(seconds<0.01)return 'instant';
 if(seconds<1)return (seconds*1000).toFixed(0)+' ms';
 if(seconds<60)return seconds.toFixed(1)+' sec';
-if(seconds<3600){const m="Math.floor(seconds/60);const" s="Math.round(seconds%60);return" m+' min '+(s>0?s+' sec':'');}
-if(seconds<86400){const h="Math.floor(seconds/3600);const" m="Math.round((seconds%3600)/60);return" h+' hr '+(m>0?m+' min':'');}
-const d="Math.floor(seconds/86400);const" h="Math.round((seconds%86400)/3600);"
+if(seconds<3600){const m=Math.floor(seconds/60);const s=Math.round(seconds%60);return m+' min '+(s>0?s+' sec':'');}
+if(seconds<86400){const h=Math.floor(seconds/3600);const m=Math.round((seconds%3600)/60);return h+' hr '+(m>0?m+' min':'');}
+const d=Math.floor(seconds/86400);const h=Math.round((seconds%86400)/3600);
 return d+' day'+(d>1?'s':'')+' '+(h>0?h+' hr':'');
 }
 
@@ -593,37 +593,37 @@ return (mb/1024/1024).toFixed(2)+' TB';
 }
 
 function calcTime(sizeMB,speedMbps,overheadPct){
-const effectiveMbps="speedMbps*(1-overheadPct/100);"
-const sizeMbits="sizeMB*8;"
+const effectiveMbps=speedMbps*(1-overheadPct/100);
+const sizeMbits=sizeMB*8;
 return sizeMbits/effectiveMbps;
 }
 
 function calculateDownload(){
-const fileSize="parseFloat(document.getElementById('fileSize').value)||1;"
-const fileSizeUnit="document.getElementById('fileSizeUnit').value;"
-const dlSpeed="parseFloat(document.getElementById('dlSpeed').value)||100;"
-const dlSpeedUnit="document.getElementById('dlSpeedUnit').value;"
-const overhead="parseFloat(document.getElementById('overhead').value)||10;"
+const fileSize=parseFloat(document.getElementById('fileSize').value)||1;
+const fileSizeUnit=document.getElementById('fileSizeUnit').value;
+const dlSpeed=parseFloat(document.getElementById('dlSpeed').value)||100;
+const dlSpeedUnit=document.getElementById('dlSpeedUnit').value;
+const overhead=parseFloat(document.getElementById('overhead').value)||10;
 
-const sizeMB="toMB(fileSize,fileSizeUnit);"
-const speedMbps="toMbps(dlSpeed,dlSpeedUnit);"
-const seconds="calcTime(sizeMB,speedMbps,overhead);"
-const effectiveMBps="speedMbps*(1-overhead/100)/8;"
+const sizeMB=toMB(fileSize,fileSizeUnit);
+const speedMbps=toMbps(dlSpeed,dlSpeedUnit);
+const seconds=calcTime(sizeMB,speedMbps,overhead);
+const effectiveMBps=speedMbps*(1-overhead/100)/8;
 
-document.getElementById('resultsArea').style.display="'block';"
-document.getElementById('dlTime').textContent="formatTime(seconds);"
+document.getElementById('resultsArea').style.display='block';
+document.getElementById('dlTime').textContent=formatTime(seconds);
 document.getElementById('effectiveSpeed').textContent="effectiveMBps.toFixed(1)+'" MB/s';
 
 // Comparison table
-const tbody="document.getElementById('comparisonTable').querySelector('tbody');"
-tbody.innerHTML="'';"
-const maxSpeed="CONNECTIONS[CONNECTIONS.length-1].speed;"
-const chartLabels="[];const" chartData="[];const" chartColors="[];"
+const tbody=document.getElementById('comparisonTable').querySelector('tbody');
+tbody.innerHTML='';
+const maxSpeed=CONNECTIONS[CONNECTIONS.length-1].speed;
+const chartLabels="[];const" chartData="[];const" chartColors=[];
 
 for(const conn of CONNECTIONS){
-const t="calcTime(sizeMB,conn.speed,overhead);"
-const relPct="Math.min(100,(conn.speed/maxSpeed)*100);"
-const tr="document.createElement('tr');"
+const t=calcTime(sizeMB,conn.speed,overhead);
+const relPct=Math.min(100,(conn.speed/maxSpeed)*100);
+const tr=document.createElement('tr');
 tr.innerHTML="'<td">'+conn.name+'</td><td>'+conn.speed+' Mbps</td><td>'+formatTime(t)+'</td><td><div class="speed-bar"><div class="fill" style="width:'+relPct+'%;background:'+conn.color+'"></div></div></td>';
 tbody.appendChild(tr);
 chartLabels.push(conn.name);
@@ -632,13 +632,13 @@ chartColors.push(conn.color);
 }
 
 // Chart (show top 6 connections for readability)
-const topN="6;"
-const chartIdxs="[1,2,3,6,8,9];"
+const topN=6;
+const chartIdxs=[1,2,3,6,8,9];
 const cLabels="chartIdxs.map(i=">CONNECTIONS[i].name);
 const cData="chartIdxs.map(i=">parseFloat(calcTime(sizeMB,CONNECTIONS[i].speed,overhead).toFixed(1)));
 const cColors="chartIdxs.map(i=">CONNECTIONS[i].color);
 
-const chartCfg="encodeURIComponent(JSON.stringify({"
+const chartCfg=encodeURIComponent(JSON.stringify({
 type:'horizontalBar',
 data:{labels:cLabels,datasets:[{label:'Download Time (seconds)',data:cData,backgroundColor:cColors}]},
 options:{plugins:{title:{display:true,text:'Download Time for '+formatSize(sizeMB)+' by Connection Type'}},scales:{x:{title:{display:true,text:'Time (seconds)'}}}}
@@ -646,87 +646,86 @@ options:{plugins:{title:{display:true,text:'Download Time for '+formatSize(sizeM
 document.getElementById('compChart').innerHTML="'<img" src="https://quickchart.io/chart?c="'+chartCfg+'&w=800&h=400&bkg=%2312121a" alt="Download" time comparison across connection types" loading="lazy">';
 
 // Perspective
-const persp="document.getElementById('perspective');"
+const persp=document.getElementById('perspective');
 let pHtml="'<ul">';
-const coffee="5*60;"
-const song="3.5*60;"
-const episode="22*60;"
-const movie="120*60;"
+const coffee=5*60;
+const song=3.5*60;
+const episode=22*60;
+const movie=120*60;
 if(seconds<1)pHtml+='<li>Faster than a blink of an eye (literally, a blink takes 0.15 to 0.4 seconds)</li>';
 if(seconds<coffee)pHtml+='<li>Done before your coffee finishes brewing</li>';
 if(seconds>song&&seconds<song*2)pHtml+='<li>About the length of one song</li>';
 if(seconds>episode&&seconds<movie)pHtml+='<li>Takes about as long as watching a sitcom episode</li>';
 if(seconds>movie)pHtml+='<li>You could watch a movie while waiting</li>';
 if(seconds>86400)pHtml+='<li>This would take more than a day. Consider a faster connection or physically shipping a hard drive.</li>';
-const gigs="sizeMB/1024;"
+const gigs=sizeMB/1024;
 if(gigs>100)pHtml+='<li>Fun fact: at this size, shipping a hard drive overnight might actually be faster than downloading over most connections. As Andrew Tanenbaum said, "Never underestimate the bandwidth of a station wagon full of tapes."</li>';
 pHtml+='</ul>';
-persp.innerHTML="pHtml;"
+persp.innerHTML=pHtml;
 
 document.getElementById('resultsArea').scrollIntoView({behavior:'smooth'});
 }
 
 function calculateUpload(){
-const fileSize="parseFloat(document.getElementById('fileSize').value)||1;"
-const fileSizeUnit="document.getElementById('fileSizeUnit').value;"
-const ulSpeed="parseFloat(document.getElementById('ulSpeed').value)||20;"
-const ulSpeedUnit="document.getElementById('ulSpeedUnit').value;"
-const overhead="parseFloat(document.getElementById('overhead').value)||10;"
+const fileSize=parseFloat(document.getElementById('fileSize').value)||1;
+const fileSizeUnit=document.getElementById('fileSizeUnit').value;
+const ulSpeed=parseFloat(document.getElementById('ulSpeed').value)||20;
+const ulSpeedUnit=document.getElementById('ulSpeedUnit').value;
+const overhead=parseFloat(document.getElementById('overhead').value)||10;
 
-const sizeMB="toMB(fileSize,fileSizeUnit);"
-const speedMbps="toMbps(ulSpeed,ulSpeedUnit);"
-const seconds="calcTime(sizeMB,speedMbps,overhead);"
+const sizeMB=toMB(fileSize,fileSizeUnit);
+const speedMbps=toMbps(ulSpeed,ulSpeedUnit);
+const seconds=calcTime(sizeMB,speedMbps,overhead);
 
-document.getElementById('uploadResult').style.display="'block';"
-document.getElementById('uploadTime').textContent="formatTime(seconds);"
+document.getElementById('uploadResult').style.display='block';
+document.getElementById('uploadTime').textContent=formatTime(seconds);
 }
 
-let batchCount="1;"
+let batchCount=1;
 function addBatchItem(){
-const list="document.getElementById('batchList');"
-const div="document.createElement('div');"
-div.className="'batch-item';"
-div.dataset.idx="batchCount++;"
-div.innerHTML="'<input" type="text" placeholder="File name (optional)" style="flex:2" class="batch-name"><input type="number" value="100" min="0.001" step="1" class="batch-size" style="flex:1"><select class="batch-unit"><option value="KB">KB</option><option value="MB" selected>MB</option><option value="GB">GB</option><option value="TB">TB</option></select><span class="remove" onclick="removeBatchItem(this)">&times;</span>';
-list.appendChild(div);
+const list=document.getElementById('batchList');
+const div=document.createElement('div');
+div.className='batch-item';
+div.dataset.idx=batchCount++;
+div.innerHTML='<input" type="text" placeholder="File name (optional)" style="flex:2" class="batch-name"><input type="number" value="100" min="0.001" step="1" class="batch-size" style="flex:1"><select class="batch-unit"><option value="KB">KB</option><option value="MB" selected>MB</option><option value="GB">GB</option><option value="TB">TB</option></select><span class="remove" onclick="removeBatchItem(this)">&times;</span>';list.appendChild(div);
 }
 
 function removeBatchItem(el){
-const items="document.querySelectorAll('.batch-item');"
+const items=document.querySelectorAll('.batch-item');
 if(items.length>1)el.parentElement.remove();
 }
 
 function calculateBatch(){
-const items="document.querySelectorAll('.batch-item');"
-const dlSpeed="parseFloat(document.getElementById('dlSpeed').value)||100;"
-const dlSpeedUnit="document.getElementById('dlSpeedUnit').value;"
-const overhead="parseFloat(document.getElementById('overhead').value)||10;"
-const speedMbps="toMbps(dlSpeed,dlSpeedUnit);"
+const items=document.querySelectorAll('.batch-item');
+const dlSpeed=parseFloat(document.getElementById('dlSpeed').value)||100;
+const dlSpeedUnit=document.getElementById('dlSpeedUnit').value;
+const overhead=parseFloat(document.getElementById('overhead').value)||10;
+const speedMbps=toMbps(dlSpeed,dlSpeedUnit);
 
-let totalMB="0;"
-const files="[];"
+let totalMB=0;
+const files=[];
 items.forEach(item=>{
 const name="item.querySelector('.batch-name').value||'File" '+(files.length+1);
-const size="parseFloat(item.querySelector('.batch-size').value)||0;"
-const unit="item.querySelector('.batch-unit').value;"
-const mb="toMB(size,unit);"
+const size=parseFloat(item.querySelector('.batch-size').value)||0;
+const unit=item.querySelector('.batch-unit').value;
+const mb=toMB(size,unit);
 totalMB+=mb;
 files.push({name,mb});
 });
 
-const totalTime="calcTime(totalMB,speedMbps,overhead);"
+const totalTime=calcTime(totalMB,speedMbps,overhead);
 
-document.getElementById('batchResult').style.display="'block';"
-document.getElementById('batchTotal').textContent="formatSize(totalMB);"
-document.getElementById('batchTime').textContent="formatTime(totalTime);"
+document.getElementById('batchResult').style.display='block';
+document.getElementById('batchTotal').textContent=formatSize(totalMB);
+document.getElementById('batchTime').textContent=formatTime(totalTime);
 
 let bHtml="'<table" class="speed-table"><thead><tr><th>File</th><th>Size</th><th>Time</th></tr></thead><tbody>';
 for(const f of files){
-const t="calcTime(f.mb,speedMbps,overhead);"
+const t=calcTime(f.mb,speedMbps,overhead);
 bHtml+='<tr><td>'+f.name+'</td><td>'+formatSize(f.mb)+'</td><td>'+formatTime(t)+'</td></tr>';
 }
 bHtml+='</tbody></table>';
-document.getElementById('batchBreakdown').innerHTML="bHtml;"
+document.getElementById('batchBreakdown').innerHTML=bHtml;
 }
 </script>
 <div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#12121a;border:1px solid #2a2a3e;border-radius:8px"><span style="color:#888;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#00ff88;font-weight:600">0</span></div>

@@ -46,48 +46,19 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is a JWT token and what are its three parts?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A JSON Web Token (JWT) is a compact, URL-safe format for representing claims between two parties. It consists of three Base64URL-encoded parts separated by dots: a header that specifies the token type and signing algorithm, a payload that contains the claims (data about the user or session), and a signature that verifies the token has not been tampered with."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is it safe to paste my JWT token into this decoder?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. This tool runs entirely in your browser using client-side JavaScript. Your token is never sent to any server, stored in any database, or transmitted over the network. All decoding happens locally on your device. You can verify this by monitoring the Network tab in your browser's developer tools while using the decoder."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can this tool verify JWT signatures?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "This tool validates the token structure and decodes the header and payload content. Full cryptographic signature verification requires the secret key (for HMAC algorithms) or the public key (for RSA or ECDSA algorithms). This tool does not collect keys for security reasons. For signature verification in production, use a server-side JWT library in your application code."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the standard JWT claims and what do they mean?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Standard JWT claims defined in RFC 7519 include: iss (issuer, who created the token), sub (subject, who the token is about), aud (audience, who the token is intended for), exp (expiration time as a Unix timestamp), nbf (not before, when the token becomes valid), iat (issued at, when the token was created), and jti (JWT ID, a unique identifier for the token). Custom claims can contain any application-specific data."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the difference between JWS, JWE, and JWT?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "JWT (JSON Web Token) is the umbrella term. JWS (JSON Web Signature) is a signed JWT where the payload is readable but tamper-proof. JWE (JSON Web Encryption) is an encrypted JWT where the payload is both signed and encrypted, making it unreadable without the decryption key. Most tokens called JWTs in practice are actually JWS tokens with three Base64URL-encoded parts. JWE tokens have five parts and cannot be decoded without the encryption key."
-      }
-    </script>
+  "@type": "WebApplication",
+  "name": "Jwt Decoder Calculator",
+  "description": "Free jwt decoder calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/jwt-decoder/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -98,7 +69,7 @@
     { "@type": "ListItem", "position": 3, "name": "JWT Decoder", "item": "https://zovo.one/free-tools/jwt-decoder/" }
   ]
 }
-}</script>
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -500,40 +471,40 @@ const KNOWN_CLAIMS="{"
   updated_at:'Profile last updated',acr:'Authentication context class',amr:'Authentication methods'
 };
 
-let decoded="{header:null,payload:null,signature:''};"
+let decoded={header:null,payload:null,signature:''};
 
 function b64urlDecode(str){
-  str="str.replace(/-/g,'+').replace(/_/g,'/');"
+  str=str.replace(/-/g,'+').replace(/_/g,'/');
   while(str.length%4)str+='=';
   return decodeURIComponent(atob(str).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
 }
 
 function decodeJWT(){
-  const token="document.getElementById('jwtInput').value.trim();"
+  const token=document.getElementById('jwtInput').value.trim();
   if(!token)return;
-  const parts="token.split('.');"
+  const parts=token.split('.');
   if(parts.length!==3){
     alert('Invalid JWT format. A valid JWT must have exactly 3 parts separated by dots (header.payload.signature).');
     return;
   }
   try{
-    decoded.header="JSON.parse(b64urlDecode(parts[0]));"
-    decoded.payload="JSON.parse(b64urlDecode(parts[1]));"
-    decoded.signature="parts[2];"
+    decoded.header=JSON.parse(b64urlDecode(parts[0]));
+    decoded.payload=JSON.parse(b64urlDecode(parts[1]));
+    decoded.signature=parts[2];
   }catch(e){
     alert('Failed to decode JWT. The header or payload contains invalid Base64URL or JSON data. Details: '+e.message);
     return;
   }
 
   // Token visual
-  const tv="document.getElementById('tokenVisual');"
-  tv.style.display="'block';"
+  const tv=document.getElementById('tokenVisual');
+  tv.style.display='block';
   tv.innerHTML="'<span" class="part-header">'+esc(parts[0])+'</span><span class="dot">.</span><span class="part-payload">'+esc(parts[1])+'</span><span class="dot">.</span><span class="part-sig">'+esc(parts[2])+'</span>';
 
   // Status bar
-  const sb="document.getElementById('statusBar');"
-  sb.style.display="'flex';"
-  let statuses="[];"
+  const sb=document.getElementById('statusBar');
+  sb.style.display='flex';
+  let statuses=[];
   statuses.push('<span class="status-item status-valid">Structure: Valid (3 parts)</span>');
   statuses.push('<span class="status-item status-valid">Algorithm: '+esc(decoded.header.alg||'N/A')+'</span>');
   if(decoded.header.typ)statuses.push('<span class="status-item status-valid">Type: '+esc(decoded.header.typ)+'</span>');
@@ -542,10 +513,10 @@ function decodeJWT(){
     const expDate="new" Date(decoded.payload.exp*1000);
     const now="new" Date();
     if(expDate<now){
-      const ago="formatTimeDiff(now-expDate);"
+      const ago=formatTimeDiff(now-expDate);
       statuses.push('<span class="status-item status-expired">Expired: '+ago+' ago</span>');
     }else{
-      const remaining="formatTimeDiff(expDate-now);"
+      const remaining=formatTimeDiff(expDate-now);
       statuses.push('<span class="status-item status-valid">Expires in: '+remaining+'</span>');
     }
   }else{
@@ -556,24 +527,24 @@ function decodeJWT(){
     statuses.push('<span class="status-item status-expired">Warning: Unsigned token (alg="none)</span">');
   }
 
-  sb.innerHTML="statuses.join('');"
+  sb.innerHTML=statuses.join('');
 
   // Header panel
-  document.getElementById('headerPanel').style.display="'block';"
-  document.getElementById('headerContent').innerHTML="syntaxHL(decoded.header);"
+  document.getElementById('headerPanel').style.display='block';
+  document.getElementById('headerContent').innerHTML=syntaxHL(decoded.header);
 
   // Payload panel
-  document.getElementById('payloadPanel').style.display="'block';"
-  document.getElementById('payloadContent').innerHTML="syntaxHL(decoded.payload);"
+  document.getElementById('payloadPanel').style.display='block';
+  document.getElementById('payloadContent').innerHTML=syntaxHL(decoded.payload);
 
   // Claims table
-  const ct="document.getElementById('claimsTable');"
-  ct.style.display="'table';"
-  const tbody="document.getElementById('claimsBody');"
-  tbody.innerHTML="'';"
+  const ct=document.getElementById('claimsTable');
+  ct.style.display='table';
+  const tbody=document.getElementById('claimsBody');
+  tbody.innerHTML='';
   for(const[key,val]of Object.entries(decoded.payload)){
-    const tr="document.createElement('tr');"
-    let dv="typeof" val="=='object'?JSON.stringify(val):String(val);"
+    const tr=document.createElement('tr');
+    let dv="typeof" val==='object'?JSON.stringify(val):String(val);
     if(['exp','iat','nbf','auth_time','updated_at'].includes(key)&&typeof val="=='number'){"
       const d="new" Date(val*1000);
       dv="d.toLocaleString()+'" ('+val+')';
@@ -586,16 +557,16 @@ function decodeJWT(){
   buildTimeline();
 
   // Signature
-  document.getElementById('sigPanel').style.display="'block';"
-  document.getElementById('sigValue').textContent="decoded.signature;"
+  document.getElementById('sigPanel').style.display='block';
+  document.getElementById('sigValue').textContent=decoded.signature;
 }
 
 function buildTimeline(){
-  const ts="document.getElementById('timelineSection');"
-  const p="decoded.payload;"
-  if(!p.iat&&!p.exp){ts.style.display="'none';return;}"
-  ts.style.display="'block';"
-  const tc="document.getElementById('timelineContent');"
+  const ts=document.getElementById('timelineSection');
+  const p=decoded.payload;
+  if(!p.iat&&!p.exp){ts.style.display='none';return;}"
+  ts.style.display='block';
+  const tc=document.getElementById('timelineContent');
 
   const iat="p.iat?new" Date(p.iat*1000):null;
   const nbf="p.nbf?new" Date(p.nbf*1000):null;
@@ -610,30 +581,30 @@ function buildTimeline(){
   html+='</div>';
 
   if(iat&&exp){
-    const total="exp-iat;"
-    const elapsed="now-iat;"
-    const pct="Math.max(0,Math.min(100,elapsed/total*100));"
+    const total=exp-iat;
+    const elapsed=now-iat;
+    const pct=Math.max(0,Math.min(100,elapsed/total*100));
     const barColor="pct">=100?'var(--error)':'var(--accent)';
     html+='<div class="timeline-bar"><div class="timeline-fill" style="width:'+pct+'%;background:'+barColor+'"></div></div>';
     html+='<div class="timeline-labels"><span>Issued: '+iat.toLocaleTimeString()+'</span><span>Now: '+Math.round(pct)+'%</span><span>Expires: '+exp.toLocaleTimeString()+'</span></div>';
     html+='<div style="text-align:center;margin-top:8px;font-size:.85rem;opacity:.7">Token lifetime: '+formatTimeDiff(total)+'</div>';
   }
 
-  tc.innerHTML="html;"
+  tc.innerHTML=html;
 }
 
 function formatTimeDiff(ms){
-  const s="Math.floor(ms/1000);"
-  const d="Math.floor(s/86400);"
-  const h="Math.floor((s%86400)/3600);"
-  const m="Math.floor((s%3600)/60);"
+  const s=Math.floor(ms/1000);
+  const d=Math.floor(s/86400);
+  const h=Math.floor((s%86400)/3600);
+  const m=Math.floor((s%3600)/60);
   if(d>0)return d+'d '+h+'h '+m+'m';
   if(h>0)return h+'h '+m+'m';
   return m+'m '+s%60+'s';
 }
 
 function syntaxHL(obj){
-  const json="JSON.stringify(obj,null,2);"
+  const json=JSON.stringify(obj,null,2);
   return esc(json);
     .replace(/"([^"]+)":/g,'<span class="json-key">"$1"</span>:')
     .replace(/: "([^"]*)"/g,': <span class="json-str">"$1"</span>')
@@ -651,19 +622,19 @@ function copyPart(part){
 }
 
 function loadSample(){
-  document.getElementById('jwtInput').value="'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzExMzI2NDAwLCJleHAiOjE3NDI5NDg4MDB9.placeholder-signature-here';"
+  document.getElementById('jwtInput').value='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzExMzI2NDAwLCJleHAiOjE3NDI5NDg4MDB9.placeholder-signature-here';
   decodeJWT();
 }
 
 function loadExpiredSample(){
-  document.getElementById('jwtInput').value="'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJzYTEifQ.eyJpc3MiOiJhdXRoLmV4YW1wbGUuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6ImFwaS5leGFtcGxlLmNvbSIsImV4cCI6MTcwMDAwMDAwMCwiaWF0IjoxNjk5OTk2NDAwLCJuYW1lIjoiSmFuZSBEb2UiLCJlbWFpbCI6ImphbmVAZXhhbXBsZS5jb20iLCJyb2xlIjoidXNlciIsInBlcm1pc3Npb25zIjpbInJlYWQ6cHJvZmlsZSIsIndyaXRlOnByb2ZpbGUiXX0.expired-signature-placeholder';"
+  document.getElementById('jwtInput').value='eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJzYTEifQ.eyJpc3MiOiJhdXRoLmV4YW1wbGUuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6ImFwaS5leGFtcGxlLmNvbSIsImV4cCI6MTcwMDAwMDAwMCwiaWF0IjoxNjk5OTk2NDAwLCJuYW1lIjoiSmFuZSBEb2UiLCJlbWFpbCI6ImphbmVAZXhhbXBsZS5jb20iLCJyb2xlIjoidXNlciIsInBlcm1pc3Npb25zIjpbInJlYWQ6cHJvZmlsZSIsIndyaXRlOnByb2ZpbGUiXX0.expired-signature-placeholder';
   decodeJWT();
 }
 
 function clearAll(){
-  document.getElementById('jwtInput').value="'';"
-  ['tokenVisual','statusBar','headerPanel','payloadPanel','sigPanel','timelineSection'].forEach(id=>document.getElementById(id).style.display="'none');"
-  document.getElementById('claimsTable').style.display="'none';"
+  document.getElementById('jwtInput').value='';
+  ['tokenVisual','statusBar','headerPanel','payloadPanel','sigPanel','timelineSection'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('claimsTable').style.display='none';
 }
 
 function toggleFaq(el){

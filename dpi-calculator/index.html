@@ -92,10 +92,10 @@ footer{border-top:1px solid #1a1a2e;padding:32px 0;margin-top:40px;text-align:ce
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"DPI Calculator","item":"https://zovo.one/free-tools/dpi-calculator/"}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this dpi calculator free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes, this dpi calculator is completely free with no registration required. All calculations happen in your browser."}},{"@type":"Question","name":"How accurate is this dpi calculator?","acceptedAnswer":{"@type":"Answer","text":"This dpi calculator uses industry-standard formulas and is regularly verified for accuracy. Results are intended for informational purposes."}},{"@type":"Question","name":"Is my data saved when I use this dpi calculator?","acceptedAnswer":{"@type":"Answer","text":"No. All calculations run entirely in your browser. No data is sent to any server or stored anywhere."}}]}
-}</script>
+</script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2K8JLFQ5H"></script>
 <script>
@@ -545,7 +545,7 @@ Privacy Note - All calculations run entirely in your browser. No image data is u
 
 <script>
 (function(){
-let vc="parseInt(localStorage.getItem('dpi_calc_visits')||'0',10)+1;"
+let vc=parseInt(localStorage.getItem('dpi_calc_visits')||'0',10)+1;
 localStorage.setItem('dpi_calc_visits',vc);
 })();
 
@@ -555,14 +555,14 @@ document.getElementById('imgHeight').value="h;"
 }
 
 function convertUnits(){
-const unit="document.getElementById('printUnit').value;"
-const wEl="document.getElementById('printWidth');"
-const hEl="document.getElementById('printHeight');"
-let w="parseFloat(wEl.value)||10;"
-let h="parseFloat(hEl.value)||8;"
+const unit=document.getElementById('printUnit').value;
+const wEl=document.getElementById('printWidth');
+const hEl=document.getElementById('printHeight');
+let w=parseFloat(wEl.value)||10;
+let h=parseFloat(hEl.value)||8;
 // Convert current values assuming they are in inches
-if(unit="=='cm'){wEl.value=(w*2.54).toFixed(1);hEl.value=(h*2.54).toFixed(1);}"
-else if(unit="=='mm'){wEl.value=(w*25.4).toFixed(0);hEl.value=(h*25.4).toFixed(0);}"
+if(unit==='cm'){wEl.value=(w*2.54).toFixed(1);hEl.value=(h*2.54).toFixed(1);}
+else if(unit==='mm'){wEl.value=(w*25.4).toFixed(0);hEl.value=(h*25.4).toFixed(0);}
 else{wEl.value="w;hEl.value=h;}"
 }
 
@@ -580,45 +580,45 @@ return{label:'Draft',cls:'q-draft',desc:'Visible pixelation. Only suitable for l
 }
 
 function calculateDPI(){
-const imgW="parseInt(document.getElementById('imgWidth').value)||1;"
-const imgH="parseInt(document.getElementById('imgHeight').value)||1;"
-const unit="document.getElementById('printUnit').value;"
-const printW="toInches(parseFloat(document.getElementById('printWidth').value)||1,unit);"
-const printH="toInches(parseFloat(document.getElementById('printHeight').value)||1,unit);"
+const imgW=parseInt(document.getElementById('imgWidth').value)||1;
+const imgH=parseInt(document.getElementById('imgHeight').value)||1;
+const unit=document.getElementById('printUnit').value;
+const printW=toInches(parseFloat(document.getElementById('printWidth').value)||1,unit);
+const printH=toInches(parseFloat(document.getElementById('printHeight').value)||1,unit);
 
-const dpiW="Math.round(imgW/printW);"
-const dpiH="Math.round(imgH/printH);"
-const effectiveDpi="Math.min(dpiW,dpiH);"
-const quality="getQuality(effectiveDpi);"
+const dpiW=Math.round(imgW/printW);
+const dpiH=Math.round(imgH/printH);
+const effectiveDpi=Math.min(dpiW,dpiH);
+const quality=getQuality(effectiveDpi);
 
-document.getElementById('resultsArea').style.display="'block';"
-document.getElementById('dpiWidth').textContent="dpiW;"
-document.getElementById('dpiHeight').textContent="dpiH;"
-document.getElementById('effectiveDpi').textContent="effectiveDpi;"
+document.getElementById('resultsArea').style.display='block';
+document.getElementById('dpiWidth').textContent=dpiW;
+document.getElementById('dpiHeight').textContent=dpiH;
+document.getElementById('effectiveDpi').textContent=effectiveDpi;
 document.getElementById('qualityBadge').innerHTML="'<span" class="quality-badge '+quality.cls+'" style="font-size:1.3rem">'+quality.label+'</span><p style="margin-top:8px;font-size:0.9rem;color:#ccc">'+quality.desc+'</p>';
 
 // Max size table
 const dpiLevels="[{dpi:72,label:'72" DPI (Screen)'},{dpi:150,label:'150 DPI (Good)'},{dpi:300,label:'300 DPI (Photo)'},{dpi:600,label:'600 DPI (Fine Art)'}];
-const tbody="document.getElementById('maxSizeTable').querySelector('tbody');"
-tbody.innerHTML="'';"
+const tbody=document.getElementById('maxSizeTable').querySelector('tbody');
+tbody.innerHTML='';
 for(const level of dpiLevels){
-const maxW="(imgW/level.dpi).toFixed(1);"
-const maxH="(imgH/level.dpi).toFixed(1);"
-const area="(maxW*maxH).toFixed(1);"
-const q="getQuality(level.dpi);"
-const tr="document.createElement('tr');"
+const maxW=(imgW/level.dpi).toFixed(1);
+const maxH=(imgH/level.dpi).toFixed(1);
+const area=(maxW*maxH).toFixed(1);
+const q=getQuality(level.dpi);
+const tr=document.createElement('tr');
 tr.innerHTML="'<td">'+level.label+'</td><td><span class="quality-badge '+q.cls+'">'+q.label+'</span></td><td>'+maxW+'"</td><td>'+maxH+'"</td><td>'+area+' sq in</td>';
 tbody.appendChild(tr);
 }
 
 // Chart
-const chartDpis="[];const" chartWidths="[];const" chartHeights="[];"
+const chartDpis="[];const" chartWidths="[];const" chartHeights=[];
 for(let d="72;d<=600;d+=20){"
 chartDpis.push(d);
 chartWidths.push(parseFloat((imgW/d).toFixed(1)));
 chartHeights.push(parseFloat((imgH/d).toFixed(1)));
 }
-const chartCfg="encodeURIComponent(JSON.stringify({"
+const chartCfg=encodeURIComponent(JSON.stringify({
 type:'line',
 data:{labels:chartDpis,datasets:[
 {label:'Max Width (in)',data:chartWidths,borderColor:'#00ff88',fill:false},
@@ -629,28 +629,28 @@ options:{plugins:{title:{display:true,text:'Maximum Print Size vs DPI for '+imgW
 document.getElementById('dpiChart').innerHTML="'<img" src="https://quickchart.io/chart?c="'+chartCfg+'&w=800&h=400&bkg=%2312121a" alt="Chart" showing maximum print size decreasing as DPI increases" loading="lazy">';
 
 // Image details
-const mp="(imgW*imgH/1e6).toFixed(1);"
-const ratio="gcd(imgW,imgH);"
+const mp=(imgW*imgH/1e6).toFixed(1);
+const ratio=gcd(imgW,imgH);
 document.getElementById('imageDetails').innerHTML="'<p">Resolution: '+imgW+' x '+imgH+' pixels · '+mp+' megapixels · Aspect ratio: '+(imgW/ratio)+':'+(imgH/ratio)+'</p><p>At your requested print size of '+printW.toFixed(1)+'" x '+printH.toFixed(1)+'", the effective DPI is '+effectiveDpi+'. '+(dpiW!==dpiH?'Note: horizontal and vertical DPI differ ('+dpiW+' vs '+dpiH+'), which means the image aspect ratio doesn\'t match the print size. The image will need to be cropped or stretched to fit.':'The DPI is consistent on both axes, meaning your image aspect ratio matches the print size well.')+'</p>';
 
 document.getElementById('resultsArea').scrollIntoView({behavior:'smooth'});
 }
 
 function calculateReverse(){
-const dpi="parseInt(document.getElementById('revDpi').value)||300;"
-const w="parseFloat(document.getElementById('revWidth').value)||1;"
-const h="parseFloat(document.getElementById('revHeight').value)||1;"
-const neededW="Math.ceil(dpi*w);"
-const neededH="Math.ceil(dpi*h);"
-const mp="(neededW*neededH/1e6).toFixed(1);"
+const dpi=parseInt(document.getElementById('revDpi').value)||300;
+const w=parseFloat(document.getElementById('revWidth').value)||1;
+const h=parseFloat(document.getElementById('revHeight').value)||1;
+const neededW=Math.ceil(dpi*w);
+const neededH=Math.ceil(dpi*h);
+const mp=(neededW*neededH/1e6).toFixed(1);
 
-document.getElementById('reverseResult').style.display="'block';"
-document.getElementById('neededWidth').textContent="neededW.toLocaleString();"
-document.getElementById('neededHeight').textContent="neededH.toLocaleString();"
+document.getElementById('reverseResult').style.display='block';
+document.getElementById('neededWidth').textContent=neededW.toLocaleString();
+document.getElementById('neededHeight').textContent=neededH.toLocaleString();
 document.getElementById('neededMegapixels').textContent="mp+'" megapixels needed · '+neededW.toLocaleString()+' x '+neededH.toLocaleString()+' pixels at '+dpi+' DPI for a '+w+'" x '+h+'" print';
 }
 
-function gcd(a,b){a="Math.abs(a);b=Math.abs(b);while(b){let" t="b;b=a%b;a=t;}return" a;}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){let t="b;b=a%b;a=t;}return" a;}
 </script>
 <div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#12121a;border:1px solid #2a2a3e;border-radius:8px"><span style="color:#888;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#00ff88;font-weight:600">0</span></div>
 <section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#12121a;border:1px solid #2a2a3a;border-radius:12px;">

@@ -16,7 +16,6 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Caching static assets');
         return cache.addAll(STATIC_ASSETS);
       })
       .then(() => self.skipWaiting())
@@ -31,7 +30,6 @@ self.addEventListener('activate', event => {
         cacheNames
           .filter(name => name.startsWith('zovo-tools-') && name !== CACHE_NAME)
           .map(name => {
-            console.log('Deleting cache:', name);
             return caches.delete(name);
           })
       );
@@ -82,7 +80,6 @@ async function syncAnalytics() {
           headers: { 'Content-Type': 'application/json' }
         });
       } catch (error) {
-        console.log('Analytics sync failed:', error);
       }
     }
     // Clear queue after successful sync

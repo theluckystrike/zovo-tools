@@ -89,10 +89,10 @@ footer{border-top:1px solid #1a1a2e;padding:32px 0;margin-top:40px;text-align:ce
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Education Savings Calculator","item":"https://zovo.one/free-tools/education-savings-calculator/"}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this education savings calculator free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes, this education savings calculator is completely free with no registration required. All calculations happen in your browser."}},{"@type":"Question","name":"How accurate is this education savings calculator?","acceptedAnswer":{"@type":"Answer","text":"This education savings calculator uses industry-standard formulas and is regularly verified for accuracy. Results are intended for informational purposes."}},{"@type":"Question","name":"Is my data saved when I use this education savings calculator?","acceptedAnswer":{"@type":"Answer","text":"No. All calculations run entirely in your browser. No data is sent to any server or stored anywhere."}}]}
-}</script>
+</script>
 </head>
 <body>
 <div class="container">
@@ -502,7 +502,7 @@ Privacy Note - All calculations run entirely in your browser. No personal or fin
 
 <script>
 (function(){
-let vc="parseInt(localStorage.getItem('edu_calc_visits')||'0',10)+1;"
+let vc=parseInt(localStorage.getItem('edu_calc_visits')||'0',10)+1;
 localStorage.setItem('edu_calc_visits',vc);
 })();
 
@@ -517,59 +517,58 @@ function fmt(n){return '$'+n.toLocaleString('en-US',{maximumFractionDigits:0})}
 function fmtShort(n){if(n>=1e6)return '$'+(n/1e6).toFixed(1)+'M';if(n>=1e3)return '$'+(n/1e3).toFixed(0)+'K';return '$'+n.toFixed(0)}
 
 function calculateEducation(){
-const childAge="parseInt(document.getElementById('childAge').value)||0;"
-const enrollAge="parseInt(document.getElementById('enrollAge').value)||18;"
-const schoolType="document.getElementById('schoolType').value;"
-const yearsOfSchool="parseInt(document.getElementById('yearsOfSchool').value)||4;"
-const currentSavings="parseFloat(document.getElementById('currentEdSavings').value)||0;"
-const monthlyContrib="parseFloat(document.getElementById('monthlyContrib').value)||0;"
-const annualReturn="(parseFloat(document.getElementById('edReturn').value)||7)/100;"
-const edInflation="(parseFloat(document.getElementById('edInflation').value)||5)/100;"
+const childAge=parseInt(document.getElementById('childAge').value)||0;
+const enrollAge=parseInt(document.getElementById('enrollAge').value)||18;
+const schoolType=document.getElementById('schoolType').value;
+const yearsOfSchool=parseInt(document.getElementById('yearsOfSchool').value)||4;
+const currentSavings=parseFloat(document.getElementById('currentEdSavings').value)||0;
+const monthlyContrib=parseFloat(document.getElementById('monthlyContrib').value)||0;
+const annualReturn=(parseFloat(document.getElementById('edReturn').value)||7)/100;
+const edInflation=(parseFloat(document.getElementById('edInflation').value)||5)/100;
 
-const yearsUntilEnroll="Math.max(0,enrollAge-childAge);"
-const monthlyReturn="annualReturn/12;"
-const totalMonths="yearsUntilEnroll*12;"
+const yearsUntilEnroll=Math.max(0,enrollAge-childAge);
+const monthlyReturn=annualReturn/12;
+const totalMonths=yearsUntilEnroll*12;
 
-const school="SCHOOL_COSTS[schoolType];"
-let totalCost="0;"
-for(let y="0;y<yearsOfSchool;y++){"
+const school=SCHOOL_COSTS[schoolType];
+let totalCost=0;
+for(let y=0;y<yearsOfSchool;y++){
 totalCost+=school.annual*Math.pow(1+edInflation,yearsUntilEnroll+y);
 }
 
-let balance="currentSavings;"
-const yearlyData="[];"
-for(let y="0;y<=yearsUntilEnroll;y++){"
+let balance=currentSavings;
+const yearlyData=[];
+for(let y=0;y<=yearsUntilEnroll;y++){
 yearlyData.push({age:childAge+y,year:y,balance:balance});
-const growth="balance*annualReturn;"
-const contrib="monthlyContrib*12;"
-balance="balance+growth+contrib;"
+const growth=balance*annualReturn;
+const contrib=monthlyContrib*12;
+balance=balance+growth+contrib;
 }
-const projectedSavings="balance;"
+const projectedSavings=balance;
 
-const gap="totalCost-projectedSavings;"
+const gap=totalCost-projectedSavings;
 
-let requiredMonthly="0;"
+let requiredMonthly=0;
 if(gap>0 && totalMonths>0){
-const fvCurrent="currentSavings*Math.pow(1+monthlyReturn,totalMonths);"
-const needed="totalCost-fvCurrent;"
+const fvCurrent=currentSavings*Math.pow(1+monthlyReturn,totalMonths);
+const needed=totalCost-fvCurrent;
 if(needed>0 && monthlyReturn>0){
-requiredMonthly="needed*monthlyReturn/(Math.pow(1+monthlyReturn,totalMonths)-1);"
+requiredMonthly=needed*monthlyReturn/(Math.pow(1+monthlyReturn,totalMonths)-1);
 }else if(needed>0){
-requiredMonthly="needed/totalMonths;"
+requiredMonthly=needed/totalMonths;
 }
 }
 
-document.getElementById('resultsArea').style.display="'block';"
-document.getElementById('projectedCost').textContent="fmt(Math.round(totalCost));"
-document.getElementById('projectedSavings').textContent="fmt(Math.round(projectedSavings));"
+document.getElementById('resultsArea').style.display='block';
+document.getElementById('projectedCost').textContent=fmt(Math.round(totalCost));
+document.getElementById('projectedSavings').textContent=fmt(Math.round(projectedSavings));
 
-const gapEl="document.getElementById('fundingGap');"
+const gapEl=document.getElementById('fundingGap');
 if(gap>0){
-gapEl.textContent="'-'+fmt(Math.round(gap));"
-gapEl.className="'big" shortfall';
-}else{
-gapEl.textContent="'+'+fmt(Math.round(Math.abs(gap)));"
-gapEl.className="'big';"
+gapEl.textContent='-'+fmt(Math.round(gap));
+gapEl.className='big" shortfall';}else{
+gapEl.textContent='+'+fmt(Math.round(Math.abs(gap)));
+gapEl.className='big';
 }
 
 document.getElementById('requiredMonthly').textContent="gap">0?fmt(Math.round(requiredMonthly))+'/mo':'$0 (Fully Funded)';
@@ -578,12 +577,12 @@ document.getElementById('requiredMonthly').textContent="gap">0?fmt(Math.round(re
 const labels="yearlyData.map(d=">d.age);
 const data="yearlyData.map(d=">Math.round(d.balance));
 const costLine="yearlyData.map(d=">{
-const yrsLeft="enrollAge-d.age;"
-let tc="0;for(let" y="0;y<yearsOfSchool;y++)tc+=school.annual*Math.pow(1+edInflation,yrsLeft+y);"
+const yrsLeft=enrollAge-d.age;
+let tc=0;for(let y=0;y<yearsOfSchool;y++)tc+=school.annual*Math.pow(1+edInflation,yrsLeft+y);
 return Math.round(tc);
 });
 
-const chartCfg="encodeURIComponent(JSON.stringify({"
+const chartCfg=encodeURIComponent(JSON.stringify({
 type:'line',
 data:{labels:labels,datasets:[
 {label:'Savings Balance',data:data,borderColor:'#00ff88',backgroundColor:'rgba(0,255,136,0.1)',fill:true},
@@ -594,33 +593,33 @@ options:{plugins:{title:{display:true,text:'Savings Growth vs Projected Cost'}},
 document.getElementById('growthChart').innerHTML="'<img" src="https://quickchart.io/chart?c="'+chartCfg+'&w=800&h=400&bkg=%2312121a" alt="Education" savings growth projection chart" loading="lazy">';
 
 // Comparison table and chart
-const compTbody="document.getElementById('compTable').querySelector('tbody');"
-compTbody.innerHTML="'';"
-const compLabels="[];const" compData="[];const" compMonthly="[];"
-const compColors="['#00ff88','#00ccff','#ffc107','#ff4444'];"
-let ci="0;"
+const compTbody=document.getElementById('compTable').querySelector('tbody');
+compTbody.innerHTML='';
+const compLabels="[];const" compData="[];const" compMonthly=[];
+const compColors=['#00ff88','#00ccff','#ffc107','#ff4444'];
+let ci=0;
 for(const[key,sc] of Object.entries(SCHOOL_COSTS)){
-let tc="0;"
-for(let y="0;y<yearsOfSchool;y++)tc+=sc.annual*Math.pow(1+edInflation,yearsUntilEnroll+y);"
-const annualAtEnroll="sc.annual*Math.pow(1+edInflation,yearsUntilEnroll);"
-const gp="tc-projectedSavings;"
-let rm="0;"
+let tc=0;
+for(let y=0;y<yearsOfSchool;y++)tc+=sc.annual*Math.pow(1+edInflation,yearsUntilEnroll+y);
+const annualAtEnroll=sc.annual*Math.pow(1+edInflation,yearsUntilEnroll);
+const gp=tc-projectedSavings;
+let rm=0;
 if(gp>0&&totalMonths>0){
-const fvC="currentSavings*Math.pow(1+monthlyReturn,totalMonths);"
-const nd="tc-fvC;"
-if(nd>0&&monthlyReturn>0)rm="nd*monthlyReturn/(Math.pow(1+monthlyReturn,totalMonths)-1);"
-else if(nd>0)rm="nd/totalMonths;"
+const fvC=currentSavings*Math.pow(1+monthlyReturn,totalMonths);
+const nd=tc-fvC;
+if(nd>0&&monthlyReturn>0)rm=nd*monthlyReturn/(Math.pow(1+monthlyReturn,totalMonths)-1);
+else if(nd>0)rm=nd/totalMonths;
 }
 compLabels.push(sc.label);
 compData.push(Math.round(tc));
 compMonthly.push(Math.round(rm));
-const tr="document.createElement('tr');"
+const tr=document.createElement('tr');
 tr.innerHTML="'<td">'+sc.label+'</td><td>'+fmt(sc.annual)+'</td><td>'+fmt(Math.round(annualAtEnroll))+'</td><td>'+fmt(Math.round(tc))+'</td><td>'+fmt(Math.round(rm))+'/mo</td>';
 compTbody.appendChild(tr);
 ci++;
 }
 
-const compCfg="encodeURIComponent(JSON.stringify({"
+const compCfg=encodeURIComponent(JSON.stringify({
 type:'bar',
 data:{labels:compLabels,datasets:[{label:'Total Projected Cost',data:compData,backgroundColor:compColors}]},
 options:{plugins:{title:{display:true,text:'Total Cost Comparison by School Type'}},scales:{y:{ticks:{callback:function(v){return '$'+(v/1e3).toFixed(0)+'K'}}}}}
@@ -628,30 +627,30 @@ options:{plugins:{title:{display:true,text:'Total Cost Comparison by School Type
 document.getElementById('compChart').innerHTML="'<img" src="https://quickchart.io/chart?c="'+compCfg+'&w=800&h=400&bkg=%2312121a" alt="College" cost comparison bar chart" loading="lazy">';
 
 // Year by year table
-const yearTbody="document.getElementById('yearTable').querySelector('tbody');"
-yearTbody.innerHTML="'';"
-let runBal="currentSavings;"
-for(let y="0;y<=yearsUntilEnroll;y++){"
-const growth="runBal*annualReturn;"
-const contrib="y===0?0:monthlyContrib*12;"
-const tr="document.createElement('tr');"
+const yearTbody=document.getElementById('yearTable').querySelector('tbody');
+yearTbody.innerHTML='';
+let runBal=currentSavings;
+for(let y=0;y<=yearsUntilEnroll;y++){
+const growth=runBal*annualReturn;
+const contrib=y===0?0:monthlyContrib*12;
+const tr=document.createElement('tr');
 tr.innerHTML="'<td">'+(childAge+y)+'</td><td>'+y+'</td><td>'+fmt(Math.round(contrib))+'</td><td>'+fmt(Math.round(growth))+'</td><td>'+fmt(Math.round(runBal))+'</td>';
 yearTbody.appendChild(tr);
-runBal="runBal+growth+contrib;"
+runBal=runBal+growth+contrib;
 }
 
 // Funding scenarios
-const scenarios="document.getElementById('scenariosArea');"
-const contribs="[100,250,500,750,1000];"
-let html="'';"
+const scenarios=document.getElementById('scenariosArea');
+const contribs=[100,250,500,750,1000];
+let html='';
 for(const c of contribs){
-let b="currentSavings;"
-for(let m="0;m<totalMonths;m++){b=b*(1+monthlyReturn)+c;}"
-const diff="totalCost-b;"
+let b=currentSavings;
+for(let m=0;m<totalMonths;m++){b=b*(1+monthlyReturn)+c;}
+const diff=totalCost-b;
 html+='<div class="scenario-card"><h4>$'+c+'/month</h4>';
 html+='<p>Projected savings: '+fmt(Math.round(b))+(diff>0?' · Gap: <span style="color:#ff4444">'+fmt(Math.round(diff))+'</span>':' · <span style="color:#00ff88">Fully funded (+'+fmt(Math.round(Math.abs(diff)))+')</span>')+'</p></div>';
 }
-scenarios.innerHTML="html;"
+scenarios.innerHTML=html;
 
 document.getElementById('resultsArea').scrollIntoView({behavior:'smooth'});
 </script>

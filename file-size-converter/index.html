@@ -25,13 +25,13 @@
 <meta name="twitter:description" content="Convert file sizes between bytes, KB, MB, GB, TB, PB. Binary and decimal modes. Free and instant."/">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"File Size Converter","description":"Convert between bytes, kilobytes, megabytes, gigabytes, terabytes, and petabytes with binary (1024) and decimal (1000) standards. Instant results with copy functionality.","url":"https://zovo.one/free-tools/file-size-converter/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip"}}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between binary and decimal file sizes?","acceptedAnswer":{"@type":"Answer","text":"Binary (base-2) uses multiples of 1024 (1 KB = 1024 bytes), which is how operating systems like Windows measure storage. Decimal (base-10) uses multiples of 1000 (1 KB = 1000 bytes), which is how storage manufacturers label drives. This is why a 1 TB drive shows as about 931 GB in Windows."}},{"@type":"Question","name":"How many megabytes are in a gigabyte?","acceptedAnswer":{"@type":"Answer","text":"In binary (base-2), 1 GB = 1,024 MB. In decimal (base-10), 1 GB = 1,000 MB. Most operating systems use binary, while drive manufacturers use decimal. The difference becomes more significant at larger sizes."}},{"@type":"Question","name":"Why does my hard drive show less space than advertised?","acceptedAnswer":{"@type":"Answer","text":"Hard drive manufacturers use decimal units (1 GB = 1,000,000,000 bytes) while your operating system displays sizes in binary units (1 GB = 1,073,741,824 bytes). This means a 1 TB drive appears as roughly 931 GiB. The missing space is not lost; it is an artifact of different measurement standards."}},{"@type":"Question","name":"What are IEC binary prefixes like KiB, MiB, GiB?","acceptedAnswer":{"@type":"Answer","text":"IEC binary prefixes (kibibyte, mebibyte, gibibyte) were introduced in 1998 to clearly distinguish binary multiples (powers of 1024) from decimal SI prefixes (powers of 1000). 1 KiB = 1024 bytes, 1 MiB = 1,048,576 bytes, 1 GiB = 1,073,741,824 bytes."}},{"@type":"Question","name":"Is this converter accurate for all file sizes?","acceptedAnswer":{"@type":"Answer","text":"Yes. The converter uses JavaScript's native floating-point arithmetic (64-bit IEEE 754), which provides 15-17 significant digits of precision. This is accurate for all practical file size conversions, including exabyte-scale calculations used in data center capacity planning."}}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"File Size Converter","item":"https://zovo.one/free-tools/file-size-converter/"}]}
-}</script>
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -672,45 +672,45 @@ gtag('config', 'G-V2K8JLFQ5H');
         {name:'Petabytes',abbr:'PB',binaryAbbr:'PiB',decimalAbbr:'PB'},
         {name:'Exabytes',abbr:'EB',binaryAbbr:'EiB',decimalAbbr:'EB'}
     ];
-    var standard="'binary';"
+    var standard='binary';
 
-    window.setStandard="function(s){"
-        standard="s;"
-        document.getElementById('btnBinary').classList.toggle('active',s="=='binary');"
-        document.getElementById('btnDecimal').classList.toggle('active',s="=='decimal');"
+    window.setStandard=function(s){
+        standard=s;
+        document.getElementById('btnBinary').classList.toggle('active',s==='binary');
+        document.getElementById('btnDecimal').classList.toggle('active',s==='decimal');
         document.getElementById('standardNote').textContent="s="=='binary';"
             ?'Using" binary standard: 1 KB = 1,024 bytes (used by operating systems).'
             :'Using decimal standard: 1 KB = 1,000 bytes (used by storage manufacturers).';
         convert();
     };
 
-    window.setPreset="function(val,unitIdx){"
+    window.setPreset=function(val,unitIdx){
         document.getElementById('inputValue').value="val;"
         document.getElementById('inputUnit').value="unitIdx;"
         convert();
     };
 
-    window.convert="function(){"
-        var val="parseFloat(document.getElementById('inputValue').value);"
-        var unitIdx="parseInt(document.getElementById('inputUnit').value);"
+    window.convert=function(){
+        var val=parseFloat(document.getElementById('inputValue').value);
+        var unitIdx=parseInt(document.getElementById('inputUnit').value);
         if(isNaN(val))return;
         var base="standard="=='binary'?1024:1000;""
-        var bytes="val*Math.pow(base,unitIdx);"
-        var tbody="document.getElementById('resultsBody');"
-        tbody.innerHTML="'';"
+        var bytes=val*Math.pow(base,unitIdx);
+        var tbody=document.getElementById('resultsBody');
+        tbody.innerHTML='';
         units.forEach(function(unit,i){
-            var converted="bytes/Math.pow(base,i);"
-            var displayVal="formatNumber(converted);"
+            var converted=bytes/Math.pow(base,i);
+            var displayVal=formatNumber(converted);
             var abbr="standard="=='binary'?unit.binaryAbbr:unit.decimalAbbr;""
-            var tr="document.createElement('tr');"
-            if(i="==unitIdx)tr.style.background="'rgba(0,255,136,.06)';""
+            var tr=document.createElement('tr');
+            if(i===unitIdx)tr.style.background='rgba(0,255,136,.06)';
             tr.innerHTML="'<td" class="unit-name">'+unit.name+' ('+abbr+')</td><td class="unit-value">'+displayVal+'</td><td><button class="copy-btn" onclick="copyValue(\''+displayVal+'" '+abbr+'\',this)">Copy</button></td>';
             tbody.appendChild(tr);
         });
     };
 
     function formatNumber(n){
-        if(n="==0)return'0';"
+        if(n===0)return'0';
         if(Math.abs(n)>=1){
             if(Number.isInteger(n)||Math.abs(n)>=100)return n.toLocaleString('en-US',{maximumFractionDigits:2});
             return n.toLocaleString('en-US',{maximumFractionDigits:6});
@@ -719,10 +719,10 @@ gtag('config', 'G-V2K8JLFQ5H');
         return n.toLocaleString('en-US',{maximumSignificantDigits:6});
     }
 
-    window.copyValue="function(text,btn){"
+    window.copyValue=function(text,btn){
         navigator.clipboard.writeText(text).then(function(){
-            btn.textContent="'Copied';"
-            setTimeout(function(){btn.textContent="'Copy';},1200);"
+            btn.textContent='Copied';
+            setTimeout(function(){btn.textContent='Copy';},1200);"
         });
     };
 

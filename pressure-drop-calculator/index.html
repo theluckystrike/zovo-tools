@@ -47,16 +47,19 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "What is the Darcy-Weisbach equation?", "acceptedAnswer": { "@type": "Answer", "text": "The Darcy-Weisbach equation calculates pressure drop due to friction in a pipe: ΔP = f × (L/D) × (ρv²/2), where f is the Darcy friction factor, L is pipe length, D is diameter, ρ is fluid density, and v is flow velocity." }},
-    { "@type": "Question", "name": "How is the friction factor calculated?", "acceptedAnswer": { "@type": "Answer", "text": "The Darcy friction factor is calculated iteratively using the Colebrook-White equation: 1/√f = -2 log₁₀(ε/(3.7D) + 2.51/(Re√f)). This calculator uses Newton-Raphson iteration to solve it." }},
-    { "@type": "Question", "name": "What are minor losses in pipe flow?", "acceptedAnswer": { "@type": "Answer", "text": "Minor losses are pressure drops caused by fittings, valves, bends, and other flow obstructions. They are calculated using K-factors: ΔP_minor = K × (ρv²/2). Despite the name, minor losses can be significant in short pipe runs with many fittings." }},
-    { "@type": "Question", "name": "What is pipe roughness?", "acceptedAnswer": { "@type": "Answer", "text": "Pipe roughness (ε) is the average height of surface irregularities inside the pipe. Common values: commercial steel 0.045 mm, PVC 0.0015 mm, cast iron 0.26 mm. Roughness increases with age and corrosion." }},
-    { "@type": "Question", "name": "What is Reynolds number?", "acceptedAnswer": { "@type": "Answer", "text": "Reynolds number (Re = ρvD/μ) determines the flow regime. Re < 2300 is laminar flow, 2300-4000 is transitional, and Re > 4000 is turbulent. Most industrial pipe flow is turbulent." }},
-    { "@type": "Question", "name": "How do I convert between pressure units?", "acceptedAnswer": { "@type": "Answer", "text": "Common conversions: 1 bar = 100,000 Pa = 14.5038 psi. 1 atm = 101,325 Pa = 14.696 psi. This calculator provides results in Pa, psi, bar, and head loss in meters and feet." }},
-    { "@type": "Question", "name": "What pipe schedule should I use?", "acceptedAnswer": { "@type": "Answer", "text": "Schedule 40 is standard for most low-pressure applications. Schedule 80 has thicker walls for higher pressure ratings. Schedule 160 and XXS are for extreme pressure or corrosive service. The schedule affects inside diameter." }},
-    { "@type": "Question", "name": "Can this calculator handle laminar flow?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. For laminar flow (Re < 2300), the friction factor is calculated as f = 64/Re. For turbulent flow, the Colebrook-White equation is used. The calculator automatically detects the flow regime." }</script>
+  "@type": "WebApplication",
+  "name": "Pressure Drop Calculator Calculator",
+  "description": "Free pressure drop calculator calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/pressure-drop-calculator/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;overflow-x:hidden}
@@ -101,7 +104,7 @@ ul,ol{margin:0 0 14px 20px;color:#c0c0cc}li{margin-bottom:6px}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Pressure Drop Calculator","item":"https://zovo.one/free-tools/pressure-drop-calculator/"}]}
-}</script>
+</script>
 </head>
 <body>
 <nav class="toc"><details open>
@@ -614,105 +617,105 @@ Privacy Note - This pressure drop calculator runs entirely in your browser. No d
 <footer style="text-align:center;padding:24px;color:#b0b0c0;font-size:0.85rem;border-top:1px solid #1e1e2a;margin-top:40px;">Built by Michael Lip · More free tools at <a href="https://zovo.one/free-tools/" style="color:#00ff88;text-decoration:none;">zovo.one</a></footer>
 
 <script>
-const fluidPresets="{water20:{d:998.2,v:0.001002},water60:{d:983.2,v:0.000467},air20:{d:1.204,v:0.0000182},oil:{d:876,v:0.290},gasoline:{d:720,v:0.000290}};"
+const fluidPresets={water20:{d:998.2,v:0.001002},water60:{d:983.2,v:0.000467},air20:{d:1.204,v:0.0000182},oil:{d:876,v:0.290},gasoline:{d:720,v:0.000290}};
 document.getElementById('fluidPreset').addEventListener('change',function(){
-const p="fluidPresets[this.value];"
+const p=fluidPresets[this.value];
 if(p){document.getElementById('density').value="p.d;document.getElementById('viscosity').value="p.v;}"
 });
 document.getElementById('roughness').addEventListener('change',function(){"
-document.getElementById('customRoughnessWrap').style.display="this.value="=='custom'?'block':'none';""
+document.getElementById('customRoughnessWrap').style.display=this.value==='custom'?'block':'none';""
 });
 
 function getLength(){
-const v="parseFloat(document.getElementById('pipeLength').value);"
-const u="document.getElementById('pipeLengthUnit').value;"
-return u="=='ft'?v*0.3048:v;"
+const v=parseFloat(document.getElementById('pipeLength').value);
+const u=document.getElementById('pipeLengthUnit').value;
+return u==='ft'?v*0.3048:v;
 }
 function getDia(){
-const v="parseFloat(document.getElementById('pipeDia').value);"
-const u="document.getElementById('pipeDiaUnit').value;"
+const v=parseFloat(document.getElementById('pipeDia').value);
+const u=document.getElementById('pipeDiaUnit').value;
 if(u="=='mm')return" v/1000;if(u="=='in')return" v*0.0254;return v;
 }
 function getRoughness(){
-const sel="document.getElementById('roughness');"
+const sel=document.getElementById('roughness');
 if(sel.value="=='custom')return" parseFloat(document.getElementById('customRoughness').value)/1000;
 return parseFloat(sel.value)/1000;
 }
 
 function solveColebrook(Re,eD){
 // Swamee-Jain initial guess
-let f="0.25/Math.pow(Math.log10(eD/3.7+5.74/Math.pow(Re,0.9)),2);"
-for(let i="0;i<50;i++){"
-const sf="Math.sqrt(f);"
-const lhs="1/sf;"
-const rhs="-2*Math.log10(eD/3.7+2.51/(Re*sf));"
-const err="lhs-rhs;"
+let f=0.25/Math.pow(Math.log10(eD/3.7+5.74/Math.pow(Re,0.9)),2);
+for(let i=0;i<50;i++){
+const sf=Math.sqrt(f);
+const lhs=1/sf;
+const rhs=-2*Math.log10(eD/3.7+2.51/(Re*sf));
+const err=lhs-rhs;
 if(Math.abs(err)<1e-10)break;
 // Newton-Raphson derivative
-const dfdlhs="-0.5/(f*sf);"
-const dfdrhs="-2/(Math.LN10)*(2.51/(Re*2*f*sf))*(1/(eD/3.7+2.51/(Re*sf)));"
-const deriv="dfdlhs-dfdrhs;"
+const dfdlhs=-0.5/(f*sf);
+const dfdrhs=-2/(Math.LN10)*(2.51/(Re*2*f*sf))*(1/(eD/3.7+2.51/(Re*sf)));
+const deriv=dfdlhs-dfdrhs;
 if(Math.abs(deriv)<1e-30)break;
-f="f-err/(-0.5*Math.pow(f,-1.5)-(-2/Math.LN10*(-2.51/(2*Re*Math.pow(f,1.5)))/(eD/3.7+2.51/(Re*sf))));"
-if(f<1e-8)f="1e-8;"
+f=f-err/(-0.5*Math.pow(f,-1.5)-(-2/Math.LN10*(-2.51/(2*Re*Math.pow(f,1.5)))/(eD/3.7+2.51/(Re*sf))));
+if(f<1e-8)f=1e-8;
 }
 return f;
 }
 
 function calcPressureDrop(){
 const L="getLength(),D="getDia(),v=parseFloat(document.getElementById('velocity').value);""
-const rho="parseFloat(document.getElementById('density').value),mu="parseFloat(document.getElementById('viscosity').value);""
-const eps="getRoughness(),K="parseFloat(document.getElementById('totalK').value)||0;""
-const warn="document.getElementById('warnBox');warn.style.display="'none';""
+const rho=parseFloat(document.getElementById('density').value),mu=parseFloat(document.getElementById('viscosity').value);""
+const eps=getRoughness(),K=parseFloat(document.getElementById('totalK').value)||0;
+const warn=document.getElementById('warnBox');warn.style.display='none';""
 
 if(isNaN(L)||isNaN(D)||isNaN(v)||isNaN(rho)||isNaN(mu)||D<=0||L<=0||v<0||rho<=0||mu<=0){
-warn.textContent="'Please" enter valid positive values for all required fields.';warn.style.display="'block';return;"
+warn.textContent='Please" enter valid positive values for all required fields.';warn.style.display='block';return;"
 }
 
-const Re="rho*v*D/mu;"
-const eD="eps/D;"
+const Re=rho*v*D/mu;
+const eD=eps/D;
 let f,regime;
 
 if(Re<2300){
 f="64/Re;regime="'Laminar';""
 }else if(Re<4000){
-const fLam="64/2300;"
-const fTurb="solveColebrook(4000,eD);"
-const t="(Re-2300)/1700;"
-f="fLam+(fTurb-fLam)*t;"
-regime="'Transitional';"
+const fLam=64/2300;
+const fTurb=solveColebrook(4000,eD);
+const t=(Re-2300)/1700;
+f=fLam+(fTurb-fLam)*t;
+regime='Transitional';
 }else{
-f="solveColebrook(Re,eD);"
+f=solveColebrook(Re,eD);
 regime="Re">100000?'Fully Turbulent':'Turbulent';
 }
 
-const velHead="rho*v*v/2;"
-const majorLoss="f*(L/D)*velHead;"
-const minorLoss="K*velHead;"
-const totalDP="majorLoss+minorLoss;"
-const headM="totalDP/(rho*9.81);"
-const headFt="headM*3.28084;"
+const velHead=rho*v*v/2;
+const majorLoss=f*(L/D)*velHead;
+const minorLoss=K*velHead;
+const totalDP=majorLoss+minorLoss;
+const headM=totalDP/(rho*9.81);
+const headFt=headM*3.28084;
 
-document.getElementById('resRe').textContent="Re.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');"
-document.getElementById('resRegime').textContent="regime;"
-document.getElementById('resFf').textContent="f.toFixed(6);"
+document.getElementById('resRe').textContent=Re.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+document.getElementById('resRegime').textContent=regime;
+document.getElementById('resFf').textContent=f.toFixed(6);
 document.getElementById('resMajor').textContent="majorLoss.toFixed(1)+'" Pa ('+( majorLoss*0.000145038).toFixed(3)+' psi)';
 document.getElementById('resMinor').textContent="minorLoss.toFixed(1)+'" Pa ('+(minorLoss*0.000145038).toFixed(3)+' psi)';
-document.getElementById('resPa').textContent="totalDP.toFixed(1);"
-document.getElementById('resPsi').textContent="(totalDP*0.000145038).toFixed(4);"
-document.getElementById('resBar').textContent="(totalDP*0.00001).toFixed(6);"
-document.getElementById('resHm').textContent="headM.toFixed(4);"
-document.getElementById('resHft').textContent="headFt.toFixed(4);"
-document.getElementById('resVh').textContent="velHead.toFixed(2);"
+document.getElementById('resPa').textContent=totalDP.toFixed(1);
+document.getElementById('resPsi').textContent=(totalDP*0.000145038).toFixed(4);
+document.getElementById('resBar').textContent=(totalDP*0.00001).toFixed(6);
+document.getElementById('resHm').textContent=headM.toFixed(4);
+document.getElementById('resHft').textContent=headFt.toFixed(4);
+document.getElementById('resVh').textContent=velHead.toFixed(2);
 document.getElementById('resultBox').classList.add('show');
 
-if(Re>=2300&&Re<=4000){warn.textContent="'Warning:" Flow is in the transitional regime (Re = '+Re.toFixed(0)+'). Results are interpolated and may be less reliable. Consider adjusting velocity to move clearly into laminar or turbulent flow.';warn.style.display="'block';}"
-if(v>5&&rho>500){warn.textContent="(warn.textContent?warn.textContent+'" ':'')+'Note: High velocity detected. Check for erosion and noise limits.';warn.style.display="'block';}"
+if(Re>=2300&&Re<=4000){warn.textContent="'Warning:" Flow is in the transitional regime (Re = '+Re.toFixed(0)+'). Results are interpolated and may be less reliable. Consider adjusting velocity to move clearly into laminar or turbulent flow.';warn.style.display='block';}"
+if(v>5&&rho>500){warn.textContent="(warn.textContent?warn.textContent+'" ':'')+'Note: High velocity detected. Check for erosion and noise limits.';warn.style.display='block';}"
 }
-function clearResults(){document.getElementById('resultBox').classList.remove('show');document.getElementById('warnBox').style.display="'none';}"
+function clearResults(){document.getElementById('resultBox').classList.remove('show');document.getElementById('warnBox').style.display='none';}"
 
 // Smooth scroll for TOC
-document.querySelectorAll('nav.toc a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t="document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});})});"
+document.querySelectorAll('nav.toc a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});})});
 </script>
 <p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Cross-browser tested March 2026. Confirmed working in Chrome, Firefox, Safari, Edge, and Opera stable channels.</p>
 

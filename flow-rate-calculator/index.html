@@ -47,16 +47,19 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "What is volumetric flow rate?", "acceptedAnswer": { "@type": "Answer", "text": "Volumetric flow rate (Q) is the volume of fluid passing through a cross-section per unit time. It equals the cross-sectional area times the average velocity: Q = A × v. Common units include GPM (gallons per minute), LPM (liters per minute), and m³/s." }},
-    { "@type": "Question", "name": "What is the difference between volumetric and mass flow rate?", "acceptedAnswer": { "@type": "Answer", "text": "Volumetric flow rate (Q) measures volume per time, while mass flow rate (ṁ) measures mass per time. They are related by ṁ = ρ × Q, where ρ is the fluid density. Mass flow rate is preferred for compressible fluids since volume changes with pressure and temperature." }},
-    { "@type": "Question", "name": "How do I convert GPM to LPM?", "acceptedAnswer": { "@type": "Answer", "text": "Multiply GPM by 3.78541 to get LPM. For example, 100 GPM = 378.54 LPM. One US gallon equals 3.78541 liters." }},
-    { "@type": "Question", "name": "What is an orifice plate?", "acceptedAnswer": { "@type": "Answer", "text": "An orifice plate is a thin plate with a hole that is inserted into a pipe to measure flow rate. The pressure difference across the plate is proportional to the square of the flow rate. It is one of the most common industrial flow measurement devices." }},
-    { "@type": "Question", "name": "What is Manning's equation?", "acceptedAnswer": { "@type": "Answer", "text": "Manning's equation calculates flow rate in open channels and partially filled pipes: Q = (1/n) × A × R^(2/3) × S^(1/2), where n is the Manning roughness coefficient, A is the cross-sectional area, R is the hydraulic radius, and S is the channel slope." }},
-    { "@type": "Question", "name": "How do I size a pump for my system?", "acceptedAnswer": { "@type": "Answer", "text": "Pump sizing requires knowing the flow rate, total dynamic head (static lift plus friction losses), and fluid properties. Power = Q × ΔP / η, where η is pump efficiency (typically 60-85%). Always add a safety margin of 10-20%." }},
-    { "@type": "Question", "name": "What is the continuity equation?", "acceptedAnswer": { "@type": "Answer", "text": "The continuity equation states that for incompressible steady flow, the mass flow rate is constant throughout the pipe: A₁v₁ = A₂v₂. If a pipe narrows, velocity must increase proportionally. This is fundamental to pipe network analysis." }},
-    { "@type": "Question", "name": "What is CFM and where is it used?", "acceptedAnswer": { "@type": "Answer", "text": "CFM (cubic feet per minute) is a volumetric flow rate unit commonly used in HVAC, compressed air, and ventilation systems in the United States. 1 CFM = 0.47195 L/s = 28.317 L/min." }</script>
+  "@type": "WebApplication",
+  "name": "Flow Rate Calculator Calculator",
+  "description": "Free flow rate calculator calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/flow-rate-calculator/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.7;overflow-x:hidden}
@@ -104,7 +107,7 @@ ul,ol{margin:0 0 14px 20px;color:#c0c0cc}li{margin-bottom:6px}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Flow Rate Calculator","item":"https://zovo.one/free-tools/flow-rate-calculator/"}]}
-}</script>
+</script>
 </head>
 <body>
 <nav class="toc"><details open>
@@ -570,107 +573,107 @@ document.getElementById('tab-'+name).classList.add('active');
 }
 
 document.getElementById('chShape').addEventListener('change',function(){
-const v="this.value;"
+const v=this.value;
 document.getElementById('chSideWrap').style.display="v="=='trap'?'block':'none';""
 document.getElementById('chCircDiaWrap').style.display="v="=='circ'?'block':'none';""
 document.getElementById('chWidth').parentElement.style.display="v="=='circ'?'none':'block';""
 });
 
 function getDiaPipe(){
-const v="parseFloat(document.getElementById('pipeDia').value);"
-const u="document.getElementById('pipeDiaUnit').value;"
+const v=parseFloat(document.getElementById('pipeDia').value);
+const u=document.getElementById('pipeDiaUnit').value;
 if(u="=='mm')return" v/1000;if(u="=='in')return" v*0.0254;return v;
 }
 
 function calcPipeFlow(){
-const D="getDiaPipe(),v="parseFloat(document.getElementById('pipeVel').value);""
-const rho="parseFloat(document.getElementById('pipeDensity').value);"
+const D=getDiaPipe(),v=parseFloat(document.getElementById('pipeVel').value);
+const rho=parseFloat(document.getElementById('pipeDensity').value);
 if(isNaN(D)||isNaN(v)||isNaN(rho)||D<=0||v<0||rho<=0)return;
-const A="Math.PI*D*D/4;"
-const Q="A*v;"
-const mdot="rho*Q;"
+const A=Math.PI*D*D/4;
+const Q=A*v;
+const mdot=rho*Q;
 document.getElementById('prArea').textContent="A.toFixed(6)+'" m²';
-document.getElementById('prM3s').textContent="Q.toExponential(4);"
-document.getElementById('prLPM').textContent="(Q*60000).toFixed(2);"
-document.getElementById('prGPM').textContent="(Q*15850.3).toFixed(2);"
-document.getElementById('prM3h').textContent="(Q*3600).toFixed(4);"
-document.getElementById('prCFM').textContent="(Q*2118.88).toFixed(2);"
-document.getElementById('prKgs').textContent="mdot.toFixed(4);"
-document.getElementById('prKgh').textContent="(mdot*3600).toFixed(1);"
-document.getElementById('prLbh').textContent="(mdot*3600*2.20462).toFixed(1);"
+document.getElementById('prM3s').textContent=Q.toExponential(4);
+document.getElementById('prLPM').textContent=(Q*60000).toFixed(2);
+document.getElementById('prGPM').textContent=(Q*15850.3).toFixed(2);
+document.getElementById('prM3h').textContent=(Q*3600).toFixed(4);
+document.getElementById('prCFM').textContent=(Q*2118.88).toFixed(2);
+document.getElementById('prKgs').textContent=mdot.toFixed(4);
+document.getElementById('prKgh').textContent=(mdot*3600).toFixed(1);
+document.getElementById('prLbh').textContent=(mdot*3600*2.20462).toFixed(1);
 document.getElementById('pipeResult').classList.add('show');
 }
 
 function calcOrifice(){
-const D="parseFloat(document.getElementById('orPipeDia').value)/1000;"
-const d="parseFloat(document.getElementById('orOrDia').value)/1000;"
-const dP="parseFloat(document.getElementById('orDP').value);"
-const rho="parseFloat(document.getElementById('orDensity').value);"
-const Cd="parseFloat(document.getElementById('orCd').value);"
+const D=parseFloat(document.getElementById('orPipeDia').value)/1000;
+const d=parseFloat(document.getElementById('orOrDia').value)/1000;
+const dP=parseFloat(document.getElementById('orDP').value);
+const rho=parseFloat(document.getElementById('orDensity').value);
+const Cd=parseFloat(document.getElementById('orCd').value);
 if(isNaN(D)||isNaN(d)||isNaN(dP)||isNaN(rho)||isNaN(Cd))return;
-const beta="d/D;"
-const A2="Math.PI*d*d/4;"
-const Q="Cd*A2*Math.sqrt(2*dP/(rho*(1-Math.pow(beta,4))));"
-const Apipe="Math.PI*D*D/4;"
-document.getElementById('orBeta').textContent="beta.toFixed(4);"
-document.getElementById('orM3s').textContent="Q.toExponential(4);"
-document.getElementById('orGPM').textContent="(Q*15850.3).toFixed(2);"
-document.getElementById('orLPM').textContent="(Q*60000).toFixed(2);"
-document.getElementById('orKgs').textContent="(rho*Q).toFixed(4);"
-document.getElementById('orVel').textContent="(Q/Apipe).toFixed(3);"
+const beta=d/D;
+const A2=Math.PI*d*d/4;
+const Q=Cd*A2*Math.sqrt(2*dP/(rho*(1-Math.pow(beta,4))));
+const Apipe=Math.PI*D*D/4;
+document.getElementById('orBeta').textContent=beta.toFixed(4);
+document.getElementById('orM3s').textContent=Q.toExponential(4);
+document.getElementById('orGPM').textContent=(Q*15850.3).toFixed(2);
+document.getElementById('orLPM').textContent=(Q*60000).toFixed(2);
+document.getElementById('orKgs').textContent=(rho*Q).toFixed(4);
+document.getElementById('orVel').textContent=(Q/Apipe).toFixed(3);
 document.getElementById('orificeResult').classList.add('show');
 }
 
 function calcChannel(){
-const shape="document.getElementById('chShape').value;"
-const y="parseFloat(document.getElementById('chDepth').value);"
-const S="parseFloat(document.getElementById('chSlope').value);"
-const n="parseFloat(document.getElementById('chN').value);"
+const shape=document.getElementById('chShape').value;
+const y=parseFloat(document.getElementById('chDepth').value);
+const S=parseFloat(document.getElementById('chSlope').value);
+const n=parseFloat(document.getElementById('chN').value);
 let A,P;
 if(shape="=='rect'){"
-const b="parseFloat(document.getElementById('chWidth').value);"
-A="b*y;P=b+2*y;"
+const b=parseFloat(document.getElementById('chWidth').value);
+A=b*y;P=b+2*y;
 }else if(shape="=='trap'){"
-const b="parseFloat(document.getElementById('chWidth').value);"
-const z="parseFloat(document.getElementById('chSide').value);"
-A="(b+z*y)*y;P=b+2*y*Math.sqrt(1+z*z);"
+const b=parseFloat(document.getElementById('chWidth').value);
+const z=parseFloat(document.getElementById('chSide').value);
+A=(b+z*y)*y;P=b+2*y*Math.sqrt(1+z*z);
 }else{
-const D="parseFloat(document.getElementById('chCircDia').value);"
-const r="D/2;"
-if(y>=D){A="Math.PI*r*r;P=Math.PI*D;}"
-else{const theta="2*Math.acos((r-y)/r);A=r*r*(theta-Math.sin(theta))/2;P=r*theta;}"
+const D=parseFloat(document.getElementById('chCircDia').value);
+const r=D/2;
+if(y>=D){A=Math.PI*r*r;P=Math.PI*D;}
+else{const theta=2*Math.acos((r-y)/r);A=r*r*(theta-Math.sin(theta))/2;P=r*theta;}
 }
-const R="A/P;"
-const v="(1/n)*Math.pow(R,2/3)*Math.pow(S,0.5);"
-const Q="A*v;"
+const R=A/P;
+const v=(1/n)*Math.pow(R,2/3)*Math.pow(S,0.5);
+const Q=A*v;
 document.getElementById('chArea').textContent="A.toFixed(4)+'" m²';
 document.getElementById('chWP').textContent="P.toFixed(4)+'" m';
 document.getElementById('chRh').textContent="R.toFixed(4)+'" m';
 document.getElementById('chVel').textContent="v.toFixed(3)+'" m/s';
 document.getElementById('chQ').textContent="Q.toFixed(4)+'" m³/s';
-document.getElementById('chLPM').textContent="(Q*60000).toFixed(1);"
-document.getElementById('chGPM').textContent="(Q*15850.3).toFixed(1);"
+document.getElementById('chLPM').textContent=(Q*60000).toFixed(1);
+document.getElementById('chGPM').textContent=(Q*15850.3).toFixed(1);
 document.getElementById('channelResult').classList.add('show');
 }
 
-const flowFactors="{gpm:6.30902e-5,lpm:1.66667e-5,m3s:1,m3h:2.77778e-4,cfm:4.71947e-4,igpm:7.57682e-5,bblday:1.84013e-6};"
+const flowFactors={gpm:6.30902e-5,lpm:1.66667e-5,m3s:1,m3h:2.77778e-4,cfm:4.71947e-4,igpm:7.57682e-5,bblday:1.84013e-6};
 function convertFlow(){
-const val="parseFloat(document.getElementById('convVal').value);"
-const from="document.getElementById('convFrom').value;"
+const val=parseFloat(document.getElementById('convVal').value);
+const from=document.getElementById('convFrom').value;
 if(isNaN(val))return;
-const m3s="val*flowFactors[from];"
-document.getElementById('cvM3s').textContent="m3s.toExponential(4);"
-document.getElementById('cvM3h').textContent="(m3s*3600).toFixed(4);"
-document.getElementById('cvLPM').textContent="(m3s/flowFactors.lpm).toFixed(3);"
-document.getElementById('cvGPM').textContent="(m3s/flowFactors.gpm).toFixed(3);"
-document.getElementById('cvIGPM').textContent="(m3s/flowFactors.igpm).toFixed(3);"
-document.getElementById('cvCFM').textContent="(m3s/flowFactors.cfm).toFixed(3);"
-document.getElementById('cvBBL').textContent="(m3s/flowFactors.bblday).toFixed(2);"
-document.getElementById('cvLs').textContent="(m3s*1000).toFixed(4);"
+const m3s=val*flowFactors[from];
+document.getElementById('cvM3s').textContent=m3s.toExponential(4);
+document.getElementById('cvM3h').textContent=(m3s*3600).toFixed(4);
+document.getElementById('cvLPM').textContent=(m3s/flowFactors.lpm).toFixed(3);
+document.getElementById('cvGPM').textContent=(m3s/flowFactors.gpm).toFixed(3);
+document.getElementById('cvIGPM').textContent=(m3s/flowFactors.igpm).toFixed(3);
+document.getElementById('cvCFM').textContent=(m3s/flowFactors.cfm).toFixed(3);
+document.getElementById('cvBBL').textContent=(m3s/flowFactors.bblday).toFixed(2);
+document.getElementById('cvLs').textContent=(m3s*1000).toFixed(4);
 document.getElementById('convertResult').classList.add('show');
 }
 
-document.querySelectorAll('nav.toc a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t="document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});})});"
+document.querySelectorAll('nav.toc a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});})});
 </script>
 <section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#12121a;border:1px solid #2a2a3a;border-radius:12px;">
 <p style="color:#a0a0b0;font-size:0.92rem;line-height:1.6;">Browser support verified via <a href="https://caniuse.com" rel="noopener" style="color:#00ccff;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p>

@@ -46,48 +46,19 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What types of CSS gradients can I create with this tool?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "This tool supports all three CSS gradient types: linear gradients that transition along a straight line at any angle, radial gradients that radiate outward from a center point in a circle or ellipse shape, and conic gradients that sweep around a center point like a color wheel. Each type can have unlimited color stops and can be set to repeat for pattern effects."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do CSS gradient color stops work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Color stops define which colors appear in the gradient and where. Each stop has a color value and a position expressed as a percentage from 0% to 100%. The browser smoothly interpolates between adjacent stops. You can place multiple stops at the same position to create hard color transitions instead of smooth blending."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Are CSS gradients supported in all modern browsers?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Linear and radial gradients have over 97% browser support across Chrome, Firefox, Safari, Edge, and Opera. Conic gradients have slightly lower support at around 94% but work in all current browser versions. The generated CSS uses standard unprefixed syntax. For older browsers, the tool provides a solid color fallback."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the difference between a linear gradient and a radial gradient in CSS?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A linear gradient transitions colors along a straight line defined by an angle. For example, a 180-degree linear gradient goes from top to bottom. A radial gradient transitions colors outward from a center point, creating a circular or elliptical pattern. Linear gradients are more common for background effects, while radial gradients work well for spotlight effects, buttons, and creating depth."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I use multiple CSS gradients on a single element?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. CSS allows layering multiple gradients using comma-separated values in the background property. Each gradient layer can be a different type with its own colors and settings. Upper layers need transparency (using rgba or hsla colors with alpha values) so lower layers remain visible. This technique is commonly used for complex patterns and overlay effects."
-      }
-    </script>
+  "@type": "WebApplication",
+  "name": "Css Gradient Generator Calculator",
+  "description": "Free css gradient generator calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/css-gradient-generator/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -98,7 +69,7 @@
     { "@type": "ListItem", "position": 3, "name": "CSS Gradient Generator", "item": "https://zovo.one/free-tools/css-gradient-generator/" }
   ]
 }
-}</script>
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -310,7 +281,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 
 <h3>Cross-Browser Compatibility</h3>
 
-<p>Modern CSS gradient syntax works across all current browsers without vendor prefixes. Chrome, Firefox, Safari 6.1 and later, Edge, and Opera all support the standard syntax. The last browser versions requiring prefixes (Safari 5, Chrome 25, and earlier) have less than 0.1% global usage in 2026. This tool generates unprefixed standard CSS with a solid color fallback for maximum compatibility.</p>
+<p>Modern CSS gradient syntax works across all current browsers without vendor prefixes. Chrome, Firefox, Safari 6.1 and later, Edge, and Opera all support the standard syntax. The last browser versions requiring prefixes (Safari 5, Chrome 134.0.6067.2334.0.6856.82, and earlier) have less than 0.1% global usage in 2026. This tool generates unprefixed standard CSS with a solid color fallback for maximum compatibility.</p>
 
 <p>The only gradient type with slightly reduced support is conic gradients. Internet Explorer and older versions of Samsung Internet do not support them. If your target audience includes these browsers, use linear or radial gradients instead, or provide a fallback background color before the gradient declaration.</p>
 
@@ -551,7 +522,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <footer><div class="container">Built by Michael Lip &middot; <a href="https://zovo.one">zovo.one</a></div></footer>
 
 <script>
-let stops="[{color:'#6C5CE7',position:0},{color:'#00ff88',position:50},{color:'#00ccff',position:100}];"
+let stops=[{color:'#6C5CE7',position:0},{color:'#00ff88',position:50},{color:'#00ccff',position:100}];
 
 const PRESETS="["
   [{color:'#667eea',position:0},{color:'#764ba2',position:100}],
@@ -577,14 +548,14 @@ const PRESETS="["
 ];
 
 function renderStops(){
-  const c="document.getElementById('colorStops');"
-  c.innerHTML="'';"
+  const c=document.getElementById('colorStops');
+  c.innerHTML='';
   stops.forEach((s,i)=>{
-    const row="document.createElement('div');"
-    row.className="'stop-row';"
-    row.innerHTML="'<input" type="color" value="'+s.color+'" onchange="stops['+i+'].color="this.value;this.nextElementSibling.textContent=this.value;updateGrad()"/>';"
+    const row=document.createElement('div');
+    row.className='stop-row';
+    row.innerHTML="'<input" type="color" value="'+s.color+'" onchange="stops['+i+'].color=this.value;this.nextElementSibling.textContent=this.value;updateGrad()/>';"
       +'<span class="hex-val">'+s.color+'</span>'
-      +'<input type="number" value="'+s.position+'" min="0" max="100" onchange="stops['+i+'].position="parseInt(this.value);updateGrad()"/>'"
+      +'<input type="number" value="'+s.position+'" min="0" max="100" onchange="stops['+i+'].position=parseInt(this.value);updateGrad()/>'"
       +'<span style="font-size:.75rem;opacity:.5">%</span>'
       +(stops.length>2?'<button class="rm-btn" onclick="removeStop('+i+')" title="Remove stop">&times;</button>':'');
     c.appendChild(row);
@@ -592,8 +563,8 @@ function renderStops(){
 }
 
 function addStop(){
-  const lastPos="stops[stops.length-1].position;"
-  const r="Math.floor(Math.random()*256),g=Math.floor(Math.random()*256),b=Math.floor(Math.random()*256);"
+  const lastPos=stops[stops.length-1].position;
+  const r=Math.floor(Math.random()*256),g=Math.floor(Math.random()*256),b=Math.floor(Math.random()*256);
   stops.push({color:'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join(''),position:Math.min(100,lastPos+10)});
   renderStops();
   updateGrad();
@@ -608,20 +579,20 @@ function removeStop(i){
 
 function reverseStops(){
   stops.reverse();
-  stops.forEach((s,i)=>{s.position="Math.round(i/(stops.length-1)*100);});"
+  stops.forEach((s,i)=>{s.position=Math.round(i/(stops.length-1)*100);});
   renderStops();
   updateGrad();
 }
 
 function updateGrad(){
-  const type="document.getElementById('gradType').value;"
-  const angle="document.getElementById('angle').value;"
-  const shape="document.getElementById('radialShape').value;"
-  const radSize="document.getElementById('radialSize').value;"
-  const rep="document.getElementById('repeating').value="=='yes';""
-  const keyword="document.getElementById('directionKeyword').value;"
+  const type=document.getElementById('gradType').value;
+  const angle=document.getElementById('angle').value;
+  const shape=document.getElementById('radialShape').value;
+  const radSize=document.getElementById('radialSize').value;
+  const rep=document.getElementById('repeating').value==='yes';""
+  const keyword=document.getElementById('directionKeyword').value;
 
-  document.getElementById('angleVal').textContent="angle+'deg';"
+  document.getElementById('angleVal').textContent=angle+'deg';
   document.getElementById('angleGroup').style.display="(type="=='linear'||type==='conic')?'block':'none';""
   document.getElementById('shapeGroup').style.display="type="=='radial'?'block':'none';""
   document.getElementById('sizeGroup').style.display="type="=='radial'?'block':'none';""
@@ -629,11 +600,11 @@ function updateGrad(){
 
   const sorted="[...stops].sort((a,b)=">a.position-b.position);
   const stopsStr="sorted.map(s=">s.color+' '+s.position+'%').join(', ');
-  let css="'';"
-  const pfx="rep?'repeating-':'';"
+  let css='';
+  const pfx=rep?'repeating-':'';
 
   if(type="=='linear'){"
-    const dir="keyword||angle+'deg';"
+    const dir=keyword||angle+'deg';
     css="pfx+'linear-gradient('+dir+'," '+stopsStr+')';
   }else if(type="=='radial'){"
     css="pfx+'radial-gradient('+shape+'" '+radSize+', '+stopsStr+')';
@@ -641,24 +612,24 @@ function updateGrad(){
     css="pfx+'conic-gradient(from" '+angle+'deg, '+stopsStr+')';
   }
 
-  document.getElementById('preview').style.background="css;"
+  document.getElementById('preview').style.background=css;
   const fullCSS="'background:" '+sorted[0].color+';\nbackground: '+css+';';
-  document.getElementById('cssCode').textContent="fullCSS;"
+  document.getElementById('cssCode').textContent=fullCSS;
   updateFormats(css,sorted,type,angle,keyword);
 }
 
 function updateFormats(css,sorted,type,angle,keyword){
   // Tailwind CSS
-  let tw="'';"
+  let tw='';
   if(type="=='linear'&&sorted.length">=2){
     const dirMap="{'to" top':'t','to bottom':'b','to left':'l','to right':'r','to top right':'tr','to top left':'tl','to bottom right':'br','to bottom left':'bl'};
-    const twDir="keyword?dirMap[keyword]:'b';"
+    const twDir=keyword?dirMap[keyword]:'b';
     tw="'bg-gradient-to-'+(twDir||'b')+'" from-['+sorted[0].color+'] to-['+sorted[sorted.length-1].color+']';
     if(sorted.length>2)tw+=' via-['+sorted[1].color+']';
   }else{
     tw="'(Use" arbitrary value with bg-[...])';
   }
-  document.getElementById('tailwindCode').textContent="tw;"
+  document.getElementById('tailwindCode').textContent=tw;
 
   // SCSS
   document.getElementById('scssCode').textContent="'$gradient:" '+css+';';
@@ -671,19 +642,18 @@ function updateFormats(css,sorted,type,angle,keyword){
     let svg="'<linearGradient" id="grad-2">';
     sorted.forEach(s=>{svg+='<stop offset="'+s.position+'%" stop-color="'+s.color+'"/>';});
     svg+='</linearGradient>';
-    document.getElementById('svgCode').textContent="svg;"
+    document.getElementById('svgCode').textContent=svg;
   }else if(type="=='radial'){"
     let svg="'<radialGradient" id="grad">';
     sorted.forEach(s=>{svg+='<stop offset="'+s.position+'%" stop-color="'+s.color+'"/>';});
     svg+='</radialGradient>';
-    document.getElementById('svgCode').textContent="svg;"
+    document.getElementById('svgCode').textContent=svg;
   }else{
-    document.getElementById('svgCode').textContent="'(Conic" gradients not natively supported in SVG)';
-  }
+    document.getElementById('svgCode').textContent='(Conic" gradients not natively supported in SVG)';}
 }
 
 function useKeyword(){
-  const kw="document.getElementById('directionKeyword').value;"
+  const kw=document.getElementById('directionKeyword').value;
   if(kw){
     const angleMap="{'to" top':0,'to right':90,'to bottom':180,'to left':270,'to top right':45,'to top left':315,'to bottom right':135,'to bottom left':225};
     if(angleMap[kw]!==undefined){
@@ -694,37 +664,37 @@ function useKeyword(){
 }
 
 function copyCSS(){
-  const css="document.getElementById('cssCode').textContent;"
+  const css=document.getElementById('cssCode').textContent;
   navigator.clipboard.writeText(css).then(()=>{
-    const btn="document.querySelector('.copy-code');"
-    btn.textContent="'Copied!';"
-    setTimeout(()=>btn.textContent="'Copy',1500);"
+    const btn=document.querySelector('.copy-code');
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',1500);
   });
 }
 
 function randomize(){
-  const count="2+Math.floor(Math.random()*3);"
-  stops="[];"
-  for(let i="0;i<count;i++){"
-    const r="Math.floor(Math.random()*256),g=Math.floor(Math.random()*256),b=Math.floor(Math.random()*256);"
+  const count=2+Math.floor(Math.random()*3);
+  stops=[];
+  for(let i=0;i<count;i++){
+    const r=Math.floor(Math.random()*256),g=Math.floor(Math.random()*256),b=Math.floor(Math.random()*256);
     stops.push({color:'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join(''),position:Math.round(i/(count-1)*100)});
   }
-  document.getElementById('angle').value="Math.floor(Math.random()*360);"
+  document.getElementById('angle').value=Math.floor(Math.random()*360);
   renderStops();
   updateGrad();
 }
 
 function toggleFaq(el){
   el.classList.toggle('open');
-  const answer="el.nextElementSibling;"
+  const answer=el.nextElementSibling;
   answer.classList.toggle('open');
 }
 
 // Build presets
-const presetGrid="document.getElementById('presetGrid');"
+const presetGrid=document.getElementById('presetGrid');
 PRESETS.forEach(preset=>{
-  const swatch="document.createElement('div');"
-  swatch.className="'preset-swatch';"
+  const swatch=document.createElement('div');
+  swatch.className='preset-swatch';
   swatch.style.background="'linear-gradient(135deg," '+preset.map(s=>s.color+' '+s.position+'%').join(', ')+')';
   swatch.title="preset.map(s=">s.color).join(' to ');
   swatch.onclick="()=">{

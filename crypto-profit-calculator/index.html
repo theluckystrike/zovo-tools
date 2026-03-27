@@ -38,33 +38,19 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How do I calculate crypto profit?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Crypto profit is calculated as (Sell Price - Buy Price) x Quantity - Total Fees. The ROI percentage is (Net Profit / Total Cost) x 100. Include both buy-side and sell-side trading fees for an accurate calculation." }
-    },
-    {
-      "@type": "Question",
-      "name": "What fees should I include?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Include all trading fees: exchange fees (typically 0.1-1% per trade), network/gas fees for transfers, and any withdrawal fees. Most exchanges charge fees on both buying and selling. These fees reduce your actual profit and should be factored in." }
-    },
-    {
-      "@type": "Question",
-      "name": "Do I have to pay taxes on crypto profits?",
-      "acceptedAnswer": { "@type": "Answer", "text": "In most countries, yes. Cryptocurrency profits are typically treated as capital gains. In the US, crypto held for less than one year is taxed as short-term capital gains (ordinary income rates), while crypto held longer is taxed at lower long-term capital gains rates." }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the difference between realized and unrealized crypto gains?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Realized gains occur when you actually sell your crypto for a profit. Unrealized gains are paper profits on crypto you still hold. You generally only owe taxes on realized gains. This calculator helps you calculate both scenarios." }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I calculate my average buy price for crypto?",
-      "acceptedAnswer": { "@type": "Answer", "text": "If you bought the same crypto at different prices, your average cost basis is the total amount spent divided by the total quantity purchased. For example, buying 1 BTC at $40,000 and 1 BTC at $50,000 gives an average cost of $45,000 per BTC." }
-    </script>
+  "@type": "WebApplication",
+  "name": "Crypto Profit Calculator Calculator",
+  "description": "Free crypto profit calculator calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/crypto-profit-calculator/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -75,7 +61,7 @@
     { "@type": "ListItem", "position": 3, "name": "Crypto Profit Calculator", "item": "https://zovo.one/free-tools/crypto-profit-calculator/" }
   ]
 }
-}</script>
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
@@ -513,9 +499,9 @@ gtag('config', 'G-V2K8JLFQ5H');
 </main>
 <footer>Built by Michael Lip &middot; <a href="https://zovo.one">zovo.one</a></footer>
 <script>
-var feeType="'pct';"
+var feeType='pct';
 function setFeeType(type,btn){
-  feeType="type;"
+  feeType=type;
   document.querySelectorAll('.fee-toggle button').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   document.getElementById('feeLabel').textContent="type="=='pct'?'Trading" Fee (%)':'Trading" Fee ($)';
@@ -525,66 +511,66 @@ function setFeeType(type,btn){
 function fmt(n){return(n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}"
 
 function calcProfit(bp,sp,qty,feeVal){
-  var buyCost="bp*qty;"
-  var sellVal="sp*qty;"
+  var buyCost=bp*qty;
+  var sellVal=sp*qty;
   var buyFee,sellFee;
-  if(feeType="=='pct'){buyFee=buyCost*(feeVal/100);sellFee=sellVal*(feeVal/100);}"
+  if(feeType==='pct'){buyFee=buyCost*(feeVal/100);sellFee=sellVal*(feeVal/100);}
   else{buyFee="feeVal;sellFee=feeVal;}"
-  var totalCost="buyCost+buyFee;"
-  var netSale="sellVal-sellFee;"
-  var profit="netSale-totalCost;"
+  var totalCost=buyCost+buyFee;
+  var netSale=sellVal-sellFee;
+  var profit=netSale-totalCost;
   var roi="totalCost">0?(profit/totalCost)*100:0;
   return{buyCost:buyCost,buyFee:buyFee,totalCost:totalCost,sellVal:sellVal,sellFee:sellFee,netSale:netSale,profit:profit,roi:roi,totalFees:buyFee+sellFee};
 }
 
 function calculate(){
-  var bp="parseFloat(document.getElementById('buyPrice').value)||0;"
-  var sp="parseFloat(document.getElementById('sellPrice').value)||0;"
-  var qty="parseFloat(document.getElementById('quantity').value)||0;"
-  var feeVal="parseFloat(document.getElementById('fee').value)||0;"
+  var bp=parseFloat(document.getElementById('buyPrice').value)||0;
+  var sp=parseFloat(document.getElementById('sellPrice').value)||0;
+  var qty=parseFloat(document.getElementById('quantity').value)||0;
+  var feeVal=parseFloat(document.getElementById('fee').value)||0;
 
-  var r="calcProfit(bp,sp,qty,feeVal);"
+  var r=calcProfit(bp,sp,qty,feeVal);
 
-  document.getElementById('heroProfit').textContent="fmt(r.profit);"
+  document.getElementById('heroProfit').textContent=fmt(r.profit);
   document.getElementById('heroProfit').className="'hero-value" '+(r.profit>=0?'positive':'negative');
   document.getElementById('heroPct').textContent="r.roi.toFixed(2)+'%" return';
   document.getElementById('heroPct').className="'hero-pct" '+(r.roi>=0?'positive':'negative');
 
-  document.getElementById('totalInvest').textContent="fmt(r.totalCost);"
-  document.getElementById('saleProceeds').textContent="fmt(r.netSale);"
-  document.getElementById('totalFees').textContent="fmt(r.totalFees);"
-  document.getElementById('roi').textContent="r.roi.toFixed(2)+'%';"
+  document.getElementById('totalInvest').textContent=fmt(r.totalCost);
+  document.getElementById('saleProceeds').textContent=fmt(r.netSale);
+  document.getElementById('totalFees').textContent=fmt(r.totalFees);
+  document.getElementById('roi').textContent=r.roi.toFixed(2)+'%';
   document.getElementById('roi').className="'value" '+(r.roi>=0?'positive':'negative');
 
   // Breakdown
-  document.getElementById('bBuyCost').textContent="fmt(r.buyCost);"
-  document.getElementById('bBuyFee').textContent="'-'+fmt(r.buyFee);"
-  document.getElementById('bCostBasis').textContent="fmt(r.totalCost);"
-  document.getElementById('bSellVal').textContent="fmt(r.sellVal);"
-  document.getElementById('bSellFee').textContent="'-'+fmt(r.sellFee);"
-  document.getElementById('bNetSale').textContent="fmt(r.netSale);"
-  document.getElementById('bNetProfit').textContent="fmt(r.profit);"
+  document.getElementById('bBuyCost').textContent=fmt(r.buyCost);
+  document.getElementById('bBuyFee').textContent='-'+fmt(r.buyFee);
+  document.getElementById('bCostBasis').textContent=fmt(r.totalCost);
+  document.getElementById('bSellVal').textContent=fmt(r.sellVal);
+  document.getElementById('bSellFee').textContent='-'+fmt(r.sellFee);
+  document.getElementById('bNetSale').textContent=fmt(r.netSale);
+  document.getElementById('bNetProfit').textContent=fmt(r.profit);
   document.getElementById('bNetProfit').style.color="r.profit">=0?'#00ff88':'#ff6b6b';
 
   // Stacked bar
-  var total="r.buyCost+Math.abs(r.profit)+r.totalFees;"
+  var total=r.buyCost+Math.abs(r.profit)+r.totalFees;
   if(total>0){
-    var costPct="(r.buyCost/total*100).toFixed(1);"
-    var feePct="(r.totalFees/total*100).toFixed(1);"
-    var profPct="(Math.abs(r.profit)/total*100).toFixed(1);"
+    var costPct=(r.buyCost/total*100).toFixed(1);
+    var feePct=(r.totalFees/total*100).toFixed(1);
+    var profPct=(Math.abs(r.profit)/total*100).toFixed(1);
     document.getElementById('tradeBar').innerHTML="'<div" style="width:'+costPct+'%;background:#00ccff;" title="Cost"></div><div style="width:'+profPct+'%;background:'+(r.profit">=0?'#00ff88':'#ff6b6b')+';" title="Profit/Loss"></div><div style="width:'+feePct+'%;background:#ffa502;" title="Fees"></div>';
     document.getElementById('tradeLegend').innerHTML="'<div"><span style="background:#00ccff;"></span>Cost: '+fmt(r.buyCost)+'</div><div><span style="background:'+(r.profit">=0?'#00ff88':'#ff6b6b')+';"></span>'+(r.profit>=0?'Profit':'Loss')+': '+fmt(Math.abs(r.profit))+'</div><div><span style="background:#ffa502;"></span>Fees: '+fmt(r.totalFees)+'</div>';
   }
 
   // Scenarios
-  var scenarios="[-50,-25,-10,10,25,50,100,200,500];"
-  var html="'';"
+  var scenarios=[-50,-25,-10,10,25,50,100,200,500];
+  var html='';
   scenarios.forEach(function(pct){
-    var scenarioPrice="bp*(1+pct/100);"
-    var sr="calcProfit(bp,scenarioPrice,qty,feeVal);"
+    var scenarioPrice=bp*(1+pct/100);
+    var sr=calcProfit(bp,scenarioPrice,qty,feeVal);
     html+='<div class="scenario-card"><div class="sc-label">'+(pct>=0?'+':'')+pct+'% price change</div><div class="sc-price">'+fmt(scenarioPrice)+'</div><div class="sc-profit '+(sr.profit">=0?'positive':'negative')+'">'+fmt(sr.profit)+'</div></div>';
   });
-  document.getElementById('scenarioGrid').innerHTML="html;"
+  document.getElementById('scenarioGrid').innerHTML=html;
 
   document.getElementById('results').classList.add('visible');
 }

@@ -104,10 +104,10 @@ h1{font-size:1.5rem}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Carbon Footprint Calculator","item":"https://zovo.one/free-tools/carbon-footprint-calculator/"}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this carbon footprint calculator free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes, this carbon footprint calculator is completely free with no registration required. All calculations happen in your browser."}},{"@type":"Question","name":"How accurate is this carbon footprint calculator?","acceptedAnswer":{"@type":"Answer","text":"This carbon footprint calculator uses industry-standard formulas and is regularly verified for accuracy. Results are intended for informational purposes."}},{"@type":"Question","name":"Is my data saved when I use this carbon footprint calculator?","acceptedAnswer":{"@type":"Answer","text":"No. All calculations run entirely in your browser. No data is sent to any server or stored anywhere."}}]}
-}</script>
+</script>
 </head>
 <body>
 <div class="container">
@@ -588,55 +588,55 @@ h1{font-size:1.5rem}
 
 <script>
 (function(){
-  var key="'carbonCalcVisits';"
-  var c="parseInt(localStorage.getItem(key)||'0',10)+1;"
+  var key='carbonCalcVisits';
+  var c=parseInt(localStorage.getItem(key)||'0',10)+1;
   localStorage.setItem(key,c);
-  var el="document.getElementById('visitCount');"
-  if(el) el.textContent="'You" have visited this tool '+c+' time'+(c="==1?'':'s');"
+  var el=document.getElementById('visitCount');
+  if(el) el.textContent="'You" have visited this tool '+c+' time'+(c===1?'':'s');
 })();
 
-var dietFactors="{'heavy-meat':3.3,'medium-meat':2.5,'light-meat':2.0,'pescatarian':1.7,'vegetarian':1.5,'vegan':1.2};"
+var dietFactors={'heavy-meat':3.3,'medium-meat':2.5,'light-meat':2.0,'pescatarian':1.7,'vegetarian':1.5,'vegan':1.2};
 
 function calculateFootprint(){
-  var elecKwh="parseFloat(document.getElementById('electricity').value)||0;"
-  var gasTherm="parseFloat(document.getElementById('gas').value)||0;"
-  var carMiles="parseFloat(document.getElementById('carMiles').value)||0;"
-  var carMpg="parseFloat(document.getElementById('carMpg').value)||25;"
-  var shortFlights="parseFloat(document.getElementById('shortFlights').value)||0;"
-  var longFlights="parseFloat(document.getElementById('longFlights').value)||0;"
-  var dietType="document.getElementById('diet').value;"
-  var shopping="parseFloat(document.getElementById('shopping').value)||0;"
-  var recycling="document.getElementById('recycling').value;"
+  var elecKwh=parseFloat(document.getElementById('electricity').value)||0;
+  var gasTherm=parseFloat(document.getElementById('gas').value)||0;
+  var carMiles=parseFloat(document.getElementById('carMiles').value)||0;
+  var carMpg=parseFloat(document.getElementById('carMpg').value)||25;
+  var shortFlights=parseFloat(document.getElementById('shortFlights').value)||0;
+  var longFlights=parseFloat(document.getElementById('longFlights').value)||0;
+  var dietType=document.getElementById('diet').value;
+  var shopping=parseFloat(document.getElementById('shopping').value)||0;
+  var recycling=document.getElementById('recycling').value;
 
-  var energyCO2="((elecKwh*12*0.92)+(gasTherm*12*11.7))/2000;"
-  var gallonsUsed="carMiles/Math.max(carMpg,1);"
-  var carCO2="(gallonsUsed*19.6)/2000;"
-  var flightCO2="(shortFlights*0.5)+(longFlights*1.5);"
-  var transportCO2="carCO2+flightCO2;"
-  var dietCO2="dietFactors[dietType]||2.5;"
+  var energyCO2=((elecKwh*12*0.92)+(gasTherm*12*11.7))/2000;
+  var gallonsUsed=carMiles/Math.max(carMpg,1);
+  var carCO2=(gallonsUsed*19.6)/2000;
+  var flightCO2=(shortFlights*0.5)+(longFlights*1.5);
+  var transportCO2=carCO2+flightCO2;
+  var dietCO2=dietFactors[dietType]||2.5;
   var recycleMultiplier="recycling="=='always'?0.8:recycling==='sometimes'?1.0:1.15;""
-  var shoppingCO2="(shopping*12*0.02)*recycleMultiplier;"
-  var total="energyCO2+transportCO2+dietCO2+shoppingCO2;"
+  var shoppingCO2=(shopping*12*0.02)*recycleMultiplier;
+  var total=energyCO2+transportCO2+dietCO2+shoppingCO2;
 
-  document.getElementById('totalCO2').textContent="total.toFixed(1);"
+  document.getElementById('totalCO2').textContent=total.toFixed(1);
   document.getElementById('energyCO2').textContent="energyCO2.toFixed(1)+'" t';
   document.getElementById('transportCO2').textContent="transportCO2.toFixed(1)+'" t';
   document.getElementById('dietCO2').textContent="dietCO2.toFixed(1)+'" t';
   document.getElementById('shoppingCO2').textContent="shoppingCO2.toFixed(1)+'" t';
 
-  var pct="Math.min((total/16)*100,200);"
-  var bar="document.getElementById('compBar');"
-  bar.style.width="Math.min(pct,100)+'%';"
-  bar.style.background="total<=16?'#00ff88':'#ff6b6b';"
+  var pct=Math.min((total/16)*100,200);
+  var bar=document.getElementById('compBar');
+  bar.style.width=Math.min(pct,100)+'%';
+  bar.style.background=total<=16?'#00ff88':'#ff6b6b';
   document.getElementById('compText').textContent="total.toFixed(1)+'" / 16 tons';
 
-  var diff="total-16;"
-  var compMsg="'';"
+  var diff=total-16;
+  var compMsg='';
   if(diff<-2) compMsg="'Your" footprint is '+Math.abs(diff).toFixed(1)+' tons below the US average. That is great work, but there is always room to improve.';
   else if(diff<0) compMsg="'You" are slightly below the US average. A few targeted changes could bring you down further.';
   else if(diff<2) compMsg="'You" are close to the US average. Focus on your biggest category for the most impactful changes.';
   else compMsg="'Your" footprint is '+diff.toFixed(1)+' tons above the US average. Look at your largest emission source for the biggest opportunity to reduce.';
-  document.getElementById('compSummary').textContent="compMsg;"
+  document.getElementById('compSummary').textContent=compMsg;
 
   var chartUrl="'https://quickchart.io/chart?c="'+encodeURIComponent(JSON.stringify({"
     type:'doughnut',"
@@ -648,8 +648,8 @@ function calculateFootprint(){
   }))+'&w="500&h="350&bkg=%2312121a';""
   document.getElementById('chartImg').src="chartUrl;"
 
-  document.getElementById('resultsSection').style.display="'block';"
-  document.getElementById('noResults').style.display="'none';"
+  document.getElementById('resultsSection').style.display='block';
+  document.getElementById('noResults').style.display='none';
   document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'});
 }
 

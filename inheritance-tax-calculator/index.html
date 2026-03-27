@@ -94,10 +94,10 @@ p{margin:10px 0;color:#c8c8d0}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Inheritance Tax Calculator","item":"https://zovo.one/free-tools/inheritance-tax-calculator/"}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the 2025 federal estate tax exemption?","acceptedAnswer":{"@type":"Answer","text":"The 2025 federal estate tax exemption is $13.61 million per individual, or $27.22 million for a married couple using portability. Estates below this threshold owe zero federal estate tax. The exemption was scheduled to drop to approximately $7 million in 2026 due to the Tax Cuts and Jobs Act sunset provision."}},{"@type":"Question","name":"Which states have an inheritance tax?","acceptedAnswer":{"@type":"Answer","text":"Six states impose an inheritance tax: Iowa (phased out in 2025), Kentucky, Maryland, Nebraska, New Jersey, and Pennsylvania. Rates vary based on the beneficiary's relationship to the deceased, with spouses universally exempt. Maryland is unique in levying both a state estate tax and a state inheritance tax."}},{"@type":"Question","name":"What is the difference between estate tax and inheritance tax?","acceptedAnswer":{"@type":"Answer","text":"Estate tax is paid by the estate of the deceased before assets are distributed. Inheritance tax is paid by the person receiving the inheritance. The federal government levies only estate tax. Some states levy inheritance tax, estate tax, both, or neither. The rate for inheritance tax depends on the beneficiary's relationship to the deceased."}},{"@type":"Question","name":"Is life insurance included in the taxable estate?","acceptedAnswer":{"@type":"Answer","text":"Yes, if the deceased owned the policy or had incidents of ownership. The full death benefit is included in the gross estate. However, if the policy is owned by an irrevocable life insurance trust (ILIT), proceeds are excluded from the estate. This strategy can save hundreds of thousands in estate tax."}},{"@type":"Question","name":"What is the stepped-up basis at death?","acceptedAnswer":{"@type":"Answer","text":"When someone dies, inherited assets receive a step-up in cost basis to fair market value at the date of death. This eliminates capital gains tax on appreciation during the deceased's lifetime. For example, stock purchased at $100,000 worth $1,000,000 at death has a new basis of $1,000,000 for the beneficiary."}}]}
-}</script>
+</script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2K8JLFQ5H"></script>
 <script>
@@ -623,7 +623,7 @@ Privacy Note - This calculator runs entirely in your browser. No estate values, 
 
 <script>
 (function(){
-let v="parseInt(localStorage.getItem('itc_visits')||'0',10)+1;"
+let v=parseInt(localStorage.getItem('itc_visits')||'0',10)+1;
 localStorage.setItem('itc_visits',v.toString());
 })();
 
@@ -642,17 +642,17 @@ const federalBrackets="["
 {min:1000000,max:Infinity,rate:0.40}
 ];
 
-const FEDERAL_EXEMPTION="13610000;"
+const FEDERAL_EXEMPTION=13610000;
 
 function calcFederalEstateTax(taxableEstate){
-const amountOverExemption="Math.max(0,taxableEstate-FEDERAL_EXEMPTION);"
+const amountOverExemption=Math.max(0,taxableEstate-FEDERAL_EXEMPTION);
 if(amountOverExemption<=0) return 0;
-let tax="0;"
-let remaining="amountOverExemption;"
-for(let i="0;i<federalBrackets.length;i++){"
-const b="federalBrackets[i];"
-const bracketSize="b.max-b.min;"
-const taxableInBracket="Math.min(remaining,bracketSize);"
+let tax=0;
+let remaining=amountOverExemption;
+for(let i=0;i<federalBrackets.length;i++){
+const b=federalBrackets[i];
+const bracketSize=b.max-b.min;
+const taxableInBracket=Math.min(remaining,bracketSize);
 if(taxableInBracket<=0) break;
 tax+=taxableInBracket*b.rate;
 remaining-=taxableInBracket;
@@ -671,47 +671,47 @@ pennsylvania:{spouse:0,child:0.045,sibling:0.12,other:0.15,exemptions:{child:0,s
 };
 
 function calcStateInheritanceTax(estateValue,state,relationship){
-const rates="stateInheritanceRates[state];"
+const rates=stateInheritanceRates[state];
 if(!rates) return 0;
-const rate="rates[relationship]||0;"
+const rate=rates[relationship]||0;
 if(rate="==0)" return 0;
-const exemption="(rates.exemptions&&rates.exemptions[relationship])||0;"
-const taxable="Math.max(0,estateValue-exemption);"
+const exemption=(rates.exemptions&&rates.exemptions[relationship])||0;
+const taxable=Math.max(0,estateValue-exemption);
 return taxable*rate;
 }
 
 function calculateInheritance(){
-const estateValue="parseFloat(document.getElementById('estateValue').value)||0;"
-const state="document.getElementById('stateSelect').value;"
-const relationship="document.getElementById('relationship').value;"
-const charitable="parseFloat(document.getElementById('charitableDeduction').value)||0;"
-const marital="parseFloat(document.getElementById('maritalDeduction').value)||0;"
+const estateValue=parseFloat(document.getElementById('estateValue').value)||0;
+const state=document.getElementById('stateSelect').value;
+const relationship=document.getElementById('relationship').value;
+const charitable=parseFloat(document.getElementById('charitableDeduction').value)||0;
+const marital=parseFloat(document.getElementById('maritalDeduction').value)||0;
 
-const totalDeductions="charitable+marital;"
-const taxableEstate="Math.max(0,estateValue-totalDeductions);"
-const amountSubjectToFed="Math.max(0,taxableEstate-FEDERAL_EXEMPTION);"
-const fedTax="calcFederalEstateTax(taxableEstate);"
+const totalDeductions=charitable+marital;
+const taxableEstate=Math.max(0,estateValue-totalDeductions);
+const amountSubjectToFed=Math.max(0,taxableEstate-FEDERAL_EXEMPTION);
+const fedTax=calcFederalEstateTax(taxableEstate);
 const fedEffRate="taxableEstate">0?((fedTax/taxableEstate)*100):0;
-const stateTax="calcStateInheritanceTax(taxableEstate,state,relationship);"
-const totalTax="fedTax+stateTax;"
-const netAmount="estateValue-totalTax;"
+const stateTax=calcStateInheritanceTax(taxableEstate,state,relationship);
+const totalTax=fedTax+stateTax;
+const netAmount=estateValue-totalTax;
 
-document.getElementById('rGrossEstate').textContent="'$'+estateValue.toLocaleString();"
-document.getElementById('rDeductions').textContent="'$'+totalDeductions.toLocaleString();"
-document.getElementById('rTaxableEstate').textContent="'$'+taxableEstate.toLocaleString();"
-document.getElementById('rSubjectFed').textContent="'$'+amountSubjectToFed.toLocaleString();"
-document.getElementById('rFedTax').textContent="'$'+fedTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});"
-document.getElementById('rFedRate').textContent="fedEffRate.toFixed(2)+'%';"
-document.getElementById('rStateTax').textContent="'$'+stateTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});"
-document.getElementById('rTotalTax').textContent="'$'+totalTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});"
-document.getElementById('rNet').textContent="'$'+netAmount.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});"
-document.getElementById('results').style.display="'block';"
+document.getElementById('rGrossEstate').textContent='$'+estateValue.toLocaleString();
+document.getElementById('rDeductions').textContent='$'+totalDeductions.toLocaleString();
+document.getElementById('rTaxableEstate').textContent='$'+taxableEstate.toLocaleString();
+document.getElementById('rSubjectFed').textContent='$'+amountSubjectToFed.toLocaleString();
+document.getElementById('rFedTax').textContent='$'+fedTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('rFedRate').textContent=fedEffRate.toFixed(2)+'%';
+document.getElementById('rStateTax').textContent='$'+stateTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('rTotalTax').textContent='$'+totalTax.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('rNet').textContent='$'+netAmount.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('results').style.display='block';
 
 updateEstateChart(taxableEstate,amountSubjectToFed,fedTax,stateTax);
 }
 
 function updateEstateChart(taxableEstate,subjectToFed,fedTax,stateTax){
-const exemptAmount="Math.min(taxableEstate,FEDERAL_EXEMPTION);"
+const exemptAmount=Math.min(taxableEstate,FEDERAL_EXEMPTION);
 const chartUrl="'https://quickchart.io/chart?c="'+encodeURIComponent(JSON.stringify({"
 type:'doughnut',"
 data:{

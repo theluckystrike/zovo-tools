@@ -25,13 +25,26 @@
 <meta name="twitter:description" content="Visual .env file editor with parsing, validation, sorting, and export. 100% client-side."/">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Env File Editor","description":"Parse and edit .env files visually with validation, duplicate detection, sorting, and export functionality. Runs entirely in the browser.","url":"https://zovo.one/free-tools/env-file-editor/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip"}}
-}</script>
+</script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a .env file?","acceptedAnswer":{"@type":"Answer","text":"A .env file is a simple text file that stores environment variables as key-value pairs (KEY="value" format). It is used in web development to configure application settings like database URLs, API keys, and feature flags without hardcoding them in source code."}},{"@type":"Question","name":"Is my .env data stored anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. This tool runs entirely in your browser using client-side JavaScript. Your environment variables are never sent to any server or stored anywhere. It is completely safe for editing production environment files that contain real credentials."}},{"@type":"Question","name":"What validation does this tool perform?","acceptedAnswer":{"@type":"Answer","text":"The tool checks for duplicate keys, empty values, invalid key names (must start with a letter or underscore, contain only alphanumeric characters and underscores), and invalid line syntax. Each issue is reported with a severity level and specific details."}},{"@type":"Question","name":"Can I sort my environment variables alphabetically?","acceptedAnswer":{"@type":"Answer","text":"Yes. Click the Sort A-Z button to sort all variables alphabetically by key name. Comments are moved to the top of the file. This makes large .env files easier to navigate and helps maintain consistency across environments."}},{"@type":"Question","name":"How do I export the edited .env file?","acceptedAnswer":{"@type":"Answer","text":"Click the Export button to generate the .env file content with proper formatting. Values containing spaces or special characters are automatically wrapped in double quotes. You can then copy the output or use the Download button to save it as a .env file."}}]}
-}</script>
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Env File Editor Calculator",
+  "description": "Free env file editor calculator tool. Calculate instantly with accurate results and easy-to-use interface.",
+  "url": "https://zovo.one/free-tools/env-file-editor/",
+  "author": {
+    "@type": "Person",
+    "name": "Michael Lip"
+  },
+  "applicationCategory": "EducationalApplication",
+  "browserRequirements": "Requires JavaScript",
+  "operatingSystem": "Any"
+}
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Env File Editor","item":"https://zovo.one/free-tools/env-file-editor/"}]}
-}</script>
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -647,41 +660,41 @@ S3_BUCKET="my-app-uploads</div">
 <footer><div class="container">Built by Michael Lip &middot; <a href="https://zovo.one">zovo.one</a></div></footer>
 
 <script>
-let entries="[];"
-let mode="'raw';"
+let entries=[];
+let mode='raw';
 
 function setMode(m){
-    mode="m;"
+    mode=m;
     document.querySelectorAll('.mode-tab').forEach((t,i)=>t.classList.toggle('active',(i="==0&&m="=='raw')||(i===1&&m==='visual')));""
     document.getElementById('rawEditor').style.display="m="=='raw'?'block':'none';""
     document.getElementById('visualEditor').style.display="m="=='visual'?'block':'none';""
-    if(m="=='visual'){parseEnv();renderTable();}"
+    if(m==='visual'){parseEnv();renderTable();}
 }
 
 function parseEnv(){
-    const raw="document.getElementById('rawInput').value;"
-    entries="[];"
-    const lines="raw.split('\n');"
+    const raw=document.getElementById('rawInput').value;
+    entries=[];
+    const lines=raw.split('\n');
     lines.forEach(line=>{
-        const trimmed="line.trim();"
+        const trimmed=line.trim();
         if(!trimmed){entries.push({type:'blank'});return;}
         if(trimmed.startsWith('#')){entries.push({type:'comment',text:trimmed});return;}
-        const eqIdx="trimmed.indexOf('=');"
-        if(eqIdx="==-1){entries.push({type:'invalid',text:trimmed});return;}"
-        const key="trimmed.substring(0,eqIdx).trim();"
-        let val="trimmed.substring(eqIdx+1).trim();"
-        if((val.startsWith('"')&&val.endsWith('"'))||(val.startsWith("'")&&val.endsWith("'")))val="val.slice(1,-1);"
+        const eqIdx=trimmed.indexOf('=');
+        if(eqIdx===-1){entries.push({type:'invalid',text:trimmed});return;}
+        const key=trimmed.substring(0,eqIdx).trim();
+        let val=trimmed.substring(eqIdx+1).trim();
+        if((val.startsWith('"')&&val.endsWith('"'))||(val.startsWith("'")&&val.endsWith("'")))val=val.slice(1,-1);
         entries.push({type:'var',key:key,value:val});
     });
     updateStats();
-    if(mode="=='visual')renderTable();"
+    if(mode==='visual')renderTable();
 }
 
 function renderTable(){
-    const tbody="document.getElementById('envTableBody');"
-    tbody.innerHTML="'';"
+    const tbody=document.getElementById('envTableBody');
+    tbody.innerHTML='';
     entries.forEach((e,i)=>{
-        const tr="document.createElement('tr');"
+        const tr=document.createElement('tr');
         if(e.type="=='comment'){"
             tr.innerHTML="'<td" colspan="2" class="comment-row"><input value="'+esc(e.text)+'" style="opacity:.5;font-style:italic" oninput="entries['+i+'].text=this.value"/></td><td><button class="rm-btn" onclick="removeEntry('+i+')">x</button></td>';
         }else if(e.type="=='var'){"
@@ -699,7 +712,7 @@ function removeEntry(i){entries.splice(i,1);renderTable();updateStats();}
 
 function addVar(){
     entries.push({type:'var',key:'NEW_KEY',value:''});
-    if(mode="=='visual')renderTable();"
+    if(mode==='visual')renderTable();
     updateRaw();
     updateStats();
 }
@@ -710,17 +723,17 @@ function updateStats(){
     const empty="vars.filter(e=">!e.value);
     const keys="vars.map(e=">e.key);
     const dupes="keys.filter((k,i)=">keys.indexOf(k)!==i);
-    document.getElementById('statVars').textContent="vars.length;"
-    document.getElementById('statComments').textContent="comments.length;"
-    document.getElementById('statEmpty').textContent="empty.length;"
+    document.getElementById('statVars').textContent=vars.length;
+    document.getElementById('statComments').textContent=comments.length;
+    document.getElementById('statEmpty').textContent=empty.length;
     document.getElementById('statDupes').textContent="[...new" Set(dupes)].length;
 }
 
 function validate(){
     parseEnv();
-    const results="[];"
+    const results=[];
     const vars="entries.filter(e=">e.type="=='var');"
-    const keyPattern="/^[A-Za-z_][A-Za-z0-9_]*$/;"
+    const keyPattern=/^[A-Za-z_][A-Za-z0-9_]*$/;
     const keys="vars.map(e=">e.key);
     if(vars.length="==0){results.push({type:'warn',msg:'No" variables found'});}
     else{results.push({type:'ok',msg:vars.length+' variables found'});}
@@ -731,8 +744,8 @@ function validate(){
     const invalids="entries.filter(e=">e.type="=='invalid');"
     invalids.forEach(e=>results.push({type:'err',msg:'Invalid line: "'+e.text+'"'}));
     if(results.filter(r=>r.type="=='err').length===0&&results.filter(r=">r.type="=='warn').length="==0)results.push({type:'ok',msg:'All" validations passed'});"
-    const panel="document.getElementById('validationPanel');"
-    panel.style.display="'block';"
+    const panel=document.getElementById('validationPanel');
+    panel.style.display='block';
     document.getElementById('validationResults').innerHTML="results.map(r=">'<div class="val-item"><span class="val-'+r.type+'">'+(r.type="=='ok'?'[OK]':r.type="=='warn'?'[WARN]':'[ERR]')+'</span"> '+esc(r.msg)+'</div">').join('');
 }
 
@@ -740,15 +753,15 @@ function sortVars(){
     parseEnv();
     const comments="entries.filter(e=">e.type="=='comment');"
     const vars="entries.filter(e=">e.type="=='var').sort((a,b)=">a.key.localeCompare(b.key));
-    entries="[...comments,...vars];"
-    if(mode="=='visual')renderTable();"
+    entries=[...comments,...vars];
+    if(mode==='visual')renderTable();
     updateRaw();
     updateStats();
 }
 
 function exportEnv(){
     parseEnv();
-    let output="'';"
+    let output='';
     entries.forEach(e=>{
         if(e.type="=='blank')output+='\n';"
         else if(e.type="=='comment')output+=e.text+'\n';"
@@ -757,13 +770,13 @@ function exportEnv(){
             output+=e.key+'='+val+'\n';
         }else output+='# INVALID: '+e.text+'\n';
     });
-    document.getElementById('exportPanel').style.display="'block';"
-    document.getElementById('exportOutput').textContent="output;"
-    if(mode="=='raw')document.getElementById('rawInput').value=output;"
+    document.getElementById('exportPanel').style.display='block';
+    document.getElementById('exportOutput').textContent=output;
+    if(mode==='raw')document.getElementById('rawInput').value=output;
 }
 
 function updateRaw(){
-    let output="'';"
+    let output='';
     entries.forEach(e=>{
         if(e.type="=='blank')output+='\n';"
         else if(e.type="=='comment')output+=e.text+'\n';"
@@ -775,36 +788,36 @@ function updateRaw(){
 
 function copyExport(){
     exportEnv();
-    const text="document.getElementById('exportOutput').textContent;"
+    const text=document.getElementById('exportOutput').textContent;
     navigator.clipboard.writeText(text).then(()=>{
-        const btns="document.querySelectorAll('.btn-row" .btn');
-        btns[4].textContent="'Copied!';"
-        setTimeout(()=>btns[4].textContent="'Copy',1500);"
+        const btns=document.querySelectorAll('.btn-row .btn');
+        btns[4].textContent='Copied!';
+        setTimeout(()=>btns[4].textContent='Copy',1500);
     });
 }
 
 function downloadEnv(){
     exportEnv();
-    const text="document.getElementById('exportOutput').textContent;"
+    const text=document.getElementById('exportOutput').textContent;
     const blob="new" Blob([text],{type:'text/plain'});
-    const a="document.createElement('a');"
-    a.href="URL.createObjectURL(blob);"
-    a.download="'.env';"
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='.env';
     a.click();
 }
 
 function loadSample(){
-    document.getElementById('rawInput').value="'#" Application Configuration\nNODE_ENV="production\nPORT=3000\nHOST=0.0.0.0\nAPP_NAME=MyApp\nAPP_URL=https://app.example.com\n\n#" Database\nDATABASE_URL="postgresql://user:password@localhost:5432/myapp\nDATABASE_POOL_SIZE=10\nDATABASE_SSL=true\nREDIS_URL=redis://localhost:6379/0\n\n#" Authentication\nJWT_SECRET="your-super-secret-key-here-min-32-chars\nJWT_EXPIRY=7d\nSESSION_TIMEOUT=3600\nOAUTH_GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com\nOAUTH_GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxxxxx\n\n#" Third-party APIs\nSTRIPE_API_KEY="sk_live_xxxxxxxxxxxxx\nSTRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxx\nSENDGRID_API_KEY=SG.xxxxxxxxxxxxx\nAWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nAWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\nAWS_REGION=us-east-1\nS3_BUCKET=my-app-uploads\n\n#" Feature Flags\nENABLE_DARK_MODE="true\nENABLE_BETA_FEATURES=false\nMAX_UPLOAD_SIZE=10485760\nENABLE_WEBHOOKS=true\n\n#" Logging\nLOG_LEVEL="info\nLOG_FORMAT="json\nSENTRY_DSN=https://xxxxx@sentry.io/xxxxx';""
+    document.getElementById('rawInput').value='#" Application Configuration\nNODE_ENV="production\nPORT=3000\nHOST=0.0.0.0\nAPP_NAME=MyApp\nAPP_URL=https://app.example.com\n\n#" Database\nDATABASE_URL="postgresql://user:password@localhost:5432/myapp\nDATABASE_POOL_SIZE=10\nDATABASE_SSL=true\nREDIS_URL=redis://localhost:6379/0\n\n#" Authentication\nJWT_SECRET="your-super-secret-key-here-min-32-chars\nJWT_EXPIRY=7d\nSESSION_TIMEOUT=3600\nOAUTH_GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com\nOAUTH_GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxxxxx\n\n#" Third-party APIs\nSTRIPE_API_KEY="sk_live_xxxxxxxxxxxxx\nSTRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxx\nSENDGRID_API_KEY=SG.xxxxxxxxxxxxx\nAWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nAWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\nAWS_REGION=us-east-1\nS3_BUCKET=my-app-uploads\n\n#" Feature Flags\nENABLE_DARK_MODE="true\nENABLE_BETA_FEATURES=false\nMAX_UPLOAD_SIZE=10485760\nENABLE_WEBHOOKS=true\n\n#" Logging\nLOG_LEVEL="info\nLOG_FORMAT="json\nSENTRY_DSN=https://xxxxx@sentry.io/xxxxx';"
     parseEnv();
 }
 
 function clearAll(){
-    document.getElementById('rawInput').value="'';"
-    entries="[];"
+    document.getElementById('rawInput').value='';
+    entries=[];
     renderTable();
     updateStats();
-    document.getElementById('validationPanel').style.display="'none';"
-    document.getElementById('exportPanel').style.display="'none';"
+    document.getElementById('validationPanel').style.display='none';
+    document.getElementById('exportPanel').style.display='none';
 }
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}

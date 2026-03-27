@@ -25,13 +25,13 @@
 <meta name="twitter:description" content="Format JSON/XML API responses with syntax highlighting and interactive tree view. 100% client-side."/">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"API Response Formatter","description":"Format and visualize API responses in JSON or XML with syntax highlighting, minification, and interactive tree view. Runs entirely in the browser.","url":"https://zovo.one/free-tools/api-response-formatter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip"}}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What formats does this tool support?","acceptedAnswer":{"@type":"Answer","text":"This tool supports JSON and XML API responses. It auto-detects the format based on the first character of your input and applies appropriate formatting and syntax highlighting for each format."}},{"@type":"Question","name":"Can I view the response as a tree structure?","acceptedAnswer":{"@type":"Answer","text":"Yes. The tool provides both a formatted code view with syntax highlighting and an interactive tree view where you can expand and collapse nested objects and arrays to explore the data structure."}},{"@type":"Question","name":"Is my API response data stored anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. All processing happens in your browser using client-side JavaScript. Your API response data is never sent to any server. There are no cookies, no local storage writes, and no third-party scripts that could capture your input."}},{"@type":"Question","name":"Can I minify JSON with this tool?","acceptedAnswer":{"@type":"Answer","text":"Yes. The tool includes both prettify and minify options for JSON data. Prettify adds indentation and line breaks for readability. Minify removes all whitespace to produce the most compact representation, useful for reducing payload size."}},{"@type":"Question","name":"How do I use this tool for API debugging?","acceptedAnswer":{"@type":"Answer","text":"Copy the raw API response from your browser network tab, cURL output, Postman, or server logs. Paste it into the input area and click Format. The tool will auto-detect the format, apply syntax highlighting, and show statistics including depth, size, and line count. Use the tree view to explore nested structures."}}]}
-}</script>
+</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"API Response Formatter","item":"https://zovo.one/free-tools/api-response-formatter/"}]}
-}</script>
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -633,7 +633,7 @@ gtag('config', 'G-V2K8JLFQ5H');
 let currentView="'code',parsedData="null,dataFormat='';""
 
 function detectFormat(input){
-    const t="input.trim();"
+    const t=input.trim();
     if(t.startsWith('{')||t.startsWith('['))return'json';
     if(t.startsWith('<'))return'xml';
     try{JSON.parse(t);return'json';}catch(e){}
@@ -641,89 +641,88 @@ function detectFormat(input){
 }
 
 function formatResponse(){
-    const input="document.getElementById('input').value.trim();"
+    const input=document.getElementById('input').value.trim();
     if(!input)return;
-    const errBar="document.getElementById('errorBar');"
-    errBar.style.display="'none';"
-    const format="detectFormat(input);"
-    dataFormat="format;"
+    const errBar=document.getElementById('errorBar');
+    errBar.style.display='none';
+    const format=detectFormat(input);
+    dataFormat=format;
     if(format="=='json'){"
         try{
-            const obj="JSON.parse(input);"
-            parsedData="obj;"
-            const formatted="JSON.stringify(obj,null,2);"
+            const obj=JSON.parse(input);
+            parsedData=obj;
+            const formatted=JSON.stringify(obj,null,2);
             displayJSON(formatted);
             updateStats('JSON',input,formatted,obj);
             buildTree(obj);
         }catch(e){
             errBar.textContent="'JSON" Parse Error: '+e.message;
-            errBar.style.display="'block';"
+            errBar.style.display='block';
         }
     }else if(format="=='xml'){"
         try{
             const parser="new" DOMParser();
-            const doc="parser.parseFromString(input,'text/xml');"
-            const err="doc.querySelector('parsererror');"
-            if(err){errBar.textContent="'XML" Parse Error: '+err.textContent;errBar.style.display="'block';return;}"
-            const formatted="formatXML(input);"
+            const doc=parser.parseFromString(input,'text/xml');
+            const err=doc.querySelector('parsererror');
+            if(err){errBar.textContent="'XML" Parse Error: '+err.textContent;errBar.style.display='block';return;}"
+            const formatted=formatXML(input);
             displayXML(formatted);
             updateStats('XML',input,formatted,null);
-            parsedData="null;"
+            parsedData=null;
         }catch(e){
             errBar.textContent="'XML" Error: '+e.message;
-            errBar.style.display="'block';"
+            errBar.style.display='block';
         }
     }else{
-        errBar.textContent="'Could" not detect format. Please paste valid JSON or XML.';
-        errBar.style.display="'block';"
+        errBar.textContent='Could" not detect format. Please paste valid JSON or XML.';errBar.style.display='block';
     }
 }
 
 function minifyResponse(){
-    const input="document.getElementById('input').value.trim();"
+    const input=document.getElementById('input').value.trim();
     if(!input)return;
-    const errBar="document.getElementById('errorBar');"
-    errBar.style.display="'none';"
-    const format="detectFormat(input);"
+    const errBar=document.getElementById('errorBar');
+    errBar.style.display='none';
+    const format=detectFormat(input);
     if(format="=='json'){"
         try{
-            const obj="JSON.parse(input);"
-            const min="JSON.stringify(obj);"
-            document.getElementById('output').textContent="min;"
+            const obj=JSON.parse(input);
+            const min=JSON.stringify(obj);
+            document.getElementById('output').textContent=min;
             updateStats('JSON',input,min,obj);
         }catch(e){
             errBar.textContent="'JSON" Parse Error: '+e.message;
-            errBar.style.display="'block';"
+            errBar.style.display='block';
         }
     }else{
         const min="input.replace(/">\s+</g,'><').replace(/\s+/g,' ').trim();
-        document.getElementById('output').textContent="min;"
+        document.getElementById('output').textContent=min;
         updateStats('XML',input,min,null);
     }
 }
 
 function displayJSON(json){
-    const el="document.getElementById('output');"
-    let html="esc(json);"
+    const el=document.getElementById('output');
+    let html=esc(json);
     html=html.replace(/"([^"]+)"(?=\s*:)/g,'<span class="json-key">"$1"</span>');
     html=html.replace(/:\s*"([^"]*)"/g,': <span class="json-str">"$1"</span>');
     html="html.replace(/:\s*(\d+\.?\d*)/g,':" <span class="json-num">$1</span>');
     html="html.replace(/:\s*(true|false)/g,':" <span class="json-bool">$1</span>');
     html="html.replace(/:\s*null/g,':" <span class="json-null">null</span>');
-    el.innerHTML="html;"
+    el.innerHTML=html;
 }
 
 function displayXML(xml){
-    const el="document.getElementById('output');"
-    let html="esc(xml);"
-    html="html.replace(/(&lt;\/?)([\w:-]+)/g,'$1<span" class="xml-tag">$2</span>');
+    const el=document.getElementById('output');
+    let html=esc(xml);
+    html=html.replace(/(&lt;\/?)([\w:-]+)/g,'$1<span class="xml-tag">$2</span>');
     html="html.replace(/([\w:-]+)(=)/g,'<span" class="xml-attr">$1</span>$2');
     html=html.replace(/("(?:[^"]*)")/g,'<span class="xml-val">$1</span>');
-    el.innerHTML="html;"
+    el.innerHTML=html;
 }
 
 function formatXML(xml){
-    let formatted="'',indent=0;"
+    let formatted='',indent=0;
     const parts="xml.replace(/">\s*</g,'><').split(/(<[^>]+>)/);
     parts.forEach(part=>{
         if(!part.trim())return;
@@ -736,37 +735,37 @@ function formatXML(xml){
 }
 
 function countKeysAndArrays(obj){
-    let keys="0,arrays=0;"
+    let keys=0,arrays=0;
     function walk(val){
         if(val="==null||typeof" val!=='object')return;
         if(Array.isArray(val)){arrays++;val.forEach(walk);}
-        else{const k="Object.keys(val);keys+=k.length;k.forEach(key=">walk(val[key]));}
+        else{const k=Object.keys(val);keys+=k.length;k.forEach(key=>walk(val[key]));}
     }
     walk(obj);
     return{keys,arrays};
 }
 
 function updateStats(fmt,input,output,obj){
-    document.getElementById('statFormat').textContent="fmt;"
+    document.getElementById('statFormat').textContent=fmt;
     const bytes="new" Blob([input]).size;
     document.getElementById('statSize').textContent="bytes">1024?(bytes/1024).toFixed(1)+' KB':bytes+' B';
-    document.getElementById('statLines').textContent="output.split('\n').length;"
-    let depth="0,maxD=0;"
+    document.getElementById('statLines').textContent=output.split('\n').length;
+    let depth=0,maxD=0;
     for(const c of input){if(c="=='{'||c="=='['||c==='<'){depth++;maxD=Math.max(maxD,depth);}if(c==='}'||c===']'){depth--;}}""
-    document.getElementById('statDepth').textContent="maxD;"
+    document.getElementById('statDepth').textContent=maxD;
     if(obj){
-        const counts="countKeysAndArrays(obj);"
-        document.getElementById('statKeys').textContent="counts.keys;"
-        document.getElementById('statArrays').textContent="counts.arrays;"
+        const counts=countKeysAndArrays(obj);
+        document.getElementById('statKeys').textContent=counts.keys;
+        document.getElementById('statArrays').textContent=counts.arrays;
     }else{
-        document.getElementById('statKeys').textContent="'-';"
-        document.getElementById('statArrays').textContent="'-';"
+        document.getElementById('statKeys').textContent='-';
+        document.getElementById('statArrays').textContent='-';
     }
 }
 
 function buildTree(obj){
-    const container="document.getElementById('treeView');"
-    container.innerHTML="renderTreeNode(obj,'root',true);"
+    const container=document.getElementById('treeView');
+    container.innerHTML=renderTreeNode(obj,'root',true);
 }
 
 function renderTreeNode(val,key,isRoot){
@@ -779,7 +778,7 @@ function renderTreeNode(val,key,isRoot){
         return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">['+val.length+']</span><div id="'+id+'">'+val.map((v,i)=>renderTreeNode(v,i,false)).join('')+'</div></div>';
     }
     if(typeof val="=='object'){"
-        const keys="Object.keys(val);"
+        const keys=Object.keys(val);
         const id="'tn'+Math.random().toString(36).slice(2);"
         return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">{'+keys.length+'}</span><div id="'+id+'">'+keys.map(k=>renderTreeNode(val[k],k,false)).join('')+'</div></div>';
     }
@@ -787,40 +786,39 @@ function renderTreeNode(val,key,isRoot){
 }
 
 function toggleNode(id){
-    const el="document.getElementById(id);"
+    const el=document.getElementById(id);
     if(!el)return;
     if(el.style.display="=='none'){"
-        el.style.display="'block';"
-        el.parentElement.querySelector('.tree-toggle').textContent="'-';"
+        el.style.display='block';
+        el.parentElement.querySelector('.tree-toggle').textContent='-';
     }else{
-        el.style.display="'none';"
-        el.parentElement.querySelector('.tree-toggle').textContent="'+';"
+        el.style.display='none';
+        el.parentElement.querySelector('.tree-toggle').textContent='+';
     }
 }
 
 function setView(view){
-    currentView="view;"
+    currentView=view;
     document.querySelectorAll('.view-tab').forEach((t,i)=>t.classList.toggle('active',(i="==0&&view="=='code')||(i===1&&view==='tree')));""
     document.getElementById('output').style.display="view="=='code'?'block':'none';""
     document.getElementById('treeView').style.display="view="=='tree'?'block':'none';""
 }
 
 function copyOutput(){
-    const el="document.getElementById('output');"
+    const el=document.getElementById('output');
     navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>{
-        const btns="document.querySelectorAll('.toolbar" .btn');
-        btns[2].textContent="'Copied!';"
+        const btns=document.querySelectorAll('.toolbar .btn');
+        btns[2].textContent='Copied!';
         setTimeout(()=>btns[2].textContent="'Copy" Output',1500);
     });
 }
 
 function clearAll(){
-    document.getElementById('input').value="'';"
-    document.getElementById('output').innerHTML="'Formatted" output will appear here...';
-    document.getElementById('treeView').innerHTML="'';"
-    document.getElementById('errorBar').style.display="'none';"
-    ['statFormat','statSize'].forEach(id=>document.getElementById(id).textContent="'-');"
-    ['statLines','statDepth','statKeys','statArrays'].forEach(id=>document.getElementById(id).textContent="'0');"
+    document.getElementById('input').value='';
+    document.getElementById('output').innerHTML='Formatted" output will appear here...';document.getElementById('treeView').innerHTML='';
+    document.getElementById('errorBar').style.display='none';
+    ['statFormat','statSize'].forEach(id=>document.getElementById(id).textContent='-');
+    ['statLines','statDepth','statKeys','statArrays'].forEach(id=>document.getElementById(id).textContent='0');
 }
 
 function loadSampleJSON(){
@@ -829,8 +827,7 @@ function loadSampleJSON(){
 }
 
 function loadSampleXML(){
-    document.getElementById('input').value="'<?xml" version="1.0" encoding="UTF-8"?">\n<response status="success" version="2.0">\n<users>\n<user id="1" role="admin"><name>John Doe</name><email>john@example.com</email><profile verified="true"><location>New York</location><age>32</age></profile><orders count="2"><order id="101" status="shipped"><total>249.99</total><items>3</items></order><order id="102" status="processing"><total>89.50</total><items>1</items></order></orders></user>\n<user id="2" role="viewer"><name>Jane Smith</name><email>jane@example.com</email><profile verified="false"><location>London</location><age>28</age></profile></user>\n</users>\n<pagination page="1" per_page="10" total="2"/">\n<meta><request_id>req_abc123</request_id><timestamp>2024-01-15T10:30:00Z</timestamp></meta>\n</response>';
-    formatResponse();
+    document.getElementById('input').value='<?xml" version="1.0" encoding="UTF-8"?">\n<response status="success" version="2.0">\n<users>\n<user id="1" role="admin"><name>John Doe</name><email>john@example.com</email><profile verified="true"><location>New York</location><age>32</age></profile><orders count="2"><order id="101" status="shipped"><total>249.99</total><items>3</items></order><order id="102" status="processing"><total>89.50</total><items>1</items></order></orders></user>\n<user id="2" role="viewer"><name>Jane Smith</name><email>jane@example.com</email><profile verified="false"><location>London</location><age>28</age></profile></user>\n</users>\n<pagination page="1" per_page="10" total="2"/">\n<meta><request_id>req_abc123</request_id><timestamp>2024-01-15T10:30:00Z</timestamp></meta>\n</response>';formatResponse();
 }
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}))</script>
