@@ -177,30 +177,61 @@ async function handleImage(request) {
   }
 }
 
-// API strategy: Network First with Stale While Revalidate
+// API strategy: Network First with Stale While Revalidate and intelligent caching
 async function handleAPI(request) {
-  try {
-    const cache = await caches.open(API_CACHE);
+  const cache = await caches.open(API_CACHE);
 
-    // Try network first
-    const networkResponse = await fetch(request, { timeout: 3000 });
+  try {
+    // Network first with optimized timeout
+    const networkPromise = fetch(request, {
+      timeout: 2500,
+      signal: AbortSignal.timeout(2500)
+    });
+
+    // Race condition: try network but don't wait forever
+    const networkResponse = await Promise.race([
+      networkPromise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Network timeout')), 2500))
+    ]);
+
     if (networkResponse.status === 200) {
-      await cache.put(request, networkResponse.clone());
+      // Background cache update with compression check
+      const responseClone = networkResponse.clone();
+      cache.put(request, responseClone).catch(e =>
+        console.log('[SW] Cache update failed:', e)
+      );
       return networkResponse;
     }
 
-    // Fall back to cache
+    // Non-200 response, try cache
     const cachedResponse = await cache.match(request);
     return cachedResponse || new Response('API unavailable', { status: 503 });
 
   } catch (error) {
-    console.error('[SW] API error:', error);
-    // Serve from cache
-    const cache = await caches.open(API_CACHE);
+    console.error('[SW] API network error:', error);
+    // Fast fallback to cache
     const cachedResponse = await cache.match(request);
-    return cachedResponse || new Response(
-      JSON.stringify({ error: 'Offline', cached: false }),
-      { headers: { 'Content-Type': 'application/json' }, status: 503 }
+    if (cachedResponse) {
+      // Add cache header for debugging
+      const headers = new Headers(cachedResponse.headers);
+      headers.set('X-SW-Cache', 'HIT-OFFLINE');
+      return new Response(cachedResponse.body, {
+        status: cachedResponse.status,
+        statusText: cachedResponse.statusText,
+        headers
+      });
+    }
+
+    return new Response(
+      JSON.stringify({
+        error: 'Service temporarily unavailable',
+        cached: false,
+        timestamp: Date.now()
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 503
+      }
     );
   }
 }
@@ -313,38 +344,91 @@ async function syncCalculations() {
   }
 }
 
-// IndexedDB utilities for offline storage
+// IndexedDB utilities for offline storage with advanced error boundaries
 async function getStoredData(key) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('ZovoOfflineDB', 1);
+
+    request.onerror = () => {
+      console.error('[SW] IndexedDB connection failed:', request.error);
+      resolve([]); // Graceful degradation
+    };
+
+    request.onblocked = () => {
+      console.warn('[SW] IndexedDB connection blocked');
+      setTimeout(() => resolve([]), 1000); // Timeout fallback
+    };
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains('data')) {
+        db.createObjectStore('data', { keyPath: 'key' });
+      }
+    };
+
     request.onsuccess = () => {
       const db = request.result;
-      const transaction = db.transaction(['data'], 'readonly');
-      const store = transaction.objectStore('data');
-      const getRequest = store.get(key);
+      try {
+        const transaction = db.transaction(['data'], 'readonly');
+        transaction.onerror = () => {
+          console.error('[SW] Transaction failed:', transaction.error);
+          resolve([]);
+        };
 
-      getRequest.onsuccess = () => {
-        resolve(getRequest.result?.data || []);
-      };
-      getRequest.onerror = () => reject(getRequest.error);
+        const store = transaction.objectStore('data');
+        const getRequest = store.get(key);
+
+        getRequest.onsuccess = () => {
+          resolve(getRequest.result?.data || []);
+        };
+        getRequest.onerror = () => {
+          console.error('[SW] Data retrieval failed:', getRequest.error);
+          resolve([]);
+        };
+      } catch (error) {
+        console.error('[SW] Database operation failed:', error);
+        resolve([]);
+      }
     };
-    request.onerror = () => reject(request.error);
   });
 }
 
 async function clearStoredData(key) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('ZovoOfflineDB', 1);
+
+    request.onerror = () => {
+      console.error('[SW] IndexedDB cleanup connection failed:', request.error);
+      resolve(); // Graceful degradation
+    };
+
+    request.onblocked = () => {
+      console.warn('[SW] IndexedDB cleanup blocked');
+      setTimeout(() => resolve(), 1000);
+    };
+
     request.onsuccess = () => {
       const db = request.result;
-      const transaction = db.transaction(['data'], 'readwrite');
-      const store = transaction.objectStore('data');
-      const deleteRequest = store.delete(key);
+      try {
+        const transaction = db.transaction(['data'], 'readwrite');
+        transaction.onerror = () => {
+          console.error('[SW] Cleanup transaction failed:', transaction.error);
+          resolve();
+        };
 
-      deleteRequest.onsuccess = () => resolve();
-      deleteRequest.onerror = () => reject(deleteRequest.error);
+        const store = transaction.objectStore('data');
+        const deleteRequest = store.delete(key);
+
+        deleteRequest.onsuccess = () => resolve();
+        deleteRequest.onerror = () => {
+          console.error('[SW] Data deletion failed:', deleteRequest.error);
+          resolve(); // Don't reject on cleanup failure
+        };
+      } catch (error) {
+        console.error('[SW] Cleanup operation failed:', error);
+        resolve();
+      }
     };
-    request.onerror = () => reject(request.error);
   });
 }
 

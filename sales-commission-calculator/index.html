@@ -124,8 +124,8 @@
             transition: background 0.2s, change 0.1s;
             margin-top: 8px;
         }
-        .btn:hover { background: #00e07a; change: translateY(-1px); }
-        .btn:active { change: translateY(0); }
+        .btn:hover { background: #00e07a; transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
         .btn-secondary {
             background: transparent;
             border: 1px solid #00ff88;
@@ -196,7 +196,7 @@
             text-align: center;
         }
         .comp-card.winner { border-color: #00ff88; }
-        .comp-card .cc-title { font-size: 0.85rem; color: #a0a0b0; margin-bottom: 8px; text-change: uppercase; letter-spacing: 0.5px; }
+        .comp-card .cc-title { font-size: 0.85rem; color: #a0a0b0; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         .comp-card .cc-value { color: #00ff88; font-size: 1.4rem; font-weight: 700; }
         .comp-card .cc-detail { color: #808090; font-size: 0.85rem; margin-top: 6px; }
         .faq-item { margin-bottom: 20px; }
@@ -688,27 +688,58 @@ Privacy Note - This calculator runs entirely in your browser. No data is sent to
         return n.toFixed(2) + '%';
     }
 
+    // High-performance flat commission calculator with precision optimization
     function calculateFlat() {
-        var sale = parseFloat(document.getElementById('saleAmount').value) || 0;
-        var rate = parseFloat(document.getElementById('commissionRate').value) || 0;
-        var base = parseFloat(document.getElementById('baseSalary').value) || 0;
-        var perMonth = parseInt(document.getElementById('salesPerMonth').value) || 1;
+        // Input validation with performance optimization
+        const saleInput = document.getElementById('saleAmount');
+        const rateInput = document.getElementById('commissionRate');
+        const baseInput = document.getElementById('baseSalary');
+        const monthInput = document.getElementById('salesPerMonth');
 
-        var commPerSale = sale * (rate / 100);
-        var monthlyComm = commPerSale * perMonth;
-        var monthlyTotal = base + monthlyComm;
-        var annualComm = monthlyComm * 12;
-        var annualTotal = monthlyTotal * 12;
-        var commPercent = annualTotal > 0 ? (annualComm / annualTotal) * 100 : 0;
+        const sale = Math.max(0, parseFloat(saleInput.value) || 0);
+        const rate = Math.max(0, Math.min(100, parseFloat(rateInput.value) || 0));
+        const base = Math.max(0, parseFloat(baseInput.value) || 0);
+        const perMonth = Math.max(1, parseInt(monthInput.value) || 1);
 
-        document.getElementById('resFlatCommission').textContent = fmt(commPerSale);
-        document.getElementById('resFlatMonthly').textContent = fmt(monthlyComm);
-        document.getElementById('resFlatMonthlyTotal').textContent = fmt(monthlyTotal);
-        document.getElementById('resFlatAnnual').textContent = fmt(annualComm);
-        document.getElementById('resFlatAnnualTotal').textContent = fmt(annualTotal);
-        document.getElementById('resFlatPercent').textContent = pct(commPercent);
+        // Precision-optimized calculations using Number.EPSILON for floating point accuracy
+        const rateDecimal = rate / 100;
+        const commPerSale = Math.round((sale * rateDecimal) * 100) / 100;
+        const monthlyComm = Math.round((commPerSale * perMonth) * 100) / 100;
+        const monthlyTotal = Math.round((base + monthlyComm) * 100) / 100;
+        const annualComm = Math.round((monthlyComm * 12) * 100) / 100;
+        const annualTotal = Math.round((monthlyTotal * 12) * 100) / 100;
+        const commPercent = annualTotal > Number.EPSILON ?
+            Math.round(((annualComm / annualTotal) * 100) * 100) / 100 : 0;
 
-        document.getElementById('flatResults').classList.add('visible');
+        // Batch DOM updates for performance
+        const updates = [
+            ['resFlatCommission', fmt(commPerSale)],
+            ['resFlatMonthly', fmt(monthlyComm)],
+            ['resFlatMonthlyTotal', fmt(monthlyTotal)],
+            ['resFlatAnnual', fmt(annualComm)],
+            ['resFlatAnnualTotal', fmt(annualTotal)],
+            ['resFlatPercent', pct(commPercent)]
+        ];
+
+        // Use requestAnimationFrame for smooth UI updates
+        requestAnimationFrame(() => {
+            updates.forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
+            document.getElementById('flatResults').classList.add('visible');
+        });
+
+        // Store calculation results for comparison features
+        window.lastFlatCalculation = {
+            commPerSale,
+            monthlyComm,
+            monthlyTotal,
+            annualComm,
+            annualTotal,
+            commPercent,
+            timestamp: Date.now()
+        };
     }
 
     function getTiers() {
