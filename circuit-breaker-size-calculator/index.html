@@ -381,7 +381,7 @@ footer { text-align: center; padding: 40px 24px; color: #555; font-size: 14px; b
 </div>
 <div class="result-card">
 <div class="label">Circuit Use</div>
-<div class="value" id="resUtilization">--</div>
+<div class="value" id="resUse">--</div>
 <div class="unit">percent</div>
 </div>
 <div class="result-card">
@@ -640,9 +640,9 @@ footer { text-align: center; padding: 40px 24px; color: #555; font-size: 14px; b
 <div class="related-tools-grid">
 <a href="https://zovo.one/free-tools/western-union-fee-calculator/" class="related-tool-link">Western Union Fee Calculator</a>
 <a href="https://zovo.one/free-tools/rafter-span-calculator/" class="related-tool-link">Rafter Span Calculator</a>
-<a href="https://zovo.one/free-tools/voltage-drop-calculator/" class="related-tool-link">Voltage Drop Calculator</a>
+
 <a href="https://zovo.one/free-tools/wire-size-calculator/" class="related-tool-link">Wire Size Calculator</a>
-<a href="https://zovo.one/free-tools/electrical-load-calculator/" class="related-tool-link">Electrical Load Calculator</a>
+
 </div>
 </div>
 
@@ -889,7 +889,7 @@ function calculateBreaker() {
   var finalVDpct = (finalVD / voltage) * 100;
   var voltageAtLoad = voltage - finalVD;
 
-  var utilization = (loadAmps / selectedBreaker) * 100;
+  var use = (loadAmps / selectedBreaker) * 100;
 
   // Display
   document.getElementById('results').style.display = 'block';
@@ -897,7 +897,7 @@ function calculateBreaker() {
   document.getElementById('resLoadAmps').textContent = loadAmps.toFixed(1);
   document.getElementById('resWireGauge').textContent = recGauge;
   document.getElementById('resVoltageDrop').textContent = finalVDpct.toFixed(1);
-  document.getElementById('resUtilization').textContent = utilization.toFixed(0);
+  document.getElementById('resUse').textContent = use.toFixed(0);
   document.getElementById('resPoles').textContent = poles;
 
   document.getElementById('detailInput').textContent = loadWatts.toFixed(0) + 'W / ' + loadAmps.toFixed(2) + 'A';
@@ -936,7 +936,7 @@ function calculateBreaker() {
   var wb = document.getElementById('warningBox');
   var warnings = [];
   if (finalVDpct > 3.0) warnings.push('Voltage drop (' + finalVDpct.toFixed(1) + '%) exceeds the NEC recommended maximum of 3%. Consider upsizing the wire gauge.');
-  if (utilization > 80 && loadType === 'continuous') warnings.push('Circuit utilization (' + utilization.toFixed(0) + '%) exceeds 80% for a continuous load. The next larger breaker size may be needed.');
+  if (use > 80 && loadType === 'continuous') warnings.push('Circuit use (' + use.toFixed(0) + '%) exceeds 80% for a continuous load. The next larger breaker size may be needed.');
   if (selectedBreaker === 15 && wireMaterial === 'copper' && recGaugeIdx === 0) warnings.push('14 AWG wire on a 15-amp breaker is the minimum allowed. For any future load additions, 12 AWG on a 20-amp circuit provides more flexibility.');
   if (loadAmps > 200) warnings.push('Load exceeds 200 amps. Consult a licensed electrician for proper service sizing and coordination study.');
   if (voltageAtLoad < voltage * 0.95) warnings.push('Voltage at load (' + voltageAtLoad.toFixed(1) + 'V) is more than 5% below nominal. Equipment may not operate correctly.');
@@ -949,7 +949,7 @@ function calculateBreaker() {
 
   var ib = document.getElementById('infoBox');
   ib.style.display = 'block';
-  ib.innerHTML = 'For your ' + loadWatts.toFixed(0) + 'W load on ' + voltage + 'V, install a ' + selectedBreaker + '-amp ' + polesLabel + ' breaker with ' + recGauge + ' AWG ' + wireMaterial + ' wire. Voltage drop at ' + wireLength + ' feet is ' + finalVDpct.toFixed(1) + '%. The circuit has ' + (100 - utilization).toFixed(0) + '% headroom above the actual load current.';
+  ib.innerHTML = 'For your ' + loadWatts.toFixed(0) + 'W load on ' + voltage + 'V, install a ' + selectedBreaker + '-amp ' + polesLabel + ' breaker with ' + recGauge + ' AWG ' + wireMaterial + ' wire. Voltage drop at ' + wireLength + ' feet is ' + finalVDpct.toFixed(1) + '%. The circuit has ' + (100 - use).toFixed(0) + '% headroom above the actual load current.';
 
   document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 
