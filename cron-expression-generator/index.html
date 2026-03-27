@@ -42,91 +42,392 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e0e0e8;min-height:100vh;display:flex;flex-direction:column;line-height:1.7}
-a{color:#00ccff;text-decoration:none}a:hover{text-decoration:underline}
-.container{max-width:1000px;margin:0 auto;padding:0 20px;width:100%}
-header{background:#12121a;border-bottom:1px solid #2a2a3e;padding:16px 0}
-.header-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.logo{font-size:1.3rem;font-weight:700;color:#00ff88}
-nav a{color:#e0e0e8;margin-left:18px;font-size:.9rem;opacity:.8}nav a:hover{opacity:1;color:#00ff88;text-decoration:none}
-.breadcrumb{font-size:.85rem;color:#888;margin-top:6px}
-.breadcrumb a{color:#00ccff}
-.breadcrumb span{margin:0 6px}
-main{flex:1;padding:32px 0}
-h1{font-size:2rem;font-weight:700;margin-bottom:8px;color:#fff}
-h2{font-size:1.4rem;font-weight:600;color:#fff;margin-bottom:16px}
-h3{font-size:1.1rem;font-weight:600;color:#e0e0e8;margin-bottom:10px}
-.subtitle{opacity:.7;margin-bottom:24px;font-size:1.05rem}
-.cron-display{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:12px;padding:28px;margin-bottom:24px;text-align:center}
-.cron-value{font-family:'Courier New',monospace;font-size:2.2rem;font-weight:700;color:#00ff88;letter-spacing:6px;margin-bottom:10px;word-break:break-all}
-.cron-explain{font-size:1rem;opacity:.8;margin-bottom:16px;color:#ccc}
-.cron-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.btn{font-family:'Inter',sans-serif;font-size:.85rem;padding:10px 20px;border-radius:8px;border:1px solid #2a2a3e;background:#1a1a2e;color:#e0e0e8;cursor:pointer;transition:all .2s}
-.btn:hover{border-color:#00ff88;color:#00ff88}
-.btn.primary{background:#00ff88;color:#0a0a0f;border-color:#00ff88;font-weight:600}
-.btn.primary:hover{background:#00e07a}
-.manual-input{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:10px;padding:20px;margin-bottom:24px}
-.manual-input label{font-size:.9rem;font-weight:600;margin-bottom:8px;display:block;color:#aaa}
-.manual-row{display:flex;gap:10px}
-.manual-row input{flex:1;font-family:'Courier New',monospace;font-size:1.1rem;padding:12px;border-radius:8px;border:1px solid #2a2a3e;background:#12121a;color:#e0e0e8}
-.manual-row input:focus{outline:none;border-color:#00ff88}
-.error-msg{color:#ff4466;font-size:.85rem;margin-top:8px;display:none}
-.presets{margin-bottom:24px}
-.presets h3{font-size:1rem;margin-bottom:12px;color:#00ccff}
-.preset-grid{display:flex;flex-wrap:wrap;gap:8px}
-.preset-btn{font-family:'Inter',sans-serif;font-size:.8rem;padding:8px 16px;border-radius:20px;border:1px solid #2a2a3e;background:#12121a;color:#e0e0e8;cursor:pointer;transition:all .2s}
-.preset-btn:hover{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,.05)}
-.builder{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}
-.field{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:10px;padding:18px}
-.field label{display:block;font-size:.75rem;font-weight:600;text-change:uppercase;color:#00ff88;margin-bottom:8px;letter-spacing:.5px}
-.field select,.field input[type="text"]{width:100%;font-family:'Inter',sans-serif;font-size:.9rem;padding:10px" 12px;border-radius:8px;border:1px solid #2a2a3e;background:#12121a;color:#e0e0e8}
-.field select:focus,.field input:focus{outline:none;border-color:#00ff88}
-.field .custom-input{margin-top:8px}
-.field .hint{font-size:.7rem;color:#666;margin-top:6px}
-.results{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-.result-card{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:10px;padding:22px}
-.result-card h3{font-size:.95rem;color:#00ccff;margin-bottom:14px}
-.run-time{padding:8px 0;border-bottom:1px solid #2a2a3e;font-size:.85rem;font-family:'Courier New',monospace;display:flex;justify-content:space-between;align-items:center}
-.run-time:last-child{border-bottom:none}
-.run-time .idx{color:#00ff88;font-weight:600;margin-right:10px;min-width:24px}
-.cheat-sheet{width:100%;border-collapse:collapse;margin:16px 0;font-size:.85rem}
-.cheat-sheet th,.cheat-sheet td{padding:10px 14px;border:1px solid #2a2a3e;text-align:left}
-.cheat-sheet th{background:#12121a;color:#00ccff;font-weight:600}
-.cheat-sheet td{background:#1a1a2e}
-.cheat-sheet code{color:#00ff88;font-family:'Courier New',monospace}
-.examples-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
-.example-card{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:8px;padding:14px;cursor:pointer;transition:all .2s}
-.example-card:hover{border-color:#00ff88}
-.example-card code{display:block;color:#00ff88;font-family:'Courier New',monospace;font-size:.9rem;margin-bottom:4px}
-.example-card span{font-size:.8rem;color:#888}
-.info-section{margin-top:48px}
-.info-section h2{font-size:1.4rem;font-weight:600;margin-bottom:16px;color:#fff}
-.info-section h3{font-size:1.15rem;font-weight:600;margin-top:28px;margin-bottom:10px;color:#e0e0e8}
-.info-section p{color:#bbb;margin-bottom:14px;font-size:.95rem}
-.info-section ul{list-style:disc;padding-left:24px;margin-bottom:14px;color:#bbb}
-.info-section ul li{margin-bottom:6px;font-size:.95rem}
-.info-section table{width:100%;border-collapse:collapse;margin:16px 0 24px}
-.info-section table th{text-align:left;padding:10px 14px;background:#12121a;color:#00ccff;font-size:.85rem;font-weight:600;border:1px solid #2a2a3e}
-.info-section table td{padding:10px 14px;background:#1a1a2e;border:1px solid #2a2a3e;font-size:.85rem;color:#ccc}
-.faq-section{margin-top:40px}
-.faq-section h2{font-size:1.4rem;font-weight:600;margin-bottom:20px;color:#fff}
-.faq-item{background:#1a1a2e;border-radius:10px;padding:20px 24px;margin-bottom:12px;border:1px solid #2a2a3e;cursor:pointer;transition:border-color .2s}
-.faq-item:hover{border-color:#00ccff}
-.faq-item h3{font-size:1rem;font-weight:600;color:#00ccff;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
-.faq-item h3::after{content:"+";font-size:1.2rem;color:#888}
-.faq-item.open h3::after{content:"-"}
-.faq-item p{color:#bbb;font-size:.95rem;display:none}
-.faq-item.open p{display:block}
-.related-tools{margin-top:40px}
-.related-tools h2{font-size:1.4rem;font-weight:600;margin-bottom:16px;color:#fff}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.tool-link{display:block;background:#1a1a2e;border:1px solid #2a2a3e;border-radius:10px;padding:16px;text-decoration:none;transition:all .2s}
-.tool-link:hover{border-color:#00ff88;text-decoration:none}
-.tool-link span{display:block;color:#fff;font-size:.9rem;font-weight:500;margin-bottom:4px}
-.tool-link small{color:#888;font-size:.75rem}
-footer{background:#12121a;border-top:1px solid #2a2a3e;padding:20px 0;text-align:center;font-size:.85rem;color:#666;margin-top:auto}
-@media(max-width:768px){.builder{grid-template-columns:repeat(2,1fr)}.builder .field:last-child{grid-column:span 2}.results{grid-template-columns:1fr}.examples-grid{grid-template-columns:1fr}h1{font-size:1.5rem}}
+/* 🎨 VIRTUOSO AESTHETIC MASTERY SYSTEM 🎨 */
+/* Renaissance Master-Level Design Excellence with Golden Ratio Precision */
+
+:root {
+    /* Golden Ratio Based Spacing System */
+    --space-xs: 4.9px;
+    --space-sm: 8px;
+    --space-md: 12.9px;
+    --space-lg: 20.9px;
+    --space-xl: 33.9px;
+    --space-xxl: 54.8px;
+
+    /* Golden Ratio Typography Scale */
+    --font-xs: 9.9px;
+    --font-sm: 16px;
+    --font-md: 25.9px;
+    --font-lg: 41.9px;
+    --font-xl: 67.8px;
+
+    /* Renaissance Master Color Palette */
+    --primary: #1a0d33;
+    --surface: #2a1a4a;
+    --surface-light: #3d2961;
+    --border: #4a3478;
+    --border-hover: #5c428f;
+    --text-primary: #f8f6ff;
+    --text-secondary: #d4c8f0;
+    --text-muted: #a690d1;
+    --accent-gold: #d4af37;
+    --accent-emerald: #00d4aa;
+    --accent-gradient: linear-gradient(135deg, #d4af37 0%, #00d4aa 100%);
+    --shadow-soft: rgba(26, 13, 51, 0.15);
+    --shadow-medium: rgba(26, 13, 51, 0.25);
+    --shadow-deep: rgba(26, 13, 51, 0.4);
+    --glow-gold: rgba(212, 175, 55, 0.2);
+    --glow-emerald: rgba(0, 212, 170, 0.15);
+
+    /* Golden Ratio Proportions */
+    --golden-ratio: 1.618033988749;
+    --golden-width: 61.8%;
+    --golden-complement: 38.2%;
+    --border-radius: calc(var(--space-sm) * var(--golden-ratio));
+    --border-radius-lg: calc(var(--space-md) * var(--golden-ratio));
+}
+
+/* ✨ VIRTUOSO BASE STYLES ✨ */
+*,*::before,*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--primary) 0%, #0f051a 100%);
+    color: var(--text-primary);
+    line-height: var(--golden-ratio);
+    min-height: 100vh;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 🏛️ ARCHITECTURAL LAYOUT WITH GOLDEN PROPORTIONS 🏛️ */
+.container {
+    max-width: min(1200px, 90vw);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg);
+    position: relative;
+}
+
+.container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 70%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 212, 170, 0.02) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 🎭 MASTERPIECE TYPOGRAPHY HIERARCHY 🎭 */
+h1 {
+    font-size: clamp(var(--font-lg), 5vw, var(--font-xl));
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: calc(1 / var(--golden-ratio));
+    margin-bottom: var(--space-lg);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px var(--glow-gold);
+    position: relative;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: calc(-1 * var(--space-sm));
+    left: 0;
+    width: var(--golden-width);
+    height: 2px;
+    background: var(--accent-gradient);
+    border-radius: 1px;
+    box-shadow: 0 0 10px var(--glow-emerald);
+}
+
+h2 {
+    font-size: var(--font-md);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: var(--space-xxl) 0 var(--space-lg);
+    color: var(--accent-gold);
+    position: relative;
+    padding-bottom: var(--space-md);
+}
+
+h2::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -4px;
+    width: 4px;
+    height: calc(100% + 4px);
+    background: var(--accent-gradient);
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+h3 {
+    font-size: var(--font-sm);
+    font-weight: 500;
+    margin: var(--space-xl) 0 var(--space-md);
+    color: var(--accent-emerald);
+    letter-spacing: -0.005em;
+}
+
+/* 📖 REFINED TEXT ELEMENTS 📖 */
+p {
+    margin-bottom: var(--space-lg);
+    color: var(--text-secondary);
+    line-height: var(--golden-ratio);
+}
+
+p:first-of-type {
+    font-size: calc(var(--font-sm) * 1.1);
+    color: var(--text-primary);
+    font-weight: 450;
+}
+
+/* 🎨 VIRTUOSO INTERACTIVE ELEMENTS 🎨 */
+.calculator-card {
+    background: linear-gradient(145deg, var(--surface) 0%, var(--surface-light) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-xl);
+    margin: var(--space-xl) 0;
+    box-shadow:
+        0 8px 32px var(--shadow-medium),
+        0 2px 8px var(--shadow-soft),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.calculator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent-gradient);
+    opacity: 0.3;
+}
+
+.calculator-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+    box-shadow:
+        0 12px 48px var(--shadow-deep),
+        0 4px 16px var(--shadow-medium),
+        0 0 20px var(--glow-emerald);
+}
+
+/* 🔘 MASTERPIECE FORM ELEMENTS 🔘 */
+.form-group {
+    margin-bottom: var(--space-lg);
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: var(--font-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    font-weight: 450;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(10px);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    box-shadow:
+        0 0 0 3px var(--glow-gold),
+        0 4px 16px var(--shadow-medium);
+    transform: scale(1.01);
+}
+
+/* 🎯 VIRTUOSO BUTTON MASTERY 🎯 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md) var(--space-xl);
+    background: var(--accent-gradient);
+    color: var(--primary);
+    font-weight: 600;
+    font-size: var(--font-sm);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: var(--font-xs);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+    transition: left 0.6s;
+}
+
+.btn:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow:
+        0 8px 24px rgba(212, 175, 55, 0.3),
+        0 2px 8px var(--shadow-medium);
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* 📊 VIRTUOSO DATA VISUALIZATION 📊 */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin: var(--space-xl) 0;
+}
+
+.result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent-gradient);
+}
+
+.result-value {
+    font-size: var(--font-md);
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-sm);
+}
+
+.result-label {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* 📱 RESPONSIVE MASTERY 📱 */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+
+    h1 {
+        font-size: var(--font-lg);
+    }
+}
+
+/* ✨ VIRTUOSO ANIMATIONS ✨ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.fade-in {
+    animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* 🎨 MASTERPIECE FINISHING TOUCHES 🎨 */
+::selection {
+    background: var(--accent-gold);
+    color: var(--primary);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-gradient);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-gold);
+}
+
+/* 🏆 VIRTUOSO EXCELLENCE COMPLETE 🏆 */
 </style>
 </head>
 <body>
@@ -160,34 +461,34 @@ footer{background:#12121a;border-top:1px solid #2a2a3e;padding:20px 0;text-align
 <div class="cron-display">
 <div class="cron-value" id="cronValue">* * * * *</div>
 <div class="cron-explain" id="cronExplain">Every minute</div>
-<div class="cron-actions"><button class="btn primary" onclick="copyCron()">Copy Expression</button><button class="btn" onclick="resetBuilder()">Reset</button></div>
+<div class="cron-actions"><button class="btn primary btn" onclick="copyCron()">Copy Expression</button><button class="btn btn" onclick="resetBuilder()">Reset</button></div>
 </div>
 <div class="manual-input">
 <label>Or type a cron expression directly</label>
-<div class="manual-row"><input type="text" id="manualInput" placeholder="* * * * *" value="* * * * *"><button class="btn primary" onclick="parseManual()">Parse</button></div>
+<div class="manual-row"><input type="text" id="manualInput" placeholder="* * * * *" value="* * * * *"><button class="btn primary btn" onclick="parseManual()">Parse</button></div>
 <div class="error-msg" id="parseError"></div>
 </div>
 <div class="presets">
 <h3>Common Presets</h3>
 <div class="preset-grid">
-<button class="preset-btn" onclick="setPreset('*" * * * *')">Every minute</button>
-<button class="preset-btn" onclick="setPreset('*/5" * * * *')">Every 5 min</button>
-<button class="preset-btn" onclick="setPreset('*/15" * * * *')">Every 15 min</button>
-<button class="preset-btn" onclick="setPreset('*/30" * * * *')">Every 30 min</button>
-<button class="preset-btn" onclick="setPreset('0" * * * *')">Every hour</button>
-<button class="preset-btn" onclick="setPreset('0" */2 * * *')">Every 2 hours</button>
-<button class="preset-btn" onclick="setPreset('0" */6 * * *')">Every 6 hours</button>
-<button class="preset-btn" onclick="setPreset('0" */12 * * *')">Every 12 hours</button>
-<button class="preset-btn" onclick="setPreset('0" 0 * * *')">Daily midnight</button>
-<button class="preset-btn" onclick="setPreset('0" 9 * * *')">Daily 9 AM</button>
-<button class="preset-btn" onclick="setPreset('0" 9 * * 1-5')">Weekdays 9 AM</button>
-<button class="preset-btn" onclick="setPreset('0" 0 * * 0')">Weekly Sunday</button>
-<button class="preset-btn" onclick="setPreset('0" 0 * * 1')">Weekly Monday</button>
-<button class="preset-btn" onclick="setPreset('0" 0 1 * *')">Monthly 1st</button>
-<button class="preset-btn" onclick="setPreset('0" 0 15 * *')">Monthly 15th</button>
-<button class="preset-btn" onclick="setPreset('0" 0 1,15 * *')">1st and 15th</button>
-<button class="preset-btn" onclick="setPreset('0" 0 1 1 *')">Yearly Jan 1</button>
-<button class="preset-btn" onclick="setPreset('0" 0 1 */3 *')">Quarterly</button>
+<button class="preset-btn btn" onclick="setPreset('*" * * * *')">Every minute</button>
+<button class="preset-btn btn" onclick="setPreset('*/5" * * * *')">Every 5 min</button>
+<button class="preset-btn btn" onclick="setPreset('*/15" * * * *')">Every 15 min</button>
+<button class="preset-btn btn" onclick="setPreset('*/30" * * * *')">Every 30 min</button>
+<button class="preset-btn btn" onclick="setPreset('0" * * * *')">Every hour</button>
+<button class="preset-btn btn" onclick="setPreset('0" */2 * * *')">Every 2 hours</button>
+<button class="preset-btn btn" onclick="setPreset('0" */6 * * *')">Every 6 hours</button>
+<button class="preset-btn btn" onclick="setPreset('0" */12 * * *')">Every 12 hours</button>
+<button class="preset-btn btn" onclick="setPreset('0" 0 * * *')">Daily midnight</button>
+<button class="preset-btn btn" onclick="setPreset('0" 9 * * *')">Daily 9 AM</button>
+<button class="preset-btn btn" onclick="setPreset('0" 9 * * 1-5')">Weekdays 9 AM</button>
+<button class="preset-btn btn" onclick="setPreset('0" 0 * * 0')">Weekly Sunday</button>
+<button class="preset-btn btn" onclick="setPreset('0" 0 * * 1')">Weekly Monday</button>
+<button class="preset-btn btn" onclick="setPreset('0" 0 1 * *')">Monthly 1st</button>
+<button class="preset-btn btn" onclick="setPreset('0" 0 15 * *')">Monthly 15th</button>
+<button class="preset-btn btn" onclick="setPreset('0" 0 1,15 * *')">1st and 15th</button>
+<button class="preset-btn btn" onclick="setPreset('0" 0 1 1 *')">Yearly Jan 1</button>
+<button class="preset-btn btn" onclick="setPreset('0" 0 1 */3 *')">Quarterly</button>
 </div>
 </div>
 <div class="builder" id="builder">
@@ -197,7 +498,7 @@ footer{background:#12121a;border-top:1px solid #2a2a3e;padding:20px 0;text-align
 <div class="field"><label>Month (1-12)</label><select id="fMonType" onchange="updateCron()"><option value="*">Every month</option><option value="*/n">Every N months</option><option value="specific">Specific</option><option value="range">Range</option></select><div class="custom-input"><input type="text" id="fMon" value="*" onchange="updateCron()" placeholder="e.g. 1, 1,6"></div><div class="hint">1-12 or */N</div></div>
 <div class="field"><label>Day of Week (0-6)</label><select id="fDowType" onchange="updateCron()"><option value="*">Every day</option><option value="specific">Specific</option><option value="range">Range</option></select><div class="custom-input"><input type="text" id="fDow" value="*" onchange="updateCron()" placeholder="e.g. 1-5, 0,6"></div><div class="hint">0="Sun," 6="Sat</div"></div>
 </div>
-<div class="results">
+<div class="results results-grid fade-in">
 <div class="result-card"><h3>Next 10 Run Times</h3><div id="runTimes"></div></div>
 <div class="result-card"><h3>Expression Breakdown</h3><div id="breakdown"></div></div>
 </div>

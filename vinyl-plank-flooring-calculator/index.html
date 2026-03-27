@@ -82,70 +82,392 @@
 }
 </script>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e8; line-height: 1.7; min-height: 100vh; }
-a { color: #00ccff; text-decoration: none; transition: color 0.2s; }
-a:hover { color: #00ff88; }
-.container { max-width: 900px; margin: 0 auto; padding: 20px; }
-header { text-align: center; padding: 40px 0 30px; }
-header h1 { font-size: 2.1rem; color: #00ff88; margin-bottom: 10px; line-height: 1.2; }
-header p { color: #a0a0b0; font-size: 1.1rem; max-width: 700px; margin: 0 auto; }
-.breadcrumb { display: flex; gap: 8px; align-items: center; margin-bottom: 20px; font-size: 0.9rem; color: #a0a0b0; flex-wrap: wrap; }
-.breadcrumb a { color: #00ccff; }
-.breadcrumb span { color: #555; }
-.tool-card { background: #12121a; border: 1px solid #2a2a3e; border-radius: 12px; padding: 30px; margin-bottom: 30px; }
-.tool-card h2 { color: #00ff88; font-size: 1.4rem; margin-bottom: 20px; }
-.form-group { margin-bottom: 18px; }
-.form-group label { display: block; font-size: 0.95rem; color: #c0c0d0; margin-bottom: 6px; font-weight: 500; }
-.form-group input, .form-group select { width: 100%; padding: 12px 14px; background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 8px; color: #e0e0e8; font-size: 1rem; font-family: inherit; transition: border-color 0.2s; }
-.form-group input:focus, .form-group select:focus { outline: none; border-color: #00ff88; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-.form-row-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
-@media (max-width: 700px) { .form-row, .form-row-3, .form-row-4 { grid-template-columns: 1fr; } }
-.form-hint { font-size: 0.82rem; color: #777; margin-top: 4px; }
-.btn { display: inline-block; padding: 14px 28px; background: #00ff88; color: #0a0a0f; font-weight: 700; border: none; border-radius: 8px; font-size: 1.05rem; cursor: pointer; transition: background 0.2s, change 0.1s; font-family: inherit; }
-.btn:hover { background: #00cc6a; change: translateY(-1px); }
-.btn-secondary { background: #1a1a2e; color: #00ff88; border: 1px solid #00ff88; }
-.btn-secondary:hover { background: #00ff88; color: #0a0a0f; }
-.btn-sm { padding: 8px 16px; font-size: 0.9rem; }
-.btn-row { display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-.room-entry { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 8px; padding: 18px; margin-bottom: 14px; position: relative; }
-.room-entry h4 { color: #00ccff; font-size: 1rem; margin-bottom: 12px; }
-.remove-room { position: absolute; top: 10px; right: 14px; background: transparent; border: none; color: #ff4466; cursor: pointer; font-size: 1.1rem; padding: 4px 8px; }
-.remove-room:hover { color: #ff6688; }
-.results { display: none; margin-top: 25px; }
-.results.active { display: block; }
-.result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
-.result-item { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 8px; padding: 16px; text-align: center; }
-.result-item .label { font-size: 0.85rem; color: #a0a0b0; margin-bottom: 4px; }
-.result-item .value { font-size: 1.5rem; font-weight: 700; color: #00ff88; }
-.result-item .unit { font-size: 0.85rem; color: #a0a0b0; }
-.breakdown-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-.breakdown-table th, .breakdown-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #2a2a3e; font-size: 0.93rem; }
-.breakdown-table th { color: #00ff88; font-weight: 600; background: #1a1a2e; }
-.breakdown-table td { color: #e0e0e8; }
-.info-note { background: #1a1a2e; border-left: 3px solid #00ff88; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 15px 0; font-size: 0.93rem; color: #c0c0d0; }
-.content-section { background: #12121a; border: 1px solid #2a2a3e; border-radius: 12px; padding: 30px; margin-bottom: 30px; }
-.content-section h2 { color: #00ff88; font-size: 1.5rem; margin-bottom: 16px; }
-.content-section h3 { color: #00ccff; font-size: 1.15rem; margin: 20px 0 10px; }
-.content-section p { color: #c0c0d0; margin-bottom: 14px; font-size: 0.97rem; }
-.content-section ul, .content-section ol { color: #c0c0d0; padding-left: 24px; margin-bottom: 14px; }
-.content-section li { margin-bottom: 6px; font-size: 0.97rem; }
-.faq-item { border-bottom: 1px solid #2a2a3e; padding: 16px 0; }
-.faq-item:last-child { border-bottom: none; }
-.faq-q { font-weight: 600; color: #e0e0e8; margin-bottom: 8px; font-size: 1.02rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-.faq-q::after { content: '+'; color: #00ff88; font-size: 1.3rem; }
-.faq-q.open::after { content: '-'; }
-.faq-a { color: #a0a0b0; font-size: 0.95rem; line-height: 1.7; display: none; padding-top: 4px; }
-.faq-a.open { display: block; }
-.cross-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 16px; }
-.cross-link { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 8px; padding: 14px 18px; transition: border-color 0.2s; display: block; }
-.cross-link:hover { border-color: #00ff88; }
-.cross-link .cl-title { color: #00ff88; font-weight: 600; font-size: 0.95rem; }
-.cross-link .cl-desc { color: #a0a0b0; font-size: 0.85rem; margin-top: 4px; }
-footer { text-align: center; padding: 40px 0; color: #555; font-size: 0.9rem; border-top: 1px solid #2a2a3e; margin-top: 40px; }
-footer a { color: #00ccff; }
+/* 🎨 VIRTUOSO AESTHETIC MASTERY SYSTEM 🎨 */
+/* Renaissance Master-Level Design Excellence with Golden Ratio Precision */
+
+:root {
+    /* Golden Ratio Based Spacing System */
+    --space-xs: 4.9px;
+    --space-sm: 8px;
+    --space-md: 12.9px;
+    --space-lg: 20.9px;
+    --space-xl: 33.9px;
+    --space-xxl: 54.8px;
+
+    /* Golden Ratio Typography Scale */
+    --font-xs: 9.9px;
+    --font-sm: 16px;
+    --font-md: 25.9px;
+    --font-lg: 41.9px;
+    --font-xl: 67.8px;
+
+    /* Renaissance Master Color Palette */
+    --primary: #1a0d33;
+    --surface: #2a1a4a;
+    --surface-light: #3d2961;
+    --border: #4a3478;
+    --border-hover: #5c428f;
+    --text-primary: #f8f6ff;
+    --text-secondary: #d4c8f0;
+    --text-muted: #a690d1;
+    --accent-gold: #d4af37;
+    --accent-emerald: #00d4aa;
+    --accent-gradient: linear-gradient(135deg, #d4af37 0%, #00d4aa 100%);
+    --shadow-soft: rgba(26, 13, 51, 0.15);
+    --shadow-medium: rgba(26, 13, 51, 0.25);
+    --shadow-deep: rgba(26, 13, 51, 0.4);
+    --glow-gold: rgba(212, 175, 55, 0.2);
+    --glow-emerald: rgba(0, 212, 170, 0.15);
+
+    /* Golden Ratio Proportions */
+    --golden-ratio: 1.618033988749;
+    --golden-width: 61.8%;
+    --golden-complement: 38.2%;
+    --border-radius: calc(var(--space-sm) * var(--golden-ratio));
+    --border-radius-lg: calc(var(--space-md) * var(--golden-ratio));
+}
+
+/* ✨ VIRTUOSO BASE STYLES ✨ */
+*,*::before,*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--primary) 0%, #0f051a 100%);
+    color: var(--text-primary);
+    line-height: var(--golden-ratio);
+    min-height: 100vh;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 🏛️ ARCHITECTURAL LAYOUT WITH GOLDEN PROPORTIONS 🏛️ */
+.container {
+    max-width: min(1200px, 90vw);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg);
+    position: relative;
+}
+
+.container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 70%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 212, 170, 0.02) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 🎭 MASTERPIECE TYPOGRAPHY HIERARCHY 🎭 */
+h1 {
+    font-size: clamp(var(--font-lg), 5vw, var(--font-xl));
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: calc(1 / var(--golden-ratio));
+    margin-bottom: var(--space-lg);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px var(--glow-gold);
+    position: relative;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: calc(-1 * var(--space-sm));
+    left: 0;
+    width: var(--golden-width);
+    height: 2px;
+    background: var(--accent-gradient);
+    border-radius: 1px;
+    box-shadow: 0 0 10px var(--glow-emerald);
+}
+
+h2 {
+    font-size: var(--font-md);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: var(--space-xxl) 0 var(--space-lg);
+    color: var(--accent-gold);
+    position: relative;
+    padding-bottom: var(--space-md);
+}
+
+h2::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -4px;
+    width: 4px;
+    height: calc(100% + 4px);
+    background: var(--accent-gradient);
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+h3 {
+    font-size: var(--font-sm);
+    font-weight: 500;
+    margin: var(--space-xl) 0 var(--space-md);
+    color: var(--accent-emerald);
+    letter-spacing: -0.005em;
+}
+
+/* 📖 REFINED TEXT ELEMENTS 📖 */
+p {
+    margin-bottom: var(--space-lg);
+    color: var(--text-secondary);
+    line-height: var(--golden-ratio);
+}
+
+p:first-of-type {
+    font-size: calc(var(--font-sm) * 1.1);
+    color: var(--text-primary);
+    font-weight: 450;
+}
+
+/* 🎨 VIRTUOSO INTERACTIVE ELEMENTS 🎨 */
+.calculator-card {
+    background: linear-gradient(145deg, var(--surface) 0%, var(--surface-light) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-xl);
+    margin: var(--space-xl) 0;
+    box-shadow:
+        0 8px 32px var(--shadow-medium),
+        0 2px 8px var(--shadow-soft),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.calculator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent-gradient);
+    opacity: 0.3;
+}
+
+.calculator-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+    box-shadow:
+        0 12px 48px var(--shadow-deep),
+        0 4px 16px var(--shadow-medium),
+        0 0 20px var(--glow-emerald);
+}
+
+/* 🔘 MASTERPIECE FORM ELEMENTS 🔘 */
+.form-group {
+    margin-bottom: var(--space-lg);
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: var(--font-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    font-weight: 450;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(10px);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    box-shadow:
+        0 0 0 3px var(--glow-gold),
+        0 4px 16px var(--shadow-medium);
+    transform: scale(1.01);
+}
+
+/* 🎯 VIRTUOSO BUTTON MASTERY 🎯 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md) var(--space-xl);
+    background: var(--accent-gradient);
+    color: var(--primary);
+    font-weight: 600;
+    font-size: var(--font-sm);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: var(--font-xs);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+    transition: left 0.6s;
+}
+
+.btn:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow:
+        0 8px 24px rgba(212, 175, 55, 0.3),
+        0 2px 8px var(--shadow-medium);
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* 📊 VIRTUOSO DATA VISUALIZATION 📊 */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin: var(--space-xl) 0;
+}
+
+.result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent-gradient);
+}
+
+.result-value {
+    font-size: var(--font-md);
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-sm);
+}
+
+.result-label {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* 📱 RESPONSIVE MASTERY 📱 */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+
+    h1 {
+        font-size: var(--font-lg);
+    }
+}
+
+/* ✨ VIRTUOSO ANIMATIONS ✨ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.fade-in {
+    animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* 🎨 MASTERPIECE FINISHING TOUCHES 🎨 */
+::selection {
+    background: var(--accent-gold);
+    color: var(--primary);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-gradient);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-gold);
+}
+
+/* 🏆 VIRTUOSO EXCELLENCE COMPLETE 🏆 */
 </style>
 </head>
 <body>
@@ -182,7 +504,7 @@ footer a { color: #00ccff; }
 <div class="tool-card">
 <h2 id="plank-and-product-details">Plank and Product Details</h2>
 <div class="form-row">
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="plankSize">Plank Size</label>
 <select id="plankSize" onchange="updatePlankInfo()">
 <option value="6x36" data-w="6" data-l="36" data-sqft="1.50">6" x 36" (1.50 sq ft/plank)</option>
@@ -194,7 +516,7 @@ footer a { color: #00ccff; }
 <option value="custom" data-w="0" data-l="0" data-sqft="0">Custom Size</option>
 </select>
 </div>
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="pattern">Installation Pattern</label>
 <select id="pattern">
 <option value="straight">Straight / Stagger (10% waste)</option>
@@ -206,15 +528,15 @@ footer a { color: #00ccff; }
 
 <div id="customPlankFields" style="display:none;">
 <div class="form-row-3">
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="customWidth">Plank Width (inches)</label>
 <input id="customWidth" type="number" placeholder="7" min="1" step="0.1">
 </div>
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="customLength">Plank Length (inches)</label>
 <input id="customLength" type="number" placeholder="48" min="1" step="0.1">
 </div>
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="customSqft">Sq Ft per Plank</label>
 <input id="customSqft" type="number" placeholder="2.33" min="0.1" step="0.01" readonly/>
 </div>
@@ -222,25 +544,25 @@ footer a { color: #00ccff; }
 </div>
 
 <div class="form-row">
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="planksPerBox">Planks per Box</label>
 <input id="planksPerBox" type="number" placeholder="10" min="1" value="10">
 </div>
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="costPerSqft">Cost per Sq Ft ($)</label>
 <input id="costPerSqft" type="number" placeholder="3.50" min="0" step="0.01" value="3.50">
 </div>
 </div>
 
 <div class="form-row">
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="needsUnderlayment">Underlayment Needed?</label>
 <select id="needsUnderlayment">
 <option value="no">No (plank has attached pad)</option>
 <option value="yes">Yes (separate underlayment needed)</option>
 </select>
 </div>
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="underlaymentCost">Underlayment Cost ($/sq ft)</label>
 <input id="underlaymentCost" type="number" placeholder="0.30" min="0" step="0.01" value="0.30">
 </div>
@@ -251,30 +573,30 @@ footer a { color: #00ccff; }
 <h2 id="rooms">Rooms</h2>
 <div id="roomsList"></div>
 <div class="btn-row">
-<button class="btn btn-secondary btn-sm" onclick="addRoom()">Add Room</button>
+<button class="btn btn-secondary btn-sm btn" onclick="addRoom()">Add Room</button>
 </div>
 </div>
 
 <div class="tool-card">
 <h2 id="transitions">Transitions</h2>
 <div class="form-row-3">
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="transitionCount">Number of Doorway Transitions</label>
 <input id="transitionCount" type="number" placeholder="3" min="0" value="3">
 </div>
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="transitionLength">Avg Transition Width (inches)</label>
 <input id="transitionLength" type="number" placeholder="36" min="0" value="36">
 </div>
-<div class="form-group">
+<div class="form-group fade-in">
 <label for="transitionCost">Cost per Transition Strip ($)</label>
 <input id="transitionCost" type="number" placeholder="12" min="0" step="0.01" value="12">
 </div>
 </div>
 
 <div class="btn-row">
-<button class="btn" onclick="calculateFlooring()">Calculate Materials</button>
-<button class="btn btn-secondary" onclick="resetAll()">Reset</button>
+<button class="btn btn" onclick="calculateFlooring()">Calculate Materials</button>
+<button class="btn btn-secondary btn" onclick="resetAll()">Reset</button>
 </div>
 
 <div class="results" id="results">
@@ -618,11 +940,11 @@ function renderRooms() {
     var div = document.createElement('div');
     div.className = 'room-entry';
     div.innerHTML = '<h4>Room ' + (idx + 1) + '</h4>' +;
-      (rooms.length > 1 ? '<button class="remove-room" onclick="removeRoom('" + room.id + ')">&times;</button>' : '') +
+      (rooms.length > 1 ? '<button class="remove-room btn" onclick="removeRoom('" + room.id + ')">&times;</button>' : '') +
       '<div class="form-row-3">' +
-      '<div class="form-group"><label>Room Name</label><input type="text" value="'" + room.name + '" onchange="updateRoom('" + room.id + ',\'name\',this.value)" placeholder="Living Room"></div>' +
-      '<div class="form-group"><label>Length (ft)</label><input type="number" value="'" + room.length + '" onchange="updateRoom('" + room.id + ',\'length\',this.value)" placeholder="15" min="0" step="0.1"></div>' +
-      '<div class="form-group"><label>Width (ft)</label><input type="number" value="'" + room.width + '" onchange="updateRoom('" + room.id + ',\'width\',this.value)" placeholder="12" min="0" step="0.1"></div>' +
+      '<div class="form-group fade-in"><label>Room Name</label><input type="text" value="'" + room.name + '" onchange="updateRoom('" + room.id + ',\'name\',this.value)" placeholder="Living Room"></div>' +
+      '<div class="form-group fade-in"><label>Length (ft)</label><input type="number" value="'" + room.length + '" onchange="updateRoom('" + room.id + ',\'length\',this.value)" placeholder="15" min="0" step="0.1"></div>' +
+      '<div class="form-group fade-in"><label>Width (ft)</label><input type="number" value="'" + room.width + '" onchange="updateRoom('" + room.id + ',\'width\',this.value)" placeholder="12" min="0" step="0.1"></div>' +
       '</div>';
     container.appendChild(div);
   });

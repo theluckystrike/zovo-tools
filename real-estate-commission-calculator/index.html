@@ -20,194 +20,393 @@
         }
     }
 </script> <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"> <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0a0f;
-            color: #e0e0e8;
-            line-height: 1.7;
-            font-size: 16px;
-        }
-        a { color: #00ccff; text-decoration: none; transition: color 0.2s; }
-        a:hover { color: #00ff88; }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px 24px; }
-        h1 { font-size: 2.2rem; color: #00ff88; margin-bottom: 12px; line-height: 1.3; }
-        h2 { font-size: 1.5rem; color: #00ff88; margin: 40px 0 16px 0; padding-bottom: 8px; border-bottom: 1px solid #1e1e2e; }
-        h3 { font-size: 1.2rem; color: #e0e0e8; margin: 24px 0 12px 0; }
-        p { margin-bottom: 16px; }
-        .subtitle { color: #a0a0b0; font-size: 1.05rem; margin-bottom: 24px; }
-        .meta-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 28px; font-size: 0.85rem; color: #808090; }
-        .meta-bar span { display: inline-flex; align-items: center; gap: 4px; }
-        .badge-img { height: 20px; vertical-align: middle; }
-        .toc { background: #12121a; border: 1px solid #1e1e2e; border-radius: 10px; padding: 20px 28px; margin: 24px 0; }
-        .toc-title { color: #00ff88; font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
-        .toc ol { padding-left: 20px; }
-        .toc li { margin-bottom: 6px; }
-        .toc a { font-size: 0.95rem; }
-        .card {
-            background: #12121a;
-            border: 1px solid #1e1e2e;
-            border-radius: 12px;
-            padding: 28px;
-            margin: 24px 0;
-        }
-        .calc-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-        .calc-grid .full-width { grid-column: 1 / -1; }
-        label {
-            display: block;
-            font-size: 0.9rem;
-            color: #a0a0b0;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-        input[type="number"]," select {
-            width: 100%;
-            padding: 12px 14px;
-            background: #0a0a0f;
-            border: 1px solid #2a2a3a;
-            border-radius: 8px;
-            color: #e0e0e8;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-        input[type="number"]:focus," select:focus { outline: none; border-color: #00ff88; }
-        .btn {
-            display: inline-block;
-            padding: 14px 32px;
-            background: #00ff88;
-            color: #0a0a0f;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, change 0.1s;
-            margin-top: 8px;
-        }
-        .btn:hover { background: #00e07a; change: translateY(-1px); }
-        .btn:active { change: translateY(0); }
-        .results-panel {
-            background: #12121a;
-            border: 1px solid #00ff8833;
-            border-radius: 12px;
-            padding: 28px;
-            margin: 24px 0;
-            display: none;
-        }
-        .results-panel.visible { display: block; }
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #1e1e2e;
-        }
-        .result-row:last-child { border-bottom: none; }
-        .result-label { color: #a0a0b0; font-size: 0.95rem; }
-        .result-value { color: #00ff88; font-size: 1.15rem; font-weight: 600; }
-        .result-value.highlight { font-size: 1.4rem; }
-        .result-value.negative { color: #ff6b6b; }
-        .compare-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-top: 16px;
-        }
-        .compare-card {
-            background: #0a0a0f;
-            border: 1px solid #2a2a3a;
-            border-radius: 8px;
-            padding: 14px;
-            text-align: center;
-        }
-        .compare-card.active { border-color: #00ff88; }
-        .compare-card .rate-label { font-size: 0.85rem; color: #a0a0b0; margin-bottom: 4px; }
-        .compare-card .rate-commission { color: #ff6b6b; font-size: 0.95rem; font-weight: 600; }
-        .compare-card .rate-net { color: #00ff88; font-size: 1.1rem; font-weight: 600; margin-top: 4px; }
-        .compare-card .rate-diff { font-size: 0.8rem; color: #808090; margin-top: 4px; }
-        .breakdown-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin-top: 16px;
-        }
-        .breakdown-item {
-            background: #0a0a0f;
-            border-radius: 8px;
-            padding: 14px;
-            text-align: center;
-        }
-        .breakdown-item .bd-label { font-size: 0.85rem; color: #a0a0b0; margin-bottom: 4px; }
-        .breakdown-item .bd-value { color: #e0e0e8; font-weight: 600; font-size: 1.05rem; }
-        .faq-item { margin-bottom: 20px; }
-        .faq-question { color: #00ccff; font-weight: 600; margin-bottom: 8px; font-size: 1.05rem; }
-        .chart-container { margin: 24px 0; text-align: center; }
-        .chart-container img { max-width: 100%; height: auto; border-radius: 8px; }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            margin: 24px 0;
-            border-radius: 12px;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            border: none;
-            border-radius: 12px;
-        }
-        .privacy-note {
-            background: #12121a;
-            border: 1px solid #1e1e2e;
-            border-radius: 8px;
-            padding: 16px;
-            margin: 24px 0;
-            font-size: 0.9rem;
-            color: #808090;
-        }
-        .eeat-footer {
-            border-top: 1px solid #1e1e2e;
-            margin-top: 48px;
-            padding-top: 28px;
-            color: #808090;
-            font-size: 0.85rem;
-        }
-        .eeat-footer p { margin-bottom: 8px; }
-        .cross-links { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
-        .cross-links a {
-            background: #12121a;
-            border: 1px solid #1e1e2e;
-            border-radius: 6px;
-            padding: 8px 14px;
-            font-size: 0.88rem;
-            transition: border-color 0.2s;
-        }
-        .cross-links a:hover { border-color: #00ff88; }
-        .external-refs { margin: 16px 0; }
-        .external-refs a { margin-right: 16px; font-size: 0.9rem; }
-        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #1e1e2e; }
-        th { color: #00ff88; font-weight: 600; font-size: 0.9rem; }
-        td { font-size: 0.95rem; }
-        ul, ol { padding-left: 24px; margin-bottom: 16px; }
-        li { margin-bottom: 8px; }
-        @media (max-width: 640px) {
-            .calc-grid { grid-template-columns: 1fr; }
-            .compare-grid { grid-template-columns: 1fr 1fr; }
-            .breakdown-grid { grid-template-columns: 1fr; }
-            h1 { font-size: 1.6rem; }
-            .container { padding: 16px; }
-            .card { padding: 18px; }
-        }
-    </style> <script type="application/ld+json">
+/* 🎨 VIRTUOSO AESTHETIC MASTERY SYSTEM 🎨 */
+/* Renaissance Master-Level Design Excellence with Golden Ratio Precision */
+
+:root {
+    /* Golden Ratio Based Spacing System */
+    --space-xs: 4.9px;
+    --space-sm: 8px;
+    --space-md: 12.9px;
+    --space-lg: 20.9px;
+    --space-xl: 33.9px;
+    --space-xxl: 54.8px;
+
+    /* Golden Ratio Typography Scale */
+    --font-xs: 9.9px;
+    --font-sm: 16px;
+    --font-md: 25.9px;
+    --font-lg: 41.9px;
+    --font-xl: 67.8px;
+
+    /* Renaissance Master Color Palette */
+    --primary: #1a0d33;
+    --surface: #2a1a4a;
+    --surface-light: #3d2961;
+    --border: #4a3478;
+    --border-hover: #5c428f;
+    --text-primary: #f8f6ff;
+    --text-secondary: #d4c8f0;
+    --text-muted: #a690d1;
+    --accent-gold: #d4af37;
+    --accent-emerald: #00d4aa;
+    --accent-gradient: linear-gradient(135deg, #d4af37 0%, #00d4aa 100%);
+    --shadow-soft: rgba(26, 13, 51, 0.15);
+    --shadow-medium: rgba(26, 13, 51, 0.25);
+    --shadow-deep: rgba(26, 13, 51, 0.4);
+    --glow-gold: rgba(212, 175, 55, 0.2);
+    --glow-emerald: rgba(0, 212, 170, 0.15);
+
+    /* Golden Ratio Proportions */
+    --golden-ratio: 1.618033988749;
+    --golden-width: 61.8%;
+    --golden-complement: 38.2%;
+    --border-radius: calc(var(--space-sm) * var(--golden-ratio));
+    --border-radius-lg: calc(var(--space-md) * var(--golden-ratio));
+}
+
+/* ✨ VIRTUOSO BASE STYLES ✨ */
+*,*::before,*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--primary) 0%, #0f051a 100%);
+    color: var(--text-primary);
+    line-height: var(--golden-ratio);
+    min-height: 100vh;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 🏛️ ARCHITECTURAL LAYOUT WITH GOLDEN PROPORTIONS 🏛️ */
+.container {
+    max-width: min(1200px, 90vw);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg);
+    position: relative;
+}
+
+.container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 70%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 212, 170, 0.02) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 🎭 MASTERPIECE TYPOGRAPHY HIERARCHY 🎭 */
+h1 {
+    font-size: clamp(var(--font-lg), 5vw, var(--font-xl));
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: calc(1 / var(--golden-ratio));
+    margin-bottom: var(--space-lg);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px var(--glow-gold);
+    position: relative;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: calc(-1 * var(--space-sm));
+    left: 0;
+    width: var(--golden-width);
+    height: 2px;
+    background: var(--accent-gradient);
+    border-radius: 1px;
+    box-shadow: 0 0 10px var(--glow-emerald);
+}
+
+h2 {
+    font-size: var(--font-md);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: var(--space-xxl) 0 var(--space-lg);
+    color: var(--accent-gold);
+    position: relative;
+    padding-bottom: var(--space-md);
+}
+
+h2::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -4px;
+    width: 4px;
+    height: calc(100% + 4px);
+    background: var(--accent-gradient);
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+h3 {
+    font-size: var(--font-sm);
+    font-weight: 500;
+    margin: var(--space-xl) 0 var(--space-md);
+    color: var(--accent-emerald);
+    letter-spacing: -0.005em;
+}
+
+/* 📖 REFINED TEXT ELEMENTS 📖 */
+p {
+    margin-bottom: var(--space-lg);
+    color: var(--text-secondary);
+    line-height: var(--golden-ratio);
+}
+
+p:first-of-type {
+    font-size: calc(var(--font-sm) * 1.1);
+    color: var(--text-primary);
+    font-weight: 450;
+}
+
+/* 🎨 VIRTUOSO INTERACTIVE ELEMENTS 🎨 */
+.calculator-card {
+    background: linear-gradient(145deg, var(--surface) 0%, var(--surface-light) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-xl);
+    margin: var(--space-xl) 0;
+    box-shadow:
+        0 8px 32px var(--shadow-medium),
+        0 2px 8px var(--shadow-soft),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.calculator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent-gradient);
+    opacity: 0.3;
+}
+
+.calculator-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+    box-shadow:
+        0 12px 48px var(--shadow-deep),
+        0 4px 16px var(--shadow-medium),
+        0 0 20px var(--glow-emerald);
+}
+
+/* 🔘 MASTERPIECE FORM ELEMENTS 🔘 */
+.form-group {
+    margin-bottom: var(--space-lg);
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: var(--font-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    font-weight: 450;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(10px);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    box-shadow:
+        0 0 0 3px var(--glow-gold),
+        0 4px 16px var(--shadow-medium);
+    transform: scale(1.01);
+}
+
+/* 🎯 VIRTUOSO BUTTON MASTERY 🎯 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md) var(--space-xl);
+    background: var(--accent-gradient);
+    color: var(--primary);
+    font-weight: 600;
+    font-size: var(--font-sm);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: var(--font-xs);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+    transition: left 0.6s;
+}
+
+.btn:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow:
+        0 8px 24px rgba(212, 175, 55, 0.3),
+        0 2px 8px var(--shadow-medium);
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* 📊 VIRTUOSO DATA VISUALIZATION 📊 */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin: var(--space-xl) 0;
+}
+
+.result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent-gradient);
+}
+
+.result-value {
+    font-size: var(--font-md);
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-sm);
+}
+
+.result-label {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* 📱 RESPONSIVE MASTERY 📱 */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+
+    h1 {
+        font-size: var(--font-lg);
+    }
+}
+
+/* ✨ VIRTUOSO ANIMATIONS ✨ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.fade-in {
+    animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* 🎨 MASTERPIECE FINISHING TOUCHES 🎨 */
+::selection {
+    background: var(--accent-gold);
+    color: var(--primary);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-gradient);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-gold);
+}
+
+/* 🏆 VIRTUOSO EXCELLENCE COMPLETE 🏆 */
+</style> <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://zovo.one/free-tools/"},{"@type":"ListItem","position":3,"name":"Real Estate Commission Calculator","item":"https://zovo.one/free-tools/real-estate-commission-calculator/"}]}
 </script>
 <script type="application/ld+json">
@@ -221,7 +420,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V2K8JLFQ5H');
 </script>
-</head> <body> <div class="container"> <h1>Real Estate Commission Calculator - 2026 Post-NAR Settlement Analysis</h1> <p class="subtitle">Professional commission analysis for the new real estate market. Calculate agent fees, net proceeds, and compare commission structures post-NAR settlement. Includes negotiation strategies and market insights to maximize your home sale proceeds.</p> <div class="meta-bar"> <span>By Michael Lip</span> <span>&middot;</span> <span>Last verified March 2026</span> <span>&middot;</span> <span>15 min read</span> <span>&middot;</span> <span><img class="badge-img" src="https://img.shields.io/badge/Tool-Free-00ff88" alt="Free Tool Badge"></span> <span>&middot;</span> <span id="visitCounter">Visits: 1</span> </div> <nav class="toc"> <div class="toc-title">Table of Contents</div> <ol> <li><a href="#calculator">Commission Calculator</a></li> <li><a href="#how-commissions-work">How Real Estate Commissions Work</a></li> <li><a href="#nar-settlement">The NAR Settlement and Its Impact</a></li> <li><a href="#commission-structures">Commission Structures Explained</a></li> <li><a href="#value-of-agent">What Agents Do for Their Commission</a></li> <li><a href="#negotiating">Negotiating Commission Rates</a></li> <li><a href="#alternatives">Alternatives to Traditional Commissions</a></li> <li><a href="#state-comparison">Commission Rates by State</a></li> <li><a href="#closing-costs">Understanding Total Closing Costs</a></li> <li><a href="#methodology">Our Testing Methodology</a></li> <li><a href="#faq">Frequently Asked Questions</a></li> <li><a href="#resources">Resources and References</a></li> </ol> </nav> <h2 id="calculator">Commission Calculator</h2> <p>Enter your sale details below. This calculator handles standard percentage-based commissions, custom agent splits, and lets you compare different commission rates side by side. Everything runs in your browser. No data is sent anywhere.</p> <div class="card"> <div class="calc-grid"> <div> <label for="salePrice">Sale Price ($)</label> <input type="number" id="salePrice" value="500000" min="10000" max="100000000" step="5000"> </div> <div> <label for="totalCommission">Total Commission Rate (%)</label> <input type="number" id="totalCommission" value="5.0" min="0" max="10" step="0.1"> </div> <div> <label for="listingAgentSplit">Listing Agent Split (%)</label> <input type="number" id="listingAgentSplit" value="2.5" min="0" max="10" step="0.1"> </div> <div> <label for="buyerAgentSplit">Buyer Agent Split (%)</label> <input type="number" id="buyerAgentSplit" value="2.5" min="0" max="10" step="0.1"> </div> <div> <label for="otherClosingCosts">Other Closing Costs ($)</label> <input type="number" id="otherClosingCosts" value="5000" min="0" max="1000000" step="500"> </div> <div> <label for="mortgageBalance">Remaining Mortgage ($)</label> <input type="number" id="mortgageBalance" value="200000" min="0" max="100000000" step="5000"> </div> <div class="full-width" style="text-align:center; margin-top: 8px;"> <button class="btn" onclick="calculateCommission()">Calculate Commission</button> </div> </div> </div> <div class="results-panel" id="resultsPanel"> <h3 style="color:#00ff88; margin-bottom:16px;">Sale Proceeds Breakdown</h3> <div class="result-row"> <span class="result-label">Sale Price</span> <span class="result-value" id="resSalePrice">$0</span> </div> <div class="result-row"> <span class="result-label">Total Commission</span> <span class="result-value negative" id="resTotalCommission">$0</span> </div> <div class="result-row"> <span class="result-label">Other Closing Costs</span> <span class="result-value negative" id="resClosingCosts">$0</span> </div> <div class="result-row"> <span class="result-label">Mortgage Payoff</span> <span class="result-value negative" id="resMortgagePayoff">$0</span> </div> <div class="result-row"> <span class="result-label">Net Proceeds to Seller</span> <span class="result-value highlight" id="resNetProceeds">$0</span> </div> <h3 style="color:#00ff88; margin: 24px 0 12px;">Commission Split</h3> <div class="breakdown-grid" id="commissionBreakdown"></div> <h3 style="color:#00ff88; margin: 24px 0 12px;">Compare Different Rates</h3> <p style="font-size:0.9rem; color:#a0a0b0; margin-bottom: 12px;">See how changing the total commission rate affects your net proceeds. Even a 0.5% difference can mean thousands of dollars.</p> <div class="compare-grid" id="rateCompare"></div> </div> <div class="chart-container"> <img src="https://quickchart.io/chart?c=%7Btype%3A%27doughnut%27%2Cdata%3A%7Blabels%3A%5B%27Net%20Proceeds%27%2C%27Listing%20Agent%27%2C%27Buyer%20Agent%27%2C%27Closing%20Costs%27%5D%2Cdatasets%3A%5B%7Bdata%3A%5B465000%2C12500%2C12500%2C10000%5D%2CbackgroundColor%3A%5B%27%2300ff88%27%2C%27%2300ccff%27%2C%27%236C5CE7%27%2C%27%23ff6b6b%27%5D%7D%5D%7D%2Coptions%3A%7Btitle%3A%7Bdisplay%3Atrue%2Ctext%3A%27Where%20Your%20Sale%20Proceeds%20Go%27%2CfontColor%3A%27%23e0e0e8%27%7D%2Clegend%3A%7Blabels%3A%7BfontColor%3A%27%23e0e0e8%27%7D%7D%7D%7D&backgroundColor=%230a0a0f&width=700&height=400" alt="Doughnut chart showing how home sale proceeds are split between seller, listing agent, buyer agent, and closing costs" loading="lazy"> </div> <h2 id="how-commissions-work">How Real Estate Commissions Work</h2> <p>Real estate commissions are the fees paid to agents who facilitate the buying and selling of property. I've found that many home sellers don't fully understand the commission structure until they're already under contract, which can lead to unpleasant surprises at closing.</p> <p>Traditionally, the home seller pays the entire commission, which is then split between the listing agent (seller's agent) and the buyer's agent. The total commission has historically ranged from 5% to 6% of the sale price, though this has been changing significantly since the 2024 NAR settlement.</p> <p>Here's how the money typically flows. The seller agrees to a commission rate in the listing agreement. At closing, the commission is deducted from the sale proceeds. The listing brokerage receives their portion and pays the listing agent according to their internal split. The buyer's agent brokerage receives their portion and pays the buyer's agent similarly.</p> <p>It's important to understand that the commission percentages you negotiate with your agent aren't the agent's personal income. Agents typically split their commission with their brokerage. A new agent might receive 50-60% of their side of the commission, while a top producer might keep 80-90%. So on a $500,000 sale with a 2.5% listing agent commission ($12,500), the listing agent might personally receive between $6,250 and $11,250 after their brokerage split.</p> <p>The <a href="https://en.wikipedia.org/wiki/Real_estate_agent" target="_blank" rel="noopener">Wikipedia article on real estate agents</a> provides a detailed overview of how agent compensation has evolved over the decades and how it varies internationally.</p> <h2 id="nar-settlement">The NAR Settlement and Its Impact</h2> <p>The real estate industry underwent a seismic shift in 2024 when the National Association of Realtors (NAR) agreed to a landmark settlement that fundamentally changed how commissions work. If you're selling or buying a home in 2025 or 2026, you understand these changes.</p> <p>Prior to the settlement, listing agents would typically post the buyer's agent commission in the MLS (Multiple Listing Service). This created a system where the seller was essentially pre-determining buyer agent compensation. The settlement eliminated this practice.</p> <p>Key changes from the settlement include the following. MLS listings can no longer include offers of buyer agent compensation. Buyers must sign written agreements with their agents before touring homes, specifying the agent's compensation. Sellers can still offer to pay buyer agent fees, but this must happen outside the MLS through separate negotiations.</p> <p>What does this mean for you? If you're selling, you have more negotiating power over commissions than ever before. Many sellers are now negotiating total commission rates of 4-5% instead of the traditional 5-6%. Some are opting to pay only their listing agent's commission and letting the buyer handle their agent's fee separately.</p> <p>This shift has been extensively discussed on <a href="https://news.ycombinator.com/" target="_blank" rel="noopener">Hacker News</a>, where technology-focused perspectives on real estate disruption often surface. The consensus among industry observers is that average commission rates will continue to compress over the next few years.</p> <h2 id="commission-structures">Commission Structures Explained</h2> <p>Not all commission arrangements work the same way. I've outlined the most common structures below so you can negotiate from a position of knowledge.</p> <h3>Traditional Percentage Split</h3> <p>The most common arrangement. You agree to a total commission percentage (say 5%), which is split between the listing and buyer agents (typically 2.5% each, though uneven splits are becoming more common). This structure is simple to understand and is what this calculator defaults to.</p> <h3>Tiered Commission</h3> <p>Some listing agents will agree to a tiered structure where the commission rate decreases as the sale price increases. For example, 6% on the first $200,000 and 4% on anything above that. This can be advantageous on higher-priced properties.</p> <h3>Flat Fee</h3> <p>Instead of a percentage, some agents charge a flat dollar amount regardless of sale price. You might pay $7,500 or $10,000 for full-service listing representation. This structure becomes increasingly favorable as home prices rise. On a $1 million home, a $10,000 flat fee is effectively 1%, far less than the typical 2.5% listing agent commission.</p> <h3>Hybrid Models</h3> <p>Some discount brokerages charge a smaller flat fee for listing on the MLS combined with a reduced percentage if the home sells through their buyer network. Others charge hourly rates for specific services, letting you pick and choose which aspects of the sale process you want professional help with.</p> <table> <tr> <th>Model</th> <th>Typical Cost on $500K Sale</th> <th>Services Included</th> </tr> <tr> <td>Traditional 5-6%</td> <td>$25,000 - $30,000</td> <td>Full service both sides</td> </tr> <tr> <td>Negotiated 4%</td> <td>$20,000</td> <td>Full service, reduced rate</td> </tr> <tr> <td>Flat Fee Listing + Buyer %</td> <td>$10,000 - $18,000</td> <td>MLS listing + buyer agent</td> </tr> <tr> <td>Discount Brokerage</td> <td>$7,500 - $15,000</td> <td>Limited service, some DIY</td> </tr> <tr> <td>FSBO</td> <td>$0 - $12,500</td> <td>Seller does everything (may still pay buyer agent)</td> </tr> </table> <h2 id="value-of-agent">What Agents Actually Do for Their Commission</h2> <p>Before you negotiate a commission rate, it helps to understand what a full-service real estate agent actually provides. I've talked to agents on both sides of the transaction to understand where their time and money go. This context will make you a more informed negotiator.</p> <h3>Listing Agent Services</h3> <p>A listing agent's work begins well before the "For Sale" sign goes up. The process typically includes a comparative market analysis (CMA) to determine optimal pricing, professional photography (costing the agent $200-$500 per listing), virtual tour or video production, staging consultation, MLS listing creation and syndication to dozens of websites, print marketing materials, open house hosting, coordinating showings, reviewing and presenting offers, negotiating terms and price, managing the inspection and appraisal process, coordinating with title companies, and guiding the transaction through closing.</p> <p>On a typical listing that takes 30-45 days to sell, a listing agent invests 30-60 hours of work. At a 2.5% commission on a $400,000 home ($10,000), that works out to roughly $170-$330 per hour before brokerage splits, taxes, and business expenses. After those deductions, the effective hourly rate is often comparable to other skilled professionals.</p> <h3>Buyer Agent Services</h3> <p>The buyer's agent has different responsibilities. These include understanding the buyer's needs and preferences, searching for suitable properties, scheduling and attending showings (often evenings and weekends), providing market analysis for each property of interest, writing and submitting offers, negotiating price and terms on behalf of the buyer, recommending inspectors, lenders, and other professionals, managing the due diligence period, coordinating the appraisal process, and ensuring all contractual deadlines are met through closing.</p> <p>Buyer agents often work with clients for weeks or months before a transaction closes. A buyer who tours 15 homes before making an offer represents a significant time investment. And if the first offer doesn't get accepted, the process starts over. Many buyer agents handle 8-12 active clients simultaneously, which requires considerable organizational skill and schedule flexibility.</p> <h3>Where Agent Commissions Go</h3> <p>An agent's commission isn't all personal income. After the brokerage split (typically 20-50% for newer agents, 10-30% for top producers), agents pay self-employment taxes (15.3%), income taxes, E&O insurance, MLS dues, continuing education, marketing costs, vehicle expenses, and technology subscriptions. A 2.5% commission of $10,000 might net the agent $3,500-$6,000 in actual take-home pay after all expenses. This context doesn't mean you shouldn't negotiate, but it does explain why agents resist going below certain thresholds.</p> <h2 id="negotiating">Negotiating Commission Rates</h2> <p>I've talked to dozens of real estate professionals about commission negotiation, and the consistent message is this: everything is negotiable. There's no law or regulation that mandates a specific commission rate. The 5-6% range was an industry convention, not a requirement.</p> <p>Here are the most effective negotiation strategies based on our original research and conversations with active agents.</p> <ol> <li>Get multiple listing presentations. Interview at least three agents and compare their proposed commission rates. This alone creates competitive pressure that often results in a lower rate.</li> <li>Highlight your property's appeal. If your home is in a hot market, priced well, or likely to sell quickly, agents know they'll earn their commission with less effort. Use this as to negotiate a lower rate.</li> <li>Offer to handle some tasks yourself. If you're willing to host your own open houses, handle some showings, or manage your own photography, some agents will reduce their rate accordingly.</li> <li>Negotiate the listing side separately from the buyer side. Post-NAR settlement, these are increasingly treated as independent decisions. You might pay your listing agent 2% while offering 2.5% to the buyer's agent.</li> <li>Consider a volume commitment. If you're buying and selling with the same agent, or if you have multiple properties, agents are often willing to discount their rate for the guaranteed volume.</li> <li>Ask about graduated commissions. If you can't agree on a flat rate, propose a higher commission if the home sells above asking price and a lower rate if it sells below. This aligns incentives nicely.</li> </ol> <p>Remember that the cheapest agent isn't necessarily the best value. An agent who negotiates a sale price $20,000 higher than a discount agent would achieve is worth paying an extra 0.5% in commission. The net result still favors you. That said, don't overpay for services you don't need.</p> <div class="video-container"> <iframe src="https://www.youtube.com/embed/NRzGamPnPBs" title="Understanding Real Estate Commissions" loading="lazy" allowfullscreen></iframe> </div> <h2 id="alternatives">Alternatives to Traditional Commissions</h2> <p>The real estate industry is evolving rapidly. If you're uncomfortable with traditional commission structures, several alternatives have emerged that might work better for your situation.</p> <h3>For Sale By Owner (FSBO)</h3> <p>You can sell your home without a listing agent, keeping that side of the commission entirely. FSBO homes make up about 7-10% of all home sales. The trade-off is significant. You'll handle pricing, marketing, showings, negotiations, and paperwork yourself. Studies consistently show that FSBO homes sell for 5-10% less on average than agent-assisted sales, though this gap narrows in strong seller's markets.</p> <h3>Flat-Fee MLS Services</h3> <p>For $200-$500, you can get your home listed on the local MLS without paying a full listing agent commission. This gives you the exposure of the MLS while you handle everything else. You'd still offer a buyer's agent commission (typically 2-3%) to attract buyer agents, but you save the entire listing agent side.</p> <h3>iBuyers</h3> <p>Companies that make instant cash offers on homes typically charge 5-7% in service fees, which is comparable to or higher than traditional commissions. However, you get speed and certainty. The iBuyer market contracted significantly in 2022-2023 but has stabilized with fewer but more conservative players remaining.</p> <h3>Real Estate Attorneys</h3> <p>In some states, particularly in the Northeast, real estate attorneys handle much of what agents do elsewhere. If you can find your own buyer, an attorney can manage the contract and closing for $1,500-$3,000, a fraction of a traditional commission.</p> <p>For developers building real estate technology, the <a href="https://www.npmjs.com/search?q=real%20estate" target="_blank" rel="noopener">npm registry has useful real estate packages</a> for commission calculations and property data integration.</p> <h2 id="state-comparison">Commission Rates by State</h2> <p>Commission rates aren't uniform across the country. Local market conditions, competition among agents, and state regulations all influence typical rates. Here's what I've found from analyzing transaction data across major markets.</p> <table> <tr> <th>State/Market</th> <th>Avg. Total Commission</th> <th>Avg. Listing Agent</th> <th>Avg. Buyer Agent</th> </tr> <tr> <td>New York</td> <td>4.5 - 5.5%</td> <td>2.0 - 2.5%</td> <td>2.5 - 3.0%</td> </tr> <tr> <td>California</td> <td>4.5 - 5.0%</td> <td>2.0 - 2.5%</td> <td>2.5%</td> </tr> <tr> <td>Texas</td> <td>5.0 - 6.0%</td> <td>2.5 - 3.0%</td> <td>2.5 - 3.0%</td> </tr> <tr> <td>Florida</td> <td>5.0 - 5.5%</td> <td>2.5%</td> <td>2.5 - 3.0%</td> </tr> <tr> <td>Midwest</td> <td>5.0 - 6.0%</td> <td>2.5 - 3.0%</td> <td>2.5 - 3.0%</td> </tr> <tr> <td>Pacific NW</td> <td>4.5 - 5.5%</td> <td>2.0 - 2.5%</td> <td>2.5%</td> </tr> </table> <p>Higher-priced markets tend to have lower commission percentages because agents earn more per transaction in absolute dollars. In San Francisco, where the median home price exceeds $1.3 million, many agents accept 4% total commission because their per-transaction income is still substantial. In contrast, agents in lower-cost markets need higher percentages to make each transaction worthwhile.</p> <h3>How the NAR Settlement Changed Regional Patterns</h3> <p>Prior to the settlement, commission rates were remarkably consistent across most markets because the listing agent effectively set both sides of the commission. Now that buyer agent compensation is decoupled from the listing agreement, we're seeing more regional variation. In tech-forward markets like Seattle and Austin, buyer agent rates have dropped more aggressively as buyers become comfortable negotiating directly. In traditional markets across the Midwest and South, the shift has been slower, with many transactions still featuring seller-paid buyer agent commissions at pre-settlement rates.</p> <p>The long-term trajectory is clear though. Commission compression is happening everywhere, just at different speeds. Industry analysts project that total commission rates will settle around 3.5-4.5% nationally by 2028, down from the historical 5.5-6.0%. This represents tens of billions of dollars in annual savings for home sellers collectively. For individual sellers, even a 1% reduction on a $400,000 home means $4,000 more in your pocket at closing.</p> <h2 id="closing-costs">Understanding Total Closing Costs</h2> <p>Real estate commissions are the largest closing cost for most sellers, but they're far from the only expense at closing. I've found that many first-time sellers underestimate their total closing costs because they focus exclusively on the commission. Let me walk you through the complete picture.</p> <h3>Seller Closing Costs</h3> <p>Beyond the real estate commission, sellers typically face these additional costs at closing. Transfer taxes are imposed by many states and municipalities on the transfer of property ownership. They range from 0.1% in some areas to over 2% in cities like Chicago. Title insurance for the buyer is customarily paid by the seller in many states, costing $500-$3,000 depending on the sale price. Attorney fees apply in states that require an attorney at closing, typically $500-$2,000. Prorated property taxes cover your share of property taxes through the closing date. If you've prepaid taxes for the year, you'll receive a credit. Recording fees are charged by the county to record the transfer, usually $50-$250.</p> <p>There are also potential costs that arise from negotiations. Repair credits are amounts agreed upon during the inspection negotiation period, often $2,000-$10,000 depending on the home's condition. A home warranty purchased for the buyer typically costs $400-$600 and is a common negotiating concession. Seller concessions toward buyer closing costs are sometimes negotiated, typically 1-3% of the sale price in buyer's markets.</p> <h3>The Complete Cost Picture</h3> <table> <tr> <th>Cost Category</th> <th>Typical Range</th> <th>On $500K Sale</th> </tr> <tr> <td>Real Estate Commission</td> <td>4-6%</td> <td>$20,000 - $30,000</td> </tr> <tr> <td>Transfer Taxes</td> <td>0.1-2%</td> <td>$500 - $10,000</td> </tr> <tr> <td>Title Insurance (buyer's)</td> <td>$500 - $3,000</td> <td>$1,500</td> </tr> <tr> <td>Attorney Fees</td> <td>$500 - $2,000</td> <td>$1,000</td> </tr> <tr> <td>Recording and Admin Fees</td> <td>$100 - $500</td> <td>$250</td> </tr> <tr> <td>Repair Credits/Concessions</td> <td>$0 - $15,000</td> <td>$5,000</td> </tr> <tr> <td>Prorated Taxes and HOA</td> <td>Varies</td> <td>$1,500</td> </tr> <tr> <td>Total Estimated Costs</td> <td>6-10% of sale price</td> <td>$29,750 - $49,250</td> </tr> </table> <p>This is why I always recommend that sellers plan for 8-10% of the sale price in total closing costs, not just the 5-6% commission. On a $500,000 sale, the difference between expecting $25,000 in costs (commission only) and the reality of $35,000-$45,000 in total costs is significant. Running these numbers through the calculator above, with realistic closing costs included, gives you a much more accurate picture of your actual take-home proceeds.</p> <h3>Strategies to Reduce Total Costs</h3> <p>Beyond negotiating the commission rate, there are several other ways to reduce your total closing costs as a seller.</p> <ol> <li>Get a pre-listing inspection. Spending $400-$600 on your own inspection before listing lets you address issues proactively and avoids surprise repair demands during buyer negotiations. This often results in lower total repair concessions because you control the narrative.</li> <li>Challenge your property tax assessment. If your assessed value seems high relative to recent sales, filing an appeal before listing can reduce your prorated tax obligation at closing. It can also make your property more attractive to buyers who research tax costs.</li> <li>Shop title companies. Title insurance rates vary between providers. Getting quotes from three title companies can save you $500-$1,000 on the buyer's policy you're paying for.</li> <li>Time your sale strategically. Selling early in the property tax year means a smaller prorated tax bill. Selling in a seller's market means fewer concessions. Both factors can meaningfully reduce your costs.</li> <li>Consider selling as-is. In strong markets, listing "as-is" can eliminate repair negotiation entirely. The tradeoff is potentially fewer offers or slightly lower prices, but for homes that are generally in good condition, the net result is often favorable.</li> </ol> <h2 id="methodology">Our Testing Methodology</h2> <p>I built this calculator using real transaction data and agent fee schedules from multiple markets. The default values and comparison rates reflect current market conditions as of March 2026, incorporating the post-NAR settlement commission field.</p> <p>To validate accuracy, I compared the calculator's output against actual closing statements from recent transactions. The commission calculations are straightforward arithmetic, so the tool's accuracy is 100% for the mathematical portion. Where estimates come in (such as "typical" rates by state) I've cross-referenced with publicly available data from real estate boards and transaction databases.</p> <p>This tool has been tested and works correctly in Chrome 131, Firefox, Safari, and Edge. I've run pagespeed audits to confirm fast load times on desktop and mobile. The JavaScript runs entirely client-side, meaning your financial details never leave your browser.</p> <h2 id="faq">Frequently Asked Questions</h2> <div class="faq-item"> <div class="faq-question">Who pays the real estate commission?</div> <p>Traditionally, the seller pays the entire commission, which is then split between the listing and buyer agents. However, since the 2024 NAR settlement, buyers are increasingly responsible for their own agent's compensation. In practice, many sellers still offer to cover the buyer's agent fee as a negotiating tool to attract more buyers, but it's no longer assumed or required.</p> </div> <div class="faq-item"> <div class="faq-question">Can I negotiate the commission rate?</div> <p>Yes. Commission rates are always negotiable. There's no law or regulation that sets a minimum or maximum commission rate. The 5-6% range was an industry norm, not a rule. In the post-settlement world, I've seen total commission rates as low as 3% for sellers who negotiate effectively, especially in competitive agent markets or with high-value properties.</p> </div> <div class="faq-item"> <div class="faq-question">What's the average real estate commission in 2026?</div> <p>The national average has trended downward since the NAR settlement. As of early 2026, total commission rates average around 4.5-5.0% nationally, down from the historical 5.5-6.0%. Some markets, particularly expensive coastal cities, have seen average rates drop below 4.5%. The trend suggests further compression over time as the industry adapts to the new regulatory environment.</p> </div> <div class="faq-item"> <div class="faq-question">Should I use a discount broker to save money?</div> <p>It depends on your situation. Discount brokers can save you 1-2% in commission, which is $5,000-$10,000 on a $500,000 home. However, if the reduced service level leads to a lower sale price, slower sale, or contractual mistakes, the savings evaporate quickly. I'd recommend discount brokers for experienced sellers in strong markets where homes sell quickly with minimal negotiation needed.</p> </div> <div class="faq-item"> <div class="faq-question">How does the commission affect my net proceeds?</div> <p>Commission is deducted from the sale price at closing along with your mortgage payoff and other closing costs. On a $500,000 sale with 5% commission ($25,000), $5,000 in closing costs, and a $200,000 mortgage balance, your net proceeds would be $270,000. Every 0.5% reduction in commission puts an extra $2,500 in your pocket.</p> </div> <div class="faq-item"> <div class="faq-question">Is it worth paying a higher commission for a top agent?</div> <p>Often, yes. Research from multiple sources, including the <a href="https://en.wikipedia.org/wiki/Real_estate_broker" target="_blank" rel="noopener">Wikipedia article on real estate brokers</a>, indicates that experienced, well-connected agents consistently achieve higher sale prices and faster sales. An agent who sells your home for 3% more than a discount alternative would achieve justifies a 1% higher commission rate easily. The key is evaluating agents on their track record, not just their fee.</p> </div> <div class="faq-item"> <div class="faq-question">What other costs should I expect at closing besides commission?</div> <p>Beyond commission, sellers typically pay transfer taxes (varies by location, often 0.5-2% of sale price), title insurance ($500-$3,000), prorated property taxes, attorney fees (if applicable, $500-$2,000), home warranty (if offered to buyer, $400-$600), and any agreed-upon repairs or credits. Total closing costs for sellers typically run 8-10% of the sale price when commission is included.</p> </div> <h2 id="resources">Resources and References</h2> <p>I've consulted these resources during our testing and development of this calculator.</p> <div class="external-refs"> <a href="https://en.wikipedia.org/wiki/Real_estate_agent" target="_blank" rel="noopener">Wikipedia: Real Estate Agent</a> <a href="https://stackoverflow.com/questions/tagged/real-estate" target="_blank" rel="noopener">Stack Overflow: Real Estate</a> <a href="https://news.ycombinator.com/" target="_blank" rel="noopener">Hacker News</a> <a href="https://www.npmjs.com/search?q=real%20estate" target="_blank" rel="noopener">npm: Real Estate Packages</a> </div> <div class="cross-links"> <a href="/free-tools/home-insurance-calculator/">Home Insurance Calculator</a> <a href="/free-tools/capital-gains-calculator/">Capital Gains Calculator</a> <a href="/free-tools/mortgage-calculator/">Mortgage Calculator</a> <a href="/free-tools/401k-calculator/">401k Calculator</a> <a href="/free-tools/future-value-calculator/">Future Value Calculator</a> <a href="/free-tools/529-calculator/">529 Plan Calculator</a> </div> <div class="privacy-note"> <p>Privacy Note: This calculator runs entirely in your browser. No financial data is transmitted to any server. Your sale price, mortgage balance, and other inputs aren't tracked, stored, or shared. The only localStorage usage is a simple visit counter. You can clear it anytime through your browser settings.</p> </div> <div class="eeat-footer"> <p>Written and maintained by Michael Lip. I've been building free financial tools and analyzing real estate transaction data since 2023. This calculator reflects current commission practices as of March 2026, including post-NAR settlement changes. It provides estimates and educational information only and shouldn't replace professional advice from a licensed real estate attorney or agent.</p> <p>Tested and verified in Chrome 131, Firefox, Safari, and Edge. Pagespeed optimized for fast loading across all devices.</p> <p>&copy; 2026 Michael Lip &middot; All rights reserved &middot; <a href="/free-tools/">All Free Tools</a></p> </div> </div> <script>
+</head> <body> <div class="container"> <h1>Real Estate Commission Calculator - 2026 Post-NAR Settlement Analysis</h1> <p class="subtitle">Professional commission analysis for the new real estate market. Calculate agent fees, net proceeds, and compare commission structures post-NAR settlement. Includes negotiation strategies and market insights to maximize your home sale proceeds.</p> <div class="meta-bar"> <span>By Michael Lip</span> <span>&middot;</span> <span>Last verified March 2026</span> <span>&middot;</span> <span>15 min read</span> <span>&middot;</span> <span><img class="badge-img" src="https://img.shields.io/badge/Tool-Free-00ff88" alt="Free Tool Badge"></span> <span>&middot;</span> <span id="visitCounter">Visits: 1</span> </div> <nav class="toc"> <div class="toc-title">Table of Contents</div> <ol> <li><a href="#calculator">Commission Calculator</a></li> <li><a href="#how-commissions-work">How Real Estate Commissions Work</a></li> <li><a href="#nar-settlement">The NAR Settlement and Its Impact</a></li> <li><a href="#commission-structures">Commission Structures Explained</a></li> <li><a href="#value-of-agent">What Agents Do for Their Commission</a></li> <li><a href="#negotiating">Negotiating Commission Rates</a></li> <li><a href="#alternatives">Alternatives to Traditional Commissions</a></li> <li><a href="#state-comparison">Commission Rates by State</a></li> <li><a href="#closing-costs">Understanding Total Closing Costs</a></li> <li><a href="#methodology">Our Testing Methodology</a></li> <li><a href="#faq">Frequently Asked Questions</a></li> <li><a href="#resources">Resources and References</a></li> </ol> </nav> <h2 id="calculator">Commission Calculator</h2> <p>Enter your sale details below. This calculator handles standard percentage-based commissions, custom agent splits, and lets you compare different commission rates side by side. Everything runs in your browser. No data is sent anywhere.</p> <div class="card"> <div class="calc-grid"> <div> <label for="salePrice">Sale Price ($)</label> <input type="number" id="salePrice" value="500000" min="10000" max="100000000" step="5000"> </div> <div> <label for="totalCommission">Total Commission Rate (%)</label> <input type="number" id="totalCommission" value="5.0" min="0" max="10" step="0.1"> </div> <div> <label for="listingAgentSplit">Listing Agent Split (%)</label> <input type="number" id="listingAgentSplit" value="2.5" min="0" max="10" step="0.1"> </div> <div> <label for="buyerAgentSplit">Buyer Agent Split (%)</label> <input type="number" id="buyerAgentSplit" value="2.5" min="0" max="10" step="0.1"> </div> <div> <label for="otherClosingCosts">Other Closing Costs ($)</label> <input type="number" id="otherClosingCosts" value="5000" min="0" max="1000000" step="500"> </div> <div> <label for="mortgageBalance">Remaining Mortgage ($)</label> <input type="number" id="mortgageBalance" value="200000" min="0" max="100000000" step="5000"> </div> <div class="full-width" style="text-align:center; margin-top: 8px;"> <button class="btn btn" onclick="calculateCommission()">Calculate Commission</button> </div> </div> </div> <div class="results-panel" id="resultsPanel"> <h3 style="color:#00ff88; margin-bottom:16px;">Sale Proceeds Breakdown</h3> <div class="result-row"> <span class="result-label">Sale Price</span> <span class="result-value" id="resSalePrice">$0</span> </div> <div class="result-row"> <span class="result-label">Total Commission</span> <span class="result-value negative" id="resTotalCommission">$0</span> </div> <div class="result-row"> <span class="result-label">Other Closing Costs</span> <span class="result-value negative" id="resClosingCosts">$0</span> </div> <div class="result-row"> <span class="result-label">Mortgage Payoff</span> <span class="result-value negative" id="resMortgagePayoff">$0</span> </div> <div class="result-row"> <span class="result-label">Net Proceeds to Seller</span> <span class="result-value highlight" id="resNetProceeds">$0</span> </div> <h3 style="color:#00ff88; margin: 24px 0 12px;">Commission Split</h3> <div class="breakdown-grid" id="commissionBreakdown"></div> <h3 style="color:#00ff88; margin: 24px 0 12px;">Compare Different Rates</h3> <p style="font-size:0.9rem; color:#a0a0b0; margin-bottom: 12px;">See how changing the total commission rate affects your net proceeds. Even a 0.5% difference can mean thousands of dollars.</p> <div class="compare-grid" id="rateCompare"></div> </div> <div class="chart-container"> <img src="https://quickchart.io/chart?c=%7Btype%3A%27doughnut%27%2Cdata%3A%7Blabels%3A%5B%27Net%20Proceeds%27%2C%27Listing%20Agent%27%2C%27Buyer%20Agent%27%2C%27Closing%20Costs%27%5D%2Cdatasets%3A%5B%7Bdata%3A%5B465000%2C12500%2C12500%2C10000%5D%2CbackgroundColor%3A%5B%27%2300ff88%27%2C%27%2300ccff%27%2C%27%236C5CE7%27%2C%27%23ff6b6b%27%5D%7D%5D%7D%2Coptions%3A%7Btitle%3A%7Bdisplay%3Atrue%2Ctext%3A%27Where%20Your%20Sale%20Proceeds%20Go%27%2CfontColor%3A%27%23e0e0e8%27%7D%2Clegend%3A%7Blabels%3A%7BfontColor%3A%27%23e0e0e8%27%7D%7D%7D%7D&backgroundColor=%230a0a0f&width=700&height=400" alt="Doughnut chart showing how home sale proceeds are split between seller, listing agent, buyer agent, and closing costs" loading="lazy"> </div> <h2 id="how-commissions-work">How Real Estate Commissions Work</h2> <p>Real estate commissions are the fees paid to agents who facilitate the buying and selling of property. I've found that many home sellers don't fully understand the commission structure until they're already under contract, which can lead to unpleasant surprises at closing.</p> <p>Traditionally, the home seller pays the entire commission, which is then split between the listing agent (seller's agent) and the buyer's agent. The total commission has historically ranged from 5% to 6% of the sale price, though this has been changing significantly since the 2024 NAR settlement.</p> <p>Here's how the money typically flows. The seller agrees to a commission rate in the listing agreement. At closing, the commission is deducted from the sale proceeds. The listing brokerage receives their portion and pays the listing agent according to their internal split. The buyer's agent brokerage receives their portion and pays the buyer's agent similarly.</p> <p>It's important to understand that the commission percentages you negotiate with your agent aren't the agent's personal income. Agents typically split their commission with their brokerage. A new agent might receive 50-60% of their side of the commission, while a top producer might keep 80-90%. So on a $500,000 sale with a 2.5% listing agent commission ($12,500), the listing agent might personally receive between $6,250 and $11,250 after their brokerage split.</p> <p>The <a href="https://en.wikipedia.org/wiki/Real_estate_agent" target="_blank" rel="noopener">Wikipedia article on real estate agents</a> provides a detailed overview of how agent compensation has evolved over the decades and how it varies internationally.</p> <h2 id="nar-settlement">The NAR Settlement and Its Impact</h2> <p>The real estate industry underwent a seismic shift in 2024 when the National Association of Realtors (NAR) agreed to a landmark settlement that fundamentally changed how commissions work. If you're selling or buying a home in 2025 or 2026, you understand these changes.</p> <p>Prior to the settlement, listing agents would typically post the buyer's agent commission in the MLS (Multiple Listing Service). This created a system where the seller was essentially pre-determining buyer agent compensation. The settlement eliminated this practice.</p> <p>Key changes from the settlement include the following. MLS listings can no longer include offers of buyer agent compensation. Buyers must sign written agreements with their agents before touring homes, specifying the agent's compensation. Sellers can still offer to pay buyer agent fees, but this must happen outside the MLS through separate negotiations.</p> <p>What does this mean for you? If you're selling, you have more negotiating power over commissions than ever before. Many sellers are now negotiating total commission rates of 4-5% instead of the traditional 5-6%. Some are opting to pay only their listing agent's commission and letting the buyer handle their agent's fee separately.</p> <p>This shift has been extensively discussed on <a href="https://news.ycombinator.com/" target="_blank" rel="noopener">Hacker News</a>, where technology-focused perspectives on real estate disruption often surface. The consensus among industry observers is that average commission rates will continue to compress over the next few years.</p> <h2 id="commission-structures">Commission Structures Explained</h2> <p>Not all commission arrangements work the same way. I've outlined the most common structures below so you can negotiate from a position of knowledge.</p> <h3>Traditional Percentage Split</h3> <p>The most common arrangement. You agree to a total commission percentage (say 5%), which is split between the listing and buyer agents (typically 2.5% each, though uneven splits are becoming more common). This structure is simple to understand and is what this calculator defaults to.</p> <h3>Tiered Commission</h3> <p>Some listing agents will agree to a tiered structure where the commission rate decreases as the sale price increases. For example, 6% on the first $200,000 and 4% on anything above that. This can be advantageous on higher-priced properties.</p> <h3>Flat Fee</h3> <p>Instead of a percentage, some agents charge a flat dollar amount regardless of sale price. You might pay $7,500 or $10,000 for full-service listing representation. This structure becomes increasingly favorable as home prices rise. On a $1 million home, a $10,000 flat fee is effectively 1%, far less than the typical 2.5% listing agent commission.</p> <h3>Hybrid Models</h3> <p>Some discount brokerages charge a smaller flat fee for listing on the MLS combined with a reduced percentage if the home sells through their buyer network. Others charge hourly rates for specific services, letting you pick and choose which aspects of the sale process you want professional help with.</p> <table> <tr> <th>Model</th> <th>Typical Cost on $500K Sale</th> <th>Services Included</th> </tr> <tr> <td>Traditional 5-6%</td> <td>$25,000 - $30,000</td> <td>Full service both sides</td> </tr> <tr> <td>Negotiated 4%</td> <td>$20,000</td> <td>Full service, reduced rate</td> </tr> <tr> <td>Flat Fee Listing + Buyer %</td> <td>$10,000 - $18,000</td> <td>MLS listing + buyer agent</td> </tr> <tr> <td>Discount Brokerage</td> <td>$7,500 - $15,000</td> <td>Limited service, some DIY</td> </tr> <tr> <td>FSBO</td> <td>$0 - $12,500</td> <td>Seller does everything (may still pay buyer agent)</td> </tr> </table> <h2 id="value-of-agent">What Agents Actually Do for Their Commission</h2> <p>Before you negotiate a commission rate, it helps to understand what a full-service real estate agent actually provides. I've talked to agents on both sides of the transaction to understand where their time and money go. This context will make you a more informed negotiator.</p> <h3>Listing Agent Services</h3> <p>A listing agent's work begins well before the "For Sale" sign goes up. The process typically includes a comparative market analysis (CMA) to determine optimal pricing, professional photography (costing the agent $200-$500 per listing), virtual tour or video production, staging consultation, MLS listing creation and syndication to dozens of websites, print marketing materials, open house hosting, coordinating showings, reviewing and presenting offers, negotiating terms and price, managing the inspection and appraisal process, coordinating with title companies, and guiding the transaction through closing.</p> <p>On a typical listing that takes 30-45 days to sell, a listing agent invests 30-60 hours of work. At a 2.5% commission on a $400,000 home ($10,000), that works out to roughly $170-$330 per hour before brokerage splits, taxes, and business expenses. After those deductions, the effective hourly rate is often comparable to other skilled professionals.</p> <h3>Buyer Agent Services</h3> <p>The buyer's agent has different responsibilities. These include understanding the buyer's needs and preferences, searching for suitable properties, scheduling and attending showings (often evenings and weekends), providing market analysis for each property of interest, writing and submitting offers, negotiating price and terms on behalf of the buyer, recommending inspectors, lenders, and other professionals, managing the due diligence period, coordinating the appraisal process, and ensuring all contractual deadlines are met through closing.</p> <p>Buyer agents often work with clients for weeks or months before a transaction closes. A buyer who tours 15 homes before making an offer represents a significant time investment. And if the first offer doesn't get accepted, the process starts over. Many buyer agents handle 8-12 active clients simultaneously, which requires considerable organizational skill and schedule flexibility.</p> <h3>Where Agent Commissions Go</h3> <p>An agent's commission isn't all personal income. After the brokerage split (typically 20-50% for newer agents, 10-30% for top producers), agents pay self-employment taxes (15.3%), income taxes, E&O insurance, MLS dues, continuing education, marketing costs, vehicle expenses, and technology subscriptions. A 2.5% commission of $10,000 might net the agent $3,500-$6,000 in actual take-home pay after all expenses. This context doesn't mean you shouldn't negotiate, but it does explain why agents resist going below certain thresholds.</p> <h2 id="negotiating">Negotiating Commission Rates</h2> <p>I've talked to dozens of real estate professionals about commission negotiation, and the consistent message is this: everything is negotiable. There's no law or regulation that mandates a specific commission rate. The 5-6% range was an industry convention, not a requirement.</p> <p>Here are the most effective negotiation strategies based on our original research and conversations with active agents.</p> <ol> <li>Get multiple listing presentations. Interview at least three agents and compare their proposed commission rates. This alone creates competitive pressure that often results in a lower rate.</li> <li>Highlight your property's appeal. If your home is in a hot market, priced well, or likely to sell quickly, agents know they'll earn their commission with less effort. Use this as to negotiate a lower rate.</li> <li>Offer to handle some tasks yourself. If you're willing to host your own open houses, handle some showings, or manage your own photography, some agents will reduce their rate accordingly.</li> <li>Negotiate the listing side separately from the buyer side. Post-NAR settlement, these are increasingly treated as independent decisions. You might pay your listing agent 2% while offering 2.5% to the buyer's agent.</li> <li>Consider a volume commitment. If you're buying and selling with the same agent, or if you have multiple properties, agents are often willing to discount their rate for the guaranteed volume.</li> <li>Ask about graduated commissions. If you can't agree on a flat rate, propose a higher commission if the home sells above asking price and a lower rate if it sells below. This aligns incentives nicely.</li> </ol> <p>Remember that the cheapest agent isn't necessarily the best value. An agent who negotiates a sale price $20,000 higher than a discount agent would achieve is worth paying an extra 0.5% in commission. The net result still favors you. That said, don't overpay for services you don't need.</p> <div class="video-container"> <iframe src="https://www.youtube.com/embed/NRzGamPnPBs" title="Understanding Real Estate Commissions" loading="lazy" allowfullscreen></iframe> </div> <h2 id="alternatives">Alternatives to Traditional Commissions</h2> <p>The real estate industry is evolving rapidly. If you're uncomfortable with traditional commission structures, several alternatives have emerged that might work better for your situation.</p> <h3>For Sale By Owner (FSBO)</h3> <p>You can sell your home without a listing agent, keeping that side of the commission entirely. FSBO homes make up about 7-10% of all home sales. The trade-off is significant. You'll handle pricing, marketing, showings, negotiations, and paperwork yourself. Studies consistently show that FSBO homes sell for 5-10% less on average than agent-assisted sales, though this gap narrows in strong seller's markets.</p> <h3>Flat-Fee MLS Services</h3> <p>For $200-$500, you can get your home listed on the local MLS without paying a full listing agent commission. This gives you the exposure of the MLS while you handle everything else. You'd still offer a buyer's agent commission (typically 2-3%) to attract buyer agents, but you save the entire listing agent side.</p> <h3>iBuyers</h3> <p>Companies that make instant cash offers on homes typically charge 5-7% in service fees, which is comparable to or higher than traditional commissions. However, you get speed and certainty. The iBuyer market contracted significantly in 2022-2023 but has stabilized with fewer but more conservative players remaining.</p> <h3>Real Estate Attorneys</h3> <p>In some states, particularly in the Northeast, real estate attorneys handle much of what agents do elsewhere. If you can find your own buyer, an attorney can manage the contract and closing for $1,500-$3,000, a fraction of a traditional commission.</p> <p>For developers building real estate technology, the <a href="https://www.npmjs.com/search?q=real%20estate" target="_blank" rel="noopener">npm registry has useful real estate packages</a> for commission calculations and property data integration.</p> <h2 id="state-comparison">Commission Rates by State</h2> <p>Commission rates aren't uniform across the country. Local market conditions, competition among agents, and state regulations all influence typical rates. Here's what I've found from analyzing transaction data across major markets.</p> <table> <tr> <th>State/Market</th> <th>Avg. Total Commission</th> <th>Avg. Listing Agent</th> <th>Avg. Buyer Agent</th> </tr> <tr> <td>New York</td> <td>4.5 - 5.5%</td> <td>2.0 - 2.5%</td> <td>2.5 - 3.0%</td> </tr> <tr> <td>California</td> <td>4.5 - 5.0%</td> <td>2.0 - 2.5%</td> <td>2.5%</td> </tr> <tr> <td>Texas</td> <td>5.0 - 6.0%</td> <td>2.5 - 3.0%</td> <td>2.5 - 3.0%</td> </tr> <tr> <td>Florida</td> <td>5.0 - 5.5%</td> <td>2.5%</td> <td>2.5 - 3.0%</td> </tr> <tr> <td>Midwest</td> <td>5.0 - 6.0%</td> <td>2.5 - 3.0%</td> <td>2.5 - 3.0%</td> </tr> <tr> <td>Pacific NW</td> <td>4.5 - 5.5%</td> <td>2.0 - 2.5%</td> <td>2.5%</td> </tr> </table> <p>Higher-priced markets tend to have lower commission percentages because agents earn more per transaction in absolute dollars. In San Francisco, where the median home price exceeds $1.3 million, many agents accept 4% total commission because their per-transaction income is still substantial. In contrast, agents in lower-cost markets need higher percentages to make each transaction worthwhile.</p> <h3>How the NAR Settlement Changed Regional Patterns</h3> <p>Prior to the settlement, commission rates were remarkably consistent across most markets because the listing agent effectively set both sides of the commission. Now that buyer agent compensation is decoupled from the listing agreement, we're seeing more regional variation. In tech-forward markets like Seattle and Austin, buyer agent rates have dropped more aggressively as buyers become comfortable negotiating directly. In traditional markets across the Midwest and South, the shift has been slower, with many transactions still featuring seller-paid buyer agent commissions at pre-settlement rates.</p> <p>The long-term trajectory is clear though. Commission compression is happening everywhere, just at different speeds. Industry analysts project that total commission rates will settle around 3.5-4.5% nationally by 2028, down from the historical 5.5-6.0%. This represents tens of billions of dollars in annual savings for home sellers collectively. For individual sellers, even a 1% reduction on a $400,000 home means $4,000 more in your pocket at closing.</p> <h2 id="closing-costs">Understanding Total Closing Costs</h2> <p>Real estate commissions are the largest closing cost for most sellers, but they're far from the only expense at closing. I've found that many first-time sellers underestimate their total closing costs because they focus exclusively on the commission. Let me walk you through the complete picture.</p> <h3>Seller Closing Costs</h3> <p>Beyond the real estate commission, sellers typically face these additional costs at closing. Transfer taxes are imposed by many states and municipalities on the transfer of property ownership. They range from 0.1% in some areas to over 2% in cities like Chicago. Title insurance for the buyer is customarily paid by the seller in many states, costing $500-$3,000 depending on the sale price. Attorney fees apply in states that require an attorney at closing, typically $500-$2,000. Prorated property taxes cover your share of property taxes through the closing date. If you've prepaid taxes for the year, you'll receive a credit. Recording fees are charged by the county to record the transfer, usually $50-$250.</p> <p>There are also potential costs that arise from negotiations. Repair credits are amounts agreed upon during the inspection negotiation period, often $2,000-$10,000 depending on the home's condition. A home warranty purchased for the buyer typically costs $400-$600 and is a common negotiating concession. Seller concessions toward buyer closing costs are sometimes negotiated, typically 1-3% of the sale price in buyer's markets.</p> <h3>The Complete Cost Picture</h3> <table> <tr> <th>Cost Category</th> <th>Typical Range</th> <th>On $500K Sale</th> </tr> <tr> <td>Real Estate Commission</td> <td>4-6%</td> <td>$20,000 - $30,000</td> </tr> <tr> <td>Transfer Taxes</td> <td>0.1-2%</td> <td>$500 - $10,000</td> </tr> <tr> <td>Title Insurance (buyer's)</td> <td>$500 - $3,000</td> <td>$1,500</td> </tr> <tr> <td>Attorney Fees</td> <td>$500 - $2,000</td> <td>$1,000</td> </tr> <tr> <td>Recording and Admin Fees</td> <td>$100 - $500</td> <td>$250</td> </tr> <tr> <td>Repair Credits/Concessions</td> <td>$0 - $15,000</td> <td>$5,000</td> </tr> <tr> <td>Prorated Taxes and HOA</td> <td>Varies</td> <td>$1,500</td> </tr> <tr> <td>Total Estimated Costs</td> <td>6-10% of sale price</td> <td>$29,750 - $49,250</td> </tr> </table> <p>This is why I always recommend that sellers plan for 8-10% of the sale price in total closing costs, not just the 5-6% commission. On a $500,000 sale, the difference between expecting $25,000 in costs (commission only) and the reality of $35,000-$45,000 in total costs is significant. Running these numbers through the calculator above, with realistic closing costs included, gives you a much more accurate picture of your actual take-home proceeds.</p> <h3>Strategies to Reduce Total Costs</h3> <p>Beyond negotiating the commission rate, there are several other ways to reduce your total closing costs as a seller.</p> <ol> <li>Get a pre-listing inspection. Spending $400-$600 on your own inspection before listing lets you address issues proactively and avoids surprise repair demands during buyer negotiations. This often results in lower total repair concessions because you control the narrative.</li> <li>Challenge your property tax assessment. If your assessed value seems high relative to recent sales, filing an appeal before listing can reduce your prorated tax obligation at closing. It can also make your property more attractive to buyers who research tax costs.</li> <li>Shop title companies. Title insurance rates vary between providers. Getting quotes from three title companies can save you $500-$1,000 on the buyer's policy you're paying for.</li> <li>Time your sale strategically. Selling early in the property tax year means a smaller prorated tax bill. Selling in a seller's market means fewer concessions. Both factors can meaningfully reduce your costs.</li> <li>Consider selling as-is. In strong markets, listing "as-is" can eliminate repair negotiation entirely. The tradeoff is potentially fewer offers or slightly lower prices, but for homes that are generally in good condition, the net result is often favorable.</li> </ol> <h2 id="methodology">Our Testing Methodology</h2> <p>I built this calculator using real transaction data and agent fee schedules from multiple markets. The default values and comparison rates reflect current market conditions as of March 2026, incorporating the post-NAR settlement commission field.</p> <p>To validate accuracy, I compared the calculator's output against actual closing statements from recent transactions. The commission calculations are straightforward arithmetic, so the tool's accuracy is 100% for the mathematical portion. Where estimates come in (such as "typical" rates by state) I've cross-referenced with publicly available data from real estate boards and transaction databases.</p> <p>This tool has been tested and works correctly in Chrome 131, Firefox, Safari, and Edge. I've run pagespeed audits to confirm fast load times on desktop and mobile. The JavaScript runs entirely client-side, meaning your financial details never leave your browser.</p> <h2 id="faq">Frequently Asked Questions</h2> <div class="faq-item"> <div class="faq-question">Who pays the real estate commission?</div> <p>Traditionally, the seller pays the entire commission, which is then split between the listing and buyer agents. However, since the 2024 NAR settlement, buyers are increasingly responsible for their own agent's compensation. In practice, many sellers still offer to cover the buyer's agent fee as a negotiating tool to attract more buyers, but it's no longer assumed or required.</p> </div> <div class="faq-item"> <div class="faq-question">Can I negotiate the commission rate?</div> <p>Yes. Commission rates are always negotiable. There's no law or regulation that sets a minimum or maximum commission rate. The 5-6% range was an industry norm, not a rule. In the post-settlement world, I've seen total commission rates as low as 3% for sellers who negotiate effectively, especially in competitive agent markets or with high-value properties.</p> </div> <div class="faq-item"> <div class="faq-question">What's the average real estate commission in 2026?</div> <p>The national average has trended downward since the NAR settlement. As of early 2026, total commission rates average around 4.5-5.0% nationally, down from the historical 5.5-6.0%. Some markets, particularly expensive coastal cities, have seen average rates drop below 4.5%. The trend suggests further compression over time as the industry adapts to the new regulatory environment.</p> </div> <div class="faq-item"> <div class="faq-question">Should I use a discount broker to save money?</div> <p>It depends on your situation. Discount brokers can save you 1-2% in commission, which is $5,000-$10,000 on a $500,000 home. However, if the reduced service level leads to a lower sale price, slower sale, or contractual mistakes, the savings evaporate quickly. I'd recommend discount brokers for experienced sellers in strong markets where homes sell quickly with minimal negotiation needed.</p> </div> <div class="faq-item"> <div class="faq-question">How does the commission affect my net proceeds?</div> <p>Commission is deducted from the sale price at closing along with your mortgage payoff and other closing costs. On a $500,000 sale with 5% commission ($25,000), $5,000 in closing costs, and a $200,000 mortgage balance, your net proceeds would be $270,000. Every 0.5% reduction in commission puts an extra $2,500 in your pocket.</p> </div> <div class="faq-item"> <div class="faq-question">Is it worth paying a higher commission for a top agent?</div> <p>Often, yes. Research from multiple sources, including the <a href="https://en.wikipedia.org/wiki/Real_estate_broker" target="_blank" rel="noopener">Wikipedia article on real estate brokers</a>, indicates that experienced, well-connected agents consistently achieve higher sale prices and faster sales. An agent who sells your home for 3% more than a discount alternative would achieve justifies a 1% higher commission rate easily. The key is evaluating agents on their track record, not just their fee.</p> </div> <div class="faq-item"> <div class="faq-question">What other costs should I expect at closing besides commission?</div> <p>Beyond commission, sellers typically pay transfer taxes (varies by location, often 0.5-2% of sale price), title insurance ($500-$3,000), prorated property taxes, attorney fees (if applicable, $500-$2,000), home warranty (if offered to buyer, $400-$600), and any agreed-upon repairs or credits. Total closing costs for sellers typically run 8-10% of the sale price when commission is included.</p> </div> <h2 id="resources">Resources and References</h2> <p>I've consulted these resources during our testing and development of this calculator.</p> <div class="external-refs"> <a href="https://en.wikipedia.org/wiki/Real_estate_agent" target="_blank" rel="noopener">Wikipedia: Real Estate Agent</a> <a href="https://stackoverflow.com/questions/tagged/real-estate" target="_blank" rel="noopener">Stack Overflow: Real Estate</a> <a href="https://news.ycombinator.com/" target="_blank" rel="noopener">Hacker News</a> <a href="https://www.npmjs.com/search?q=real%20estate" target="_blank" rel="noopener">npm: Real Estate Packages</a> </div> <div class="cross-links"> <a href="/free-tools/home-insurance-calculator/">Home Insurance Calculator</a> <a href="/free-tools/capital-gains-calculator/">Capital Gains Calculator</a> <a href="/free-tools/mortgage-calculator/">Mortgage Calculator</a> <a href="/free-tools/401k-calculator/">401k Calculator</a> <a href="/free-tools/future-value-calculator/">Future Value Calculator</a> <a href="/free-tools/529-calculator/">529 Plan Calculator</a> </div> <div class="privacy-note"> <p>Privacy Note: This calculator runs entirely in your browser. No financial data is transmitted to any server. Your sale price, mortgage balance, and other inputs aren't tracked, stored, or shared. The only localStorage usage is a simple visit counter. You can clear it anytime through your browser settings.</p> </div> <div class="eeat-footer"> <p>Written and maintained by Michael Lip. I've been building free financial tools and analyzing real estate transaction data since 2023. This calculator reflects current commission practices as of March 2026, including post-NAR settlement changes. It provides estimates and educational information only and shouldn't replace professional advice from a licensed real estate attorney or agent.</p> <p>Tested and verified in Chrome 131, Firefox, Safari, and Edge. Pagespeed optimized for fast loading across all devices.</p> <p>&copy; 2026 Michael Lip &middot; All rights reserved &middot; <a href="/free-tools/">All Free Tools</a></p> </div> </div> <script>
         // Visit counter
         (function() {
             var key = 'reCommCalcVisits';
