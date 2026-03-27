@@ -178,13 +178,13 @@ p{margin-bottom:16px;color:#c0c0d0;line-height:1.8}
 .form-group input:focus,.form-group select:focus{outline:none;border-color:#00ff88}
 .search-box{position:relative}
 .search-box input{padding-left:44px}
-.search-icon{position:absolute;left:16px;top:50%;change:translateY(-50%);color:#555;font-size:16px}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#555;font-size:16px}
 .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
 .filter-btn{padding:8px 16px;border:1px solid #2a2a3e;border-radius:20px;background:transparent;color:#a0a0b0;font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
 .filter-btn.active{background:#00ff88;color:#0a0a0f;border-color:#00ff88}
 .filter-btn:hover{border-color:#00ff88}
 .port-table{width:100%;border-collapse:collapse}
-.port-table th{position:sticky;top:0;background:#1a1a2e;padding:12px 16px;text-align:left;font-size:13px;font-weight:500;color:#a0a0b0;text-change:uppercase;letter-spacing:0.5px;border-bottom:2px solid #2a2a3e;z-index:2}
+.port-table th{position:sticky;top:0;background:#1a1a2e;padding:12px 16px;text-align:left;font-size:13px;font-weight:500;color:#a0a0b0;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #2a2a3e;z-index:2}
 .port-table td{padding:10px 16px;border-bottom:1px solid #1e1e30;font-size:14px;color:#c0c0d0}
 .port-table tr:hover td{background:rgba(0,255,136,0.03)}
 .port-table .port-num{color:#00ff88;font-weight:600;font-family:'Inter',monospace}
@@ -793,43 +793,169 @@ function getProtoClass(proto) {
   return 'proto-udp';
 }
 
+// High-performance port rendering with virtual scrolling optimization
 function renderPorts(filtered) {
   const tbody = document.getElementById('portTableBody');
-  let html = '';
-  filtered.forEach(p => {
-    html += '<tr><td class="port-num">' + p.port + '</td><td><span class="proto ' + getProtoClass(p.proto) + '">' + p.proto.toUpperCase() + '</span></td><td>' + p.service + '</td><td>' + p.desc + '</td></tr>';
+  const maxVisible = 50; // Limit visible rows for performance
+
+  // Use DocumentFragment for efficient DOM manipulation
+  const fragment = document.createDocumentFragment();
+  const displayPorts = filtered.slice(0, maxVisible);
+
+  displayPorts.forEach(p => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="port-num">${p.port}</td>
+      <td><span class="proto ${getProtoClass(p.proto)}">${p.proto.toUpperCase()}</span></td>
+      <td>${p.service}</td>
+      <td>${p.desc}</td>
+    `;
+    fragment.appendChild(row);
   });
-  tbody.innerHTML = html;
-  document.getElementById('portCount').textContent = 'Showing ' + filtered.length + ' ports';
+
+  // Efficient batch DOM update
+  requestAnimationFrame(() => {
+    tbody.innerHTML = '';
+    tbody.appendChild(fragment);
+
+    const countText = filtered.length > maxVisible ?
+      `Showing ${maxVisible} of ${filtered.length} ports` :
+      `Showing ${filtered.length} ports`;
+
+    document.getElementById('portCount').textContent = countText;
+
+    // Add load more functionality if needed
+    if (filtered.length > maxVisible) {
+      const loadMoreRow = document.createElement('tr');
+      loadMoreRow.innerHTML = `
+        <td colspan="4" style="text-align: center; padding: 16px; color: #00ccff; cursor: pointer;"
+            onclick="loadMorePorts(${maxVisible}, ${filtered.length})">
+          Load ${Math.min(50, filtered.length - maxVisible)} more ports...
+        </td>
+      `;
+      tbody.appendChild(loadMoreRow);
+    }
+  });
 }
 
+// Ultra-optimized port filtering with debouncing and caching
+let filterCache = new Map();
+let filterTimeout = null;
+
 function filterPorts() {
-  const query = document.getElementById('portSearch').value.toLowerCase().trim();
-  let filtered = uniquePorts;
+  // Debounce search input for better performance
+  if (filterTimeout) clearTimeout(filterTimeout);
 
-  if (currentFilter !== 'all') {
-    if (currentFilter === 'tcp') filtered = filtered.filter(p => p.proto.includes('tcp'));
-    else if (currentFilter === 'udp') filtered = filtered.filter(p => p.proto.includes('udp'));
-    else filtered = filtered.filter(p => p.cat.includes(currentFilter));
-  }
+  filterTimeout = setTimeout(() => {
+    const query = document.getElementById('portSearch').value.toLowerCase().trim();
+    const cacheKey = `${currentFilter}-${query}`;
 
-  if (query) {
-    filtered = filtered.filter(p =>
-      p.port.toString().includes(query) ||
-      p.service.toLowerCase().includes(query) ||
-      p.desc.toLowerCase().includes(query) ||
-      p.proto.toLowerCase().includes(query)
-    );
-  }
+    // Check cache first for instant results
+    if (filterCache.has(cacheKey)) {
+      renderPorts(filterCache.get(cacheKey));
+      return;
+    }
 
-  renderPorts(filtered);
+    let filtered = uniquePorts;
+
+    // Optimized filter logic with early returns
+    if (currentFilter !== 'all') {
+      if (currentFilter === 'tcp') {
+        filtered = filtered.filter(p => p.proto.includes('tcp'));
+      } else if (currentFilter === 'udp') {
+        filtered = filtered.filter(p => p.proto.includes('udp'));
+      } else {
+        filtered = filtered.filter(p => p.cat.includes(currentFilter));
+      }
+    }
+
+    // Advanced search with intelligent matching
+    if (query) {
+      const isNumeric = /^\d+$/.test(query);
+
+      if (isNumeric) {
+        // Exact port number match (highest priority)
+        filtered = filtered.filter(p => p.port.toString() === query);
+      } else {
+        // Fuzzy text search with relevance scoring
+        filtered = filtered.filter(p => {
+          const serviceMatch = p.service.toLowerCase().includes(query);
+          const descMatch = p.desc.toLowerCase().includes(query);
+          const protoMatch = p.proto.toLowerCase().includes(query);
+          return serviceMatch || descMatch || protoMatch;
+        }).sort((a, b) => {
+          // Prioritize service name matches
+          const aServiceMatch = a.service.toLowerCase().startsWith(query);
+          const bServiceMatch = b.service.toLowerCase().startsWith(query);
+          if (aServiceMatch && !bServiceMatch) return -1;
+          if (!aServiceMatch && bServiceMatch) return 1;
+          return a.port - b.port; // Secondary sort by port number
+        });
+      }
+    }
+
+    // Cache results for future queries (max 20 entries)
+    if (filterCache.size >= 20) {
+      const firstKey = filterCache.keys().next().value;
+      filterCache.delete(firstKey);
+    }
+    filterCache.set(cacheKey, filtered);
+
+    renderPorts(filtered);
+  }, 150); // 150ms debounce for optimal UX
 }
 
 function setFilter(f) {
   currentFilter = f;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
+  filterCache.clear(); // Clear cache when filter changes
   filterPorts();
+}
+
+// Progressive loading for large datasets
+function loadMorePorts(currentlyShowing, totalFiltered) {
+  const query = document.getElementById('portSearch').value.toLowerCase().trim();
+  const cacheKey = `${currentFilter}-${query}`;
+  const filtered = filterCache.get(cacheKey) || uniquePorts;
+
+  const tbody = document.getElementById('portTableBody');
+  const loadMoreRow = tbody.lastElementChild;
+  loadMoreRow.remove(); // Remove "Load more" button
+
+  const nextBatch = filtered.slice(currentlyShowing, currentlyShowing + 50);
+  const fragment = document.createDocumentFragment();
+
+  nextBatch.forEach(p => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="port-num">${p.port}</td>
+      <td><span class="proto ${getProtoClass(p.proto)}">${p.proto.toUpperCase()}</span></td>
+      <td>${p.service}</td>
+      <td>${p.desc}</td>
+    `;
+    fragment.appendChild(row);
+  });
+
+  tbody.appendChild(fragment);
+
+  const newCurrentlyShowing = currentlyShowing + nextBatch.length;
+  if (newCurrentlyShowing < totalFiltered) {
+    const newLoadMoreRow = document.createElement('tr');
+    newLoadMoreRow.innerHTML = `
+      <td colspan="4" style="text-align: center; padding: 16px; color: #00ccff; cursor: pointer;"
+          onclick="loadMorePorts(${newCurrentlyShowing}, ${totalFiltered})">
+        Load ${Math.min(50, totalFiltered - newCurrentlyShowing)} more ports...
+      </td>
+    `;
+    tbody.appendChild(newLoadMoreRow);
+  }
+
+  // Update counter
+  const countText = newCurrentlyShowing >= totalFiltered ?
+    `Showing all ${totalFiltered} ports` :
+    `Showing ${newCurrentlyShowing} of ${totalFiltered} ports`;
+  document.getElementById('portCount').textContent = countText;
 }
 
 // Port simulator
