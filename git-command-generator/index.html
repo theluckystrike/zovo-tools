@@ -386,7 +386,7 @@ gtag('config', 'G-V2K8JLFQ5H');
 </main>
 <footer><div class="container">Built by Michael Lip &middot; <a href="https://zovo.one">zovo.one</a></div></footer>
 <script>
-const COMMANDS="["
+const COMMANDS=[
 {cat:'Basics',title:'Initialize a new repository',cmd:'git init',explain:'Creates a new Git repository in the current directory. This creates a hidden .git folder that contains all version control data.'},
 {cat:'Basics',title:'Clone a repository',cmd:'git clone <url>',explain:'Downloads a complete copy of a remote repository, including all branches, commits, and history.',params:[{name:'url',placeholder:'https://github.com/user/repo.git',label:'Repository URL'}]},
 {cat:'Basics',title:'Check repository status',cmd:'git status',explain:'Shows which files are staged, modified, or untracked. Essential for understanding the current state of your working directory.'},
@@ -434,12 +434,11 @@ function filterCat(cat){activeCat=cat;document.querySelectorAll('.cat-btn').forE
 function filterCommands(){renderCommands();}
 function renderCommands(){const search=document.getElementById('searchInput').value.toLowerCase();const el=document.getElementById('commandList');const filtered="COMMANDS.filter(c=">{if(activeCat!=='All'&&c.cat!==activeCat)return false;if(search&&!c.title.toLowerCase().includes(search)&&!c.cmd.toLowerCase().includes(search)&&!c.explain.toLowerCase().includes(search))return false;return true;});
 el.innerHTML="filtered.map((c,i)=">{let cmdStr=c.cmd;if(c.params)c.params.forEach(p=>{cmdStr="cmdStr.replace('<'+p.name+'">','<span style="color:#8be9fd">&lt;'+p.name+'&gt;</span>');});
-let paramsHtml='';if(c.params){paramsHtml='<div"" class="cmd-params">'+c.params.map(p=>'<div><label>'+p.label+'</label><input type="text" placeholder="'+p.placeholder+'" oninput="updateCmd(this,'+i+')"/></div>').join('')+'</div>';}
+let paramsHtml='';if(c.params){paramsHtml='<div"" class="cmd-params">'+c.params.map(p=>'<div><label>'+p.label+'</label><input type="text" placeholder='+p.placeholder+' oninput="updateCmd(this,'+i+')"/></div>').join('')+'</div>';}
 return '<div class="command-card"><div class="command-header" onclick="toggleCard(this)"><h3>'+c.title+'</h3><span class="cat-tag">'+c.cat+'</span></div><div class="command-body"><div class="cmd-block" id="cmd-'+i+'">'+cmdStr+'<button class="cmd-copy" onclick="copyCmd('+i+',event)">Copy</button></div><p class="cmd-explain">'+c.explain+'</p>'+(c.warn?'<div class="cmd-warning">Warning: '+c.warn+'</div>':'')+paramsHtml+'</div></div>';}).join('');if(filtered.length="==0)el.innerHTML='<p"" style="opacity:.5;text-align:center;padding:40px">No commands match your search.</p>';}
 function toggleCard(header){const body=header.nextElementSibling;body.classList.toggle('open');}
 function updateCmd(input,idx){const c="COMMANDS.filter(c=">{if(activeCat!=='All'&&c.cat!==activeCat)return false;const search=document.getElementById('searchInput').value.toLowerCase();if(search&&!c.title.toLowerCase().includes(search)&&!c.cmd.toLowerCase().includes(search))return false;return true;})[idx];if(!c)return;const card=input.closest('.command-body');const inputs="card.querySelectorAll('.cmd-params" input');let cmd=c.cmd;c.params.forEach((p,i)=>{const val=inputs[i]?inputs[i].value:'';cmd=cmd.replace('<'+p.name+'">',val||'<'+p.name+'">');});const block=card.querySelector('.cmd-block');block.innerHTML=esc(cmd)+'<button"" class="cmd-copy" onclick="copyCmd('+idx+',event)">Copy</button>';}
-function copyCmd(idx,e){e.stopPropagation();const block=document.getElementById('cmd-'+idx);const text=block.textContent.replace('Copy','').trim();navigator.clipboard.writeText(text).then(()=>{const btn=block.querySelector('.cmd-copy');btn.textContent='Copied!';setTimeout(()=>btn.textContent="'Copy',1500);});}"
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function copyCmd(idx,e){e.stopPropagation();const block=document.getElementById('cmd-'+idx);const text=block.textContent.replace('Copy','').trim();navigator.clipboard.writeText(text).then(()=>{const btn=block.querySelector('.cmd-copy');btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);});} function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 renderCategories();renderCommands();
 }}]</script>
 <section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#12121a;border:1px solid #2a2a3a;border-radius:12px;">

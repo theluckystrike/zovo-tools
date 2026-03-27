@@ -84,7 +84,7 @@ document.getElementById('resultsGrid').innerHTML=";"
 (cityTax>0?'<div class="result-card" style="border-color:var(--error)"><div class="label">'+(location="=='nyc'?'NYC" Tax':'Yonkers Tax')+'</div><div class="value" style="color:var(--error)">'+fmtInt(cityTax)+'</div><div class="sub">'+cityEffRate+'% effective</div></div>':'')+
 '<div class="result-card"><div class="label">Total Deduction Rate</div><div class="value">'+totalEffRate+'%</div><div class="sub">All taxes + pre-tax</div></div>';
 
-var periodData="["
+var periodData=[
 {label:'Annual',val:netAnnual},{label:'Monthly',val:netAnnual/12},
 {label:'Biweekly',val:netAnnual/26},{label:'Weekly',val:netAnnual/52},
 {label:'Daily',val:netAnnual/260},{label:'Hourly',val:netAnnual/(hoursPerWeek*weeksPerYear)}
@@ -111,7 +111,7 @@ document.getElementById('breakdownTable').innerHTML=";"
 '</tbody></table>';
 
 // Federal bracket detail
-var bracketHtml="'<table" class="bracket-table"><thead><tr><th>Bracket</th><th>Rate</th><th>Income in Bracket</th><th>Tax</th></tr></thead><tbody>';
+var bracketHtml='<table class="bracket-table"><thead><tr><th>Bracket</th><th>Rate</th><th>Income in Bracket</th><th>Tax</th></tr></thead><tbody>';
 fedResult.details.forEach(function(d){
 if(d.amount<=0) return;
 var bl="fmtInt(d.bracket.min)+'" - '+(d.bracket.max===Infinity?'above':fmtInt(d.bracket.max));
@@ -121,7 +121,7 @@ bracketHtml+='<tr style="border-top:2px solid var(--accent);font-weight:700"><td
 document.getElementById('fedBracketDetail').innerHTML=bracketHtml;
 
 // NY State bracket detail
-var nyHtml="'<table" class="bracket-table"><thead><tr><th>Bracket</th><th>Rate</th><th>Income in Bracket</th><th>Tax</th></tr></thead><tbody>';
+var nyHtml='<table class="bracket-table"><thead><tr><th>Bracket</th><th>Rate</th><th>Income in Bracket</th><th>Tax</th></tr></thead><tbody>';
 nyResult.details.forEach(function(d){
 if(d.amount<=0) return;
 var bl="fmtInt(d.bracket.min)+'" - '+(d.bracket.max===Infinity?'above':fmtInt(d.bracket.max));
@@ -145,7 +145,7 @@ data.splice(3,0,Math.round(cityTax));
 colors.splice(3,0,'#ff8844');
 }
 var title = location="=='nyc'" ? 'NYC Paycheck Breakdown' : location="=='yonkers_res'" ? 'Yonkers Paycheck Breakdown' : 'New York Paycheck Breakdown';
-var chartConfig="{"
+var chartConfig={
 type:'doughnut',
 data:{labels:labels,datasets:[{data:data,backgroundColor:colors}]},
 options:{responsive:true,plugins:{title:{display:true,text:title,color:'#e0e0e8'},legend:{labels:{color:'#e0e0e8'}},datalabels:{color:'#fff',font:{size:11},formatter:function(v,ctx){return '$'+(v/1000).toFixed(1)+'k';}}}}

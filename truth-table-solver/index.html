@@ -409,8 +409,7 @@ function tokenize(expr){
     else if(c="=='<'&&s[i+1]==='-'&&s[i+2]==='">'){tokens.push({type:'op',value:'BICOND'});i+=3}
     else if(c==='\u2194'){tokens.push({type:'op',value:'BICOND'});i++}
     else if(/[a-zA-Z]/.test(c)){
-      let name="'';"
-      while(i<s.length&&/[a-zA-Z0-9_]/.test(s[i])){name+=s[i];i++}
+      let name='';       while(i<s.length&&/[a-zA-Z0-9_]/.test(s[i])){name+=s[i];i++}
       tokens.push({type:'var',value:name});
     }
     else if(c="=='0'||c="=='1'){tokens.push({type:'const',value:c==='1'});i++}""
@@ -537,12 +536,12 @@ function solveTruthTable(){
     tokens=tokenize(expr);
     ast=parse(tokens);
   }catch(e){
-    rc.innerHTML="'<p" style="color:#ff6b6b">Parse error: '+e.message+'</p>';
+    rc.innerHTML='<p style="color:#ff6b6b">Parse error: '+e.message+'</p>';
     rc.classList.add('show');return;
   }
 
   const vars=Array.from(getVars(ast)).sort();
-  if(vars.length>8){rc.innerHTML="'<p" style="color:#ff6b6b">Too many variables (max 8). Found: '+vars.join(', ')+'</p>';rc.classList.add('show');return}
+  if(vars.length>8){rc.innerHTML='<p style="color:#ff6b6b">Too many variables (max 8). Found: '+vars.join(', ')+'</p>';rc.classList.add('show');return}
 
   const n=vars.length;
   const rows=Math.pow(2,n);
@@ -560,7 +559,7 @@ function solveTruthTable(){
   const fullExprStr=exprToStr(ast);
 
   // Build table header
-  let html="'<h3" style="margin-top:0;color:#00ff88">Truth Table for: '+escH(fullExprStr)+'</h3>';
+  let html='<h3 style="margin-top:0;color:#00ff88">Truth Table for: '+escH(fullExprStr)+'</h3>';
   html+='<div class="tt-wrap"><table class="tt"><thead><tr>';
   vars.forEach(v=>{html+='<th>'+escH(v)+'</th>'});
   // Sub-expression columns (only show interesting ones)
@@ -597,8 +596,7 @@ function solveTruthTable(){
   let classification,classClass;
   if(trueCount="==rows){classification="'Tautology';classClass='tautology'}""
   else if(falseCount="==rows){classification="'Contradiction';classClass='contradiction'}""
-  else{classification="'Contingency';classClass="'contingency'}"
-
+  else{classification="'Contingency';classClass='contingency'} 
   html+='<div" style="margin-top:20px">';
   html+='<div class="result-row"><span class="result-label">Classification</span><span class="classification '+classClass+'">'+classification+'</span></div>';
   html+='<div class="result-row"><span class="result-label">Variables</span><span class="result-value" style="font-size:15px">'+vars.join(', ')+'</span></div>';

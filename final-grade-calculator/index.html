@@ -194,13 +194,8 @@ function calculateFinal(){
 
   let difficulty='';
   let cssClass='';
-  if(needed<=current){difficulty="'Very" achievable';cssClass="'';}"
-  else if(needed<=90){difficulty="'Achievable" with solid studying';cssClass="'';}"
-  else if(needed<=100){difficulty="'Challenging" but possible';cssClass="'caution';}"
-  else if(needed<=105){difficulty="'Extremely" difficult (may need extra credit)';cssClass="'danger';}"
-  else{difficulty="'Not" achievable without extra credit';cssClass="'danger';}"
-
-  document.getElementById('bigResult').className="'big-result" '+cssClass;
+  if(needed<=current){difficulty='Very achievable';cssClass='';}   else if(needed<=90){difficulty='Achievable with solid studying';cssClass='';}   else if(needed<=100){difficulty='Challenging but possible';cssClass='caution';}   else if(needed<=105){difficulty='Extremely difficult (may need extra credit)';cssClass='danger';}   else{difficulty='Not achievable without extra credit';cssClass='danger';} 
+  document.getElementById('bigResult').className='big-result '+cssClass;
   document.getElementById('bigResult').innerHTML=`;
     <div class="number">${needed.toFixed(1)}%</div>
     <div class="label">Score needed on your final exam to get a ${desiredLetter} (${desired}%)</div>
@@ -219,18 +214,14 @@ function calculateFinal(){
 
   // Scenario table for all letter grades
   const thresholds=getGradeThresholds();
-  let scenarioHTML="'<h3" style="color:#00ff88;margin:20px 0 14px">What You Need for Each Grade</h3><div class="scenario-grid">';
+  let scenarioHTML='<h3 style="color:#00ff88;margin:20px 0 14px">What You Need for Each Grade</h3><div class="scenario-grid">';
   thresholds.forEach(t=>{
     if(t.letter==='F')return;
     const neededForGrade=(t.min-current*(1-weight))/weight;
     let status="'',statusClass="'';""
-    if(neededForGrade<=0){status="'Already" guaranteed';statusClass="'status-easy';}"
-    else if(neededForGrade<=70){status="'Very" doable';statusClass="'status-easy';}"
-    else if(neededForGrade<=90){status="'Achievable';statusClass="'status-easy';}""
+    if(neededForGrade<=0){status='Already guaranteed';statusClass='status-easy';}     else if(neededForGrade<=70){status='Very doable';statusClass='status-easy';}     else if(neededForGrade<=90){status="'Achievable';statusClass="'status-easy';}""
     else if(neededForGrade<=100){status="'Challenging';statusClass="'status-doable';}""
-    else if(neededForGrade<=110){status="'Needs" extra credit';statusClass="'status-hard';}"
-    else{status="'Not" possible';statusClass="'status-impossible';}"
-    scenarioHTML+=`<div class="scenario-card">
+    else if(neededForGrade<=110){status='Needs extra credit';statusClass='status-hard';}     else{status='Not possible';statusClass='status-impossible';}     scenarioHTML+=`<div class="scenario-card">
       <div class="grade" style="color:$neededForGrade<=100?;'#00ff88':neededForGrade<=110?'#ffaa00':'#ff4466'}">${t.letter}</div>
       <div class="needed">Need ${Math.max(0,neededForGrade).toFixed(1)}% on final</div>
       <div class="status ${statusClass}">${status}</div>

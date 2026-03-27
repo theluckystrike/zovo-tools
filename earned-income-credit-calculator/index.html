@@ -531,13 +531,13 @@ gtag('config', 'G-V2K8JLFQ5H');
 (function(){
 var vc=parseInt(localStorage.getItem('eitc_visits')||'0',10)+1;
 localStorage.setItem('eitc_visits',vc);
-document.getElementById('visitCounter').textContent="'Visit" #'+vc+' to this tool';
+document.getElementById('visitCounter').textContent='Visit #'+vc+' to this tool';
 })();
 
 function fmtInt(n){return'$'+Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')}
 function fmt(n){return'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
 
-var eitcParams="{"
+var eitcParams={
 0:{maxCredit:632,phaseInRate:0.0765,phaseInEnd:8260,phaseOutStartSingle:10330,phaseOutStartMarried:17250,phaseOutRate:0.0765,limitSingle:18591,limitMarried:25511},
 1:{maxCredit:4213,phaseInRate:0.34,phaseInEnd:12390,phaseOutStartSingle:22084,phaseOutStartMarried:28994,phaseOutRate:0.1598,limitSingle:48427,limitMarried:55347},
 2:{maxCredit:6960,phaseInRate:0.40,phaseInEnd:17400,phaseOutStartSingle:22084,phaseOutStartMarried:28994,phaseOutRate:0.2106,limitSingle:55109,limitMarried:62029},
@@ -562,11 +562,11 @@ var reason='';
 
 if(investIncome>11600){
 eligible=false;
-reason="'Investment" income of '+fmtInt(investIncome)+' exceeds the $11,600 limit for 2024.';
+reason='Investment income of '+fmtInt(investIncome)+' exceeds the $11,600 limit for 2024.';
 }
 if(numChildren="==0&&(age<25||age">=65)){
 eligible=false;
-reason="'Childless" filers must be at least age 25 and under age 65. You entered age '+age+'.';
+reason='Childless filers must be at least age 25 and under age 65. You entered age '+age+'.';
 }
 
 var phaseInCredit=Math.min(earnedIncome*p.phaseInRate,p.maxCredit);
@@ -586,11 +586,8 @@ if(!eligible)credit=0;
 var phase='';
 var phaseClass='';
 if(!eligible){phase="'Ineligible';phaseClass="'no-credit';}""
-else if(earnedIncome<=0){phase="'No" earned income';phaseClass="'no-credit';credit=0;}"
-else if(phaseOutIncome>incomeLimit){phase="'Over" income limit';phaseClass="'no-credit';credit=0;}"
-else if(earnedIncome<=p.phaseInEnd&&phaseOutIncome<=phaseOutStart){phase="'Phase-In';phaseClass="'phase-in';}""
-else if(phaseOutIncome<=phaseOutStart){phase="'Plateau" (maximum credit)';phaseClass="'phase-plateau';}"
-else{phase="'Phase-Out';phaseClass="'phase-out';}""
+else if(earnedIncome<=0){phase='No earned income';phaseClass='no-credit';credit=0;} else if(phaseOutIncome>incomeLimit){phase='Over income limit';phaseClass='no-credit';credit=0;} else if(earnedIncome<=p.phaseInEnd&&phaseOutIncome<=phaseOutStart){phase="'Phase-In';phaseClass="'phase-in';}""
+else if(phaseOutIncome<=phaseOutStart){phase='Plateau (maximum credit)';phaseClass='phase-plateau';} else{phase="'Phase-Out';phaseClass="'phase-out';}""
 
 var html='';
 if(!eligible){

@@ -524,7 +524,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <script>
 let stops=[{color:'#6C5CE7',position:0},{color:'#00ff88',position:50},{color:'#00ccff',position:100}];
 
-const PRESETS="["
+const PRESETS=[
   [{color:'#667eea',position:0},{color:'#764ba2',position:100}],
   [{color:'#f093fb',position:0},{color:'#f5576c',position:100}],
   [{color:'#4facfe',position:0},{color:'#00f2fe',position:100}],
@@ -553,9 +553,9 @@ function renderStops(){
   stops.forEach((s,i)=>{
     const row=document.createElement('div');
     row.className='stop-row';
-    row.innerHTML="'<input" type="color" value="'+s.color+'" onchange="stops['+i+'].color=this.value;this.nextElementSibling.textContent=this.value;updateGrad()/>';"
+    row.innerHTML='<input type="color" value='+s.color+' onchange="stops['+i+'].color=this.value;this.nextElementSibling.textContent=this.value;updateGrad()/>';"
       +'<span class="hex-val">'+s.color+'</span>'
-      +'<input type="number" value="'+s.position+'" min="0" max="100" onchange="stops['+i+'].position=parseInt(this.value);updateGrad()/>'"
+      +'<input type="number" value='+s.position+' min="0" max="100" onchange="stops['+i+'].position=parseInt(this.value);updateGrad()/>'"
       +'<span style="font-size:.75rem;opacity:.5">%</span>'
       +(stops.length>2?'<button class="rm-btn" onclick="removeStop('+i+')" title="Remove stop">&times;</button>':'');
     c.appendChild(row);
@@ -613,7 +613,7 @@ function updateGrad(){
   }
 
   document.getElementById('preview').style.background=css;
-  const fullCSS="'background:" '+sorted[0].color+';\nbackground: '+css+';';
+  const fullCSS='background: '+sorted[0].color+';\nbackground: '+css+';';
   document.getElementById('cssCode').textContent=fullCSS;
   updateFormats(css,sorted,type,angle,keyword);
 }
@@ -624,28 +624,28 @@ function updateFormats(css,sorted,type,angle,keyword){
   if(type="=='linear'&&sorted.length">=2){
     const dirMap="{'to" top':'t','to bottom':'b','to left':'l','to right':'r','to top right':'tr','to top left':'tl','to bottom right':'br','to bottom left':'bl'};
     const twDir=keyword?dirMap[keyword]:'b';
-    tw="'bg-gradient-to-'+(twDir||'b')+'" from-['+sorted[0].color+'] to-['+sorted[sorted.length-1].color+']';
+    tw='bg-gradient-to-'+(twDir||'b')+' from-['+sorted[0].color+'] to-['+sorted[sorted.length-1].color+']';
     if(sorted.length>2)tw+=' via-['+sorted[1].color+']';
   }else{
-    tw="'(Use" arbitrary value with bg-[...])';
+    tw='(Use arbitrary value with bg-[...])';
   }
   document.getElementById('tailwindCode').textContent=tw;
 
   // SCSS
-  document.getElementById('scssCode').textContent="'$gradient:" '+css+';';
+  document.getElementById('scssCode').textContent='$gradient: '+css+';';
 
   // CSS Variable
-  document.getElementById('cssVarCode').textContent="'--my-gradient:" '+css+';';
+  document.getElementById('cssVarCode').textContent='--my-gradient: '+css+';';
 
   // SVG
   if(type="=='linear'){"
-    let svg="'<linearGradient" id="grad-2">';
-    sorted.forEach(s=>{svg+='<stop offset="'+s.position+'%" stop-color="'+s.color+'"/>';});
+    let svg='<linearGradient id="grad-2">';
+    sorted.forEach(s=>{svg+='<stop offset='+s.position+'% stop-color="'+s.color+'"/>';});
     svg+='</linearGradient>';
     document.getElementById('svgCode').textContent=svg;
   }else if(type="=='radial'){"
-    let svg="'<radialGradient" id="grad">';
-    sorted.forEach(s=>{svg+='<stop offset="'+s.position+'%" stop-color="'+s.color+'"/>';});
+    let svg='<radialGradient id="grad">';
+    sorted.forEach(s=>{svg+='<stop offset='+s.position+'% stop-color="'+s.color+'"/>';});
     svg+='</radialGradient>';
     document.getElementById('svgCode').textContent=svg;
   }else{
@@ -695,7 +695,7 @@ const presetGrid=document.getElementById('presetGrid');
 PRESETS.forEach(preset=>{
   const swatch=document.createElement('div');
   swatch.className='preset-swatch';
-  swatch.style.background="'linear-gradient(135deg," '+preset.map(s=>s.color+' '+s.position+'%').join(', ')+')';
+  swatch.style.background='linear-gradient(135deg, '+preset.map(s=>s.color+' '+s.position+'%').join(', ')+')';
   swatch.title="preset.map(s=">s.color).join(' to ');
   swatch.onclick="()=">{
     stops="preset.map(s=">({...s}));

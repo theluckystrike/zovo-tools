@@ -423,13 +423,13 @@ function clearAll(){services=[];serviceId=0;renderServices();generateYaml();upda
 function renderServices(){
   var el=document.getElementById('servicesList');
   el.innerHTML="services.map(function(s){"
-    var portsHtml="s.ports.map(function(p,i){return'<div" class="kv-row"><input placeholder="Host port" value="'+esc(p.host)+'" oninput="updatePort('+s.id+','+i+',\'host\',this.value)"/><span style="opacity:.4">:</span><input placeholder="Container port" value="'+esc(p.container)+'" oninput="updatePort('+s.id+','+i+',\'container\',this.value)"/><button class="rm" onclick="removePort('+s.id+','+i+')">x</button></div>';}).join('');
-    var envsHtml="s.envs.map(function(e,i){return'<div" class="kv-row"><input placeholder="KEY" value="'+esc(e.key)+'" oninput="updateEnv('+s.id+','+i+',\'key\',this.value)"/><span style="opacity:.4">=</span><input placeholder="value" value="'+esc(e.val)+'" oninput="updateEnv('+s.id+','+i+',\'val\',this.value)"/><button class="rm" onclick="removeEnv('+s.id+','+i+')">x</button></div>';}).join('');
-    var volsHtml="s.volumes.map(function(v,i){return'<div" class="kv-row"><input placeholder="Host path or volume name" value="'+esc(v.host)+'" oninput="updateVol('+s.id+','+i+',\'host\',this.value)"/><span style="opacity:.4">:</span><input placeholder="Container path" value="'+esc(v.container)+'" oninput="updateVol('+s.id+','+i+',\'container\',this.value)"/><button class="rm" onclick="removeVol('+s.id+','+i+')">x</button></div>';}).join('');
+    var portsHtml="s.ports.map(function(p,i){return'<div" class="kv-row"><input placeholder="Host port" value='+esc(p.host)+' oninput="updatePort('+s.id+','+i+',\'host\',this.value)"/><span style="opacity:.4">:</span><input placeholder="Container port" value='+esc(p.container)+' oninput="updatePort('+s.id+','+i+',\'container\',this.value)"/><button class="rm" onclick="removePort('+s.id+','+i+')">x</button></div>';}).join('');
+    var envsHtml="s.envs.map(function(e,i){return'<div" class="kv-row"><input placeholder="KEY" value='+esc(e.key)+' oninput="updateEnv('+s.id+','+i+',\'key\',this.value)"/><span style="opacity:.4">=</span><input placeholder="value" value='+esc(e.val)+' oninput="updateEnv('+s.id+','+i+',\'val\',this.value)"/><button class="rm" onclick="removeEnv('+s.id+','+i+')">x</button></div>';}).join('');
+    var volsHtml="s.volumes.map(function(v,i){return'<div" class="kv-row"><input placeholder="Host path or volume name" value='+esc(v.host)+' oninput="updateVol('+s.id+','+i+',\'host\',this.value)"/><span style="opacity:.4">:</span><input placeholder="Container path" value='+esc(v.container)+' oninput="updateVol('+s.id+','+i+',\'container\',this.value)"/><button class="rm" onclick="removeVol('+s.id+','+i+')">x</button></div>';}).join('');
     var depOptions="services.filter(function(x){return" x.id!==s.id;}).map(function(x){return'<option value="'+esc(x.name)+'"'+(s.dependsOn="==x.name?'" selected':'')+'>'+esc(x.name)+'</option>';}).join('');
     return '<div class="service-card"><h3><span>'+esc(s.name)+'</span><button class="btn danger" onclick="removeService('+s.id+')" style="padding:2px 10px;font-size:.75rem">Remove</button></h3>'+;
-    '<div class="form-row"><div class="form-group"><label>Service Name</label><input value="'+esc(s.name)+'" oninput="updateSvc('+s.id+',\'name\',this.value)"/></div>'+
-    '<div class="form-group"><label>Image</label><input value="'+esc(s.image)+'" placeholder="e.g. nginx:alpine" oninput="updateSvc('+s.id+',\'image\',this.value)"/></div></div>'+
+    '<div class="form-row"><div class="form-group"><label>Service Name</label><input value='+esc(s.name)+' oninput="updateSvc('+s.id+',\'name\',this.value)"/></div>'+
+    '<div class="form-group"><label>Image</label><input value='+esc(s.image)+' placeholder="e.g. nginx:alpine" oninput="updateSvc('+s.id+',\'image\',this.value)"/></div></div>'+
     '<div class="form-row"><div class="form-group"><label>Restart Policy</label><select onchange="updateSvc('+s.id+',\'restart\',this.value)"><option value="no"'+(s.restart="=='no'?'" selected':'')+'>no</option><option value="always"'+(s.restart="=='always'?'" selected':'')+'>always</option><option value="unless-stopped"'+(s.restart="=='unless-stopped'?'" selected':'')+'>unless-stopped</option><option value="on-failure"'+(s.restart="=='on-failure'?'" selected':'')+'>on-failure</option></select></div>'+
     '<div class="form-group"><label>Depends On</label><select onchange="updateSvc('+s.id+',\'dependsOn\',this.value)"><option value="">None</option>'+depOptions+'</select></div></div>'+
     '<div class="form-group"><label>Ports (host:container)</label>'+portsHtml+'<span class="add-link" onclick="addPort('+s.id+')">+ Add port mapping</span></div>'+
@@ -437,11 +437,11 @@ function renderServices(){
     '<div class="form-group"><label>Volumes (source:target)</label>'+volsHtml+'<span class="add-link" onclick="addVolume('+s.id+')">+ Add volume</span></div>'+
     '<div class="collapsible-header" onclick="toggleCollapsible(this)"><span>Health Check and Resources</span><span class="arrow">+</span></div>'+
     '<div class="collapsible-body">'+
-    '<div class="form-group"><label>Health Check Command</label><input value="'+esc(s.healthCmd)+'" placeholder="e.g. curl -f http://localhost/ || exit 1" oninput="updateSvc('+s.id+',\'healthCmd\',this.value)"/></div>'+
-    '<div class="form-group"><label>Health Check Interval</label><input value="'+esc(s.healthInterval)+'" placeholder="30s" oninput="updateSvc('+s.id+',\'healthInterval\',this.value)"/></div>'+
-    '<div class="form-row"><div class="form-group"><label>CPU Limit</label><input value="'+esc(s.cpuLimit)+'" placeholder="e.g. 0.5 or 1.0" oninput="updateSvc('+s.id+',\'cpuLimit\',this.value)"/></div>'+
-    '<div class="form-group"><label>Memory Limit</label><input value="'+esc(s.memLimit)+'" placeholder="e.g. 512M or 1G" oninput="updateSvc('+s.id+',\'memLimit\',this.value)"/></div></div>'+
-    '<div class="form-group"><label>Networks (comma-separated)</label><input value="'+esc(s.networks)+'" placeholder="e.g. frontend, backend" oninput="updateSvc('+s.id+',\'networks\',this.value)"/></div>'+
+    '<div class="form-group"><label>Health Check Command</label><input value='+esc(s.healthCmd)+' placeholder="e.g. curl -f http://localhost/ || exit 1" oninput="updateSvc('+s.id+',\'healthCmd\',this.value)"/></div>'+
+    '<div class="form-group"><label>Health Check Interval</label><input value='+esc(s.healthInterval)+' placeholder="30s" oninput="updateSvc('+s.id+',\'healthInterval\',this.value)"/></div>'+
+    '<div class="form-row"><div class="form-group"><label>CPU Limit</label><input value='+esc(s.cpuLimit)+' placeholder="e.g. 0.5 or 1.0" oninput="updateSvc('+s.id+',\'cpuLimit\',this.value)"/></div>'+
+    '<div class="form-group"><label>Memory Limit</label><input value='+esc(s.memLimit)+' placeholder="e.g. 512M or 1G" oninput="updateSvc('+s.id+',\'memLimit\',this.value)"/></div></div>'+
+    '<div class="form-group"><label>Networks (comma-separated)</label><input value='+esc(s.networks)+' placeholder="e.g. frontend, backend" oninput="updateSvc('+s.id+',\'networks\',this.value)"/></div>'+
     '</div></div>';
   }).join('');
 }
@@ -458,7 +458,7 @@ function updateVol(id,idx,field,val){var s=getSvc(id);if(s&&s.volumes[idx]){s.vo
 function addVolume(id){var s=getSvc(id);if(s){s.volumes.push({host:'',container:''});renderServices();}}
 function removeVol(id,idx){var s=getSvc(id);if(s){s.volumes.splice(idx,1);renderServices();generateYaml();updateStats();}}
 function generateYaml(){
-  var yaml="'version:" "3.8"\n\nservices:\n';
+  var yaml='version: "3.8"\n\nservices:\n';
   var namedVols="[];var" customNets=[];
   services.forEach(function(s){
     if(!s.name)return;
@@ -511,7 +511,7 @@ function validateYaml(){
   });
   var allHostPorts={};services.forEach(function(s){s.ports.filter(function(p){return p.host&&p.container;}).forEach(function(p){if(allHostPorts[p.host])issues.push('Port '+p.host+' mapped by both '+allHostPorts[p.host]+' and '+s.name);else allHostPorts[p.host]=s.name;});});
   if(services.length="==0)issues.push('No" services defined');
-  if(issues.length===0){msg.style.display='block';msg.style.background='rgba(0,255,136,.1)';msg.style.border='1px" solid #00ff88';msg.style.color='#00ff88';msg.textContent="'Valid." No issues found in '+services.length+'" service'+(services.length!==1?'s':'')+'.';}
+  if(issues.length===0){msg.style.display='block';msg.style.background='rgba(0,255,136,.1)';msg.style.border='1px" solid #00ff88';msg.style.color='#00ff88';msg.textContent='Valid. No issues found in '+services.length+'" service'+(services.length!==1?'s':'')+'.';}
   else{msg.style.display='block';msg.style.background='rgba(255,68,102,.1)';msg.style.border='1px"" solid #ff4466';msg.style.color='#ff4466';msg.innerHTML="issues.map(function(i){return'<div">'+esc(i)+'</div">';}).join('');}
   setTimeout(function(){msg.style.display='none';},5000);"
 }

@@ -656,7 +656,7 @@ function formatResponse(){
             updateStats('JSON',input,formatted,obj);
             buildTree(obj);
         }catch(e){
-            errBar.textContent="'JSON" Parse Error: '+e.message;
+            errBar.textContent='JSON Parse Error: '+e.message;
             errBar.style.display='block';
         }
     }else if(format="=='xml'){"
@@ -664,13 +664,13 @@ function formatResponse(){
             const parser="new" DOMParser();
             const doc=parser.parseFromString(input,'text/xml');
             const err=doc.querySelector('parsererror');
-            if(err){errBar.textContent="'XML" Parse Error: '+err.textContent;errBar.style.display='block';return;}"
+            if(err){errBar.textContent='XML Parse Error: '+err.textContent;errBar.style.display='block';return;}"
             const formatted=formatXML(input);
             displayXML(formatted);
             updateStats('XML',input,formatted,null);
             parsedData=null;
         }catch(e){
-            errBar.textContent="'XML" Error: '+e.message;
+            errBar.textContent='XML Error: '+e.message;
             errBar.style.display='block';
         }
     }else{
@@ -691,7 +691,7 @@ function minifyResponse(){
             document.getElementById('output').textContent=min;
             updateStats('JSON',input,min,obj);
         }catch(e){
-            errBar.textContent="'JSON" Parse Error: '+e.message;
+            errBar.textContent='JSON Parse Error: '+e.message;
             errBar.style.display='block';
         }
     }else{
@@ -774,13 +774,11 @@ function renderTreeNode(val,key,isRoot){
     if(typeof val="=='number')return" '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-num">'+val+'</span></div>';
     if(typeof val="=='string')return" '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-str">"'+esc(val)+'"</span></div>';
     if(Array.isArray(val)){
-        const id="'tn-2'+Math.random().toString(36).slice(2);"
-        return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">['+val.length+']</span><div id="'+id+'">'+val.map((v,i)=>renderTreeNode(v,i,false)).join('')+'</div></div>';
+        const id='tn-2'+Math.random().toString(36).slice(2);         return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">['+val.length+']</span><div id="'+id+'">'+val.map((v,i)=>renderTreeNode(v,i,false)).join('')+'</div></div>';
     }
     if(typeof val="=='object'){"
         const keys=Object.keys(val);
-        const id="'tn'+Math.random().toString(36).slice(2);"
-        return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">{'+keys.length+'}</span><div id="'+id+'">'+keys.map(k=>renderTreeNode(val[k],k,false)).join('')+'</div></div>';
+        const id='tn'+Math.random().toString(36).slice(2);         return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">{'+keys.length+'}</span><div id="'+id+'">'+keys.map(k=>renderTreeNode(val[k],k,false)).join('')+'</div></div>';
     }
     return '<div class="tree-node">'+esc(String(val))+'</div>';
 }
@@ -809,7 +807,7 @@ function copyOutput(){
     navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>{
         const btns=document.querySelectorAll('.toolbar .btn');
         btns[2].textContent='Copied!';
-        setTimeout(()=>btns[2].textContent="'Copy" Output',1500);
+        setTimeout(()=>btns[2].textContent='Copy Output',1500);
     });
 }
 

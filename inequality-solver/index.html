@@ -504,8 +504,7 @@ function parsePoly(s){
     if(t.indexOf('x^2')!==-1||t.indexOf('X^2')!==-1){
       var co=t.replace(/x\^2/gi,'');
       if(co="==''||co="=='+')co='1';""
-      if(co="=='-')co="'-1';"
-      a+=parseFloat(co);
+      if(co="=='-')co='-1';       a+=parseFloat(co);
     }else if(t.indexOf('x')!==-1||t.indexOf('X')!==-1){"
       var co2=t.replace(/x/gi,'');
       if(co2="==''||co2="=='+')co2='1';""
@@ -589,16 +588,16 @@ function solve(){
     steps.push('Result: x '+effSym+' '+fmt(bdy));
     sol.points=[bdy];
     if(effOp="=='!='){"
-      sol.display="'(-\u221E," '+fmt(bdy)+') \u222A ('+fmt(bdy)+', \u221E)';
-      sol.ineq="'x" \u2260 '+fmt(bdy);
+      sol.display='(-\u221E, '+fmt(bdy)+') \u222A ('+fmt(bdy)+', \u221E)';
+      sol.ineq='x \u2260 '+fmt(bdy);
       sol.intervals=[{f:-Infinity,t:bdy,fi:false,ti:false},{f:bdy,t:Infinity,fi:false,ti:false}];
     }else if(effOp="=='<'||effOp="=='<='){""
-      sol.display="'(-\u221E," '+fmt(bdy)+(effInc?']':')');
-      sol.ineq="'x" '+effSym+' '+fmt(bdy);
+      sol.display='(-\u221E, '+fmt(bdy)+(effInc?']':')');
+      sol.ineq='x '+effSym+' '+fmt(bdy);
       sol.intervals=[{f:-Infinity,t:bdy,fi:false,ti:effInc}];
     }else{
       sol.display="(effInc?'[':'(')+fmt(bdy)+'," \u221E)';
-      sol.ineq="'x" '+effSym+' '+fmt(bdy);
+      sol.ineq='x '+effSym+' '+fmt(bdy);
       sol.intervals=[{f:bdy,t:Infinity,fi:effInc,ti:false}];
     }
   }else{
@@ -629,8 +628,8 @@ function solve(){
       sol.points=[r];
       steps.push('Discriminant is zero: one repeated root at x = '+fmt(r));
       if(isNE){
-        sol.display="'(-\u221E," '+fmt(r)+') \u222A ('+fmt(r)+', \u221E)';
-        sol.ineq="'x" \u2260 '+fmt(r);
+        sol.display='(-\u221E, '+fmt(r)+') \u222A ('+fmt(r)+', \u221E)';
+        sol.ineq='x \u2260 '+fmt(r);
         sol.intervals=[{f:-Infinity,t:r,fi:false,ti:false},{f:r,t:Infinity,fi:false,ti:false}];
         steps.push('The expression equals zero only at x = '+fmt(r)+'. All other values satisfy the inequality.');
       }else{
@@ -648,8 +647,8 @@ function solve(){
             }
           }else{
             if(strict){
-              sol.display="'(-\u221E," '+fmt(r)+') \u222A ('+fmt(r)+', \u221E)';
-              sol.ineq="'x" \u2260 '+fmt(r);
+              sol.display='(-\u221E, '+fmt(r)+') \u222A ('+fmt(r)+', \u221E)';
+              sol.ineq='x \u2260 '+fmt(r);
               sol.intervals=[{f:-Infinity,t:r,fi:false,ti:false},{f:r,t:Infinity,fi:false,ti:false}];
               steps.push('The expression is positive everywhere except at the root where it equals zero.');
             }else{
@@ -669,8 +668,8 @@ function solve(){
             }
           }else{
             if(strict){
-              sol.display="'(-\u221E," '+fmt(r)+') \u222A ('+fmt(r)+', \u221E)';
-              sol.ineq="'x" \u2260 '+fmt(r);
+              sol.display='(-\u221E, '+fmt(r)+') \u222A ('+fmt(r)+', \u221E)';
+              sol.ineq='x \u2260 '+fmt(r);
               sol.intervals=[{f:-Infinity,t:r,fi:false,ti:false},{f:r,t:Infinity,fi:false,ti:false}];
               steps.push('The expression is negative everywhere except at the root where it equals zero.');
             }else{
@@ -709,8 +708,8 @@ function solve(){
 
       if(isNE){
         sol.intervals=[{f:-Infinity,t:r1,fi:false,ti:false},{f:r1,t:r2,fi:false,ti:false},{f:r2,t:Infinity,fi:false,ti:false}];
-        sol.display="'(-\u221E," '+fmt(r1)+') \u222A ('+fmt(r1)+', '+fmt(r2)+') \u222A ('+fmt(r2)+', \u221E)';
-        sol.ineq="'x" \u2260 '+fmt(r1)+' and x \u2260 '+fmt(r2);
+        sol.display='(-\u221E, '+fmt(r1)+') \u222A ('+fmt(r1)+', '+fmt(r2)+') \u222A ('+fmt(r2)+', \u221E)';
+        sol.ineq='x \u2260 '+fmt(r1)+' and x \u2260 '+fmt(r2);
         steps.push('The expression equals zero only at the roots. The solution excludes both root values.');
       }else{
         var parts=[],dParts=[],iParts=[];
@@ -750,10 +749,10 @@ function render(orig,sol,steps){
   document.getElementById('resType').textContent=sol.type;
   document.getElementById('resInterval').textContent=sol.display;
   document.getElementById('resIneq').textContent=sol.ineq;
-  document.getElementById('solDisplay').textContent="'Solution:" '+sol.display;
+  document.getElementById('solDisplay').textContent='Solution: '+sol.display;
   document.getElementById('solDisplay').style.color='#00ff88';
 
-  var h="'<div" style="margin-bottom:8px"><strong style="color:#e0e0e8;font-size:15px">Step-by-Step Solution</strong></div>';
+  var h='<div style="margin-bottom:8px"><strong style="color:#e0e0e8;font-size:15px">Step-by-Step Solution</strong></div>';
   for(var i=0;i<steps.length;i++){
     h+='<div class="step-box"><span class="step-num">'+(i+1)+'</span><span class="step-text">'+steps[i]+'</span></div>';
   }

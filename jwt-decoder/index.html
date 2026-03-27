@@ -459,7 +459,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:20px
 <footer><div class="container">Built by Michael Lip &middot; <a href="https://zovo.one">zovo.one</a></div></footer>
 
 <script>
-const KNOWN_CLAIMS="{"
+const KNOWN_CLAIMS={
   iss:'Issuer',sub:'Subject',aud:'Audience',exp:'Expiration Time',nbf:'Not Before',
   iat:'Issued At',jti:'JWT ID',name:'Full name',email:'Email address',
   email_verified:'Email verified status',role:'User role',roles:'User roles',
@@ -499,7 +499,7 @@ function decodeJWT(){
   // Token visual
   const tv=document.getElementById('tokenVisual');
   tv.style.display='block';
-  tv.innerHTML="'<span" class="part-header">'+esc(parts[0])+'</span><span class="dot">.</span><span class="part-payload">'+esc(parts[1])+'</span><span class="dot">.</span><span class="part-sig">'+esc(parts[2])+'</span>';
+  tv.innerHTML='<span class="part-header">'+esc(parts[0])+'</span><span class="dot">.</span><span class="part-payload">'+esc(parts[1])+'</span><span class="dot">.</span><span class="part-sig">'+esc(parts[2])+'</span>';
 
   // Status bar
   const sb=document.getElementById('statusBar');
@@ -549,7 +549,7 @@ function decodeJWT(){
       const d="new" Date(val*1000);
       dv="d.toLocaleString()+'" ('+val+')';
     }
-    tr.innerHTML="'<td" class="claim-name">'+esc(key)+'</td><td>'+esc(dv)+'</td><td class="claim-desc">'+(KNOWN_CLAIMS[key]||'Custom claim')+'</td>';
+    tr.innerHTML='<td class="claim-name">'+esc(key)+'</td><td>'+esc(dv)+'</td><td class="claim-desc">'+(KNOWN_CLAIMS[key]||'Custom claim')+'</td>';
     tbody.appendChild(tr);
   }
 
@@ -573,7 +573,7 @@ function buildTimeline(){
   const exp="p.exp?new" Date(p.exp*1000):null;
   const now="new" Date();
 
-  let html="'<div" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px">';
+  let html='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px">';
   if(iat)html+='<div style="background:var(--input-bg);padding:10px;border-radius:6px"><div style="font-size:.75rem;color:var(--accent);margin-bottom:4px">Issued At (iat)</div><div style="font-size:.85rem">'+iat.toLocaleString()+'</div></div>';
   if(nbf)html+='<div style="background:var(--input-bg);padding:10px;border-radius:6px"><div style="font-size:.75rem;color:var(--warning);margin-bottom:4px">Not Before (nbf)</div><div style="font-size:.85rem">'+nbf.toLocaleString()+'</div></div>';
   if(exp)html+='<div style="background:var(--input-bg);padding:10px;border-radius:6px"><div style="font-size:.75rem;color:'+(exp<now?'var(--error)':'var(--accent)');"
