@@ -35,7 +35,7 @@ class ToolIntegrationSystem {
             'math': {
                 name: 'Math & Statistics',
                 tools: [
-                    'mixed-fraction-calculator', 'z-value-table',
+                    'jacobian-calculator', 'mixed-fraction-calculator', 'z-value-table',
                     'three-phase-power-calculator', 'acceleration-calculator'
                 ],
                 icon: '📊'
@@ -95,9 +95,11 @@ class ToolIntegrationSystem {
             'yen-to-usd-converter': ['60k-a-year-is-how-much-an-hour'],
 
             // Math relationships
-            'mixed-fraction-calculator': ['three-phase-power-calculator', 'acceleration-calculator'],
-            'z-value-table': ['three-phase-power-calculator'],
-            'three-phase-power-calculator': ['acceleration-calculator', 'mixed-fraction-calculator'],
+            'jacobian-calculator': ['mixed-fraction-calculator', 'three-phase-power-calculator', 'acceleration-calculator', 'z-value-table'],
+            'mixed-fraction-calculator': ['jacobian-calculator', 'three-phase-power-calculator', 'acceleration-calculator'],
+            'z-value-table': ['jacobian-calculator', 'three-phase-power-calculator'],
+            'three-phase-power-calculator': ['jacobian-calculator', 'acceleration-calculator', 'mixed-fraction-calculator'],
+            'acceleration-calculator': ['jacobian-calculator', 'three-phase-power-calculator'],
 
             // Development relationships
             'regex-visualizer': ['yaml-validator', 'xml-formatter'],
@@ -214,6 +216,11 @@ class ToolIntegrationSystem {
             'a1c-calculator': ['Glucose conversion', 'Risk levels', 'Medical accuracy'],
             'xml-formatter': ['Pretty print', 'Validation', 'Minification'],
             'yaml-validator': ['Syntax check', 'Error detection', 'Best practices'],
+            'jacobian-calculator': ['Partial derivatives', 'Matrix determinant', 'Coordinate transformations', 'Step-by-step solutions'],
+            'mixed-fraction-calculator': ['Fraction arithmetic', 'Decimal conversion', 'Simplification'],
+            'three-phase-power-calculator': ['Electrical calculations', 'Power analysis', 'Circuit optimization'],
+            'acceleration-calculator': ['Motion analysis', 'Velocity calculations', 'Physics applications'],
+            'z-value-table': ['Statistical analysis', 'Normal distribution', 'Probability calculations'],
             // Add more as needed
         };
         return featureMap[toolId] || ['Advanced calculations', 'User-friendly', 'Accurate results'];
