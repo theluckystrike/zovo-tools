@@ -11,6 +11,622 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V2K8JLFQ5H');
 </script> <link href="https://zovo.one/free-tools/chemistry-equation-balancer/" rel="canonical"/><meta content="Balance chemical equations instantly with our free online tool. Step-by-step balancing using algebraic matrix method, molar mass display, and 50+ common equa." name="description"/><meta content="chemical equation balancer, balance equations, chemistry tool, stoichiometry, molar mass calculator" name="keywords"/><meta content="Michael Lip" name="author"/><meta content="index, follow" name="robots"/><meta content="Zovo" property="og:site_name"/><!-- L7: OG Tags --><meta content="Chemical Equation Balancer - Free Online Tool" property="og:title"/><meta content="Balance chemical equations with step-by-step solutions. Algebraic matrix method, molar mass display, common equations library." property="og:description"/><meta content="website" property="og:type"/><meta content="https://zovo.one/free-tools/chemistry-equation-balancer/" property="og:url"/><meta content="https://zovo.one/free-tools/chemistry-equation-balancer/og-image.png" property="og:image"/><meta content="Balance Chemical Equations Online - Free Equation Balancer Tool" name="twitter:title"/><meta content="Balance chemical equations instantly with our free online tool. Step-by-step balancing using algebraic matrix method, molar mass display, and 50+ common equa." name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/><!-- L6: Structured Data --><meta content="2026-03-20" name="date"/><meta content="true" name="human-authored"/> <script> // L20: localStorage visit counter (function(){ let visits = parseInt(localStorage.getItem('visit_chem_balancer') || '0'); visits++; localStorage.setItem('visit_chem_balancer', visits.toString()); document.getElementById('visitCounter').textContent = '' + visits; })(); // Periodic table data (atomic masses) const ELEMENTS = { H:1.008,He:4.003,Li:6.941,Be:9.012,B:10.81,C:12.011,N:14.007,O:15.999, F:18.998,Ne:20.18,Na:22.99,Mg:24.305,Al:26.982,Si:28.086,P:30.974,S:32.06, Cl:35.45,Ar:39.948,K:39.098,Ca:40.078,Sc:44.956,Ti:47.867,V:50.942,Cr:51.996, Mn:54.938,Fe:55.845,Co:58.933,Ni:58.693,Cu:63.546,Zn:65.38,Ga:69.723,Ge:72.63, As:74.922,Se:78.96,Br:79.904,Kr:83.798,Rb:85.468,Sr:87.62,Y:88.906,Zr:91.224, Nb:92.906,Mo:95.96,Ru:101.07,Rh:102.906,Pd:106.42,Ag:107.868,Cd:112.411, In:114.818,Sn:118.71,Sb:121.76,Te:127.6,I:126.904,Xe:131.293,Cs:132.905, Ba:137.327,La:138.905,Pt:195.084,Au:196.967,Hg:200.59,Pb:207.2,Bi:208.98,U:238.029 }; const ELEMENT_COLORS = { H:'#ff3b30',O:'#0071e3',C:'#00ff88',N:'#0071e3',S:'#ff9f0a',Fe:'#ff9ff3', Na:'#ffa502',Cl:'#2ed573',Ca:'#1e90ff',K:'#ff6348',Mg:'#7bed9f',Al:'#70a1ff', P:'#ff4757',Si:'#eccc68',Cu:'#ffa502',Zn:'#a4b0be',Ag:'#dfe6e9',Au:'#f9ca24', Mn:'#c44569',Cr:'#0071e3',Br:'#e17055',I:'#0071e3',Ba:'#00b894',Pb:'#636e72' }; function getElementColor(el) { return ELEMENT_COLORS[el] || '#00ff88'; } // Parse a compound like "Ca(OH)2" into {Ca:1, O:2, H:2} function parseCompound(formula) { const elements = {}; const stack = [{}]; let i = 0; while (i < formula.length) { if (formula[i] === '(') { stack.push({}); i++; } else if (formula[i] === ')') { i++; let numStr = ''; while (i < formula.length && /\d/.test(formula[i])) { numStr += formula[i]; i++; } const mult = numStr? parseInt(numStr) : 1; const top = stack.pop(); const parent = stack[stack.length - 1]; for (const el in top) { parent[el] = (parent[el] || 0) + top[el] * mult; } } else if (/[A-Z]/.test(formula[i])) { let el = formula[i]; i++; while (i < formula.length && /[a-z]/.test(formula[i])) { el += formula[i]; i++; } let numStr = ''; while (i < formula.length && /\d/.test(formula[i])) { numStr += formula[i]; i++; } const count = numStr? parseInt(numStr) : 1; const top = stack[stack.length - 1]; top[el] = (top[el] || 0) + count; } else { i++; } } const result = stack[0]; for (const el in result) { elements[el] = (elements[el] || 0) + result[el]; } return elements; } // Parse equation string function parseEquation(eq) { eq = eq.replace(/\s+/g, ''); const sides = eq.split(/->|→|=|/); if (sides.length!== 2) return null; const reactants = sides[0].split('+').map(s => s.trim()).filter(Boolean); const products = sides[1].split('+').map(s => s.trim()).filter(Boolean); return { reactants, products }; } // Get molar mass of compound function getMolarMass(formula) { const elems = parseCompound(formula); let mass = 0; for (const el in elems) { if (ELEMENTS[el]) mass += ELEMENTS[el] * elems[el]; else return null; } return Math.round(mass * 1000) / 1000; } // Build coefficient matrix and solve using Gaussian elimination function balanceMatrix(reactants, products) { const allCompounds = [..reactants..products]; const allElements = new Set(); const parsed = allCompounds.map(c => parseCompound(c)); parsed.forEach(p => Object.keys(p).forEach(el => allElements.add(el))); const elements = Array.from(allElements); const n = allCompounds.length; // columns (coefficients) const m = elements.length; // rows (elements) // rows="elements," cols="compounds" // Reactants get positive, products get negative const matrix = []; for (let i = 0; i < m; i++) { const row = []; for (let j = 0; j < n; j++) { let val = parsed[j][elements[i]] || 0; if (j >= reactants.length) val = -val; row.push(val); } row.push(0); // augmented column matrix.push(row); } // Gaussian elimination const rows = matrix.length; const cols = matrix[0].length; let pivotRow = 0; for (let col = 0; col < cols - 1 && pivotRow < rows; col++) { // Find pivot let maxRow = pivotRow; for (let r = pivotRow + 1; r < rows; r++) { if (Math.abs(matrix[r][col]) > Math.abs(matrix[maxRow][col])) maxRow = r; } if (Math.abs(matrix[maxRow][col]) < 1e-10) continue; [matrix[pivotRow], matrix[maxRow]] = [matrix[maxRow], matrix[pivotRow]]; const pivotVal = matrix[pivotRow][col]; for (let c = col; c < cols; c++) matrix[pivotRow][c] /= pivotVal; for (let r = 0; r < rows; r++) { if (r === pivotRow) continue; const factor = matrix[r][col]; for (let c = col; c < cols; c++) matrix[r][c] -= factor * matrix[pivotRow][c]; } pivotRow++; } // Find free variables and solve const coefficients = new Array(n).fill(0); const pivotCols = []; let pr = 0; for (let c = 0; c < n && pr < rows; c++) { if (Math.abs(matrix[pr][c]) > 1e-10) { pivotCols.push(c); pr++; } } const freeCols = []; for (let c = 0; c < n; c++) { if (!pivotCols.includes(c)) freeCols.push(c); } if (freeCols.length === 0) { // Trivial - set last coefficient to 1 coefficients[n - 1] = 1; for (let i = pivotCols.length - 1; i >= 0; i--) { const r = i; const pc = pivotCols[i]; let sum = matrix[r][cols - 1]; for (let c = pc + 1; c < n; c++) sum -= matrix[r][c] * coefficients[c]; coefficients[pc] = sum; } } else { // Set free variables to 1 for (const fc of freeCols) coefficients[fc] = 1; for (let i = pivotCols.length - 1; i >= 0; i--) { const r = i; const pc = pivotCols[i]; let sum = matrix[r][cols - 1]; for (let c = pc + 1; c < n; c++) sum -= matrix[r][c] * coefficients[c]; coefficients[pc] = sum; } } // Make all positive integers const absCoeffs = coefficients.map(c => Math.abs(c)); // Multiply to clear fractions let lcm = 1; for (const c of absCoeffs) { if (c === 0) continue; // Find denominator for (let d = 1; d <= 1000; d++) { if (Math.abs(c * d - Math.round(c * d)) < 1e-6) { lcm = lcmNum(lcm, d); break; } } } const intCoeffs = absCoeffs.map(c => Math.round(c * lcm)); // Reduce by GCD let g = intCoeffs.filter(c => c > 0).reduce((a, b) => gcd(a, b), 0); if (g === 0) g = 1; const final = intCoeffs.map(c => c / g); // Validate for (const el of elements) { let left = 0, right = 0; for (let j = 0; j < reactants.length; j++) { left += (parsed[j][el] || 0) * final[j]; } for (let j = reactants.length; j < n; j++) { right += (parsed[j][el] || 0) * final[j]; } if (Math.abs(left - right) > 1e-6) return null; } return { reactantfinal.slice(0, reactants.length), productfinal.slice(reactants.length), elements, parsed }; } function gcd(a, b) { a = Math.abs(Math.round(a)); b = Math.abs(Math.round(b)); while (b) { [a, b] = [b, a % b]; } return a; } function lcmNum(a, b) { return (a * b) / gcd(a, b); } function formatEquation(reactants, products, rCoeffs, pCoeffs) { const fmtCompound = (c, coeff) => { const prefix = coeff > 1? `<span style="color:#0071e3;font-weight:700;">${coeff}</span>` : ''; const colored = c.replace(/([A-Z][a-z]?)(\d*)/g, (m, el, num) => { const color = getElementColor(el); return `<span class="element-tag" style="background:$color20;color:$color;padding:1px 4px;border-radius:3px;">${el}</span>${num? `<sub>${num}</sub>` : ''}`; }); return prefix + colored; }; const left = reactants.map((r, i) => fmtCompound(r, rCoeffs[i])).join(' + '); const right = products.map((p, i) => fmtCompound(p, pCoeffs[i])).join(' + '); return left + ' → ' + right; } function balanceEquation() { const input = document.getElementById('equationInput').value.trim(); if (!input) return; const parsed = parseEquation(input); if (!parsed) { document.getElementById('resultArea').innerHTML = '
+
+<style>
+
+/* Apple Design System - Clean, Professional, Trustworthy */
+
+:root {
+    /* Spacing - 8px grid */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-7: 32px;
+    --space-8: 40px;
+    --space-9: 48px;
+    --space-10: 64px;
+
+    /* Typography scale */
+    --font-xs: 12px;
+    --font-sm: 14px;
+    --font-base: 16px;
+    --font-md: 17px;
+    --font-lg: 20px;
+    --font-xl: 24px;
+    --font-2xl: 28px;
+    --font-3xl: 34px;
+
+    /* Colors */
+    --color-background: #ffffff;
+    --color-surface: #f5f5f7;
+    --color-surface-elevated: #ffffff;
+    --color-border: #d2d2d7;
+    --color-border-light: #e5e5ea;
+    --color-text-primary: #1d1d1f;
+    --color-text-secondary: #6e6e73;
+    --color-text-tertiary: #86868b;
+    --color-text-placeholder: #aeaeb2;
+    --color-accent: #0071e3;
+    --color-accent-hover: #0077ed;
+    --color-success: #34c759;
+    --color-warning: #ff9f0a;
+    --color-error: #ff3b30;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+    /* Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--color-background);
+    color: var(--color-text-primary);
+    line-height: 1.47;
+    min-height: 100vh;
+    font-size: var(--font-md);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* Layout */
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--space-9) var(--space-6);
+}
+
+/* Typography */
+h1 {
+    font-size: var(--font-3xl);
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.2;
+    margin-bottom: var(--space-6);
+    color: var(--color-text-primary);
+    text-align: center;
+}
+
+h2 {
+    font-size: var(--font-xl);
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.2;
+    margin: var(--space-9) 0 var(--space-6);
+    color: var(--color-text-primary);
+    padding-bottom: var(--space-3);
+}
+
+h3 {
+    font-size: var(--font-lg);
+    font-weight: 600;
+    margin: var(--space-7) 0 var(--space-4);
+    color: var(--color-text-primary);
+}
+
+p {
+    margin-bottom: var(--space-5);
+    color: var(--color-text-secondary);
+    line-height: 1.47;
+}
+
+p:first-of-type {
+    font-size: var(--font-md);
+    color: var(--color-text-primary);
+    font-weight: 400;
+}
+
+a {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+code {
+    background: var(--color-surface);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: var(--font-sm);
+    font-family: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, monospace;
+    color: var(--color-text-primary);
+}
+
+/* Cards */
+.calculator-card, .tool-card {
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    margin: var(--space-7) 0;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.2s ease;
+}
+
+.calculator-card:hover, .tool-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+/* Form elements */
+.form-group {
+    margin-bottom: var(--space-4);
+    position: relative;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    margin-bottom: var(--space-2);
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    font-size: var(--font-sm);
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    font-size: var(--font-md);
+    font-family: inherit;
+    font-weight: 400;
+    transition: border-color 0.15s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+input::placeholder, select::placeholder, textarea::placeholder {
+    color: var(--color-text-placeholder);
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--color-border-light);
+    border-radius: 2px;
+    border: none;
+    padding: 0;
+    outline: none;
+    box-shadow: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    cursor: pointer;
+    border: none;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    width: auto;
+    margin-right: var(--space-2);
+}
+
+.hint {
+    font-size: var(--font-xs);
+    color: var(--color-text-tertiary);
+    margin-top: var(--space-1);
+}
+
+/* Buttons */
+.btn, button.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-accent);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: var(--font-base);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s ease;
+    text-decoration: none;
+    letter-spacing: 0;
+}
+
+.btn:hover {
+    background: var(--color-accent-hover);
+    text-decoration: none;
+}
+
+.btn:active {
+    background: #006edb;
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-accent);
+    border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+    background: var(--color-border-light);
+}
+
+/* Results */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-7) 0;
+}
+
+.result-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    padding: var(--space-5);
+}
+
+.result-value, .result-card .val {
+    font-size: var(--font-xl);
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-bottom: var(--space-1);
+}
+
+.result-label, .result-card .lbl {
+    font-size: var(--font-xs);
+    color: var(--color-text-tertiary);
+}
+
+/* Result panel */
+.result-panel {
+    display: none;
+    margin-top: var(--space-7);
+}
+
+.result-panel.visible {
+    display: block;
+}
+
+.rate-display {
+    text-align: center;
+    padding: var(--space-7) 0;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-6);
+}
+
+.rate-label {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+}
+
+.rate-number {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1.2;
+    margin: var(--space-2) 0;
+}
+
+.rate-sub {
+    font-size: var(--font-sm);
+    color: var(--color-text-tertiary);
+    margin-top: var(--space-3);
+}
+
+.rate-tiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin: var(--space-6) 0;
+}
+
+.tier-card {
+    text-align: center;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+}
+
+.tier-card.tier-target { border-color: var(--color-accent); }
+.tier-name { font-size: var(--font-xs); font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2); }
+.tier-rate { font-size: var(--font-2xl); font-weight: 700; color: var(--color-text-primary); margin-bottom: var(--space-2); }
+.tier-card.tier-target .tier-rate { color: var(--color-accent); }
+.tier-desc { font-size: var(--font-xs); color: var(--color-text-tertiary); }
+
+.breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.breakdown-card {
+    text-align: center;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+}
+
+.breakdown-card .val { font-size: var(--font-xl); font-weight: 700; color: var(--color-text-primary); margin-bottom: var(--space-1); }
+.breakdown-card .lbl { font-size: var(--font-xs); color: var(--color-text-tertiary); }
+
+/* Breadcrumb */
+.breadcrumb {
+    font-size: var(--font-sm);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-7);
+}
+
+.breadcrumb a {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover { text-decoration: underline; }
+
+/* Reading time */
+.reading-time {
+    font-size: var(--font-sm);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-6);
+    text-align: center;
+}
+
+/* Table of Contents */
+.toc {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    margin: var(--space-7) 0;
+}
+
+.toc-title {
+    font-size: var(--font-lg);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+}
+
+.toc ol { padding-left: var(--space-6); }
+.toc li { margin-bottom: var(--space-2); }
+.toc a { color: var(--color-accent); text-decoration: none; font-size: var(--font-base); }
+.toc a:hover { text-decoration: underline; }
+
+/* Content sections */
+.content-section {
+    margin: var(--space-9) 0;
+}
+
+.content-section a { color: var(--color-accent); text-decoration: none; }
+.content-section a:hover { text-decoration: underline; }
+
+/* Community and video sections */
+.community-section a, .video-section a {
+    display: block;
+    color: var(--color-accent);
+    text-decoration: none;
+    padding: var(--space-2) 0;
+    font-size: var(--font-base);
+}
+
+.community-section a:hover, .video-section a:hover { text-decoration: underline; }
+
+/* FAQ */
+.faq-section { margin: var(--space-9) 0; }
+.faq-item { border-bottom: 1px solid var(--color-border-light); }
+.faq-q { padding: var(--space-5) 0; font-weight: 600; color: var(--color-text-primary); cursor: pointer; font-size: var(--font-md); }
+.faq-q:hover { color: var(--color-accent); }
+.faq-a { display: none; padding: 0 0 var(--space-5); }
+.faq-a p { color: var(--color-text-secondary); line-height: 1.6; }
+.faq-item.open .faq-a { display: block; }
+
+/* Author box */
+.author-box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    margin: var(--space-7) 0;
+}
+
+.author-box .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--color-accent); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: var(--font-lg); flex-shrink: 0; }
+.author-box .name { font-weight: 600; color: var(--color-text-primary); margin-bottom: var(--space-1); }
+.author-box .info { font-size: var(--font-sm); color: var(--color-text-secondary); line-height: 1.47; }
+
+/* Update log */
+.update-log { font-size: var(--font-sm); color: var(--color-text-tertiary); margin: var(--space-6) 0; line-height: 1.8; }
+.log-date { font-weight: 600; color: var(--color-text-secondary); }
+
+/* Related tools */
+.related-tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-6) 0;
+}
+
+.related-tool-card {
+    display: block;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: box-shadow 0.15s ease;
+}
+
+.related-tool-card:hover { box-shadow: var(--shadow-md); text-decoration: none; }
+.related-tool-card .tool-name { font-weight: 600; color: var(--color-text-primary); margin-bottom: var(--space-2); font-size: var(--font-base); }
+.related-tool-card .tool-desc { font-size: var(--font-sm); color: var(--color-text-secondary); }
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-6) 0;
+    font-size: var(--font-sm);
+}
+
+th, td {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+th {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+}
+
+td { color: var(--color-text-secondary); }
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: var(--space-9) 0 var(--space-6);
+    font-size: var(--font-sm);
+    color: var(--color-text-tertiary);
+    border-top: 1px solid var(--color-border-light);
+    margin-top: var(--space-10);
+}
+
+footer a { color: var(--color-accent); text-decoration: none; margin-left: var(--space-2); }
+
+/* Links */
+a.interactive-element { color: var(--color-accent); text-decoration: none; }
+a.interactive-element:hover { text-decoration: underline; }
+
+/* Tabs */
+.tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-6); border-bottom: 1px solid var(--color-border-light); }
+.tab { padding: var(--space-3) var(--space-4); cursor: pointer; color: var(--color-text-secondary); font-weight: 500; border-bottom: 2px solid transparent; }
+.tab.active, .tab:hover { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Toggle/Switch */
+.toggle { display: flex; align-items: center; gap: var(--space-2); cursor: pointer; }
+
+/* Output area */
+.output, .output-area, #output, #result, .result {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    padding: var(--space-5);
+    margin: var(--space-5) 0;
+    font-family: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, monospace;
+    font-size: var(--font-sm);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--color-text-primary);
+}
+
+/* Badges section */
+.badges { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3); }
+
+/* Gauge / progress */
+.gauge, .progress-bar { background: var(--color-border-light); border-radius: 4px; height: 8px; overflow: hidden; }
+.gauge-fill, .progress-fill { background: var(--color-accent); height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+
+/* Stats grid */
+.stats-grid, .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-6) 0;
+}
+
+.stat-card, .stat {
+    text-align: center;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-light);
+}
+
+.stat-value, .stat-number { font-size: var(--font-xl); font-weight: 700; color: var(--color-accent); }
+.stat-label { font-size: var(--font-xs); color: var(--color-text-tertiary); margin-top: var(--space-1); }
+
+/* Grid layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+
+@media (max-width: 600px) {
+    .grid-2, .grid-3, .rate-tiers { grid-template-columns: 1fr; }
+}
+
+/* Focus & accessibility */
+*:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container { padding: var(--space-6) var(--space-4); }
+    h1 { font-size: var(--font-2xl); }
+    .results-grid { grid-template-columns: 1fr; }
+}
+
+/* Misc resets for old theme classes */
+.fade-in { animation: none; }
+.pulse { animation: none; }
+.virtuoso-signature::after { display: none; }
+
+</style>
 </head>
 <body><main role="main" class="consciousness-main">
 
