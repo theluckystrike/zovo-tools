@@ -665,9 +665,9 @@ gtag('config', 'G-V2K8JLFQ5H');
   visitCount++;
   localStorage.setItem(key,visitCount.toString());
   const saved=JSON.parse(localStorage.getItem('final_grade_prefs')||'{}');
-  if(saved.currentGrade)document.getElementById('currentGrade').value="saved.currentGrade;"
-  if(saved.finalWeight)document.getElementById('finalWeight').value="saved.finalWeight;"
-  if(saved.desiredGrade)document.getElementById('desiredGrade').value="saved.desiredGrade;"
+  if(saved.currentGrade)document.getElementById('currentGrade').value=saved.currentGrade;
+  if(saved.finalWeight)document.getElementById('finalWeight').value=saved.finalWeight;
+  if(saved.desiredGrade)document.getElementById('desiredGrade').value=saved.desiredGrade;
 })();
 
 let categories=[];
@@ -684,7 +684,7 @@ function switchTab(tab){
 
 function getGradeThresholds(){
   const scale=document.getElementById('gradeScale').value;
-  if(scale="=='plus_minus'){"
+  if(scale==='plus_minus'){
     return [{letter:'A',min:93},{letter:'A-',min:90},{letter:'B+',min:87},{letter:'B',min:83},{letter:'B-',min:80},{letter:'C+',min:77},{letter:'C',min:73},{letter:'C-',min:70},{letter:'D+',min:67},{letter:'D',min:63},{letter:'D-',min:60},{letter:'F',min:0}];
   }
   return [{letter:'A',min:90},{letter:'B',min:80},{letter:'C',min:70},{letter:'D',min:60},{letter:'F',min:0}];
@@ -713,20 +713,25 @@ function calculateFinal(){
 
   let difficulty='';
   let cssClass='';
-  if(needed<=current){difficulty='Very achievable';cssClass='';}   else if(needed<=90){difficulty='Achievable with solid studying';cssClass='';}   else if(needed<=100){difficulty='Challenging but possible';cssClass='caution';}   else if(needed<=105){difficulty='Extremely difficult (may need extra credit)';cssClass='danger';}   else{difficulty='Not achievable without extra credit';cssClass='danger';} 
+  if(needed<=current){difficulty='Very achievable';cssClass='';}
+  else if(needed<=90){difficulty='Achievable with solid studying';cssClass='';}
+  else if(needed<=100){difficulty='Challenging but possible';cssClass='caution';}
+  else if(needed<=105){difficulty='Extremely difficult (may need extra credit)';cssClass='danger';}
+  else{difficulty='Not achievable without extra credit';cssClass='danger';}
+
   document.getElementById('bigResult').className='big-result '+cssClass;
-  document.getElementById('bigResult').innerHTML=`;
+  document.getElementById('bigResult').innerHTML=`
     <div class="number">${needed.toFixed(1)}%</div>
     <div class="label">Score needed on your final exam to get a ${desiredLetter} (${desired}%)</div>
     <div class="sub">${difficulty}</div>
   `;
 
-  document.getElementById('resultsCard').innerHTML=`;
+  document.getElementById('resultsCard').innerHTML=`
     <h3 style="color:#0071e3;margin-bottom:14px">Grade Analysis</h3>
     <div class="result-row"><span class="result-label">Current Course Grade</span><span class="result-value">${current.toFixed(1)}% (${currentLetter})</span></div>
     <div class="result-row"><span class="result-label">Final Exam Weight</span><span class="result-value">${(weight*100).toFixed(0)}%</span></div>
     <div class="result-row"><span class="result-label">Desired Course Grade</span><span class="result-value">${desired.toFixed(1)}% (${desiredLetter})</span></div>
-    <div class="result-row"><span class="result-label">Needed Final Score</span><span class="result-value ${needed>100?'danger':needed">90?'caution':''}">${needed.toFixed(2)}%</span></div>
+    <div class="result-row"><span class="result-label">Needed Final Score</span><span class="result-value ${needed>100?'danger':needed>90?'caution':''}">${needed.toFixed(2)}%</span></div>
     <div class="result-row"><span class="result-label">If You Score 100% on Final</span><span class="result-value">${(current*(1-weight)+100*weight).toFixed(1)}% (${getLetterGrade(current*(1-weight)+100*weight)})</span></div>
     <div class="result-row"><span class="result-label">If You Score 0% on Final</span><span class="result-value danger">${(current*(1-weight)).toFixed(1)}% (${getLetterGrade(current*(1-weight))})</span></div>
   `;
@@ -737,11 +742,15 @@ function calculateFinal(){
   thresholds.forEach(t=>{
     if(t.letter==='F')return;
     const neededForGrade=(t.min-current*(1-weight))/weight;
-    let status="'',statusClass="'';""
-    if(neededForGrade<=0){status='Already guaranteed';statusClass='status-easy';}     else if(neededForGrade<=70){status='Very doable';statusClass='status-easy';}     else if(neededForGrade<=90){status="'Achievable';statusClass="'status-easy';}""
-    else if(neededForGrade<=100){status="'Challenging';statusClass="'status-doable';}""
-    else if(neededForGrade<=110){status='Needs extra credit';statusClass='status-hard';}     else{status='Not possible';statusClass='status-impossible';}     scenarioHTML+=`<div class="scenario-card">
-      <div class="grade" style="color:$neededForGrade<=100?;'#00ff88':neededForGrade<=110?'#ff9f0a':'#ff3b30'}">${t.letter}</div>
+    let status='',statusClass='';
+    if(neededForGrade<=0){status='Already guaranteed';statusClass='status-easy';}
+    else if(neededForGrade<=70){status='Very doable';statusClass='status-easy';}
+    else if(neededForGrade<=90){status='Achievable';statusClass='status-easy';}
+    else if(neededForGrade<=100){status='Challenging';statusClass='status-doable';}
+    else if(neededForGrade<=110){status='Needs extra credit';statusClass='status-hard';}
+    else{status='Not possible';statusClass='status-impossible';}
+    scenarioHTML+=`<div class="scenario-card">
+      <div class="grade" style="color:${neededForGrade<=100?'#00ff88':neededForGrade<=110?'#ff9f0a':'#ff3b30'}">${t.letter}</div>
       <div class="needed">Need ${Math.max(0,neededForGrade).toFixed(1)}% on final</div>
       <div class="status ${statusClass}">${status}</div>
     </div>`;
@@ -751,7 +760,8 @@ function calculateFinal(){
 
   document.getElementById('resultsSection').style.display='block';
   document.getElementById('chartSection').style.display='block';
-  document.getElementById('chartTitle').textContent='Final" Score vs Course Grade';drawFinalChart(current,weight);
+  document.getElementById('chartTitle').textContent='Final Score vs Course Grade';
+  drawFinalChart(current,weight);
 }
 
 function addCategory(){
@@ -767,13 +777,13 @@ function addCategory(){
 }
 
 function removeCategory(i){categories.splice(i,1);renderCategories();}
-function clearCategories(){categories=[];renderCategories();document.getElementById('resultsSection').style.display='none';}"
+function clearCategories(){categories=[];renderCategories();document.getElementById('resultsSection').style.display='none';}
 
 function renderCategories(){
   const el=document.getElementById('catList');
-  if(!categories.length){el.innerHTML='';return;}"
-  const totalWeight="categories.reduce((s,c)=">s+c.weight,0);
-  el.innerHTML="categories.map((c,i)=">`<div class="cat-item">;
+  if(!categories.length){el.innerHTML='';return;}
+  const totalWeight=categories.reduce((s,c)=>s+c.weight,0);
+  el.innerHTML=categories.map((c,i)=>`<div class="cat-item">
     <span style="color:#0071e3;font-weight:600">${c.name}</span>
     <span>Weight: ${c.weight}%</span>
     <span>Score: ${c.score}%</span>
@@ -784,21 +794,21 @@ function renderCategories(){
 
 function calculateWeighted(){
   if(!categories.length){alert('Add at least one category.');return;}
-  const totalWeight="categories.reduce((s,c)=">s+c.weight,0);
-  const weightedSum="categories.reduce((s,c)=">s+c.score*(c.weight/100),0);
+  const totalWeight=categories.reduce((s,c)=>s+c.weight,0);
+  const weightedSum=categories.reduce((s,c)=>s+c.score*(c.weight/100),0);
 
   // Current grade on completed work
-  const currentOnCompleted="totalWeight">0?(weightedSum/(totalWeight/100)):0;
+  const currentOnCompleted=totalWeight>0?(weightedSum/(totalWeight/100)):0;
   const remaining=100-totalWeight;
 
   document.getElementById('bigResult').className='big-result';
-  document.getElementById('bigResult').innerHTML=`;
+  document.getElementById('bigResult').innerHTML=`
     <div class="number">${weightedSum.toFixed(1)}%</div>
     <div class="label">Your current weighted grade (${totalWeight}% of course completed)</div>
     <div class="sub">Average on completed work: ${currentOnCompleted.toFixed(1)}%${remaining>0?` · ${remaining}% of grade remaining`:''}</div>
   `;
 
-  let html="`<h3" style="color:#0071e3;margin-bottom:14px">Weighted Grade Breakdown</h3>`;
+  let html=`<h3 style="color:#0071e3;margin-bottom:14px">Weighted Grade Breakdown</h3>`;
   categories.forEach(c=>{
     html+=`<div class="result-row"><span class="result-label">${c.name} (${c.weight}%)</span><span class="result-value">${c.score}% · contributes ${(c.score*c.weight/100).toFixed(1)} pts</span></div>`;
   });
@@ -807,7 +817,7 @@ function calculateWeighted(){
   html+=`<div class="result-row"><span class="result-label">Total Weight Accounted</span><span class="result-value">${totalWeight}%</span></div>`;
 
   if(remaining>0){
-    const thresholds="getGradeThresholds().filter(t=">t.letter!=='F');
+    const thresholds=getGradeThresholds().filter(t=>t.letter!=='F');
     html+=`<div style="margin-top:16px"><h3 style="color:#0071e3;margin-bottom:10px">What You Need on Remaining ${remaining}%</h3>`;
     thresholds.forEach(t=>{
       const neededOnRemaining=(t.min-weightedSum)/(remaining/100);
@@ -815,7 +825,7 @@ function calculateWeighted(){
       if(neededOnRemaining>100)color='#ff3b30';
       else if(neededOnRemaining>90)color='#ff9f0a';
       else if(neededOnRemaining<0)color='#00ff88';
-      html+=`<div class="result-row"><span class="result-label">For a ${t.letter} (${t.min}%+)</span><span class="result-value" style="color:$color;">${neededOnRemaining<=0?'Already guaranteed':neededOnRemaining.toFixed(1)+'%'}</span></div>`;
+      html+=`<div class="result-row"><span class="result-label">For a ${t.letter} (${t.min}%+)</span><span class="result-value" style="color:${color}">${neededOnRemaining<=0?'Already guaranteed':neededOnRemaining.toFixed(1)+'%'}</span></div>`;
     });
     html+=`</div>`;
   }
@@ -824,7 +834,8 @@ function calculateWeighted(){
   document.getElementById('resultsSection').style.display='block';
   document.getElementById('scenarioSection').innerHTML='';
   document.getElementById('chartSection').style.display='block';
-  document.getElementById('chartTitle').textContent='Grade" Weight Distribution';drawWeightChart();
+  document.getElementById('chartTitle').textContent='Grade Weight Distribution';
+  drawWeightChart();
 }
 
 function drawFinalChart(current,weight){
@@ -842,7 +853,7 @@ function drawFinalChart(current,weight){
 
   // Plot: final score (x) vs course grade (y)
   const points=[];
-  for(let f="0;f<=100;f+=2){"
+  for(let f=0;f<=100;f+=2){
     const course=current*(1-weight)+f*weight;
     points.push({x:f,y:course});
   }
@@ -853,35 +864,36 @@ function drawFinalChart(current,weight){
 
   // Grade threshold fills
   const thresholds=getGradeThresholds();
-  const gradeColors="{'A':'rgba(0,255,136,.06)','A-':'rgba(0,255,136,.05)','B+':'rgba(0,204,255,.06)','B':'rgba(0,204,255,.05)','B-':'rgba(0,204,255,.04)','C+':'rgba(255,170,0,.06)','C':'rgba(255,170,0,.05)','C-':'rgba(255,170,0,.04)','D+':'rgba(255,68,102,.04)','D':'rgba(255,68,102,.05)','D-':'rgba(255,68,102,.04)','F':'rgba(255,68,102,.03)'};"
+  const gradeColors={'A':'rgba(0,255,136,.06)','A-':'rgba(0,255,136,.05)','B+':'rgba(0,204,255,.06)','B':'rgba(0,204,255,.05)','B-':'rgba(0,204,255,.04)','C+':'rgba(255,170,0,.06)','C':'rgba(255,170,0,.05)','C-':'rgba(255,170,0,.04)','D+':'rgba(255,68,102,.04)','D':'rgba(255,68,102,.05)','D-':'rgba(255,68,102,.04)','F':'rgba(255,68,102,.03)'};
   for(let i=0;i<thresholds.length-1;i++){
     const upper=Math.min(thresholds[i].min+10,100);
     const lower=thresholds[i+1]?thresholds[i+1].min:0;
     ctx.fillStyle=gradeColors[thresholds[i].letter]||'rgba(255,255,255,.02)';
     ctx.fillRect(pad.left,yScale(Math.min(upper,maxY)),cw,yScale(lower)-yScale(Math.min(upper,maxY)));
     // Label
-    ctx.fillStyle='rgba(255,255,255,.15);';
-    ctx.font='12px" Inter';ctx.textAlign='right';
+    ctx.fillStyle='rgba(255,255,255,.15)';
+    ctx.font='12px Inter';
+    ctx.textAlign='right';
     ctx.fillText(thresholds[i].letter,pad.left+cw-4,yScale(thresholds[i].min)+14);
     // Threshold line
-    ctx.strokeStyle='rgba(255,255,255,.08);';
+    ctx.strokeStyle='rgba(255,255,255,.08)';
     ctx.setLineDash([3,3]);
     ctx.beginPath();ctx.moveTo(pad.left,yScale(thresholds[i].min));ctx.lineTo(pad.left+cw,yScale(thresholds[i].min));ctx.stroke();
     ctx.setLineDash([]);
   }
 
   // Line
-  ctx.beginPath();ctx.strokeStyle='#00ff88;';ctx.lineWidth=2.5;"
+  ctx.beginPath();ctx.strokeStyle='#00ff88';ctx.lineWidth=2.5;
   points.forEach((p,i)=>{if(i===0)ctx.moveTo(xScale(p.x),yScale(p.y));else ctx.lineTo(xScale(p.x),yScale(p.y));});
   ctx.stroke();
 
   // Axes
-  ctx.fillStyle='#86868b;';ctx.font='11px"" Inter';ctx.textAlign='center';
+  ctx.fillStyle='#86868b';ctx.font='11px Inter';ctx.textAlign='center';
   for(let i=0;i<=10;i++){ctx.fillText(i*10+'%',xScale(i*10),h-pad.bottom+18);}
   ctx.textAlign='right';
   for(let i=0;i<=5;i++){const v=maxY*i/5;ctx.fillText(v.toFixed(0)+'%',pad.left-6,yScale(v)+4);}
 
-  ctx.textAlign='center';ctx.fillText('Final" Exam Score',pad.left+cw/2,h-5);
+  ctx.textAlign='center';ctx.fillText('Final Exam Score',pad.left+cw/2,h-5);
   ctx.save();ctx.translate(12,pad.top+ch/2);ctx.rotate(-Math.PI/2);ctx.fillText('Course Grade',0,0);ctx.restore();
 }
 
@@ -897,9 +909,9 @@ function drawWeightChart(){
   ctx.clearRect(0,0,w,h);
 
   const colors=['#00ff88','#0071e3','#ff9f0a','#ff3b30','#aa66ff','#66ffcc','#ff66aa','#88ff00'];
-  const total="categories.reduce((s,c)=">s+c.weight,0);
+  const total=categories.reduce((s,c)=>s+c.weight,0);
   const remaining=100-total;
-  const allSlices="[...categories.map((c,i)=">({label:c.name,value:c.weight,color:colors[i%colors.length]}))];
+  const allSlices=[...categories.map((c,i)=>({label:c.name,value:c.weight,color:colors[i%colors.length]}))];
   if(remaining>0)allSlices.push({label:'Remaining',value:remaining,color:'#333'});
 
   const cx=w/2,cy=h/2-10,radius=Math.min(cx,cy)-30;
@@ -913,14 +925,14 @@ function drawWeightChart(){
     ctx.closePath();
     ctx.fillStyle=slice.color;
     ctx.fill();
-    ctx.strokeStyle='#ffffff;';ctx.lineWidth=2;ctx.stroke();"
+    ctx.strokeStyle='#ffffff';ctx.lineWidth=2;ctx.stroke();
 
     // Label
     const midAngle=startAngle+sliceAngle/2;
     const lx=cx+Math.cos(midAngle)*(radius*0.65);
     const ly=cy+Math.sin(midAngle)*(radius*0.65);
     if(slice.value>=8){
-      ctx.fillStyle='#fff;';ctx.font='11px"" Inter';ctx.textAlign='center';
+      ctx.fillStyle='#fff';ctx.font='11px Inter';ctx.textAlign='center';
       ctx.fillText(slice.label,lx,ly-4);
       ctx.fillText(slice.value+'%',lx,ly+10);
     }

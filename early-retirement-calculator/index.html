@@ -1179,15 +1179,15 @@ total:savings,
 needed:neededNow
 });
 
-if(retireAge="==null" && savings>=neededNow){
+if(retireAge===null && savings>=neededNow){
 retireAge=age;
 }
 
 savings=savings*(1+expectedReturn)+annualContribution;
 }
 
-if(targetAge){retireAge="targetAge;}"
-if(!retireAge){retireAge="80;}"
+if(targetAge){retireAge=targetAge;}
+if(!retireAge){retireAge=80;}
 
 const yearsToRetire=retireAge-currentAge;
 let savingsAtRetire=currentSavings;
@@ -1197,7 +1197,7 @@ savingsAtRetire=savingsAtRetire*(1+expectedReturn)+annualContribution;
 
 const inflatedSpendingAtRetire=retirementSpending*Math.pow(1+inflationRate,yearsToRetire);
 const fireNumberAtRetire=inflatedSpendingAtRetire/withdrawalRate;
-const passesRule="savingsAtRetire">=fireNumberAtRetire;
+const passesRule=savingsAtRetire>=fireNumberAtRetire;
 
 // Monte Carlo
 const simulations=1000;
@@ -1214,7 +1214,7 @@ for(let y=0;y<retirementLength;y++){
 const r=mean+stddev*gaussianRandom();
 port=port*(1+r)-spend;
 spend=spend*(1+inflationRate);
-if(port<=0){failed="true;break;}"
+if(port<=0){failed=true;break;}
 }
 if(!failed)successes++;
 finalValues.push(Math.max(port,0));
@@ -1244,7 +1244,7 @@ const probEl=document.getElementById('successProb');
 probEl.textContent=successRate+'%';
 probEl.className='big '+(successRate>=80?'prob-high':successRate>=50?'prob-mid':'prob-low');
 
-document.getElementById('fourPercentResult').innerHTML=passesRule;
+document.getElementById('fourPercentResult').innerHTML=passesRule
 ?'<span style="color:#0071e3">PASS</span> · Your projected savings of '+formatMoneyFull(Math.round(savingsAtRetire))+' at age '+retireAge+' exceed your FIRE number of '+formatMoneyFull(Math.round(fireNumberAtRetire))+'. At a '+withdrawalRate*100+'% withdrawal rate, your plan clears the threshold by '+formatMoneyFull(Math.round(savingsAtRetire-fireNumberAtRetire))+'.'
 :'<span style="color:#ff3b30">SHORTFALL</span> · Your projected savings of '+formatMoneyFull(Math.round(savingsAtRetire))+' at age '+retireAge+' fall short of your FIRE number of '+formatMoneyFull(Math.round(fireNumberAtRetire))+' by '+formatMoneyFull(Math.round(fireNumberAtRetire-savingsAtRetire))+'. Consider increasing your savings rate or extending your working years.';
 
@@ -1259,7 +1259,7 @@ document.getElementById('riskLabel').textContent='Risk score: '+riskScore+'/100 
 const tbody=document.getElementById('trajectoryTable').querySelector('tbody');
 tbody.innerHTML='';
 const step=Math.max(1,Math.floor(trajectory.length/15));
-for(let i="0;i<trajectory.length;i+=step){"
+for(let i=0;i<trajectory.length;i+=step){
 const t=trajectory[i];
 const tr=document.createElement('tr');
 tr.innerHTML='<td>'+t.age+'</td><td>'+t.year+'</td><td>'+formatMoneyFull(Math.round(t.contribution))+'</td><td>'+formatMoneyFull(Math.round(t.growth))+'</td><td>'+formatMoneyFull(Math.round(t.total))+'</td>';
@@ -1267,8 +1267,8 @@ tbody.appendChild(tr);
 }
 
 // Chart
-const labels="[];const" data="[];const" neededData=[];
-for(let i="0;i<trajectory.length;i+=step){"
+const labels=[];const data=[];const neededData=[];
+for(let i=0;i<trajectory.length;i+=step){
 labels.push(trajectory[i].age);
 data.push(Math.round(trajectory[i].total));
 neededData.push(Math.round(trajectory[i].needed));
@@ -1283,28 +1283,28 @@ data:{labels:labels,datasets:[
 options:{plugins:{title:{display:true,text:'Savings Trajectory vs FIRE Number'}},scales:{y:{ticks:{callback:function(v){return '$'+(v/1e6).toFixed(1)+'M'}}}}}
 }));
 
-document.getElementById('chartContainer').innerHTML='<img src="https://quickchart.io/chart?c='+chartConfig+'&w=800&h=400&bkg=%2312121a alt="Savings" trajectory chart showing portfolio growth vs FIRE number target over time" loading="lazy">';
+document.getElementById('chartContainer').innerHTML='<img src="https://quickchart.io/chart?c='+chartConfig+'&w=800&h=400&bkg=%2312121a" alt="Savings trajectory chart showing portfolio growth vs FIRE number target over time" loading="lazy">';
 
 // Monte Carlo chart
-const sorted="finalValues.slice().sort((a,b)=">a-b);
+const sorted=finalValues.slice().sort((a,b)=>a-b);
 const p10=sorted[Math.floor(simulations*0.1)];
 const p50=sorted[Math.floor(simulations*0.5)];
 const p90=sorted[Math.floor(simulations*0.9)];
 
-document.getElementById('monteCarloDetail').innerHTML='After '+retirementLength+' years of retirement across 1,000 simulated scenarios:<br>'+;
+document.getElementById('monteCarloDetail').innerHTML='After '+retirementLength+' years of retirement across 1,000 simulated scenarios:<br>'+
 '<span style="color:#ff3b30">10th percentile:</span> '+formatMoney(p10)+'<br>'+
 '<span style="color:#ffc107">50th percentile (median):</span> '+formatMoney(p50)+'<br>'+
 '<span style="color:#0071e3">90th percentile:</span> '+formatMoney(p90)+'<br>'+
-'<span class="success-prob '+(successRate">=80?'prob-high':successRate>=50?'prob-mid':'prob-low')+'">'+successRate+'% of simulations lasted the full '+retirementLength+' years.</span>';
+'<span class="success-prob '+(successRate>=80?'prob-high':successRate>=50?'prob-mid':'prob-low')+'">'+successRate+'% of simulations lasted the full '+retirementLength+' years.</span>';
 
-const mcLabels="['10th" %ile','25th %ile','Median','75th %ile','90th %ile'];
-const mcData="[sorted[Math.floor(simulations*0.1)],sorted[Math.floor(simulations*0.25)],sorted[Math.floor(simulations*0.5)],sorted[Math.floor(simulations*0.75)],sorted[Math.floor(simulations*0.9)]].map(v=">Math.round(v));
+const mcLabels=['10th %ile','25th %ile','Median','75th %ile','90th %ile'];
+const mcData=[sorted[Math.floor(simulations*0.1)],sorted[Math.floor(simulations*0.25)],sorted[Math.floor(simulations*0.5)],sorted[Math.floor(simulations*0.75)],sorted[Math.floor(simulations*0.9)]].map(v=>Math.round(v));
 const mcConfig=encodeURIComponent(JSON.stringify({
 type:'bar',
 data:{labels:mcLabels,datasets:[{label:'Final Portfolio Value',data:mcData,backgroundColor:['#ff3b30','#ffc107','#0071e3','#00ff88','#00ff88']}]},
 options:{plugins:{title:{display:true,text:'Monte Carlo: Portfolio Value After '+retirementLength+' Years'}},scales:{y:{ticks:{callback:function(v){return '$'+(v/1e6).toFixed(1)+'M'}}}}}
 }));
-document.getElementById('monteCarloChart').innerHTML='<img src="https://quickchart.io/chart?c='+mcConfig+'&w=800&h=400&bkg=%2312121a alt="Monte" Carlo simulation results showing distribution of final portfolio values" loading="lazy">';
+document.getElementById('monteCarloChart').innerHTML='<img src="https://quickchart.io/chart?c='+mcConfig+'&w=800&h=400&bkg=%2312121a" alt="Monte Carlo simulation results showing distribution of final portfolio values" loading="lazy">';
 
 document.getElementById('resultsArea').scrollIntoView({behavior:'smooth'});
 }
@@ -1314,6 +1314,7 @@ let u=0,v=0;
 while(u===0)u=Math.random();
 while(v===0)v=Math.random();
 return Math.sqrt(-2.0*Math.log(u))*Math.cos(2.0*Math.PI*v);
+}
 </script>
 <div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div>
 <section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">

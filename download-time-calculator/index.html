@@ -1048,8 +1048,8 @@ const CONNECTIONS=[
 ];
 
 function setFilePreset(size,unit){
-document.getElementById('fileSize').value="size;"
-document.getElementById('fileSizeUnit').value="unit;"
+document.getElementById('fileSize').value=size;
+document.getElementById('fileSizeUnit').value=unit;
 }
 
 function toMB(size,unit){
@@ -1108,13 +1108,13 @@ const effectiveMBps=speedMbps*(1-overhead/100)/8;
 
 document.getElementById('resultsArea').style.display='block';
 document.getElementById('dlTime').textContent=formatTime(seconds);
-document.getElementById('effectiveSpeed').textContent="effectiveMBps.toFixed(1)+'" MB/s';
+document.getElementById('effectiveSpeed').textContent=effectiveMBps.toFixed(1)+' MB/s';
 
 // Comparison table
 const tbody=document.getElementById('comparisonTable').querySelector('tbody');
 tbody.innerHTML='';
 const maxSpeed=CONNECTIONS[CONNECTIONS.length-1].speed;
-const chartLabels="[];const" chartData="[];const" chartColors=[];
+const chartLabels=[];const chartData=[];const chartColors=[];
 
 for(const conn of CONNECTIONS){
 const t=calcTime(sizeMB,conn.speed,overhead);
@@ -1130,20 +1130,20 @@ chartColors.push(conn.color);
 // Chart (show top 6 connections for readability)
 const topN=6;
 const chartIdxs=[1,2,3,6,8,9];
-const cLabels="chartIdxs.map(i=">CONNECTIONS[i].name);
-const cData="chartIdxs.map(i=">parseFloat(calcTime(sizeMB,CONNECTIONS[i].speed,overhead).toFixed(1)));
-const cColors="chartIdxs.map(i=">CONNECTIONS[i].color);
+const cLabels=chartIdxs.map(i=>CONNECTIONS[i].name);
+const cData=chartIdxs.map(i=>parseFloat(calcTime(sizeMB,CONNECTIONS[i].speed,overhead).toFixed(1)));
+const cColors=chartIdxs.map(i=>CONNECTIONS[i].color);
 
 const chartCfg=encodeURIComponent(JSON.stringify({
 type:'horizontalBar',
 data:{labels:cLabels,datasets:[{label:'Download Time (seconds)',data:cData,backgroundColor:cColors}]},
 options:{plugins:{title:{display:true,text:'Download Time for '+formatSize(sizeMB)+' by Connection Type'}},scales:{x:{title:{display:true,text:'Time (seconds)'}}}}
 }));
-document.getElementById('compChart').innerHTML='<img src="https://quickchart.io/chart?c='+chartCfg+'&w=800&h=400&bkg=%2312121a alt="Download" time comparison across connection types" loading="lazy">';
+document.getElementById('compChart').innerHTML='<img src="https://quickchart.io/chart?c='+chartCfg+'&w=800&h=400&bkg=%2312121a" alt="Download time comparison across connection types" loading="lazy">';
 
 // Perspective
 const persp=document.getElementById('perspective');
-let pHtml="'<ul">';
+let pHtml='<ul>';
 const coffee=5*60;
 const song=3.5*60;
 const episode=22*60;
@@ -1183,7 +1183,8 @@ const list=document.getElementById('batchList');
 const div=document.createElement('div');
 div.className='batch-item';
 div.dataset.idx=batchCount++;
-div.innerHTML='<input" type="text" placeholder="File name (optional)" style="flex:2" class="batch-name"><input type="number" value="100" min="0.001" step="1" class="batch-size" style="flex:1"><select class="batch-unit"><option value="KB">KB</option><option value="MB" selected>MB</option><option value="GB">GB</option><option value="TB">TB</option></select><span class="remove" onclick="removeBatchItem(this)">&times;</span>';list.appendChild(div);
+div.innerHTML='<input type="text" placeholder="File name (optional)" style="flex:2" class="batch-name"><input type="number" value="100" min="0.001" step="1" class="batch-size" style="flex:1"><select class="batch-unit"><option value="KB">KB</option><option value="MB" selected>MB</option><option value="GB">GB</option><option value="TB">TB</option></select><span class="remove" onclick="removeBatchItem(this)">&times;</span>';
+list.appendChild(div);
 }
 
 function removeBatchItem(el){
@@ -1201,7 +1202,7 @@ const speedMbps=toMbps(dlSpeed,dlSpeedUnit);
 let totalMB=0;
 const files=[];
 items.forEach(item=>{
-const name="item.querySelector('.batch-name').value||'File" '+(files.length+1);
+const name=item.querySelector('.batch-name').value||'File '+(files.length+1);
 const size=parseFloat(item.querySelector('.batch-size').value)||0;
 const unit=item.querySelector('.batch-unit').value;
 const mb=toMB(size,unit);

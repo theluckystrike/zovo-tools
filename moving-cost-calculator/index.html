@@ -654,11 +654,11 @@ studio:{weight:2000,hours:2,truckSize:'10ft',truckLocal:40,truckLD:800},
 
 const s=sizeData[homeSize];
 const isLocal=distance<=50;
-const isLong="distance">500;
-const seasonMult="season="=='peak'?1.25:1.0;""
+const isLong=distance>500;
+const seasonMult=season==='peak'?1.25:1.0;
 const items=[];
 
-if(method="=='diy'){"
+if(method==='diy'){
 let truckCost=isLocal?s.truckLocal:Math.round(s.truckLD*(distance/1000));
 truckCost=Math.round(truckCost*seasonMult);
 items.push({label:'Truck Rental ('+s.truckSize+')',value:truckCost});
@@ -674,7 +674,7 @@ const nights=Math.ceil(distance/500);
 items.push({label:'Lodging ('+nights+' nights)',value:nights*120});
 items.push({label:'Meals on Road',value:nights*50});
 }
-}else if(method="=='hybrid'){"
+}else if(method==='hybrid'){
 let truckCost=isLocal?s.truckLocal:Math.round(s.truckLD*(distance/1000));
 truckCost=Math.round(truckCost*seasonMult);
 items.push({label:'Truck Rental ('+s.truckSize+')',value:truckCost});
@@ -696,7 +696,7 @@ const nights=Math.ceil(distance/500);
 items.push({label:'Lodging ('+nights+' nights)',value:nights*120});
 items.push({label:'Meals on Road',value:nights*50});
 }
-}else if(method="=='full'){"
+}else if(method==='full'){
 let baseCost;
 if(isLocal){
 baseCost=Math.round(s.hours*130*seasonMult);
@@ -711,7 +711,7 @@ items.push({label:'Loading/Unloading Labor',value:laborCost});
 }
 const fuelSurcharge=Math.round(baseCost*0.06);
 items.push({label:'Fuel Surcharge',value:fuelSurcharge});
-}else if(method="=='container'){"
+}else if(method==='container'){
 let containerCost;
 if(isLocal){
 containerCost=Math.round((s.weight/1000)*200*seasonMult);
@@ -723,10 +723,10 @@ items.push({label:'Container Rental + Transport',value:containerCost});
 items.push({label:'Delivery/Pickup Fees',value:Math.round(200*seasonMult)});
 }
 
-if(packing="=='partial'){"
+if(packing==='partial'){
 const packCost=Math.round(s.weight*0.04);
 items.push({label:'Partial Packing (Fragile Items)',value:packCost});
-}else if(packing="=='full'){"
+}else if(packing==='full'){
 const packCost=Math.round(s.weight*0.10);
 items.push({label:'Full Packing Service + Materials',value:packCost});
 }else{
@@ -734,30 +734,30 @@ const supplyCost=Math.round(s.weight*0.015);
 items.push({label:'Packing Supplies (Boxes, Tape, Paper)',value:Math.max(supplyCost,50)});
 }
 
-if(specialItems="=='piano')items.push({label:'Piano" Moving',value:450});
-else if(specialItems="=='hotTub')items.push({label:'Hot" Tub Moving',value:600});
-else if(specialItems="=='both'){items.push({label:'Piano" Moving',value:450});items.push({label:'Hot Tub Moving',value:600});}
+if(specialItems==='piano')items.push({label:'Piano Moving',value:450});
+else if(specialItems==='hotTub')items.push({label:'Hot Tub Moving',value:600});
+else if(specialItems==='both'){items.push({label:'Piano Moving',value:450});items.push({label:'Hot Tub Moving',value:600});}
 
-if(floors="=='2nd')items.push({label:'Stair" Charge (2nd Floor)',value:150});
-else if(floors="=='3rd')items.push({label:'Stair" Charge (3rd+ Floor)',value:300});
+if(floors==='2nd')items.push({label:'Stair Charge (2nd Floor)',value:150});
+else if(floors==='3rd')items.push({label:'Stair Charge (3rd+ Floor)',value:300});
 
-if(insurance="=='full'){"
+if(insurance==='full'){
 const insCost=Math.round(s.weight*0.01*6);
 items.push({label:'Full Value Protection Insurance',value:Math.max(insCost,150)});
 }
 
-const tipAmount="method="=='full'||method==='hybrid'?Math.round(items.reduce((s,i)=">s+i.value,0)*0.08):0;
-if(tipAmount>0)items.push({label:'Mover" Tips (Suggested 15-20%)',value:tipAmount});
+const tipAmount=method==='full'||method==='hybrid'?Math.round(items.reduce((s,i)=>s+i.value,0)*0.08):0;
+if(tipAmount>0)items.push({label:'Mover Tips (Suggested 15-20%)',value:tipAmount});
 
-let total="items.reduce((s,i)=">s+i.value,0);
+let total=items.reduce((s,i)=>s+i.value,0);
 
 let html='';
 items.forEach(i=>{html+='<div class="result-row"><span class="label">'+i.label+'</span><span class="value">'+fmt(i.value)+'</span></div>';});
 document.getElementById('resultRows').innerHTML=html;
 document.getElementById('totalCost').textContent='Total Estimated Moving Cost: '+fmt(total);
 
-const methodNames="{diy:'DIY" truck rental',hybrid:'hybrid (truck + helpers)',full:'full-service movers',container:'portable container'};
-document.getElementById('moveNote').textContent='Estimate for '+homeSize.replace('br',' bedroom')+' '+methodNames[method]+' move, '+distance.toLocaleString()+' miles, '+(season="=='peak'?'peak':'off-peak')+'" season. Actual costs may vary by 10-20%.';
+const methodNames={diy:'DIY truck rental',hybrid:'hybrid (truck + helpers)',full:'full-service movers',container:'portable container'};
+document.getElementById('moveNote').textContent='Estimate for '+homeSize.replace('br',' bedroom')+' '+methodNames[method]+' move, '+distance.toLocaleString()+' miles, '+(season==='peak'?'peak':'off-peak')+' season. Actual costs may vary by 10-20%.';
 document.getElementById('results').style.display='block';
 }
 </script><p style="text-align:center;color:#86868b;font-size:0.8rem;margin:2rem 0 0.5rem;">Last updated: March 19, 2026</p>

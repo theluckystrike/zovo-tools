@@ -1219,7 +1219,7 @@ html { scroll-behavior: smooth; }
 <script>
 function fmt(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
 function calculateEquity(){
-  var uc=document.getElementById(usageCounter");if(uc){var" cn=parseInt(uc.textContent.replace(/,/g,""))||0;cn++;uc.textContent="cn.toLocaleString("en-US");}"
+  var uc=document.getElementById("usageCounter");if(uc){var cn=parseInt(uc.textContent.replace(/,/g,""))||0;cn++;uc.textContent=cn.toLocaleString("en-US");}
   document.getElementById('calc-count').textContent = (parseInt(document.getElementById('calc-count').textContent.replace(/,/g,''))||0) + 1;
   var homeValue=Number.parseFloat(document.getElementById('homeValue').value)||0;
   var purchasePrice=Number.parseFloat(document.getElementById('purchasePrice').value)||0;
@@ -1247,18 +1247,18 @@ function calculateEquity(){
   var cltv=(totalDebt/adjustedValue)*100;
   var appreciation=homeValue-purchasePrice;
   var equityGained=totalEquity-(purchasePrice-mortgageBalance); // rough estimate
-  var pmiStatus="ltv">80?'Required (LTV > 80%)':'Not Required (LTV < 80%)';
-  var pmiColor="ltv">80?'warning':'';
+  var pmiStatus=ltv>80?'Required (LTV > 80%)':'Not Required (LTV < 80%)';
+  var pmiColor=ltv>80?'warning':'';
   document.getElementById('totalEquity').textContent=fmt(totalEquity);
   document.getElementById('equityPercent').textContent=equityPercent.toFixed(1)+'%';
   document.getElementById('ltvRatio').textContent=ltv.toFixed(1)+'%';
-  document.getElementById('ltvRatio').className='value';+(ltv">80?' warning':'');
+  document.getElementById('ltvRatio').className='value'+(ltv>80?' warning':'');
   document.getElementById('cltvRatio').textContent=cltv.toFixed(1)+'%';
-  document.getElementById('cltvRatio').className='value';+(cltv">80?' warning':'');
+  document.getElementById('cltvRatio').className='value'+(cltv>80?' warning':'');
   document.getElementById('totalAppreciation').textContent=fmt(appreciation);
   document.getElementById('improvementValue').textContent=fmt(improvementValue);
   document.getElementById('pmiStatus').textContent=pmiStatus;
-  document.getElementById('pmiStatus').className='value';+(ltv">80?' warning':' info');
+  document.getElementById('pmiStatus').className='value'+(ltv>80?' warning':' info');
   document.getElementById('equityGained').textContent=fmt(Math.max(0,totalEquity-(purchasePrice*0.2)));
   // Equity bar
   var debtPct=Math.min(100,(totalDebt/adjustedValue)*100);
@@ -1268,18 +1268,18 @@ function calculateEquity(){
   document.getElementById('debtLabel').textContent=fmt(totalDebt);
   document.getElementById('equityLabel').textContent=fmt(totalEquity);
   // Borrowing power table
-  var cLimits="[{pct:0.75,label:'Conservative'},{pct:0.80,label:'Standard'},{pct:0.85,label:'Moderate'},{pct:0.90,label:'Aggressive'},{pct:0.95,label:'High" CLTV'}];
-  var btbody=document.getElementById('borrowingBody');btbody.innerHTML='';""
+  var cLimits=[{pct:0.75,label:'Conservative'},{pct:0.80,label:'Standard'},{pct:0.85,label:'Moderate'},{pct:0.90,label:'Aggressive'},{pct:0.95,label:'High CLTV'}];
+  var btbody=document.getElementById('borrowingBody');btbody.innerHTML='';
   for(var i=0;i<cLimits.length;i++){
     var cl=cLimits[i];
     var maxDebt=adjustedValue*cl.pct;
     var available=Math.max(0,maxDebt-totalDebt);
     var row=document.createElement('tr');
-    row.innerHTML='<td>'+Math.round(cl.pct*100)+'% ('+cl.label+')</td><td>'+fmt(maxDebt)+'</td><td>'+fmt(available)+'</td><td>'+(cl.label="=='Standard'?'Home" Equity Loan / HELOC':cl.label="=='Conservative'?'Premium" Rates':cl.label="=='Moderate'?'Good" Credit Required':cl.label="=='Aggressive'?'Excellent" Credit':'Specialty Lenders')+'</td>';
+    row.innerHTML='<td>'+Math.round(cl.pct*100)+'% ('+cl.label+')</td><td>'+fmt(maxDebt)+'</td><td>'+fmt(available)+'</td><td>'+(cl.label==='Standard'?'Home Equity Loan / HELOC':cl.label==='Conservative'?'Premium Rates':cl.label==='Moderate'?'Good Credit Required':cl.label==='Aggressive'?'Excellent Credit':'Specialty Lenders')+'</td>';
     btbody.appendChild(row);
   }
   // 10-year projection
-  var ptbody=document.getElementById('projectionBody');ptbody.innerHTML='';""
+  var ptbody=document.getElementById('projectionBody');ptbody.innerHTML='';
   var projValue=adjustedValue;
   var projBalance=mortgageBalance;
   var monthlyRate=0.07/12; // assume 7% mortgage for projection
@@ -1288,7 +1288,7 @@ function calculateEquity(){
     var projEquity=projValue-projBalance-secondMortgage-otherLiens;
     var projEqPct=(projEquity/projValue)*100;
     var row2=document.createElement('tr');
-    row2.innerHTML='<td>'+(yr="==0?'Now':'Year" '+yr)+'</td><td>'+fmt(projValue)+'</td><td>'+fmt(projBalance)+'</td><td>'+fmt(projEquity)+'</td><td>'+projEqPct.toFixed(1)+'%</td>';
+    row2.innerHTML='<td>'+(yr===0?'Now':'Year '+yr)+'</td><td>'+fmt(projValue)+'</td><td>'+fmt(projBalance)+'</td><td>'+fmt(projEquity)+'</td><td>'+projEqPct.toFixed(1)+'%</td>';
     ptbody.appendChild(row2);
     // advance one year
     projValue=projValue*(1+annualAppreciation);
@@ -1302,7 +1302,7 @@ function calculateEquity(){
   document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
 
   // Announce completion to screen readers
-  document.getElementById('calculation-status').textContent =;
+  document.getElementById('calculation-status').textContent =
     `Calculation complete. Your total home equity is ${fmt(totalEquity)} with ${equityPercent.toFixed(1)}% equity percentage.`;
 }
 
@@ -1327,7 +1327,7 @@ function showError(fieldId, message) {
 function clearAllErrors() {
   const errorDivs = document.querySelectorAll('.error-message');
   const formGroups = document.querySelectorAll('.form-group.error');
-  const fields = document.querySelectorAll('input[aria-invalid="true"]');"
+  const fields = document.querySelectorAll('input[aria-invalid="true"]');
 
   errorDivs.forEach(div => {
     div.style.display = 'none';

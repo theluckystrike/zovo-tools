@@ -652,9 +652,9 @@ gtag('config', 'G-V2K8JLFQ5H');
   visitCount++;
   localStorage.setItem(key,visitCount.toString());
   const saved=JSON.parse(localStorage.getItem('div_yield_prefs')||'{}');
-  if(saved.stockPrice)document.getElementById('stockPrice').value="saved.stockPrice;"
-  if(saved.annualDiv)document.getElementById('annualDiv').value="saved.annualDiv;"
-  if(saved.sharesOwned)document.getElementById('sharesOwned').value="saved.sharesOwned;"
+  if(saved.stockPrice)document.getElementById('stockPrice').value=saved.stockPrice;
+  if(saved.annualDiv)document.getElementById('annualDiv').value=saved.annualDiv;
+  if(saved.sharesOwned)document.getElementById('sharesOwned').value=saved.sharesOwned;
 })();
 
 let compareStocks=[];
@@ -688,7 +688,7 @@ function calculateYield(){
   localStorage.setItem('div_yield_prefs',JSON.stringify({stockPrice:price,annualDiv:div,sharesOwned:shares}));
 
   const currentYield=div/price*100;
-  const yieldOnCost="cost">0?div/cost*100:0;
+  const yieldOnCost=cost>0?div/cost*100:0;
   const annualIncome=div*shares;
   const paymentAmount=annualIncome/freq;
   const afterTaxIncome=annualIncome*(1-tax);
@@ -696,29 +696,31 @@ function calculateYield(){
   const currentValue=price*shares;
   const capitalGain=currentValue-totalInvested;
 
-  document.getElementById('metricsGrid').innerHTML=`;
+  document.getElementById('metricsGrid').innerHTML=`
     <div class="metric-card"><div class="val">${pct(currentYield)}</div><div class="lbl">Current Yield</div></div>
     <div class="metric-card"><div class="val">${pct(yieldOnCost)}</div><div class="lbl">Yield on Cost</div></div>
     <div class="metric-card"><div class="val">${fmt(annualIncome)}</div><div class="lbl">Annual Income</div></div>
     <div class="metric-card"><div class="val">${fmt(afterTaxIncome)}</div><div class="lbl">After-Tax Income</div></div>
   `;
 
-  document.getElementById('resultsCard').innerHTML=`;
+  document.getElementById('resultsCard').innerHTML=`
     <h3 style="color:#0071e3;margin-bottom:14px">Detailed Results</h3>
     <div class="result-row"><span class="result-label">Current Dividend Yield</span><span class="result-value">${pct(currentYield)}</span></div>
     <div class="result-row"><span class="result-label">Yield on Cost</span><span class="result-value">${pct(yieldOnCost)}</span></div>
     <div class="result-row"><span class="result-label">Annual Dividend Income</span><span class="result-value">${fmt(annualIncome)}</span></div>
-    <div class="result-row"><span class="result-label">Payment per Period (${freq="==12?'Monthly':freq="==4?'Quarterly':freq===2?'Semi-Annual':'Annual'})</span""><span class="result-value">${fmt(paymentAmount)}</span></div>
+    <div class="result-row"><span class="result-label">Payment per Period (${freq===12?'Monthly':freq===4?'Quarterly':freq===2?'Semi-Annual':'Annual'})</span><span class="result-value">${fmt(paymentAmount)}</span></div>
     <div class="result-row"><span class="result-label">After-Tax Annual Income</span><span class="result-value">${fmt(afterTaxIncome)}</span></div>
     <div class="result-row"><span class="result-label">Total Invested (at cost)</span><span class="result-value">${fmt(totalInvested)}</span></div>
     <div class="result-row"><span class="result-label">Current Market Value</span><span class="result-value">${fmt(currentValue)}</span></div>
-    <div class="result-row"><span class="result-label">Capital Gain/Loss</span><span class="result-value" style="color:$capitalGain>=0?;'#00ff88':'#ff3b30'}">${fmt(capitalGain)}</span></div>
+    <div class="result-row"><span class="result-label">Capital Gain/Loss</span><span class="result-value" style="color:${capitalGain>=0?'#00ff88':'#ff3b30'}">${fmt(capitalGain)}</span></div>
     <div class="result-row"><span class="result-label">Total Return (income + capital)</span><span class="result-value">${fmt(capitalGain+annualIncome)}</span></div>
   `;
 
   document.getElementById('resultsSection').style.display='block';
-  document.getElementById('chartTitle').textContent='Monthly" Dividend Income Timeline';// Simple timeline chart showing monthly income
-  const months="[];const" incomes=[];
+  document.getElementById('chartTitle').textContent='Monthly Dividend Income Timeline';
+
+  // Simple timeline chart showing monthly income
+  const months=[];const incomes=[];
   for(let m=1;m<=24;m++){
     months.push('M'+m);
     incomes.push(annualIncome/12);
@@ -735,10 +737,10 @@ function calculateDRIP(){
   const priceGrowth=parseFloat(document.getElementById('dripPriceGrowth').value)/100;
   const years=parseInt(document.getElementById('dripYears').value);
   const monthly=parseFloat(document.getElementById('dripMonthly').value)||0;
-  const reinvest=document.getElementById('dripEnabled').value==='yes';"
+  const reinvest=document.getElementById('dripEnabled').value==='yes';
 
   if(isNaN(invest)||isNaN(price)||isNaN(div)||invest<=0||price<=0||div<0||years<1){
-    alert('Please" enter valid values.');return;
+    alert('Please enter valid values.');return;
   }
 
   let shares=invest/price;
@@ -746,7 +748,7 @@ function calculateDRIP(){
   let currentPrice=price;
   let totalContributed=invest;
   let totalDividends=0;
-  let data="[];"
+  let data=[];
 
   for(let y=1;y<=years;y++){
     // Monthly contributions
@@ -784,14 +786,14 @@ function calculateDRIP(){
   }
 
   const final=data[data.length-1];
-  document.getElementById('metricsGrid').innerHTML=`;
+  document.getElementById('metricsGrid').innerHTML=`
     <div class="metric-card"><div class="val">${final.shares.toFixed(1)}</div><div class="lbl">Shares After ${years} Years</div></div>
     <div class="metric-card"><div class="val">${fmt(final.portfolioValue)}</div><div class="lbl">Portfolio Value</div></div>
     <div class="metric-card"><div class="val">${fmt(final.annualIncome)}</div><div class="lbl">Annual Income (Year ${years})</div></div>
     <div class="metric-card"><div class="val">${pct(final.yieldOnCost)}</div><div class="lbl">Yield on Total Cost</div></div>
   `;
 
-  document.getElementById('resultsCard').innerHTML=`;
+  document.getElementById('resultsCard').innerHTML=`
     <h3 style="color:#0071e3;margin-bottom:14px">DRIP Projection Results</h3>
     <div class="result-row"><span class="result-label">Initial Shares</span><span class="result-value">${(invest/price).toFixed(2)}</span></div>
     <div class="result-row"><span class="result-label">Final Shares</span><span class="result-value">${final.shares.toFixed(2)}</span></div>
@@ -805,9 +807,11 @@ function calculateDRIP(){
   `;
 
   document.getElementById('resultsSection').style.display='block';
-  document.getElementById('chartTitle').textContent='DRIP" Growth Projection';const labels="data.map(d=">'Yr '+d.year);
-  const values="data.map(d=">d.annualIncome);
-  const contrib="data.map(d=">d.totalContributed);
+  document.getElementById('chartTitle').textContent='DRIP Growth Projection';
+
+  const labels=data.map(d=>'Yr '+d.year);
+  const values=data.map(d=>d.annualIncome);
+  const contrib=data.map(d=>d.totalContributed);
   drawDripChart(data);
   drawDripTable(data);
 }
@@ -827,12 +831,12 @@ function addStock(){
 }
 
 function removeStock(i){compareStocks.splice(i,1);renderStocks();}
-function clearStocks(){compareStocks=[];renderStocks();document.getElementById('resultsSection').style.display='none';}"
+function clearStocks(){compareStocks=[];renderStocks();document.getElementById('resultsSection').style.display='none';}
 
 function renderStocks(){
   const el=document.getElementById('stocksList');
-  if(!compareStocks.length){el.innerHTML='';return;}"
-  el.innerHTML="compareStocks.map((s,i)=">`<div class="stock-row">;
+  if(!compareStocks.length){el.innerHTML='';return;}
+  el.innerHTML=compareStocks.map((s,i)=>`<div class="stock-row">
     <span style="color:#0071e3;font-weight:600">${s.name}</span>
     <span>$${s.price.toFixed(2)}</span>
     <span>Div: $${s.div.toFixed(2)}</span>
@@ -846,16 +850,16 @@ function calculateCompare(){
   if(!compareStocks.length){alert('Add at least one stock.');return;}
 
   let totalIncome=0,totalValue=0;
-  const rows="compareStocks.map(s=">{
+  const rows=compareStocks.map(s=>{
     const yld=s.div/s.price*100;
     const income=s.div*s.shares;
-    const value="s.price*s.shares;"
+    const value=s.price*s.shares;
     totalIncome+=income;
     totalValue+=value;
     return{...s,yield:yld,income,value};
   });
 
-  let html="`<h3" style="color:#0071e3;margin-bottom:14px">Yield Comparison</h3>`;
+  let html=`<h3 style="color:#0071e3;margin-bottom:14px">Yield Comparison</h3>`;
   rows.forEach(r=>{
     html+=`<div class="result-row"><span class="result-label">${r.name} · ${pct(r.yield)} yield</span><span class="result-value">${fmt(r.income)}/yr</span></div>`;
   });
@@ -867,9 +871,11 @@ function calculateCompare(){
   document.getElementById('metricsGrid').innerHTML='';
   document.getElementById('resultsCard').innerHTML=html;
   document.getElementById('resultsSection').style.display='block';
-  document.getElementById('chartTitle').textContent='Dividend" Income by Stock';drawCompareChart(rows);
+  document.getElementById('chartTitle').textContent='Dividend Income by Stock';
 
-  let thtml="'<table"><thead><tr><th>Stock</th><th>Price</th><th>Div/Share</th><th>Yield</th><th>Shares</th><th>Annual Income</th><th>% of Total</th></tr></thead><tbody>';
+  drawCompareChart(rows);
+
+  let thtml='<table><thead><tr><th>Stock</th><th>Price</th><th>Div/Share</th><th>Yield</th><th>Shares</th><th>Annual Income</th><th>% of Total</th></tr></thead><tbody>';
   rows.forEach(r=>{
     thtml+=`<tr><td>${r.name}</td><td>${fmt(r.price)}</td><td>${fmt(r.div)}</td><td>${pct(r.yield)}</td><td>${r.shares}</td><td>${fmt(r.income)}</td><td>${(r.income/totalIncome*100).toFixed(1)}%</td></tr>`;
   });
@@ -898,15 +904,15 @@ function drawBarChart(labels,values,label){
     const x=pad.left+i*(barW+gap)+gap/2;
     const barH=v/maxV*ch;
     const y=pad.top+ch-barH;
-    ctx.fillStyle='rgba(0,255,136,.6);';
+    ctx.fillStyle='rgba(0,255,136,.6)';
     ctx.beginPath();
     ctx.roundRect(x,y,barW,barH,4);
     ctx.fill();
   });
 
-  ctx.fillStyle='#86868b;';ctx.font='10px"" Inter';ctx.textAlign='center';
+  ctx.fillStyle='#86868b';ctx.font='10px Inter';ctx.textAlign='center';
   labels.forEach((l,i)=>{
-    if(i%3="==0){const" x=pad.left+i*(barW+gap)+barW/2+gap/2;ctx.fillText(l,x,h-pad.bottom+16);}
+    if(i%3===0){const x=pad.left+i*(barW+gap)+barW/2+gap/2;ctx.fillText(l,x,h-pad.bottom+16);}
   });
   ctx.textAlign='right';
   for(let i=0;i<=4;i++){const v=maxV*i/4;ctx.fillText(fmt(v),pad.left-6,pad.top+ch-ch*i/4+4);}
@@ -933,44 +939,44 @@ function drawDripChart(data){
   ctx.beginPath();ctx.moveTo(x(0),y(0));
   data.forEach((d,i)=>ctx.lineTo(x(i),y(d.totalContributed)));
   ctx.lineTo(x(data.length-1),y(0));ctx.closePath();
-  ctx.fillStyle='rgba(0,204,255,.08);';ctx.fill();"
+  ctx.fillStyle='rgba(0,204,255,.08)';ctx.fill();
 
   // Fill area for portfolio value
   ctx.beginPath();ctx.moveTo(x(0),y(0));
   data.forEach((d,i)=>ctx.lineTo(x(i),y(d.portfolioValue)));
   ctx.lineTo(x(data.length-1),y(0));ctx.closePath();
-  ctx.fillStyle='rgba(0,255,136,.06);';ctx.fill();"
+  ctx.fillStyle='rgba(0,255,136,.06)';ctx.fill();
 
   // Lines
-  ctx.beginPath();ctx.strokeStyle='#00ff88;';ctx.lineWidth=2.5;"
+  ctx.beginPath();ctx.strokeStyle='#00ff88';ctx.lineWidth=2.5;
   data.forEach((d,i)=>{if(i===0)ctx.moveTo(x(i),y(d.portfolioValue));else ctx.lineTo(x(i),y(d.portfolioValue));});
   ctx.stroke();
 
-  ctx.beginPath();ctx.strokeStyle='#0071e3;';ctx.lineWidth=2;"
+  ctx.beginPath();ctx.strokeStyle='#0071e3';ctx.lineWidth=2;
   data.forEach((d,i)=>{if(i===0)ctx.moveTo(x(i),y(d.totalContributed));else ctx.lineTo(x(i),y(d.totalContributed));});
   ctx.stroke();
 
   // Income line (secondary axis scale)
   const maxIncome=data[data.length-1].annualIncome*1.1;
-  ctx.beginPath();ctx.strokeStyle='#ff9f0a;';ctx.lineWidth=2;ctx.setLineDash([4,4]);"
+  ctx.beginPath();ctx.strokeStyle='#ff9f0a';ctx.lineWidth=2;ctx.setLineDash([4,4]);
   data.forEach((d,i)=>{
     const iy=pad.top+ch-(d.annualIncome/maxIncome)*ch;
     if(i===0)ctx.moveTo(x(i),iy);else ctx.lineTo(x(i),iy);
   });
   ctx.stroke();ctx.setLineDash([]);
 
-  ctx.fillStyle='#86868b;';ctx.font='11px"" Inter';ctx.textAlign='center';
+  ctx.fillStyle='#86868b';ctx.font='11px Inter';ctx.textAlign='center';
   data.forEach((d,i)=>{if(i%Math.max(1,Math.floor(data.length/8))===0)ctx.fillText('Yr '+d.year,x(i),h-pad.bottom+20);});
   ctx.textAlign='right';
   for(let i=0;i<=5;i++){const v=maxV*i/5;ctx.fillText(fmt(v),pad.left-8,y(v)+4);}
 
   // Legend
-  ctx.fillStyle='#00ff88;';ctx.fillRect(pad.left+10,pad.top+6,12,12);"
-  ctx.fillStyle='#1d1d1f;';ctx.font='11px"" Inter';ctx.textAlign='left';ctx.fillText('Portfolio" Value',pad.left+26,pad.top+16);
-  ctx.fillStyle='#0071e3;';ctx.fillRect(pad.left+10,pad.top+24,12,12);"
-  ctx.fillStyle='#1d1d1f;';ctx.fillText('Contributions',pad.left+26,pad.top+34);"
-  ctx.fillStyle='#ff9f0a;';ctx.fillRect(pad.left+10,pad.top+42,12,12);"
-  ctx.fillStyle='#1d1d1f;';ctx.fillText('Annual" Income',pad.left+26,pad.top+52);
+  ctx.fillStyle='#00ff88';ctx.fillRect(pad.left+10,pad.top+6,12,12);
+  ctx.fillStyle='#1d1d1f';ctx.font='11px Inter';ctx.textAlign='left';ctx.fillText('Portfolio Value',pad.left+26,pad.top+16);
+  ctx.fillStyle='#0071e3';ctx.fillRect(pad.left+10,pad.top+24,12,12);
+  ctx.fillStyle='#1d1d1f';ctx.fillText('Contributions',pad.left+26,pad.top+34);
+  ctx.fillStyle='#ff9f0a';ctx.fillRect(pad.left+10,pad.top+42,12,12);
+  ctx.fillStyle='#1d1d1f';ctx.fillText('Annual Income',pad.left+26,pad.top+52);
 }
 
 function drawCompareChart(rows){
@@ -999,18 +1005,18 @@ function drawCompareChart(rows){
     ctx.fillStyle=colors[i%colors.length];
     ctx.beginPath();ctx.roundRect(x,y,barW,barH,4);ctx.fill();
     ctx.save();ctx.translate(x+barW/2,h-pad.bottom+14);ctx.rotate(-0.3);
-    ctx.fillStyle='#86868b;';ctx.font='10px"" Inter';ctx.textAlign='center';ctx.fillText(r.name,0,0);"
+    ctx.fillStyle='#86868b';ctx.font='10px Inter';ctx.textAlign='center';ctx.fillText(r.name,0,0);
     ctx.restore();
-    ctx.fillStyle="colors[i%colors.length];ctx.font='11px"" Inter';ctx.textAlign='center';
+    ctx.fillStyle=colors[i%colors.length];ctx.font='11px Inter';ctx.textAlign='center';
     ctx.fillText(fmt(r.income),x+barW/2,y-6);
   });
 
-  ctx.textAlign='right';ctx.fillStyle='#86868b;';ctx.font='11px" Inter';"
+  ctx.textAlign='right';ctx.fillStyle='#86868b';ctx.font='11px Inter';
   for(let i=0;i<=4;i++){const v=maxV*i/4;ctx.fillText(fmt(v),pad.left-6,pad.top+ch-ch*i/4+4);}
 }
 
 function drawDripTable(data){
-  let html="'<table"><thead><tr><th>Year</th><th>Shares</th><th>Share Price</th><th>Div/Share</th><th>Annual Income</th><th>Portfolio Value</th><th>Yield on Cost</th></tr></thead><tbody>';
+  let html='<table><thead><tr><th>Year</th><th>Shares</th><th>Share Price</th><th>Div/Share</th><th>Annual Income</th><th>Portfolio Value</th><th>Yield on Cost</th></tr></thead><tbody>';
   data.forEach(d=>{
     html+=`<tr><td>${d.year}</td><td>${d.shares.toFixed(2)}</td><td>${fmt(d.price)}</td><td>${fmt(d.divPerShare)}</td><td>${fmt(d.annualIncome)}</td><td>${fmt(d.portfolioValue)}</td><td>${pct(d.yieldOnCost)}</td></tr>`;
   });
