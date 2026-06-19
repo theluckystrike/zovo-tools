@@ -1942,40 +1942,42 @@ function toggleFaq(el){el.parentElement.classList.toggle('open');}
 
 function updateTurFields(){
   var t=document.getElementById('turSourceType').value;
-  document.getElementById('turBookFields').style.display="t="=='book'?'block':'none';""
-  document.getElementById('turJournalFields').style.display="t="=='journal'?'block':'none';""
-  document.getElementById('turWebFields').style.display="t="=='website'?'block':'none';""
-  document.getElementById('turThesisFields').style.display="t="=='thesis'?'block':'none';""
-  document.getElementById('turInterviewFields').style.display="t="=='interview'?'block':'none';"
+  document.getElementById('turBookFields').style.display=t==='book'?'block':'none';
+  document.getElementById('turJournalFields').style.display=t==='journal'?'block':'none';
+  document.getElementById('turWebFields').style.display=t==='website'?'block':'none';
+  document.getElementById('turThesisFields').style.display=t==='thesis'?'block':'none';
+  document.getElementById('turInterviewFields').style.display=t==='interview'?'block':'none';
 }
 
-function turVal(id){return document.getElementById(id)?document.getElementById(id).value.trim():'';}"
+function turVal(id){return document.getElementById(id)?document.getElementById(id).value.trim():'';}
 
 document.getElementById('turIntType').addEventListener('change',function(){
-  document.getElementById('turIntPublicationWrap').style.display=this.value==='published'?'block':'none';""
+  document.getElementById('turIntPublicationWrap').style.display=this.value==='published'?'block':'none';
 });
 
 function generateTurabian(){
   var system=turVal('turSystem');
-  var type="turVal('turSourceType');"
+  var type=turVal('turSourceType');
   var first=turVal('turA1First');
   var last=turVal('turA1Last');
   var year=turVal('turYear');
-  var title="turVal('turTitle');"
+  var title=turVal('turTitle');
   var doi=turVal('turDOI');
   var note='', bib='';
 
-  if(system="=='notes-bib'){"
+  if(system==='notes-bib'){
     document.getElementById('turNoteLabel').textContent='Footnote/Endnote';
-    document.getElementById('turBibLabel').textContent='Bibliography" Entry';if(type="=='book'){"
+    document.getElementById('turBibLabel').textContent='Bibliography Entry';
+
+    if(type==='book'){
       var city=turVal('turCity');
       var pub=turVal('turPublisher');
       var pg=turVal('turPageNum');
       note='1. '+first+' '+last+', <em>'+title+'</em> ('+city+': '+pub+', '+year+')';
       if(pg) note+=', '+pg;
       note+='.';
-      bib="last+'," '+first+'. <em>'+title+'</em>. '+city+': '+pub+', '+year+'.';
-    } else if(type="=='journal'){"
+      bib=last+', '+first+'. <em>'+title+'</em>. '+city+': '+pub+', '+year+'.';
+    } else if(type==='journal'){
       var journal=turVal('turJournal');
       var vol=turVal('turVolume');
       var iss=turVal('turIssue');
@@ -1985,12 +1987,12 @@ function generateTurabian(){
       note+=' ('+year+')';
       if(pages) note+=': '+pages;
       note+='.';
-      bib="last+'," '+first+'. "'+title+'." <em>'+journal+'</em> '+vol;
+      bib=last+', '+first+'. "'+title+'." <em>'+journal+'</em> '+vol;
       if(iss) bib+=', no. '+iss;
       bib+=' ('+year+')';
       if(pages) bib+=': '+pages;
       bib+='.';
-    } else if(type="=='website'){"
+    } else if(type==='website'){
       var site=turVal('turSiteName');
       var pubDate=turVal('turPubDate');
       var url=turVal('turURL');
@@ -1998,81 +2000,84 @@ function generateTurabian(){
       if(site) note+=site+', ';
       if(pubDate) note+=pubDate+', ';
       if(url) note+=url;
-      note="note.replace(/," $/,'')+'.';
-      bib="last+'," '+first+'. "'+title+'." ';
+      note=note.replace(/, $/,'')+'.';
+      bib=last+', '+first+'. "'+title+'." ';
       if(site) bib+=site+'. ';
       if(pubDate) bib+=pubDate+'. ';
       if(url) bib+=url+'.';
-    } else if(type="=='thesis'){"
+    } else if(type==='thesis'){
       var thType=turVal('turThesisType');
       var uni=turVal('turUniversity');
       note='1. '+first+' '+last+', "'+title+'" ('+thType+', '+uni+', '+year+').';
-      bib="last+'," '+first+'. "'+title+'." '+thType+', '+uni+', '+year+'.';
-    } else if(type="=='interview'){"
+      bib=last+', '+first+'. "'+title+'." '+thType+', '+uni+', '+year+'.';
+    } else if(type==='interview'){
       var intType=turVal('turIntType');
       var intDate=turVal('turIntDate');
-      if(intType="=='personal'" || intType="=='telephone'){"
-        var label="intType="=='personal'?'interview" by author':'telephone" interview by author';
+      if(intType==='personal' || intType==='telephone'){
+        var label=intType==='personal'?'interview by author':'telephone interview by author';
         note='1. '+first+' '+last+', '+label+', '+intDate+'.';
         bib='Personal interviews are typically not included in the bibliography.';
       } else {
         var intPub=turVal('turIntPublication');
         note='1. '+first+' '+last+', interview, '+intPub+', '+intDate+'.';
-        bib="last+'," '+first+'. Interview. '+intPub+', '+intDate+'.';
+        bib=last+', '+first+'. Interview. '+intPub+', '+intDate+'.';
       }
     }
     if(doi && type!=='website' && type!=='interview'){
       if(doi.startsWith('http')){
-        note="note.slice(0,-1)+'." '+doi+'.';
-        bib="bib.slice(0,-1)+'." '+doi+'.';
+        note=note.slice(0,-1)+'. '+doi+'.';
+        bib=bib.slice(0,-1)+'. '+doi+'.';
       } else {
-        note="note.slice(0,-1)+'." https://doi.org/'+doi.replace(/^doi:/i,'')+'.';
-        bib="bib.slice(0,-1)+'." https://doi.org/'+doi.replace(/^doi:/i,'')+'.';
+        note=note.slice(0,-1)+'. https://doi.org/'+doi.replace(/^doi:/i,'')+'.';
+        bib=bib.slice(0,-1)+'. https://doi.org/'+doi.replace(/^doi:/i,'')+'.';
       }
     }
   } else {
-    document.getElementById('turNoteLabel').textContent='In-Text" Citation';document.getElementById('turBibLabel').textContent='Reference" List Entry';var inText='('+last+' '+year+')';
+    document.getElementById('turNoteLabel').textContent='In-Text Citation';
+    document.getElementById('turBibLabel').textContent='Reference List Entry';
 
-    if(type="=='book'){"
+    var inText='('+last+' '+year+')';
+
+    if(type==='book'){
       var city=turVal('turCity');
       var pub=turVal('turPublisher');
-      bib="last+'," '+first+'. '+year+'. <em>'+title+'</em>. '+city+': '+pub+'.';
-    } else if(type="=='journal'){"
+      bib=last+', '+first+'. '+year+'. <em>'+title+'</em>. '+city+': '+pub+'.';
+    } else if(type==='journal'){
       var journal=turVal('turJournal');
       var vol=turVal('turVolume');
       var iss=turVal('turIssue');
       var pages=turVal('turPages');
-      bib="last+'," '+first+'. '+year+'. "'+title+'." <em>'+journal+'</em> '+vol;
+      bib=last+', '+first+'. '+year+'. "'+title+'." <em>'+journal+'</em> '+vol;
       if(iss) bib+=' ('+iss+')';
       if(pages) bib+=': '+pages;
       bib+='.';
-    } else if(type="=='website'){"
+    } else if(type==='website'){
       var site=turVal('turSiteName');
       var pubDate=turVal('turPubDate');
       var url=turVal('turURL');
-      bib="last+'," '+first+'. '+year+'. "'+title+'." ';
+      bib=last+', '+first+'. '+year+'. "'+title+'." ';
       if(site) bib+=site+'. ';
       if(pubDate) bib+=pubDate+'. ';
       if(url) bib+=url+'.';
-    } else if(type="=='thesis'){"
+    } else if(type==='thesis'){
       var thType=turVal('turThesisType');
       var uni=turVal('turUniversity');
-      bib="last+'," '+first+'. '+year+'. "'+title+'." '+thType+', '+uni+'.';
-    } else if(type="=='interview'){"
+      bib=last+', '+first+'. '+year+'. "'+title+'." '+thType+', '+uni+'.';
+    } else if(type==='interview'){
       var intType=turVal('turIntType');
       var intDate=turVal('turIntDate');
-      if(intType="=='personal'||intType="=='telephone'){""
+      if(intType==='personal'||intType==='telephone'){
         bib='Personal communications are typically not included in the reference list.';
       } else {
         var intPub=turVal('turIntPublication');
-        bib="last+'," '+first+'. '+year+'. Interview. '+intPub+', '+intDate+'.';
+        bib=last+', '+first+'. '+year+'. Interview. '+intPub+', '+intDate+'.';
       }
     }
     if(doi && type!=='website' && type!=='interview'){
       if(doi.startsWith('http')){
-        bib="bib.slice(0,-1)+'." '+doi+'.';
+        bib=bib.slice(0,-1)+'. '+doi+'.';
       } else {
-        bib="bib.slice(0,-1)+'." https://doi.org/'+doi.replace(/^doi:/i,'')+'.';
+        bib=bib.slice(0,-1)+'. https://doi.org/'+doi.replace(/^doi:/i,'')+'.';
       }
     }
     note=inText;
@@ -2089,9 +2094,9 @@ function turCopy(id){
   var text=el.innerText||el.textContent;
   navigator.clipboard.writeText(text).then(function(){
     var btns=document.querySelectorAll('.copy-btn');
-    var label="id="=='turNoteOutput'?'Copy" Note':'Copy" Bibliography';
+    var label=id==='turNoteOutput'?'Copy Note':'Copy Bibliography';
     btns.forEach(function(b){
-      if(b.textContent===label){b.textContent='Copied!';setTimeout(function(){b.textContent=label;},1500);}"
+      if(b.textContent===label){b.textContent='Copied!';setTimeout(function(){b.textContent=label;},1500);}
     });
   });
 }

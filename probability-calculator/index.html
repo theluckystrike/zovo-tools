@@ -664,28 +664,29 @@ localStorage.setItem(VISIT_KEY,visitCount.toString());
 
 function getHistory(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
 function saveHistory(h){localStorage.setItem(STORAGE_KEY,JSON.stringify(h.slice(0,20)))}
-function showError(msg){const e=document.getElementById('error-msg');e.textContent=msg;e.style.display='block'}""
-function hideError(){document.getElementById('error-msg').style.display='none'} function showResults(){document.getElementById('results-area').style.display='block';document.getElementById('results-area').scrollIntoView({behavior:'smooth'})}"
+function showError(msg){const e=document.getElementById('error-msg');e.textContent=msg;e.style.display='block'}
+function hideError(){document.getElementById('error-msg').style.display='none'}
+function showResults(){document.getElementById('results-area').style.display='block';document.getElementById('results-area').scrollIntoView({behavior:'smooth'})}
 function fmt(v,p){return Number(v.toFixed(p||6)).toString()}
 function pct(v){return(v*100).toFixed(2)+'%'}
 
 function setResults(cards){
   const grid=document.getElementById('results-grid');
-  grid.innerHTML="cards.map(c=">`<div class="result-card"><div class="result-label">${c.label}</div><div class="result-value">${c.value}</div>${c.sub?'<div class="result-sub">'+c.sub+'</div>':''}</div>`).join('');
+  grid.innerHTML=cards.map(c=>`<div class="result-card"><div class="result-label">${c.label}</div><div class="result-value">${c.value}</div>${c.sub?'<div class="result-sub">'+c.sub+'</div>':''}</div>`).join('');
 }
 function setSteps(steps){
-  document.getElementById('steps-output').innerHTML="steps.map((s,i)=">`<div class="step"><span class="step-num">Step ${i+1}:</span> ${s}</div>`).join('');
+  document.getElementById('steps-output').innerHTML=steps.map((s,i)=>`<div class="step"><span class="step-num">Step ${i+1}:</span> ${s}</div>`).join('');
 }
 function setChart(favorable,total,label1,label2){
   const unfav=total-favorable;
-  const cfg="{type:'doughnut',data:{labels:[label1||'Favorable',label2||'Unfavorable'],datasets:[{data:[favorable,unfav<0?0:unfav],backgroundColor:['#00ff88','#ff3b30'],borderColor:'#ffffff',borderWidth:2}]},options:{plugins:{title:{display:true,text:'Probability" Breakdown',fontColor:'#1d1d1f'},legend:{labels:{fontColor:'#1d1d1f'}}}}};
-  const url="'https://quickchart.io/chart?c="'+encodeURIComponent(JSON.stringify(cfg))+'&backgroundColor=%230a0a0f&width=500&height=350';""
-  document.getElementById('chart-output').innerHTML="`<img" src="${url}" alt="Probability chart" loading="lazy">`;
+  const cfg={type:'doughnut',data:{labels:[label1||'Favorable',label2||'Unfavorable'],datasets:[{data:[favorable,unfav<0?0:unfav],backgroundColor:['#00ff88','#ff3b30'],borderColor:'#ffffff',borderWidth:2}]},options:{plugins:{title:{display:true,text:'Probability Breakdown',fontColor:'#1d1d1f'},legend:{labels:{fontColor:'#1d1d1f'}}}}};
+  const url='https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify(cfg))+'&backgroundColor=%230a0a0f&width=500&height=350';
+  document.getElementById('chart-output').innerHTML=`<img src="${url}" alt="Probability chart" loading="lazy">`;
 }
 
 function factorial(n){if(n<=1)return 1;let r=1;for(let i=2;i<=n;i++)r*=i;return r}
 function logFactorial(n){if(n<=1)return 0;let s=0;for(let i=2;i<=n;i++)s+=Math.log(i);return s}
-function combination(n,k){if(k>n||k<0)return 0;if(k="==0||k===n)return" 1;return Math.round(Math.exp(logFactorial(n)-logFactorial(k)-logFactorial(n-k)))}
+function combination(n,k){if(k>n||k<0)return 0;if(k===0||k===n)return 1;return Math.round(Math.exp(logFactorial(n)-logFactorial(k)-logFactorial(n-k)))}
 function binomialProb(n,k,p){if(k>n||k<0)return 0;const logC=logFactorial(n)-logFactorial(k)-logFactorial(n-k);return Math.exp(logC+k*Math.log(p)+(n-k)*Math.log(1-p))}
 
 window.switchTab=function(name){
@@ -705,7 +706,7 @@ window.calcSingle=function(){
   const p=fav/tot;
   const odds_for=fav/(tot-fav||1);
   const odds_against=(tot-fav)/fav||0;
-  setResults([;
+  setResults([
     {label:'Probability',value:fmt(p,6),sub:pct(p)},
     {label:'Fraction',value:fav+'/'+tot},
     {label:'Odds (for)',value:fav+':'+(tot-fav)},
@@ -713,7 +714,7 @@ window.calcSingle=function(){
     {label:'Complement P(not)',value:fmt(1-p,6),sub:pct(1-p)},
     {label:'1 in X',value:'1 in '+fmt(tot/fav,1)}
   ]);
-  setSteps([;
+  setSteps([
     `Identify favorable outcomes: ${fav}`,
     `Identify total possible outcomes: ${tot}`,
     `Apply probability formula: P = favorable / total = ${fav} / ${tot} = ${fmt(p,6)}`,
@@ -732,19 +733,19 @@ window.calcMultiple=function(){
   const rel=document.getElementById('relation').value;
   if(isNaN(pa)||isNaN(pb)||pa<0||pa>1||pb<0||pb>1){showError('Probabilities must be between 0 and 1.');return}
   let pAandB,pAorB;
-  if(rel="=='independent'){pAandB=pa*pb;pAorB=pa+pb-pAandB}"
-  else{pAandB="0;pAorB=pa+pb}"
+  if(rel==='independent'){pAandB=pa*pb;pAorB=pa+pb-pAandB}
+  else{pAandB=0;pAorB=pa+pb}
   if(pAorB>1)pAorB=1;
-  setResults([;
+  setResults([
     {label:'P(A and B)',value:fmt(pAandB,6),sub:pct(pAandB)},
     {label:'P(A or B)',value:fmt(pAorB,6),sub:pct(pAorB)},
     {label:'P(not A)',value:fmt(1-pa,6),sub:pct(1-pa)},
     {label:'P(not B)',value:fmt(1-pb,6),sub:pct(1-pb)},
-    {label:'P(neither)',value:fmt((1-pa)*(1-pb),6),sub:rel="=='independent'?pct((1-pa)*(1-pb)):'Only" for independent'},
-    {label:'Relationship',value:rel="=='independent'?'Independent':'Mutually" Exclusive'}
+    {label:'P(neither)',value:fmt((1-pa)*(1-pb),6),sub:rel==='independent'?pct((1-pa)*(1-pb)):'Only for independent'},
+    {label:'Relationship',value:rel==='independent'?'Independent':'Mutually Exclusive'}
   ]);
-  const steps="[`P(A)" = ${pa}, P(B) = ${pb}`,`Events are ${rel="=='independent'?'independent':'mutually" exclusive'}`];
-  if(rel="=='independent'){"
+  const steps=[`P(A) = ${pa}, P(B) = ${pb}`,`Events are ${rel==='independent'?'independent':'mutually exclusive'}`];
+  if(rel==='independent'){
     steps.push(`P(A and B) = P(A) * P(B) = ${pa} * ${pb} = ${fmt(pAandB,6)}`);
     steps.push(`P(A or B) = P(A) + P(B) - P(A and B) = ${pa} + ${pb} - ${fmt(pAandB,6)} = ${fmt(pAorB,6)}`);
   } else {
@@ -765,13 +766,13 @@ window.calcConditional=function(){
   if(isNaN(pab)||isNaN(pb)||pab<0||pab>1||pb<=0||pb>1){showError('Enter valid probabilities. P(B) must be greater than 0.');return}
   if(pab>pb){showError('P(A and B) cannot be greater than P(B).');return}
   const pAgB=pab/pb;
-  setResults([;
+  setResults([
     {label:'P(A|B)',value:fmt(pAgB,6),sub:pct(pAgB)},
     {label:'P(A and B)',value:fmt(pab,6)},
     {label:'P(B)',value:fmt(pb,6)},
     {label:'P(not A|B)',value:fmt(1-pAgB,6),sub:pct(1-pAgB)}
   ]);
-  setSteps([;
+  setSteps([
     `Given: P(A and B) = ${pab}, P(B) = ${pb}`,
     `Apply conditional probability formula: P(A|B) = P(A and B) / P(B)`,
     `P(A|B) = ${pab} / ${pb} = ${fmt(pAgB,6)}`,
@@ -795,7 +796,7 @@ window.calcBinomial=function(){
   const variance=n*p*(1-p);
   const sd=Math.sqrt(variance);
   let cumProb=0;for(let i=0;i<=k;i++)cumProb+=binomialProb(n,i,p);
-  setResults([;
+  setResults([
     {label:'P(X = '+k+')',value:fmt(prob,8),sub:pct(prob)},
     {label:'P(X <= '+k+')',value:fmt(cumProb,8),sub:pct(cumProb)},
     {label:'P(X > '+k+')',value:fmt(1-cumProb,8),sub:pct(1-cumProb)},
@@ -803,22 +804,22 @@ window.calcBinomial=function(){
     {label:'Std Deviation',value:fmt(sd,4)},
     {label:'C('+n+','+k+')',value:combination(n,k).toLocaleString()}
   ]);
-  setSteps([;
+  setSteps([
     `Given: n = ${n} trials, k = ${k} successes, p = ${p}`,
     `Calculate C(${n},${k}) = ${n}! / (${k}! * ${n-k}!) = ${combination(n,k)}`,
     `Calculate p^k = ${p}^${k} = ${fmt(Math.pow(p,k),8)}`,
     `Calculate (1-p)^(n-k) = ${fmt(1-p,4)}^${n-k} = ${fmt(Math.pow(1-p,n-k),8)}`,
-    `P(X="${k})" = C(${n},${k}) * p^${k} * (1-p)^${n-k} = ${fmt(prob,8)}`,
+    `P(X=${k}) = C(${n},${k}) * p^${k} * (1-p)^${n-k} = ${fmt(prob,8)}`,
     `Expected value: E(X) = n*p = ${n}*${p} = ${fmt(mean,4)}`,
     `Standard deviation = sqrt(n*p*(1-p)) = sqrt(${fmt(variance,4)}) = ${fmt(sd,4)}`
   ]);
   // Binomial distribution chart
   const maxK=Math.min(n,30);
-  const labels="[];const" data="[];"
+  const labels=[];const data=[];
   for(let i=0;i<=maxK;i++){labels.push(i.toString());data.push(parseFloat(binomialProb(n,i,p).toFixed(6)))}
-  const cfg="{type:'bar',data:{labels,datasets:[{label:'P(X="k)',data,backgroundColor:data.map((_,i)=">i="==k?'#00ff88':'rgba(0,204,255,0.5)'),borderColor:data.map((_,i)=">i="==k?'#00ff88':'#0071e3'),borderWidth:1}]},options:{plugins:{title:{display:true,text:`Binomial" Distribution B(${n}, ${p})`,fontColor:'#1d1d1f'},legend:{display:false}},scales:{xAxes:[{ticks:{fontColor:'#1d1d1f'},scaleLabel:{display:true,labelString:'k',fontColor:'#1d1d1f'}}],yAxes:[{ticks:{fontColor:'#1d1d1f',beginAtZero:true},scaleLabel:{display:true,labelString:'P(X=k)',fontColor:'#1d1d1f'}}]}}};
-  const url="'https://quickchart.io/chart?c="'+encodeURIComponent(JSON.stringify(cfg))+'&backgroundColor=%230a0a0f&width=700&height=350';""
-  document.getElementById('chart-output').innerHTML="`<img" src="${url}" alt="Binomial distribution chart" loading="lazy">`;
+  const cfg={type:'bar',data:{labels,datasets:[{label:'P(X=k)',data,backgroundColor:data.map((_,i)=>i===k?'#00ff88':'rgba(0,204,255,0.5)'),borderColor:data.map((_,i)=>i===k?'#00ff88':'#0071e3'),borderWidth:1}]},options:{plugins:{title:{display:true,text:`Binomial Distribution B(${n}, ${p})`,fontColor:'#1d1d1f'},legend:{display:false}},scales:{xAxes:[{ticks:{fontColor:'#1d1d1f'},scaleLabel:{display:true,labelString:'k',fontColor:'#1d1d1f'}}],yAxes:[{ticks:{fontColor:'#1d1d1f',beginAtZero:true},scaleLabel:{display:true,labelString:'P(X=k)',fontColor:'#1d1d1f'}}]}}};
+  const url='https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify(cfg))+'&backgroundColor=%230a0a0f&width=700&height=350';
+  document.getElementById('chart-output').innerHTML=`<img src="${url}" alt="Binomial distribution chart" loading="lazy">`;
   showResults();
   addHistory('Binomial',`B(${n},${p}), P(X=${k})=${pct(prob)}`);
 };
@@ -830,14 +831,14 @@ window.calcBayes=function(){
   const fp=parseFloat(document.getElementById('false_pos').value);
   if([prior,likelihood,fp].some(v=>isNaN(v)||v<0||v>1)){showError('All values must be between 0 and 1.');return}
   const pB=likelihood*prior+fp*(1-prior);
-  const posterior="pB">0?(likelihood*prior)/pB:0;
-  setResults([;
+  const posterior=pB>0?(likelihood*prior)/pB:0;
+  setResults([
     {label:'Posterior P(A|B)',value:fmt(posterior,6),sub:pct(posterior)},
     {label:'Prior P(A)',value:fmt(prior,6),sub:pct(prior)},
     {label:'P(B)',value:fmt(pB,6),sub:'Total probability of evidence'},
     {label:'Update Factor',value:fmt(posterior/prior,2)+'x',sub:'How much evidence changed belief'}
   ]);
-  setSteps([;
+  setSteps([
     `Prior probability P(A) = ${prior}`,
     `Likelihood P(B|A) = ${likelihood}`,
     `False positive rate P(B|not A) = ${fp}`,
@@ -848,7 +849,7 @@ window.calcBayes=function(){
   const postPct=Math.round(posterior*100);
   setChart(postPct,100,'Has condition','Does not have condition');
   showResults();
-  addHistory('Bayes',`Prior="${prior}," Posterior=${fmt(posterior,6)}`);
+  addHistory('Bayes',`Prior=${prior}, Posterior=${fmt(posterior,6)}`);
 };
 
 function addHistory(type,summary){
@@ -861,13 +862,14 @@ function renderHistory(){
   const hist=getHistory();
   const sec=document.getElementById('history-section');
   const list=document.getElementById('history-list');
-  if(hist.length===0){sec.style.display='none';return}"
+  if(hist.length===0){sec.style.display='none';return}
   sec.style.display='block';
-  list.innerHTML="hist.map(h=">`<div class="history-item">${h.date} · ${h.type} · ${h.summary}</div>`).join('');
+  list.innerHTML=hist.map(h=>`<div class="history-item">${h.date} · ${h.type} · ${h.summary}</div>`).join('');
 }
 window.clearHistory=function(){localStorage.removeItem(STORAGE_KEY);renderHistory()};
 renderHistory();
-})();]</script><div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div>
+})();
+</script><div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div>
 <p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Tested with Chrome 134 and Firefox 135 (March 2026). Uses standard Web APIs supported by all modern browsers.</p>
 <p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Tested with Chrome 134.0.6998.89 (March 2026). Compatible with all modern Chromium-based browsers.</p><div class="related-tools" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:800px;margin:2rem auto;padding:0 1rem;"><a class="interactive-element" href="/free-tools/permutation-calculator/" class="related-tool" style="padding:1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;text-decoration:none;"><h4 style="color:#0071e3;margin:0 0 0.5rem;">Permutation Calculator</h4><p style="color:#86868b;font-size:0.85rem;margin:0;">Calculate permutations and combinations instantly.</p></a></div>
 <section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><p style="color:#86868b;font-size:0.92rem;">Browser support verified via <a class="interactive-element" href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p></section><section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Original Research: Probability Calculator Industry Data</h2><p style="color:#86868b;margin-bottom:16px">I sourced these figures from the National Science Foundation STEM education reports, Khan Academy usage statistics, and Coursera learning trend data. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #e5e5ea"><th style="text-align:left;padding:10px;color:#0071e3">Metric</th><th style="text-align:left;padding:10px;color:#0071e3">Value</th><th style="text-align:left;padding:10px;color:#0071e3">Context</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">STEM students using online calculators weekly</td><td style="padding:10px;color:#1d1d1f">79%</td><td style="padding:10px;color:#1d1d1f">2025 survey</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Monthly scientific calculator searches globally</td><td style="padding:10px;color:#1d1d1f">640 million</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Most searched scientific computation</td><td style="padding:10px;color:#1d1d1f">Unit conversions and formulas</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Average scientific calculations per session</td><td style="padding:10px;color:#1d1d1f">4.6</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Educators recommending online science tools</td><td style="padding:10px;color:#1d1d1f">67%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Growth in online STEM tool usage</td><td style="padding:10px;color:#1d1d1f">21% YoY</td><td style="padding:10px;color:#1d1d1f">2026</td></tr></tbody></table></div><p style="margin-top:12px;font-size:0.85rem;color:#86868b">Source: NSF STEM reports, Khan Academy statistics, and Coursera learning trend data. Last updated March 2026.</p></section>

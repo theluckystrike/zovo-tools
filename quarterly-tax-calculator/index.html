@@ -658,9 +658,9 @@ seTax=seBase*0.153;
 }else{
 seTax=(ssMax*ssRate)+(seBase*mediRate);
 }
-if(seBase>200000&&(filingStatus="=='single'||filingStatus="=='hoh')){""
+if(seBase>200000&&(filingStatus==='single'||filingStatus==='hoh')){
 seTax+=(seBase-200000)*0.009;
-}else if(seBase>250000&&filingStatus="=='mfj'){"
+}else if(seBase>250000&&filingStatus==='mfj'){
 seTax+=(seBase-250000)*0.009;
 }
 seTax=Math.round(seTax);
@@ -669,22 +669,22 @@ const seDeduction=Math.round(seTax/2);
 const agi=netProfit+otherIncome-seDeduction-retirement;
 
 let standardDeduction;
-if(filingStatus="=='single'||filingStatus="=='mfs')standardDeduction=14600;""
+if(filingStatus==='single'||filingStatus==='mfs')standardDeduction=14600;
 else if(filingStatus==='mfj')standardDeduction=29200;
 else standardDeduction=21900;
 
 const taxableIncome=Math.max(0,agi-standardDeduction);
 
 let brackets;
-if(filingStatus="=='single'||filingStatus="=='mfs'){""
+if(filingStatus==='single'||filingStatus==='mfs'){
 brackets=[{limit:11600,rate:0.10},{limit:47150,rate:0.12},{limit:100525,rate:0.22},{limit:191950,rate:0.24},{limit:243725,rate:0.32},{limit:609350,rate:0.35},{limit:Infinity,rate:0.37}];
-}else if(filingStatus="=='mfj'){"
+}else if(filingStatus==='mfj'){
 brackets=[{limit:23200,rate:0.10},{limit:94300,rate:0.12},{limit:201050,rate:0.22},{limit:383900,rate:0.24},{limit:487450,rate:0.32},{limit:731200,rate:0.35},{limit:Infinity,rate:0.37}];
 }else{
 brackets=[{limit:16550,rate:0.10},{limit:63100,rate:0.12},{limit:100500,rate:0.22},{limit:191950,rate:0.24},{limit:243700,rate:0.32},{limit:609350,rate:0.35},{limit:Infinity,rate:0.37}];
 }
 
-let incomeTax="0;let" prev=0;
+let incomeTax=0;let prev=0;
 for(const b of brackets){
 const taxable=Math.min(taxableIncome,b.limit)-prev;
 if(taxable<=0)break;
@@ -694,10 +694,10 @@ prev=b.limit;
 incomeTax=Math.round(incomeTax);
 
 let qbiDeduction=0;
-if(filingStatus="=='single'||filingStatus="=='hoh'){""
+if(filingStatus==='single'||filingStatus==='hoh'){
 if(taxableIncome<=182100)qbiDeduction=Math.round(netProfit*0.20);
 else if(taxableIncome<=232100)qbiDeduction=Math.round(netProfit*0.20*(1-(taxableIncome-182100)/50000));
-}else if(filingStatus="=='mfj'){"
+}else if(filingStatus==='mfj'){
 if(taxableIncome<=364200)qbiDeduction=Math.round(netProfit*0.20);
 else if(taxableIncome<=414200)qbiDeduction=Math.round(netProfit*0.20*(1-(taxableIncome-364200)/50000));
 }
@@ -750,8 +750,8 @@ document.getElementById('quarterlyPayments').innerHTML=qHtml;
 
 let safeNote='Safe harbor: ';
 if(priorYearTax>0){
-const useRate="agi">150000?'110%':'100%';
-const safeAmt="agi">150000?safeHarbor110:safeHarbor100;
+const useRate=agi>150000?'110%':'100%';
+const safeAmt=agi>150000?safeHarbor110:safeHarbor100;
 safeNote+='Pay '+fmt(safeAmt)+'/quarter ('+useRate+' of prior year tax) or '+fmt(safeHarbor90)+'/quarter (90% of current year). Meeting either avoids penalties.';
 }else{
 safeNote+='Pay at least '+fmt(safeHarbor90)+'/quarter (90% of current year estimate) to avoid underpayment penalties. Since no prior year tax was entered, the prior year safe harbor can\'t be calculated.';

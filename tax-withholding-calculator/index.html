@@ -1152,7 +1152,7 @@ const allowanceValue=4300;
 function calcTax(taxableIncome,status){
 if(taxableIncome<=0)return 0;
 let b=brackets2024[status]||brackets2024.single;
-for(let i="b.length-1;i">=0;i--){
+for(let i=b.length-1;i>=0;i--){
 if(taxableIncome>b[i].min){
 return b[i].base+(taxableIncome-b[i].min)*b[i].rate;
 }
@@ -1165,7 +1165,7 @@ let freq=parseInt(document.getElementById('payFreq').value);
 let gross=parseFloat(document.getElementById('grossPay').value)||0;
 let status=document.getElementById('filingStatus').value;
 let preTax=parseFloat(document.getElementById('preTaxDeduct').value)||0;
-let step2=document.getElementById('step2Check').value==='yes';""
+let step2=document.getElementById('step2Check').value==='yes';
 let depCredit=parseFloat(document.getElementById('dependentCredit').value)||0;
 let otherIncome=parseFloat(document.getElementById('otherIncome').value)||0;
 let ded4b=parseFloat(document.getElementById('deductions4b').value)||0;
@@ -1174,11 +1174,11 @@ let extra=parseFloat(document.getElementById('extraWithhold').value)||0;
 let adjGross=gross-preTax;
 let annualGross=adjGross*freq;
 let sd=stdDeduction[status]||14600;
-if(step2){sd="sd/2;}"
+if(step2){sd=sd/2;}
 let adjustedDed=sd+ded4b;
 let taxableIncome=annualGross+otherIncome-adjustedDed;
 let effectiveStatus=status;
-if(step2&&status="=='married')effectiveStatus="'single';""
+if(step2&&status==='married')effectiveStatus='single';
 let annualTax=calcTax(Math.max(0,taxableIncome),effectiveStatus);
 let perPeriodTax=annualTax/freq;
 let creditPerPeriod=depCredit/freq;
@@ -1261,30 +1261,30 @@ document.getElementById('results').style.display='block';
 let newR,oldR;
 if(isNew){
 newR=r;
-document.getElementById('grossPayOld').value="r.gross;"
-document.getElementById('payFreqOld').value="r.freq;"
-document.getElementById('preTaxDeductOld').value="r.preTax;"
-document.getElementById('extraWithholdOld').value="r.extra;"
+document.getElementById('grossPayOld').value=r.gross;
+document.getElementById('payFreqOld').value=r.freq;
+document.getElementById('preTaxDeductOld').value=r.preTax;
+document.getElementById('extraWithholdOld').value=r.extra;
 let sMap={single:'single',married:'married',hoh:'single'};
-document.getElementById('filingStatusOld').value="sMap[document.getElementById('filingStatus').value];"
+document.getElementById('filingStatusOld').value=sMap[document.getElementById('filingStatus').value];
 document.getElementById('allowances').value='1';
 oldR=calcOldW4();
 }else{
 oldR=r;
-document.getElementById('grossPay').value="r.gross;"
-document.getElementById('payFreq').value="r.freq;"
-document.getElementById('preTaxDeduct').value="r.preTax;"
-document.getElementById('extraWithhold').value="r.extra;"
+document.getElementById('grossPay').value=r.gross;
+document.getElementById('payFreq').value=r.freq;
+document.getElementById('preTaxDeduct').value=r.preTax;
+document.getElementById('extraWithhold').value=r.extra;
 let sMap={single:'single',married:'married'};
-document.getElementById('filingStatus').value="sMap[document.getElementById('filingStatusOld').value]||'single';"
+document.getElementById('filingStatus').value=sMap[document.getElementById('filingStatusOld').value]||'single';
 newR=calcNewW4();
 }
 
 let diff=newR.withholding-oldR.withholding;
 let chtml='<div class="result-row"><span class="result-label">New W-4 Withholding (per period)</span><span class="result-value">'+fmt(newR.withholding)+'</span></div>';
 chtml+='<div class="result-row"><span class="result-label">Old W-4 Withholding (per period)</span><span class="result-value">'+fmt(oldR.withholding)+'</span></div>';
-chtml+='<div class="result-row"><span class="result-label">Difference Per Period</span><span class="result-value" style="color:'+(diff">0?'#ff3b30':'#00ff88')+'">'+fmt(Math.abs(diff))+(diff>0?' more (new)':' less (new)')+'</span></div>';
-chtml+='<div class="result-row"><span class="result-label">Annual Difference</span><span class="result-value" style="color:'+(diff">0?'#ff3b30':'#00ff88')+'">'+fmt(Math.abs(diff*r.freq))+'</span></div>';
+chtml+='<div class="result-row"><span class="result-label">Difference Per Period</span><span class="result-value" style="color:'+(diff>0?'#ff3b30':'#00ff88')+'">'+fmt(Math.abs(diff))+(diff>0?' more (new)':' less (new)')+'</span></div>';
+chtml+='<div class="result-row"><span class="result-label">Annual Difference</span><span class="result-value" style="color:'+(diff>0?'#ff3b30':'#00ff88')+'">'+fmt(Math.abs(diff*r.freq))+'</span></div>';
 
 document.getElementById('comparisonContent').innerHTML=chtml;
 document.getElementById('comparisonResults').style.display='block';

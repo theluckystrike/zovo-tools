@@ -662,20 +662,21 @@ localStorage.setItem(VISIT_KEY,visitCount.toString());
 
 function getHistory(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
 function saveHistory(h){localStorage.setItem(STORAGE_KEY,JSON.stringify(h.slice(0,20)))}
-function showError(msg){const e=document.getElementById('error-msg');e.textContent=msg;e.style.display='block'}""
-function hideError(){document.getElementById('error-msg').style.display='none'} function showResults(){document.getElementById('results-area').style.display='block';document.getElementById('results-area').scrollIntoView({behavior:'smooth'})}"
+function showError(msg){const e=document.getElementById('error-msg');e.textContent=msg;e.style.display='block'}
+function hideError(){document.getElementById('error-msg').style.display='none'}
+function showResults(){document.getElementById('results-area').style.display='block';document.getElementById('results-area').scrollIntoView({behavior:'smooth'})}
 
 function factorial(n){if(n<=1)return 1;let r=1;for(let i=2;i<=n;i++)r*=i;return r}
 function logFact(n){if(n<=1)return 0;let s=0;for(let i=2;i<=n;i++)s+=Math.log(i);return s}
-function perm(n,r){if(r>n)return 0;let result=1;for(let i="n;i">n-r;i--)result*=i;return result}
-function comb(n,r){if(r>n)return 0;if(r>n-r)r="n-r;let" result=1;for(let i=0;i<r;i++){result=result*(n-i)/(i+1)}return Math.round(result)}
+function perm(n,r){if(r>n)return 0;let result=1;for(let i=n;i>n-r;i--)result*=i;return result}
+function comb(n,r){if(r>n)return 0;if(r>n-r)r=n-r;let result=1;for(let i=0;i<r;i++){result=result*(n-i)/(i+1)}return Math.round(result)}
 function fmtBig(n){if(n>1e15)return n.toExponential(6);return n.toLocaleString()}
 
 function setResults(cards){
-  document.getElementById('results-grid').innerHTML="cards.map(c=">`<div class="result-card"><div class="result-label">${c.label}</div><div class="result-value">${c.value}</div>${c.sub?'<div class="result-sub">'+c.sub+'</div>':''}</div>`).join('');
+  document.getElementById('results-grid').innerHTML=cards.map(c=>`<div class="result-card"><div class="result-label">${c.label}</div><div class="result-value">${c.value}</div>${c.sub?'<div class="result-sub">'+c.sub+'</div>':''}</div>`).join('');
 }
 function setSteps(steps){
-  document.getElementById('steps-output').innerHTML="steps.map((s,i)=">`<div class="step"><span class="step-num">Step ${i+1}:</span> ${s}</div>`).join('');
+  document.getElementById('steps-output').innerHTML=steps.map((s,i)=>`<div class="step"><span class="step-num">Step ${i+1}:</span> ${s}</div>`).join('');
 }
 
 function addHistory(type,summary){
@@ -688,17 +689,17 @@ function renderHistory(){
   const hist=getHistory();
   const sec=document.getElementById('history-section');
   const list=document.getElementById('history-list');
-  if(hist.length===0){sec.style.display='none';return}"
+  if(hist.length===0){sec.style.display='none';return}
   sec.style.display='block';
-  list.innerHTML="hist.map(h=">`<div class="history-item">${h.date} · ${h.type} · ${h.summary}</div>`).join('');
+  list.innerHTML=hist.map(h=>`<div class="history-item">${h.date} · ${h.type} · ${h.summary}</div>`).join('');
 }
 window.clearHistory=function(){localStorage.removeItem(STORAGE_KEY);renderHistory()};
 
 window.switchTab=function(name){
   document.querySelectorAll('.tab-btn').forEach(b=>{
     const t=b.textContent.toLowerCase();
-    const match="(name="=='perm'&&t.includes('permutation"" ('))||(name="=='comb'&&t.includes('combination'))||(name="=='fact'&&t.includes('factorial'))||(name==='rep'&&t.includes('repetition'));"
-    b.classList.toggle('active',match);"
+    const match=(name==='perm'&&t.includes('permutation ('))||(name==='comb'&&t.includes('combination'))||(name==='fact'&&t.includes('factorial'))||(name==='rep'&&t.includes('repetition'));
+    b.classList.toggle('active',match);
   });
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
@@ -717,14 +718,14 @@ window.calcPerm=function(){
   const combResult=comb(n,r);
   const nFact=factorial(n);
   const nrFact=factorial(n-r);
-  setResults([;
+  setResults([
     {label:`P(${n},${r})`,value:fmtBig(result),sub:'Permutations'},
     {label:`C(${n},${r})`,value:fmtBig(combResult),sub:'Combinations'},
     {label:`${n}!`,value:fmtBig(nFact)},
     {label:`(${n}-${r})!`,value:fmtBig(nrFact)}
   ]);
-  const terms=[];for(let i="n;i">n-r;i--)terms.push(i);
-  setSteps([;
+  const terms=[];for(let i=n;i>n-r;i--)terms.push(i);
+  setSteps([
     `P(${n},${r}) = ${n}! / (${n}-${r})! = ${n}! / ${n-r}!`,
     `Expand: ${terms.join(' * ')}`,
     `Calculate: P(${n},${r}) = ${fmtBig(result)}`,
@@ -732,10 +733,10 @@ window.calcPerm=function(){
     `There are ${fmtBig(result)} ways to arrange ${r} items from ${n} when order matters`
   ]);
   // Chart comparing P and C
-  const labels="[];const" pData="[];const" cData=[];
-  for(let i=1;i<=Math.min(n,8);i++){labels.push('r='+i);pData.push(perm(n,i));cData.push(comb(n,i))}""
+  const labels=[];const pData=[];const cData=[];
+  for(let i=1;i<=Math.min(n,8);i++){labels.push('r='+i);pData.push(perm(n,i));cData.push(comb(n,i))}
   const cfg={type:'bar',data:{labels,datasets:[{label:'Permutations',data:pData,backgroundColor:'#00ff88'},{label:'Combinations',data:cData,backgroundColor:'#0071e3'}]},options:{plugins:{title:{display:true,text:`P(${n},r) vs C(${n},r)`,fontColor:'#1d1d1f'},legend:{labels:{fontColor:'#1d1d1f'}}},scales:{xAxes:[{ticks:{fontColor:'#1d1d1f'}}],yAxes:[{ticks:{fontColor:'#1d1d1f',beginAtZero:true},type:'logarithmic'}]}}};
-  document.getElementById('chart-output').innerHTML="`<img" src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(cfg))}&backgroundColor=%230a0a0f&width=700&height=350" alt="Permutation vs Combination comparison chart" loading="lazy">`;
+  document.getElementById('chart-output').innerHTML=`<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(cfg))}&backgroundColor=%230a0a0f&width=700&height=350" alt="Permutation vs Combination comparison chart" loading="lazy">`;
   showResults();
   addHistory('nPr',`P(${n},${r}) = ${fmtBig(result)}`);
 };
@@ -750,13 +751,13 @@ window.calcComb=function(){
   const result=comb(n,r);
   const permResult=perm(n,r);
   const rFact=factorial(r);
-  setResults([;
+  setResults([
     {label:`C(${n},${r})`,value:fmtBig(result),sub:'Combinations'},
     {label:`P(${n},${r})`,value:fmtBig(permResult),sub:'Permutations'},
     {label:`${r}!`,value:fmtBig(rFact),sub:'Order factor'},
     {label:'Verification',value:fmtBig(permResult)+' / '+fmtBig(rFact),sub:'P/r! = C'}
   ]);
-  setSteps([;
+  setSteps([
     `C(${n},${r}) = ${n}! / (${r}! * (${n}-${r})!)`,
     `C(${n},${r}) = ${n}! / (${r}! * ${n-r}!)`,
     `Calculate: C(${n},${r}) = ${fmtBig(result)}`,
@@ -765,8 +766,8 @@ window.calcComb=function(){
   ]);
   // Pascal's triangle row
   const row=[];for(let i=0;i<=Math.min(n,15);i++)row.push(comb(n,i));
-  const cfg={type:'bar',data:{labels:row.map((_,i)=>'C('+n+','+i+')'),datasets:[{label:'Combinations',data:row,backgroundColor:row.map((_,i)=>i="==r?'#00ff88':'rgba(0,204,255,0.5)'),borderColor:row.map((_,i)=">i="==r?'#00ff88':'#0071e3'),borderWidth:1}]},options:{plugins:{title:{display:true,text:`Row" ${n} of Pascal's Triangle`,fontColor:'#1d1d1f'},legend:{display:false}},scales:{xAxes:[{ticks:{fontColor:'#1d1d1f',fontSize:10}}],yAxes:[{ticks:{fontColor:'#1d1d1f',beginAtZero:true}}]}}};
-  document.getElementById('chart-output').innerHTML="`<img" src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(cfg))}&backgroundColor=%230a0a0f&width=700&height=350" alt="Pascal's" triangle row visualization" loading="lazy">`;
+  const cfg={type:'bar',data:{labels:row.map((_,i)=>'C('+n+','+i+')'),datasets:[{label:'Combinations',data:row,backgroundColor:row.map((_,i)=>i===r?'#00ff88':'rgba(0,204,255,0.5)'),borderColor:row.map((_,i)=>i===r?'#00ff88':'#0071e3'),borderWidth:1}]},options:{plugins:{title:{display:true,text:`Row ${n} of Pascal's Triangle`,fontColor:'#1d1d1f'},legend:{display:false}},scales:{xAxes:[{ticks:{fontColor:'#1d1d1f',fontSize:10}}],yAxes:[{ticks:{fontColor:'#1d1d1f',beginAtZero:true}}]}}};
+  document.getElementById('chart-output').innerHTML=`<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(cfg))}&backgroundColor=%230a0a0f&width=700&height=350" alt="Pascal's triangle row visualization" loading="lazy">`;
   showResults();
   addHistory('nCr',`C(${n},${r}) = ${fmtBig(result)}`);
 };
@@ -777,16 +778,16 @@ window.calcFact=function(){
   if(isNaN(n)||n<0){showError('Please enter a non-negative integer.');return}
   if(n>170){showError('Maximum value is 170 (JavaScript number limit).');return}
   const result=factorial(n);
-  const digits="n">0?Math.floor(Math.log10(result))+1:1;
-  setResults([;
+  const digits=n>0?Math.floor(Math.log10(result))+1:1;
+  setResults([
     {label:`${n}!`,value:fmtBig(result)},
     {label:'Digits',value:digits.toLocaleString(),sub:'Number of digits'},
     {label:`${n>0?n-1:0}!`,value:fmtBig(factorial(Math.max(0,n-1)))},
     {label:`${Math.min(n+1,170)}!`,value:fmtBig(factorial(Math.min(n+1,170)))}
   ]);
-  const terms=[];for(let i="n;i">=1;i--)terms.push(i);
-  const display="terms.length">10?terms.slice(0,5).join(' * ')+' * ... * '+terms.slice(-3).join(' * '):terms.join(' * ');
-  setSteps([;
+  const terms=[];for(let i=n;i>=1;i--)terms.push(i);
+  const display=terms.length>10?terms.slice(0,5).join(' * ')+' * ... * '+terms.slice(-3).join(' * '):terms.join(' * ');
+  setSteps([
     `${n}! = ${n>0?display:'1 (by definition)'}`,
     `${n}! = ${fmtBig(result)}`,
     `The result has ${digits} digit${digits>1?'s':''}`,
@@ -794,10 +795,10 @@ window.calcFact=function(){
   ]);
   // Factorial growth chart
   const maxN=Math.min(n+3,12);
-  const labels="[];const" data="[];"
+  const labels=[];const data=[];
   for(let i=0;i<=maxN;i++){labels.push(i+'!');data.push(factorial(i))}
-  const cfg={type:'line',data:{labels,datasets:[{label:'n!',data,borderColor:'#00ff88',backgroundColor:'rgba(0,255,136,0.1)',fill:true,pointBackgroundColor:data.map((_,i)=>i="==n?'#00ff88':'#0071e3'),pointRadius:data.map((_,i)=">i="==n?8:4)}]},options:{plugins:{title:{display:true,text:'Factorial" Growth',fontColor:'#1d1d1f'},legend:{display:false}},scales:{xAxes:[{ticks:{fontColor:'#1d1d1f'}}],yAxes:[{ticks:{fontColor:'#1d1d1f',beginAtZero:true}}]}}};
-  document.getElementById('chart-output').innerHTML="`<img" src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(cfg))}&backgroundColor=%230a0a0f&width=700&height=350" alt="Factorial growth chart" loading="lazy">`;
+  const cfg={type:'line',data:{labels,datasets:[{label:'n!',data,borderColor:'#00ff88',backgroundColor:'rgba(0,255,136,0.1)',fill:true,pointBackgroundColor:data.map((_,i)=>i===n?'#00ff88':'#0071e3'),pointRadius:data.map((_,i)=>i===n?8:4)}]},options:{plugins:{title:{display:true,text:'Factorial Growth',fontColor:'#1d1d1f'},legend:{display:false}},scales:{xAxes:[{ticks:{fontColor:'#1d1d1f'}}],yAxes:[{ticks:{fontColor:'#1d1d1f',beginAtZero:true}}]}}};
+  document.getElementById('chart-output').innerHTML=`<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(cfg))}&backgroundColor=%230a0a0f&width=700&height=350" alt="Factorial growth chart" loading="lazy">`;
   showResults();
   addHistory('Factorial',`${n}! = ${fmtBig(result)}`);
 };
@@ -809,17 +810,17 @@ window.calcRep=function(){
   const type=document.getElementById('rep-type').value;
   if(isNaN(n)||isNaN(r)||n<1||r<1){showError('Please enter positive integers.');return}
   let result,formula;
-  if(type="=='perm'){"
+  if(type==='perm'){
     if(r*Math.log10(n)>308){showError('Result too large. Try smaller values.');return}
     result=Math.pow(n,r);
     formula=`${n}^${r}`;
-    setResults([;
+    setResults([
       {label:`${n}^${r}`,value:fmtBig(result),sub:'Permutations with repetition'},
       {label:'Formula',value:'n^r'},
       {label:'n (choices)',value:n.toString()},
       {label:'r (positions)',value:r.toString()}
     ]);
-    setSteps([;
+    setSteps([
       `Permutation with repetition: each of ${r} positions has ${n} choices`,
       `Formula: n^r = ${n}^${r}`,
       `Calculate: ${fmtBig(result)}`,
@@ -829,28 +830,28 @@ window.calcRep=function(){
     if(n+r-1>170){showError('Values too large. n+r-1 must be <= 170.');return}
     result=comb(n+r-1,r);
     formula=`C(${n+r-1},${r})`;
-    setResults([;
+    setResults([
       {label:formula,value:fmtBig(result),sub:'Combinations with repetition'},
       {label:'Formula',value:'C(n+r-1, r)'},
       {label:'n (types)',value:n.toString()},
       {label:'r (selected)',value:r.toString()}
     ]);
-    setSteps([;
+    setSteps([
       `Combination with repetition: choose ${r} items from ${n} types, repetition allowed`,
       `Formula: C(n+r-1, r) = C(${n}+${r}-1, ${r}) = C(${n+r-1}, ${r})`,
       `Calculate: ${fmtBig(result)}`,
       `This uses the "stars and bars" method from combinatorics`
     ]);
   }
-  const labels="[];const" data="[];"
+  const labels=[];const data=[];
   for(let i=1;i<=Math.min(r+2,8);i++){
     labels.push('r='+i);
-    data.push(type="=='perm'?Math.pow(n,i):comb(n+i-1,i));"
+    data.push(type==='perm'?Math.pow(n,i):comb(n+i-1,i));
   }
-  const cfg="{type:'bar',data:{labels,datasets:[{label:type="=='perm'?'n^r':'C(n+r-1,r)',data,backgroundColor:'#00ff88'}]},options:{plugins:{title:{display:true,text:`${type==='perm'?'Permutations':'Combinations'}"" with Repetition (n=${n})`,fontColor:'#1d1d1f'},legend:{display:false}},scales:{xAxes:[{ticks:{fontColor:'#1d1d1f'}}],yAxes:[{ticks:{fontColor:'#1d1d1f',beginAtZero:true}}]}}};
-  document.getElementById('chart-output').innerHTML="`<img" src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(cfg))}&backgroundColor=%230a0a0f&width=700&height=350" alt="Repetition calculation chart" loading="lazy">`;
+  const cfg={type:'bar',data:{labels,datasets:[{label:type==='perm'?'n^r':'C(n+r-1,r)',data,backgroundColor:'#00ff88'}]},options:{plugins:{title:{display:true,text:`${type==='perm'?'Permutations':'Combinations'} with Repetition (n=${n})`,fontColor:'#1d1d1f'},legend:{display:false}},scales:{xAxes:[{ticks:{fontColor:'#1d1d1f'}}],yAxes:[{ticks:{fontColor:'#1d1d1f',beginAtZero:true}}]}}};
+  document.getElementById('chart-output').innerHTML=`<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(cfg))}&backgroundColor=%230a0a0f&width=700&height=350" alt="Repetition calculation chart" loading="lazy">`;
   showResults();
-  addHistory(type="=='perm'?'Perm+Rep':'Comb+Rep',`n=${n}," r="${r}," result=${fmtBig(result)}`);
+  addHistory(type==='perm'?'Perm+Rep':'Comb+Rep',`n=${n}, r=${r}, result=${fmtBig(result)}`);
 };
 
 renderHistory();

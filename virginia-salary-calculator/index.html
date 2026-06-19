@@ -2227,15 +2227,15 @@ var preTaxTotal=(gross*k401/100)+otherDed;
 var taxableGross=gross-preTaxTotal;
 if(taxableGross<0)taxableGross=0;
 
-var fedStdDed="status="=='married'?30000:status==='head'?22500:15000;""
+var fedStdDed=status==='married'?30000:status==='head'?22500:15000;
 var fedTaxable=Math.max(0,taxableGross-fedStdDed);
 var fedTax=0;
-if(status="=='married'){"
+if(status==='married'){
 var mb=[23850,96950,206700,394600,501050,751600,Infinity];
 var mr=[0.10,0.12,0.22,0.24,0.32,0.35,0.37];
 var prev=0;
 for(var i=0;i<mb.length;i++){var amt=Math.min(fedTaxable,mb[i])-prev;if(amt>0)fedTax+=amt*mr[i];prev=mb[i];if(fedTaxable<=mb[i])break;}
-}else if(status="=='head'){"
+}else if(status==='head'){
 var hb=[17000,64850,103350,197300,250500,626350,Infinity];
 var hr=[0.10,0.12,0.22,0.24,0.32,0.35,0.37];
 var prev=0;
@@ -2247,12 +2247,12 @@ var prev=0;
 for(var i=0;i<sb.length;i++){var amt=Math.min(fedTaxable,sb[i])-prev;if(amt>0)fedTax+=amt*sr[i];prev=sb[i];if(fedTaxable<=sb[i])break;}
 }
 
-var vaStdDed="status="=='married'?16000:8000;""
-var vaExemptions="(status="=='married'?2:1+deps)*930;""
+var vaStdDed=status==='married'?16000:8000;
+var vaExemptions=(status==='married'?2:1+deps)*930;
 var vaTaxable=Math.max(0,taxableGross-vaStdDed-vaExemptions);
 var vaTax=0;
 if(vaTaxable>0){
-if(vaTaxable<=3000){vaTax="vaTaxable*0.02;}"
+if(vaTaxable<=3000){vaTax=vaTaxable*0.02;}
 else if(vaTaxable<=5000){vaTax=60+(vaTaxable-3000)*0.03;}
 else if(vaTaxable<=17000){vaTax=60+60+(vaTaxable-5000)*0.05;}
 else{vaTax=60+60+600+(vaTaxable-17000)*0.0575;}
@@ -2266,7 +2266,7 @@ if(taxableGross>200000)medicareTax+=(taxableGross-200000)*0.009;
 var totalTax=fedTax+vaTax+ssTax+medicareTax;
 var netPay=taxableGross-totalTax;
 var perPeriod=netPay/freq;
-var effectiveRate="gross">0?(totalTax/gross*100):0;
+var effectiveRate=gross>0?(totalTax/gross*100):0;
 
 function fmt(n){return'$'+Math.round(n).toLocaleString('en-US');}
 
@@ -2293,7 +2293,7 @@ var items=[
 var maxVal=Math.max.apply(null,items.map(function(x){return x.value;}));
 var chartHtml='<h3 style="margin-bottom:16px;color:#1d1d1f;">Paycheck Breakdown</h3>';
 for(var i=0;i<items.length;i++){
-var pct="maxVal">0?(items[i].value/maxVal*100):0;
+var pct=maxVal>0?(items[i].value/maxVal*100):0;
 chartHtml+='<div class="bar-row"><span class="bar-label">'+items[i].label+'</span><div style="flex:1;background:#f5f5f7;border-radius:4px;overflow:hidden;"><div class="bar-fill" style="width:'+pct+'%;background:'+items[i].color+';"></div></div><span class="bar-value">'+fmt(items[i].value)+'</span></div>';
 }
 var bc=document.getElementById('barChart');

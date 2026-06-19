@@ -1145,14 +1145,14 @@ function applyPreset(){
   if(sel==='custom')return;
   var p=presets[sel];
   if(!p)return;
-  document.getElementById('density').value="p.density;"
-  document.getElementById('dynVisc').value="p.dynVisc;"
-  document.getElementById('kinVisc').value="p.kinVisc;"
+  document.getElementById('density').value=p.density;
+  document.getElementById('dynVisc').value=p.dynVisc;
+  document.getElementById('kinVisc').value=p.kinVisc;
 }
 
 function toggleCalcMode(){
   var mode=document.getElementById('calcMode').value;
-  if(mode="=='density'){"
+  if(mode==='density'){
     document.getElementById('densityField').style.display='';
     document.getElementById('dynViscField').style.display='';
     document.getElementById('kinViscField').style.display='none';
@@ -1169,23 +1169,23 @@ function calculateReynolds(){
   var mode=document.getElementById('calcMode').value;
   var Re;
 
-  if(mode="=='density'){"
+  if(mode==='density'){
     var rho=parseFloat(document.getElementById('density').value);
     var mu=parseFloat(document.getElementById('dynVisc').value);
-    if(!v||!D||!rho||!mu||mu="==0){alert('Please" enter valid positive values for all fields.');return;}
+    if(!v||!D||!rho||!mu||mu===0){alert('Please enter valid positive values for all fields.');return;}
     Re=rho*v*D/mu;
   } else {
     var nu=parseFloat(document.getElementById('kinVisc').value);
-    if(!v||!D||!nu||nu="==0){alert('Please" enter valid positive values for all fields.');return;}
+    if(!v||!D||!nu||nu===0){alert('Please enter valid positive values for all fields.');return;}
     Re=v*D/nu;
   }
 
   var pipeType=document.getElementById('pipeType').value;
   var regime,regimeClass,critLow,critHigh;
 
-  if(pipeType="=='internal'){"
+  if(pipeType==='internal'){
     critLow=2300;critHigh=4000;
-  } else if(pipeType="=='external'){"
+  } else if(pipeType==='external'){
     critLow=500000;critHigh=500000;
   } else {
     critLow=200000;critHigh=200000;
@@ -1201,7 +1201,7 @@ function calculateReynolds(){
 
   var regimeBox=document.getElementById('regimeBox');
   regimeBox.className='regime-indicator '+regimeClass;
-  regimeBox.textContent="regime+'" (Re = '+formatNumber(Re)+')';
+  regimeBox.textContent=regime+' (Re = '+formatNumber(Re)+')';
 
   var html='';
   html+='<div class="result-row"><span class="result-label">Reynolds Number</span><span class="result-value accent">'+formatNumber(Re)+'</span></div>';
@@ -1209,7 +1209,7 @@ function calculateReynolds(){
   html+='<div class="result-row"><span class="result-label">Flow Regime</span><span class="result-value">'+regime+'</span></div>';
   html+='<div class="result-row"><span class="result-label">Flow Geometry</span><span class="result-value">'+document.getElementById('pipeType').options[document.getElementById('pipeType').selectedIndex].text+'</span></div>';
 
-  if(pipeType="=='internal'){"
+  if(pipeType==='internal'){
     if(Re<2300){
       var f=64/Re;
       html+='<div class="result-row"><span class="result-label">Darcy Friction Factor (f = 64/Re)</span><span class="result-value">'+f.toFixed(6)+'</span></div>';
@@ -1247,8 +1247,8 @@ function formatNumber(n){
 (function(){
   try{
     var saved=JSON.parse(localStorage.getItem('zovo_reynolds_last'));
-    if(saved&&saved.v){document.getElementById('velocity').value="saved.v;}"
-    if(saved&&saved.D){document.getElementById('diameter').value="saved.D;}"
+    if(saved&&saved.v){document.getElementById('velocity').value=saved.v;}
+    if(saved&&saved.D){document.getElementById('diameter').value=saved.D;}
   }catch(e){}
 })();
 </script>
