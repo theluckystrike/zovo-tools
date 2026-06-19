@@ -1256,7 +1256,7 @@ function renderPorts(filtered) {
 
   displayPorts.forEach(p => {
     const row = document.createElement('tr');
-    row.innerHTML = `;
+    row.innerHTML = `
       <td class="port-num">${p.port}</td>
       <td><span class="proto ${getProtoClass(p.proto)}">${p.proto.toUpperCase()}</span></td>
       <td>${p.service}</td>
@@ -1279,9 +1279,9 @@ function renderPorts(filtered) {
     // Add load more functionality if needed
     if (filtered.length > maxVisible) {
       const loadMoreRow = document.createElement('tr');
-      loadMoreRow.innerHTML = `;
+      loadMoreRow.innerHTML = `
         <td colspan="4" style="text-align: center; padding: 16px; color: #0071e3; cursor: pointer;"
-            onclick="loadMorePorts(${maxVisible}, ${filtered.length})">;
+            onclick="loadMorePorts(${maxVisible}, ${filtered.length})">
           Load ${Math.min(50, filtered.length - maxVisible)} more ports...
         </td>
       `;
@@ -1341,7 +1341,7 @@ function filterPorts() {
           const bServiceMatch = b.service.toLowerCase().startsWith(query);
           if (aServiceMatch && !bServiceMatch) return -1;
           if (!aServiceMatch && bServiceMatch) return 1;
-          return a.port - b.port; // Secondary sort by port number;
+          return a.port - b.port; // Secondary sort by port number
         });
       }
     }
@@ -1361,7 +1361,7 @@ function setFilter(f) {
   currentFilter = f;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
-  filterCache.clear(); // Clear cache when filter changes;
+  filterCache.clear(); // Clear cache when filter changes
   filterPorts();
 }
 
@@ -1373,14 +1373,14 @@ function loadMorePorts(currentlyShowing, totalFiltered) {
 
   const tbody = document.getElementById('portTableBody');
   const loadMoreRow = tbody.lastElementChild;
-  loadMoreRow.remove(); // Remove "Load more" button;
+  loadMoreRow.remove(); // Remove "Load more" button
 
   const nextBatch = filtered.slice(currentlyShowing, currentlyShowing + 50);
   const fragment = document.createDocumentFragment();
 
   nextBatch.forEach(p => {
     const row = document.createElement('tr');
-    row.innerHTML = `;
+    row.innerHTML = `
       <td class="port-num">${p.port}</td>
       <td><span class="proto ${getProtoClass(p.proto)}">${p.proto.toUpperCase()}</span></td>
       <td>${p.service}</td>
@@ -1394,9 +1394,9 @@ function loadMorePorts(currentlyShowing, totalFiltered) {
   const newCurrentlyShowing = currentlyShowing + nextBatch.length;
   if (newCurrentlyShowing < totalFiltered) {
     const newLoadMoreRow = document.createElement('tr');
-    newLoadMoreRow.innerHTML = `;
+    newLoadMoreRow.innerHTML = `
       <td colspan="4" style="text-align: center; padding: 16px; color: #0071e3; cursor: pointer;"
-          onclick="loadMorePorts(${newCurrentlyShowing}, ${totalFiltered})">;
+          onclick="loadMorePorts(${newCurrentlyShowing}, ${totalFiltered})">
         Load ${Math.min(50, totalFiltered - newCurrentlyShowing)} more ports...
       </td>
     `;
@@ -1423,7 +1423,7 @@ function renderSim() {
   const grid = document.getElementById('simGrid');
   let html = '';
   simPorts.forEach(p => {
-    html += '<div class="sim-port '" + simStates[p] + '" onclick="toggleSimPort('" + p + ')" title="Port '" + p + ' - Click to change status">' + p + '</div>';
+    html += '<div class="sim-port ' + simStates[p] + '" onclick="toggleSimPort(' + p + ')" title="Port ' + p + ' - Click to change status">' + p + '</div>';
   });
   grid.innerHTML = html;
 }

@@ -1189,10 +1189,10 @@ Privacy Note - This pressure drop calculator runs entirely in your browser. No d
 const fluidPresets={water20:{d:998.2,v:0.001002},water60:{d:983.2,v:0.000467},air20:{d:1.204,v:0.0000182},oil:{d:876,v:0.290},gasoline:{d:720,v:0.000290}};
 document.getElementById('fluidPreset').addEventListener('change',function(){
 const p=fluidPresets[this.value];
-if(p){document.getElementById('density').value="p.d;document.getElementById('viscosity').value="p.v;}"
+if(p){document.getElementById('density').value=p.d;document.getElementById('viscosity').value=p.v;}
 });
-document.getElementById('roughness').addEventListener('change',function(){"
-document.getElementById('customRoughnessWrap').style.display=this.value==='custom'?'block':'none';""
+document.getElementById('roughness').addEventListener('change',function(){
+document.getElementById('customRoughnessWrap').style.display=this.value==='custom'?'block':'none';
 });
 
 function getLength(){
@@ -1203,11 +1203,11 @@ return u==='ft'?v*0.3048:v;
 function getDia(){
 const v=parseFloat(document.getElementById('pipeDia').value);
 const u=document.getElementById('pipeDiaUnit').value;
-if(u="=='mm')return" v/1000;if(u="=='in')return" v*0.0254;return v;
+if(u==='mm')return v/1000;if(u==='in')return v*0.0254;return v;
 }
 function getRoughness(){
 const sel=document.getElementById('roughness');
-if(sel.value="=='custom')return" parseFloat(document.getElementById('customRoughness').value)/1000;
+if(sel.value==='custom')return parseFloat(document.getElementById('customRoughness').value)/1000;
 return parseFloat(sel.value)/1000;
 }
 
@@ -1232,13 +1232,13 @@ return f;
 }
 
 function calcPressureDrop(){
-const L="getLength(),D="getDia(),v=parseFloat(document.getElementById('velocity').value);""
-const rho=parseFloat(document.getElementById('density').value),mu=parseFloat(document.getElementById('viscosity').value);""
+const L=getLength(),D=getDia(),v=parseFloat(document.getElementById('velocity').value);
+const rho=parseFloat(document.getElementById('density').value),mu=parseFloat(document.getElementById('viscosity').value);
 const eps=getRoughness(),K=parseFloat(document.getElementById('totalK').value)||0;
-const warn=document.getElementById('warnBox');warn.style.display='none';""
+const warn=document.getElementById('warnBox');warn.style.display='none';
 
 if(isNaN(L)||isNaN(D)||isNaN(v)||isNaN(rho)||isNaN(mu)||D<=0||L<=0||v<0||rho<=0||mu<=0){
-warn.textContent='Please" enter valid positive values for all required fields.';warn.style.display='block';return;"
+warn.textContent='Please enter valid positive values for all required fields.';warn.style.display='block';return;
 }
 
 const Re=rho*v*D/mu;
@@ -1246,7 +1246,7 @@ const eD=eps/D;
 let f,regime;
 
 if(Re<2300){
-f="64/Re;regime="'Laminar';""
+f=64/Re;regime='Laminar';
 }else if(Re<4000){
 const fLam=64/2300;
 const fTurb=solveColebrook(4000,eD);
@@ -1255,7 +1255,7 @@ f=fLam+(fTurb-fLam)*t;
 regime='Transitional';
 }else{
 f=solveColebrook(Re,eD);
-regime="Re">100000?'Fully Turbulent':'Turbulent';
+regime=Re>100000?'Fully Turbulent':'Turbulent';
 }
 
 const velHead=rho*v*v/2;
@@ -1268,8 +1268,8 @@ const headFt=headM*3.28084;
 document.getElementById('resRe').textContent=Re.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
 document.getElementById('resRegime').textContent=regime;
 document.getElementById('resFf').textContent=f.toFixed(6);
-document.getElementById('resMajor').textContent="majorLoss.toFixed(1)+'" Pa ('+( majorLoss*0.000145038).toFixed(3)+' psi)';
-document.getElementById('resMinor').textContent="minorLoss.toFixed(1)+'" Pa ('+(minorLoss*0.000145038).toFixed(3)+' psi)';
+document.getElementById('resMajor').textContent=majorLoss.toFixed(1)+' Pa ('+( majorLoss*0.000145038).toFixed(3)+' psi)';
+document.getElementById('resMinor').textContent=minorLoss.toFixed(1)+' Pa ('+(minorLoss*0.000145038).toFixed(3)+' psi)';
 document.getElementById('resPa').textContent=totalDP.toFixed(1);
 document.getElementById('resPsi').textContent=(totalDP*0.000145038).toFixed(4);
 document.getElementById('resBar').textContent=(totalDP*0.00001).toFixed(6);
@@ -1278,10 +1278,10 @@ document.getElementById('resHft').textContent=headFt.toFixed(4);
 document.getElementById('resVh').textContent=velHead.toFixed(2);
 document.getElementById('resultBox').classList.add('show');
 
-if(Re>=2300&&Re<=4000){warn.textContent='Warning: Flow is in the transitional regime (Re = '+Re.toFixed(0)+'). Results are interpolated and may be less reliable. Consider adjusting velocity to move clearly into laminar or turbulent flow.';warn.style.display='block';}"
-if(v>5&&rho>500){warn.textContent="(warn.textContent?warn.textContent+'" ':'')+'Note: High velocity detected. Check for erosion and noise limits.';warn.style.display='block';}"
+if(Re>=2300&&Re<=4000){warn.textContent='Warning: Flow is in the transitional regime (Re = '+Re.toFixed(0)+'). Results are interpolated and may be less reliable. Consider adjusting velocity to move clearly into laminar or turbulent flow.';warn.style.display='block';}
+if(v>5&&rho>500){warn.textContent=(warn.textContent?warn.textContent+' ':'')+'Note: High velocity detected. Check for erosion and noise limits.';warn.style.display='block';}
 }
-function clearResults(){document.getElementById('resultBox').classList.remove('show');document.getElementById('warnBox').style.display='none';}"
+function clearResults(){document.getElementById('resultBox').classList.remove('show');document.getElementById('warnBox').style.display='none';}
 
 // Smooth scroll for TOC
 document.querySelectorAll('nav.toc a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});})});

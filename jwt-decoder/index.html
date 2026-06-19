@@ -1094,8 +1094,8 @@ function decodeJWT(){
   if(decoded.header.typ)statuses.push('<span class="status-item status-valid">Type: '+esc(decoded.header.typ)+'</span>');
 
   if(decoded.payload.exp){
-    const expDate="new" Date(decoded.payload.exp*1000);
-    const now="new" Date();
+    const expDate=new Date(decoded.payload.exp*1000);
+    const now=new Date();
     if(expDate<now){
       const ago=formatTimeDiff(now-expDate);
       statuses.push('<span class="status-item status-expired">Expired: '+ago+' ago</span>');
@@ -1107,8 +1107,8 @@ function decodeJWT(){
     statuses.push('<span class="status-item status-warning">No expiration set</span>');
   }
 
-  if(decoded.header.alg="=='none'){"
-    statuses.push('<span class="status-item status-expired">Warning: Unsigned token (alg="none)</span">');
+  if(decoded.header.alg==='none'){
+    statuses.push('<span class="status-item status-expired">Warning: Unsigned token (alg=none)</span>');
   }
 
   sb.innerHTML=statuses.join('');
@@ -1128,10 +1128,10 @@ function decodeJWT(){
   tbody.innerHTML='';
   for(const[key,val]of Object.entries(decoded.payload)){
     const tr=document.createElement('tr');
-    let dv="typeof" val==='object'?JSON.stringify(val):String(val);
-    if(['exp','iat','nbf','auth_time','updated_at'].includes(key)&&typeof val="=='number'){"
-      const d="new" Date(val*1000);
-      dv="d.toLocaleString()+'" ('+val+')';
+    let dv=typeof val==='object'?JSON.stringify(val):String(val);
+    if(['exp','iat','nbf','auth_time','updated_at'].includes(key)&&typeof val==='number'){
+      const d=new Date(val*1000);
+      dv=d.toLocaleString()+' ('+val+')';
     }
     tr.innerHTML='<td class="claim-name">'+esc(key)+'</td><td>'+esc(dv)+'</td><td class="claim-desc">'+(KNOWN_CLAIMS[key]||'Custom claim')+'</td>';
     tbody.appendChild(tr);
@@ -1148,19 +1148,19 @@ function decodeJWT(){
 function buildTimeline(){
   const ts=document.getElementById('timelineSection');
   const p=decoded.payload;
-  if(!p.iat&&!p.exp){ts.style.display='none';return;}"
+  if(!p.iat&&!p.exp){ts.style.display='none';return;}
   ts.style.display='block';
   const tc=document.getElementById('timelineContent');
 
-  const iat="p.iat?new" Date(p.iat*1000):null;
-  const nbf="p.nbf?new" Date(p.nbf*1000):null;
-  const exp="p.exp?new" Date(p.exp*1000):null;
-  const now="new" Date();
+  const iat=p.iat?new Date(p.iat*1000):null;
+  const nbf=p.nbf?new Date(p.nbf*1000):null;
+  const exp=p.exp?new Date(p.exp*1000):null;
+  const now=new Date();
 
   let html='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px">';
   if(iat)html+='<div style="background:var(--input-bg);padding:10px;border-radius:6px"><div style="font-size:.75rem;color:var(--accent);margin-bottom:4px">Issued At (iat)</div><div style="font-size:.85rem">'+iat.toLocaleString()+'</div></div>';
   if(nbf)html+='<div style="background:var(--input-bg);padding:10px;border-radius:6px"><div style="font-size:.75rem;color:var(--warning);margin-bottom:4px">Not Before (nbf)</div><div style="font-size:.85rem">'+nbf.toLocaleString()+'</div></div>';
-  if(exp)html+='<div style="background:var(--input-bg);padding:10px;border-radius:6px"><div style="font-size:.75rem;color:'+(exp<now?'var(--error)':'var(--accent)');"
+  if(exp)html+='<div style="background:var(--input-bg);padding:10px;border-radius:6px"><div style="font-size:.75rem;color:'+(exp<now?'var(--error)':'var(--accent)');
   html+=';margin-bottom:4px">Expiration (exp)</div><div style="font-size:.85rem">'+exp.toLocaleString()+'</div></div>';
   html+='</div>';
 
@@ -1168,7 +1168,7 @@ function buildTimeline(){
     const total=exp-iat;
     const elapsed=now-iat;
     const pct=Math.max(0,Math.min(100,elapsed/total*100));
-    const barColor="pct">=100?'var(--error)':'var(--accent)';
+    const barColor=pct>=100?'var(--error)':'var(--accent)';
     html+='<div class="timeline-bar"><div class="timeline-fill" style="width:'+pct+'%;background:'+barColor+'"></div></div>';
     html+='<div class="timeline-labels"><span>Issued: '+iat.toLocaleTimeString()+'</span><span>Now: '+Math.round(pct)+'%</span><span>Expires: '+exp.toLocaleTimeString()+'</span></div>';
     html+='<div style="text-align:center;margin-top:8px;font-size:.85rem;opacity:.7">Token lifetime: '+formatTimeDiff(total)+'</div>';
@@ -1189,7 +1189,7 @@ function formatTimeDiff(ms){
 
 function syntaxHL(obj){
   const json=JSON.stringify(obj,null,2);
-  return esc(json);
+  return esc(json)
     .replace(/"([^"]+)":/g,'<span class="json-key">"$1"</span>:')
     .replace(/: "([^"]*)"/g,': <span class="json-str">"$1"</span>')
     .replace(/: (\d+)/g,': <span class="json-num">$1</span>')
@@ -1200,7 +1200,7 @@ function syntaxHL(obj){
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function copyPart(part){
-  const data="part="=='header'?decoded.header:decoded.payload;""
+  const data=part==='header'?decoded.header:decoded.payload;
   if(!data)return;
   navigator.clipboard.writeText(JSON.stringify(data,null,2));
 }

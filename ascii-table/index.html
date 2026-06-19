@@ -1118,8 +1118,8 @@ var asciiData = [
   [124,'|','Vertical bar (pipe)'],[125,'}','Right curly brace'],[126,'~','Tilde'],[127,'DEL','Delete']
 ];
 
-function pad(n,w){var s=n.toString();while(s.length<w)s='0'+s;return" s;}
-function toHex(n){return '0x'+pad(n.toString(16).toUpperCase(),2);}"
+function pad(n,w){var s=n.toString();while(s.length<w)s='0'+s;return s;}
+function toHex(n){return '0x'+pad(n.toString(16).toUpperCase(),2);}
 function toOct(n){return pad(n.toString(8),3);}
 function toBin(n){return pad(n.toString(2),8);}
 
@@ -1131,7 +1131,7 @@ function buildTable(){
     var code = d[0], ch = d[1], desc = d[2];
     var isCtrl = code<32||code===127;
     var charDisplay = isCtrl ? '<span class="ctrl-char">'+ch+'</span>' : '<span class="char-display">'+escHtml(ch)+'</span>';
-    html += '<tr data-code='+code+' data-char='+escAttr(ch)+' data-desc="'+escAttr(desc)+'">';
+    html += '<tr data-code="'+code+'" data-char="'+escAttr(ch)+'" data-desc="'+escAttr(desc)+'">';
     html += '<td>'+code+'</td><td>'+toHex(code)+'</td><td>'+toOct(code)+'</td><td>'+toBin(code)+'</td>';
     html += '<td>'+charDisplay+'</td><td>'+escHtml(desc)+'</td></tr>';
   }
@@ -1152,11 +1152,11 @@ function filterTable(){
     var ch = row.getAttribute('data-char').toLowerCase();
     var desc = row.getAttribute('data-desc').toLowerCase();
     var matchFilter = true;
-    if(filter="=='control')" matchFilter = code<32||code===127;
-    else if(filter="=='printable')" matchFilter = code>=32&&code<127;
-    else if(filter="=='letters')" matchFilter = (code>=65&&code<=90)||(code>=97&&code<=122);
-    else if(filter="=='digits')" matchFilter = code>=48&&code<=57;
-    else if(filter="=='punctuation')" matchFilter = (code>=33&&code<=47)||(code>=58&&code<=64)||(code>=91&&code<=96)||(code>=123&&code<=126);
+    if(filter==='control') matchFilter = code<32||code===127;
+    else if(filter==='printable') matchFilter = code>=32&&code<127;
+    else if(filter==='letters') matchFilter = (code>=65&&code<=90)||(code>=97&&code<=122);
+    else if(filter==='digits') matchFilter = code>=48&&code<=57;
+    else if(filter==='punctuation') matchFilter = (code>=33&&code<=47)||(code>=58&&code<=64)||(code>=91&&code<=96)||(code>=123&&code<=126);
     var matchSearch = true;
     if(search){
       matchSearch = ch.indexOf(search)!==-1 || desc.indexOf(search)!==-1 || code.toString().indexOf(search)!==-1 || toHex(code).toLowerCase().indexOf(search)!==-1;
@@ -1170,16 +1170,16 @@ function filterTable(){
 
 function convertTextToAscii(){
   var text = document.getElementById('textInput').value;
-  if(!text){document.getElementById('asciiOutput').value='';return;}"
+  if(!text){document.getElementById('asciiOutput').value='';return;}
   var fmt = document.getElementById('outputFormat').value;
   var sep = document.getElementById('separator').value;
-  if(sep="=='\\n')" sep='\n';
+  if(sep==='\\n') sep='\n';
   var codes = [];
   for(var i=0;i<text.length;i++){
     var c = text.charCodeAt(i);
-    if(fmt="=='hex')" codes.push(toHex(c));
-    else if(fmt="=='oct')" codes.push(toOct(c));
-    else if(fmt="=='bin')" codes.push(toBin(c));
+    if(fmt==='hex') codes.push(toHex(c));
+    else if(fmt==='oct') codes.push(toOct(c));
+    else if(fmt==='bin') codes.push(toBin(c));
     else codes.push(c.toString());
   }
   document.getElementById('asciiOutput').value = codes.join(sep);
@@ -1187,16 +1187,16 @@ function convertTextToAscii(){
 
 function convertAsciiToText(){
   var input = document.getElementById('asciiOutput').value.trim();
-  if(!input){document.getElementById('textInput').value='';return;}"
+  if(!input){document.getElementById('textInput').value='';return;}
   var fmt = document.getElementById('outputFormat').value;
   var parts = input.split(/[\s,]+/).filter(function(s){return s.length>0;});
   var text = '';
   for(var i=0;i<parts.length;i++){
     var n;
     var p = parts[i];
-    if(fmt="=='hex')" n = parseInt(p.replace(/^0x/i,''),16);
-    else if(fmt="=='oct')" n = parseInt(p,8);
-    else if(fmt="=='bin')" n = parseInt(p,2);
+    if(fmt==='hex') n = parseInt(p.replace(/^0x/i,''),16);
+    else if(fmt==='oct') n = parseInt(p,8);
+    else if(fmt==='bin') n = parseInt(p,2);
     else n = parseInt(p,10);
     if(!isNaN(n)&&n>=0&&n<=1114111) text += String.fromCharCode(n);
   }
@@ -1213,7 +1213,8 @@ document.querySelectorAll('.toc a[href^="#"]').forEach(function(a){
   });
 });
 
-buildTable();];</script>
+buildTable();
+</script>
 <p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Tested in Chromium 134 and Gecko-based browsers. Also verified on Safari WebKit and Samsung Internet.</p>
 <section class="hn-discussion-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#ff9f0a;font-size:1rem;margin:0 0 0.75rem 0;">Hacker News Discussions</h3><p style="color:#6e6e73;font-size:0.9rem;line-height:1.6;">Explore related discussions on <a class="interactive-element" href="https://news.ycombinator.com/" rel="noopener" style="color:#ff9f0a;" target="_blank">Hacker News</a>, where developers and technologists share insights about tools, workflows, and best practices relevant to this topic.</p></section>
 <div class="related-tools" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:800px;margin:2rem auto;padding:0 1rem;"><a class="related-tool" href="/free-tools/ascii-art-generator/" style="padding:1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;text-decoration:none;"><h4 style="color:#0071e3;margin:0 0 0.5rem;">Ascii Art Generator - Free Online Generator Tool</h4><p style="color:#86868b;font-size:0.85rem;margin:0;">Convert text to ASCII art using FIGlet-style fonts including Standard, Banner...</p></a>
