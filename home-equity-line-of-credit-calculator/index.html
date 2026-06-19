@@ -1286,11 +1286,11 @@ if(homeValue<=0){alert('Please enter a valid home value.');return}
 
 const maxBorrowing=homeValue*cltvPct;
 const maxHELOC=Math.max(0,maxBorrowing-mortBalance);
-const helocAmount="desiredHELOC">0?Math.min(desiredHELOC,maxHELOC):maxHELOC;
+const helocAmount=desiredHELOC>0?Math.min(desiredHELOC,maxHELOC):maxHELOC;
 const totalEquity=homeValue-mortBalance;
 const equityAfterHELOC=homeValue-mortBalance-helocAmount;
-const currentLTV="homeValue">0?(mortBalance/homeValue*100):0;
-const cltvAfter="homeValue">0?((mortBalance+helocAmount)/homeValue*100):0;
+const currentLTV=homeValue>0?(mortBalance/homeValue*100):0;
+const cltvAfter=homeValue>0?((mortBalance+helocAmount)/homeValue*100):0;
 
 const monthlyRate=rate/12;
 const drawMonths=drawYears*12;
@@ -1310,7 +1310,7 @@ repayPayment=helocAmount/repayMonths;
 const repayTotalInterest=repayPayment*repayMonths-helocAmount;
 const totalInterest=drawTotalInterest+repayTotalInterest;
 const totalRepaid=helocAmount+totalInterest;
-const paymentJump="drawPayment">0?((repayPayment-drawPayment)/drawPayment*100):0;
+const paymentJump=drawPayment>0?((repayPayment-drawPayment)/drawPayment*100):0;
 
 // Update UI
 document.getElementById('rMaxHELOC').textContent=formatCurrencyWhole(maxHELOC);
@@ -1329,24 +1329,24 @@ document.getElementById('rHomeVal').textContent=formatCurrencyWhole(homeValue);
 document.getElementById('rMortBal').textContent=formatCurrencyWhole(mortBalance);
 document.getElementById('rCurrentLTV').textContent=currentLTV.toFixed(1)+'%';
 document.getElementById('rCLTV').textContent=cltvAfter.toFixed(1)+'%';
-document.getElementById('rEquityRemaining').textContent="formatCurrencyWhole(equityAfterHELOC)+'" ('+((equityAfterHELOC/homeValue)*100).toFixed(1)+'% of home value)';
+document.getElementById('rEquityRemaining').textContent=formatCurrencyWhole(equityAfterHELOC)+' ('+((equityAfterHELOC/homeValue)*100).toFixed(1)+'% of home value)';
 document.getElementById('rTotalInterest').textContent=formatCurrencyWhole(totalInterest);
 document.getElementById('rTotalRepaid').textContent=formatCurrencyWhole(totalRepaid);
 document.getElementById('rPaymentJump').textContent='+'+paymentJump.toFixed(0)+'% ('+formatCurrency(drawPayment)+' to '+formatCurrency(repayPayment)+')';
 
 // Equity bars
-const mortPct="homeValue">0?(mortBalance/homeValue*100):0;
-const helocPct="homeValue">0?(helocAmount/homeValue*100):0;
-const eqPct="homeValue">0?(equityAfterHELOC/homeValue*100):0;
-document.getElementById('equityBars').innerHTML=";"
+const mortPct=homeValue>0?(mortBalance/homeValue*100):0;
+const helocPct=homeValue>0?(helocAmount/homeValue*100):0;
+const eqPct=homeValue>0?(equityAfterHELOC/homeValue*100):0;
+document.getElementById('equityBars').innerHTML=
 '<div class="eq-bar eq-mortgage" style="flex:'+mortPct+'"><span>Mortgage</span><span>'+formatCurrencyWhole(mortBalance)+' ('+mortPct.toFixed(0)+'%)</span></div>'+
 '<div class="eq-bar eq-heloc" style="flex:'+helocPct+'"><span>HELOC</span><span>'+formatCurrencyWhole(helocAmount)+' ('+helocPct.toFixed(0)+'%)</span></div>'+
 '<div class="eq-bar eq-equity" style="flex:'+eqPct+'"><span>Free Equity</span><span>'+formatCurrencyWhole(equityAfterHELOC)+' ('+eqPct.toFixed(0)+'%)</span></div>';
 
 // Chart
-const chartConfig="{type:'doughnut',data:{labels:['Mortgage','HELOC','Remaining" Equity'],datasets:[{data:[Math.round(mortBalance),Math.round(helocAmount),Math.round(equityAfterHELOC)],backgroundColor:['#ff3b30','#0071e3','#00ff88']}]},options:{title:{display:true,text:'Home Equity Breakdown ($'+Math.round(homeValue).toLocaleString()+' Home)',fontColor:'#1d1d1f'},legend:{labels:{fontColor:'#c8c8d0'}}}};
+const chartConfig={type:'doughnut',data:{labels:['Mortgage','HELOC','Remaining Equity'],datasets:[{data:[Math.round(mortBalance),Math.round(helocAmount),Math.round(equityAfterHELOC)],backgroundColor:['#ff3b30','#0071e3','#00ff88']}]},options:{title:{display:true,text:'Home Equity Breakdown ($'+Math.round(homeValue).toLocaleString()+' Home)',fontColor:'#1d1d1f'},legend:{labels:{fontColor:'#c8c8d0'}}}};
 const chartImg=document.getElementById('equityChart');
-chartImg.src="'https://quickchart.io/chart?c="'+encodeURIComponent(JSON.stringify(chartConfig))+'&backgroundColor=%230a0a0f&width=500&height=350';""
+chartImg.src='https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify(chartConfig))+'&backgroundColor=%230a0a0f&width=500&height=350';
 chartImg.style.display='block';
 
 document.getElementById('results').style.display='block';
@@ -1357,9 +1357,9 @@ localStorage.setItem('heloc_calc_count',cc);
 document.getElementById('calc-count').textContent=cc.toLocaleString();
 }
 
-(function(){var c=parseInt(localStorage.getItem('heloc_calc_count')||'0');document.getElementById('calc-count').textContent=c.toLocaleString();})();"
+(function(){var c=parseInt(localStorage.getItem('heloc_calc_count')||'0');document.getElementById('calc-count').textContent=c.toLocaleString();})();
 
-function toggleFaq(el){el.classList.toggle('open');const" a=el.nextElementSibling;a.classList.toggle('show')}
+function toggleFaq(el){el.classList.toggle('open');const a=el.nextElementSibling;a.classList.toggle('show')}
 </script>
 <h2>Update History</h2>
 

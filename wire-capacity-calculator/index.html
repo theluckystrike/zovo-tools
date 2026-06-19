@@ -1600,7 +1600,7 @@ const tempCorrection={
   75:{26:1.05,30:1.0,35:0.94,40:0.88,45:0.82,50:0.75},
   90:{26:1.04,30:1.0,35:0.96,40:0.91,45:0.87,50:0.82}
 };
-const insulationNames="{60:'TW" / UF (60°C)',75:'THW / THWN (75°C)',90:'THHN / XHHW-2 (90°C)'};
+const insulationNames={60:'TW / UF (60°C)',75:'THW / THWN (75°C)',90:'THHN / XHHW-2 (90°C)'};
 const breakerSizes=[15,20,25,30,35,40,45,50,60,70,80,90,100,110,125,150,175,200,225,250,300,350,400];
 
 function getBreaker(amps){for(let i=0;i<breakerSizes.length;i++){if(breakerSizes[i]>=amps)return breakerSizes[i]}return breakerSizes[breakerSizes.length-1]}
@@ -1611,7 +1611,7 @@ function lookupAmpacity(){
   const temp=parseInt(document.getElementById('tempRating').value);
   const numC=parseInt(document.getElementById('numConductors').value);
   const ambT=parseInt(document.getElementById('ambientTemp').value);
-  const data="ampacityData[mat];"
+  const data=ampacityData[mat];
   if(!data[gauge]){alert('Ampacity data not available for '+gauge+' AWG '+mat+'. Aluminum does not come in 14 AWG per NEC.');return}
   const base=data[gauge][temp];
   const cDerate=conductorDerate[numC]||1.0;
@@ -1620,14 +1620,14 @@ function lookupAmpacity(){
   document.getElementById('resAmpacity').textContent=final+'A';
   document.getElementById('resBaseAmpacity').textContent=base+'A';
   document.getElementById('resDeratedAmpacity').textContent=final+'A';
-  document.getElementById('resGauge').textContent="gauge+(gauge.includes('/')?'" AWG':parseInt(gauge)>=250?' kcmil':' AWG');
+  document.getElementById('resGauge').textContent=gauge+(gauge.includes('/')?' AWG':parseInt(gauge)>=250?' kcmil':' AWG');
   document.getElementById('resMaterial').textContent=mat.charAt(0).toUpperCase()+mat.slice(1);
   document.getElementById('resInsulation').textContent=insulationNames[temp];
   document.getElementById('resConductorDerate').textContent=(cDerate*100)+'%';
   document.getElementById('resTempCorrection').textContent=tCorr;
   document.getElementById('resBreakerSize').textContent=getBreaker(final)+'A';
   document.getElementById('ampacityResults').style.display='block';
-  document.getElementById('ampacityResults').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('ampacityResults').scrollIntoView({behavior:'smooth',block:'start'})
 }
 
 function calculateVoltageDrop(){
@@ -1641,24 +1641,24 @@ function calculateVoltageDrop(){
   const r=resistance[mat][gauge];
   if(!r){alert('Resistance data not available for that wire gauge.');return}
   let vd;
-  if(phase="=='single'){vd=(2*distance*current*r)/1000}"
-  else{vd="(1.732*distance*current*r)/1000}"
+  if(phase==='single'){vd=(2*distance*current*r)/1000}
+  else{vd=(1.732*distance*current*r)/1000}
   const pct=(vd/voltage)*100;
   const endV=voltage-vd;
   const powerLoss=vd*current;
   document.getElementById('vdVolts').textContent=vd.toFixed(2)+'V';
   document.getElementById('vdPercent').textContent=pct.toFixed(2)+'%';
   document.getElementById('vdEndVoltage').textContent=endV.toFixed(1)+'V';
-  document.getElementById('vdResistance').textContent="r+'" Ω/1000ft';
-  document.getElementById('vdRoundTrip').textContent="(phase="=='single'?distance*2:distance*1.732).toFixed(0)+'" ft';"
+  document.getElementById('vdResistance').textContent=r+' Ω/1000ft';
+  document.getElementById('vdRoundTrip').textContent=(phase==='single'?distance*2:distance*1.732).toFixed(0)+' ft';
   document.getElementById('vdPowerLoss').textContent=powerLoss.toFixed(1)+'W';
   const compEl=document.getElementById('vdCompliance');
   const recEl=document.getElementById('vdRecommendation');
-  if(pct<=3){compEl.textContent='PASS';compEl.style.color='';recEl.style.display='none'}""
-  else if(pct<=5){compEl.textContent='MARGINAL';compEl.style.color='';recEl.style.display='block';recEl.style.background='rgba(255,170,0,0.1)';recEl.style.border='1px"" solid ';recEl.style.color='';recEl.textContent='Voltage drop exceeds 3% recommendation. Consider upsizing the wire gauge for better performance.'}"
-  else{compEl.textContent='FAIL';compEl.style.color='';recEl.style.display='block';recEl.style.background='rgba(255,107,107,0.1)';recEl.style.border='1px"" solid ';recEl.style.color='';recEl.textContent='Voltage drop exceeds 5% maximum. You must use a larger wire gauge for this run.'}"
+  if(pct<=3){compEl.textContent='PASS';compEl.style.color='';recEl.style.display='none'}
+  else if(pct<=5){compEl.textContent='MARGINAL';compEl.style.color='';recEl.style.display='block';recEl.style.background='rgba(255,170,0,0.1)';recEl.style.border='1px solid ';recEl.style.color='';recEl.textContent='Voltage drop exceeds 3% recommendation. Consider upsizing the wire gauge for better performance.'}
+  else{compEl.textContent='FAIL';compEl.style.color='';recEl.style.display='block';recEl.style.background='rgba(255,107,107,0.1)';recEl.style.border='1px solid ';recEl.style.color='';recEl.textContent='Voltage drop exceeds 5% maximum. You must use a larger wire gauge for this run.'}
   document.getElementById('vdResults').style.display='block';
-  document.getElementById('vdResults').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('vdResults').scrollIntoView({behavior:'smooth',block:'start'})
 }
 
 function recommendWire(){
@@ -1673,7 +1673,7 @@ function recommendWire(){
   for(let i=0;i<gauges.length;i++){
     const g=gauges[i];
     const a=ampacityData[mat][g];
-    if(a&&a[75]>=current){ampGauge="g;break}"
+    if(a&&a[75]>=current){ampGauge=g;break}
   }
   let vdGauge=null;
   for(let i=0;i<gauges.length;i++){
@@ -1682,7 +1682,7 @@ function recommendWire(){
     if(!r)continue;
     const vd=(2*distance*current*r)/1000;
     const pct=(vd/voltage)*100;
-    if(pct<=maxDrop){vdGauge="g;break}"
+    if(pct<=maxDrop){vdGauge=g;break}
   }
   if(!ampGauge&&!vdGauge){alert('No standard wire gauge meets these requirements.');return}
   const ampIdx=ampGauge?gauges.indexOf(ampGauge):0;
@@ -1695,20 +1695,20 @@ function recommendWire(){
   const actualPct=(actualVd/voltage)*100;
   const unit=parseInt(finalGauge)>=250?' kcmil':' AWG';
   document.getElementById('recGauge').textContent=finalGauge+unit;
-  document.getElementById('recAmpGauge').textContent="(ampGauge||'N/A')+(ampGauge&&parseInt(ampGauge)<250?'" AWG':ampGauge?' kcmil':'');
-  document.getElementById('recVdGauge').textContent="(vdGauge||'N/A')+(vdGauge&&parseInt(vdGauge)<250?'" AWG':vdGauge?' kcmil':'');
-  document.getElementById('recActualVd').textContent="actualPct.toFixed(2)+'%" ('+actualVd.toFixed(2)+'V)';
-  document.getElementById('recAmpRating').textContent="finalAmp+'A" @ 75°C';
+  document.getElementById('recAmpGauge').textContent=(ampGauge||'N/A')+(ampGauge&&parseInt(ampGauge)<250?' AWG':ampGauge?' kcmil':'');
+  document.getElementById('recVdGauge').textContent=(vdGauge||'N/A')+(vdGauge&&parseInt(vdGauge)<250?' AWG':vdGauge?' kcmil':'');
+  document.getElementById('recActualVd').textContent=actualPct.toFixed(2)+'% ('+actualVd.toFixed(2)+'V)';
+  document.getElementById('recAmpRating').textContent=finalAmp+'A @ 75°C';
   document.getElementById('recBreaker').textContent=getBreaker(current)+'A';
   document.getElementById('recResults').style.display='block';
-  document.getElementById('recResults').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('recResults').scrollIntoView({behavior:'smooth',block:'start'})
 }
 
 document.querySelectorAll('.toc a').forEach(function(a){
   a.addEventListener('click',function(e){
     e.preventDefault();
     var target=document.querySelector(this.getAttribute('href'));
-    if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    if(target)target.scrollIntoView({behavior:'smooth',block:'start'})
   })
 });
 </script> <!-- PageSpeed Metrics -->
@@ -1781,7 +1781,7 @@ document.querySelectorAll('.toc a').forEach(function(a){
 <span style="color:#86868b;font-size:0.85rem;">Calculations performed: </span><span id="usage-count" style="color:#0071e3;font-weight:700;font-size:1rem;">0</span>
 </div>
 <script>
-(function(){var c=parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent=c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var"" el=document.getElementById('usage-count');if(el)el.textContent=c.toLocaleString();}});})();"
+(function(){var c=parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent=c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var el=document.getElementById('usage-count');if(el)el.textContent=c.toLocaleString();}});})();
 </script>
 <!-- benchmark-chart -->
 <div style="margin:2rem" 0;padding:1.5rem;background:#f5f5f7;border:1px solid #f5f5f7;border-radius:8px;">

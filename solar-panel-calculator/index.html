@@ -691,7 +691,7 @@ function calculateSolar(){
   const netCost=grossCost-taxCredit;
   const year1Savings=Math.min(annualProd,annualKwh)*rate;
 
-  let totalSavings="0;let" paybackYear="0;let" cumSavings=0;
+  let totalSavings=0;let paybackYear=0;let cumSavings=0;
   let savingsData=[];
   for(let y=1;y<=25;y++){
     const yearRate=rate*Math.pow(1+rateIncrease,y-1);
@@ -700,18 +700,18 @@ function calculateSolar(){
     const yearSavings=Math.min(yearProd,annualKwh)*yearRate;
     cumSavings+=yearSavings;
     totalSavings+=yearSavings;
-    if(paybackYear="==0&&cumSavings">=netCost)paybackYear=y;
-    savingsData.push({year:y,cumulative:cumSavings,annual:yearSavings});
+    if(paybackYear===0&&cumSavings>=netCost)paybackYear=y;
+    savingsData.push({year:y,cumulative:cumSavings,annual:yearSavings})
   }
   if(paybackYear===0)paybackYear=25;
 
   const roi=((totalSavings-netCost)/netCost)*100;
   const co2=annualProd*0.855/1000;
 
-  document.getElementById('resSystemSize').textContent="actualSystemKw.toFixed(1)+'" kW';
-  document.getElementById('resPanelCount').textContent="panelCount+'" panels';
+  document.getElementById('resSystemSize').textContent=actualSystemKw.toFixed(1)+' kW';
+  document.getElementById('resPanelCount').textContent=panelCount+' panels';
   document.getElementById('resAnnualProd').textContent=Math.round(annualProd).toLocaleString()+' kWh';
-  document.getElementById('resPayback').textContent="paybackYear+'" years';
+  document.getElementById('resPayback').textContent=paybackYear+' years';
   document.getElementById('resMonthlyKwh').textContent=Math.round(monthlyKwh).toLocaleString()+' kWh';
   document.getElementById('resGrossCost').textContent=fmt(grossCost);
   document.getElementById('resTaxCredit').textContent='-'+fmt(taxCredit);
@@ -720,21 +720,21 @@ function calculateSolar(){
   document.getElementById('res25YrSavings').textContent=fmt(totalSavings);
   document.getElementById('resROI').textContent=roi.toFixed(0)+'%';
   document.getElementById('resRoofSpace').textContent=Math.round(roofNeeded)+' sq ft'+(roofNeeded>roofArea?' (exceeds available!)':'');
-  document.getElementById('resCO2').textContent="co2.toFixed(1)+'" metric tons/year';
+  document.getElementById('resCO2').textContent=co2.toFixed(1)+' metric tons/year';
 
   let chartHtml='';
   const maxSavings=savingsData[savingsData.length-1].cumulative;
   savingsData.forEach(function(d){
-    if(d.year%5="==0||d.year===1||d.year===paybackYear){"
+    if(d.year%5===0||d.year===1||d.year===paybackYear){
       const barWidth=Math.max(2,(d.cumulative/maxSavings)*100);
-      const color="d.cumulative">=netCost?'#00ff88':'#0071e3';
+      const color=d.cumulative>=netCost?'#00ff88':'#0071e3';
       chartHtml+='<div class="savings-row"><span class="savings-label">Year '+d.year+'</span><div class="savings-bar" style="width:'+barWidth+'%;background:'+color+'"></div><span class="savings-val">'+fmt(d.cumulative)+'</span></div>'
     }
   });
   const costLine='<div style="margin:8px 0 4px;padding:8px 12px;background:rgba(255,107,107,0.1);border:1px solid #ff3b30;border-radius:6px;font-size:0.85rem;color:#ff3b30">System cost (after credits): '+fmt(netCost)+' - Payback in year'+paybackYear+'</div>';
   document.getElementById('savingsChart').innerHTML=costLine+chartHtml;
   document.getElementById('solarResults').style.display='block';
-  document.getElementById('solarResults').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('solarResults').scrollIntoView({behavior:'smooth',block:'start'})
 }
 
 function calculateROI(){
@@ -744,11 +744,11 @@ function calculateROI(){
   const life=parseInt(document.getElementById('roiPanelLife').value);
   if(!cost||!annualSavings){alert('Please enter system cost and annual savings.');return}
 
-  let totalSavings="0;let" paybackYear=0;
+  let totalSavings=0;let paybackYear=0;
   for(let y=1;y<=life;y++){
     const yearSavings=annualSavings*Math.pow(1+rateIncrease,y-1)*(1-(y-1)*0.005);
     totalSavings+=yearSavings;
-    if(paybackYear="==0&&totalSavings">=cost)paybackYear=y;
+    if(paybackYear===0&&totalSavings>=cost)paybackYear=y
   }
   if(paybackYear===0)paybackYear=life;
 
@@ -756,21 +756,21 @@ function calculateROI(){
   const roi=(netProfit/cost)*100;
   const annualized=Math.pow(totalSavings/cost,1/life)-1;
 
-  document.getElementById('roiPayback').textContent="paybackYear+'" years';
+  document.getElementById('roiPayback').textContent=paybackYear+' years';
   document.getElementById('roiTotalSavings').textContent=fmt(totalSavings);
   document.getElementById('roiPercent').textContent=roi.toFixed(0)+'%';
   document.getElementById('roiNetProfit').textContent=fmt(netProfit);
   document.getElementById('roiAnnualized').textContent=(annualized*100).toFixed(1)+'%/year';
-  document.getElementById('roiEquivalent').textContent="(annualized*100).toFixed(1)+'%" vs ~10% S&P avg';
+  document.getElementById('roiEquivalent').textContent=(annualized*100).toFixed(1)+'% vs ~10% S&P avg';
   document.getElementById('roiResults').style.display='block';
-  document.getElementById('roiResults').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('roiResults').scrollIntoView({behavior:'smooth',block:'start'})
 }
 
 document.querySelectorAll('.toc a').forEach(function(a){
   a.addEventListener('click',function(e){
     e.preventDefault();
     var target=document.querySelector(this.getAttribute('href'));
-    if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    if(target)target.scrollIntoView({behavior:'smooth',block:'start'})
   })
 });
 </script> <!-- compat-table-section -->
@@ -832,7 +832,7 @@ document.querySelectorAll('.toc a').forEach(function(a){
 <span style="color:#86868b;font-size:0.85rem;">Calculations performed: </span><span id="usage-count" style="color:#0071e3;font-weight:700;font-size:1rem;">0</span>
 </div>
 <script>
-(function(){var c=parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent=c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var"" el=document.getElementById('usage-count');if(el)el.textContent=c.toLocaleString();}});})();"
+(function(){var c=parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent=c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var el=document.getElementById('usage-count');if(el)el.textContent=c.toLocaleString();}});})();
 </script>
 <!-- benchmark-chart -->
 <div style="margin:2rem" 0;padding:1.5rem;background:#f5f5f7;border:1px solid #f5f5f7;border-radius:8px;">

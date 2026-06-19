@@ -1574,7 +1574,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 function calcWIStateTax(taxableIncome,status){
 var tax=0;
-if(status="=='single'||status="=='hoh'){""
+if(status==='single'||status==='hoh'){
 var b=[[14320,0.0354],[14320,0.0465],[286670,0.053],[Infinity,0.0765]];
 var rem=taxableIncome;for(var i=0;i<b.length;i++){var a=Math.min(rem,b[i][0]);tax+=a*b[i][1];rem-=a;if(rem<=0)break;}
 }else{
@@ -1584,16 +1584,16 @@ var rem=taxableIncome;for(var i=0;i<b.length;i++){var a=Math.min(rem,b[i][0]);ta
 return tax;
 }
 function getWIStdDeduction(income,status){
-if(status="=='single'||status="=='hoh'){""
-var maxDed="status="=='hoh'?16400:12760;""
+if(status==='single'||status==='hoh'){
+var maxDed=status==='hoh'?16400:12760;
 var threshold=16780;
-var rate="status="=='hoh'?0.22515:0.12;""
+var rate=status==='hoh'?0.22515:0.12;
 if(income<=threshold)return maxDed;
 var reduction=(income-threshold)*rate;
 var ded=maxDed-reduction;
 return ded>0?ded:0;
 }else{
-var maxDed="23620;var" threshold="23210;var" rate=0.19778;
+var maxDed=23620;var threshold=23210;var rate=0.19778;
 if(income<=threshold)return maxDed;
 var reduction=(income-threshold)*rate;
 var ded=maxDed-reduction;
@@ -1607,13 +1607,13 @@ var status=document.getElementById('filingStatus').value;
 var extra=parseFloat(document.getElementById('allowances').value)||0;
 var preTax=parseFloat(document.getElementById('preTaxDeductions').value)||0;
 var taxableIncome=gross-preTax;if(taxableIncome<0)taxableIncome=0;
-var fedSD=14600;if(status==='married')fedSD=29200;if(status==='hoh')fedSD=21900;""
+var fedSD=14600;if(status==='married')fedSD=29200;if(status==='hoh')fedSD=21900;
 var fedTaxable=taxableIncome-fedSD;if(fedTaxable<0)fedTaxable=0;
 var fedTax=0;
-if(status="=='single'){"
+if(status==='single'){
 var brackets=[[11600,0.10],[35550,0.12],[53375,0.22],[91425,0.24],[51775,0.32],[365625,0.35],[Infinity,0.37]];
 var remaining=fedTaxable;for(var i=0;i<brackets.length;i++){var amt=Math.min(remaining,brackets[i][0]);fedTax+=amt*brackets[i][1];remaining-=amt;if(remaining<=0)break;}
-}else if(status="=='married'){"
+}else if(status==='married'){
 var brackets=[[23200,0.10],[71100,0.12],[106750,0.22],[182850,0.24],[103550,0.32],[243750,0.35],[Infinity,0.37]];
 var remaining=fedTaxable;for(var i=0;i<brackets.length;i++){var amt=Math.min(remaining,brackets[i][0]);fedTax+=amt*brackets[i][1];remaining-=amt;if(remaining<=0)break;}
 }else{
@@ -1625,9 +1625,9 @@ var wiTaxable=taxableIncome-wiSD;if(wiTaxable<0)wiTaxable=0;
 var stateTax=calcWIStateTax(wiTaxable,status);
 var ssWages=Math.min(gross,168600);var ssTax=ssWages*0.062;
 var medicareTax=gross*0.0145;
-if(status="=='single'&&gross">200000)medicareTax+=(gross-200000)*0.009;
-if(status="=='married'&&gross">250000)medicareTax+=(gross-250000)*0.009;
-if(status="=='hoh'&&gross">200000)medicareTax+=(gross-200000)*0.009;
+if(status==='single'&&gross>200000)medicareTax+=(gross-200000)*0.009;
+if(status==='married'&&gross>250000)medicareTax+=(gross-250000)*0.009;
+if(status==='hoh'&&gross>200000)medicareTax+=(gross-200000)*0.009;
 var extraAnnual=extra*freq;
 var totalDeductions=fedTax+stateTax+ssTax+medicareTax+extraAnnual;
 var netPay=gross-totalDeductions-preTax;if(netPay<0)netPay=0;
@@ -1637,35 +1637,35 @@ document.getElementById('resFederal').textContent='-'+fmt(fedTax/freq);
 document.getElementById('resState').textContent='-'+fmt(stateTax/freq);
 document.getElementById('resSS').textContent='-'+fmt(ssTax/freq);
 document.getElementById('resMedicare').textContent='-'+fmt(medicareTax/freq);
-document.getElementById('resExtra').textContent="extra">0?'-'+fmt(extra):'$0.00';
+document.getElementById('resExtra').textContent=extra>0?'-'+fmt(extra):'$0.00';
 document.getElementById('resNet').textContent=fmt(netPay/freq);
 document.getElementById('resAnnualGross').textContent=fmt(gross);
 document.getElementById('resAnnualNet').textContent=fmt(netPay);
-document.getElementById('resEffective').textContent="(gross">0?((totalDeductions/gross)*100).toFixed(1):'0.0')+'%';
-var fedPct="gross">0?(fedTax/gross*100):0;var statePct="gross">0?(stateTax/gross*100):0;
-var ssPct="gross">0?(ssTax/gross*100):0;var medPct="gross">0?(medicareTax/gross*100):0;
-var netPct="gross">0?(netPay/gross*100):0;
-document.getElementById('barFederal').style.width=fedPct+'%';document.getElementById('barFederalVal').textContent=fedPct.toFixed(1)+'%';""
-document.getElementById('barState').style.width=statePct+'%';document.getElementById('barStateVal').textContent=statePct.toFixed(1)+'%';""
-document.getElementById('barSS').style.width=ssPct+'%';document.getElementById('barSSVal').textContent=ssPct.toFixed(1)+'%';""
-document.getElementById('barMedicare').style.width=medPct+'%';document.getElementById('barMedicareVal').textContent=medPct.toFixed(1)+'%';""
-document.getElementById('barNet').style.width=netPct+'%';document.getElementById('barNetVal').textContent=netPct.toFixed(1)+'%';""
+document.getElementById('resEffective').textContent=(gross>0?((totalDeductions/gross)*100).toFixed(1):'0.0')+'%';
+var fedPct=gross>0?(fedTax/gross*100):0;var statePct=gross>0?(stateTax/gross*100):0;
+var ssPct=gross>0?(ssTax/gross*100):0;var medPct=gross>0?(medicareTax/gross*100):0;
+var netPct=gross>0?(netPay/gross*100):0;
+document.getElementById('barFederal').style.width=fedPct+'%';document.getElementById('barFederalVal').textContent=fedPct.toFixed(1)+'%';
+document.getElementById('barState').style.width=statePct+'%';document.getElementById('barStateVal').textContent=statePct.toFixed(1)+'%';
+document.getElementById('barSS').style.width=ssPct+'%';document.getElementById('barSSVal').textContent=ssPct.toFixed(1)+'%';
+document.getElementById('barMedicare').style.width=medPct+'%';document.getElementById('barMedicareVal').textContent=medPct.toFixed(1)+'%';
+document.getElementById('barNet').style.width=netPct+'%';document.getElementById('barNetVal').textContent=netPct.toFixed(1)+'%';
 document.getElementById('resultsBox').style.display='block';
 }
 function calculateSE(){
 var income=parseFloat(document.getElementById('seIncome').value)||0;
 var status=document.getElementById('seStatus').value;
-var taxBase="income*0.9235;var" seTax=0;
+var taxBase=income*0.9235;var seTax=0;
 var ssBase=Math.min(taxBase,168600);seTax=ssBase*0.124+taxBase*0.029;
 if(taxBase>200000)seTax+=(taxBase-200000)*0.009;
 var halfSE=seTax/2;
-var fedSD=14600;if(status==='married')fedSD=29200;if(status==='hoh')fedSD=21900;""
+var fedSD=14600;if(status==='married')fedSD=29200;if(status==='hoh')fedSD=21900;
 var fedTaxable=income-halfSE-fedSD;if(fedTaxable<0)fedTaxable=0;
 var fedTax=0;
-if(status="=='single'){"
+if(status==='single'){
 var brackets=[[11600,0.10],[35550,0.12],[53375,0.22],[91425,0.24],[51775,0.32],[365625,0.35],[Infinity,0.37]];
 var remaining=fedTaxable;for(var i=0;i<brackets.length;i++){var amt=Math.min(remaining,brackets[i][0]);fedTax+=amt*brackets[i][1];remaining-=amt;if(remaining<=0)break;}
-}else if(status="=='married'){"
+}else if(status==='married'){
 var brackets=[[23200,0.10],[71100,0.12],[106750,0.22],[182850,0.24],[103550,0.32],[243750,0.35],[Infinity,0.37]];
 var remaining=fedTaxable;for(var i=0;i<brackets.length;i++){var amt=Math.min(remaining,brackets[i][0]);fedTax+=amt*brackets[i][1];remaining-=amt;if(remaining<=0)break;}
 }else{
@@ -1676,7 +1676,7 @@ var adjIncome=income-halfSE;
 var wiSD=getWIStdDeduction(adjIncome,status);
 var wiTaxable=adjIncome-wiSD;if(wiTaxable<0)wiTaxable=0;
 var stateTax=calcWIStateTax(wiTaxable,status);
-var totalTax="seTax+fedTax+stateTax;var" takeHome=income-totalTax;
+var totalTax=seTax+fedTax+stateTax;var takeHome=income-totalTax;
 function fmt(n){return'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 document.getElementById('seNetIncome').textContent=fmt(income);
 document.getElementById('seTaxBase').textContent=fmt(taxBase);
@@ -1685,18 +1685,18 @@ document.getElementById('seHalfDeduct').textContent=fmt(halfSE);
 document.getElementById('seFedTax').textContent='-'+fmt(fedTax);
 document.getElementById('seStateTax').textContent='-'+fmt(stateTax);
 document.getElementById('seTakeHome').textContent=fmt(takeHome);
-document.getElementById('seEffRate').textContent="(income">0?((totalTax/income)*100).toFixed(1):'0.0')+'%';
+document.getElementById('seEffRate').textContent=(income>0?((totalTax/income)*100).toFixed(1):'0.0')+'%';
 document.getElementById('seResults').style.display='block';
 }
 document.addEventListener('DOMContentLoaded',function(){
 var tocLinks=document.querySelectorAll('.toc a');
 tocLinks.forEach(function(link){
-var href="link.getAttribute('href');"
+var href=link.getAttribute('href');
 if(href){
 var hash=href.split('/').pop();
 link.addEventListener('click',function(e){
 e.preventDefault();
-var id="hash.replace('#','').replace('-h','');"
+var id=hash.replace('#','').replace('-h','');
 var el=document.getElementById(id);
 if(el)el.scrollIntoView({behavior:'smooth'});
 });
@@ -1774,7 +1774,7 @@ calculatePayroll();
 <span style="color:#86868b;font-size:0.85rem;">Calculations performed: </span><span id="usage-count" style="color:#0071e3;font-weight:700;font-size:1rem;">0</span>
 </div>
 <script>
-(function(){var c=parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent=c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var"" el=document.getElementById('usage-count');if(el)el.textContent=c.toLocaleString();}});})();"
+(function(){var c=parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent=c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var el=document.getElementById('usage-count');if(el)el.textContent=c.toLocaleString();}});})();
 </script>
 <!-- benchmark-chart -->
 <div style="margin:2rem" 0;padding:1.5rem;background:#f5f5f7;border:1px solid #f5f5f7;border-radius:8px;">

@@ -1306,44 +1306,44 @@ const newTotalInterest=newPayment*newTerm-balance;
 
 const monthlySavings=curPayment-newPayment;
 const totalSavings=curTotalPaid-newTotalPaid;
-const breakEvenMonths="monthlySavings">0?Math.ceil(fees/monthlySavings):999;
+const breakEvenMonths=monthlySavings>0?Math.ceil(fees/monthlySavings):999;
 const rateDrop=curRate-newRate;
 
 // Traffic light
 let lightClass,lightText,lightDot;
 if(totalSavings>0&&breakEvenMonths<=6){
-lightClass="'traffic-green';lightText="'Clear"" savings. Refinancing is a strong move.';lightDot='#00ff88';
+lightClass='traffic-green';lightText='Clear savings. Refinancing is a strong move.';lightDot='#00ff88';
 }else if(totalSavings>0){
-lightClass="'traffic-yellow';lightText='Marginal savings. Break-even takes '+breakEvenMonths+'" months.';lightDot='#ffcc00';
+lightClass='traffic-yellow';lightText='Marginal savings. Break-even takes '+breakEvenMonths+' months.';lightDot='#ffcc00';
 }else{
-lightClass="'traffic-red';lightText="'Refi"" costs more. Keep your current loan.';lightDot='#ff3b30';
+lightClass='traffic-red';lightText='Refi costs more. Keep your current loan.';lightDot='#ff3b30';
 }
 
 document.getElementById('trafficLight').innerHTML='<div class="traffic-light '+lightClass+'"><span class="traffic-dot" style="background:'+lightDot+'"></span>'+lightText+'</div>';
 
 document.getElementById('rCurPayment').textContent=formatCurrency(curPayment);
 document.getElementById('rCurTotal').textContent=formatCurrencyWhole(curTotalPaid);
-document.getElementById('rCurInterest').textContent="formatCurrencyWhole(curTotalInterest)+'" interest';
+document.getElementById('rCurInterest').textContent=formatCurrencyWhole(curTotalInterest)+' interest';
 document.getElementById('rNewPayment').textContent=formatCurrency(newPayment);
 document.getElementById('rNewTotal').textContent=formatCurrencyWhole(newTotalPaid);
-document.getElementById('rNewInterest').textContent="formatCurrencyWhole(newTotalInterest)+'" interest + '+formatCurrencyWhole(fees)+' fees';
+document.getElementById('rNewInterest').textContent=formatCurrencyWhole(newTotalInterest)+' interest + '+formatCurrencyWhole(fees)+' fees';
 
-document.getElementById('rMonthlySave').textContent="(monthlySavings">=0?'+':'')+formatCurrencyWhole(monthlySavings)+'/mo';
-document.getElementById('rMonthlySave').style.color="monthlySavings">=0?'#00ff88':'#ff3b30';
-document.getElementById('rTotalSave').textContent="(totalSavings">=0?'+':'')+formatCurrencyWhole(totalSavings);
-document.getElementById('rTotalSave').style.color="totalSavings">=0?'#0071e3':'#ff3b30';
-document.getElementById('rBreakEven').textContent="breakEvenMonths<999?breakEvenMonths+'" months':'N/A';
-document.getElementById('rRateDrop').textContent="(rateDrop">=0?'-':'+')+(Math.abs(rateDrop)*100).toFixed(1)+'%';
+document.getElementById('rMonthlySave').textContent=(monthlySavings>=0?'+':'')+formatCurrencyWhole(monthlySavings)+'/mo';
+document.getElementById('rMonthlySave').style.color=monthlySavings>=0?'#00ff88':'#ff3b30';
+document.getElementById('rTotalSave').textContent=(totalSavings>=0?'+':'')+formatCurrencyWhole(totalSavings);
+document.getElementById('rTotalSave').style.color=totalSavings>=0?'#0071e3':'#ff3b30';
+document.getElementById('rBreakEven').textContent=breakEvenMonths<999?breakEvenMonths+' months':'N/A';
+document.getElementById('rRateDrop').textContent=(rateDrop>=0?'-':'+')+(Math.abs(rateDrop)*100).toFixed(1)+'%';
 
 document.getElementById('rCurTotalPaid').textContent=formatCurrencyWhole(curTotalPaid);
 document.getElementById('rNewTotalPaid').textContent=formatCurrencyWhole(newTotalPaid);
-document.getElementById('rNetSavings').textContent="(totalSavings">=0?'You save ':'')+formatCurrencyWhole(Math.abs(totalSavings))+(totalSavings<0?' more with refi':'');
-document.getElementById('rNetSavings').style.color="totalSavings">=0?'#00ff88':'#ff3b30';
+document.getElementById('rNetSavings').textContent=(totalSavings>=0?'You save ':'')+formatCurrencyWhole(Math.abs(totalSavings))+(totalSavings<0?' more with refi':'');
+document.getElementById('rNetSavings').style.color=totalSavings>=0?'#00ff88':'#ff3b30';
 
 // Chart
-const chartConfig="{type:'bar',data:{labels:['Current" Loan Path','Refi Path'],datasets:[{label:'Principal',data:[Math.round(balance),Math.round(balance)],backgroundColor:'#00ff88'},{label:'Interest',data:[Math.round(curTotalInterest),Math.round(newTotalInterest)],backgroundColor:'#0071e3'},{label:'Fees',data:[0,Math.round(fees)],backgroundColor:'#0071e3'}]},options:{title:{display:true,text:'Total Cost Comparison: Current vs Refi',fontColor:'#1d1d1f'},scales:{yAxes:[{stacked:true,gridLines:{color:'#f5f5f7'},ticks:{fontColor:'#c8c8d0',callback:function(v){return'$'+v.toLocaleString()}}}],xAxes:[{stacked:true,gridLines:{color:'#f5f5f7'},ticks:{fontColor:'#c8c8d0'}}]},legend:{labels:{fontColor:'#c8c8d0'}}}};
+const chartConfig={type:'bar',data:{labels:['Current Loan Path','Refi Path'],datasets:[{label:'Principal',data:[Math.round(balance),Math.round(balance)],backgroundColor:'#00ff88'},{label:'Interest',data:[Math.round(curTotalInterest),Math.round(newTotalInterest)],backgroundColor:'#0071e3'},{label:'Fees',data:[0,Math.round(fees)],backgroundColor:'#0071e3'}]},options:{title:{display:true,text:'Total Cost Comparison: Current vs Refi',fontColor:'#1d1d1f'},scales:{yAxes:[{stacked:true,gridLines:{color:'#f5f5f7'},ticks:{fontColor:'#c8c8d0',callback:function(v){return'$'+v.toLocaleString()}}}],xAxes:[{stacked:true,gridLines:{color:'#f5f5f7'},ticks:{fontColor:'#c8c8d0'}}]},legend:{labels:{fontColor:'#c8c8d0'}}}};
 const chartImg=document.getElementById('refiChart');
-chartImg.src="'https://quickchart.io/chart?c="'+encodeURIComponent(JSON.stringify(chartConfig))+'&backgroundColor=%230a0a0f&width=700&height=350';""
+chartImg.src='https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify(chartConfig))+'&backgroundColor=%230a0a0f&width=700&height=350';
 chartImg.style.display='block';
 
 document.getElementById('results').style.display='block';
@@ -1354,9 +1354,9 @@ localStorage.setItem('cr_calc_count',cc);
 document.getElementById('calc-count').textContent=cc.toLocaleString();
 }
 
-(function(){var c=parseInt(localStorage.getItem('cr_calc_count')||'0');document.getElementById('calc-count').textContent=c.toLocaleString();})();"
+(function(){var c=parseInt(localStorage.getItem('cr_calc_count')||'0');document.getElementById('calc-count').textContent=c.toLocaleString();})();
 
-function toggleFaq(el){el.classList.toggle('open');const" a=el.nextElementSibling;a.classList.toggle('show')}
+function toggleFaq(el){el.classList.toggle('open');const a=el.nextElementSibling;a.classList.toggle('show')}
 </script>
 <h2>Update History</h2>
 
