@@ -1103,22 +1103,22 @@ function setFeeType(type,btn){
   feeType=type;
   document.querySelectorAll('.fee-toggle button').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
-  document.getElementById('feeLabel').textContent="type="=='pct'?'Trading" Fee (%)':'Trading" Fee ($)';
-  document.getElementById('fee').value="type="=='pct'?'0.1':'10';"
+  document.getElementById('feeLabel').textContent=type==='pct'?'Trading Fee (%)':'Trading Fee ($)';
+  document.getElementById('fee').value=type==='pct'?'0.1':'10';
 }
 
-function fmt(n){return(n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}"
+function fmt(n){return(n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
 function calcProfit(bp,sp,qty,feeVal){
   var buyCost=bp*qty;
   var sellVal=sp*qty;
   var buyFee,sellFee;
   if(feeType==='pct'){buyFee=buyCost*(feeVal/100);sellFee=sellVal*(feeVal/100);}
-  else{buyFee="feeVal;sellFee=feeVal;}"
+  else{buyFee=feeVal;sellFee=feeVal;}
   var totalCost=buyCost+buyFee;
   var netSale=sellVal-sellFee;
   var profit=netSale-totalCost;
-  var roi="totalCost">0?(profit/totalCost)*100:0;
+  var roi=totalCost>0?(profit/totalCost)*100:0;
   return{buyCost:buyCost,buyFee:buyFee,totalCost:totalCost,sellVal:sellVal,sellFee:sellFee,netSale:netSale,profit:profit,roi:roi,totalFees:buyFee+sellFee};
 }
 
@@ -1132,7 +1132,7 @@ function calculate(){
 
   document.getElementById('heroProfit').textContent=fmt(r.profit);
   document.getElementById('heroProfit').className='hero-value '+(r.profit>=0?'positive':'negative');
-  document.getElementById('heroPct').textContent="r.roi.toFixed(2)+'%" return';
+  document.getElementById('heroPct').textContent=r.roi.toFixed(2)+'% return';
   document.getElementById('heroPct').className='hero-pct '+(r.roi>=0?'positive':'negative');
 
   document.getElementById('totalInvest').textContent=fmt(r.totalCost);
@@ -1149,7 +1149,7 @@ function calculate(){
   document.getElementById('bSellFee').textContent='-'+fmt(r.sellFee);
   document.getElementById('bNetSale').textContent=fmt(r.netSale);
   document.getElementById('bNetProfit').textContent=fmt(r.profit);
-  document.getElementById('bNetProfit').style.color="r.profit">=0?'#00ff88':'#ff3b30';
+  document.getElementById('bNetProfit').style.color=r.profit>=0?'#00ff88':'#ff3b30';
 
   // Stacked bar
   var total=r.buyCost+Math.abs(r.profit)+r.totalFees;
@@ -1157,8 +1157,8 @@ function calculate(){
     var costPct=(r.buyCost/total*100).toFixed(1);
     var feePct=(r.totalFees/total*100).toFixed(1);
     var profPct=(Math.abs(r.profit)/total*100).toFixed(1);
-    document.getElementById('tradeBar').innerHTML='<div style="width:'+costPct+'%;background:#0071e3;" title="Cost"></div><div style="width:'+profPct+'%;background:'+(r.profit">=0?'#00ff88':'#ff3b30')+';" title="Profit/Loss"></div><div style="width:'+feePct+'%;background:#ffa502;" title="Fees"></div>';
-    document.getElementById('tradeLegend').innerHTML='<div><span style="background:#0071e3;"></span>Cost: '+fmt(r.buyCost)+'</div><div><span style="background:'+(r.profit">=0?'#00ff88':'#ff3b30')+';"></span>'+(r.profit>=0?'Profit':'Loss')+': '+fmt(Math.abs(r.profit))+'</div><div><span style="background:#ffa502;"></span>Fees: '+fmt(r.totalFees)+'</div>';
+    document.getElementById('tradeBar').innerHTML='<div style="width:'+costPct+'%;background:#0071e3;" title="Cost"></div><div style="width:'+profPct+'%;background:'+(r.profit>=0?'#00ff88':'#ff3b30')+';" title="Profit/Loss"></div><div style="width:'+feePct+'%;background:#ffa502;" title="Fees"></div>';
+    document.getElementById('tradeLegend').innerHTML='<div><span style="background:#0071e3;"></span>Cost: '+fmt(r.buyCost)+'</div><div><span style="background:'+(r.profit>=0?'#00ff88':'#ff3b30')+';"></span>'+(r.profit>=0?'Profit':'Loss')+': '+fmt(Math.abs(r.profit))+'</div><div><span style="background:#ffa502;"></span>Fees: '+fmt(r.totalFees)+'</div>';
   }
 
   // Scenarios
@@ -1167,7 +1167,7 @@ function calculate(){
   scenarios.forEach(function(pct){
     var scenarioPrice=bp*(1+pct/100);
     var sr=calcProfit(bp,scenarioPrice,qty,feeVal);
-    html+='<div class="scenario-card"><div class="sc-label">'+(pct>=0?'+':'')+pct+'% price change</div><div class="sc-price">'+fmt(scenarioPrice)+'</div><div class="sc-profit '+(sr.profit">=0?'positive':'negative')+'">'+fmt(sr.profit)+'</div></div>';
+    html+='<div class="scenario-card"><div class="sc-label">'+(pct>=0?'+':'')+pct+'% price change</div><div class="sc-price">'+fmt(scenarioPrice)+'</div><div class="sc-profit '+(sr.profit>=0?'positive':'negative')+'">'+fmt(sr.profit)+'</div></div>';
   });
   document.getElementById('scenarioGrid').innerHTML=html;
 

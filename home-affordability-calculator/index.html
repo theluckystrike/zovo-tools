@@ -646,7 +646,7 @@ function calcMonthlyPayment(principal,annualRate,years){
   if(principal<=0) return 0;
   var r=annualRate/100/12;
   var n=years*12;
-  if(r="==0)" return principal/n;
+  if(r===0) return principal/n;
   return principal*(r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);
 }
 
@@ -670,7 +670,8 @@ function calculateAffordability(){
     document.getElementById('results').style.display='block';
     document.getElementById('maxPrice').textContent='$0';
     document.getElementById('dtiWarning').style.display='block';
-    document.getElementById('dtiWarning').textContent='Your" existing debts exceed the 36% back-end DTI limit. Consider reducing debts before purchasing a home.';document.getElementById('dtiGood').style.display='none';
+    document.getElementById('dtiWarning').textContent='Your existing debts exceed the 36% back-end DTI limit. Consider reducing debts before purchasing a home.';
+    document.getElementById('dtiGood').style.display='none';
     return;
   }
 
@@ -679,30 +680,30 @@ function calculateAffordability(){
   for(var i=0;i<60;i++){
     var mid=(lo+hi)/2;
     var loan=mid-dp;
-    if(loan<0){hi="mid;continue;}"
+    if(loan<0){hi=mid;continue;}
     var pi=calcMonthlyPayment(loan,rate,term);
     var tax=mid*taxRate/100/12;
     var ins=insurance/12;
     var pmi=0;
     if(dp<mid*0.2){
       var ltv=loan/mid;
-      pmi="loan*(ltv">0.95?0.01:ltv>0.9?0.008:ltv>0.85?0.006:0.005)/12;
+      pmi=loan*(ltv>0.95?0.01:ltv>0.9?0.008:ltv>0.85?0.006:0.005)/12;
     }
     var total=pi+tax+ins+pmi+hoa;
-    if(total<=maxHousing){lo="mid;bestPrice=mid;}"
-    else{hi="mid;}"
+    if(total<=maxHousing){lo=mid;bestPrice=mid;}
+    else{hi=mid;}
   }
 
   var homePrice=Math.floor(bestPrice/1000)*1000;
   var loanAmount=homePrice-dp;
-  if(loanAmount<0){loanAmount="0;homePrice=dp;}"
+  if(loanAmount<0){loanAmount=0;homePrice=dp;}
   var pi=calcMonthlyPayment(loanAmount,rate,term);
   var tax=homePrice*taxRate/100/12;
   var ins=insurance/12;
   var pmi=0;
   if(dp<homePrice*0.2&&loanAmount>0){
     var ltv=loanAmount/homePrice;
-    pmi="loanAmount*(ltv">0.95?0.01:ltv>0.9?0.008:ltv>0.85?0.006:0.005)/12;
+    pmi=loanAmount*(ltv>0.95?0.01:ltv>0.9?0.008:ltv>0.85?0.006:0.005)/12;
   }
   var totalPayment=pi+tax+ins+pmi+hoa;
   var actualFrontDTI=(totalPayment/monthlyIncome*100);
@@ -716,7 +717,7 @@ function calculateAffordability(){
   document.getElementById('piPayment').textContent=fmt(pi);
   document.getElementById('taxMonthly').textContent=fmt(tax);
   document.getElementById('insMonthly').textContent=fmt(ins);
-  document.getElementById('pmiMonthly').textContent="pmi">0?fmt(pmi):'$0 (not required)';
+  document.getElementById('pmiMonthly').textContent=pmi>0?fmt(pmi):'$0 (not required)';
   document.getElementById('hoaMonthly').textContent=fmt(hoa);
   document.getElementById('loanAmt').textContent=fmt(loanAmount);
 
@@ -728,7 +729,8 @@ function calculateAffordability(){
     good.style.display='none';
   } else {
     good.style.display='block';
-    good.textContent='Your" DTI ratios look healthy. You have room in your budget for maintenance, savings, and unexpected expenses.';warn.style.display='none';
+    good.textContent='Your DTI ratios look healthy. You have room in your budget for maintenance, savings, and unexpected expenses.';
+    warn.style.display='none';
   }
 
   // Down payment scenarios
@@ -754,11 +756,11 @@ function calculateAffordability(){
       var sPmi=0;
       if(s.pct<0.2){
         var sLtv=sLoan/sm;
-        sPmi="sLoan*(sLtv">0.95?0.01:sLtv>0.9?0.008:sLtv>0.85?0.006:0.005)/12;
+        sPmi=sLoan*(sLtv>0.95?0.01:sLtv>0.9?0.008:sLtv>0.85?0.006:0.005)/12;
       }
       var sTotal=sPi+sTax+sIns+sPmi+hoa;
-      if(sTotal<=maxHousing){sLo="sm;sBest=sm;}"
-      else{sHi="sm;}"
+      if(sTotal<=maxHousing){sLo=sm;sBest=sm;}
+      else{sHi=sm;}
     }
     var sPrice=Math.floor(sBest/1000)*1000;
     var sDpAmt=Math.round(sPrice*s.pct);

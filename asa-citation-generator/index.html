@@ -977,54 +977,54 @@ function toggleFaq(el){el.parentElement.classList.toggle('open');}
 
 function updateASAFields(){
   var t=document.getElementById('sourceType').value;
-  document.getElementById('journalFields').style.display="t="=='journal'?'block':'none';""
-  document.getElementById('bookFields').style.display="t="=='book'?'block':'none';""
-  document.getElementById('chapterFields').style.display="t="=='chapter'?'block':'none';""
-  document.getElementById('websiteFields').style.display="t="=='website'?'block':'none';""
-  document.getElementById('newspaperFields').style.display="t="=='newspaper'?'block':'none';""
+  document.getElementById('journalFields').style.display=t==='journal'?'block':'none';
+  document.getElementById('bookFields').style.display=t==='book'?'block':'none';
+  document.getElementById('chapterFields').style.display=t==='chapter'?'block':'none';
+  document.getElementById('websiteFields').style.display=t==='website'?'block':'none';
+  document.getElementById('newspaperFields').style.display=t==='newspaper'?'block':'none';
 }
 
 function updateAuthorFields(){
   var n=parseInt(document.getElementById('numAuthors').value);
-  document.getElementById('authorFields2').style.display="n">=2?'block':'none';
-  document.getElementById('authorFields3').style.display="n">=3?'block':'none';
+  document.getElementById('authorFields2').style.display=n>=2?'block':'none';
+  document.getElementById('authorFields3').style.display=n>=3?'block':'none';
 }
 
 function getVal(id){return document.getElementById(id)?document.getElementById(id).value.trim():'';}
 
 function buildAuthorRef(){
   var n=parseInt(document.getElementById('numAuthors').value);
-  var a1="getVal('author1Last')+'," '+getVal('author1First');
-  if(n="==1)" return a1;
-  var a2="getVal('author2Last')+'," '+getVal('author2First');
-  if(n="==2)" return a1+' and '+a2;
-  var a3="getVal('author3Last')+'," '+getVal('author3First');
+  var a1=getVal('author1Last')+', '+getVal('author1First');
+  if(n===1) return a1;
+  var a2=getVal('author2Last')+', '+getVal('author2First');
+  if(n===2) return a1+' and '+a2;
+  var a3=getVal('author3Last')+', '+getVal('author3First');
   return a1+', '+a2+', and '+a3;
 }
 
 function buildAuthorInText(){
   var n=parseInt(document.getElementById('numAuthors').value);
   var a1=getVal('author1Last');
-  if(n="==1)" return a1;
-  if(n="==2)" return a1+' and '+getVal('author2Last');
+  if(n===1) return a1;
+  if(n===2) return a1+' and '+getVal('author2Last');
   return a1+' et al.';
 }
 
 function generateASA(){
-  var type="getVal('sourceType');"
+  var type=getVal('sourceType');
   var year=getVal('year');
-  var title="getVal('title');"
+  var title=getVal('title');
   var doi=getVal('doi');
   var ref='';
   var authorRef=buildAuthorRef();
   var authorInText=buildAuthorInText();
 
-  if(type="=='journal'){"
+  if(type==='journal'){
     var journal=getVal('journal');
     var volume=getVal('volume');
     var issue=getVal('issue');
     var pages=getVal('pages');
-    ref="authorRef+'." '+year+'. "'+title+'." ';
+    ref=authorRef+'. '+year+'. "'+title+'." ';
     ref+='<em>'+journal+'</em> ';
     ref+=volume;
     if(issue) ref+='('+issue+')';
@@ -1035,10 +1035,10 @@ function generateASA(){
       else if(doi.startsWith('doi:')) ref+=' '+doi;
       else ref+=' doi:'+doi;
     }
-  } else if(type="=='book'){"
+  } else if(type==='book'){
     var city=getVal('city');
     var publisher=getVal('publisher');
-    ref="authorRef+'." '+year+'. <em>'+title+'</em>. ';
+    ref=authorRef+'. '+year+'. <em>'+title+'</em>. ';
     if(city && publisher) ref+=city+': '+publisher+'.';
     else if(publisher) ref+=publisher+'.';
     if(doi){
@@ -1046,13 +1046,13 @@ function generateASA(){
       else if(doi.startsWith('doi:')) ref+=' doi:'+doi;
       else ref+=' doi:'+doi;
     }
-  } else if(type="=='chapter'){"
+  } else if(type==='chapter'){
     var bookTitle=getVal('bookTitle');
     var editor=getVal('editorName');
     var chPages=getVal('chapterPages');
     var chCity=getVal('chapterCity');
     var chPub=getVal('chapterPublisher');
-    ref="authorRef+'." '+year+'. "'+title+'." ';
+    ref=authorRef+'. '+year+'. "'+title+'." ';
     if(chPages) ref+='Pp. '+chPages+' in ';
     else ref+='in ';
     ref+='<em>'+bookTitle+'</em>';
@@ -1060,10 +1060,10 @@ function generateASA(){
     ref+='. ';
     if(chCity && chPub) ref+=chCity+': '+chPub+'.';
     else if(chPub) ref+=chPub+'.';
-  } else if(type="=='website'){"
+  } else if(type==='website'){
     var siteName=getVal('websiteName');
     var retrieved=getVal('retrievedDate');
-    ref="authorRef+'." '+year+'. "'+title+'." ';
+    ref=authorRef+'. '+year+'. "'+title+'." ';
     if(siteName) ref+='<em>'+siteName+'</em>. ';
     if(retrieved) ref+='Retrieved '+retrieved;
     if(doi){
@@ -1071,11 +1071,11 @@ function generateASA(){
     } else {
       ref+='.';
     }
-  } else if(type="=='newspaper'){"
+  } else if(type==='newspaper'){
     var npName=getVal('newspaperName');
     var pubDate=getVal('pubDate');
     var npPages=getVal('newspaperPages');
-    ref="authorRef+'." '+year+'. "'+title+'." ';
+    ref=authorRef+'. '+year+'. "'+title+'." ';
     ref+='<em>'+npName+'</em>';
     if(pubDate) ref+=', '+pubDate;
     if(npPages) ref+=', pp. '+npPages;
@@ -1098,7 +1098,7 @@ function copyText(id){
   var text=el.innerText||el.textContent;
   navigator.clipboard.writeText(text).then(function(){
     var btns=document.querySelectorAll('.copy-btn');
-    btns.forEach(function(b){if(b.textContent.indexOf(id.includes('ref')?'Reference':'In-Text')>-1){b.textContent='Copied!';setTimeout(function(){b.textContent="id==='refOutput'?'Copy" Reference':'Copy" In-Text';},1500);}});
+    btns.forEach(function(b){if(b.textContent.indexOf(id.includes('ref')?'Reference':'In-Text')>-1){b.textContent='Copied!';setTimeout(function(){b.textContent=id==='refOutput'?'Copy Reference':'Copy In-Text';},1500);}});
   });
 }
 
@@ -1108,7 +1108,7 @@ function copyAll(){
   navigator.clipboard.writeText('Reference:\n'+ref+'\n\nIn-Text Citation:\n'+inText).then(function(){
     var btn=document.querySelectorAll('.copy-btn')[2];
     btn.textContent='Copied!';
-    setTimeout(function(){btn.textContent='Copy" Both';},1500);
+    setTimeout(function(){btn.textContent='Copy Both';},1500);
   });
 }
 </script>

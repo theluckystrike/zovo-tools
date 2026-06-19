@@ -1166,21 +1166,21 @@ function calculateFootprint(){
   var flightCO2=(shortFlights*0.5)+(longFlights*1.5);
   var transportCO2=carCO2+flightCO2;
   var dietCO2=dietFactors[dietType]||2.5;
-  var recycleMultiplier="recycling="=='always'?0.8:recycling==='sometimes'?1.0:1.15;""
+  var recycleMultiplier=recycling==='always'?0.8:recycling==='sometimes'?1.0:1.15;
   var shoppingCO2=(shopping*12*0.02)*recycleMultiplier;
   var total=energyCO2+transportCO2+dietCO2+shoppingCO2;
 
   document.getElementById('totalCO2').textContent=total.toFixed(1);
-  document.getElementById('energyCO2').textContent="energyCO2.toFixed(1)+'" t';
-  document.getElementById('transportCO2').textContent="transportCO2.toFixed(1)+'" t';
-  document.getElementById('dietCO2').textContent="dietCO2.toFixed(1)+'" t';
-  document.getElementById('shoppingCO2').textContent="shoppingCO2.toFixed(1)+'" t';
+  document.getElementById('energyCO2').textContent=energyCO2.toFixed(1)+' t';
+  document.getElementById('transportCO2').textContent=transportCO2.toFixed(1)+' t';
+  document.getElementById('dietCO2').textContent=dietCO2.toFixed(1)+' t';
+  document.getElementById('shoppingCO2').textContent=shoppingCO2.toFixed(1)+' t';
 
   var pct=Math.min((total/16)*100,200);
   var bar=document.getElementById('compBar');
   bar.style.width=Math.min(pct,100)+'%';
   bar.style.background=total<=16?'#00ff88':'#ff3b30';
-  document.getElementById('compText').textContent="total.toFixed(1)+'" / 16 tons';
+  document.getElementById('compText').textContent=total.toFixed(1)+' / 16 tons';
 
   var diff=total-16;
   var compMsg='';
@@ -1190,14 +1190,15 @@ function calculateFootprint(){
   else compMsg='Your footprint is '+diff.toFixed(1)+' tons above the US average. Look at your largest emission source for the biggest opportunity to reduce.';
   document.getElementById('compSummary').textContent=compMsg;
 
-  var chartUrl="'https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify({     type:'doughnut',"
+  var chartUrl='https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify({
+    type:'doughnut',
     data:{
       labels:['Energy','Transport','Diet','Shopping'],
       datasets:[{data:[+energyCO2.toFixed(1),+transportCO2.toFixed(1),+dietCO2.toFixed(1),+shoppingCO2.toFixed(1)],backgroundColor:['#00ff88','#0071e3','#ff3b30','#ff9f0a']}]
     },
     options:{plugins:{legend:{labels:{color:'#1d1d1f'}},datalabels:{color:'#1d1d1f',font:{size:14}}}}
-  }))+'&w="500&h="350&bkg=%2312121a';""
-  document.getElementById('chartImg').src="chartUrl;"
+  }))+'&w=500&h=350&bkg=%2312121a';
+  document.getElementById('chartImg').src=chartUrl;
 
   document.getElementById('resultsSection').style.display='block';
   document.getElementById('noResults').style.display='none';

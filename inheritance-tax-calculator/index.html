@@ -1220,7 +1220,7 @@ function calcStateInheritanceTax(estateValue,state,relationship){
 const rates=stateInheritanceRates[state];
 if(!rates) return 0;
 const rate=rates[relationship]||0;
-if(rate="==0)" return 0;
+if(rate===0) return 0;
 const exemption=(rates.exemptions&&rates.exemptions[relationship])||0;
 const taxable=Math.max(0,estateValue-exemption);
 return taxable*rate;
@@ -1237,7 +1237,7 @@ const totalDeductions=charitable+marital;
 const taxableEstate=Math.max(0,estateValue-totalDeductions);
 const amountSubjectToFed=Math.max(0,taxableEstate-FEDERAL_EXEMPTION);
 const fedTax=calcFederalEstateTax(taxableEstate);
-const fedEffRate="taxableEstate">0?((fedTax/taxableEstate)*100):0;
+const fedEffRate=taxableEstate>0?((fedTax/taxableEstate)*100):0;
 const stateTax=calcStateInheritanceTax(taxableEstate,state,relationship);
 const totalTax=fedTax+stateTax;
 const netAmount=estateValue-totalTax;
@@ -1258,7 +1258,8 @@ updateEstateChart(taxableEstate,amountSubjectToFed,fedTax,stateTax);
 
 function updateEstateChart(taxableEstate,subjectToFed,fedTax,stateTax){
 const exemptAmount=Math.min(taxableEstate,FEDERAL_EXEMPTION);
-const chartUrl="'https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify({ type:'doughnut',"
+const chartUrl='https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify({
+type:'doughnut',
 data:{
 labels:['Exempt Amount','Federal Tax','State Tax','Net to Beneficiary'],
 datasets:[{
@@ -1270,8 +1271,8 @@ options:{
 title:{display:true,text:'Estate Distribution Breakdown',fontColor:'#1d1d1f'},
 legend:{labels:{fontColor:'#c8c8d0'}}
 }
-}))+'&backgroundColor="%230a0a0f&width="500&height=350';""
-document.getElementById('estateChart').src="chartUrl;"
+}))+'&backgroundColor=%230a0a0f&width=500&height=350';
+document.getElementById('estateChart').src=chartUrl;
 }
 
 function toggleFaq(el){

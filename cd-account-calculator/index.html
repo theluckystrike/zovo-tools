@@ -1142,7 +1142,7 @@ function calculateCD(){
     earlyBalance=P*Math.pow(1+apr/n,n*et);
     var earnedInt=earlyBalance-P;
     penalty=P*apr*(penMo/12);
-    if(penalty>earlyBalance-P) penalty=earlyBalance; // can't exceed balance;
+    if(penalty>earlyBalance-P) penalty=earlyBalance; // can't exceed balance
     netReturn=earlyBalance-penalty-P;
   } else {
     earlyBalance=maturityVal;
@@ -1152,14 +1152,14 @@ function calculateCD(){
   document.getElementById('maturityValue').textContent=fmt(maturityVal);
   document.getElementById('totalInterest').textContent=fmt(totalInt);
   document.getElementById('apy').textContent=(apy*100).toFixed(3)+'%';
-  document.getElementById('penaltyAmount').textContent="earlyMo">0&&earlyMo<months?fmt(penalty):'N/A (held to maturity)';
-  document.getElementById('afterPenalty').textContent="earlyMo">0&&earlyMo<months?fmt(earlyBalance-penalty):fmt(maturityVal);
-  document.getElementById('netReturn').textContent="earlyMo">0&&earlyMo<months?fmt(netReturn):fmt(totalInt);
+  document.getElementById('penaltyAmount').textContent=earlyMo>0&&earlyMo<months?fmt(penalty):'N/A (held to maturity)';
+  document.getElementById('afterPenalty').textContent=earlyMo>0&&earlyMo<months?fmt(earlyBalance-penalty):fmt(maturityVal);
+  document.getElementById('netReturn').textContent=earlyMo>0&&earlyMo<months?fmt(netReturn):fmt(totalInt);
   // Compounding comparison table
   var freqs=[{name:'Daily',n:365},{name:'Monthly',n:12},{name:'Quarterly',n:4},{name:'Semi-Annually',n:2},{name:'Annually',n:1}];
   var annualVal=P*Math.pow(1+apr,t);
   var annualInt=annualVal-P;
-  var tbody=document.getElementById('compBody');tbody.innerHTML='';""
+  var tbody=document.getElementById('compBody');tbody.innerHTML='';
   for(var i=0;i<freqs.length;i++){
     var f=freqs[i];
     var val=P*Math.pow(1+apr/f.n,f.n*t);
@@ -1167,13 +1167,13 @@ function calculateCD(){
     var apyC=Math.pow(1+apr/f.n,f.n)-1;
     var diff=intE-annualInt;
     var row=document.createElement('tr');
-    if(f.n="==n)" row.className='highlight';
+    if(f.n===n) row.className='highlight';
     row.innerHTML='<td>'+f.name+'</td><td>'+(apyC*100).toFixed(3)+'%</td><td>'+fmt(intE)+'</td><td>'+fmt(val)+'</td><td>'+(diff>=0?'+':'')+fmt(diff)+'</td>';
     tbody.appendChild(row);
   }
   // Monthly schedule
-  var stbody=document.getElementById('schedBody');stbody.innerHTML='';""
-  var bal="P;var" cumInt=0;
+  var stbody=document.getElementById('schedBody');stbody.innerHTML='';
+  var bal=P;var cumInt=0;
   for(var m=1;m<=months;m++){
     var startBal=bal;
     var monthEnd=P*Math.pow(1+apr/n,n*(m/12));
@@ -1185,11 +1185,11 @@ function calculateCD(){
     stbody.appendChild(srow);
   }
   // Growth chart
-  var chartDiv=document.getElementById('growthChart');chartDiv.innerHTML='';""
+  var chartDiv=document.getElementById('growthChart');chartDiv.innerHTML='';
   var steps=Math.min(months,24);
   var interval=Math.max(1,Math.floor(months/steps));
-  for(var s="0;s<=months;s+=interval){"
-    if(s="==0)" s="interval">1?interval:1;
+  for(var s=0;s<=months;s+=interval){
+    if(s===0) s=interval>1?interval:1;
     var sVal=P*Math.pow(1+apr/n,n*(s/12));
     var sInt=sVal-P;
     var pPct=(P/maturityVal)*100;

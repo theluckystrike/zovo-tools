@@ -1042,10 +1042,10 @@ html { scroll-behavior: smooth; }
 
 <script>
 function toggleFaq(el){el.parentElement.classList.toggle('open')}
-function loadExample(s){document.getElementById('ineqInput').value="s;solve()}"
+function loadExample(s){document.getElementById('ineqInput').value=s;solve()}
 
 /* GCD utility */
-function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t="b;b=a%b;a=t}return" a}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t}return a}
 
 /* Number formatting */
 function fmt(n){
@@ -1053,11 +1053,11 @@ function fmt(n){
   n=Math.round(n*1e10)/1e10;
   if(Number.isInteger(n))return n.toString();
   var sign=n<0?'-':'',abs=Math.abs(n);
-  for(var d="1;d<=1000;d++){"
+  for(var d=1;d<=1000;d++){
     var num=Math.round(abs*d);
     if(Math.abs(num/d-abs)<1e-9){
       var g=gcd(num,d);num/=g;var den=d/g;
-      if(den="==1)return" sign+num;
+      if(den===1)return sign+num;
       return sign+num+'/'+den;
     }
   }
@@ -1074,8 +1074,8 @@ function fmtPoly(a,b,c){
   }
   if(b!==0){
     if(p.length){
-      if(b="==1)p.push('+" x');
-      else if(b="==-1)p.push('-" x');
+      if(b===1)p.push('+ x');
+      else if(b===-1)p.push('- x');
       else if(b>0)p.push('+ '+fmt(b)+'x');
       else p.push('- '+fmt(Math.abs(b))+'x');
     }else{
@@ -1099,17 +1099,18 @@ function parsePoly(s){
   s=s.replace(/\u00B2/g,'^2');
   s=s.replace(/([0-9x\)])(-)/g,'$1+-');
   var a=0,b=0,c=0;
-  var terms="s.split('+').filter(function(t){return" t.length>0});
+  var terms=s.split('+').filter(function(t){return t.length>0});
   for(var i=0;i<terms.length;i++){
     var t=terms[i].replace(/\*/g,'');
     if(t.indexOf('x^2')!==-1||t.indexOf('X^2')!==-1){
       var co=t.replace(/x\^2/gi,'');
-      if(co="==''||co="=='+')co='1';""
-      if(co="=='-')co='-1';       a+=parseFloat(co);
-    }else if(t.indexOf('x')!==-1||t.indexOf('X')!==-1){"
+      if(co===''||co==='+')co='1';
+      if(co==='-')co='-1';
+      a+=parseFloat(co);
+    }else if(t.indexOf('x')!==-1||t.indexOf('X')!==-1){
       var co2=t.replace(/x/gi,'');
-      if(co2="==''||co2="=='+')co2='1';""
-      if(co2="=='-')co2="'-1';""
+      if(co2===''||co2==='+')co2='1';
+      if(co2==='-')co2='-1';
       b+=parseFloat(co2);
     }else{
       c+=parseFloat(t);
@@ -1120,22 +1121,22 @@ function parsePoly(s){
 }
 
 /* Operator maps */
-var SYM="{'<':'<','">':'>','<=':'\u2264','>=':'\u2265','!=':'\u2260'};
-var FLIP="{'<':'">','>':'<','<=':'>=','>=':'<=','!=':'!='};
+var SYM={'<':'<','>':'>','<=':'\u2264','>=':'\u2265','!=':'\u2260'};
+var FLIP={'<':'>','>':'<','<=':'>=','>=':'<=','!=':'!='};
 
 /* Main solver */
 function solve(){
   var raw=document.getElementById('ineqInput').value.trim();
   if(!raw)return;
 
-  var input="raw.replace(/\u2264/g,'<=').replace(/\u2265/g,'">=').replace(/\u2260/g,'!=').replace(/\u00D7/g,'*');
+  var input=raw.replace(/\u2264/g,'<=').replace(/\u2265/g,'>=').replace(/\u2260/g,'!=').replace(/\u00D7/g,'*');
 
   var op='',idx=-1;
-  var ops="['<=','">=','!=','<','>'];
+  var ops=['<=','>=','!=','<','>'];
   for(var oi=0;oi<ops.length;oi++){
     var o=ops[oi];
     var fi=input.indexOf(o);
-    if(fi>0){op="o;idx=fi;break}"
+    if(fi>0){op=o;idx=fi;break}
   }
   if(!op){showErr('No inequality operator found. Use <, >, <=, >=, or !=');return}
 
@@ -1144,31 +1145,32 @@ function solve(){
   if(!lhsStr||!rhsStr){showErr('Both sides of the inequality must contain an expression.');return}
 
   var lhs,rhs;
-  try{lhs=parsePoly(lhsStr);rhs=parsePoly(rhsStr)}catch(e){showErr('Could" not parse the inequality. Check your syntax.');return}"
+  try{lhs=parsePoly(lhsStr);rhs=parsePoly(rhsStr)}catch(e){showErr('Could not parse the inequality. Check your syntax.');return}
 
   var A=Math.round((lhs.a-rhs.a)*1e10)/1e10;
   var B=Math.round((lhs.b-rhs.b)*1e10)/1e10;
   var C=Math.round((lhs.c-rhs.c)*1e10)/1e10;
 
   var sym=SYM[op];
-  var displayOrig="lhsStr.replace(/\^2/g,'\u00B2')+'" '+sym+' '+rhsStr.replace(/\^2/g,'\u00B2');
-  var inclusive="(op="=='<='||op==='">=');"
-  var isNE="(op="=='!=');""
+  var displayOrig=lhsStr.replace(/\^2/g,'\u00B2')+' '+sym+' '+rhsStr.replace(/\^2/g,'\u00B2');
+  var inclusive=(op==='<='||op==='>=');
+  var isNE=(op==='!=');
   var isQuad=(A!==0),isLin=(A===0&&B!==0),isConst=(A===0&&B===0);
 
-  var steps="[],sol="{type:'',display:'',ineq:'',intervals:[],points:[]};"
+  var steps=[],sol={type:'',display:'',ineq:'',intervals:[],points:[]};
 
   if(isConst){
-    steps.push('After" simplifying, the inequality reduces to: '+fmt(C)+' '+sym+' 0');
+    steps.push('After simplifying, the inequality reduces to: '+fmt(C)+' '+sym+' 0');
     var ok=false;
-    if(op==='<')ok=(C<0);else if(op="=='">')ok="(C">0);
-    else if(op==='<=')ok=(C<=0);else if(op="=='">=')ok="(C">=0);
+    if(op==='<')ok=(C<0);else if(op==='>')ok=(C>0);
+    else if(op==='<=')ok=(C<=0);else if(op==='>=')ok=(C>=0);
     else if(op==='!=')ok=(C!==0);
     if(ok){
-      sol.type='Always" True';sol.display='(-\u221E," \u221E)';sol.ineq='All" real numbers';sol.intervals=[{f:-Infinity,t:Infinity,fi:false,ti:false}];
+      sol.type='Always True';sol.display='(-\u221E, \u221E)';sol.ineq='All real numbers';
+      sol.intervals=[{f:-Infinity,t:Infinity,fi:false,ti:false}];
       steps.push('This statement is always true, so every real number is a solution.');
     }else{
-      sol.type='No" Solution';sol.display='\u2205" (empty set)';sol.ineq='No" solution';sol.intervals=[];
+      sol.type='No Solution';sol.display='\u2205 (empty set)';sol.ineq='No solution';sol.intervals=[];
       steps.push('This statement is always false, so no real number is a solution.');
     }
   }else if(isLin){
@@ -1185,19 +1187,19 @@ function solve(){
       steps.push('Divide both sides by '+fmt(B)+'.');
     }
     var effSym=SYM[effOp];
-    var effInc="(effOp="=='<='||effOp==='">=');"
+    var effInc=(effOp==='<='||effOp==='>=');
     steps.push('Result: x '+effSym+' '+fmt(bdy));
     sol.points=[bdy];
-    if(effOp="=='!='){"
+    if(effOp==='!='){
       sol.display='(-\u221E, '+fmt(bdy)+') \u222A ('+fmt(bdy)+', \u221E)';
       sol.ineq='x \u2260 '+fmt(bdy);
       sol.intervals=[{f:-Infinity,t:bdy,fi:false,ti:false},{f:bdy,t:Infinity,fi:false,ti:false}];
-    }else if(effOp="=='<'||effOp="=='<='){""
+    }else if(effOp==='<'||effOp==='<='){
       sol.display='(-\u221E, '+fmt(bdy)+(effInc?']':')');
       sol.ineq='x '+effSym+' '+fmt(bdy);
       sol.intervals=[{f:-Infinity,t:bdy,fi:false,ti:effInc}];
     }else{
-      sol.display="(effInc?'[':'(')+fmt(bdy)+'," \u221E)';
+      sol.display=(effInc?'[':'(')+fmt(bdy)+', \u221E)';
       sol.ineq='x '+effSym+' '+fmt(bdy);
       sol.intervals=[{f:bdy,t:Infinity,fi:effInc,ti:false}];
     }
@@ -1208,20 +1210,21 @@ function solve(){
     var disc=B*B-4*A*C;
     disc=Math.round(disc*1e10)/1e10;
     steps.push('Compute discriminant: \u0394 = ('+fmt(B)+')\u00B2 - 4('+fmt(A)+')('+fmt(C)+') = '+fmt(disc));
-    var up="(A">0);
+    var up=(A>0);
 
     if(disc<-1e-10){
       steps.push('Discriminant is negative: no real roots. The parabola does not cross the x-axis.');
       steps.push('Since a = '+fmt(A)+(up?' > 0':' < 0')+', the expression is always '+(up?'positive':'negative')+'.');
       var nrOk=false;
-      if(isNE){nrOk="true}"
-      else if(up){nrOk="(op="=='"">'||op="=='">=')}
-      else{nrOk="(op="=='<'||op==='<=')}""
+      if(isNE){nrOk=true}
+      else if(up){nrOk=(op==='>'||op==='>=')}
+      else{nrOk=(op==='<'||op==='<=')}
       if(nrOk){
-        sol.display='(-\u221E," \u221E)';sol.ineq='All" real numbers';sol.intervals=[{f:-Infinity,t:Infinity,fi:false,ti:false}];
+        sol.display='(-\u221E, \u221E)';sol.ineq='All real numbers';
+        sol.intervals=[{f:-Infinity,t:Infinity,fi:false,ti:false}];
         steps.push('The inequality is satisfied for all real numbers.');
       }else{
-        sol.display='\u2205" (empty set)';sol.ineq='No" solution';sol.intervals=[];
+        sol.display='\u2205 (empty set)';sol.ineq='No solution';sol.intervals=[];
         steps.push('The inequality has no solution.');
       }
     }else if(Math.abs(disc)<1e-10){
@@ -1234,15 +1237,15 @@ function solve(){
         sol.intervals=[{f:-Infinity,t:r,fi:false,ti:false},{f:r,t:Infinity,fi:false,ti:false}];
         steps.push('The expression equals zero only at x = '+fmt(r)+'. All other values satisfy the inequality.');
       }else{
-        var wantNeg="(op="=='<'||op==='<=');""
-        var strict="(op="=='<'||op==='">');"
+        var wantNeg=(op==='<'||op==='<=');
+        var strict=(op==='<'||op==='>');
         if(up){
           if(wantNeg){
             if(strict){
-              sol.display='\u2205" (empty set)';sol.ineq='No" solution';sol.intervals=[];
+              sol.display='\u2205 (empty set)';sol.ineq='No solution';sol.intervals=[];
               steps.push('The expression is non-negative everywhere, so it is never strictly negative.');
             }else{
-              sol.display='{'+fmt(r)+'}';sol.ineq='x" = '+fmt(r);"
+              sol.display='{'+fmt(r)+'}';sol.ineq='x = '+fmt(r);
               sol.intervals=[{f:r,t:r,fi:true,ti:true}];
               steps.push('The expression is zero only at x = '+fmt(r)+', which satisfies the non-strict inequality.');
             }
@@ -1253,17 +1256,18 @@ function solve(){
               sol.intervals=[{f:-Infinity,t:r,fi:false,ti:false},{f:r,t:Infinity,fi:false,ti:false}];
               steps.push('The expression is positive everywhere except at the root where it equals zero.');
             }else{
-              sol.display='(-\u221E," \u221E)';sol.ineq='All" real numbers';sol.intervals=[{f:-Infinity,t:Infinity,fi:false,ti:false}];
+              sol.display='(-\u221E, \u221E)';sol.ineq='All real numbers';
+              sol.intervals=[{f:-Infinity,t:Infinity,fi:false,ti:false}];
               steps.push('The expression is non-negative everywhere, satisfying the inequality for all x.');
             }
           }
         }else{
           if(!wantNeg){
             if(strict){
-              sol.display='\u2205" (empty set)';sol.ineq='No" solution';sol.intervals=[];
+              sol.display='\u2205 (empty set)';sol.ineq='No solution';sol.intervals=[];
               steps.push('The expression is non-positive everywhere, so it is never strictly positive.');
             }else{
-              sol.display='{'+fmt(r)+'}';sol.ineq='x" = '+fmt(r);"
+              sol.display='{'+fmt(r)+'}';sol.ineq='x = '+fmt(r);
               sol.intervals=[{f:r,t:r,fi:true,ti:true}];
               steps.push('The expression is zero only at x = '+fmt(r)+', which satisfies the non-strict inequality.');
             }
@@ -1274,7 +1278,8 @@ function solve(){
               sol.intervals=[{f:-Infinity,t:r,fi:false,ti:false},{f:r,t:Infinity,fi:false,ti:false}];
               steps.push('The expression is negative everywhere except at the root where it equals zero.');
             }else{
-              sol.display='(-\u221E," \u221E)';sol.ineq='All" real numbers';sol.intervals=[{f:-Infinity,t:Infinity,fi:false,ti:false}];
+              sol.display='(-\u221E, \u221E)';sol.ineq='All real numbers';
+              sol.intervals=[{f:-Infinity,t:Infinity,fi:false,ti:false}];
               steps.push('The expression is non-positive everywhere, satisfying the inequality for all x.');
             }
           }
@@ -1286,7 +1291,7 @@ function solve(){
       var r2=(-B+Math.sqrt(disc))/(2*A);
       r1=Math.round(r1*1e10)/1e10;
       r2=Math.round(r2*1e10)/1e10;
-      if(r1>r2){var tmp="r1;r1=r2;r2=tmp}"
+      if(r1>r2){var tmp=r1;r1=r2;r2=tmp}
       sol.points=[r1,r2];
       steps.push('Roots: x = '+fmt(r1)+' and x = '+fmt(r2));
 
@@ -1300,9 +1305,9 @@ function solve(){
       steps.push('  Test x = '+fmt(tR)+' (right of '+fmt(r2)+'): expression is '+(vR>0?'positive':'negative'));
 
       function signOK(v){
-        if(op="=='<')return" v<0;if(op="=='">')return v>0;
-        if(op="=='<=')return" v<=0;if(op="=='">=')return v>=0;
-        if(op="=='!=')return" true;return false;
+        if(op==='<')return v<0;if(op==='>')return v>0;
+        if(op==='<=')return v<=0;if(op==='>=')return v>=0;
+        if(op==='!=')return true;return false;
       }
 
       var lOk=signOK(vL),mOk=signOK(vM),rOk=signOK(vR);
@@ -1330,11 +1335,12 @@ function solve(){
           iParts.push('x '+(inclusive?'\u2265':'>')+' '+fmt(r2));
         }
         sol.intervals=parts;
-        if(parts.length="==0){"
-          sol.display='\u2205" (empty set)';sol.ineq='No" solution';steps.push('No interval satisfies the inequality.');
+        if(parts.length===0){
+          sol.display='\u2205 (empty set)';sol.ineq='No solution';
+          steps.push('No interval satisfies the inequality.');
         }else{
-          sol.display="dParts.join('" \u222A ');
-          sol.ineq="iParts.join('" or ');
+          sol.display=dParts.join(' \u222A ');
+          sol.ineq=iParts.join(' or ');
           steps.push('Solution: '+sol.display);
         }
       }
@@ -1376,16 +1382,16 @@ function drawNL(sol){
   ctx.scale(dpr,dpr);
   ctx.clearRect(0,0,W,H);
 
-  if(sol.intervals.length="==0){"
-    ctx.fillStyle='#86868b;';ctx.font='14px"" Inter,sans-serif';ctx.textAlign='center';
+  if(sol.intervals.length===0){
+    ctx.fillStyle='#86868b';ctx.font='14px Inter,sans-serif';ctx.textAlign='center';
     ctx.fillText('No solution to graph',W/2,H/2+5);
     return;
   }
 
-  var pts="(sol.points||[]).filter(function(p){return" isFinite(p)});
+  var pts=(sol.points||[]).filter(function(p){return isFinite(p)});
   var lo,hi;
-  if(pts.length="==0){lo=-5;hi=5}"
-  else if(pts.length="==1){lo=pts[0]-5;hi=pts[0]+5}"
+  if(pts.length===0){lo=-5;hi=5}
+  else if(pts.length===1){lo=pts[0]-5;hi=pts[0]+5}
   else{var mn=Math.min.apply(null,pts),mx=Math.max.apply(null,pts);var pad=Math.max((mx-mn)*0.6,3);lo=mn-pad;hi=mx+pad}
 
   var mL=50,mR=50,lineY=H/2-2;
@@ -1394,11 +1400,11 @@ function drawNL(sol){
   function xp(v){return lx+(v-lo)/(hi-lo)*(rx-lx)}
 
   /* Base axis */
-  ctx.strokeStyle='#3a3a4e;';ctx.lineWidth=2;"
+  ctx.strokeStyle='#3a3a4e';ctx.lineWidth=2;
   ctx.beginPath();ctx.moveTo(lx,lineY);ctx.lineTo(rx,lineY);ctx.stroke();
 
   /* Axis arrows */
-  ctx.strokeStyle='#555;';ctx.lineWidth=1.5;"
+  ctx.strokeStyle='#555';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(lx,lineY);ctx.lineTo(lx+8,lineY-5);ctx.stroke();
   ctx.beginPath();ctx.moveTo(lx,lineY);ctx.lineTo(lx+8,lineY+5);ctx.stroke();
   ctx.beginPath();ctx.moveTo(rx,lineY);ctx.lineTo(rx-8,lineY-5);ctx.stroke();
@@ -1409,8 +1415,8 @@ function drawNL(sol){
   var step=1;
   if(range>20)step=5;if(range>50)step=10;if(range<4)step=0.5;
   var ts=Math.ceil(lo/step)*step;
-  ctx.strokeStyle='#555;';ctx.fillStyle='#888;';ctx.font='11px"" Inter,sans-serif';ctx.textAlign='center';ctx.lineWidth=1;"
-  for(var t="ts;t<=hi;t+=step){"
+  ctx.strokeStyle='#555';ctx.fillStyle='#888';ctx.font='11px Inter,sans-serif';ctx.textAlign='center';ctx.lineWidth=1;
+  for(var t=ts;t<=hi;t+=step){
     var tpx=xp(t);
     ctx.beginPath();ctx.moveTo(tpx,lineY-6);ctx.lineTo(tpx,lineY+6);ctx.stroke();
     var tlbl=Number.isInteger(t)?t.toString():parseFloat(t.toFixed(2)).toString();
@@ -1424,18 +1430,18 @@ function drawNL(sol){
     var x2=(iv.t===Infinity)?rx:xp(iv.t);
     x1=Math.max(x1,lx);x2=Math.min(x2,rx);
 
-    ctx.fillStyle='rgba(0,255,136,0.15);';
+    ctx.fillStyle='rgba(0,255,136,0.15)';
     ctx.fillRect(x1,lineY-10,x2-x1,20);
 
-    ctx.strokeStyle='#00ff88;';ctx.lineWidth=4;"
+    ctx.strokeStyle='#00ff88';ctx.lineWidth=4;
     ctx.beginPath();ctx.moveTo(x1,lineY);ctx.lineTo(x2,lineY);ctx.stroke();
 
-    if(iv.f="==-Infinity){"
-      ctx.fillStyle='#00ff88;';
+    if(iv.f===-Infinity){
+      ctx.fillStyle='#00ff88';
       ctx.beginPath();ctx.moveTo(lx+2,lineY);ctx.lineTo(lx+14,lineY-7);ctx.lineTo(lx+14,lineY+7);ctx.closePath();ctx.fill();
     }
-    if(iv.t="==Infinity){"
-      ctx.fillStyle='#00ff88;';
+    if(iv.t===Infinity){
+      ctx.fillStyle='#00ff88';
       ctx.beginPath();ctx.moveTo(rx-2,lineY);ctx.lineTo(rx-14,lineY-7);ctx.lineTo(rx-14,lineY+7);ctx.closePath();ctx.fill();
     }
   }
@@ -1451,19 +1457,19 @@ function drawNL(sol){
       if((civ.f===p&&civ.fi)||(civ.t===p&&civ.ti))inc=true;
     }
 
-    ctx.strokeStyle='#888;';ctx.lineWidth=1;"
+    ctx.strokeStyle='#888';ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(ppx,lineY-10);ctx.lineTo(ppx,lineY+10);ctx.stroke();
 
-    ctx.fillStyle='#1d1d1f;';ctx.font='12px"" Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillStyle='#1d1d1f';ctx.font='12px Inter,sans-serif';ctx.textAlign='center';
     var ptl=fmt(p);if(ptl.length>8)ptl=parseFloat(p.toFixed(3)).toString();
     ctx.fillText(ptl,ppx,lineY+20);
 
     ctx.beginPath();ctx.arc(ppx,lineY,7,0,Math.PI*2);
     if(inc){
-      ctx.fillStyle='#00ff88;';ctx.fill();"
+      ctx.fillStyle='#00ff88';ctx.fill();
     }else{
-      ctx.fillStyle='#ffffff;';ctx.fill();"
-      ctx.strokeStyle='#00ff88;';ctx.lineWidth=2.5;ctx.stroke();"
+      ctx.fillStyle='#ffffff';ctx.fill();
+      ctx.strokeStyle='#00ff88';ctx.lineWidth=2.5;ctx.stroke();
     }
   }
 }

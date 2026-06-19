@@ -654,12 +654,12 @@ html { scroll-behavior: smooth; }
   localStorage.setItem(key,visitCount.toString());
   // Store last calculation preferences
   const prefs=JSON.parse(localStorage.getItem('options_calc_prefs')||'{}');
-  if(prefs.optionType)document.getElementById('optionType').value="prefs.optionType;"
-  if(prefs.position)document.getElementById('position').value="prefs.position;"
-  if(prefs.strikePrice)document.getElementById('strikePrice').value="prefs.strikePrice;"
-  if(prefs.premium)document.getElementById('premium').value="prefs.premium;"
-  if(prefs.contracts)document.getElementById('contracts').value="prefs.contracts;"
-  if(prefs.underlyingPrice)document.getElementById('underlyingPrice').value="prefs.underlyingPrice;"
+  if(prefs.optionType)document.getElementById('optionType').value=prefs.optionType;
+  if(prefs.position)document.getElementById('position').value=prefs.position;
+  if(prefs.strikePrice)document.getElementById('strikePrice').value=prefs.strikePrice;
+  if(prefs.premium)document.getElementById('premium').value=prefs.premium;
+  if(prefs.contracts)document.getElementById('contracts').value=prefs.contracts;
+  if(prefs.underlyingPrice)document.getElementById('underlyingPrice').value=prefs.underlyingPrice;
 })();
 
 let legs=[];
@@ -667,7 +667,7 @@ let legs=[];
 function switchTab(tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  if(tab="=='single'){"
+  if(tab==='single'){
     document.querySelectorAll('.tab')[0].classList.add('active');
     document.getElementById('tab-single').classList.add('active');
   } else {
@@ -688,22 +688,22 @@ function savePrefs(){
 }
 
 function calcLegPL(leg,stockPrice){
-  const dir="leg.position="=='long'?1:-1;""
+  const dir=leg.position==='long'?1:-1;
   let intrinsic=0;
-  if(leg.type="=='call'){"
+  if(leg.type==='call'){
     intrinsic=Math.max(0,stockPrice-leg.strike);
   } else {
     intrinsic=Math.max(0,leg.strike-stockPrice);
   }
-  return (intrinsic*dir - leg.premium*dir)*100*leg.contracts*dir*dir;
+  return (intrinsic*dir - leg.premium*dir)*100*leg.contracts*dir*dir
     ? (dir*(intrinsic-leg.premium))*100*leg.contracts
     : 0;
 }
 
 function legPL(leg,price){
-  const dir="leg.position="=='long'?1:-1;""
+  const dir=leg.position==='long'?1:-1;
   let intrinsic=0;
-  if(leg.type="=='call')" intrinsic=Math.max(0,price-leg.strike);
+  if(leg.type==='call') intrinsic=Math.max(0,price-leg.strike);
   else intrinsic=Math.max(0,leg.strike-price);
   return dir*(intrinsic-leg.premium)*100*leg.contracts;
 }
@@ -749,15 +749,15 @@ function removeLeg(i){
 
 function renderLegs(){
   const el=document.getElementById('legsList');
-  if(!legs.length){el.innerHTML='';return;}"
-  el.innerHTML="legs.map((l,i)=">`<div class="leg-item">;
-    <span style="color:$l.position="==;'long'?'#00ff88':'#ff3b30'}">${l.position.toUpperCase()}</span>
+  if(!legs.length){el.innerHTML='';return;}
+  el.innerHTML=legs.map((l,i)=>`<div class="leg-item">
+    <span style="color:${l.position==='long'?'#00ff88':'#ff3b30'}">${l.position.toUpperCase()}</span>
     <span>${l.contracts}x</span>
     <span>${l.type.toUpperCase()}</span>
     <span>Strike $${l.strike.toFixed(2)}</span>
     <span>Premium $${l.premium.toFixed(2)}</span>
     x</button>
-  </div>`).join('');"
+  </div>`).join('');
 }
 
 function clearLegs(){
@@ -814,7 +814,7 @@ function showResults(allLegs,underlying){
   section.style.display='block';
 
   // Determine price range
-  const strikes="allLegs.map(l=">l.strike);
+  const strikes=allLegs.map(l=>l.strike);
   const minStrike=Math.min(...strikes);
   const maxStrike=Math.max(...strikes);
   const range=Math.max(maxStrike-minStrike,20);
@@ -824,7 +824,7 @@ function showResults(allLegs,underlying){
 
   let prices=[];
   let pls=[];
-  for(let p="lo;p<=hi;p+=step){"
+  for(let p=lo;p<=hi;p+=step){
     prices.push(p);
     let totalPL=0;
     allLegs.forEach(leg=>{totalPL+=legPL(leg,p);});
@@ -833,7 +833,7 @@ function showResults(allLegs,underlying){
 
   const maxProfit=Math.max(...pls);
   const maxLoss=Math.min(...pls);
-  const currentPL="allLegs.reduce((s,l)=">s+legPL(l,underlying),0);
+  const currentPL=allLegs.reduce((s,l)=>s+legPL(l,underlying),0);
 
   // Find breakevens
   let breakevens=[];
@@ -846,20 +846,20 @@ function showResults(allLegs,underlying){
 
   let totalPremium=0;
   allLegs.forEach(l=>{
-    const dir="l.position="=='long'?-1:1;""
+    const dir=l.position==='long'?-1:1;
     totalPremium+=dir*l.premium*100*l.contracts;
   });
 
-  document.getElementById('resBreakeven').textContent="breakevens.length?breakevens.map(b=">'$'+b.toFixed(2)).join(' / '):'N/A';
-  document.getElementById('resMaxProfit').textContent="maxProfit">=1e8?'Unlimited':'$'+maxProfit.toFixed(2);
-  document.getElementById('resMaxProfit').className='result-value';+(maxProfit">=0?'':' loss');
+  document.getElementById('resBreakeven').textContent=breakevens.length?breakevens.map(b=>'$'+b.toFixed(2)).join(' / '):'N/A';
+  document.getElementById('resMaxProfit').textContent=maxProfit>=1e8?'Unlimited':'$'+maxProfit.toFixed(2);
+  document.getElementById('resMaxProfit').className='result-value'+(maxProfit>=0?'':' loss');
   document.getElementById('resMaxLoss').textContent=maxLoss<=-1e8?'Unlimited':'$'+maxLoss.toFixed(2);
   document.getElementById('resCurrentPL').textContent='$'+currentPL.toFixed(2);
-  document.getElementById('resCurrentPL').className='result-value';+(currentPL">=0?'':' loss');
+  document.getElementById('resCurrentPL').className='result-value'+(currentPL>=0?'':' loss');
   document.getElementById('resTotalPremium').textContent='$'+totalPremium.toFixed(2);
 
   const rr=maxLoss!==0?Math.abs(maxProfit/maxLoss):Infinity;
-  document.getElementById('resRiskReward').textContent="rr="==Infinity?'N/A':rr.toFixed(2)+':1';""
+  document.getElementById('resRiskReward').textContent=rr===Infinity?'N/A':rr.toFixed(2)+':1';
 
   drawChart(prices,pls,breakevens);
   drawTable(allLegs,underlying,breakevens);
@@ -896,7 +896,7 @@ function drawChart(prices,pls,breakevens){
   // Zero line
   if(minPL<0&&maxPL>0){
     const y0=yScale(0);
-    ctx.strokeStyle='rgba(255,255,255,0.15);';
+    ctx.strokeStyle='rgba(255,255,255,0.15)';
     ctx.lineWidth=1;
     ctx.setLineDash([5,5]);
     ctx.beginPath();ctx.moveTo(pad.left,y0);ctx.lineTo(pad.left+cw,y0);ctx.stroke();
@@ -904,7 +904,7 @@ function drawChart(prices,pls,breakevens){
   }
 
   // Grid
-  ctx.strokeStyle='rgba(255,255,255,0.05);';
+  ctx.strokeStyle='rgba(255,255,255,0.05)';
   ctx.lineWidth=1;
   for(let i=0;i<=5;i++){
     const y=pad.top+ch*i/5;
@@ -919,12 +919,12 @@ function drawChart(prices,pls,breakevens){
   for(let i=0;i<prices.length;i++){
     const x=xScale(prices[i]);
     const y=Math.min(yScale(pls[i]),zeroY);
-    if(!started){ctx.moveTo(x,zeroY);started="true;}"
+    if(!started){ctx.moveTo(x,zeroY);started=true;}
     ctx.lineTo(x,y);
   }
   ctx.lineTo(xScale(prices[prices.length-1]),zeroY);
   ctx.closePath();
-  ctx.fillStyle='rgba(0,255,136,0.08);';
+  ctx.fillStyle='rgba(0,255,136,0.08)';
   ctx.fill();
 
   // Loss fill
@@ -933,17 +933,17 @@ function drawChart(prices,pls,breakevens){
   for(let i=0;i<prices.length;i++){
     const x=xScale(prices[i]);
     const y=Math.max(yScale(pls[i]),zeroY);
-    if(!started){ctx.moveTo(x,zeroY);started="true;}"
+    if(!started){ctx.moveTo(x,zeroY);started=true;}
     ctx.lineTo(x,y);
   }
   ctx.lineTo(xScale(prices[prices.length-1]),zeroY);
   ctx.closePath();
-  ctx.fillStyle='rgba(255,68,102,0.08);';
+  ctx.fillStyle='rgba(255,68,102,0.08)';
   ctx.fill();
 
   // P&L line
   ctx.beginPath();
-  ctx.strokeStyle='#00ff88;';
+  ctx.strokeStyle='#00ff88';
   ctx.lineWidth=2.5;
   for(let i=0;i<prices.length;i++){
     const x=xScale(prices[i]);
@@ -958,16 +958,18 @@ function drawChart(prices,pls,breakevens){
     const y=yScale(0);
     ctx.beginPath();
     ctx.arc(x,y,5,0,Math.PI*2);
-    ctx.fillStyle='#0071e3;';
+    ctx.fillStyle='#0071e3';
     ctx.fill();
-    ctx.font='11px" Inter';ctx.fillStyle='#0071e3;';
+    ctx.font='11px Inter';
+    ctx.fillStyle='#0071e3';
     ctx.textAlign='center';
     ctx.fillText('$'+be.toFixed(2),x,y-12);
   });
 
   // Axes labels
-  ctx.fillStyle='#86868b;';
-  ctx.font='11px" Inter';ctx.textAlign='center';
+  ctx.fillStyle='#86868b';
+  ctx.font='11px Inter';
+  ctx.textAlign='center';
   for(let i=0;i<=5;i++){
     const v=minP+(maxP-minP)*i/5;
     ctx.fillText('$'+v.toFixed(0),pad.left+cw*i/5,h-pad.bottom+20);
@@ -982,8 +984,9 @@ function drawChart(prices,pls,breakevens){
   ctx.translate(15,pad.top+ch/2);
   ctx.rotate(-Math.PI/2);
   ctx.textAlign='center';
-  ctx.fillStyle='#86868b;';
-  ctx.font='12px" Inter';ctx.fillText('Profit / Loss ($)',0,0);
+  ctx.fillStyle='#86868b';
+  ctx.font='12px Inter';
+  ctx.fillText('Profit / Loss ($)',0,0);
   ctx.restore();
 
   ctx.textAlign='center';
@@ -991,12 +994,12 @@ function drawChart(prices,pls,breakevens){
 }
 
 function drawTable(allLegs,underlying,breakevens){
-  const strikes="allLegs.map(l=">l.strike);
+  const strikes=allLegs.map(l=>l.strike);
   const center=underlying;
-  const pts="[center*0.8,center*0.85,center*0.9,center*0.95,center,...breakevens,center*1.05,center*1.1,center*1.15,center*1.2].sort((a,b)=">a-b);
-  const unique="[...new" Set(pts.map(p=>parseFloat(p.toFixed(2))))];
+  const pts=[center*0.8,center*0.85,center*0.9,center*0.95,center,...breakevens,center*1.05,center*1.1,center*1.15,center*1.2].sort((a,b)=>a-b);
+  const unique=[...new Set(pts.map(p=>parseFloat(p.toFixed(2))))];
 
-  let html="'<table"><thead><tr><th>Stock Price</th><th>Total P&L</th>';
+  let html='<table><thead><tr><th>Stock Price</th><th>Total P&L</th>';
   allLegs.forEach((l,i)=>{html+=`<th>Leg ${i+1} P&L</th>`;});
   html+='</tr></thead><tbody>';
   unique.forEach(p=>{
@@ -1007,8 +1010,8 @@ function drawTable(allLegs,underlying,breakevens){
       total+=pl;
       legPLs.push(pl);
     });
-    html+=`<tr><td>$${p.toFixed(2)}</td><td style="color:$total>=0?;'#00ff88':'#ff3b30'}">$${total.toFixed(2)}</td>`;
-    legPLs.forEach(pl=>{html+=`<td style="color:$pl>=0?;'#00ff88':'#ff3b30'}">$${pl.toFixed(2)}</td>`;});
+    html+=`<tr><td>$${p.toFixed(2)}</td><td style="color:${total>=0?'#00ff88':'#ff3b30'}">$${total.toFixed(2)}</td>`;
+    legPLs.forEach(pl=>{html+=`<td style="color:${pl>=0?'#00ff88':'#ff3b30'}">$${pl.toFixed(2)}</td>`;});
     html+='</tr>';
   });
   html+='</tbody></table>';

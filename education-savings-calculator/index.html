@@ -1078,17 +1078,18 @@ document.getElementById('projectedSavings').textContent=fmt(Math.round(projected
 const gapEl=document.getElementById('fundingGap');
 if(gap>0){
 gapEl.textContent='-'+fmt(Math.round(gap));
-gapEl.className='big" shortfall';}else{
+gapEl.className='big shortfall';
+}else{
 gapEl.textContent='+'+fmt(Math.round(Math.abs(gap)));
 gapEl.className='big';
 }
 
-document.getElementById('requiredMonthly').textContent="gap">0?fmt(Math.round(requiredMonthly))+'/mo':'$0 (Fully Funded)';
+document.getElementById('requiredMonthly').textContent=gap>0?fmt(Math.round(requiredMonthly))+'/mo':'$0 (Fully Funded)';
 
 // Growth chart
-const labels="yearlyData.map(d=">d.age);
-const data="yearlyData.map(d=">Math.round(d.balance));
-const costLine="yearlyData.map(d=">{
+const labels=yearlyData.map(d=>d.age);
+const data=yearlyData.map(d=>Math.round(d.balance));
+const costLine=yearlyData.map(d=>{
 const yrsLeft=enrollAge-d.age;
 let tc=0;for(let y=0;y<yearsOfSchool;y++)tc+=school.annual*Math.pow(1+edInflation,yrsLeft+y);
 return Math.round(tc);
@@ -1102,12 +1103,12 @@ data:{labels:labels,datasets:[
 ]},
 options:{plugins:{title:{display:true,text:'Savings Growth vs Projected Cost'}},scales:{y:{ticks:{callback:function(v){return '$'+(v/1e3).toFixed(0)+'K'}}}}}
 }));
-document.getElementById('growthChart').innerHTML='<img src="https://quickchart.io/chart?c='+chartCfg+'&w=800&h=400&bkg=%2312121a alt="Education" savings growth projection chart" loading="lazy">';
+document.getElementById('growthChart').innerHTML='<img src="https://quickchart.io/chart?c='+chartCfg+'&w=800&h=400&bkg=%2312121a" alt="Education savings growth projection chart" loading="lazy">';
 
 // Comparison table and chart
 const compTbody=document.getElementById('compTable').querySelector('tbody');
 compTbody.innerHTML='';
-const compLabels="[];const" compData="[];const" compMonthly=[];
+const compLabels=[];const compData=[];const compMonthly=[];
 const compColors=['#00ff88','#0071e3','#ffc107','#ff3b30'];
 let ci=0;
 for(const[key,sc] of Object.entries(SCHOOL_COSTS)){
@@ -1136,7 +1137,7 @@ type:'bar',
 data:{labels:compLabels,datasets:[{label:'Total Projected Cost',data:compData,backgroundColor:compColors}]},
 options:{plugins:{title:{display:true,text:'Total Cost Comparison by School Type'}},scales:{y:{ticks:{callback:function(v){return '$'+(v/1e3).toFixed(0)+'K'}}}}}
 }));
-document.getElementById('compChart').innerHTML='<img src="https://quickchart.io/chart?c='+compCfg+'&w=800&h=400&bkg=%2312121a alt="College" cost comparison bar chart" loading="lazy">';
+document.getElementById('compChart').innerHTML='<img src="https://quickchart.io/chart?c='+compCfg+'&w=800&h=400&bkg=%2312121a" alt="College cost comparison bar chart" loading="lazy">';
 
 // Year by year table
 const yearTbody=document.getElementById('yearTable').querySelector('tbody');
@@ -1165,6 +1166,7 @@ html+='<p>Projected savings: '+fmt(Math.round(b))+(diff>0?' · Gap: <span style=
 scenarios.innerHTML=html;
 
 document.getElementById('resultsArea').scrollIntoView({behavior:'smooth'});
+}
 </script>
 <div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div>
 <section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">

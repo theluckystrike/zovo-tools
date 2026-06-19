@@ -665,30 +665,30 @@ const federalTaxableGross=gross-preTax;
 
 // Federal standard deduction
 let fedStdDed=14600;
-if(status="=='married')" fedStdDed=29200;
-else if(status="=='hoh')" fedStdDed=21900;
+if(status==='married') fedStdDed=29200;
+else if(status==='hoh') fedStdDed=21900;
 
 const fedTaxableIncome=Math.max(0,federalTaxableGross-fedStdDed);
 
 // Federal tax brackets 2024
 let fedTax=0;
-if(status="=='married'){"
+if(status==='married'){
 const brackets=[[23200,0.10],[94300,0.12],[201050,0.22],[383900,0.24],[487450,0.32],[731200,0.35],[Infinity,0.37]];
 let prev=0;
-for(const [limit,rate] of brackets){if(fedTaxableIncome<=prev) break;fedTax+=(Math.min(fedTaxableIncome,limit)-prev)*rate;prev="limit;}"
-} else if(status="=='hoh'){"
+for(const [limit,rate] of brackets){if(fedTaxableIncome<=prev) break;fedTax+=(Math.min(fedTaxableIncome,limit)-prev)*rate;prev=limit;}
+} else if(status==='hoh'){
 const brackets=[[16550,0.10],[63100,0.12],[100500,0.22],[191950,0.24],[243725,0.32],[609350,0.35],[Infinity,0.37]];
 let prev=0;
-for(const [limit,rate] of brackets){if(fedTaxableIncome<=prev) break;fedTax+=(Math.min(fedTaxableIncome,limit)-prev)*rate;prev="limit;}"
+for(const [limit,rate] of brackets){if(fedTaxableIncome<=prev) break;fedTax+=(Math.min(fedTaxableIncome,limit)-prev)*rate;prev=limit;}
 } else {
 const brackets=[[11600,0.10],[47150,0.12],[100525,0.22],[191950,0.24],[243725,0.32],[609350,0.35],[Infinity,0.37]];
 let prev=0;
-for(const [limit,rate] of brackets){if(fedTaxableIncome<=prev) break;fedTax+=(Math.min(fedTaxableIncome,limit)-prev)*rate;prev="limit;}"
+for(const [limit,rate] of brackets){if(fedTaxableIncome<=prev) break;fedTax+=(Math.min(fedTaxableIncome,limit)-prev)*rate;prev=limit;}
 }
 
 // MI state tax - flat 4.05% with personal exemptions
 let exemptions=1;
-if(status="=='married')" exemptions=2;
+if(status==='married') exemptions=2;
 exemptions+=deps;
 const miExemptionTotal=exemptions*5400;
 const miTaxableIncome=Math.max(0,federalTaxableGross-miExemptionTotal);
@@ -702,7 +702,7 @@ const ssWages=Math.min(gross,168600);
 const ssTax=ssWages*0.062;
 const medicareTax=gross*0.0145;
 let addlMedicare=0;
-const medicareThreshold="status="=='married'?250000:200000;""
+const medicareThreshold=status==='married'?250000:200000;
 if(gross>medicareThreshold) addlMedicare=(gross-medicareThreshold)*0.009;
 const totalMedicare=medicareTax+addlMedicare;
 const totalFICA=ssTax+totalMedicare;
@@ -711,7 +711,7 @@ const totalTax=fedTax+miTax+cityTax+totalFICA;
 const annualNet=gross-preTax-totalTax;
 const perCheck=annualNet/freq;
 const monthlyNet=annualNet/12;
-const effectiveRate="gross">0?(totalTax/gross*100):0;
+const effectiveRate=gross>0?(totalTax/gross*100):0;
 
 document.getElementById('annualNet').textContent='$'+Math.round(annualNet).toLocaleString();
 document.getElementById('perPaycheck').textContent='$'+Math.round(perCheck).toLocaleString();
@@ -721,7 +721,7 @@ document.getElementById('effectiveRate').textContent=effectiveRate.toFixed(1)+'%
 const freqLabels={52:'Weekly',26:'Biweekly',24:'Semi-Monthly',12:'Monthly',1:'Annual'};
 document.getElementById('paycheckFreq').textContent=freqLabels[freq]||'';
 
-const cityLabel="cityRate="==2.4?'Detroit"" City Tax (2.4%)':cityRate="==1.2?'Detroit" Non-Res (1.2%)':cityRate="==1.5?'City" Tax (1.5%)':'City Tax ('+cityRate+'%)';
+const cityLabel=cityRate===2.4?'Detroit City Tax (2.4%)':cityRate===1.2?'Detroit Non-Res (1.2%)':cityRate===1.5?'City Tax (1.5%)':'City Tax ('+cityRate+'%)';
 
 const rows=[
 ['Gross Salary',gross,gross/freq,'100.0'],
@@ -736,9 +736,9 @@ const rows=[
 
 let html='';
 rows.forEach((r,i)=>{
-const bold="i="==0||i===rows.length-1?'font-weight:700;':'';""
-const color="i="==rows.length-1?'color:#0071e3;':'';""
-html+=`<tr style="$bold$color;"><td>${r[0]}</td><td>$${Math.round(Math.abs(r[1])).toLocaleString()}</td><td>$${Math.round(Math.abs(r[2])).toLocaleString()}</td><td>${r[3]}%</td></tr>`;
+const bold=i===0||i===rows.length-1?'font-weight:700;':'';
+const color=i===rows.length-1?'color:#0071e3;':'';
+html+=`<tr style="${bold}${color}"><td>${r[0]}</td><td>$${Math.round(Math.abs(r[1])).toLocaleString()}</td><td>$${Math.round(Math.abs(r[2])).toLocaleString()}</td><td>${r[3]}%</td></tr>`;
 });
 document.getElementById('breakdownBody').innerHTML=html;
 
@@ -751,13 +751,13 @@ const items=[
 {label:'Take-Home',value:annualNet,color:'#00ff88'}
 ];
 if(preTax>0) items.unshift({label:'Deductions',value:preTax,color:'#b197fc'});
-if(cityTax="==0)" items.splice(items.findIndex(i=>i.label="=='City" Tax'),1);
+if(cityTax===0) items.splice(items.findIndex(i=>i.label==='City Tax'),1);
 
 const maxVal=Math.max(...items.map(i=>i.value));
 let barHtml='';
 items.forEach(item=>{
-const width="maxVal">0?Math.max(2,(item.value/maxVal)*100):0;
-barHtml+=`<div class="bar-row"><span class="bar-label">${item.label}</span><div class="bar-fill" style="width:$width%;background:$item.color;">$${Math.round(item.value).toLocaleString()}</div></div>`;
+const width=maxVal>0?Math.max(2,(item.value/maxVal)*100):0;
+barHtml+=`<div class="bar-row"><span class="bar-label">${item.label}</span><div class="bar-fill" style="width:${width}%;background:${item.color}">$${Math.round(item.value).toLocaleString()}</div></div>`;
 });
 document.getElementById('barChart').innerHTML=barHtml;
 

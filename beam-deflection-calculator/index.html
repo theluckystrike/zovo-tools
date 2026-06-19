@@ -1106,42 +1106,42 @@ Privacy - All calculations run entirely in your browser. No data is sent to any 
 'use strict';
 
 function gv(id){return parseFloat(document.getElementById(id).value)}
-function fmt(n,d){d="d||2;if(Math.abs(n)">=1e7||Math.abs(n)<0.001&&n!==0)return n.toExponential(3);return parseFloat(n.toFixed(d)).toLocaleString('en-US',{maximumFractionDigits:d})}
-function row(l,v,a){return '<div class="result-row"><span class="result-label">'+l+'</span><span class="result-value'+(a?'" accent':'')+'">'+ v+'</span></div>'}
+function fmt(n,d){d=d||2;if(Math.abs(n)>=1e7||Math.abs(n)<0.001&&n!==0)return n.toExponential(3);return parseFloat(n.toFixed(d)).toLocaleString('en-US',{maximumFractionDigits:d})}
+function row(l,v,a){return '<div class="result-row"><span class="result-label">'+l+'</span><span class="result-value'+(a?' accent':'')+'">'+ v+'</span></div>'}
 
 window.toggleLoadInputs=function(){
   var lt=document.getElementById('loadType').value;
-  document.getElementById('pointLoadGroup').style.display="(lt="=='uniform')?'none':'flex';""
-  document.getElementById('distLoadGroup').style.display="(lt="=='uniform')?'flex':'none';""
-  document.getElementById('loadPosGroup').style.display="(lt="=='point_any')?'flex':'none';""
+  document.getElementById('pointLoadGroup').style.display=(lt==='uniform')?'none':'flex';
+  document.getElementById('distLoadGroup').style.display=(lt==='uniform')?'flex':'none';
+  document.getElementById('loadPosGroup').style.display=(lt==='point_any')?'flex':'none';
 };
 
 window.toggleSection=function(){
   var s=document.getElementById('sectionType').value;
-  document.getElementById('rectInputs').style.display="(s="=='rectangular')?'block':'none';""
-  document.getElementById('ibeamInputs').style.display="(s="=='ibeam')?'block':'none';""
-  document.getElementById('circInputs').style.display="(s="=='circular')?'block':'none';""
-  document.getElementById('pipeInputs').style.display="(s="=='pipe')?'block':'none';""
-  document.getElementById('customInputs').style.display="(s="=='custom')?'block':'none';""
+  document.getElementById('rectInputs').style.display=(s==='rectangular')?'block':'none';
+  document.getElementById('ibeamInputs').style.display=(s==='ibeam')?'block':'none';
+  document.getElementById('circInputs').style.display=(s==='circular')?'block':'none';
+  document.getElementById('pipeInputs').style.display=(s==='pipe')?'block':'none';
+  document.getElementById('customInputs').style.display=(s==='custom')?'block':'none';
 };
 
 function getSection(){
   var s=document.getElementById('sectionType').value;
   var I,c;
-  if(s="=='rectangular'){"
-    var b="gv('rectB'),h="gv('rectH');""
+  if(s==='rectangular'){
+    var b=gv('rectB'),h=gv('rectH');
     I=b*Math.pow(h,3)/12;c=h/2;
-  }else if(s="=='ibeam'){"
-    var H="gv('ibH'),bf="gv('ibBf'),tf=gv('ibTf'),tw=gv('ibTw');""
+  }else if(s==='ibeam'){
+    var H=gv('ibH'),bf=gv('ibBf'),tf=gv('ibTf'),tw=gv('ibTw');
     I=(bf*Math.pow(H,3)-(bf-tw)*Math.pow(H-2*tf,3))/12;c=H/2;
-  }else if(s="=='circular'){"
-    var d="gv('circD');"
+  }else if(s==='circular'){
+    var d=gv('circD');
     I=Math.PI*Math.pow(d,4)/64;c=d/2;
-  }else if(s="=='pipe'){"
-    var od="gv('pipeOD'),id="gv('pipeID');""
+  }else if(s==='pipe'){
+    var od=gv('pipeOD'),id=gv('pipeID');
     I=Math.PI*(Math.pow(od,4)-Math.pow(id,4))/64;c=od/2;
   }else{
-    I=gv('customI');c=gv('customC');""
+    I=gv('customI');c=gv('customC');
   }
   return{I:I,c:c};
 }
@@ -1158,15 +1158,15 @@ window.calcBeam=function(){
   var Mmax=0,Vmax=0,dmax=0,Ra=0,Rb=0,Ma=0,Mb=0;
   var momentFn,shearFn;
 
-  if(sup="=='simply'){"
-    if(lt="=='point_center'){"
+  if(sup==='simply'){
+    if(lt==='point_center'){
       var P=gv('pointLoad');
       Ra=P/2;Rb=P/2;Mmax=P*L/4;Vmax=P/2;
       dmax=P*L*L*L/(48*EI);
       momentFn=function(x){return x<=L/2?Ra*x:Ra*x-P*(x-L/2)};
       shearFn=function(x){return x<L/2?Ra:Ra-P};
-    }else if(lt="=='point_any'){"
-      var P="gv('pointLoad'),a="gv('loadPos'),b=L-a;""
+    }else if(lt==='point_any'){
+      var P=gv('pointLoad'),a=gv('loadPos'),b=L-a;
       Ra=P*b/L;Rb=P*a/L;Mmax=P*a*b/L;Vmax=Math.max(Ra,Rb);
       dmax=P*a*a*b*b/(3*EI*L);
       momentFn=function(x){return x<=a?Ra*x:Ra*x-P*(x-a)};
@@ -1178,10 +1178,10 @@ window.calcBeam=function(){
       momentFn=function(x){return Ra*x-w*x*x/2};
       shearFn=function(x){return Ra-w*x};
     }
-  }else if(sup="=='cantilever'){"
-    if(lt="=='point_center'||lt="=='point_any'){""
+  }else if(sup==='cantilever'){
+    if(lt==='point_center'||lt==='point_any'){
       var P=gv('pointLoad');
-      var a="(lt="=='point_any')?gv('loadPos'):L;""
+      var a=(lt==='point_any')?gv('loadPos'):L;
       Ra=P;Ma=-P*a;Mmax=Math.abs(Ma);Vmax=P;
       dmax=P*a*a*(3*L-a)/(6*EI);
       momentFn=function(x){return x<=a?-P*a+P*x:-P*a+P*x;};
@@ -1201,27 +1201,27 @@ window.calcBeam=function(){
       shearFn=function(x){return w*(L-x)};
     }
   }else{ // fixed-fixed
-    if(lt="=='point_center'){"
+    if(lt==='point_center'){
       var P=gv('pointLoad');
       Ra=P/2;Rb=P/2;Ma=-P*L/8;Mb=-P*L/8;
-      Mmax=P*L/8; // both end moment and midspan moment equal magnitude;
+      Mmax=P*L/8; // both end moment and midspan moment equal magnitude
       Vmax=P/2;
       dmax=P*L*L*L/(192*EI);
       momentFn=function(x){return -P*L/8+P/2*x-(x>L/2?P*(x-L/2):0)};
       shearFn=function(x){return x<L/2?P/2:P/2-P};
-    }else if(lt="=='point_any'){"
-      var P="gv('pointLoad'),a="gv('loadPos'),b=L-a;""
+    }else if(lt==='point_any'){
+      var P=gv('pointLoad'),a=gv('loadPos'),b=L-a;
       Ra=P*b*b*(3*a+b)/(L*L*L);Rb=P*a*a*(a+3*b)/(L*L*L);
       Ma=-P*a*b*b/(L*L);Mb=-P*a*a*b/(L*L);
       Mmax=Math.max(Math.abs(Ma),Math.abs(Mb),Math.abs(Ma+Ra*a));
       Vmax=Math.max(Ra,Rb);
-      dmax=2*P*a*a*a*b*b*b/(3*EI*Math.pow(L,3)); // approximate;
+      dmax=2*P*a*a*a*b*b*b/(3*EI*Math.pow(L,3)); // approximate
       momentFn=function(x){return x<=a?Ma+Ra*x:Ma+Ra*x-P*(x-a)};
       shearFn=function(x){return x<a?Ra:Ra-P};
     }else{
       var w=gv('distLoad');
       Ra=w*L/2;Rb=w*L/2;Ma=-w*L*L/12;Mb=-w*L*L/12;
-      Mmax=w*L*L/24; // midspan positive moment; end moments are w*L^2/12;
+      Mmax=w*L*L/24; // midspan positive moment; end moments are w*L^2/12
       Vmax=w*L/2;
       dmax=w*Math.pow(L,4)/(384*EI);
       momentFn=function(x){return -w*L*L/12+w*L*x/2-w*x*x/2};
@@ -1245,7 +1245,7 @@ window.calcBeam=function(){
   html+=row('Moment of Inertia (I)',fmt(I,1)+' mm\u2074');
   html+=row('Maximum Shear Force',fmt(Vmax)+' N ('+fmt(Vmax/1e3,2)+' kN)');
   html+=row('Reaction at Left (R_A)',fmt(Ra)+' N');
-  if(sup="=='simply'||sup="=='fixed')html+=row('Reaction" at Right (R_B)',fmt(Rb)+'" N');
+  if(sup==='simply'||sup==='fixed')html+=row('Reaction at Right (R_B)',fmt(Rb)+' N');
   if(Ma!==0)html+=row('Fixed-End Moment Left',fmt(Ma)+' N\u00B7mm');
   if(Mb!==0)html+=row('Fixed-End Moment Right',fmt(Mb)+' N\u00B7mm');
 
@@ -1268,7 +1268,7 @@ function drawDiagram(canvasId,title,fn,L,h){
   var dpr=window.devicePixelRatio||1;
   var cw=840,ch=h;
   canvas.width=cw*dpr;canvas.height=ch*dpr;
-  canvas.style.width=cw+'px';canvas.style.height=ch+'px';""
+  canvas.style.width=cw+'px';canvas.style.height=ch+'px';
   var ctx=canvas.getContext('2d');
   ctx.scale(dpr,dpr);
   ctx.clearRect(0,0,cw,ch);
@@ -1284,36 +1284,36 @@ function drawDiagram(canvasId,title,fn,L,h){
     var v=fn(x);vals.push(v);
     if(v<vmin)vmin=v;if(v>vmax)vmax=v;
   }
-  if(vmin="==vmax){vmin-=1;vmax+=1;}"
+  if(vmin===vmax){vmin-=1;vmax+=1;}
   var range=vmax-vmin;
   vmin-=range*0.1;vmax+=range*0.1;range=vmax-vmin;
 
   // Background
-  ctx.fillStyle='#ffffff;';ctx.fillRect(0,0,cw,ch);"
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,cw,ch);
 
   // Title
-  ctx.fillStyle='#6e6e73;';ctx.font='12px"" system-ui';ctx.textAlign='center';
+  ctx.fillStyle='#6e6e73';ctx.font='12px system-ui';ctx.textAlign='center';
   ctx.fillText(title,cw/2,20);
 
   // Grid
-  ctx.strokeStyle='#f5f5f7;';ctx.lineWidth=0.5;"
+  ctx.strokeStyle='#f5f5f7';ctx.lineWidth=0.5;
   var zeroY=pad.t+ph*(vmax/(range));
   // zero line
-  ctx.strokeStyle='#333;';ctx.lineWidth=1;"
+  ctx.strokeStyle='#333';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(pad.l,zeroY);ctx.lineTo(pad.l+pw,zeroY);ctx.stroke();
 
   // Axes
-  ctx.strokeStyle='#555;';ctx.lineWidth=1;"
+  ctx.strokeStyle='#555';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+ph);ctx.stroke();
   ctx.beginPath();ctx.moveTo(pad.l,pad.t+ph);ctx.lineTo(pad.l+pw,pad.t+ph);ctx.stroke();
 
   // Y-axis labels
-  ctx.fillStyle='#888;';ctx.font='10px"" system-ui';ctx.textAlign='right';
+  ctx.fillStyle='#888';ctx.font='10px system-ui';ctx.textAlign='right';
   for(var j=0;j<=4;j++){
     var yv=vmax-range*j/4;
     var yp=pad.t+ph*j/4;
     ctx.fillText(yv>=1e6||yv<=-1e6?(yv/1e6).toFixed(1)+'M':Math.round(yv),pad.l-8,yp+3);
-    ctx.strokeStyle='#1a1a24;';ctx.lineWidth=0.5;"
+    ctx.strokeStyle='#1a1a24';ctx.lineWidth=0.5;
     ctx.beginPath();ctx.moveTo(pad.l,yp);ctx.lineTo(pad.l+pw,yp);ctx.stroke();
   }
 
@@ -1334,7 +1334,7 @@ function drawDiagram(canvasId,title,fn,L,h){
     ctx.lineTo(xp,yp);
   }
   ctx.lineTo(pad.l+pw,zeroY);ctx.closePath();
-  ctx.fillStyle='rgba(0,255,136,0.12);';ctx.fill();"
+  ctx.fillStyle='rgba(0,255,136,0.12)';ctx.fill();
 
   // Line
   ctx.beginPath();
@@ -1343,15 +1343,15 @@ function drawDiagram(canvasId,title,fn,L,h){
     var yp=pad.t+ph*((vmax-vals[i])/range);
     if(i===0)ctx.moveTo(xp,yp);else ctx.lineTo(xp,yp);
   }
-  ctx.strokeStyle='#00ff88;';ctx.lineWidth=2;ctx.stroke();"
+  ctx.strokeStyle='#00ff88';ctx.lineWidth=2;ctx.stroke();
 
   // Max annotation
   var maxV=vals[0],maxI=0;
-  for(var i=1;i<=n;i++){if(Math.abs(vals[i])>Math.abs(maxV)){maxV="vals[i];maxI=i;}}"
+  for(var i=1;i<=n;i++){if(Math.abs(vals[i])>Math.abs(maxV)){maxV=vals[i];maxI=i;}}
   var mxp=pad.l+pw*maxI/n;
   var myp=pad.t+ph*((vmax-maxV)/range);
-  ctx.fillStyle='#00ff88;';ctx.beginPath();ctx.arc(mxp,myp,4,0,Math.PI*2);ctx.fill();"
-  ctx.fillStyle='#fff;';ctx.font='bold"" 11px system-ui';ctx.textAlign='center';
+  ctx.fillStyle='#00ff88';ctx.beginPath();ctx.arc(mxp,myp,4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='bold 11px system-ui';ctx.textAlign='center';
   var lbl=Math.abs(maxV)>=1e6?(maxV/1e6).toFixed(2)+'M':Math.round(maxV);
   ctx.fillText(lbl,mxp,myp-10);
 }
