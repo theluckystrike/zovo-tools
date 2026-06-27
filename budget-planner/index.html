@@ -992,32 +992,32 @@ html { scroll-behavior: smooth; }
 </main>
 <footer>Built by Michael Lip &middot; <a class="interactive-element" href="https://zovo.one">zovo.one</a></footer>
 <script>
-var CATS={Housing:'#00ff88',Food:'#0071e3',Transport:'#ffa502',Utilities:'#ff3b30',Insurance:'#0071e3',Healthcare:'#e84393',Entertainment:'#fdcb6e',Shopping:'#74b9ff',Education:'#0071e3',Debt:'#fab1a0',Other:'#636e72'};
+var CATS={Housing:'#00ff88',Food:'#00ccff',Transport:'#ffa502',Utilities:'#ff6b6b',Insurance:'#6C5CE7',Healthcare:'#e84393',Entertainment:'#fdcb6e',Shopping:'#74b9ff',Education:'#a29bfe',Debt:'#fab1a0',Other:'#636e72'};
 var NEEDS=['Housing','Food','Transport','Utilities','Insurance','Healthcare','Debt'];
 var selectOpts='<option value="Housing">Housing</option><option value="Food">Food</option><option value="Transport">Transport</option><option value="Utilities">Utilities</option><option value="Insurance">Insurance</option><option value="Healthcare">Healthcare</option><option value="Entertainment">Entertainment</option><option value="Shopping">Shopping</option><option value="Education">Education</option><option value="Debt">Debt Payments</option><option value="Other">Other</option>';
 
 function fmt(n){return(n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
 function rmRow(btn){var list=btn.parentElement.parentElement;if(list.querySelectorAll('.item-row').length>1)btn.parentElement.remove();}
-function addIncome(){var list=document.getElementById('incomeList');var d=document.createElement('div');d.className='item-row';d.innerHTML='<input"" type="text" placeholder="Source" class="consciousness-input"><input type="number" value="0" min="0" placeholder="$0" class="consciousness-input"><button class="btn-rm btn" onclick="rmRow(this)" class="consciousness-button">X</button>';list.appendChild(d);}
-function addExpense(){var list=document.getElementById('expenseList');var d=document.createElement('div');d.className='item-row';d.innerHTML='<input"" type="text" placeholder="Expense" class="consciousness-input"><select>'+selectOpts+'</select><input type="number" value="0" min="0" placeholder="$0" class="consciousness-input"><button class="btn-rm btn" onclick="rmRow(this)" class="consciousness-button">X</button>';list.appendChild(d);}
+function addIncome(){var list=document.getElementById('incomeList');var d=document.createElement('div');d.className='item-row';d.innerHTML='<input type="text" placeholder="Source"/><input type="number" value="0" min="0" placeholder="$0"/><button class="btn-rm" onclick="rmRow(this)">X</button>';list.appendChild(d);}
+function addExpense(){var list=document.getElementById('expenseList');var d=document.createElement('div');d.className='item-row';d.innerHTML='<input type="text" placeholder="Expense"/><select>'+selectOpts+'</select><input type="number" value="0" min="0" placeholder="$0"/><button class="btn-rm" onclick="rmRow(this)">X</button>';list.appendChild(d);}
 
 function calculate(){
   var incRows=document.getElementById('incomeList').querySelectorAll('.item-row');
   var totalInc=0;
-  incRows.forEach(function(r){totalInc+=parseFloat(r.querySelector('input[type="number"]').value)||0;});"
+  incRows.forEach(function(r){totalInc+=parseFloat(r.querySelector('input[type="number"]').value)||0;});
 
   var expRows=document.getElementById('expenseList').querySelectorAll('.item-row');
-  var totalExp="0;var" catTotals={};
+  var totalExp=0;var catTotals={};
   expRows.forEach(function(r){
     var cat=r.querySelector('select').value;
-    var amt=parseFloat(r.querySelector('input[type=number"]').value)||0;"
+    var amt=parseFloat(r.querySelector('input[type="number"]').value)||0;
     totalExp+=amt;
     catTotals[cat]=(catTotals[cat]||0)+amt;
   });
 
   var savingsGoal=parseFloat(document.getElementById('savingsGoal').value)||0;
   var remaining=totalInc-totalExp;
-  var savPct="savingsGoal">0?Math.min(100,(remaining/savingsGoal)*100):0;
+  var savPct=savingsGoal>0?Math.min(100,(remaining/savingsGoal)*100):0;
 
   document.getElementById('totalIncome').textContent=fmt(totalInc);
   document.getElementById('totalExpenses').textContent=fmt(totalExp);
@@ -1038,12 +1038,12 @@ function calculate(){
       var angle=(catTotals[c]/totalExp)*Math.PI*2;
       if(angle>0.01){
         ctx.beginPath();ctx.arc(cx,cy,r-lw/2,start,start+angle);
-        ctx.strokeStyle="CATS[c]||'#636e72';ctx.lineWidth="lw;ctx.lineCap='butt';ctx.stroke();""
+        ctx.strokeStyle=CATS[c]||'#636e72';ctx.lineWidth=lw;ctx.lineCap='butt';ctx.stroke();
         start+=angle;
       }
     });
   }else{
-    ctx.beginPath();ctx.arc(cx,cy,r-lw/2,0,Math.PI*2);ctx.strokeStyle='#e5e5ea;';ctx.lineWidth=lw;ctx.stroke();"
+    ctx.beginPath();ctx.arc(cx,cy,r-lw/2,0,Math.PI*2);ctx.strokeStyle='#2a2a3e';ctx.lineWidth=lw;ctx.stroke();
   }
 
   var legHtml='';
@@ -1073,8 +1073,8 @@ function calculate(){
     var needsPct=(needsTotal/totalInc*100).toFixed(0);
     var wantsPct=(wantsTotal/totalInc*100).toFixed(0);
     var savPctActual=(savingsActual/totalInc*100).toFixed(0);
-    document.getElementById('ruleBarActual').innerHTML='<div style="width:'+needsPct+'%;background:#0071e3;">'+needsPct+'%</div><div style="width:'+wantsPct+'%;background:#0071e3;">'+wantsPct+'%</div><div style="width:'+savPctActual+'%;background:#ffa502;">'+savPctActual+'%</div>';
-    document.getElementById('ruleLegendActual').innerHTML='<div><span style="background:#0071e3;"></span>Needs: '+needsPct+'% ('+fmt(needsTotal)+')</div><div><span style="background:#0071e3;"></span>Wants: '+wantsPct+'% ('+fmt(wantsTotal)+')</div><div><span style="background:#ffa502;"></span>Savings: '+savPctActual+'% ('+fmt(savingsActual)+')</div>';
+    document.getElementById('ruleBarActual').innerHTML='<div style="width:'+needsPct+'%;background:#00ff88;">'+needsPct+'%</div><div style="width:'+wantsPct+'%;background:#00ccff;">'+wantsPct+'%</div><div style="width:'+savPctActual+'%;background:#ffa502;">'+savPctActual+'%</div>';
+    document.getElementById('ruleLegendActual').innerHTML='<div><span style="background:#00ff88;"></span>Needs: '+needsPct+'% ('+fmt(needsTotal)+')</div><div><span style="background:#00ccff;"></span>Wants: '+wantsPct+'% ('+fmt(wantsTotal)+')</div><div><span style="background:#ffa502;"></span>Savings: '+savPctActual+'% ('+fmt(savingsActual)+')</div>';
   }
 
   document.getElementById('results').classList.add('visible');

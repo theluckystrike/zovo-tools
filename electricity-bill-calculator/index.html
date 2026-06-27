@@ -678,23 +678,23 @@ function fmt(n){return'$'+n.toFixed(2)}
 
 function addPreset(name,watts,hours){
   appliances.push({id:nextId++,name:name,watts:watts,hours:hours,qty:1});
-  renderAppliances();
+  renderAppliances()
 }
 
 function addBlankAppliance(){
   appliances.push({id:nextId++,name:'',watts:0,hours:0,qty:1});
-  renderAppliances();
+  renderAppliances()
 }
 
 function removeAppliance(id){
-  appliances="appliances.filter(function(a){return" a.id!==id});
-  renderAppliances();
+  appliances=appliances.filter(function(a){return a.id!==id});
+  renderAppliances()
 }
 
 function clearAll(){
   appliances=[];
   renderAppliances();
-  document.getElementById('billResults').style.display='none';
+  document.getElementById('billResults').style.display='none'
 }
 
 function renderAppliances(){
@@ -703,18 +703,18 @@ function renderAppliances(){
   appliances.forEach(function(a){
     var row=document.createElement('div');
     row.className='appliance-item';
-    row.innerHTML='<input type="text" value='+a.name+' content"Appliance name" onchange="updateAppliance('+a.id+',\'name\',this.value)"/>'+'<input type="number" value='+(a.watts||'')+' content"Watts" min="0" onchange="updateAppliance('+a.id+',\'watts\',parseFloat(this.value)||0)"/>'+'<input type="number" value='+(a.hours||'')+' content"Hrs/day" min="0" step="0.25" onchange="updateAppliance('+a.id+',\'hours\',parseFloat(this.value)||0)"/>'+'<input type="number" value='+(a.qty||1)+' content"Qty" min="1" onchange="updateAppliance('+a.id+',\'qty\',parseInt(this.value)||1)"/>'+'X</button>';
-    list.appendChild(row);
+    row.innerHTML='<input type="text" value="'+a.name+'" content"Appliance name" onchange="updateAppliance('+a.id+',\'name\',this.value)"/>'+'<input type="number" value="'+(a.watts||'')+'" content"Watts" min="0" onchange="updateAppliance('+a.id+',\'watts\',parseFloat(this.value)||0)"/>'+'<input type="number" value="'+(a.hours||'')+'" content"Hrs/day" min="0" step="0.25" onchange="updateAppliance('+a.id+',\'hours\',parseFloat(this.value)||0)"/>'+'<input type="number" value="'+(a.qty||1)+'" content"Qty" min="1" onchange="updateAppliance('+a.id+',\'qty\',parseInt(this.value)||1)"/>'+'X</button>';
+    list.appendChild(row)
   })
 }
 
 function updateAppliance(id,field,value){
-  var a="appliances.find(function(x){return" x.id="==id});"
-  if(a)a[field]=value;
+  var a=appliances.find(function(x){return x.id===id});
+  if(a)a[field]=value
 }
 
 function calculateBill(){
-  if(appliances.length="==0){alert('Please" add at least one appliance.');return}
+  if(appliances.length===0){alert('Please add at least one appliance.');return}
   var rate=parseFloat(document.getElementById('electricRate').value)||0.16;
   var totalDailyKwh=0;
   var breakdown=[];
@@ -724,44 +724,44 @@ function calculateBill(){
       var monthlyKwh=dailyKwh*30;
       var monthlyCost=monthlyKwh*rate;
       totalDailyKwh+=dailyKwh;
-      breakdown.push({name:a.name||'Unnamed',monthlyKwh:monthlyKwh,monthlyCost:monthlyCost});
+      breakdown.push({name:a.name||'Unnamed',monthlyKwh:monthlyKwh,monthlyCost:monthlyCost})
     }
   });
-  if(breakdown.length="==0){alert('Please" enter wattage and hours for at least one appliance.');return}
+  if(breakdown.length===0){alert('Please enter wattage and hours for at least one appliance.');return}
   var totalMonthlyKwh=totalDailyKwh*30;
   var totalMonthlyCost=totalMonthlyKwh*rate;
   var annualCost=totalMonthlyCost*12;
   var co2=totalMonthlyKwh*0.855;
   document.getElementById('resTotalCost').textContent=fmt(totalMonthlyCost);
-  document.getElementById('resTotalKwh').textContent="totalMonthlyKwh.toFixed(1)+'" kWh';
+  document.getElementById('resTotalKwh').textContent=totalMonthlyKwh.toFixed(1)+' kWh';
   document.getElementById('resAnnualCost').textContent=fmt(annualCost);
-  document.getElementById('resDailyKwh').textContent="totalDailyKwh.toFixed(2)+'" kWh';
+  document.getElementById('resDailyKwh').textContent=totalDailyKwh.toFixed(2)+' kWh';
   document.getElementById('resDailyCost').textContent=fmt(totalDailyKwh*rate);
   document.getElementById('resAvgCost').textContent=fmt(totalMonthlyCost/breakdown.length);
-  document.getElementById('resCO2').textContent="(co2/1000).toFixed(1)+'" kg CO2/month';
+  document.getElementById('resCO2').textContent=(co2/1000).toFixed(1)+' kg CO2/month';
 
   breakdown.sort(function(a,b){return b.monthlyCost-a.monthlyCost});
   var maxCost=breakdown[0].monthlyCost;
   var chartHtml='';
-  var tableHtml="'<table"><thead><tr><th>Appliance</th><th>Monthly kWh</th><th>Monthly Cost</th><th>% of Total</th></tr></thead><tbody>';
+  var tableHtml='<table><thead><tr><th>Appliance</th><th>Monthly kWh</th><th>Monthly Cost</th><th>% of Total</th></tr></thead><tbody>';
   breakdown.forEach(function(b){
     var pct=(b.monthlyCost/totalMonthlyCost*100);
     var barWidth=Math.max(2,(b.monthlyCost/maxCost)*100);
     chartHtml+='<div class="bar-h"><span class="bar-h-label">'+b.name+'</span><div class="bar-h-fill" style="width:'+barWidth+'%"></div><span class="bar-h-value">'+fmt(b.monthlyCost)+'</span></div>';
     tableHtml+='<tr><td>'+b.name+'</td><td>'+b.monthlyKwh.toFixed(1)+'</td><td>'+fmt(b.monthlyCost)+'</td><td>'+pct.toFixed(1)+'%</td></tr>'
   });
-  tableHtml+='<tr style="font-weight:700;border-bottom:2px solid #e5e5ea"><td>Total</td><td>'+totalMonthlyKwh.toFixed(1)+'</td><td>'+fmt(totalMonthlyCost)+'</td><td>100%</td></tr></tbody></table>';
+  tableHtml+='<tr style="font-weight:700;border-top:2px solid #00ff88"><td>Total</td><td>'+totalMonthlyKwh.toFixed(1)+'</td><td>'+fmt(totalMonthlyCost)+'</td><td>100%</td></tr></tbody></table>';
   document.getElementById('breakdownChart').innerHTML=chartHtml;
   document.getElementById('breakdownTable').innerHTML=tableHtml;
   document.getElementById('billResults').style.display='block';
-  document.getElementById('billResults').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('billResults').scrollIntoView({behavior:'smooth',block:'start'})
 }
 
 document.querySelectorAll('.toc a').forEach(function(a){
   a.addEventListener('click',function(e){
     e.preventDefault();
     var target=document.querySelector(this.getAttribute('href'));
-    if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    if(target)target.scrollIntoView({behavior:'smooth',block:'start'})
   })
 });
 </script><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">

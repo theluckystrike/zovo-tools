@@ -1124,6 +1124,7 @@ Privacy Note - This business loan calculator runs 100% in your browser. No finan
   let visits = parseInt(localStorage.getItem(key) || '0', 10);
   visits++;
   localStorage.setItem(key, visits.toString());
+  console.log('Business Loan Calculator visits:', visits);
 })();
 
 function formatCurrency(num) {
@@ -1211,7 +1212,7 @@ function calculateLoan() {
   const typeNames = { term: 'Term Loan', sba7a: 'SBA 7(a)', sba504: 'SBA 504', loc: 'Line of Credit' };
 
   const resultsGrid = document.getElementById('resultsGrid');
-  resultsGrid.innerHTML = `;
+  resultsGrid.innerHTML = `
     <div class="result-card"><div class="label">Monthly Payment</div><div class="value">${formatCurrencyExact(result.monthlyPayment)}</div><div class="sub">${typeNames[loanType]}</div></div>
     <div class="result-card accent"><div class="label">Total Interest</div><div class="value">${formatShort(result.totalInterest)}</div><div class="sub">Over ${loanTerm} years</div></div>
     <div class="result-card purple"><div class="label">Total Cost of Loan</div><div class="value">${formatShort(totalCost)}</div><div class="sub">Interest + fees + down payment</div></div>
@@ -1227,15 +1228,15 @@ function calculateLoan() {
       labels: ['Principal', 'Interest', 'Fees'],
       datasets: [{
         data: [Math.round(financedAmount), Math.round(result.totalInterest), Math.round(originationFee)],
-        backgroundColor: ['#00ff88', '#0071e3', '#0071e3']
+        backgroundColor: ['#00ff88', '#00ccff', '#6C5CE7']
       }]
     },
     options: {
-      title: { display: true, text: 'Payment Breakdown', fontColor: '#1d1d1f' },
-      legend: { labels: { fontColor: '#1d1d1f' } }
+      title: { display: true, text: 'Payment Breakdown', fontColor: '#e0e0e8' },
+      legend: { labels: { fontColor: '#e0e0e8' } }
     }
   };
-  document.getElementById('breakdownChart').innerHTML = `<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=500&h=350&bkg=%23121218" alt="Loan payment breakdown chart" loading="lazy">`;
+  document.getElementById('breakdownChart').innerHTML = `<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=500&h=350&bkg=%23121218" alt="Loan payment breakdown chart" loading="lazy"/>`;
 
   showAmort(currentView);
 
@@ -1298,14 +1299,14 @@ function compareLoans() {
   let gridHtml = '';
   results.forEach(r => {
     const isBest = r.totalCost === minCost;
-    gridHtml += `<div class="compare-card ${isBest ? 'best'" : ''}">
+    gridHtml += `<div class="compare-card ${isBest ? 'best' : ''}">
       <h4>${r.name}</h4>
       <div class="row"><span class="lbl">Rate</span><span class="val">${r.rate}%</span></div>
       <div class="row"><span class="lbl">Term</span><span class="val">${r.term} years</span></div>
       <div class="row"><span class="lbl">Monthly Payment</span><span class="val">${formatCurrencyExact(r.monthlyPayment)}</span></div>
       <div class="row"><span class="lbl">Total Interest</span><span class="val">${formatCurrency(r.totalInterest)}</span></div>
       <div class="row"><span class="lbl">Fees</span><span class="val">${formatCurrency(r.feeAmount)}</span></div>
-      <div class="row"><span class="lbl">Total Cost</span><span class="val" style="color: $isBest ?;'#00ff88'" : '#1d1d1f'};">${formatCurrency(r.totalCost)}</span></div>
+      <div class="row"><span class="lbl">Total Cost</span><span class="val" style="color: ${isBest ? '#00ff88' : '#e0e0e8'};">${formatCurrency(r.totalCost)}</span></div>
     </div>`;
   });
   document.getElementById('compareGrid').innerHTML = gridHtml;
@@ -1316,20 +1317,20 @@ function compareLoans() {
     data: {
       labels: results.map(r => r.name),
       datasets: [
-        { label: 'Interest', data: results.map(r => Math.round(r.totalInterest)), backgroundColor: '#0071e3' },
-        { label: 'Fees', data: results.map(r => Math.round(r.feeAmount)), backgroundColor: '#0071e3' }
+        { label: 'Interest', data: results.map(r => Math.round(r.totalInterest)), backgroundColor: '#00ccff' },
+        { label: 'Fees', data: results.map(r => Math.round(r.feeAmount)), backgroundColor: '#6C5CE7' }
       ]
     },
     options: {
-      title: { display: true, text: 'Total Cost Comparison for ' + formatCurrency(financedAmount) + ' Loan', fontColor: '#1d1d1f' },
-      legend: { labels: { fontColor: '#1d1d1f' } },
+      title: { display: true, text: 'Total Cost Comparison for ' + formatCurrency(financedAmount) + ' Loan', fontColor: '#e0e0e8' },
+      legend: { labels: { fontColor: '#e0e0e8' } },
       scales: {
-        xAxes: [{ stacked: true, ticks: { fontColor: '#1d1d1f' }, gridLines: { color: 'rgba(255,255,255,0.05)' } }],
-        yAxes: [{ stacked: true, ticks: { fontColor: '#1d1d1f', callback: function(v) { return '$' + (v/1000).toFixed(0) + 'K'; } }, gridLines: { color: 'rgba(255,255,255,0.05)' } }]
+        xAxes: [{ stacked: true, ticks: { fontColor: '#e0e0e8' }, gridLines: { color: 'rgba(255,255,255,0.05)' } }],
+        yAxes: [{ stacked: true, ticks: { fontColor: '#e0e0e8', callback: function(v) { return '$' + (v/1000).toFixed(0) + 'K'; } }, gridLines: { color: 'rgba(255,255,255,0.05)' } }]
       }
     }
   };
-  document.getElementById('compareChart').innerHTML = `<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=800&h=400&bkg=%23121218" alt="Business loan type comparison chart" loading="lazy">`;
+  document.getElementById('compareChart').innerHTML = `<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=800&h=400&bkg=%23121218" alt="Business loan type comparison chart" loading="lazy"/>`;
 
   document.getElementById('comparison').style.display = 'block';
   document.getElementById('results').style.display = 'none';

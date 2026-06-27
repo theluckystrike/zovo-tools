@@ -1060,7 +1060,7 @@ window.calculate=function(){
     var fees=parseFloat(document.getElementById('fees').value)||0;
     var taxRate=parseFloat(document.getElementById('taxRate').value)||0;
     var inflRate=parseFloat(document.getElementById('inflationRate').value)||0;
-    var reinvest=document.getElementById('reinvest').value==='yes';""
+    var reinvest=document.getElementById('reinvest').value==='yes';
 
     if(sh<=0||bp<=0){return;}
 
@@ -1068,10 +1068,10 @@ window.calculate=function(){
     var saleProceeds=sh*sp;
     var capGain=saleProceeds-(sh*bp);
     var totalProfit=capGain+div-fees;
-    var totalReturn="costBasis">0?(totalProfit/costBasis)*100:0;
+    var totalReturn=costBasis>0?(totalProfit/costBasis)*100:0;
     var endVal=saleProceeds+div-fees;
-    var annReturn="costBasis">0?(Math.pow(endVal/costBasis,1/yrs)-1)*100:0;
-    var priceReturn="bp">0?((sp-bp)/bp)*100:0;
+    var annReturn=costBasis>0?(Math.pow(endVal/costBasis,1/yrs)-1)*100:0;
+    var priceReturn=bp>0?((sp-bp)/bp)*100:0;
     var annDivYield=(div/yrs)/(sh*bp)*100;
 
     // DRIP adjustment note
@@ -1081,9 +1081,9 @@ window.calculate=function(){
         var dripEndVal=(sh+extraShares)*sp-fees;
         var dripTotalProfit=dripEndVal-costBasis+div;
         totalProfit=dripEndVal-costBasis;
-        totalReturn="costBasis">0?(totalProfit/costBasis)*100:0;
+        totalReturn=costBasis>0?(totalProfit/costBasis)*100:0;
         endVal=dripEndVal;
-        annReturn="costBasis">0?(Math.pow(endVal/costBasis,1/yrs)-1)*100:0;
+        annReturn=costBasis>0?(Math.pow(endVal/costBasis,1/yrs)-1)*100:0;
     }
 
     // Tax calculation
@@ -1095,7 +1095,7 @@ window.calculate=function(){
     }
     var totalTax=taxOnGains+taxOnDiv;
     var afterTaxProfit=totalProfit-totalTax;
-    var afterTaxReturn="costBasis">0?(afterTaxProfit/costBasis)*100:0;
+    var afterTaxReturn=costBasis>0?(afterTaxProfit/costBasis)*100:0;
 
     // Real return (inflation adjusted)
     var realAnnReturn=0;
@@ -1126,7 +1126,8 @@ window.calculate=function(){
         extraRow.style.display='none';
     }
     document.getElementById('divYield').textContent=pct(annDivYield);
-    document.getElementById('divYield').className='value" positive';document.getElementById('priceReturn').textContent=pct(priceReturn);
+    document.getElementById('divYield').className='value positive';
+    document.getElementById('priceReturn').textContent=pct(priceReturn);
     document.getElementById('priceReturn').className='value '+(priceReturn>=0?'positive':'negative');
     if(taxRate<=0&&inflRate<=0){
         extraRow.style.display='grid';
@@ -1137,28 +1138,28 @@ window.calculate=function(){
     var ctx=c.getContext('2d');
     var dpr=window.devicePixelRatio||1;
     c.width=200*dpr;c.height=200*dpr;
-    c.style.width='200px';c.style.height='200px';"
+    c.style.width='200px';c.style.height='200px';
     ctx.scale(dpr,dpr);
     ctx.clearRect(0,0,200,200);
     var cx=100,cy=100,r=75,lw=24;
     var absGain=Math.abs(capGain),absDiv=div,absFee=fees;
     var total=absGain+absDiv+absFee;
-    if(total="==0){"
-        ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='#e5e5ea;';ctx.lineWidth=lw;ctx.stroke();"
+    if(total===0){
+        ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='#2a2a3e';ctx.lineWidth=lw;ctx.stroke();
     }else{
         var slices=[
-            {v:absGain,c:capGain>=0?'#00ff88':'#ff3b30',l:'Capital '+(capGain>=0?'Gain':'Loss')},
+            {v:absGain,c:capGain>=0?'#00ff88':'#ff6b6b',l:'Capital '+(capGain>=0?'Gain':'Loss')},
             {v:absDiv,c:'#ffa502',l:'Dividends'},
-            {v:absFee,c:'#0071e3',l:'Fees'}
+            {v:absFee,c:'#6C5CE7',l:'Fees'}
         ];
         if(totalTax>0)slices.push({v:totalTax,c:'#e17055',l:'Taxes'});
-        var sliceTotal="slices.reduce(function(a,s){return" a+s.v;},0);
+        var sliceTotal=slices.reduce(function(a,s){return a+s.v;},0);
         var start=-Math.PI/2;
         slices.forEach(function(s){
             if(s.v>0){
                 var angle=(s.v/sliceTotal)*Math.PI*2;
                 ctx.beginPath();ctx.arc(cx,cy,r,start,start+angle);
-                ctx.strokeStyle="s.c;ctx.lineWidth="lw;ctx.lineCap='butt';ctx.stroke();""
+                ctx.strokeStyle=s.c;ctx.lineWidth=lw;ctx.lineCap='butt';ctx.stroke();
                 start+=angle;
             }
         });
@@ -1173,11 +1174,11 @@ window.calculate=function(){
 
     // Breakdown bars
     var items=[
-        {name:'Initial Investment',value:sh*bp,color:'#0071e3'},
-        {name:'Capital '+(capGain>=0?'Gain':'Loss'),value:capGain,color:capGain>=0?'#00ff88':'#ff3b30'},
+        {name:'Initial Investment',value:sh*bp,color:'#00ccff'},
+        {name:'Capital '+(capGain>=0?'Gain':'Loss'),value:capGain,color:capGain>=0?'#00ff88':'#ff6b6b'},
         {name:'Dividends Received',value:div,color:'#ffa502'},
-        {name:'Fees Paid',value:fees,color:'#ff3b30'},
-        {name:'Net Profit',value:totalProfit,color:totalProfit>=0?'#00ff88':'#ff3b30'}
+        {name:'Fees Paid',value:fees,color:'#ff6b6b'},
+        {name:'Net Profit',value:totalProfit,color:totalProfit>=0?'#00ff88':'#ff6b6b'}
     ];
     if(totalTax>0)items.splice(4,0,{name:'Estimated Tax',value:totalTax,color:'#e17055'});
     var maxV=Math.max.apply(null,items.map(function(i){return Math.abs(i.value);}))||1;
@@ -1197,7 +1198,7 @@ window.calculate=function(){
     for(var y=1;y<=Math.min(fullYears,30);y++){
         var startVal=curVal;
         var fraction=(y<=yrs)?Math.min(1,yrs-y+1):0;
-        if(y="==fullYears&&yrs%1!==0){"
+        if(y===fullYears&&yrs%1!==0){
             curVal=startVal*Math.pow(1+growthRate,yrs-y+1);
         }else{
             curVal=startVal*(1+growthRate);
@@ -1205,7 +1206,7 @@ window.calculate=function(){
         var growthAmt=curVal-startVal;
         var cumReturn=((curVal/costBasis)-1)*100;
         var tr=document.createElement('tr');
-        tr.innerHTML='<td>'+y+'</td><td>'+fmt(startVal)+'</td><td style="color:'+(growthAmt">=0?'#00ff88':'#ff3b30')+'">'+fmt(growthAmt)+'</td><td>'+fmt(curVal)+'</td><td style="color:'+(cumReturn">=0?'#00ff88':'#ff3b30')+'">'+pct(cumReturn)+'</td>';
+        tr.innerHTML='<td>'+y+'</td><td>'+fmt(startVal)+'</td><td style="color:'+(growthAmt>=0?'#00ff88':'#ff6b6b')+'">'+fmt(growthAmt)+'</td><td>'+fmt(curVal)+'</td><td style="color:'+(cumReturn>=0?'#00ff88':'#ff6b6b')+'">'+pct(cumReturn)+'</td>';
         yearBody.appendChild(tr);
     }
 
@@ -1241,7 +1242,7 @@ window.calculate=function(){
     }
     var sHtml='';
     rows.forEach(function(r){
-        sHtml+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e5ea;"><span style="color:#6e6e73;">'+r[0]+'</span><span style="font-weight:600;">'+r[1]+'</span></div>';
+        sHtml+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a3e;"><span style="color:#aaa;">'+r[0]+'</span><span style="font-weight:600;">'+r[1]+'</span></div>';
     });
     document.getElementById('summaryTable').innerHTML=sHtml;
 
@@ -1259,10 +1260,10 @@ window.calculate=function(){
     bBody.innerHTML='';
     benchmarks.forEach(function(b){
         var diff=annReturn-b.ret;
-        var diffColor="diff">=0?'#00ff88':'#ff3b30';
-        var diffSign="diff">=0?'+':'';
+        var diffColor=diff>=0?'#00ff88':'#ff6b6b';
+        var diffSign=diff>=0?'+':'';
         var tr=document.createElement('tr');
-        tr.innerHTML='<td>'+b.name+'</td><td>'+pct(b.ret)+'</td><td style="color:'+(annReturn">=0?'#00ff88':'#ff3b30')+'">'+pct(annReturn)+'</td><td style="color:'+diffColor+'">'+diffSign+pct(diff)+'</td>';
+        tr.innerHTML='<td>'+b.name+'</td><td>'+pct(b.ret)+'</td><td style="color:'+(annReturn>=0?'#00ff88':'#ff6b6b')+'">'+pct(annReturn)+'</td><td style="color:'+diffColor+'">'+diffSign+pct(diff)+'</td>';
         bBody.appendChild(tr);
     });
 
@@ -1344,7 +1345,7 @@ calculate();
 <span style="color:#86868b;font-size:0.85rem;">Calculations performed: </span><span id="usage-count" style="color:#0071e3;font-weight:700;font-size:1rem;">0</span>
 </div>
 <script>
-(function(){var c=parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent=c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var"" el=document.getElementById('usage-count');if(el)el.textContent=c.toLocaleString();}});})();"
+(function(){var c=parseInt(localStorage.getItem('zovo_usage_count')||'0');document.getElementById('usage-count').textContent=c.toLocaleString();document.addEventListener('click',function(e){if(e.target.matches('button,[type=submit]')){c++;localStorage.setItem('zovo_usage_count',c.toString());var el=document.getElementById('usage-count');if(el)el.textContent=c.toLocaleString();}});})();
 </script>
 <!-- benchmark-chart -->
 <div style="margin:2rem" 0;padding:1.5rem;background:#f5f5f7;border:1px solid #f5f5f7;border-radius:8px;">

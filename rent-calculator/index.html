@@ -730,13 +730,13 @@ function calculateRent() {
 
   // Display
   document.getElementById('maxRent').textContent = fmt(recommendedRent);
-  document.getElementById('rentSummary').textContent =;
-    fmt(recommendedRent) + '/month based on ' + Math.round(rentPct*100) + '% of ' + fmt(totalMonthlyGross) + ' gross income' +;
+  document.getElementById('rentSummary').textContent =
+    fmt(recommendedRent) + '/month based on ' + Math.round(rentPct*100) + '% of ' + fmt(totalMonthlyGross) + ' gross income' +
     (totalDebt > 0 ? ' (adjusted for ' + fmt(totalDebt) + ' monthly debt)' : '');
   document.getElementById('resultsSection').classList.remove('hidden');
 
   // Stats
-  document.getElementById('statsGrid').innerHTML = `;
+  document.getElementById('statsGrid').innerHTML = `
     <div class="stat-card">
       <div class="val">${fmt(totalMonthlyGross)}</div>
       <div class="lbl">Monthly Gross Income</div>
@@ -754,20 +754,20 @@ function calculateRent() {
   // Budget breakdown
   const budgetItems = [
     { label: 'Recommended Rent', amount: recommendedRent, color: '#00ff88', pct: recommendedRent / monthlyNet * 100 },
-    { label: 'Debt Payments', amount: totalDebt, color: '#ff3b30', pct: totalDebt / monthlyNet * 100 },
-    { label: 'Estimated Utilities', amount: monthlyNet * 0.08, color: '#0071e3', pct: 8 },
-    { label: 'Savings (20% target)', amount: monthlyNet * 0.20, color: '#ff9f0a', pct: 20 },
+    { label: 'Debt Payments', amount: totalDebt, color: '#ff4444', pct: totalDebt / monthlyNet * 100 },
+    { label: 'Estimated Utilities', amount: monthlyNet * 0.08, color: '#00ccff', pct: 8 },
+    { label: 'Savings (20% target)', amount: monthlyNet * 0.20, color: '#ffaa00', pct: 20 },
     { label: 'Remaining for Living', amount: Math.max(0, afterRentDebt - monthlyNet * 0.28), color: '#888', pct: Math.max(0, (afterRentDebt - monthlyNet * 0.28) / monthlyNet * 100) }
   ];
 
-  document.getElementById('budgetBreakdown').innerHTML = budgetItems.map(item => `;
+  document.getElementById('budgetBreakdown').innerHTML = budgetItems.map(item => `
     <div class="breakdown-item">
       <div class="breakdown-label">
-        <span style="color:#6e6e73;">${item.label}</span>
+        <span style="color:#aaa;">${item.label}</span>
         <span>${fmt(item.amount)} <span style="color:#666;font-size:0.82rem;">(${item.pct.toFixed(1)}% of net)</span></span>
       </div>
       <div class="breakdown-bar-bg">
-        <div class="breakdown-bar" style="width:$Math.min(100, item.pct)%;background:$item.color;"></div>
+        <div class="breakdown-bar" style="width:${Math.min(100, item.pct)}%;background:${item.color};"></div>
       </div>
     </div>
   `).join('');
@@ -781,13 +781,13 @@ function calculateRent() {
     meterFill.style.background = '#00ff88';
     document.getElementById('meterAdvice').textContent = 'Your rent is very comfortable relative to your net income. You have plenty of room for savings and discretionary spending.';
   } else if (rentPctOfNet < 35) {
-    meterFill.style.background = 'linear-gradient(90deg, #00ff88, #ff9f0a)';
+    meterFill.style.background = 'linear-gradient(90deg, #00ff88, #ffaa00)';
     document.getElementById('meterAdvice').textContent = 'Your rent is within a healthy range. You should be able to maintain a solid budget with room for savings.';
   } else if (rentPctOfNet < 45) {
-    meterFill.style.background = 'linear-gradient(90deg, #ff9f0a, #ff9f0a)';
+    meterFill.style.background = 'linear-gradient(90deg, #ffaa00, #ff8844)';
     document.getElementById('meterAdvice').textContent = 'Your rent is on the higher side. Consider whether you can reduce other expenses or increase income to maintain financial flexibility.';
   } else {
-    meterFill.style.background = 'linear-gradient(90deg, #ff9f0a, #ff3b30)';
+    meterFill.style.background = 'linear-gradient(90deg, #ff8844, #ff4444)';
     document.getElementById('meterAdvice').textContent = 'Your rent consumes a large portion of your net income. This leaves limited room for savings and emergencies. Consider finding a roommate or a more affordable option.';
   }
 
@@ -803,14 +803,14 @@ function calculateRent() {
   const maintenance = homePrice * 0.015 / 12;
   const totalBuyCost = mortgagePayment + propertyTax + homeInsurance + maintenance;
 
-  document.getElementById('compareGrid').innerHTML = `;
+  document.getElementById('compareGrid').innerHTML = `
     <div class="compare-col">
       <h4>Renting</h4>
       <div class="compare-row"><span class="clabel">Monthly Rent</span><span class="cval">${fmt(recommendedRent)}</span></div>
       <div class="compare-row"><span class="clabel">Renter's Insurance</span><span class="cval">${fmt(25)}</span></div>
       <div class="compare-row"><span class="clabel">Upfront Cost</span><span class="cval">${fmt(recommendedRent * 2)} (deposit)</span></div>
       <div class="compare-row"><span class="clabel">Maintenance</span><span class="cval">$0 (landlord)</span></div>
-      <div class="compare-row" style="border-bottom:none;padding-top:10px;"><span class="clabel" style="color:#0071e3;">Total Monthly</span><span class="cval" style="color:#0071e3;">${fmt(recommendedRent + 25)}</span></div>
+      <div class="compare-row" style="border-bottom:none;padding-top:10px;"><span class="clabel" style="color:#00ff88;">Total Monthly</span><span class="cval" style="color:#00ff88;">${fmt(recommendedRent + 25)}</span></div>
     </div>
     <div class="compare-col">
       <h4>Buying (${fmt(homePrice)} home)</h4>
@@ -819,7 +819,7 @@ function calculateRent() {
       <div class="compare-row"><span class="clabel">Insurance</span><span class="cval">${fmt(homeInsurance)}</span></div>
       <div class="compare-row"><span class="clabel">Maintenance (1.5%)</span><span class="cval">${fmt(maintenance)}</span></div>
       <div class="compare-row"><span class="clabel">Down Payment (20%)</span><span class="cval">${fmt(downPayment)}</span></div>
-      <div class="compare-row" style="border-bottom:none;padding-top:10px;"><span class="clabel" style="color:#ff9f0a;">Total Monthly</span><span class="cval" style="color:#ff9f0a;">${fmt(totalBuyCost)}</span></div>
+      <div class="compare-row" style="border-bottom:none;padding-top:10px;"><span class="clabel" style="color:#ffaa00;">Total Monthly</span><span class="cval" style="color:#ffaa00;">${fmt(totalBuyCost)}</span></div>
     </div>
   `;
 }

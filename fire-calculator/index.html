@@ -1153,6 +1153,7 @@ Privacy Note - This FIRE calculator runs 100% in your browser. No financial data
   let visits = parseInt(localStorage.getItem(key) || '0', 10);
   visits++;
   localStorage.setItem(key, visits.toString());
+  console.log('FIRE Calculator visits:', visits);
 })();
 
 function formatCurrency(num) {
@@ -1232,7 +1233,7 @@ function calculateFIRE() {
 
   // Display results
   const resultsGrid = document.getElementById('resultsGrid');
-  resultsGrid.innerHTML = `;
+  resultsGrid.innerHTML = `
     <div class="result-card"><div class="label">FIRE Number</div><div class="value">${formatCurrency(fireNumber)}</div><div class="sub">At ${withdrawalRate*100}% withdrawal rate</div></div>
     <div class="result-card accent"><div class="label">Years to FIRE</div><div class="value">${yearsToFire !== null ? yearsToFire : '100+'}</div><div class="sub">${fireAge !== null ? 'FIRE at age ' + fireAge : 'Unreachable at current rate'}</div></div>
     <div class="result-card purple"><div class="label">Coast FIRE Number</div><div class="value">${formatCurrency(coastFireNumber)}</div><div class="sub">${yearsToCoastFire !== null ? yearsToCoastFire + ' years to reach' : 'Already achieved'}</div></div>
@@ -1243,7 +1244,7 @@ function calculateFIRE() {
 
   // Comparison grid
   const comparisonGrid = document.getElementById('comparisonGrid');
-  comparisonGrid.innerHTML = `;
+  comparisonGrid.innerHTML = `
     <div class="result-card"><div class="label">Lean FIRE</div><div class="value">${formatCurrency(leanFireNumber)}</div><div class="sub">${yearsToLeanFire !== null ? yearsToLeanFire + ' years (age ' + (currentAge + yearsToLeanFire) + ')' : 'Unreachable'}</div></div>
     <div class="result-card accent"><div class="label">Regular FIRE</div><div class="value">${formatCurrency(fireNumber)}</div><div class="sub">${yearsToFire !== null ? yearsToFire + ' years (age ' + (currentAge + yearsToFire) + ')' : 'Unreachable'}</div></div>
     <div class="result-card purple"><div class="label">Fat FIRE</div><div class="value">${formatCurrency(fatFireNumber)}</div><div class="sub">${yearsToFatFire !== null ? yearsToFatFire + ' years (age ' + (currentAge + yearsToFatFire) + ')' : 'Unreachable'}</div></div>
@@ -1268,11 +1269,11 @@ function calculateFIRE() {
       }]
     },
     options: {
-      title: { display: true, text: 'Projected Portfolio Growth', fontColor: '#1d1d1f' },
-      legend: { labels: { fontColor: '#1d1d1f' } },
+      title: { display: true, text: 'Projected Portfolio Growth', fontColor: '#e0e0e8' },
+      legend: { labels: { fontColor: '#e0e0e8' } },
       scales: {
-        xAxes: [{ ticks: { fontColor: '#1d1d1f' }, gridLines: { color: 'rgba(255,255,255,0.05)' }, scaleLabel: { display: true, labelString: 'Age', fontColor: '#1d1d1f' } }],
-        yAxes: [{ ticks: { fontColor: '#1d1d1f', callback: function(v) { return '$' + (v/1000000).toFixed(1) + 'M'; } }, gridLines: { color: 'rgba(255,255,255,0.05)' } }]
+        xAxes: [{ ticks: { fontColor: '#e0e0e8' }, gridLines: { color: 'rgba(255,255,255,0.05)' }, scaleLabel: { display: true, labelString: 'Age', fontColor: '#e0e0e8' } }],
+        yAxes: [{ ticks: { fontColor: '#e0e0e8', callback: function(v) { return '$' + (v/1000000).toFixed(1) + 'M'; } }, gridLines: { color: 'rgba(255,255,255,0.05)' } }]
       },
       annotation: {
         annotations: [{
@@ -1280,16 +1281,16 @@ function calculateFIRE() {
           mode: 'horizontal',
           scaleID: 'y-axis-0',
           value: fireNumber,
-          borderColor: '#0071e3',
+          borderColor: '#00ccff',
           borderWidth: 2,
           borderDash: [5, 5],
-          label: { enabled: true, content: 'FIRE Target', backgroundColor: '#0071e3' }
+          label: { enabled: true, content: 'FIRE Target', backgroundColor: '#00ccff' }
         }]
       }
     }
   };
   const encodedChart = encodeURIComponent(JSON.stringify(chartConfig));
-  chartContainer.innerHTML = `<img src="https://quickchart.io/chart?c=${encodedChart}&w=900&h=400&bkg=%23121218" alt="Projected savings growth chart showing path to FIRE" loading="lazy">`;
+  chartContainer.innerHTML = `<img src="https://quickchart.io/chart?c=${encodedChart}&w=900&h=400&bkg=%23121218" alt="Projected savings growth chart showing path to FIRE" loading="lazy"/>`;
 
   // Year table
   const tableContainer = document.getElementById('yearTable');
@@ -1302,7 +1303,7 @@ function calculateFIRE() {
     else if (p.passedCoast) status = 'Coast FIRE';
     else status = 'Accumulating';
     const isHighlight = (p.passedFire && !projections[Math.max(0, projections.indexOf(p)-1)].passedFire) || (p.passedLean && !projections[Math.max(0, projections.indexOf(p)-1)].passedLean) || (p.passedCoast && !projections[Math.max(0, projections.indexOf(p)-1)].passedCoast);
-    tableHtml += `<tr class="${isHighlight ? 'highlight-row'" : ''}"><td>${p.year}</td><td>${p.age}</td><td>${formatNumber(p.balance)}</td><td>${formatNumber(p.year === 0 ? 0 : annualSavings)}</td><td>${status}</td></tr>`;
+    tableHtml += `<tr class="${isHighlight ? 'highlight-row' : ''}"><td>${p.year}</td><td>${p.age}</td><td>${formatNumber(p.balance)}</td><td>${formatNumber(p.year === 0 ? 0 : annualSavings)}</td><td>${status}</td></tr>`;
   });
   tableHtml += '</tbody></table>';
   tableContainer.innerHTML = tableHtml;
