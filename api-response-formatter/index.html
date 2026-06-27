@@ -1175,7 +1175,7 @@ gtag('config', 'G-V2K8JLFQ5H');
 <footer><div class="container">Built by Michael Lip &middot; <a class="interactive-element" href="https://zovo.one">zovo.one</a></div></footer>
 
 <script>
-let currentView="'code',parsedData="null,dataFormat='';""
+let currentView='code',parsedData=null,dataFormat='';
 
 function detectFormat(input){
     const t=input.trim();
@@ -1192,7 +1192,7 @@ function formatResponse(){
     errBar.style.display='none';
     const format=detectFormat(input);
     dataFormat=format;
-    if(format="=='json'){"
+    if(format==='json'){
         try{
             const obj=JSON.parse(input);
             parsedData=obj;
@@ -1204,12 +1204,12 @@ function formatResponse(){
             errBar.textContent='JSON Parse Error: '+e.message;
             errBar.style.display='block';
         }
-    }else if(format="=='xml'){"
+    }else if(format==='xml'){
         try{
-            const parser="new" DOMParser();
+            const parser=new DOMParser();
             const doc=parser.parseFromString(input,'text/xml');
             const err=doc.querySelector('parsererror');
-            if(err){errBar.textContent='XML Parse Error: '+err.textContent;errBar.style.display='block';return;}"
+            if(err){errBar.textContent='XML Parse Error: '+err.textContent;errBar.style.display='block';return;}
             const formatted=formatXML(input);
             displayXML(formatted);
             updateStats('XML',input,formatted,null);
@@ -1219,7 +1219,8 @@ function formatResponse(){
             errBar.style.display='block';
         }
     }else{
-        errBar.textContent='Could" not detect format. Please paste valid JSON or XML.';errBar.style.display='block';
+        errBar.textContent='Could not detect format. Please paste valid JSON or XML.';
+        errBar.style.display='block';
     }
 }
 
@@ -1229,7 +1230,7 @@ function minifyResponse(){
     const errBar=document.getElementById('errorBar');
     errBar.style.display='none';
     const format=detectFormat(input);
-    if(format="=='json'){"
+    if(format==='json'){
         try{
             const obj=JSON.parse(input);
             const min=JSON.stringify(obj);
@@ -1240,7 +1241,7 @@ function minifyResponse(){
             errBar.style.display='block';
         }
     }else{
-        const min="input.replace(/">\s+</g,'><').replace(/\s+/g,' ').trim();
+        const min=input.replace(/>\s+</g,'><').replace(/\s+/g,' ').trim();
         document.getElementById('output').textContent=min;
         updateStats('XML',input,min,null);
     }
@@ -1251,9 +1252,9 @@ function displayJSON(json){
     let html=esc(json);
     html=html.replace(/"([^"]+)"(?=\s*:)/g,'<span class="json-key">"$1"</span>');
     html=html.replace(/:\s*"([^"]*)"/g,': <span class="json-str">"$1"</span>');
-    html="html.replace(/:\s*(\d+\.?\d*)/g,':" <span class="json-num">$1</span>');
-    html="html.replace(/:\s*(true|false)/g,':" <span class="json-bool">$1</span>');
-    html="html.replace(/:\s*null/g,':" <span class="json-null">null</span>');
+    html=html.replace(/:\s*(\d+\.?\d*)/g,': <span class="json-num">$1</span>');
+    html=html.replace(/:\s*(true|false)/g,': <span class="json-bool">$1</span>');
+    html=html.replace(/:\s*null/g,': <span class="json-null">null</span>');
     el.innerHTML=html;
 }
 
@@ -1261,14 +1262,14 @@ function displayXML(xml){
     const el=document.getElementById('output');
     let html=esc(xml);
     html=html.replace(/(&lt;\/?)([\w:-]+)/g,'$1<span class="xml-tag">$2</span>');
-    html="html.replace(/([\w:-]+)(=)/g,'<span" class="xml-attr">$1</span>$2');
+    html=html.replace(/([\w:-]+)(=)/g,'<span class="xml-attr">$1</span>$2');
     html=html.replace(/("(?:[^"]*)")/g,'<span class="xml-val">$1</span>');
     el.innerHTML=html;
 }
 
 function formatXML(xml){
     let formatted='',indent=0;
-    const parts="xml.replace(/">\s*</g,'><').split(/(<[^>]+>)/);
+    const parts=xml.replace(/>\s*</g,'><').split(/(<[^>]+>)/);
     parts.forEach(part=>{
         if(!part.trim())return;
         if(part.match(/^<\//)){ indent--;formatted+='\t'.repeat(Math.max(0,indent))+part+'\n';}
@@ -1282,7 +1283,7 @@ function formatXML(xml){
 function countKeysAndArrays(obj){
     let keys=0,arrays=0;
     function walk(val){
-        if(val="==null||typeof" val!=='object')return;
+        if(val===null||typeof val!=='object')return;
         if(Array.isArray(val)){arrays++;val.forEach(walk);}
         else{const k=Object.keys(val);keys+=k.length;k.forEach(key=>walk(val[key]));}
     }
@@ -1292,11 +1293,11 @@ function countKeysAndArrays(obj){
 
 function updateStats(fmt,input,output,obj){
     document.getElementById('statFormat').textContent=fmt;
-    const bytes="new" Blob([input]).size;
-    document.getElementById('statSize').textContent="bytes">1024?(bytes/1024).toFixed(1)+' KB':bytes+' B';
+    const bytes=new Blob([input]).size;
+    document.getElementById('statSize').textContent=bytes>1024?(bytes/1024).toFixed(1)+' KB':bytes+' B';
     document.getElementById('statLines').textContent=output.split('\n').length;
     let depth=0,maxD=0;
-    for(const c of input){if(c="=='{'||c="=='['||c==='<'){depth++;maxD=Math.max(maxD,depth);}if(c==='}'||c===']'){depth--;}}""
+    for(const c of input){if(c==='{'||c==='['||c==='<'){depth++;maxD=Math.max(maxD,depth);}if(c==='}'||c===']'){depth--;}}
     document.getElementById('statDepth').textContent=maxD;
     if(obj){
         const counts=countKeysAndArrays(obj);
@@ -1314,16 +1315,18 @@ function buildTree(obj){
 }
 
 function renderTreeNode(val,key,isRoot){
-    if(val="==null)return" '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-null">null</span></div>';
-    if(typeof val="=='boolean')return" '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-bool">'+val+'</span></div>';
-    if(typeof val="=='number')return" '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-num">'+val+'</span></div>';
-    if(typeof val="=='string')return" '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-str">"'+esc(val)+'"</span></div>';
+    if(val===null)return '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-null">null</span></div>';
+    if(typeof val==='boolean')return '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-bool">'+val+'</span></div>';
+    if(typeof val==='number')return '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-num">'+val+'</span></div>';
+    if(typeof val==='string')return '<div class="tree-node"><span class="tree-key">'+esc(key)+'</span>: <span class="tree-str">"'+esc(val)+'"</span></div>';
     if(Array.isArray(val)){
-        const id='tn-2'+Math.random().toString(36).slice(2);         return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">['+val.length+']</span><div id="'+id+'">'+val.map((v,i)=>renderTreeNode(v,i,false)).join('')+'</div></div>';
+        const id='tn'+Math.random().toString(36).slice(2);
+        return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">['+val.length+']</span><div id="'+id+'">'+val.map((v,i)=>renderTreeNode(v,i,false)).join('')+'</div></div>';
     }
-    if(typeof val="=='object'){"
+    if(typeof val==='object'){
         const keys=Object.keys(val);
-        const id='tn'+Math.random().toString(36).slice(2);         return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">{'+keys.length+'}</span><div id="'+id+'">'+keys.map(k=>renderTreeNode(val[k],k,false)).join('')+'</div></div>';
+        const id='tn'+Math.random().toString(36).slice(2);
+        return '<div class="tree-node"><span class="tree-toggle" onclick="toggleNode(\''+id+'\')">-</span> <span class="tree-key">'+esc(key)+'</span> <span style="opacity:.5">{'+keys.length+'}</span><div id="'+id+'">'+keys.map(k=>renderTreeNode(val[k],k,false)).join('')+'</div></div>';
     }
     return '<div class="tree-node">'+esc(String(val))+'</div>';
 }
@@ -1331,7 +1334,7 @@ function renderTreeNode(val,key,isRoot){
 function toggleNode(id){
     const el=document.getElementById(id);
     if(!el)return;
-    if(el.style.display="=='none'){"
+    if(el.style.display==='none'){
         el.style.display='block';
         el.parentElement.querySelector('.tree-toggle').textContent='-';
     }else{
@@ -1342,9 +1345,9 @@ function toggleNode(id){
 
 function setView(view){
     currentView=view;
-    document.querySelectorAll('.view-tab').forEach((t,i)=>t.classList.toggle('active',(i="==0&&view="=='code')||(i===1&&view==='tree')));""
-    document.getElementById('output').style.display="view="=='code'?'block':'none';""
-    document.getElementById('treeView').style.display="view="=='tree'?'block':'none';""
+    document.querySelectorAll('.view-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&view==='code')||(i===1&&view==='tree')));
+    document.getElementById('output').style.display=view==='code'?'block':'none';
+    document.getElementById('treeView').style.display=view==='tree'?'block':'none';
 }
 
 function copyOutput(){
@@ -1358,7 +1361,8 @@ function copyOutput(){
 
 function clearAll(){
     document.getElementById('input').value='';
-    document.getElementById('output').innerHTML='Formatted" output will appear here...';document.getElementById('treeView').innerHTML='';
+    document.getElementById('output').innerHTML='Formatted output will appear here...';
+    document.getElementById('treeView').innerHTML='';
     document.getElementById('errorBar').style.display='none';
     ['statFormat','statSize'].forEach(id=>document.getElementById(id).textContent='-');
     ['statLines','statDepth','statKeys','statArrays'].forEach(id=>document.getElementById(id).textContent='0');
@@ -1370,10 +1374,12 @@ function loadSampleJSON(){
 }
 
 function loadSampleXML(){
-    document.getElementById('input').value='<?xml" version="1.0" encoding="UTF-8"?">\n<response status="success" version="2.0">\n<users>\n<user id="1" role="admin"><name>John Doe</name><email>john@example.com</email><profile verified="true"><location>New York</location><age>32</age></profile><orders count="2"><order id="101" status="shipped"><total>249.99</total><items>3</items></order><order id="102" status="processing"><total>89.50</total><items>1</items></order></orders></user>\n<user id="2" role="viewer"><name>Jane Smith</name><email>jane@example.com</email><profile verified="false"><location>London</location><age>28</age></profile></user>\n</users>\n<pagination page="1" per_page="10" total="2"/">\n<meta><request_id>req_abc123</request_id><timestamp>2024-01-15T10:30:00Z</timestamp></meta>\n</response>';formatResponse();
+    document.getElementById('input').value='<?xml version="1.0" encoding="UTF-8"?>\n<response status="success" version="2.0">\n<users>\n<user id="1" role="admin"><name>John Doe</name><email>john@example.com</email><profile verified="true"><location>New York</location><age>32</age></profile><orders count="2"><order id="101" status="shipped"><total>249.99</total><items>3</items></order><order id="102" status="processing"><total>89.50</total><items>1</items></order></orders></user>\n<user id="2" role="viewer"><name>Jane Smith</name><email>jane@example.com</email><profile verified="false"><location>London</location><age>28</age></profile></user>\n</users>\n<pagination page="1" per_page="10" total="2"/>\n<meta><request_id>req_abc123</request_id><timestamp>2024-01-15T10:30:00Z</timestamp></meta>\n</response>';
+    formatResponse();
 }
 
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}))</script>
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+</script>
 <p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Browser-tested March 2026. Compatible with Chrome 134+, Firefox 135+, Safari 18+, and Edge 134+.</p>
 
 <section class="hn-discussion-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#ff9f0a;font-size:1rem;margin:0 0 0.75rem 0;">Hacker News Discussions</h3><p style="color:#6e6e73;font-size:0.9rem;line-height:1.6;">Explore related discussions on <a class="interactive-element" href="https://news.ycombinator.com/" rel="noopener" style="color:#ff9f0a;" target="_blank">Hacker News</a>, where developers and technologists share insights about tools, workflows, and best practices relevant to this topic.</p></section>
