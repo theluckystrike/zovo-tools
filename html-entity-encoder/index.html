@@ -1073,7 +1073,6 @@ html { scroll-behavior: smooth; }
 
 <script>
 let mode='encode';
-let activeRefCategory='common';
 
 const NAMED_ENTITIES={
   '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;',
@@ -1081,105 +1080,147 @@ const NAMED_ENTITIES={
   '\u00b0':'&deg;','\u00b1':'&plusmn;','\u00d7':'&times;','\u00f7':'&divide;',
   '\u2260':'&ne;','\u2264':'&le;','\u2265':'&ge;','\u221e':'&infin;',
   '\u2190':'&larr;','\u2191':'&uarr;','\u2192':'&rarr;','\u2193':'&darr;',
-  '\u2194':'&harr;','\u21d0':'&lArr;','\u21d2':'&rArr;','\u21d4':'&hArr;',
   '\u2014':'&mdash;','\u2013':'&ndash;','\u2018':'&lsquo;','\u2019':'&rsquo;',
   '\u201c':'&ldquo;','\u201d':'&rdquo;','\u2026':'&hellip;','\u00a3':'&pound;',
   '\u20ac':'&euro;','\u00a5':'&yen;','\u00a2':'&cent;','\u00ab':'&laquo;',
   '\u00bb':'&raquo;','\u00bc':'&frac14;','\u00bd':'&frac12;','\u00be':'&frac34;',
-  '\u2020':'&dagger;','\u2021':'&Dagger;','\u00b6':'&para;','\u00a7':'&sect;',
-  '\u2032':'&prime;','\u2033':'&Prime;','\u2044':'&frasl;','\u2234':'&there4;',
-  '\u00b7':'&middot;','\u2022':'&bull;','\u25a0':'&block;','\u25cb':'&cir;',
-  '\u2660':'&spades;','\u2663':'&clubs;','\u2665':'&hearts;','\u2666':'&diams;',
-  '\u03b1':'&alpha;','\u03b2':'&beta;','\u03b3':'&gamma;','\u03b4':'&delta;',
-  '\u03b5':'&epsilon;','\u03b6':'&zeta;','\u03b7':'&eta;','\u03b8':'&theta;',
-  '\u03b9':'&iota;','\u03ba':'&kappa;','\u03bb':'&lambda;','\u03bc':'&mu;',
-  '\u03bd':'&nu;','\u03be':'&xi;','\u03bf':'&omicron;','\u03c0':'&pi;',
-  '\u03c1':'&rho;','\u03c3':'&sigma;','\u03c4':'&tau;','\u03c5':'&upsilon;',
-  '\u03c6':'&phi;','\u03c7':'&chi;','\u03c8':'&psi;','\u03c9':'&omega;',
-  '\u2200':'&forall;','\u2202':'&part;','\u2203':'&exist;','\u2205':'&empty;',
-  '\u2207':'&nabla;','\u2208':'&isin;','\u2209':'&notin;','\u220b':'&ni;',
-  '\u220f':'&prod;','\u2211':'&sum;','\u221a':'&radic;','\u221d':'&prop;',
-  '\u2227':'&and;','\u2228':'&or;','\u2229':'&cap;','\u222a':'&cup;',
-  '\u222b':'&int;','\u2248':'&asymp;','\u2261':'&equiv;','\u2282':'&sub;',
-  '\u2283':'&sup;','\u2284':'&nsub;','\u2286':'&sube;','\u2287':'&supe;',
-  '\u2295':'&oplus;','\u2297':'&otimes;','\u22a5':'&perp;','\u22c5':'&sdot;',
-  '\u00c0':'&Agrave;','\u00c1':'&Aacute;','\u00c2':'&Acirc;','\u00c3':'&Atilde;',
-  '\u00c4':'&Auml;','\u00c5':'&Aring;','\u00c6':'&AElig;','\u00c7':'&Ccedil;',
-  '\u00c8':'&Egrave;','\u00c9':'&Eacute;','\u00ca':'&Ecirc;','\u00cb':'&Euml;',
-  '\u00cc':'&Igrave;','\u00cd':'&Iacute;','\u00ce':'&Icirc;','\u00cf':'&Iuml;',
-  '\u00d1':'&Ntilde;','\u00d2':'&Ograve;','\u00d3':'&Oacute;','\u00d4':'&Ocirc;',
-  '\u00d5':'&Otilde;','\u00d6':'&Ouml;','\u00d8':'&Oslash;','\u00d9':'&Ugrave;',
-  '\u00da':'&Uacute;','\u00db':'&Ucirc;','\u00dc':'&Uuml;','\u00dd':'&Yacute;',
-  '\u00df':'&szlig;','\u00e0':'&agrave;','\u00e1':'&aacute;','\u00e2':'&acirc;',
-  '\u00e3':'&atilde;','\u00e4':'&auml;','\u00e5':'&aring;','\u00e6':'&aelig;',
-  '\u00e7':'&ccedil;','\u00e8':'&egrave;','\u00e9':'&eacute;','\u00ea':'&ecirc;',
-  '\u00eb':'&euml;','\u00ec':'&igrave;','\u00ed':'&iacute;','\u00ee':'&icirc;',
-  '\u00ef':'&iuml;','\u00f1':'&ntilde;','\u00f2':'&ograve;','\u00f3':'&oacute;',
-  '\u00f4':'&ocirc;','\u00f5':'&otilde;','\u00f6':'&ouml;','\u00f8':'&oslash;',
-  '\u00f9':'&ugrave;','\u00fa':'&uacute;','\u00fb':'&ucirc;','\u00fc':'&uuml;',
-  '\u00fd':'&yacute;','\u00ff':'&yuml;'
+  '\u2020':'&dagger;','\u2021':'&Dagger;','\u00b6':'&para;','\u00a7':'&sect;'
 };
 
 const REVERSE_ENTITIES={};
 for(const[char,entity]of Object.entries(NAMED_ENTITIES)){REVERSE_ENTITIES[entity]=char;}
 
-const REFERENCE_DATA={
-  common:[
-    ['&','&amp;','Ampersand'],['<','&lt;','Less than'],['>','&gt;','Greater than'],
-    ['"','&quot;','Double quote'],["'",'&apos;','Apostrophe'],['\u00a0','&nbsp;','Non-breaking space'],
-    ['\u00a9','&copy;','Copyright'],['\u00ae','&reg;','Registered'],['\u2122','&trade;','Trademark'],
-    ['\u00b0','&deg;','Degree'],['\u00a7','&sect;','Section'],['\u00b6','&para;','Paragraph']
-  ],
-  symbols:[
-    ['\u2022','&bull;','Bullet'],['\u2026','&hellip;','Ellipsis'],['\u2020','&dagger;','Dagger'],
-    ['\u2021','&Dagger;','Double dagger'],['\u00b7','&middot;','Middle dot'],['\u2032','&prime;','Prime'],
-    ['\u2033','&Prime;','Double prime'],['\u2660','&spades;','Spade'],['\u2663','&clubs;','Club'],
-    ['\u2665','&hearts;','Heart'],['\u2666','&diams;','Diamond'],['\u00ab','&laquo;','Left guillemet'],
-    ['\u00bb','&raquo;','Right guillemet'],['\u00bc','&frac14;','One quarter'],['\u00bd','&frac12;','One half'],
-    ['\u00be','&frac34;','Three quarters']
-  ],
-  math:[
-    ['\u00d7','&times;','Multiply'],['\u00f7','&divide;','Divide'],['\u00b1','&plusmn;','Plus-minus'],
-    ['\u2260','&ne;','Not equal'],['\u2264','&le;','Less or equal'],['\u2265','&ge;','Greater or equal'],
-    ['\u221e','&infin;','Infinity'],['\u221a','&radic;','Square root'],['\u2211','&sum;','Summation'],
-    ['\u220f','&prod;','Product'],['\u222b','&int;','Integral'],['\u2248','&asymp;','Approx equal'],
-    ['\u2261','&equiv;','Identical'],['\u2202','&part;','Partial'],['\u2207','&nabla;','Nabla'],
-    ['\u2200','&forall;','For all'],['\u2203','&exist;','Exists'],['\u2205','&empty;','Empty set']
-  ],
-  arrows:[
-    ['\u2190','&larr;','Left arrow'],['\u2191','&uarr;','Up arrow'],
-    ['\u2192','&rarr;','Right arrow'],['\u2193','&darr;','Down arrow'],
-    ['\u2194','&harr;','Left-right arrow'],['\u21d0','&lArr;','Double left'],
-    ['\u21d2','&rArr;','Double right'],['\u21d4','&hArr;','Double left-right']
-  ],
-  currency:[
-    ['\u20ac','&euro;','Euro'],['\u00a3','&pound;','Pound'],['\u00a5','&yen;','Yen'],
-    ['\u00a2','&cent;','Cent'],['\u20b9','&#8377;','Rupee'],['\u20bd','&#8381;','Ruble'],
-    ['\u20ba','&#8378;','Lira'],['\u20bf','&#8383;','Bitcoin']
-  ],
-  punctuation:[
-    ['\u2014','&mdash;','Em dash'],['\u2013','&ndash;','En dash'],
-    ['\u2018','&lsquo;','Left single quote'],['\u2019','&rsquo;','Right single quote'],
-    ['\u201c','&ldquo;','Left double quote'],['\u201d','&rdquo;','Right double quote'],
-    ['\u00a1','&#161;','Inverted !'],['\u00bf','&#191;','Inverted ?'],
-    ['\u2044','&frasl;','Fraction slash'],['\u2234','&there4;','Therefore']
-  ],
-  greek:[
-    ['\u03b1','&alpha;','Alpha'],['\u03b2','&beta;','Beta'],['\u03b3','&gamma;','Gamma'],
-    ['\u03b4','&delta;','Delta'],['\u03b5','&epsilon;','Epsilon'],['\u03b6','&zeta;','Zeta'],
-    ['\u03b7','&eta;','Eta'],['\u03b8','&theta;','Theta'],['\u03b9','&iota;','Iota'],
-    ['\u03ba','&kappa;','Kappa'],['\u03bb','&lambda;','Lambda'],['\u03bc','&mu;','Mu'],
-    ['\u03bd','&nu;','Nu'],['\u03be','&xi;','Xi'],['\u03bf','&omicron;','Omicron'],
-    ['\u03c0','&pi;','Pi'],['\u03c1','&rho;','Rho'],['\u03c3','&sigma;','Sigma'],
-    ['\u03c4','&tau;','Tau'],['\u03c5','&upsilon;','Upsilon'],['\u03c6','&phi;','Phi'],
-    ['\u03c7','&chi;','Chi'],['\u03c8','&psi;','Psi'],['\u03c9','&omega;','Omega']
-  ]
-};
+const COMMON_REF=[
+  ['&','&amp;','Ampersand'],['<','&lt;','Less than'],['>','&gt;','Greater than'],
+  ['"','&quot;','Double quote'],["'",'&apos;','Apostrophe'],['\u00a0','&nbsp;','Non-breaking space'],
+  ['\u00a9','&copy;','Copyright'],['\u00ae','&reg;','Registered'],['\u2122','&trade;','Trademark'],
+  ['\u00b0','&deg;','Degree'],['\u20ac','&euro;','Euro'],['\u00a3','&pound;','Pound'],
+  ['\u00a5','&yen;','Yen'],['\u00a2','&cent;','Cent'],['\u2190','&larr;','Left arrow'],
+  ['\u2192','&rarr;','Right arrow'],['\u2191','&uarr;','Up arrow'],['\u2193','&darr;','Down arrow'],
+  ['\u2014','&mdash;','Em dash'],['\u2013','&ndash;','En dash'],['\u2026','&hellip;','Ellipsis'],
+  ['\u00d7','&times;','Times'],['\u00f7','&divide;','Divide'],['\u221e','&infin;','Infinity']
+];
 
-const SAMPLE_DATA={
-  html:'<div class="greeting">\n  <h2>Hello & Welcome!</h2>\n  <p>Price: $19.99 < $25.00</p>\n  <img src="photo.jpg" alt="A photo of \\"nature\\"" />\n  <a class="interactive-element" href="page.html?id=5&name=test">Click here</a>\n</div>',
-  xss:'<script>alert("XSS Attack!")
-}</script>\n<img src="x" onerror="document.cookie" alt="Image">\n<a class="interactive-element" href="javascript:void(0)" onclick="stealData()">Click me</a>\n<div onmouseover="malicious()">Hover trap</div>\n<iframe src="evil-site.com"></iframe>',
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.mode-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&m==='encode')||(i===1&&m==='decode')));
+  document.getElementById('inputLabel').textContent=m==='encode'?'Input Text':'Encoded HTML';
+  document.getElementById('outputLabel').textContent=m==='encode'?'Encoded Output':'Decoded Text';
+  convert();
+}
+
+function convert(){
+  const input=document.getElementById('input').value;
+  const output=document.getElementById('output');
+
+  if(mode==='encode'){
+    output.value=encodeEntities(input);
+  }else{
+    output.value=decodeEntities(input);
+  }
+
+  updateStats(input,output.value);
+  updateCharBreakdown(input);
+}
+
+function encodeEntities(text){
+  const useNamed=document.getElementById('optNamed').checked;
+  const useNumeric=document.getElementById('optNumeric').checked;
+  const useHex=document.getElementById('optHex').checked;
+  const encodeAll=document.getElementById('optAll').checked;
+
+  let result='';
+  for(let i=0;i<text.length;i++){
+    const char=text[i];
+    const code=char.codePointAt(0);
+    const needsEncode=encodeAll||(code>127)||['&','<','>','"',"'"].includes(char);
+
+    if(needsEncode){
+      if(useNamed&&NAMED_ENTITIES[char]){
+        result+=NAMED_ENTITIES[char];
+      }else if(useHex){
+        result+='&#x'+code.toString(16).toUpperCase()+';';
+      }else if(useNumeric){
+        result+='&#'+code+';';
+      }else if(NAMED_ENTITIES[char]){
+        result+=NAMED_ENTITIES[char];
+      }else{
+        result+='&#'+code+';';
+      }
+    }else{
+      result+=char;
+    }
+  }
+  return result;
+}
+
+function decodeEntities(text){
+  const el=document.createElement('textarea');
+  el.innerHTML=text;
+  return el.value;
+}
+
+function updateStats(input,output){
+  document.getElementById('statInput').textContent=input.length;
+  document.getElementById('statOutput').textContent=output.length;
+  const entityCount=(output.match(/&[#\w]+;/g)||[]).length;
+  document.getElementById('statEntities').textContent=mode==='encode'?entityCount:(input.match(/&[#\w]+;/g)||[]).length;
+}
+
+function updateCharBreakdown(text){
+  const container=document.getElementById('charBreakdown');
+  if(!text||text.length>100){container.innerHTML='';return;}
+
+  let html='<table class="char-table"><thead><tr><th>Char</th><th>Code Point</th><th>Named Entity</th><th>Decimal</th><th>Hex</th></tr></thead><tbody>';
+  const seen=new Set();
+  for(const char of text){
+    if(seen.has(char)||char==='\n'||char==='\r')continue;
+    seen.add(char);
+    const code=char.codePointAt(0);
+    const named=NAMED_ENTITIES[char]||'N/A';
+    html+=`<tr><td class="char-display">${escHtml(char)}</td><td>U+${code.toString(16).toUpperCase().padStart(4,'0')}</td><td>${escHtml(named)}</td><td>&#38;#${code};</td><td>&#38;#x${code.toString(16).toUpperCase()};</td></tr>`;
+  }
+  html+='</tbody></table>';
+  container.innerHTML=html;
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function copyOutput(){
+  const output=document.getElementById('output');
+  navigator.clipboard.writeText(output.value).then(()=>{
+    const btn=event.target;btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy Output',1500);
+  });
+}
+
+function swapFields(){
+  const input=document.getElementById('input');
+  const output=document.getElementById('output');
+  const temp=input.value;
+  input.value=output.value;
+  output.value=temp;
+  setMode(mode==='encode'?'decode':'encode');
+}
+
+function clearAll(){
+  document.getElementById('input').value='';
+  document.getElementById('output').value='';
+  document.getElementById('charBreakdown').innerHTML='';
+  document.getElementById('statInput').textContent='0';
+  document.getElementById('statOutput').textContent='0';
+  document.getElementById('statEntities').textContent='0';
+}
+
+// Build reference grid
+const grid=document.getElementById('refGrid');
+COMMON_REF.forEach(([char,entity,name])=>{
+  const item=document.createElement('div');
+  item.className='ref-item';
+  item.innerHTML=`<span class="ref-char">${escHtml(char)}</span><span><span class="ref-code">${escHtml(entity)}</span><br/><span style="font-size:.75rem;opacity:.6">${name}</span></span>`;
+  item.onclick=()=>{document.getElementById('input').value+=char;convert();};
+  grid.appendChild(item);
+});
+</script>\n<img src="x" onerror="document.cookie" alt="Image">\n<a class="interactive-element" href="javascript:void(0)" onclick="stealData()">Click me</a>\n<div onmouseover="malicious()">Hover trap</div>\n<iframe src="evil-site.com"></iframe>',
   unicode:'Hello World \u00e9\u00e8\u00ea \u00fc\u00f6\u00e4\n\u00a9 2026 \u00ae \u2122\nMath: \u03b1 + \u03b2 = \u03b3, \u221e \u00d7 0 \u2260 0\nArrows: \u2190 \u2191 \u2192 \u2193\nCurrency: \u20ac \u00a3 \u00a5 \u00a2\nCards: \u2660 \u2665 \u2666 \u2663\nEmoji: \ud83d\ude80 \ud83c\udf1f \u2764\ufe0f \ud83d\udc4d',
   email:'Dear Customer,\n\nYour order total is \u00a3150.00 (approximately \u20ac175.00).\n\nTerms & Conditions apply.\nPrice includes 20% VAT.\n\n\u00a9 2026 Company Name\u2122\nAll rights reserved \u00ae\n\n"Quality is our #1 priority"\n\nContact: support@company.com',
   entities:'&lt;div class="&quot;test&quot;&gt;\n"  &amp; means ampersand\n  &amp;copy; 2026 &amp;mdash; All rights reserved\n  Price: &amp;pound;50 &amp;times; 2 = &amp;pound;100\n  &amp;alpha; + &amp;beta; = &amp;gamma;\n  &amp;larr; &amp;uarr; &amp;rarr; &amp;darr;\n&lt;/div&gt;'
