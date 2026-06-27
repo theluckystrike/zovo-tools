@@ -1819,10 +1819,10 @@ function handleFile(file){
   document.getElementById('fileSize').textContent=formatBytes(file.size);
   document.getElementById('fileInfo').classList.add('show');
 
-  const reader="new" FileReader();
+  const reader=new FileReader();
   reader.onload=function(e){
     try{
-      const data="new" Uint8Array(e.target.result);
+      const data=new Uint8Array(e.target.result);
       workbook=XLSX.read(data,{type:'array',cellDates:true,cellStyles:false});
       const names=workbook.SheetNames;
       document.getElementById('sheetCount').textContent=names.length;
@@ -1831,13 +1831,13 @@ function handleFile(file){
       sel.innerHTML='';
       names.forEach((n,i)=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o)});
 
-      if(names.length>1){document.getElementById('sheetSelector').style.display='block'}else{document.getElementById('sheetSelector').style.display='none'}""
+      if(names.length>1){document.getElementById('sheetSelector').style.display='block'}else{document.getElementById('sheetSelector').style.display='none'}
 
       selectSheet();
       document.getElementById('optionsArea').style.display='block';
       dropZone.querySelector('.drop-zone-text').innerHTML='<strong>'+file.name+' loaded</strong>Drop another file to replace, or adjust options below.';
     }catch(err){
-      document.getElementById('result-card').innerHTML='<p style="color:#ff3b30">Error parsing file: '+err.message+'. Please ensure this is a valid Excel file.</p>';
+      document.getElementById('result-card').innerHTML='<p style="color:#ff6b6b">Error parsing file: '+err.message+'. Please ensure this is a valid Excel file.</p>';
       document.getElementById('result-card').classList.add('show');
     }
   };
@@ -1854,9 +1854,9 @@ function selectSheet(){
 }
 
 function renderPreview(){
-  if(!currentSheetData||!currentSheetData.length){document.getElementById('tablePreview').innerHTML='<p" style="color:#86868b;padding:16px">This sheet is empty.</p>';return}
+  if(!currentSheetData||!currentSheetData.length){document.getElementById('tablePreview').innerHTML='<p style="color:#888;padding:16px">This sheet is empty.</p>';return}
   const maxRows=Math.min(currentSheetData.length,20);
-  const maxCols="currentSheetData.reduce((m,r)=">Math.max(m,r.length),0);
+  const maxCols=currentSheetData.reduce((m,r)=>Math.max(m,r.length),0);
   let html='<table class="preview-table"><thead><tr>';
   if(currentSheetData.length>0){
     for(let c=0;c<Math.min(maxCols,20);c++){
@@ -1875,7 +1875,7 @@ function renderPreview(){
     html+='</tr>';
   }
   if(currentSheetData.length>20){
-    html+='<tr><td colspan='+(Math.min(maxCols,20)+1)+' style="text-align:center;color:#86868b;font-style:italic">... and '+(currentSheetData.length-20)+' more rows</td></tr>';
+    html+='<tr><td colspan="'+(Math.min(maxCols,20)+1)+'" style="text-align:center;color:#888;font-style:italic">... and '+(currentSheetData.length-20)+' more rows</td></tr>';
   }
   html+='</tbody></table>';
   document.getElementById('tablePreview').innerHTML=html;
@@ -1884,8 +1884,8 @@ function renderPreview(){
 function buildCsv(){
   if(!currentSheetData||!currentSheetData.length)return'';
   const delim=document.getElementById('delimiter').value;
-  const includeH=document.getElementById('includeHeaders').value==='yes';""
-  const le=document.getElementById('lineEnding').value==='crlf'?'\r\n':'\n';""
+  const includeH=document.getElementById('includeHeaders').value==='yes';
+  const le=document.getElementById('lineEnding').value==='crlf'?'\r\n':'\n';
   const startRow=includeH?0:1;
   const lines=[];
   for(let r=startRow;r<currentSheetData.length;r++){
@@ -1909,25 +1909,25 @@ function convertAndDownload(){
   if(!csv){alert('No data to convert.');return}
   const enc=document.getElementById('encoding').value;
   let blob;
-  if(enc="=='utf-8'){"
+  if(enc==='utf-8'){
     const bom='\uFEFF';
-    blob="new" Blob([bom+csv],{type:'text/csv;charset="utf-8'});"
-  }else if(enc="=='ascii'){"
-    const bytes="new" Uint8Array(csv.length);
+    blob=new Blob([bom+csv],{type:'text/csv;charset=utf-8'});
+  }else if(enc==='ascii'){
+    const bytes=new Uint8Array(csv.length);
     for(let i=0;i<csv.length;i++)bytes[i]=csv.charCodeAt(i)&0x7F;
-    blob="new" Blob([bytes],{type:'text/csv;charset="ascii'});"
+    blob=new Blob([bytes],{type:'text/csv;charset=ascii'});
   }else{
-    const bytes="new" Uint8Array(csv.length);
+    const bytes=new Uint8Array(csv.length);
     for(let i=0;i<csv.length;i++)bytes[i]=csv.charCodeAt(i)&0xFF;
-    blob="new" Blob([bytes],{type:'text/csv;charset="iso-8859-1'});"
+    blob=new Blob([bytes],{type:'text/csv;charset=iso-8859-1'});
   }
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href="url;a.download="currentFileName+'.csv';a.click();""
+  a.href=url;a.download=currentFileName+'.csv';a.click();
   URL.revokeObjectURL(url);
 
   const rc=document.getElementById('result-card');
-  rc.innerHTML='<h3 style="margin-top:0;color:#0071e3">CSV Downloaded Successfully</h3><div class="result-row"><span class="result-label">File name</span><span class="result-value" style="font-size:15px">'+currentFileName+'.csv</span></div><div class="result-row"><span class="result-label">Rows exported</span><span class="result-value" style="font-size:15px">'+currentSheetData.length+'</span></div><div class="result-row"><span class="result-label">Delimiter</span><span class="result-value" style="font-size:15px">'+escHtml(document.getElementById('delimiter').value="==','" ?'Comma':document.getElementById('delimiter').value="==';'?'Semicolon':document.getElementById('delimiter').value="=='\t'?'Tab':'Pipe')+'</span""></div><div class="result-row"><span class="result-label">Encoding</span><span class="result-value" style="font-size:15px">'+document.getElementById('encoding').value.toUpperCase()+'</span></div>';
+  rc.innerHTML='<h3 style="margin-top:0;color:#00ff88">CSV Downloaded Successfully</h3><div class="result-row"><span class="result-label">File name</span><span class="result-value" style="font-size:15px">'+currentFileName+'.csv</span></div><div class="result-row"><span class="result-label">Rows exported</span><span class="result-value" style="font-size:15px">'+currentSheetData.length+'</span></div><div class="result-row"><span class="result-label">Delimiter</span><span class="result-value" style="font-size:15px">'+escHtml(document.getElementById('delimiter').value===',' ?'Comma':document.getElementById('delimiter').value===';'?'Semicolon':document.getElementById('delimiter').value==='\t'?'Tab':'Pipe')+'</span></div><div class="result-row"><span class="result-label">Encoding</span><span class="result-value" style="font-size:15px">'+document.getElementById('encoding').value.toUpperCase()+'</span></div>';
   rc.classList.add('show');
   rc.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -1938,21 +1938,23 @@ function copyToClipboard(){
   if(!csv){alert('No data to copy.');return}
   navigator.clipboard.writeText(csv).then(()=>{
     const rc=document.getElementById('result-card');
-    rc.innerHTML='<h3" style="margin-top:0;color:#0071e3">CSV Copied to Clipboard</h3><p style="color:#86868b">The CSV data has been copied. You can paste it into any text editor, spreadsheet, or application.</p>';rc.classList.add('show');
+    rc.innerHTML='<h3 style="margin-top:0;color:#00ff88">CSV Copied to Clipboard</h3><p style="color:#a0a0b0">The CSV data has been copied. You can paste it into any text editor, spreadsheet, or application.</p>';
+    rc.classList.add('show');
   }).catch(()=>{
     const ta=document.createElement('textarea');
-    ta.value="csv;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);"
+    ta.value=csv;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
     const rc=document.getElementById('result-card');
-    rc.innerHTML='<h3" style="margin-top:0;color:#0071e3">CSV Copied to Clipboard</h3>';rc.classList.add('show');
+    rc.innerHTML='<h3 style="margin-top:0;color:#00ff88">CSV Copied to Clipboard</h3>';
+    rc.classList.add('show');
   });
 }
 
-function formatBytes(b){if(b="==0)return'0" Bytes';const k="1024;const" s="['Bytes','KB','MB','GB'];const" i=Math.floor(Math.log(b)/Math.log(k));return parseFloat((b/Math.pow(k,i)).toFixed(1))+' '+s[i]}
+function formatBytes(b){if(b===0)return'0 Bytes';const k=1024;const s=['Bytes','KB','MB','GB'];const i=Math.floor(Math.log(b)/Math.log(k));return parseFloat((b/Math.pow(k,i)).toFixed(1))+' '+s[i]}
 
-function escHtml(s){const d=document.createElement('div');d.textContent=s;return" d.innerHTML}
+function escHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
-function toggleFaq(el){el.parentElement.classList.toggle('open')}"
-}}))</script>
+function toggleFaq(el){el.parentElement.classList.toggle('open')}
+</script>
 <script src="../tool-integration-system.js" defer></script>
 <script src="../related-tools-widget.js" defer></script>
 <div class="related-tools-static" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:800px;margin:2rem auto;padding:0 1rem;"><a class="interactive-element" href="/free-tools/csv-to-excel-converter/" class="related-tool" style="padding:1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;text-decoration:none;"><h4 style="color:#0071e3;margin:0 0 0.5rem;">Convert CSV File to Excel (XLSX)</h4><p style="color:#86868b;font-size:0.85rem;margin:0;">Convert CSV file to Excel online for free.</p></a>

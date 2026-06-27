@@ -1070,7 +1070,7 @@ function calcMonthlyPayment(principal,annualRate,years){
   if(principal<=0)return 0;
   var r=annualRate/100/12;
   var n=years*12;
-  if(r="==0)return" principal/n;
+  if(r===0)return principal/n;
   return principal*(r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);
 }
 
@@ -1192,16 +1192,22 @@ function calculateRentVsBuy(){
 
   var v=document.getElementById('verdict');
   if(breakeven>0&&breakeven<=30){
-    document.getElementById("breakeven-2").textContent='Year '+breakeven;
+    document.getElementById('breakeven').textContent='Year '+breakeven;
     if(breakeven<=5){
-      v.className='verdict" verdict-buy';v.textContent='Buying wins in '+breakeven+' year'+(breakeven>1?'s':'')+'. This market favors buyers.';
+      v.className='verdict verdict-buy';
+      v.textContent='Buying wins in '+breakeven+' year'+(breakeven>1?'s':'')+'. This market favors buyers.';
     } else if(breakeven<=10){
-      v.className='verdict" verdict-buy';v.textContent='Buying wins after '+breakeven+' years. Good if you plan to stay long-term.';
+      v.className='verdict verdict-buy';
+      v.textContent='Buying wins after '+breakeven+' years. Good if you plan to stay long-term.';
     } else {
-      v.className='verdict" verdict-rent';v.textContent='Breakeven at year '+breakeven+'. Consider renting unless you plan to stay 10+ years.';
+      v.className='verdict verdict-rent';
+      v.textContent='Breakeven at year '+breakeven+'. Consider renting unless you plan to stay 10+ years.';
     }
   } else {
-    document.getElementById("breakeven-2").textContent='Beyond" 30 years';v.className='verdict" verdict-rent';v.textContent='Renting" and investing appears more favorable in this scenario over 30 years.';}
+    document.getElementById('breakeven').textContent='Beyond 30 years';
+    v.className='verdict verdict-rent';
+    v.textContent='Renting and investing appears more favorable in this scenario over 30 years.';
+  }
 
   // Year grid
   var grid=document.getElementById('yearGrid');
@@ -1210,16 +1216,16 @@ function calculateRentVsBuy(){
   showYears.forEach(function(y){
     if(!results[y])return;
     var r=results[y];
-    var winner="r.buyerNet">r.renterNet?'Buy':'Rent';
+    var winner=r.buyerNet>r.renterNet?'Buy':'Rent';
     var diff=Math.abs(r.buyerNet-r.renterNet);
     var card=document.createElement('div');
     card.className='scenario-card';
-    card.innerHTML='<h4>'+y+' Years</h4>'+;
+    card.innerHTML='<h4>'+y+' Years</h4>'+
       '<div class="sub">Rent total: '+fmt(r.rentTotal)+'</div>'+
       '<div class="sub">Buy total cost: '+fmt(r.buyTotal)+'</div>'+
       '<div class="sub">Home equity: '+fmt(r.equity)+'</div>'+
       '<div class="sub">Renter portfolio: '+fmt(r.renterInvest)+'</div>'+
-      '<div class="big-num" style="margin-top:8px;color:'+(winner="=='Buy'?'#00ff88':'#ff3b30')+'">'+winner+'" wins by '+fmt(diff)+'</div>';
+      '<div class="big-num" style="margin-top:8px;color:'+(winner==='Buy'?'#00ff88':'#ff6b6b')+'">'+winner+' wins by '+fmt(diff)+'</div>';
     grid.appendChild(card);
   });
 
@@ -1230,14 +1236,14 @@ function calculateRentVsBuy(){
     var r10=results[10];
     var rentCard=document.createElement('div');
     rentCard.className='scenario-card';
-    rentCard.innerHTML='<h4 style="color:#ff3b30">Renting at Year 10</h4>'+;
+    rentCard.innerHTML='<h4 style="color:#ff6b6b">Renting at Year 10</h4>'+
       '<div class="sub">Total rent paid: '+fmt(r10.rentTotal)+'</div>'+
       '<div class="sub">Investment portfolio: '+fmt(r10.renterInvest)+'</div>'+
       '<div class="big-num" style="margin-top:8px">Net: '+fmt(r10.renterNet)+'</div>';
     detail.appendChild(rentCard);
     var buyCard=document.createElement('div');
     buyCard.className='scenario-card';
-    buyCard.innerHTML='<h4>Buying at Year 10</h4>'+;
+    buyCard.innerHTML='<h4>Buying at Year 10</h4>'+
       '<div class="sub">Home value: '+fmt(r10.homeVal)+'</div>'+
       '<div class="sub">Remaining loan: '+fmt(r10.balance)+'</div>'+
       '<div class="sub">Home equity: '+fmt(r10.equity)+'</div>'+

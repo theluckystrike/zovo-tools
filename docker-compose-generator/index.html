@@ -930,41 +930,41 @@ html { scroll-behavior: smooth; }
 </main>
 <footer><div class="container">Built by Michael Lip &middot; <a class="interactive-element" href="https://zovo.one">zovo.one</a></div></footer>
 <script>
-var services="[];var" serviceId=0;
+var services=[];var serviceId=0;
 function addService(name,image,ports,envs,volumes,restart,healthCmd,healthInterval,dependsOn,networks,cpuLimit,memLimit){
-  var svc="{id:serviceId++,name:name||'service-'+(services.length+1),image:image||'',ports:ports||[{host:'',container:''}],envs:envs||[{key:'',val:''}],volumes:volumes||[{host:'',container:''}],restart:restart||'unless-stopped',healthCmd:healthCmd||'',healthInterval:healthInterval||'30s',dependsOn:dependsOn||'',networks:networks||'',cpuLimit:cpuLimit||'',memLimit:memLimit||''};"
+  var svc={id:serviceId++,name:name||'service-'+(services.length+1),image:image||'',ports:ports||[{host:'',container:''}],envs:envs||[{key:'',val:''}],volumes:volumes||[{host:'',container:''}],restart:restart||'unless-stopped',healthCmd:healthCmd||'',healthInterval:healthInterval||'30s',dependsOn:dependsOn||'',networks:networks||'',cpuLimit:cpuLimit||'',memLimit:memLimit||''};
   services.push(svc);renderServices();generateYaml();updateStats();
 }
-function removeService(id){services="services.filter(function(s){return" s.id!==id;});renderServices();generateYaml();updateStats();}
+function removeService(id){services=services.filter(function(s){return s.id!==id;});renderServices();generateYaml();updateStats();}
 function clearAll(){services=[];serviceId=0;renderServices();generateYaml();updateStats();}
 function renderServices(){
   var el=document.getElementById('servicesList');
-  el.innerHTML="services.map(function(s){"
-    var portsHtml="s.ports.map(function(p,i){return'<div" class="kv-row"><input placeholder="Host port" value='+esc(p.host)+' oninput="updatePort('+s.id+','+i+',\'host\',this.value)"/><span style="opacity:.4">:</span><input placeholder="Container port" value='+esc(p.container)+' oninput="updatePort('+s.id+','+i+',\'container\',this.value)"/><button class="rm btn" onclick="removePort('+s.id+','+i+')">x</button></div>';}).join('');
-    var envsHtml="s.envs.map(function(e,i){return'<div" class="kv-row"><input placeholder="KEY" value='+esc(e.key)+' oninput="updateEnv('+s.id+','+i+',\'key\',this.value)"/><span style="opacity:.4">=</span><input placeholder="value" value='+esc(e.val)+' oninput="updateEnv('+s.id+','+i+',\'val\',this.value)"/><button class="rm btn" onclick="removeEnv('+s.id+','+i+')">x</button></div>';}).join('');
-    var volsHtml="s.volumes.map(function(v,i){return'<div" class="kv-row"><input placeholder="Host path or volume name" value='+esc(v.host)+' oninput="updateVol('+s.id+','+i+',\'host\',this.value)"/><span style="opacity:.4">:</span><input placeholder="Container path" value='+esc(v.container)+' oninput="updateVol('+s.id+','+i+',\'container\',this.value)"/><button class="rm btn" onclick="removeVol('+s.id+','+i+')">x</button></div>';}).join('');
-    var depOptions="services.filter(function(x){return" x.id!==s.id;}).map(function(x){return'<option value="'+esc(x.name)+'"'+(s.dependsOn="==x.name?'" selected':'')+'>'+esc(x.name)+'</option>';}).join('');
-    return '<div class="service-card"><h3><span>'+esc(s.name)+'</span><button class="btn danger btn" onclick="removeService('+s.id+')" style="padding:2px 10px;font-size:.75rem">Remove</button></h3>'+;
-    '<div class="form-row"><div class="form-group fade-in"><label>Service Name</label><input value='+esc(s.name)+' oninput="updateSvc('+s.id+',\'name\',this.value)"/></div>'+
-    '<div class="form-group fade-in"><label>Image</label><input value='+esc(s.image)+' placeholder="e.g. nginx:alpine" oninput="updateSvc('+s.id+',\'image\',this.value)"/></div></div>'+
-    '<div class="form-row"><div class="form-group fade-in"><label>Restart Policy</label><select onchange="updateSvc('+s.id+',\'restart\',this.value)"><option value="no"'+(s.restart="=='no'?'" selected':'')+'>no</option><option value="always"'+(s.restart="=='always'?'" selected':'')+'>always</option><option value="unless-stopped"'+(s.restart="=='unless-stopped'?'" selected':'')+'>unless-stopped</option><option value="on-failure"'+(s.restart="=='on-failure'?'" selected':'')+'>on-failure</option></select></div>'+
-    '<div class="form-group fade-in"><label>Depends On</label><select onchange="updateSvc('+s.id+',\'dependsOn\',this.value)"><option value="">None</option>'+depOptions+'</select></div></div>'+
-    '<div class="form-group fade-in"><label>Ports (host:container)</label>'+portsHtml+'<span class="add-link" onclick="addPort('+s.id+')">+ Add port mapping</span></div>'+
-    '<div class="form-group fade-in"><label>Environment Variables</label>'+envsHtml+'<span class="add-link" onclick="addEnvVar('+s.id+')">+ Add variable</span></div>'+
-    '<div class="form-group fade-in"><label>Volumes (source:target)</label>'+volsHtml+'<span class="add-link" onclick="addVolume('+s.id+')">+ Add volume</span></div>'+
+  el.innerHTML=services.map(function(s){
+    var portsHtml=s.ports.map(function(p,i){return'<div class="kv-row"><input placeholder="Host port" value="'+esc(p.host)+'" oninput="updatePort('+s.id+','+i+',\'host\',this.value)"/><span style="opacity:.4">:</span><input placeholder="Container port" value="'+esc(p.container)+'" oninput="updatePort('+s.id+','+i+',\'container\',this.value)"/><button class="rm" onclick="removePort('+s.id+','+i+')">x</button></div>';}).join('');
+    var envsHtml=s.envs.map(function(e,i){return'<div class="kv-row"><input placeholder="KEY" value="'+esc(e.key)+'" oninput="updateEnv('+s.id+','+i+',\'key\',this.value)"/><span style="opacity:.4">=</span><input placeholder="value" value="'+esc(e.val)+'" oninput="updateEnv('+s.id+','+i+',\'val\',this.value)"/><button class="rm" onclick="removeEnv('+s.id+','+i+')">x</button></div>';}).join('');
+    var volsHtml=s.volumes.map(function(v,i){return'<div class="kv-row"><input placeholder="Host path or volume name" value="'+esc(v.host)+'" oninput="updateVol('+s.id+','+i+',\'host\',this.value)"/><span style="opacity:.4">:</span><input placeholder="Container path" value="'+esc(v.container)+'" oninput="updateVol('+s.id+','+i+',\'container\',this.value)"/><button class="rm" onclick="removeVol('+s.id+','+i+')">x</button></div>';}).join('');
+    var depOptions=services.filter(function(x){return x.id!==s.id;}).map(function(x){return'<option value="'+esc(x.name)+'"'+(s.dependsOn===x.name?' selected':'')+'>'+esc(x.name)+'</option>';}).join('');
+    return '<div class="service-card"><h3><span>'+esc(s.name)+'</span><button class="btn danger" onclick="removeService('+s.id+')" style="padding:2px 10px;font-size:.75rem">Remove</button></h3>'+
+    '<div class="form-row"><div class="form-group"><label>Service Name</label><input value="'+esc(s.name)+'" oninput="updateSvc('+s.id+',\'name\',this.value)"/></div>'+
+    '<div class="form-group"><label>Image</label><input value="'+esc(s.image)+'" placeholder="e.g. nginx:alpine" oninput="updateSvc('+s.id+',\'image\',this.value)"/></div></div>'+
+    '<div class="form-row"><div class="form-group"><label>Restart Policy</label><select onchange="updateSvc('+s.id+',\'restart\',this.value)"><option value="no"'+(s.restart==='no'?' selected':'')+'>no</option><option value="always"'+(s.restart==='always'?' selected':'')+'>always</option><option value="unless-stopped"'+(s.restart==='unless-stopped'?' selected':'')+'>unless-stopped</option><option value="on-failure"'+(s.restart==='on-failure'?' selected':'')+'>on-failure</option></select></div>'+
+    '<div class="form-group"><label>Depends On</label><select onchange="updateSvc('+s.id+',\'dependsOn\',this.value)"><option value="">None</option>'+depOptions+'</select></div></div>'+
+    '<div class="form-group"><label>Ports (host:container)</label>'+portsHtml+'<span class="add-link" onclick="addPort('+s.id+')">+ Add port mapping</span></div>'+
+    '<div class="form-group"><label>Environment Variables</label>'+envsHtml+'<span class="add-link" onclick="addEnvVar('+s.id+')">+ Add variable</span></div>'+
+    '<div class="form-group"><label>Volumes (source:target)</label>'+volsHtml+'<span class="add-link" onclick="addVolume('+s.id+')">+ Add volume</span></div>'+
     '<div class="collapsible-header" onclick="toggleCollapsible(this)"><span>Health Check and Resources</span><span class="arrow">+</span></div>'+
     '<div class="collapsible-body">'+
-    '<div class="form-group fade-in"><label>Health Check Command</label><input value='+esc(s.healthCmd)+' placeholder="e.g. curl -f http://localhost/ || exit 1" oninput="updateSvc('+s.id+',\'healthCmd\',this.value)"/></div>'+
-    '<div class="form-group fade-in"><label>Health Check Interval</label><input value='+esc(s.healthInterval)+' placeholder="30s" oninput="updateSvc('+s.id+',\'healthInterval\',this.value)"/></div>'+
-    '<div class="form-row"><div class="form-group fade-in"><label>CPU Limit</label><input value='+esc(s.cpuLimit)+' placeholder="e.g. 0.5 or 1.0" oninput="updateSvc('+s.id+',\'cpuLimit\',this.value)"/></div>'+
-    '<div class="form-group fade-in"><label>Memory Limit</label><input value='+esc(s.memLimit)+' placeholder="e.g. 512M or 1G" oninput="updateSvc('+s.id+',\'memLimit\',this.value)"/></div></div>'+
-    '<div class="form-group fade-in"><label>Networks (comma-separated)</label><input value='+esc(s.networks)+' placeholder="e.g. frontend, backend" oninput="updateSvc('+s.id+',\'networks\',this.value)"/></div>'+
+    '<div class="form-group"><label>Health Check Command</label><input value="'+esc(s.healthCmd)+'" placeholder="e.g. curl -f http://localhost/ || exit 1" oninput="updateSvc('+s.id+',\'healthCmd\',this.value)"/></div>'+
+    '<div class="form-group"><label>Health Check Interval</label><input value="'+esc(s.healthInterval)+'" placeholder="30s" oninput="updateSvc('+s.id+',\'healthInterval\',this.value)"/></div>'+
+    '<div class="form-row"><div class="form-group"><label>CPU Limit</label><input value="'+esc(s.cpuLimit)+'" placeholder="e.g. 0.5 or 1.0" oninput="updateSvc('+s.id+',\'cpuLimit\',this.value)"/></div>'+
+    '<div class="form-group"><label>Memory Limit</label><input value="'+esc(s.memLimit)+'" placeholder="e.g. 512M or 1G" oninput="updateSvc('+s.id+',\'memLimit\',this.value)"/></div></div>'+
+    '<div class="form-group"><label>Networks (comma-separated)</label><input value="'+esc(s.networks)+'" placeholder="e.g. frontend, backend" oninput="updateSvc('+s.id+',\'networks\',this.value)"/></div>'+
     '</div></div>';
   }).join('');
 }
-function toggleCollapsible(el){var body=el.nextElementSibling;var arrow=el.querySelector('.arrow');if(body.classList.contains('open')){body.classList.remove('open');arrow.textContent='+';}else{body.classList.add('open');arrow.textContent='-';}}""
-function getSvc(id){return services.find(function(s){return s.id="==id;});}"
-function updateSvc(id,field,val){var s=getSvc(id);if(s){s[field]=val;if(field==='name')renderServices();generateYaml();updateStats();}}""
+function toggleCollapsible(el){var body=el.nextElementSibling;var arrow=el.querySelector('.arrow');if(body.classList.contains('open')){body.classList.remove('open');arrow.textContent='+';}else{body.classList.add('open');arrow.textContent='-';}}
+function getSvc(id){return services.find(function(s){return s.id===id;});}
+function updateSvc(id,field,val){var s=getSvc(id);if(s){s[field]=val;if(field==='name')renderServices();generateYaml();updateStats();}}
 function updatePort(id,idx,field,val){var s=getSvc(id);if(s&&s.ports[idx]){s.ports[idx][field]=val;generateYaml();updateStats();}}
 function addPort(id){var s=getSvc(id);if(s){s.ports.push({host:'',container:''});renderServices();}}
 function removePort(id,idx){var s=getSvc(id);if(s){s.ports.splice(idx,1);renderServices();generateYaml();updateStats();}}
@@ -976,22 +976,22 @@ function addVolume(id){var s=getSvc(id);if(s){s.volumes.push({host:'',container:
 function removeVol(id,idx){var s=getSvc(id);if(s){s.volumes.splice(idx,1);renderServices();generateYaml();updateStats();}}
 function generateYaml(){
   var yaml='version: "3.8"\n\nservices:\n';
-  var namedVols="[];var" customNets=[];
+  var namedVols=[];var customNets=[];
   services.forEach(function(s){
     if(!s.name)return;
     yaml+='  '+s.name+':\n';
     if(s.image)yaml+='    image: '+s.image+'\n';
     if(s.restart&&s.restart!=='no')yaml+='    restart: '+s.restart+'\n';
-    var validPorts="s.ports.filter(function(p){return" p.host&&p.container;});
+    var validPorts=s.ports.filter(function(p){return p.host&&p.container;});
     if(validPorts.length){yaml+='    ports:\n';validPorts.forEach(function(p){yaml+='      - "'+p.host+':'+p.container+'"\n';});}
-    var validEnvs="s.envs.filter(function(e){return" e.key;});
+    var validEnvs=s.envs.filter(function(e){return e.key;});
     if(validEnvs.length){yaml+='    environment:\n';validEnvs.forEach(function(e){yaml+='      '+e.key+': '+(e.val?'"'+e.val+'"':'""')+'\n';});}
-    var validVols="s.volumes.filter(function(v){return" v.host&&v.container;});
+    var validVols=s.volumes.filter(function(v){return v.host&&v.container;});
     if(validVols.length){yaml+='    volumes:\n';validVols.forEach(function(v){yaml+='      - '+v.host+':'+v.container+'\n';if(!v.host.startsWith('.')&&!v.host.startsWith('/')&&!v.host.includes('\\'))namedVols.push(v.host);});}
     if(s.dependsOn){yaml+='    depends_on:\n      - '+s.dependsOn+'\n';}
     if(s.healthCmd){yaml+='    healthcheck:\n      test: ["CMD-SHELL", "'+s.healthCmd+'"]\n      interval: '+(s.healthInterval||'30s')+'\n      timeout: 10s\n      retries: 3\n      start_period: 40s\n';}
     if(s.cpuLimit||s.memLimit){yaml+='    deploy:\n      resources:\n        limits:\n';if(s.cpuLimit)yaml+='          cpus: "'+s.cpuLimit+'"\n';if(s.memLimit)yaml+='          memory: '+s.memLimit+'\n';}
-    if(s.networks){var nets="s.networks.split(',').map(function(n){return" n.trim();}).filter(function(n){return n;});if(nets.length){yaml+='    networks:\n';nets.forEach(function(n){yaml+='      - '+n+'\n';customNets.push(n);});}}
+    if(s.networks){var nets=s.networks.split(',').map(function(n){return n.trim();}).filter(function(n){return n;});if(nets.length){yaml+='    networks:\n';nets.forEach(function(n){yaml+='      - '+n+'\n';customNets.push(n);});}}
     yaml+='\n';
   });
   var uniqueVols=[]; namedVols.forEach(function(v){if(uniqueVols.indexOf(v)===-1)uniqueVols.push(v);});
@@ -999,7 +999,7 @@ function generateYaml(){
   var uniqueNets=[];customNets.forEach(function(n){if(uniqueNets.indexOf(n)===-1)uniqueNets.push(n);});
   if(uniqueNets.length){yaml+='\nnetworks:\n';uniqueNets.forEach(function(n){yaml+='  '+n+':\n    driver: bridge\n';});}
   var el=document.getElementById('yamlOutput');
-  el.innerHTML="yaml.replace(/^(\s*[\w-]+:)/gm,'<span" class="yaml-key">$1</span>').replace(/(".*?")/g,'<span class="yaml-str">$1</span>');
+  el.innerHTML=yaml.replace(/^(\s*[\w-]+:)/gm,'<span class="yaml-key">$1</span>').replace(/(".*?")/g,'<span class="yaml-str">$1</span>');
   el.dataset.raw=yaml;
   document.getElementById('statLines').textContent=yaml.split('\n').length;
 }
@@ -1015,39 +1015,39 @@ function updateStats(){
   document.getElementById('statEnvs').textContent=envCount;
   document.getElementById('statVols').textContent=volCount;
 }
-function copyYaml(){var yaml=document.getElementById('yamlOutput').dataset.raw||document.getElementById('yamlOutput').textContent;navigator.clipboard.writeText(yaml).then(function(){var btns=document.querySelectorAll('.output-actions .btn');btns[0].textContent='Copied!';setTimeout(function(){btns[0].textContent='Copy" YAML';},1500);});}"
-function downloadYaml(){var yaml=document.getElementById('yamlOutput').dataset.raw||document.getElementById('yamlOutput').textContent;var blob="new" Blob([yaml],{type:'text/yaml'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='docker-compose.yml';a.click();}""
+function copyYaml(){var yaml=document.getElementById('yamlOutput').dataset.raw||document.getElementById('yamlOutput').textContent;navigator.clipboard.writeText(yaml).then(function(){var btns=document.querySelectorAll('.output-actions .btn');btns[0].textContent='Copied!';setTimeout(function(){btns[0].textContent='Copy YAML';},1500);});}
+function downloadYaml(){var yaml=document.getElementById('yamlOutput').dataset.raw||document.getElementById('yamlOutput').textContent;var blob=new Blob([yaml],{type:'text/yaml'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='docker-compose.yml';a.click();}
 function validateYaml(){
   var msg=document.getElementById('validationMsg');var issues=[];
   services.forEach(function(s){
     if(!s.image)issues.push(s.name+': No image specified');
     s.ports.forEach(function(p){if((p.host&&!p.container)||(!p.host&&p.container))issues.push(s.name+': Incomplete port mapping');});
-    var portNums="s.ports.filter(function(p){return" p.host;}).map(function(p){return p.host;});
+    var portNums=s.ports.filter(function(p){return p.host;}).map(function(p){return p.host;});
     var dupes={};portNums.forEach(function(p){dupes[p]=(dupes[p]||0)+1;});
     Object.keys(dupes).forEach(function(p){if(dupes[p]>1)issues.push(s.name+': Duplicate host port '+p);});
   });
   var allHostPorts={};services.forEach(function(s){s.ports.filter(function(p){return p.host&&p.container;}).forEach(function(p){if(allHostPorts[p.host])issues.push('Port '+p.host+' mapped by both '+allHostPorts[p.host]+' and '+s.name);else allHostPorts[p.host]=s.name;});});
-  if(services.length="==0)issues.push('No" services defined');
-  if(issues.length===0){msg.style.display='block';msg.style.background='rgba(0,255,136,.1)';msg.style.border='1px" solid #00ff88';msg.style.color='#00ff88';msg.textContent='Valid. No issues found in '+services.length+'" service'+(services.length!==1?'s':'')+'.';}
-  else{msg.style.display='block';msg.style.background='rgba(255,68,102,.1)';msg.style.border='1px"" solid #ff3b30';msg.style.color='#ff3b30';msg.innerHTML="issues.map(function(i){return'<div">'+esc(i)+'</div">';}).join('');}
-  setTimeout(function(){msg.style.display='none';},5000);"
+  if(services.length===0)issues.push('No services defined');
+  if(issues.length===0){msg.style.display='block';msg.style.background='rgba(0,255,136,.1)';msg.style.border='1px solid #00ff88';msg.style.color='#00ff88';msg.textContent='Valid. No issues found in '+services.length+' service'+(services.length!==1?'s':'')+'.';}
+  else{msg.style.display='block';msg.style.background='rgba(255,68,102,.1)';msg.style.border='1px solid #ff4466';msg.style.color='#ff4466';msg.innerHTML=issues.map(function(i){return'<div>'+esc(i)+'</div>';}).join('');}
+  setTimeout(function(){msg.style.display='none';},5000);
 }
 function loadTemplate(t){services=[];serviceId=0;
-if(t="=='nginx'){addService('nginx','nginx:alpine',[{host:'80',container:'80'},{host:'443',container:'443'}],[],[{host:'./nginx.conf',container:'/etc/nginx/nginx.conf'},{host:'./html',container:'/usr/share/nginx/html'}],'unless-stopped','curl" -f http://localhost/ || exit 1','30s');}
-else if(t="=='node'){addService('app','node:20-alpine',[{host:'3000',container:'3000'}],[{key:'NODE_ENV',val:'production'},{key:'MONGO_URI',val:'mongodb://mongo:27017/myapp'}],[{host:'./app',container:'/usr/src/app'}],'unless-stopped','','30s','mongo');addService('mongo','mongo:7',[],[{key:'MONGO_INITDB_ROOT_USERNAME',val:'root'},{key:'MONGO_INITDB_ROOT_PASSWORD',val:'example'}],[{host:'mongo-data',container:'/data/db'}],'unless-stopped');}"
-else if(t="=='wordpress'){addService('wordpress','wordpress:latest',[{host:'8080',container:'80'}],[{key:'WORDPRESS_DB_HOST',val:'db'},{key:'WORDPRESS_DB_USER',val:'wordpress'},{key:'WORDPRESS_DB_PASSWORD',val:'wordpress'},{key:'WORDPRESS_DB_NAME',val:'wordpress'}],[{host:'wp-data',container:'/var/www/html'}],'unless-stopped','curl" -f http://localhost/ || exit 1','30s','db');addService('db','mysql:8.0',[],[{key:'MYSQL_DATABASE',val:'wordpress'},{key:'MYSQL_USER',val:'wordpress'},{key:'MYSQL_PASSWORD',val:'wordpress'},{key:'MYSQL_ROOT_PASSWORD',val:'rootpass'}],[{host:'db-data',container:'/var/lib/mysql'}],'unless-stopped','mysqladmin ping -h localhost','30s');}
-else if(t="=='postgres'){addService('postgres','postgres:16',[{host:'5432',container:'5432'}],[{key:'POSTGRES_USER',val:'admin'},{key:'POSTGRES_PASSWORD',val:'secret'},{key:'POSTGRES_DB',val:'mydb'}],[{host:'pg-data',container:'/var/lib/postgresql/data'}],'unless-stopped','pg_isready" -U admin','30s');addService('pgadmin','dpage/pgadmin4',[{host:'5050',container:'80'}],[{key:'PGADMIN_DEFAULT_EMAIL',val:'admin@example.com'},{key:'PGADMIN_DEFAULT_PASSWORD',val:'admin'}],[],'unless-stopped','','30s','postgres');}
-else if(t="=='redis'){addService('redis','redis:alpine',[{host:'6379',container:'6379'}],[],[{host:'redis-data',container:'/data'}],'unless-stopped','redis-cli" ping','30s');}
-else if(t="=='lamp'){addService('apache','php:8.2-apache',[{host:'80',container:'80'}],[],[{host:'./src',container:'/var/www/html'}],'unless-stopped','curl" -f http://localhost/ || exit 1','30s','mysql');addService('mysql','mysql:8.0',[{host:'3306',container:'3306'}],[{key:'MYSQL_ROOT_PASSWORD',val:'root'},{key:'MYSQL_DATABASE',val:'app'}],[{host:'mysql-data',container:'/var/lib/mysql'}],'unless-stopped','mysqladmin ping -h localhost','30s');}
-else if(t="=='django'){addService('web','python:3.12-slim',[{host:'8000',container:'8000'}],[{key:'DATABASE_URL',val:'postgres://admin:secret@db:5432/django_app'},{key:'DJANGO_SETTINGS_MODULE',val:'config.settings.production'},{key:'SECRET_KEY',val:'change-me-in-production'}],[{host:'./app',container:'/app'}],'unless-stopped','','30s','db');addService('db','postgres:16',[],[{key:'POSTGRES_USER',val:'admin'},{key:'POSTGRES_PASSWORD',val:'secret'},{key:'POSTGRES_DB',val:'django_app'}],[{host:'pg-data',container:'/var/lib/postgresql/data'}],'unless-stopped','pg_isready" -U admin','30s');}
-else if(t="=='elk'){addService('elasticsearch','docker.elastic.co/elasticsearch/elasticsearch:8.11.0',[{host:'9200',container:'9200'}],[{key:'discovery.type',val:'single-node'},{key:'xpack.security.enabled',val:'false'},{key:'ES_JAVA_OPTS',val:'-Xms512m" -Xmx512m'}],[{host:'es-data',container:'/usr/share/elasticsearch/data'}],'unless-stopped','curl -f http://localhost:9200/_cluster/health || exit 1','30s','','','1.0','1G');addService('logstash','docker.elastic.co/logstash/logstash:8.11.0',[{host:'5044',container:'5044'}],[{key:'LS_JAVA_OPTS',val:'-Xms256m -Xmx256m'}],[{host:'./logstash/pipeline',container:'/usr/share/logstash/pipeline'}],'unless-stopped','','30s','elasticsearch');addService('kibana','docker.elastic.co/kibana/kibana:8.11.0',[{host:'5601',container:'5601'}],[{key:'ELASTICSEARCH_HOSTS',val:'http://elasticsearch:9200'}],[],'unless-stopped','curl -f http://localhost:5601/api/status || exit 1','30s','elasticsearch');}
-else if(t="=='nextjs'){addService('app','node:20-alpine',[{host:'3000',container:'3000'}],[{key:'NODE_ENV',val:'production'},{key:'REDIS_URL',val:'redis://redis:6379'}],[{host:'./app',container:'/app'}],'unless-stopped','','30s','redis');addService('redis','redis:alpine',[],[],[{host:'redis-data',container:'/data'}],'unless-stopped','redis-cli" ping','10s');}
-else if(t="=='grafana'){addService('prometheus','prom/prometheus',[{host:'9090',container:'9090'}],[],[{host:'./prometheus/prometheus.yml',container:'/etc/prometheus/prometheus.yml'},{host:'prom-data',container:'/prometheus'}],'unless-stopped','wget" --no-verbose --tries="1" --spider http://localhost:9090/ || exit 1','30s');addService('grafana','grafana/grafana',[{host:'3000',container:'3000'}],[{key:'GF_SECURITY_ADMIN_USER',val:'admin'},{key:'GF_SECURITY_ADMIN_PASSWORD',val:'admin'}],[{host:'grafana-data',container:'/var/lib/grafana'}],'unless-stopped','curl -f http://localhost:3000/api/health || exit 1','30s','prometheus');}
+if(t==='nginx'){addService('nginx','nginx:alpine',[{host:'80',container:'80'},{host:'443',container:'443'}],[],[{host:'./nginx.conf',container:'/etc/nginx/nginx.conf'},{host:'./html',container:'/usr/share/nginx/html'}],'unless-stopped','curl -f http://localhost/ || exit 1','30s');}
+else if(t==='node'){addService('app','node:20-alpine',[{host:'3000',container:'3000'}],[{key:'NODE_ENV',val:'production'},{key:'MONGO_URI',val:'mongodb://mongo:27017/myapp'}],[{host:'./app',container:'/usr/src/app'}],'unless-stopped','','30s','mongo');addService('mongo','mongo:7',[],[{key:'MONGO_INITDB_ROOT_USERNAME',val:'root'},{key:'MONGO_INITDB_ROOT_PASSWORD',val:'example'}],[{host:'mongo-data',container:'/data/db'}],'unless-stopped');}
+else if(t==='wordpress'){addService('wordpress','wordpress:latest',[{host:'8080',container:'80'}],[{key:'WORDPRESS_DB_HOST',val:'db'},{key:'WORDPRESS_DB_USER',val:'wordpress'},{key:'WORDPRESS_DB_PASSWORD',val:'wordpress'},{key:'WORDPRESS_DB_NAME',val:'wordpress'}],[{host:'wp-data',container:'/var/www/html'}],'unless-stopped','curl -f http://localhost/ || exit 1','30s','db');addService('db','mysql:8.0',[],[{key:'MYSQL_DATABASE',val:'wordpress'},{key:'MYSQL_USER',val:'wordpress'},{key:'MYSQL_PASSWORD',val:'wordpress'},{key:'MYSQL_ROOT_PASSWORD',val:'rootpass'}],[{host:'db-data',container:'/var/lib/mysql'}],'unless-stopped','mysqladmin ping -h localhost','30s');}
+else if(t==='postgres'){addService('postgres','postgres:16',[{host:'5432',container:'5432'}],[{key:'POSTGRES_USER',val:'admin'},{key:'POSTGRES_PASSWORD',val:'secret'},{key:'POSTGRES_DB',val:'mydb'}],[{host:'pg-data',container:'/var/lib/postgresql/data'}],'unless-stopped','pg_isready -U admin','30s');addService('pgadmin','dpage/pgadmin4',[{host:'5050',container:'80'}],[{key:'PGADMIN_DEFAULT_EMAIL',val:'admin@example.com'},{key:'PGADMIN_DEFAULT_PASSWORD',val:'admin'}],[],'unless-stopped','','30s','postgres');}
+else if(t==='redis'){addService('redis','redis:alpine',[{host:'6379',container:'6379'}],[],[{host:'redis-data',container:'/data'}],'unless-stopped','redis-cli ping','30s');}
+else if(t==='lamp'){addService('apache','php:8.2-apache',[{host:'80',container:'80'}],[],[{host:'./src',container:'/var/www/html'}],'unless-stopped','curl -f http://localhost/ || exit 1','30s','mysql');addService('mysql','mysql:8.0',[{host:'3306',container:'3306'}],[{key:'MYSQL_ROOT_PASSWORD',val:'root'},{key:'MYSQL_DATABASE',val:'app'}],[{host:'mysql-data',container:'/var/lib/mysql'}],'unless-stopped','mysqladmin ping -h localhost','30s');}
+else if(t==='django'){addService('web','python:3.12-slim',[{host:'8000',container:'8000'}],[{key:'DATABASE_URL',val:'postgres://admin:secret@db:5432/django_app'},{key:'DJANGO_SETTINGS_MODULE',val:'config.settings.production'},{key:'SECRET_KEY',val:'change-me-in-production'}],[{host:'./app',container:'/app'}],'unless-stopped','','30s','db');addService('db','postgres:16',[],[{key:'POSTGRES_USER',val:'admin'},{key:'POSTGRES_PASSWORD',val:'secret'},{key:'POSTGRES_DB',val:'django_app'}],[{host:'pg-data',container:'/var/lib/postgresql/data'}],'unless-stopped','pg_isready -U admin','30s');}
+else if(t==='elk'){addService('elasticsearch','docker.elastic.co/elasticsearch/elasticsearch:8.11.0',[{host:'9200',container:'9200'}],[{key:'discovery.type',val:'single-node'},{key:'xpack.security.enabled',val:'false'},{key:'ES_JAVA_OPTS',val:'-Xms512m -Xmx512m'}],[{host:'es-data',container:'/usr/share/elasticsearch/data'}],'unless-stopped','curl -f http://localhost:9200/_cluster/health || exit 1','30s','','','1.0','1G');addService('logstash','docker.elastic.co/logstash/logstash:8.11.0',[{host:'5044',container:'5044'}],[{key:'LS_JAVA_OPTS',val:'-Xms256m -Xmx256m'}],[{host:'./logstash/pipeline',container:'/usr/share/logstash/pipeline'}],'unless-stopped','','30s','elasticsearch');addService('kibana','docker.elastic.co/kibana/kibana:8.11.0',[{host:'5601',container:'5601'}],[{key:'ELASTICSEARCH_HOSTS',val:'http://elasticsearch:9200'}],[],'unless-stopped','curl -f http://localhost:5601/api/status || exit 1','30s','elasticsearch');}
+else if(t==='nextjs'){addService('app','node:20-alpine',[{host:'3000',container:'3000'}],[{key:'NODE_ENV',val:'production'},{key:'REDIS_URL',val:'redis://redis:6379'}],[{host:'./app',container:'/app'}],'unless-stopped','','30s','redis');addService('redis','redis:alpine',[],[],[{host:'redis-data',container:'/data'}],'unless-stopped','redis-cli ping','10s');}
+else if(t==='grafana'){addService('prometheus','prom/prometheus',[{host:'9090',container:'9090'}],[],[{host:'./prometheus/prometheus.yml',container:'/etc/prometheus/prometheus.yml'},{host:'prom-data',container:'/prometheus'}],'unless-stopped','wget --no-verbose --tries=1 --spider http://localhost:9090/ || exit 1','30s');addService('grafana','grafana/grafana',[{host:'3000',container:'3000'}],[{key:'GF_SECURITY_ADMIN_USER',val:'admin'},{key:'GF_SECURITY_ADMIN_PASSWORD',val:'admin'}],[{host:'grafana-data',container:'/var/lib/grafana'}],'unless-stopped','curl -f http://localhost:3000/api/health || exit 1','30s','prometheus');}
 renderServices();generateYaml();updateStats();}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function toggleFaq(el){el.classList.toggle('open');}
 addService('web','nginx:alpine',[{host:'80',container:'80'}],[],[{host:'./html',container:'/usr/share/nginx/html'}],'unless-stopped','curl -f http://localhost/ || exit 1','30s');
-}})</script>
+</script>
 <section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
 <p style="color:#86868b;font-size:0.92rem;line-height:1.6;">Browser support verified via <a class="interactive-element" href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p>
 </section>

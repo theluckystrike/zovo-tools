@@ -1215,9 +1215,9 @@ let mode='raw';
 
 function setMode(m){
     mode=m;
-    document.querySelectorAll('.mode-tab').forEach((t,i)=>t.classList.toggle('active',(i="==0&&m="=='raw')||(i===1&&m==='visual')));""
-    document.getElementById('rawEditor').style.display="m="=='raw'?'block':'none';""
-    document.getElementById('visualEditor').style.display="m="=='visual'?'block':'none';""
+    document.querySelectorAll('.mode-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&m==='raw')||(i===1&&m==='visual')));
+    document.getElementById('rawEditor').style.display=m==='raw'?'block':'none';
+    document.getElementById('visualEditor').style.display=m==='visual'?'block':'none';
     if(m==='visual'){parseEnv();renderTable();}
 }
 
@@ -1245,14 +1245,14 @@ function renderTable(){
     tbody.innerHTML='';
     entries.forEach((e,i)=>{
         const tr=document.createElement('tr');
-        if(e.type="=='comment'){"
-            tr.innerHTML='<td colspan="2" class="comment-row"><input value='+esc(e.text)+' style="opacity:.5;font-style:italic" oninput="entries['+i+'].text=this.value"/></td><td><button class="rm-btn btn" onclick="removeEntry('+i+')">x</button></td>';
-        }else if(e.type="=='var'){"
-            tr.innerHTML='<td><input class="key-input" value='+esc(e.key)+' oninput="entries['+i+'].key=this.value;updateStats()"/></td><td><input value='+esc(e.value)+' oninput="entries['+i+'].value=this.value;updateStats()"/></td><td><button class="rm-btn btn" onclick="removeEntry('+i+')">x</button></td>';
-        }else if(e.type="=='blank'){"
-            tr.innerHTML='<td colspan="2" style="opacity:.2;font-size:.75rem">--- blank line ---</td><td><button class="rm-btn btn" onclick="removeEntry('+i+')">x</button></td>';
+        if(e.type==='comment'){
+            tr.innerHTML='<td colspan="2" class="comment-row"><input value="'+esc(e.text)+'" style="opacity:.5;font-style:italic" oninput="entries['+i+'].text=this.value"/></td><td><button class="rm-btn" onclick="removeEntry('+i+')">x</button></td>';
+        }else if(e.type==='var'){
+            tr.innerHTML='<td><input class="key-input" value="'+esc(e.key)+'" oninput="entries['+i+'].key=this.value;updateStats()"/></td><td><input value="'+esc(e.value)+'" oninput="entries['+i+'].value=this.value;updateStats()"/></td><td><button class="rm-btn" onclick="removeEntry('+i+')">x</button></td>';
+        }else if(e.type==='blank'){
+            tr.innerHTML='<td colspan="2" style="opacity:.2;font-size:.75rem">--- blank line ---</td><td><button class="rm-btn" onclick="removeEntry('+i+')">x</button></td>';
         }else{
-            tr.innerHTML='<td colspan="2"><input value='+esc(e.text)+' style="color:var(--error)" oninput="entries['+i+'].text=this.value"/></td><td><button class="rm-btn btn" onclick="removeEntry('+i+')">x</button></td>';
+            tr.innerHTML='<td colspan="2"><input value="'+esc(e.text)+'" style="color:var(--error)" oninput="entries['+i+'].text=this.value"/></td><td><button class="rm-btn" onclick="removeEntry('+i+')">x</button></td>';
         }
         tbody.appendChild(tr);
     });
@@ -1268,41 +1268,41 @@ function addVar(){
 }
 
 function updateStats(){
-    const vars="entries.filter(e=">e.type="=='var');"
-    const comments="entries.filter(e=">e.type="=='comment');"
-    const empty="vars.filter(e=">!e.value);
-    const keys="vars.map(e=">e.key);
-    const dupes="keys.filter((k,i)=">keys.indexOf(k)!==i);
+    const vars=entries.filter(e=>e.type==='var');
+    const comments=entries.filter(e=>e.type==='comment');
+    const empty=vars.filter(e=>!e.value);
+    const keys=vars.map(e=>e.key);
+    const dupes=keys.filter((k,i)=>keys.indexOf(k)!==i);
     document.getElementById('statVars').textContent=vars.length;
     document.getElementById('statComments').textContent=comments.length;
     document.getElementById('statEmpty').textContent=empty.length;
-    document.getElementById('statDupes').textContent="[...new" Set(dupes)].length;
+    document.getElementById('statDupes').textContent=[...new Set(dupes)].length;
 }
 
 function validate(){
     parseEnv();
     const results=[];
-    const vars="entries.filter(e=">e.type="=='var');"
+    const vars=entries.filter(e=>e.type==='var');
     const keyPattern=/^[A-Za-z_][A-Za-z0-9_]*$/;
-    const keys="vars.map(e=">e.key);
-    if(vars.length="==0){results.push({type:'warn',msg:'No" variables found'});}
+    const keys=vars.map(e=>e.key);
+    if(vars.length===0){results.push({type:'warn',msg:'No variables found'});}
     else{results.push({type:'ok',msg:vars.length+' variables found'});}
     vars.forEach(e=>{if(!keyPattern.test(e.key))results.push({type:'err',msg:'Invalid key name: "'+e.key+'" (must start with letter/underscore, contain only alphanumeric/underscore)'});});
-    const dupes="keys.filter((k,i)=">keys.indexOf(k)!==i);
+    const dupes=keys.filter((k,i)=>keys.indexOf(k)!==i);
     [...new Set(dupes)].forEach(k=>results.push({type:'err',msg:'Duplicate key: "'+k+'"'}));
     vars.forEach(e=>{if(!e.value)results.push({type:'warn',msg:'Empty value for key: "'+e.key+'"'});});
-    const invalids="entries.filter(e=">e.type="=='invalid');"
+    const invalids=entries.filter(e=>e.type==='invalid');
     invalids.forEach(e=>results.push({type:'err',msg:'Invalid line: "'+e.text+'"'}));
-    if(results.filter(r=>r.type="=='err').length===0&&results.filter(r=">r.type="=='warn').length="==0)results.push({type:'ok',msg:'All" validations passed'});"
+    if(results.filter(r=>r.type==='err').length===0&&results.filter(r=>r.type==='warn').length===0)results.push({type:'ok',msg:'All validations passed'});
     const panel=document.getElementById('validationPanel');
     panel.style.display='block';
-    document.getElementById('validationResults').innerHTML="results.map(r=">'<div class="val-item"><span class="val-'+r.type+'">'+(r.type="=='ok'?'[OK]':r.type="=='warn'?'[WARN]':'[ERR]')+'</span"> '+esc(r.msg)+'</div">').join('');
+    document.getElementById('validationResults').innerHTML=results.map(r=>'<div class="val-item"><span class="val-'+r.type+'">'+(r.type==='ok'?'[OK]':r.type==='warn'?'[WARN]':'[ERR]')+'</span> '+esc(r.msg)+'</div>').join('');
 }
 
 function sortVars(){
     parseEnv();
-    const comments="entries.filter(e=">e.type="=='comment');"
-    const vars="entries.filter(e=">e.type="=='var').sort((a,b)=">a.key.localeCompare(b.key));
+    const comments=entries.filter(e=>e.type==='comment');
+    const vars=entries.filter(e=>e.type==='var').sort((a,b)=>a.key.localeCompare(b.key));
     entries=[...comments,...vars];
     if(mode==='visual')renderTable();
     updateRaw();
@@ -1313,10 +1313,10 @@ function exportEnv(){
     parseEnv();
     let output='';
     entries.forEach(e=>{
-        if(e.type="=='blank')output+='\n';"
-        else if(e.type="=='comment')output+=e.text+'\n';"
-        else if(e.type="=='var'){"
-            const val="e.value.includes('" ')||e.value.includes('#')?'"'+e.value+'"':e.value;
+        if(e.type==='blank')output+='\n';
+        else if(e.type==='comment')output+=e.text+'\n';
+        else if(e.type==='var'){
+            const val=e.value.includes(' ')||e.value.includes('#')?'"'+e.value+'"':e.value;
             output+=e.key+'='+val+'\n';
         }else output+='# INVALID: '+e.text+'\n';
     });
@@ -1328,12 +1328,12 @@ function exportEnv(){
 function updateRaw(){
     let output='';
     entries.forEach(e=>{
-        if(e.type="=='blank')output+='\n';"
-        else if(e.type="=='comment')output+=e.text+'\n';"
-        else if(e.type="=='var')output+=e.key+'='+e.value+'\n';"
+        if(e.type==='blank')output+='\n';
+        else if(e.type==='comment')output+=e.text+'\n';
+        else if(e.type==='var')output+=e.key+'='+e.value+'\n';
         else output+=e.text+'\n';
     });
-    document.getElementById('rawInput').value="output;"
+    document.getElementById('rawInput').value=output;
 }
 
 function copyExport(){
@@ -1349,7 +1349,7 @@ function copyExport(){
 function downloadEnv(){
     exportEnv();
     const text=document.getElementById('exportOutput').textContent;
-    const blob="new" Blob([text],{type:'text/plain'});
+    const blob=new Blob([text],{type:'text/plain'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
     a.download='.env';
@@ -1357,7 +1357,7 @@ function downloadEnv(){
 }
 
 function loadSample(){
-    document.getElementById('rawInput').value='#" Application Configuration\nNODE_ENV="production\nPORT=3000\nHOST=0.0.0.0\nAPP_NAME=MyApp\nAPP_URL=https://app.example.com\n\n#" Database\nDATABASE_URL="postgresql://user:password@localhost:5432/myapp\nDATABASE_POOL_SIZE=10\nDATABASE_SSL=true\nREDIS_URL=redis://localhost:6379/0\n\n#" Authentication\nJWT_SECRET="your-super-secret-key-here-min-32-chars\nJWT_EXPIRY=7d\nSESSION_TIMEOUT=3600\nOAUTH_GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com\nOAUTH_GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxxxxx\n\n#" Third-party APIs\nSTRIPE_API_KEY="sk_live_xxxxxxxxxxxxx\nSTRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxx\nSENDGRID_API_KEY=SG.xxxxxxxxxxxxx\nAWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nAWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\nAWS_REGION=us-east-1\nS3_BUCKET=my-app-uploads\n\n#" Feature Flags\nENABLE_DARK_MODE="true\nENABLE_BETA_FEATURES=false\nMAX_UPLOAD_SIZE=10485760\nENABLE_WEBHOOKS=true\n\n#" Logging\nLOG_LEVEL="info\nLOG_FORMAT="json\nSENTRY_DSN=https://xxxxx@sentry.io/xxxxx';"
+    document.getElementById('rawInput').value='# Application Configuration\nNODE_ENV=production\nPORT=3000\nHOST=0.0.0.0\nAPP_NAME=MyApp\nAPP_URL=https://app.example.com\n\n# Database\nDATABASE_URL=postgresql://user:password@localhost:5432/myapp\nDATABASE_POOL_SIZE=10\nDATABASE_SSL=true\nREDIS_URL=redis://localhost:6379/0\n\n# Authentication\nJWT_SECRET=your-super-secret-key-here-min-32-chars\nJWT_EXPIRY=7d\nSESSION_TIMEOUT=3600\nOAUTH_GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com\nOAUTH_GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxxxxx\n\n# Third-party APIs\nSTRIPE_API_KEY=sk_live_xxxxxxxxxxxxx\nSTRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxx\nSENDGRID_API_KEY=SG.xxxxxxxxxxxxx\nAWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nAWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\nAWS_REGION=us-east-1\nS3_BUCKET=my-app-uploads\n\n# Feature Flags\nENABLE_DARK_MODE=true\nENABLE_BETA_FEATURES=false\nMAX_UPLOAD_SIZE=10485760\nENABLE_WEBHOOKS=true\n\n# Logging\nLOG_LEVEL=info\nLOG_FORMAT=json\nSENTRY_DSN=https://xxxxx@sentry.io/xxxxx';
     parseEnv();
 }
 
