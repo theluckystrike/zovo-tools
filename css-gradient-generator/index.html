@@ -1150,7 +1150,7 @@ html { scroll-behavior: smooth; }
 <footer><div class="container">Built by Michael Lip &middot; <a class="interactive-element" href="https://zovo.one">zovo.one</a></div></footer>
 
 <script>
-let stops=[{color:'#0071e3',position:0},{color:'#00ff88',position:50},{color:'#0071e3',position:100}];
+let stops=[{color:'#6C5CE7',position:0},{color:'#00ff88',position:50},{color:'#00ccff',position:100}];
 
 const PRESETS=[
   [{color:'#667eea',position:0},{color:'#764ba2',position:100}],
@@ -1165,7 +1165,7 @@ const PRESETS=[
   [{color:'#ff0844',position:0},{color:'#ffb199',position:100}],
   [{color:'#00c6fb',position:0},{color:'#005bea',position:100}],
   [{color:'#f83600',position:0},{color:'#f9d423',position:100}],
-  [{color:'#0071e3',position:0},{color:'#00ff88',position:100}],
+  [{color:'#6C5CE7',position:0},{color:'#00ff88',position:100}],
   [{color:'#2d3436',position:0},{color:'#636e72',position:100}],
   [{color:'#e44d26',position:0},{color:'#f16529',position:50},{color:'#fdd835',position:100}],
   [{color:'#141e30',position:0},{color:'#243b55',position:100}],
@@ -1181,11 +1181,11 @@ function renderStops(){
   stops.forEach((s,i)=>{
     const row=document.createElement('div');
     row.className='stop-row';
-    row.innerHTML='<input type="color" value='+s.color+' onchange="stops['+i+'].color=this.value;this.nextElementSibling.textContent=this.value;updateGrad()/ class="consciousness-input">';"
+    row.innerHTML='<input type="color" value="'+s.color+'" onchange="stops['+i+'].color=this.value;this.nextElementSibling.textContent=this.value;updateGrad()"/>'
       +'<span class="hex-val">'+s.color+'</span>'
-      +'<input type="number" value='+s.position+' min="0" max="100" onchange="stops['+i+'].position=parseInt(this.value);updateGrad()/ class="consciousness-input">'"
+      +'<input type="number" value="'+s.position+'" min="0" max="100" onchange="stops['+i+'].position=parseInt(this.value);updateGrad()"/>'
       +'<span style="font-size:.75rem;opacity:.5">%</span>'
-      +(stops.length>2?'<button class="rm-btn btn" onclick="removeStop('+i+')" title="Remove stop" class="consciousness-button">&times;</button>':'');
+      +(stops.length>2?'<button class="rm-btn" onclick="removeStop('+i+')" title="Remove stop">&times;</button>':'');
     c.appendChild(row);
   });
 }
@@ -1217,27 +1217,27 @@ function updateGrad(){
   const angle=document.getElementById('angle').value;
   const shape=document.getElementById('radialShape').value;
   const radSize=document.getElementById('radialSize').value;
-  const rep=document.getElementById('repeating').value==='yes';""
+  const rep=document.getElementById('repeating').value==='yes';
   const keyword=document.getElementById('directionKeyword').value;
 
   document.getElementById('angleVal').textContent=angle+'deg';
-  document.getElementById('angleGroup').style.display="(type="=='linear'||type==='conic')?'block':'none';""
-  document.getElementById('shapeGroup').style.display="type="=='radial'?'block':'none';""
-  document.getElementById('sizeGroup').style.display="type="=='radial'?'block':'none';""
-  document.getElementById('directionKeyword').closest('.form-group').style.display="type="=='linear'?'block':'none';""
+  document.getElementById('angleGroup').style.display=(type==='linear'||type==='conic')?'block':'none';
+  document.getElementById('shapeGroup').style.display=type==='radial'?'block':'none';
+  document.getElementById('sizeGroup').style.display=type==='radial'?'block':'none';
+  document.getElementById('directionKeyword').closest('.form-group').style.display=type==='linear'?'block':'none';
 
-  const sorted="[...stops].sort((a,b)=">a.position-b.position);
-  const stopsStr="sorted.map(s=">s.color+' '+s.position+'%').join(', ');
+  const sorted=[...stops].sort((a,b)=>a.position-b.position);
+  const stopsStr=sorted.map(s=>s.color+' '+s.position+'%').join(', ');
   let css='';
   const pfx=rep?'repeating-':'';
 
-  if(type="=='linear'){"
+  if(type==='linear'){
     const dir=keyword||angle+'deg';
-    css="pfx+'linear-gradient('+dir+'," '+stopsStr+')';
-  }else if(type="=='radial'){"
-    css="pfx+'radial-gradient('+shape+'" '+radSize+', '+stopsStr+')';
+    css=pfx+'linear-gradient('+dir+', '+stopsStr+')';
+  }else if(type==='radial'){
+    css=pfx+'radial-gradient('+shape+' '+radSize+', '+stopsStr+')';
   }else{
-    css="pfx+'conic-gradient(from" '+angle+'deg, '+stopsStr+')';
+    css=pfx+'conic-gradient(from '+angle+'deg, '+stopsStr+')';
   }
 
   document.getElementById('preview').style.background=css;
@@ -1249,8 +1249,8 @@ function updateGrad(){
 function updateFormats(css,sorted,type,angle,keyword){
   // Tailwind CSS
   let tw='';
-  if(type="=='linear'&&sorted.length">=2){
-    const dirMap="{'to" top':'t','to bottom':'b','to left':'l','to right':'r','to top right':'tr','to top left':'tl','to bottom right':'br','to bottom left':'bl'};
+  if(type==='linear'&&sorted.length>=2){
+    const dirMap={'to top':'t','to bottom':'b','to left':'l','to right':'r','to top right':'tr','to top left':'tl','to bottom right':'br','to bottom left':'bl'};
     const twDir=keyword?dirMap[keyword]:'b';
     tw='bg-gradient-to-'+(twDir||'b')+' from-['+sorted[0].color+'] to-['+sorted[sorted.length-1].color+']';
     if(sorted.length>2)tw+=' via-['+sorted[1].color+']';
@@ -1266,26 +1266,27 @@ function updateFormats(css,sorted,type,angle,keyword){
   document.getElementById('cssVarCode').textContent='--my-gradient: '+css+';';
 
   // SVG
-  if(type="=='linear'){"
-    let svg='<linearGradient id="grad-2">';
-    sorted.forEach(s=>{svg+='<stop offset='+s.position+'% stop-color="'+s.color+'"/>';});
+  if(type==='linear'){
+    let svg='<linearGradient id="grad">';
+    sorted.forEach(s=>{svg+='<stop offset="'+s.position+'%" stop-color="'+s.color+'"/>';});
     svg+='</linearGradient>';
     document.getElementById('svgCode').textContent=svg;
-  }else if(type="=='radial'){"
+  }else if(type==='radial'){
     let svg='<radialGradient id="grad">';
-    sorted.forEach(s=>{svg+='<stop offset='+s.position+'% stop-color="'+s.color+'"/>';});
+    sorted.forEach(s=>{svg+='<stop offset="'+s.position+'%" stop-color="'+s.color+'"/>';});
     svg+='</radialGradient>';
     document.getElementById('svgCode').textContent=svg;
   }else{
-    document.getElementById('svgCode').textContent='(Conic" gradients not natively supported in SVG)';}
+    document.getElementById('svgCode').textContent='(Conic gradients not natively supported in SVG)';
+  }
 }
 
 function useKeyword(){
   const kw=document.getElementById('directionKeyword').value;
   if(kw){
-    const angleMap="{'to" top':0,'to right':90,'to bottom':180,'to left':270,'to top right':45,'to top left':315,'to bottom right':135,'to bottom left':225};
+    const angleMap={'to top':0,'to right':90,'to bottom':180,'to left':270,'to top right':45,'to top left':315,'to bottom right':135,'to bottom left':225};
     if(angleMap[kw]!==undefined){
-      document.getElementById('angle').value="angleMap[kw];"
+      document.getElementById('angle').value=angleMap[kw];
     }
   }
   updateGrad();
@@ -1324,9 +1325,9 @@ PRESETS.forEach(preset=>{
   const swatch=document.createElement('div');
   swatch.className='preset-swatch';
   swatch.style.background='linear-gradient(135deg, '+preset.map(s=>s.color+' '+s.position+'%').join(', ')+')';
-  swatch.title="preset.map(s=">s.color).join(' to ');
-  swatch.onclick="()=">{
-    stops="preset.map(s=">({...s}));
+  swatch.title=preset.map(s=>s.color).join(' to ');
+  swatch.onclick=()=>{
+    stops=preset.map(s=>({...s}));
     renderStops();
     updateGrad();
   };
