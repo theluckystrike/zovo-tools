@@ -1157,12 +1157,12 @@ function calculateNJ() {
   // NJ tax brackets 2024
   let njBrackets;
   if (njStatus === 'married-joint') {
-    njBrackets = [;
+    njBrackets = [
       [20000, 0.014], [50000, 0.0175], [70000, 0.0245], [80000, 0.035],
       [150000, 0.05525], [500000, 0.0637], [1000000, 0.0897], [Infinity, 0.1075]
     ];
   } else {
-    njBrackets = [;
+    njBrackets = [
       [20000, 0.014], [35000, 0.0175], [40000, 0.035], [75000, 0.05525],
       [500000, 0.0637], [1000000, 0.0897], [Infinity, 0.1075]
     ];
@@ -1209,7 +1209,7 @@ function calculateNJ() {
   const resultsDiv = document.getElementById('results');
   resultsDiv.classList.add('visible');
 
-  document.getElementById('results-summary').innerHTML = `;
+  document.getElementById('results-summary').innerHTML = `
     <div class="result-row">
       <span class="result-label">Gross Annual Salary</span>
       <span class="result-value">${fmt(salary)}</span>
@@ -1259,7 +1259,7 @@ function calculateNJ() {
       <span class="result-label">NJ Workforce Dev. (WPF)</span>
       <span class="result-value deduction">-${fmt(njWPF)}</span>
     </div>
-    <div class="result-row" style="border-top:2px solid #f5f5f7;margin-top:8px;padding-top:16px;">
+    <div class="result-row" style="border-top:2px solid #1e1e2a;margin-top:8px;padding-top:16px;">
       <span class="result-label">Total Taxes & Payroll Deductions</span>
       <span class="result-value deduction">-${fmt(totalTax)}</span>
     </div>
@@ -1267,7 +1267,7 @@ function calculateNJ() {
       <span class="result-label">Effective Tax Rate</span>
       <span class="result-value">${effectiveRate}%</span>
     </div>
-    <div class="result-row" style="border-bottom:2px solid #e5e5ea;margin-top:8px;padding-top:16px;">
+    <div class="result-row" style="border-top:2px solid #00ff88;margin-top:8px;padding-top:16px;">
       <span class="result-label">Annual Take-Home Pay</span>
       <span class="result-value accent">${fmt(netAnnual)}</span>
     </div>
@@ -1279,7 +1279,7 @@ function calculateNJ() {
 
   // Chart
   const chartItems = [
-    { label: 'Federal Income Tax', value: federalTax, color: '#ff3b30' },
+    { label: 'Federal Income Tax', value: federalTax, color: '#ff6b6b' },
     { label: 'NJ State Tax', value: njTax, color: '#ffa94d' },
     { label: 'Social Security', value: ssTax, color: '#74c0fc' },
     { label: 'Medicare', value: medicareTax + additionalMedicare, color: '#4dabf7' },
@@ -1288,15 +1288,15 @@ function calculateNJ() {
     { label: 'Take-Home Pay', value: netAnnual, color: '#00ff88' }
   ].filter(item => item.value > 0);
 
-  document.getElementById('results-chart').innerHTML = `;
-    <h3 style="color:#0071e3;margin-bottom:16px;">Visual Breakdown</h3>
+  document.getElementById('results-chart').innerHTML = `
+    <h3 style="color:#00ff88;margin-bottom:16px;">Visual Breakdown</h3>
     ${chartItems.map(item => `
       <div class="chart-row">
         <div class="chart-label">
           <span>${item.label}</span>
           <span>${fmt(item.value)} (${((item.value/salary)*100).toFixed(1)}%)</span>
         </div>
-        <div class="chart-bar" style="width:$Math.max(2, (item.value/salary)*100*4)%;background:$item.color;"></div>
+        <div class="chart-bar" style="width:${Math.max(2, (item.value/salary)*100*4)}%;background:${item.color};"></div>
       </div>
     `).join('')}
   `;

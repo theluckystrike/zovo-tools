@@ -1159,17 +1159,17 @@ function calculateOhio() {
   // Federal tax brackets 2024
   let fedBrackets;
   if (filingStatus === 'married') {
-    fedBrackets = [;
+    fedBrackets = [
       [23200, 0.10], [94300, 0.12], [201050, 0.22], [383900, 0.24],
       [487450, 0.32], [731200, 0.35], [Infinity, 0.37]
     ];
   } else if (filingStatus === 'head') {
-    fedBrackets = [;
+    fedBrackets = [
       [16550, 0.10], [63100, 0.12], [100500, 0.22], [191950, 0.24],
       [243725, 0.32], [609350, 0.35], [Infinity, 0.37]
     ];
   } else {
-    fedBrackets = [;
+    fedBrackets = [
       [11600, 0.10], [47150, 0.12], [100525, 0.22], [191950, 0.24],
       [243725, 0.32], [609350, 0.35], [Infinity, 0.37]
     ];
@@ -1235,7 +1235,7 @@ function calculateOhio() {
   const resultsDiv = document.getElementById('results');
   resultsDiv.classList.add('visible');
 
-  document.getElementById('results-summary').innerHTML = `;
+  document.getElementById('results-summary').innerHTML = `
     <div class="result-row">
       <span class="result-label">Gross Annual Salary</span>
       <span class="result-value">${fmt(salary)}</span>
@@ -1280,7 +1280,7 @@ function calculateOhio() {
       <span class="result-label">Medicare Tax (1.45%${additionalMedicare > 0 ? ' + 0.9% surtax' : ''})</span>
       <span class="result-value deduction">-${fmt(medicareTax + additionalMedicare)}</span>
     </div>
-    <div class="result-row" style="border-top:2px solid #f5f5f7;margin-top:8px;padding-top:16px;">
+    <div class="result-row" style="border-top:2px solid #1e1e2a;margin-top:8px;padding-top:16px;">
       <span class="result-label">Total Taxes</span>
       <span class="result-value deduction">-${fmt(totalTax)}</span>
     </div>
@@ -1288,7 +1288,7 @@ function calculateOhio() {
       <span class="result-label">Effective Tax Rate</span>
       <span class="result-value">${effectiveRate}%</span>
     </div>
-    <div class="result-row" style="border-bottom:2px solid #e5e5ea;margin-top:8px;padding-top:16px;">
+    <div class="result-row" style="border-top:2px solid #00ff88;margin-top:8px;padding-top:16px;">
       <span class="result-label">Annual Take-Home Pay</span>
       <span class="result-value accent">${fmt(netAnnual)}</span>
     </div>
@@ -1303,7 +1303,7 @@ function calculateOhio() {
   const barWidth = (val) => maxVal > 0 ? Math.max(2, (val / salary) * 100 * 5) : 2;
 
   const chartItems = [
-    { label: 'Federal Income Tax', value: federalTax, color: '#ff3b30' },
+    { label: 'Federal Income Tax', value: federalTax, color: '#ff6b6b' },
     { label: 'Ohio State Tax', value: ohioTax, color: '#ffa94d' },
     { label: 'Municipal Tax', value: municipalTax, color: '#ffd43b' },
     { label: 'School District Tax', value: schoolTax, color: '#a9e34b' },
@@ -1312,15 +1312,15 @@ function calculateOhio() {
     { label: 'Take-Home Pay', value: netAnnual, color: '#00ff88' }
   ].filter(item => item.value > 0);
 
-  document.getElementById('results-chart').innerHTML = `;
-    <h3 style="color:#0071e3;margin-bottom:16px;">Visual Breakdown</h3>
+  document.getElementById('results-chart').innerHTML = `
+    <h3 style="color:#00ff88;margin-bottom:16px;">Visual Breakdown</h3>
     ${chartItems.map(item => `
       <div class="chart-row">
         <div class="chart-label">
           <span>${item.label}</span>
           <span>${fmt(item.value)} (${((item.value/salary)*100).toFixed(1)}%)</span>
         </div>
-        <div class="chart-bar" style="width:$Math.max(2, (item.value/salary)*100*4)%;background:$item.color;"></div>
+        <div class="chart-bar" style="width:${Math.max(2, (item.value/salary)*100*4)}%;background:${item.color};"></div>
       </div>
     `).join('')}
   `;

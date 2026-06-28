@@ -683,7 +683,7 @@ function getCountyRate() {
 function calcFederalTax(taxableIncome, status) {
   var brackets;
   if (status === 'married') {
-    brackets = [;
+    brackets = [
       {min:0, max:23850, rate:0.10},
       {min:23850, max:96950, rate:0.12},
       {min:96950, max:206700, rate:0.22},
@@ -693,7 +693,7 @@ function calcFederalTax(taxableIncome, status) {
       {min:1252700, max:Infinity, rate:0.37}
     ];
   } else if (status === 'hoh') {
-    brackets = [;
+    brackets = [
       {min:0, max:17000, rate:0.10},
       {min:17000, max:64850, rate:0.12},
       {min:64850, max:103350, rate:0.22},
@@ -703,7 +703,7 @@ function calcFederalTax(taxableIncome, status) {
       {min:626350, max:Infinity, rate:0.37}
     ];
   } else {
-    brackets = [;
+    brackets = [
       {min:0, max:11925, rate:0.10},
       {min:11925, max:48475, rate:0.12},
       {min:48475, max:103350, rate:0.22},
@@ -809,17 +809,17 @@ function calculateSalary() {
     var r = rows[i];
     var pct = gross > 0 ? ((r.annual / gross) * 100).toFixed(1) + '%' : '0%';
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td>' + r.name + '</td><td style="'" + (r.cls === 'tax' ? 'color:#ff3b30' : 'color:#0071e3') + '">' + fmt(r.annual) + '</td><td style="'" + (r.cls === 'tax' ? 'color:#ff3b30' : 'color:#0071e3') + '">' + fmt(r.annual / payFreq) + '</td><td>' + pct + '</td>';
+    tr.innerHTML = '<td>' + r.name + '</td><td style="' + (r.cls === 'tax' ? 'color:#ff4466' : 'color:#00ff88') + '">' + fmt(r.annual) + '</td><td style="' + (r.cls === 'tax' ? 'color:#ff4466' : 'color:#00ff88') + '">' + fmt(r.annual / payFreq) + '</td><td>' + pct + '</td>';
     tbody.appendChild(tr);
   }
 
-  var chartUrl = 'https://quickchart.io/chart?c="'" + encodeURIComponent(JSON.stringify({
+  var chartUrl = 'https://quickchart.io/chart?c=' + encodeURIComponent(JSON.stringify({
     type: 'doughnut',
     data: {
       labels: ['Take-Home', 'Federal Tax', 'IN State Tax', 'County Tax', 'Social Security', 'Medicare', '401(k)'],
       datasets: [{
         data: [Math.round(netAnnual), Math.round(federalTax), Math.round(stateTax), Math.round(countyTax), Math.round(fica.ss), Math.round(fica.medicare), Math.round(contrib401k)],
-        backgroundColor: ['#00ff88', '#ff3b30', '#ff9f0a', '#ffcc00', '#0071e3', '#cc44ff', '#88ff44']
+        backgroundColor: ['#00ff88', '#ff4466', '#ff8844', '#ffcc00', '#00ccff', '#cc44ff', '#88ff44']
       }]
     },
     options: {
@@ -828,16 +828,16 @@ function calculateSalary() {
         legend: { position: 'bottom' }
       }
     }
-  })) + '&w="500&h="400&f=png';"
+  })) + '&w=500&h=400&f=png';
 
-  document.getElementById('chartContainer').innerHTML" = '<img alt="Your personalized Indiana salary breakdown chart" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjEwIiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5Ij5QbGFjZWhvbGRlciBJbWFnZTwvdGV4dD48L3N2Zz4=" + chartUrl + '" style="max-width:100%;border-radius:12px;">';
+  document.getElementById('chartContainer').innerHTML = '<img alt="Your personalized Indiana salary breakdown chart" src="' + chartUrl + '" style="max-width:100%;border-radius:12px;"/>';
   document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 document.addEventListener('DOMContentLoaded', function() {
   calculateSalary();
 });
-}</script> <div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div>
+</script> <div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div>
 <p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Verified in Chrome 134, Firefox 135, Safari 18.3, and Edge 134. Built on stable Web APIs with no browser-specific hacks.</p>
 <div class="related-tools" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:800px;margin:2rem auto;padding:0 1rem;"><a class="interactive-element" href="/free-tools/salary-raise-calculator/" class="related-tool" style="padding:1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;text-decoration:none;"><h4 style="color:#0071e3;margin:0 0 0.5rem;">Salary Raise Calculator - Calculate Pay Increase &amp; Raise</h4><p style="color:#86868b;font-size:0.85rem;margin:0;">Free salary increase calculator to determine your new pay after a raise.</p></a>
 <a class="interactive-element" href="/free-tools/salary-calculator/" class="related-tool" style="padding:1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;text-decoration:none;"><h4 style="color:#0071e3;margin:0 0 0.5rem;">Free Salary Calculator - Hourly to Annual, Take-Home Pay</h4><p style="color:#86868b;font-size:0.85rem;margin:0;">Calculate your salary from hourly to annual, monthly, weekly, and daily.</p></a>

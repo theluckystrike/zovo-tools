@@ -1197,7 +1197,7 @@ function showSuggestions(input) {
     var item = document.createElement('div');
     item.className = 'autocomplete-item';
     var posClass = 'pos-' + p.pos.toLowerCase();
-    item.innerHTML = '<span>' + p.name + '</span><span class="pos-tag '" + posClass + '">' + p.pos + '</span>';
+    item.innerHTML = '<span>' + p.name + '</span><span class="pos-tag ' + posClass + '">' + p.pos + '</span>';
     item.addEventListener('click', function() {
       input.value = p.name;
       // Set position dropdown
@@ -1221,13 +1221,13 @@ function addPlayer(containerId) {
   var container = document.getElementById(containerId);
   var entry = document.createElement('div');
   entry.className = 'player-entry';
-  entry.innerHTML = '<div class="player-row">' +;
+  entry.innerHTML = '<div class="player-row">' +
     '<div class="form-group player-autocomplete"><label>Player Name</label>' +
-    '<input type="text" class="player-name" placeholder="Start typing..." oninput="showSuggestions(this)" onfocus="showSuggestions(this)">' +
+    '<input type="text" class="player-name" placeholder="Start typing..." oninput="showSuggestions(this)" onfocus="showSuggestions(this)"/>' +
     '<div class="autocomplete-list"></div></div>' +
-    '<div class="form-group fade-in"><label>Position</label><select class="player-pos">' +
+    '<div class="form-group"><label>Position</label><select class="player-pos">' +
     '<option value="QB">QB</option><option value="RB" selected>RB</option><option value="WR">WR</option><option value="TE">TE</option></select></div>' +
-    '<button class="remove-player btn" onclick=this.closest(\'.player-entry\').remove()>X</button></div>';
+    '<button class="remove-player" onclick="this.closest(\'.player-entry\').remove()">X</button></div>';
   container.appendChild(entry);
 }
 
@@ -1311,7 +1311,7 @@ function analyzeTrade() {
     verdictSub.textContent = 'Team A receives ' + diff + ' more trade value points (' + diffPct.toFixed(1) + '% advantage).';
   } else {
     verdictCard.classList.add('side-b-wins');
-    verdictText.style.color = '#0071e3';
+    verdictText.style.color = '#00ccff';
     verdictText.textContent = 'Team B Wins This Trade';
     verdictSub.textContent = 'Team B receives ' + diff + ' more trade value points (' + diffPct.toFixed(1) + '% advantage).';
   }
@@ -1333,7 +1333,7 @@ function analyzeTrade() {
   valuesB.innerHTML = '';
   sideB.forEach(function(p) {
     var li = document.createElement('li');
-    li.innerHTML = '<span class="pname">' + p.name + ' (' + p.pos + ')</span><span class="pval" style="color:#0071e3">' + p.value + '</span>';
+    li.innerHTML = '<span class="pname">' + p.name + ' (' + p.pos + ')</span><span class="pval" style="color:#00ccff">' + p.value + '</span>';
     valuesB.appendChild(li);
   });
 
@@ -1342,20 +1342,20 @@ function analyzeTrade() {
   var pctA = totalBoth > 0 ? (totalA / totalBoth * 100) : 50;
   var pctB = 100 - pctA;
   var compBar = document.getElementById('compBar');
-  compBar.innerHTML = '<div class="comp-bar-a" style="width:'" + pctA.toFixed(1) + '%">Team A: ' + totalA + '</div>' +;
-    '<div class="comp-bar-b" style="width:'" + pctB.toFixed(1) + '%">Team B: ' + totalB + '</div>';
+  compBar.innerHTML = '<div class="comp-bar-a" style="width:' + pctA.toFixed(1) + '%">Team A: ' + totalA + '</div>' +
+    '<div class="comp-bar-b" style="width:' + pctB.toFixed(1) + '%">Team B: ' + totalB + '</div>';
 
   // Breakdown table
   var tbody = document.getElementById('breakdownBody');
   tbody.innerHTML = '';
   sideA.forEach(function(p) {
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td style="color:#0071e3">A</td><td>' + p.name + '</td><td>' + p.pos + '</td><td>' + p.base + '</td><td>' + p.scarcityMult.toFixed(2) + 'x</td><td style="font-weight:600">' + p.value + '</td>';
+    tr.innerHTML = '<td style="color:#00ff88">A</td><td>' + p.name + '</td><td>' + p.pos + '</td><td>' + p.base + '</td><td>' + p.scarcityMult.toFixed(2) + 'x</td><td style="font-weight:600">' + p.value + '</td>';
     tbody.appendChild(tr);
   });
   sideB.forEach(function(p) {
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td style="color:#0071e3">B</td><td>' + p.name + '</td><td>' + p.pos + '</td><td>' + p.base + '</td><td>' + p.scarcityMult.toFixed(2) + 'x</td><td style="font-weight:600">' + p.value + '</td>';
+    tr.innerHTML = '<td style="color:#00ccff">B</td><td>' + p.name + '</td><td>' + p.pos + '</td><td>' + p.base + '</td><td>' + p.scarcityMult.toFixed(2) + 'x</td><td style="font-weight:600">' + p.value + '</td>';
     tbody.appendChild(tr);
   });
 

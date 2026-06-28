@@ -694,7 +694,7 @@ function loadSettings() {
 function calcFederalTax(taxableIncome, status) {
   var brackets;
   if (status === 'married') {
-    brackets = [;
+    brackets = [
       {min:0, max:23850, rate:0.10},
       {min:23850, max:96950, rate:0.12},
       {min:96950, max:206700, rate:0.22},
@@ -704,7 +704,7 @@ function calcFederalTax(taxableIncome, status) {
       {min:751600, max:Infinity, rate:0.37}
     ];
   } else if (status === 'hoh') {
-    brackets = [;
+    brackets = [
       {min:0, max:17000, rate:0.10},
       {min:17000, max:64850, rate:0.12},
       {min:64850, max:106250, rate:0.22},
@@ -714,7 +714,7 @@ function calcFederalTax(taxableIncome, status) {
       {min:626350, max:Infinity, rate:0.37}
     ];
   } else {
-    brackets = [;
+    brackets = [
       {min:0, max:11925, rate:0.10},
       {min:11925, max:48475, rate:0.12},
       {min:48475, max:103350, rate:0.22},
@@ -738,7 +738,7 @@ function calcFederalTax(taxableIncome, status) {
 function calcCTTax(taxableIncome, status) {
   var brackets, recaptureThreshold, recaptureMax;
   if (status === 'married') {
-    brackets = [;
+    brackets = [
       {min:0, max:20000, rate:0.03},
       {min:20000, max:100000, rate:0.05},
       {min:100000, max:200000, rate:0.055},
@@ -749,7 +749,7 @@ function calcCTTax(taxableIncome, status) {
     ];
     recaptureThreshold = 400000;
   } else if (status === 'hoh') {
-    brackets = [;
+    brackets = [
       {min:0, max:16000, rate:0.03},
       {min:16000, max:80000, rate:0.05},
       {min:80000, max:160000, rate:0.055},
@@ -760,7 +760,7 @@ function calcCTTax(taxableIncome, status) {
     ];
     recaptureThreshold = 320000;
   } else {
-    brackets = [;
+    brackets = [
       {min:0, max:10000, rate:0.03},
       {min:10000, max:50000, rate:0.05},
       {min:50000, max:100000, rate:0.055},
@@ -929,7 +929,7 @@ function calculateSalary() {
   if (extra > 0) {
     html += '<div class="result-row"><span class="result-label">Additional Withholding</span><span class="result-value">-$' + formatNum(totalExtra) + '</span></div>';
   }
-  html += '<div class="result-row" style="border-bottom:2px solid #e5e5ea;margin-top:0.5rem;padding-top:0.75rem"><span class="result-label" style="font-weight:600;color:#1d1d1f">Annual Take-Home Pay</span><span class="result-value accent">$' + formatNum(netAnnual) + '</span></div>';
+  html += '<div class="result-row" style="border-top:2px solid #00ff88;margin-top:0.5rem;padding-top:0.75rem"><span class="result-label" style="font-weight:600;color:#e0e0e8">Annual Take-Home Pay</span><span class="result-value accent">$' + formatNum(netAnnual) + '</span></div>';
   html += '<div class="result-row"><span class="result-label">Per Paycheck (' + getFreqLabel(freq) + ')</span><span class="result-value accent">$' + formatNum(netPerPeriod) + '</span></div>';
   html += '<div class="result-row"><span class="result-label">Monthly Take-Home</span><span class="result-value">$' + formatNum(netAnnual / 12) + '</span></div>';
   html += '<div class="result-row"><span class="result-label">Weekly Take-Home</span><span class="result-value">$' + formatNum(netAnnual / 52) + '</span></div>';
@@ -945,18 +945,18 @@ function calculateSalary() {
       labels: ['Take-Home', 'Federal Tax', 'CT State Tax', 'Social Security', 'Medicare', '401(k)'],
       datasets: [{
         data: [Math.round(netAnnual), Math.round(federalTax), Math.round(stateTax), Math.round(fica.ss), Math.round(fica.medicare), Math.round(k401Amount)],
-        backgroundColor: ['#00ff88', '#ff3b30', '#ff9f0a', '#0071e3', '#8888ff', '#ff88cc']
+        backgroundColor: ['#00ff88', '#ff4466', '#ffaa00', '#00ccff', '#8888ff', '#ff88cc']
       }]
     },
     options: {
       plugins: {
-        title: {display: true, text: 'Connecticut Salary Breakdown', color: '#1d1d1f', font: {size: 16}},
-        legend: {labels: {color: '#1d1d1f', font: {size: 12}}}
+        title: {display: true, text: 'Connecticut Salary Breakdown', color: '#e0e0e8', font: {size: 16}},
+        legend: {labels: {color: '#e0e0e8', font: {size: 12}}}
       }
     }
   };
-  var chartUrl = 'https://quickchart.io/chart?c="'" + encodeURIComponent(JSON.stringify(chartConfig)) + '&backgroundColor="%230a0a0f&width="500&height=350';"
-  document.getElementById('chartContainer').innerHTML" = '<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjEwIiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5Ij5QbGFjZWhvbGRlciBJbWFnZTwvdGV4dD48L3N2Zz4=" + chartUrl + '" alt="Connecticut salary breakdown chart showing take-home pay, federal tax, CT state tax, and FICA" loading="lazy">';
+  var chartUrl = 'https://quickchart.io/chart?c=' + encodeURIComponent(JSON.stringify(chartConfig)) + '&backgroundColor=%230a0a0f&width=500&height=350';
+  document.getElementById('chartContainer').innerHTML = '<img src="' + chartUrl + '" alt="Connecticut salary breakdown chart showing take-home pay, federal tax, CT state tax, and FICA" loading="lazy"/>';
 
   saveSettings();
   document.getElementById('results').scrollIntoView({behavior: 'smooth'});
