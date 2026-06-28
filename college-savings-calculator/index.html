@@ -1098,6 +1098,7 @@ Privacy Note - This college savings calculator runs 100% in your browser. No fin
   let visits = parseInt(localStorage.getItem(key) || '0', 10);
   visits++;
   localStorage.setItem(key, visits.toString());
+  console.log('College Savings Calculator visits:', visits);
 })();
 
 const collegeCosts = {
@@ -1179,10 +1180,10 @@ function calculateCollege() {
 
   // Display results
   const resultsGrid = document.getElementById('resultsGrid');
-  resultsGrid.innerHTML = `;
+  resultsGrid.innerHTML = `
     <div class="result-card"><div class="label">Projected Savings at ${collegeAge}</div><div class="value">${formatShort(projectedSavings)}</div><div class="sub">${yearsToCollege} years of growth</div></div>
-    <div class="result-card ${fundingGap <= 0 ? ''" : 'red'}"><div class="label">Total College Cost (Inflated)</div><div class="value">${formatShort(totalCostAtCollege)}</div><div class="sub">${collegeCosts[collegeType].name}, ${collegeYears} years</div></div>
-    <div class="result-card ${fundingGap <= 0 ? ''" : 'red'}"><div class="label">${fundingGap <= 0 ? 'Surplus' : 'Funding Gap'}</div><div class="value">${formatShort(Math.abs(fundingGap))}</div><div class="sub">${fundingGap <= 0 ? 'Above target' : 'Below target'}</div></div>
+    <div class="result-card ${fundingGap <= 0 ? '' : 'red'}"><div class="label">Total College Cost (Inflated)</div><div class="value">${formatShort(totalCostAtCollege)}</div><div class="sub">${collegeCosts[collegeType].name}, ${collegeYears} years</div></div>
+    <div class="result-card ${fundingGap <= 0 ? '' : 'red'}"><div class="label">${fundingGap <= 0 ? 'Surplus' : 'Funding Gap'}</div><div class="value">${formatShort(Math.abs(fundingGap))}</div><div class="sub">${fundingGap <= 0 ? 'Above target' : 'Below target'}</div></div>
     <div class="result-card accent"><div class="label">Total Contributions</div><div class="value">${formatShort(totalContributions)}</div><div class="sub">${formatCurrency(monthlyContrib)}/month for ${yearsToCollege} years</div></div>
     <div class="result-card purple"><div class="label">Investment Growth</div><div class="value">${formatShort(totalGrowth)}</div><div class="sub">${((totalGrowth / (currentSavings + totalContributions)) * 100).toFixed(0)}% return on contributions</div></div>
     <div class="result-card accent"><div class="label">Annual Cost at College</div><div class="value">${formatShort(annualCostAtCollege)}</div><div class="sub">First year, inflation-adjusted</div></div>
@@ -1190,10 +1191,10 @@ function calculateCollege() {
 
   // Progress bar
   const progressSection = document.getElementById('progressSection');
-  const color = fundingPercent >= 100 ? '#00ff88' : fundingPercent >= 70 ? '#0071e3' : fundingPercent >= 40 ? '#0071e3' : '#ff3b30';
-  progressSection.innerHTML = `;
-    <div class="progress-bar"><div class="progress-fill" style="width: $Math.min(100, fundingPercent)%; background: $color;">${fundingPercent.toFixed(1)}% Funded</div></div>
-    <p style="font-size: 0.88rem; color:#86868b; margin-top: 8px;">${fundingPercent >= 100 ? 'Your savings exceed the projected cost. Well done.' : 'You are ' + fundingPercent.toFixed(1) + '% of the way to your goal.'}</p>
+  const color = fundingPercent >= 100 ? '#00ff88' : fundingPercent >= 70 ? '#00ccff' : fundingPercent >= 40 ? '#6C5CE7' : '#ff6b6b';
+  progressSection.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width: ${Math.min(100, fundingPercent)}%; background: ${color};">${fundingPercent.toFixed(1)}% Funded</div></div>
+    <p style="font-size: 0.88rem; color: #888; margin-top: 8px;">${fundingPercent >= 100 ? 'Your savings exceed the projected cost. Well done.' : 'You are ' + fundingPercent.toFixed(1) + '% of the way to your goal.'}</p>
   `;
 
   // Cost comparison cards for all college types
@@ -1201,13 +1202,13 @@ function calculateCollege() {
   let cardsHtml = '';
   Object.entries(collegeCosts).forEach(([key, val]) => {
     const inflatedTotal = Array.from({length: collegeYears}, (_, y) => val.annual * Math.pow(1 + eduInflation, yearsToCollege + y)).reduce((a, b) => a + b, 0);
-    const colors = { community: '#00ff88', public_in: '#0071e3', public_out: '#0071e3', private: '#1d1d1f', ivy: '#ff3b30' };
+    const colors = { community: '#00ff88', public_in: '#00ccff', public_out: '#6C5CE7', private: '#e0e0e8', ivy: '#ff6b6b' };
     const isCurrent = key === collegeType;
-    cardsHtml += `<div class="cost-card" style="$isCurrent ?;'border-color:" ' + colors[key] + ';' : ''}">
+    cardsHtml += `<div class="cost-card" style="${isCurrent ? 'border-color: ' + colors[key] + ';' : ''}">
       <div class="type">${val.name}</div>
-      <div class="amount" style="color: $colors[key];">${formatShort(inflatedTotal)}</div>
+      <div class="amount" style="color: ${colors[key]};">${formatShort(inflatedTotal)}</div>
       <div class="detail">${collegeYears}-yr total in ${yearsToCollege} years</div>
-      ${isCurrent ? '<div class="detail" style="color: #0071e3; margin-top: 4px;">Selected</div>' : ''}
+      ${isCurrent ? '<div class="detail" style="color: #00ff88; margin-top: 4px;">Selected</div>' : ''}
     </div>`;
   });
   costCards.innerHTML = cardsHtml;
@@ -1224,23 +1225,23 @@ function calculateCollege() {
       ]
     },
     options: {
-      title: { display: true, text: 'Savings Growth to College', fontColor: '#1d1d1f' },
-      legend: { labels: { fontColor: '#1d1d1f' } },
+      title: { display: true, text: 'Savings Growth to College', fontColor: '#e0e0e8' },
+      legend: { labels: { fontColor: '#e0e0e8' } },
       scales: {
-        xAxes: [{ ticks: { fontColor: '#1d1d1f' }, gridLines: { color: 'rgba(255,255,255,0.05)' } }],
-        yAxes: [{ ticks: { fontColor: '#1d1d1f', callback: function(v) { return '$' + (v/1000).toFixed(0) + 'K'; } }, gridLines: { color: 'rgba(255,255,255,0.05)' } }]
+        xAxes: [{ ticks: { fontColor: '#e0e0e8' }, gridLines: { color: 'rgba(255,255,255,0.05)' } }],
+        yAxes: [{ ticks: { fontColor: '#e0e0e8', callback: function(v) { return '$' + (v/1000).toFixed(0) + 'K'; } }, gridLines: { color: 'rgba(255,255,255,0.05)' } }]
       },
       annotation: {
         annotations: [{
           type: 'line', mode: 'horizontal', scaleID: 'y-axis-0',
-          value: totalCostAtCollege, borderColor: '#ff3b30', borderWidth: 2, borderDash: [5,5],
-          label: { enabled: true, content: 'Cost Target', backgroundColor: '#ff3b30' }
+          value: totalCostAtCollege, borderColor: '#ff6b6b', borderWidth: 2, borderDash: [5,5],
+          label: { enabled: true, content: 'Cost Target', backgroundColor: '#ff6b6b' }
         }]
       }
     }
   };
   const chartContainer = document.getElementById('growthChart');
-  chartContainer.innerHTML = `<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=900&h=400&bkg=%23121218" alt="College savings growth projection chart" loading="lazy">`;
+  chartContainer.innerHTML = `<img src="https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=900&h=400&bkg=%23121218" alt="College savings growth projection chart" loading="lazy"/>`;
 
   // Year table
   const tableContainer = document.getElementById('yearTable');
@@ -1254,12 +1255,12 @@ function calculateCollege() {
   // Gap section
   const gapSection = document.getElementById('gapSection');
   if (fundingGap > 0) {
-    gapSection.innerHTML = `;
-      <div class="inline-note">To fully fund ${collegeCosts[collegeType].name} (${collegeYears} years, inflation-adjusted), you would need to contribute <span style="color:#0071e3;font-weight:600;">${formatCurrency(requiredMonthly)}/month</span> instead of your current ${formatCurrency(monthlyContrib)}/month. That is an increase of ${formatCurrency(requiredMonthly - monthlyContrib)}/month. Consider starting with what you can afford and increasing over time as income grows.</div>
+    gapSection.innerHTML = `
+      <div class="inline-note">To fully fund ${collegeCosts[collegeType].name} (${collegeYears} years, inflation-adjusted), you would need to contribute <span style="color:#00ff88;font-weight:600;">${formatCurrency(requiredMonthly)}/month</span> instead of your current ${formatCurrency(monthlyContrib)}/month. That is an increase of ${formatCurrency(requiredMonthly - monthlyContrib)}/month. Consider starting with what you can afford and increasing over time as income grows.</div>
     `;
   } else {
-    gapSection.innerHTML = `;
-      <div class="inline-note" style="border-color: #0071e3;">Your current savings plan exceeds the projected cost by ${formatCurrency(Math.abs(fundingGap))}. You could reduce your monthly contribution to ${formatCurrency(Math.max(0, requiredMonthly))}/month and still meet your goal, or keep the surplus as a buffer against higher-than-expected costs or graduate school.</div>
+    gapSection.innerHTML = `
+      <div class="inline-note" style="border-color: #00ff88;">Your current savings plan exceeds the projected cost by ${formatCurrency(Math.abs(fundingGap))}. You could reduce your monthly contribution to ${formatCurrency(Math.max(0, requiredMonthly))}/month and still meet your goal, or keep the surplus as a buffer against higher-than-expected costs or graduate school.</div>
     `;
   }
 

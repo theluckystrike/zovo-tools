@@ -1150,50 +1150,51 @@ function calculatePoints() {
     scenarios.forEach(function(s) {
         const row = document.createElement('tr');
         if (s.points === bestPoints) row.classList.add('highlight-row');
-        row.innerHTML =;
+        row.innerHTML =
             '<td>' + s.points + (s.points === 1 ? ' Point' : ' Points') + (s.points === bestPoints && s.points > 0 ? '<span class="rec-badge">Best</span>' : '') + '</td>' +
             '<td>' + s.rate.toFixed(2) + '%</td>' +
             '<td>$' + s.payment.toFixed(2) + '</td>' +
             '<td>$' + s.upfront.toLocaleString() + '</td>' +
             '<td>' + (s.points === 0 ? 'N/A' : s.breakeven + ' mo') + '</td>' +
-            '<td style="color:'" + (s.netSavings >= 0 ? '#00ff88' : '#ff3b30') + '">$' + s.netSavings.toFixed(2) + '</td>';
+            '<td style="color:' + (s.netSavings >= 0 ? '#00ff88' : '#ff6b6b') + '">$' + s.netSavings.toFixed(2) + '</td>';
         tbody.appendChild(row);
     });
 
     const best = scenarios[bestPoints];
     const summaryEl = document.getElementById('summaryText');
     if (bestPoints === 0) {
-        summaryEl.innerHTML = '<p style="margin:0;color:#1d1d1f;">Based on your ' + yearsStaying + '-year timeline, <span style="color:#0071e3;">buying zero points</span> is the most cost-effective option. The breakeven periods for 1-3 points all exceed your planned stay, so you wouldn\'t recoup the upfront costs.</p>';
+        summaryEl.innerHTML = '<p style="margin:0;color:#e0e0e8;">Based on your ' + yearsStaying + '-year timeline, <span style="color:#00ff88;">buying zero points</span> is the most cost-effective option. The breakeven periods for 1-3 points all exceed your planned stay, so you wouldn\'t recoup the upfront costs.</p>';
     } else {
-        summaryEl.innerHTML = '<p style="margin:0;color:#1d1d1f;">Based on your ' + yearsStaying + '-year timeline, <span style="color:#0071e3;">buying ' + bestPoints + (bestPoints === 1 ? ' point' : ' points') + '</span> saves you the most money. You\'ll break even at month ' + best.breakeven + ' and save a net <span style="color:#0071e3;">$' + best.netSavings.toFixed(2) + '</span> over ' + yearsStaying + ' years compared to no points.</p>';
+        summaryEl.innerHTML = '<p style="margin:0;color:#e0e0e8;">Based on your ' + yearsStaying + '-year timeline, <span style="color:#00ff88;">buying ' + bestPoints + (bestPoints === 1 ? ' point' : ' points') + '</span> saves you the most money. You\'ll break even at month ' + best.breakeven + ' and save a net <span style="color:#00ff88;">$' + best.netSavings.toFixed(2) + '</span> over ' + yearsStaying + ' years compared to no points.</p>';
     }
 
     // Build dynamic chart
     const payments = scenarios.map(function(s) { return Math.round(s.payment); });
-    const chartUrl = 'https://quickchart.io/chart?c="'" + encodeURIComponent(JSON.stringify({
+    const chartUrl = 'https://quickchart.io/chart?c=' + encodeURIComponent(JSON.stringify({
         type: 'bar',
         data: {
             labels: ['0 Points', '1 Point', '2 Points', '3 Points'],
             datasets: [{
                 label: 'Monthly Payment ($)',
                 data: payments,
-                backgroundColor: ['#00ff88', '#0071e3', '#0071e3', '#ff3b30']
+                backgroundColor: ['#00ff88', '#00ccff', '#6C5CE7', '#ff6b6b']
             }]
         },
         options: {
-            title: { display: true, text: 'Monthly Payment by Points', fontColor: '#1d1d1f' },
-            legend: { labels: { fontColor: '#1d1d1f' } },
+            title: { display: true, text: 'Monthly Payment by Points', fontColor: '#e0e0e8' },
+            legend: { labels: { fontColor: '#e0e0e8' } },
             scales: {
-                yAxes: [{ ticks: { fontColor: '#1d1d1f' } }],
-                xAxes: [{ ticks: { fontColor: '#1d1d1f' } }]
+                yAxes: [{ ticks: { fontColor: '#e0e0e8' } }],
+                xAxes: [{ ticks: { fontColor: '#e0e0e8' } }]
             }
         }
-    })) + '&w="600&h="350&backgroundColor=%230a0a0f';"
+    })) + '&w=600&h=350&backgroundColor=%230a0a0f';
 
-    document.getElementById('chartContainer').innerHTML" = '<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjEwIiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5Ij5QbGFjZWhvbGRlciBJbWFnZTwvdGV4dD48L3N2Zz4=" + chartUrl + '" alt="Dynamic mortgage points comparison chart" loading="lazy" style="max-width:100%;border-radius:8px;">';
+    document.getElementById('chartContainer').innerHTML = '<img src="' + chartUrl + '" alt="Dynamic mortgage points comparison chart" loading="lazy" style="max-width:100%;border-radius:8px;">';
 
     document.getElementById('resultsPanel').classList.add('active');
     document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 </script>
 <div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div>
 <section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Original Research: Mortgage Point Costs and Break-Even Analysis (2026)</h2><p style="color:#86868b;margin-bottom:16px">I compiled this data from mortgage lender rate sheets across 20 major US markets. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #e5e5ea"><th style="text-align:left;padding:10px;color:#0071e3">Points Purchased</th><th style="text-align:left;padding:10px;color:#0071e3">Rate Reduction</th><th style="text-align:left;padding:10px;color:#0071e3">Cost on $400K Loan</th><th style="text-align:left;padding:10px;color:#0071e3">Break-Even (months)</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">0.5 points</td><td style="padding:10px;color:#1d1d1f">0.125%</td><td style="padding:10px;color:#1d1d1f">$2,000</td><td style="padding:10px;color:#1d1d1f">56 months</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">1.0 points</td><td style="padding:10px;color:#1d1d1f">0.25%</td><td style="padding:10px;color:#1d1d1f">$4,000</td><td style="padding:10px;color:#1d1d1f">54 months</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">1.5 points</td><td style="padding:10px;color:#1d1d1f">0.375%</td><td style="padding:10px;color:#1d1d1f">$6,000</td><td style="padding:10px;color:#1d1d1f">52 months</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">2.0 points</td><td style="padding:10px;color:#1d1d1f">0.50%</td><td style="padding:10px;color:#1d1d1f">$8,000</td><td style="padding:10px;color:#1d1d1f">50 months</td></tr></tbody></table></div></section>

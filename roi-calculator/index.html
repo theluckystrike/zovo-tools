@@ -932,7 +932,7 @@ html { scroll-behavior: smooth; }
 <footer>Built by Michael Lip &middot; <a class="interactive-element" href="https://zovo.one">zovo.one</a></footer>
 <script>
 var invCounter = 2;
-var colors = ['#00ff88', '#0071e3', '#ffa502', '#ff3b30', '#0071e3', '#e84393', '#fdcb6e', '#74b9ff'];
+var colors = ['#00ff88', '#00ccff', '#ffa502', '#ff6b6b', '#6C5CE7', '#e84393', '#fdcb6e', '#74b9ff'];
 
 function fmt(n) { return (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0}); }
 
@@ -940,13 +940,13 @@ function addInvestment() {
   invCounter++;
   var div = document.createElement('div');
   div.className = 'card inv-card';
-  div.innerHTML = '<div class="inv-header"><h2>Investment ' + invCounter + '</h2><button class="btn-remove-inv btn" onclick="removeInv(this)">Remove</button></div>' +;
-    '<div class="input-row"><div class="input-group"><label>Investment Name</label><input type="text" class="inv-name" value="Investment '" + invCounter + '"/></div>' +
-    '<div class="input-group"><label>Initial Investment ($)</label><input type="number" class="inv-cost" value="10000" min="0"></div>' +
-    '<div class="input-group"><label>Final Value ($)</label><input type="number" class="inv-value" value="12000" min="0"></div></div>' +
-    '<div class="input-row"><div class="input-group"><label>Holding Period (years)</label><input type="number" class="inv-years" value="1" min="0.1" step="0.1"></div>' +
-    '<div class="input-group"><label>Additional Costs ($)</label><input type="number" class="inv-fees" value="0" min="0" step="1"></div>' +
-    '<div class="input-group"><label>Income Received ($)</label><input type="number" class="inv-income" value="0" min="0" step="1"></div></div>';
+  div.innerHTML = '<div class="inv-header"><h2>Investment ' + invCounter + '</h2><button class="btn-remove-inv" onclick="removeInv(this)">Remove</button></div>' +
+    '<div class="input-row"><div class="input-group"><label>Investment Name</label><input type="text" class="inv-name" value="Investment ' + invCounter + '"/></div>' +
+    '<div class="input-group"><label>Initial Investment ($)</label><input type="number" class="inv-cost" value="10000" min="0"/></div>' +
+    '<div class="input-group"><label>Final Value ($)</label><input type="number" class="inv-value" value="12000" min="0"/></div></div>' +
+    '<div class="input-row"><div class="input-group"><label>Holding Period (years)</label><input type="number" class="inv-years" value="1" min="0.1" step="0.1"/></div>' +
+    '<div class="input-group"><label>Additional Costs ($)</label><input type="number" class="inv-fees" value="0" min="0" step="1"/></div>' +
+    '<div class="input-group"><label>Income Received ($)</label><input type="number" class="inv-income" value="0" min="0" step="1"/></div></div>';
   document.getElementById('investments').appendChild(div);
 }
 
@@ -987,16 +987,16 @@ function calculate() {
   var avgRoi = data.length > 0 ? data.reduce(function(s, d) { return s + d.annRoi; }, 0) / data.length : 0;
 
   var sumHtml = '<div class="summary-item"><div class="label">Total Invested</div><div class="value neutral">' + fmt(totalInvested) + '</div></div>';
-  sumHtml += '<div class="summary-item"><div class="label">Total Profit</div><div class="value '" + (totalProfit >= 0 ? 'positive' : 'negative') + '">' + fmt(totalProfit) + '</div></div>';
-  sumHtml += '<div class="summary-item"><div class="label">Avg Annualized</div><div class="value '" + (avgRoi >= 0 ? 'positive' : 'negative') + '">' + avgRoi.toFixed(1) + '%</div></div>';
+  sumHtml += '<div class="summary-item"><div class="label">Total Profit</div><div class="value ' + (totalProfit >= 0 ? 'positive' : 'negative') + '">' + fmt(totalProfit) + '</div></div>';
+  sumHtml += '<div class="summary-item"><div class="label">Avg Annualized</div><div class="value ' + (avgRoi >= 0 ? 'positive' : 'negative') + '">' + avgRoi.toFixed(1) + '%</div></div>';
   sumHtml += '<div class="summary-item"><div class="label">Top Performer</div><div class="value positive">' + data[bestIdx].name + '</div></div>';
   document.getElementById('summaryGrid').innerHTML = sumHtml;
 
   // Table
   var html = '';
   data.forEach(function(d, i) {
-    var cls = i === bestIdx ? ' class="best-roi"'" : '';
-    html += '<tr' + cls + '><td>' + d.name + '</td><td class="'" + (d.profit >= 0 ? 'positive' : 'negative') + '">' + fmt(d.profit) + '</td><td class="'" + (d.roi >= 0 ? 'positive' : 'negative') + '">' + d.roi.toFixed(1) + '%</td><td class="'" + (d.annRoi >= 0 ? 'positive' : 'negative') + '">' + d.annRoi.toFixed(1) + '%</td><td class="'" + (d.realReturn >= 0 ? 'positive' : 'negative') + '">' + d.realReturn.toFixed(1) + '%</td><td class="'" + (d.afterTaxRoi >= 0 ? 'positive' : 'negative') + '">' + d.afterTaxRoi.toFixed(1) + '%</td><td>' + fmt(d.cost) + '</td><td>' + fmt(d.value) + '</td></tr>';
+    var cls = i === bestIdx ? ' class="best-roi"' : '';
+    html += '<tr' + cls + '><td>' + d.name + '</td><td class="' + (d.profit >= 0 ? 'positive' : 'negative') + '">' + fmt(d.profit) + '</td><td class="' + (d.roi >= 0 ? 'positive' : 'negative') + '">' + d.roi.toFixed(1) + '%</td><td class="' + (d.annRoi >= 0 ? 'positive' : 'negative') + '">' + d.annRoi.toFixed(1) + '%</td><td class="' + (d.realReturn >= 0 ? 'positive' : 'negative') + '">' + d.realReturn.toFixed(1) + '%</td><td class="' + (d.afterTaxRoi >= 0 ? 'positive' : 'negative') + '">' + d.afterTaxRoi.toFixed(1) + '%</td><td>' + fmt(d.cost) + '</td><td>' + fmt(d.value) + '</td></tr>';
   });
   document.getElementById('resultsTable').innerHTML = html;
 
@@ -1007,9 +1007,9 @@ function calculate() {
   data.forEach(function(d, i) {
     var pct = Math.max(3, Math.abs(d.roi) / maxRoi * 100);
     var color = colors[i % colors.length];
-    roiHtml += '<div class="bar-group"><div class="bar-label"><span>' + d.name + '</span><span class="'" + (d.roi >= 0 ? 'positive' : 'negative') + '">' + d.roi.toFixed(1) + '%</span></div><div class="bar-track"><div class="bar-fill" style="width:'" + pct + '%;background:' + color + ';"></div></div></div>';
+    roiHtml += '<div class="bar-group"><div class="bar-label"><span>' + d.name + '</span><span class="' + (d.roi >= 0 ? 'positive' : 'negative') + '">' + d.roi.toFixed(1) + '%</span></div><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + color + ';"></div></div></div>';
     var pctA = Math.max(3, Math.abs(d.annRoi) / maxAnn * 100);
-    annHtml += '<div class="bar-group"><div class="bar-label"><span>' + d.name + ' (' + d.years + 'yr)</span><span class="'" + (d.annRoi >= 0 ? 'positive' : 'negative') + '">' + d.annRoi.toFixed(1) + '%/yr</span></div><div class="bar-track"><div class="bar-fill" style="width:'" + pctA + '%;background:' + color + ';"></div></div></div>';
+    annHtml += '<div class="bar-group"><div class="bar-label"><span>' + d.name + ' (' + d.years + 'yr)</span><span class="' + (d.annRoi >= 0 ? 'positive' : 'negative') + '">' + d.annRoi.toFixed(1) + '%/yr</span></div><div class="bar-track"><div class="bar-fill" style="width:' + pctA + '%;background:' + color + ';"></div></div></div>';
   });
   document.getElementById('roiChart').innerHTML = roiHtml;
   document.getElementById('annChart').innerHTML = annHtml;
@@ -1022,10 +1022,10 @@ function calculate() {
     var nomVal = best.cost * Math.pow(1 + annRate, y);
     var realVal = nomVal / Math.pow(1 + inflation, y);
     var cumReturn = ((nomVal - best.cost) / best.cost * 100);
-    projHtml += '<tr><td>' + y + '</td><td>' + fmt(nomVal) + '</td><td>' + fmt(realVal) + '</td><td class="'" + (cumReturn >= 0 ? 'positive' : 'negative') + '">' + cumReturn.toFixed(1) + '%</td></tr>';
+    projHtml += '<tr><td>' + y + '</td><td>' + fmt(nomVal) + '</td><td>' + fmt(realVal) + '</td><td class="' + (cumReturn >= 0 ? 'positive' : 'negative') + '">' + cumReturn.toFixed(1) + '%</td></tr>';
   }
   projHtml += '</tbody></table>';
-  projHtml += '<p style="color:#86868b;font-size:0.8rem;margin-top:10px;">Projection based on ' + best.name + ' annualized return of ' + best.annRoi.toFixed(1) + '% applied to initial investment of ' + fmt(best.cost) + '.</p>';
+  projHtml += '<p style="color:#888;font-size:0.8rem;margin-top:10px;">Projection based on ' + best.name + ' annualized return of ' + best.annRoi.toFixed(1) + '% applied to initial investment of ' + fmt(best.cost) + '.</p>';
   document.getElementById('projectionTable').innerHTML = projHtml;
 
   // Insights
@@ -1038,7 +1038,7 @@ function calculate() {
     insHtml += '<p>The performance spread between best and worst is ' + spread.toFixed(1) + ' percentage points annually.</p>';
   }
   if (data[bestIdx].realReturn < 0) {
-    insHtml += '<p style="color:#ff3b30;">Even the best investment has a negative real return after inflation adjustment. Consider higher-yielding alternatives.</p>';
+    insHtml += '<p style="color:#ff6b6b;">Even the best investment has a negative real return after inflation adjustment. Consider higher-yielding alternatives.</p>';
   }
   var doublingYears = data[bestIdx].annRoi > 0 ? (72 / data[bestIdx].annRoi).toFixed(1) : 'N/A';
   insHtml += '<p>At ' + data[bestIdx].annRoi.toFixed(1) + '% per year, your money doubles approximately every ' + doublingYears + ' years (Rule of 72).</p>';

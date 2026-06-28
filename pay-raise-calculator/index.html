@@ -685,7 +685,7 @@ function calculateRaise(){
   document.getElementById('resDaily').textContent=fmt(increase/260);
   document.getElementById('resHourly').textContent=fmt(increase/2080);
   document.getElementById('raiseResults').style.display='block';
-  document.getElementById('raiseResults').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('raiseResults').scrollIntoView({behavior:'smooth',block:'start'})
 }
 
 function calculateInflation(){
@@ -706,7 +706,7 @@ function calculateInflation(){
   document.getElementById('infRealGain').textContent=fmt(realGain);
   document.getElementById('infRealMonthly').textContent=fmt(realGain/12);
   document.getElementById('inflationResults').style.display='block';
-  document.getElementById('inflationResults').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('inflationResults').scrollIntoView({behavior:'smooth',block:'start'})
 }
 
 const brackets={
@@ -717,10 +717,18 @@ const brackets={
 
 function getBracket(income,status){
   const b=brackets[status];
-  for(let i=0;iprev){tax+=(top-prev)*b[i][1]}
-    prev=b[i][0];if(income<=b[i][0])break;
+  for(let i=0;i<b.length;i++){if(income<=b[i][0])return b[i][1]}
+  return 0.37
+}
+
+function calcFedTax(income,status){
+  const b=brackets[status];let tax=0,prev=0;
+  for(let i=0;i<b.length;i++){
+    const top=Math.min(income,b[i][0]);
+    if(top>prev){tax+=(top-prev)*b[i][1]}
+    prev=b[i][0];if(income<=b[i][0])break
   }
-  return tax;
+  return tax
 }
 
 function calculateTaxImpact(){
@@ -744,15 +752,17 @@ function calculateTaxImpact(){
   document.getElementById('taxTakeHome').textContent=fmt(takeHome);
   document.getElementById('taxEffectiveRate').textContent=fmtP(effectiveRate);
   document.getElementById('taxResults').style.display='block';
-  document.getElementById('taxResults').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('taxResults').scrollIntoView({behavior:'smooth',block:'start'})
 }
 
-document.getElementById('raisePercent').addEventListener('input',function(){if(this.value)document.getElementById('newSalary').value=''}); document.getElementById('newSalary').addEventListener('input',function(){if(this.value)document.getElementById('raisePercent').value=''}); 
+document.getElementById('raisePercent').addEventListener('input',function(){if(this.value)document.getElementById('newSalary').value=''});
+document.getElementById('newSalary').addEventListener('input',function(){if(this.value)document.getElementById('raisePercent').value=''});
+
 document.querySelectorAll('.toc a').forEach(function(a){
   a.addEventListener('click',function(e){
     e.preventDefault();
     var target=document.querySelector(this.getAttribute('href'));
-    if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    if(target)target.scrollIntoView({behavior:'smooth',block:'start'})
   })
 });
 </script><p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Cross-browser tested March 2026. Confirmed working in Chrome, Firefox, Safari, Edge, and Opera stable channels.</p>
