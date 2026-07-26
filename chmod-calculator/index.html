@@ -17,7 +17,7 @@
 <meta name="author" content="Michael Lip">
 <meta name="robots" content="index, follow">
 <meta name="last-modified" content="2026-03-26">
-<link rel="canonical" href="https://zovo.one/free-tools/chmod-calculator/">
+<link rel="canonical" href="https://zovo.one/free-tools/chmod-calculator">
 <link rel="icon" href="https://zovo.one/favicon.ico">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Chmod Calculator | Free Unix File Permission Calculator | Zovo Tools">
@@ -689,9 +689,9 @@ html { scroll-behavior: smooth; }
 <p class="subtitle">Visual Unix and Linux file permission calculator. Toggle permissions, enter numeric values, or type symbolic notation directly.</p>
 
 <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:16px 0">
-<img src="https://img.shields.io/badge/Last_verified-March_2026-00ff88?style=flat-square" alt="Last verified March 2026" height="22">
-<img src="https://img.shields.io/badge/Updated-2026--03--26-00ccff?style=flat-square" alt="Updated 2026-03-26" height="22">
-<img src="https://img.shields.io/badge/Free_Tool-No_Login-00ff88?style=flat-square" alt="Free Tool - No Login" height="22">
+
+
+
 </div>
 
 <nav style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:10px;padding:20px 24px;margin:20px 0" aria-label="Table of Contents">
@@ -700,7 +700,6 @@ html { scroll-behavior: smooth; }
 <a class="interactive-element" href="#calculator" style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">Permission Calculator</a>
 <span style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">Chmod Guide</span>
 <a class="interactive-element" href="#faq" style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">FAQ</a>
-<a class="interactive-element" href="#research" style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">Permission Reference</a>
 <a class="interactive-element" href="#community" style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">Community Questions</a>
 <a class="interactive-element" href="#video" style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">Video Guide</a>
 </div></nav>
@@ -826,7 +825,7 @@ html { scroll-behavior: smooth; }
 
 <h3>Common Permission Settings</h3>
 
-<p>Different types of files and directories require different permission settings for proper security. Regular files that contain data (text files, images, configurations) should typically have <code>644</code> (rw-r--r--), allowing the owner to read and write while others can only read. This is the default permission set by most applications when creating files.</p>
+<p>Different types of files and directories require different permission settings for proper security. Regular files that contain data (text files, images, configurations) should typically have <code>644</code> (rw-r, r--), allowing the owner to read and write while others can only read. This is the default permission set by most applications when creating files.</p>
 
 <p>Executable files and scripts need the execute bit set. The standard setting is <code>755</code> (rwxr-xr-x), which allows anyone to run the program but only the owner to modify it. Shell scripts, Python scripts, and compiled binaries all need execute permission to run directly.</p>
 
@@ -874,7 +873,7 @@ html { scroll-behavior: smooth; }
 
 <p>Standard Unix permissions are limited to three groups (owner, group, others). For more granular control, modern Unix systems support Access Control Lists (ACLs). ACLs allow you to set specific permissions for individual users and groups beyond the standard owner/group model.</p>
 
-<p>The <code>setfacl</code> command sets ACL entries. For example, <code>setfacl -m u:alice:rw file.txt</code> grants user alice read and write access to file.txt, regardless of the standard permission bits. The <code>getfacl</code> command displays the current ACL. Files with ACLs show a <code>+</code> sign after the permission string in <code>ls -l</code> output (e.g., <code>-rw-r--r--+</code>).</p>
+<p>The <code>setfacl</code> command sets ACL entries. For example, <code>setfacl -m u:alice:rw file.txt</code> grants user alice read and write access to file.txt, regardless of the standard permission bits. The <code>getfacl</code> command displays the current ACL. Files with ACLs show a <code>+</code> sign after the permission string in <code>ls -l</code> output (e.g., <code>-rw-r, r--+</code>).</p>
 
 <p>ACLs are useful in shared hosting environments, team project directories, and any scenario where the standard owner/group model is insufficient. However, they add complexity and can be confusing to debug. I recommend using standard permissions whenever possible and reserving ACLs for cases where multiple specific users need different access levels to the same files.</p>
 
@@ -942,7 +941,7 @@ html { scroll-behavior: smooth; }
 
 <p>For production servers, I manage file permissions through configuration management tools rather than manual chmod commands. Ansible, Chef, Puppet, and Salt all support setting file permissions, ownership, and ACLs as part of their declarative configuration. This ensures permissions are consistent across all servers and are automatically corrected if someone changes them manually.</p>
 
-<p>In Ansible, the <code>file</code> module sets permissions declaratively: <code>file: path="/var/www" state="directory" mode="0755" owner="www-data" group="www-data" recurse="yes</code">. In a Dockerfile, the <code>COPY --chmod="644</code"> directive (available since BuildKit) sets permissions during the image build without needing a separate RUN chmod command.</p>
+<p>In Ansible, the <code>file</code> module sets permissions declaratively: <code>file: path="/var/www" state="directory" mode="0755" owner="www-data" group="www-data" recurse="yes</code">. In a Dockerfile, the <code>COPY, chmod="644</code"> directive (available since BuildKit) sets permissions during the image build without needing a separate RUN chmod command.</p>
 
 <p>Monitoring tools can alert on permission changes. Tools like AIDE, Tripwire, and OSSEC maintain a database of expected file permissions and report deviations. Integrating these tools into your security monitoring infrastructure provides early warning if permissions are changed by an unauthorized process or compromised account, which could indicate a security breach or configuration drift.</p>
 
@@ -996,12 +995,12 @@ html { scroll-behavior: smooth; }
 
 <div class="faq-item">
 <div class="faq-q" onclick="toggleFaq(this)">What is the difference between numeric and symbolic chmod notation?</div>
-<div class="faq-a">Numeric (octal) notation uses three digits from 0 to 7, where each digit represents the sum of read (4), write (2), and execute (1) for owner, group, and others respectively. For example, 644 means owner has rw- (6), group has r-- (4), others have r-- (4). Symbolic notation uses letters and operators: u (user/owner), g (group), o (others), a (all), with + (add), - (remove), = (set exactly), and r/w/x for the permissions. For example, "chmod g+w file" adds write permission for the group. The key advantage of symbolic notation is that it modifies only the specified permissions without affecting the rest.</div>
+<div class="faq-a">Numeric (octal) notation uses three digits from 0 to 7, where each digit represents the sum of read (4), write (2), and execute (1) for owner, group, and others respectively. For example, 644 means owner has rw- (6), group has r, (4), others have r, (4). Symbolic notation uses letters and operators: u (user/owner), g (group), o (others), a (all), with + (add), - (remove), = (set exactly), and r/w/x for the permissions. For example, "chmod g+w file" adds write permission for the group. The key advantage of symbolic notation is that it modifies only the specified permissions without affecting the rest.</div>
 </div>
 
 <div class="faq-item">
 <div class="faq-q" onclick="toggleFaq(this)">What are the most common file permission settings?</div>
-<div class="faq-a">The most frequently used settings are: 644 (rw-r--r--) for regular text files, configuration files, and HTML files, allowing the owner to edit and everyone to read. 755 (rwxr-xr-x) for executable scripts, compiled programs, and directories, allowing everyone to run or access them but only the owner to modify. 600 (rw-------) for private files like SSH private keys, database credentials, and API key files, accessible only by the owner. 700 (rwx------) for private directories like ~/.ssh. 775 (rwxrwxr-x) for shared project directories where group members need write access. 444 (r--r--r--) for read-only system files that should not be modified by anyone.</div>
+<div class="faq-a">The most frequently used settings are: 644 (rw-r, r--) for regular text files, configuration files, and HTML files, allowing the owner to edit and everyone to read. 755 (rwxr-xr-x) for executable scripts, compiled programs, and directories, allowing everyone to run or access them but only the owner to modify. 600 (rw-------) for private files like SSH private keys, database credentials, and API key files, accessible only by the owner. 700 (rwx------) for private directories like ~/.ssh. 775 (rwxrwxr-x) for shared project directories where group members need write access. 444 (r, r, r--) for read-only system files that should not be modified by anyone.</div>
 </div>
 
 <div class="faq-item">
@@ -1013,11 +1012,11 @@ html { scroll-behavior: smooth; }
 <div id="calculator" class="related-tools">
 <h2>Related Tools</h2>
 <div class="related-grid">
-<a class="interactive-element" href="https://zovo.one/free-tools/base64-encoder/" class="related-card"><div class="r-title">Base64 Encoder / Decoder</div><div class="r-desc">Encode and decode Base64 strings for data encoding and file transfers.</div></a>
-<a class="interactive-element" href="https://zovo.one/free-tools/json-formatter/" class="related-card"><div class="r-title">JSON Formatter</div><div class="r-desc">Format, validate, and beautify JSON data with syntax highlighting.</div></a>
-<a class="interactive-element" href="https://zovo.one/free-tools/hash-generator/" class="related-card"><div class="r-title">Hash Generator</div><div class="r-desc">Generate MD5, SHA-1, SHA-256, and SHA-512 hashes for file integrity.</div></a>
-<a class="interactive-element" href="https://zovo.one/free-tools/cron-expression-generator/" class="related-card"><div class="r-title">Cron Expression Generator</div><div class="r-desc">Build and validate cron expressions for scheduled tasks on Unix systems.</div></a>
-<a class="interactive-element" href="https://zovo.one/free-tools/binary-translator/" class="related-card"><div class="r-title">Binary Translator</div><div class="r-desc">Convert between binary, decimal, hexadecimal, and octal number systems.</div></a>
+<a class="interactive-element" href="https://zovo.one/free-tools/base64-encoder" class="related-card"><div class="r-title">Base64 Encoder / Decoder</div><div class="r-desc">Encode and decode Base64 strings for data encoding and file transfers.</div></a>
+<a class="interactive-element" href="https://zovo.one/free-tools/json-formatter" class="related-card"><div class="r-title">JSON Formatter</div><div class="r-desc">Format, validate, and beautify JSON data with syntax highlighting.</div></a>
+<a class="interactive-element" href="https://zovo.one/free-tools/hash-generator" class="related-card"><div class="r-title">Hash Generator</div><div class="r-desc">Generate MD5, SHA-1, SHA-256, and SHA-512 hashes for file integrity.</div></a>
+<a class="interactive-element" href="https://zovo.one/free-tools/cron-generator" class="related-card"><div class="r-title">Cron Expression Generator</div><div class="r-desc">Build and validate cron expressions for scheduled tasks on Unix systems.</div></a>
+<a class="interactive-element" href="https://zovo.one/free-tools/binary-converter" class="related-card"><div class="r-title">Binary Translator</div><div class="r-desc">Convert between binary, decimal, hexadecimal, and octal number systems.</div></a>
 </div>
 </div>
 
@@ -1049,25 +1048,7 @@ html { scroll-behavior: smooth; }
 <p style="margin:6px 0 0 0;font-size:0.8rem"><a class="interactive-element" href="https://stackoverflow.com/questions/tagged/chmod" target="_blank" rel="noopener" style="color:#0071e3">Stack Overflow</a></p></div></div></div>
 </section>
 
-<section style="margin-top:2rem">
-<h2 id="research-2" style="font-size:1.4rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Original Research: Common chmod Permission Settings</h2>
-<p style="color:#86868b;margin-bottom:16px">I compiled this data from server administration best practices and security guidelines. Last updated March 2026.</p>
-<div style="overflow-x:auto">
-<table style="width:100%;border-collapse:collapse;font-size:0.9rem">
-<thead><tr style="border-bottom:2px solid #e5e5ea">
-<th style="text-align:left;padding:10px;color:#0071e3">Permission</th>
-<th style="text-align:left;padding:10px;color:#0071e3">Symbolic</th>
-<th style="text-align:left;padding:10px;color:#0071e3">Use Case</th>
-</tr></thead>
-<tbody>
-<tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">644</td><td style="padding:10px;color:#1d1d1f">rw-r--r--</td><td style="padding:10px;color:#1d1d1f">Standard files, web content</td></tr>
-<tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">755</td><td style="padding:10px;color:#1d1d1f">rwxr-xr-x</td><td style="padding:10px;color:#1d1d1f">Directories, executable scripts</td></tr>
-<tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">600</td><td style="padding:10px;color:#1d1d1f">rw-------</td><td style="padding:10px;color:#1d1d1f">Private keys, credential files</td></tr>
-<tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">700</td><td style="padding:10px;color:#1d1d1f">rwx------</td><td style="padding:10px;color:#1d1d1f">Home directories, .ssh folder</td></tr>
-<tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">444</td><td style="padding:10px;color:#1d1d1f">r--r--r--</td><td style="padding:10px;color:#1d1d1f">Read-only config files</td></tr>
-<tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">775</td><td style="padding:10px;color:#1d1d1f">rwxrwxr-x</td><td style="padding:10px;color:#1d1d1f">Shared group directories</td></tr>
-</tbody></table></div>
-</section>
+
 
 <div id="usage-counter-2" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px">
 <span style="color:#86868b;font-size:0.85rem">Permissions calculated: </span>
@@ -1075,7 +1056,7 @@ html { scroll-behavior: smooth; }
 </div>
 
 </main>
-<footer><div class="container">Built by Michael Lip &middot; <a class="interactive-element" href="https://zovo.one">zovo.one</a></div></footer>
+<!-- ZOVO-ILINK v1 --><section class="zovo-related-tools" style="margin:2.5rem auto;max-width:800px;padding:1.25rem 1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;font-family:-apple-system,BlinkMacSystemFont,system-ui,Helvetica,Arial,sans-serif;"><h2 style="color:#1d1d1f;font-size:1.15rem;margin:0 0 0.75rem;">More free tools you can use right now</h2><ul style="margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:0.5rem 1.25rem;"><li style="color:#424245;font-size:0.95rem;line-height:1.6;"><a href="/free-tools/tax-equivalent-yield-calculator" style="color:#0071e3;text-decoration:none;">Tax-Equivalent Yield Calculator</a></li><li style="color:#424245;font-size:0.95rem;line-height:1.6;"><a href="/free-tools/utm-builder" style="color:#0071e3;text-decoration:none;">UTM Builder</a></li><li style="color:#424245;font-size:0.95rem;line-height:1.6;"><a href="/free-tools/habit-tracker" style="color:#0071e3;text-decoration:none;">Habit Tracker</a></li><li style="color:#424245;font-size:0.95rem;line-height:1.6;"><a href="/free-tools/rafter-span-calculator" style="color:#0071e3;text-decoration:none;">Rafter Span Calculator</a></li><li style="color:#424245;font-size:0.95rem;line-height:1.6;"><a href="/free-tools/reynolds-number-calculator" style="color:#0071e3;text-decoration:none;">Reynolds Number Calculator</a></li><li style="color:#424245;font-size:0.95rem;line-height:1.6;"><a href="/free-tools/screen-recorder" style="color:#0071e3;text-decoration:none;">Screen Recorder</a></li><li style="color:#424245;font-size:0.95rem;line-height:1.6;"><a href="/free-tools/spring-constant-calculator" style="color:#0071e3;text-decoration:none;">Spring Constant Calculator</a></li><li style="color:#424245;font-size:0.95rem;line-height:1.6;"><a href="/free-tools" style="color:#0071e3;text-decoration:none;">all free online tools</a></li></ul></section><!-- /ZOVO-ILINK v1 --><footer><div class="container">Built by Michael Lip &middot; <a class="interactive-element" href="https://zovo.one">zovo.one</a></div></footer>
 
 <script>
 function updateFromCheckboxes(){
@@ -1182,8 +1163,8 @@ parseNumeric();
 </script>
 <p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Built with progressive enhancement. Core functionality works in Chrome, Firefox, Safari, Edge, and even legacy browsers with ES5 support.</p>
 
-<section class="hn-discussion-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#ff9f0a;font-size:1rem;margin:0 0 0.75rem 0;">Hacker News Discussions</h3><p style="color:#6e6e73;font-size:0.9rem;line-height:1.6;">Explore related discussions on <a class="interactive-element" href="https://news.ycombinator.com/" rel="noopener" style="color:#ff9f0a;" target="_blank">Hacker News</a>, where developers and technologists share insights about tools, workflows, and best practices relevant to this topic.</p></section>
-<p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Tested with Chrome 134.0.6998.89 (March 2026). Compatible with all modern Chromium-based browsers.</p><section class="so-questions-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
+
+<section class="so-questions-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
 <p style="color:#86868b;font-size:0.92rem;line-height:1.6;">Community discussion on <a class="interactive-element" href="https://stackoverflow.com/search?q=Unix+file+permissions+chmod" rel="noopener" style="color:#0071e3;" target="_blank">Stack Overflow</a>.</p>
 </section>
 <section style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
@@ -1195,13 +1176,11 @@ parseNumeric();
 <section class="npm-dashboard" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
 <p style="color:#86868b;font-size:0.92rem;line-height:1.6;">Powered by native Web APIs and vanilla JavaScript. No npm packages, no CDN dependencies, no server communication.</p>
 </section>
-<section class="original-research" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
-<p style="color:#86868b;font-size:0.92rem;line-height:1.6;">Original Research: I verified Chmod Calculator results against published reference data and confirmed correct handling of all supported input formats and ranges.</p>
-</section>
+
 <div class="live-stats" style="margin:1rem auto;max-width:800px;text-align:center;">
 <p style="color:#86868b;font-size:0.85rem;">Free browser tool · No extensions needed · Runs on any modern device</p>
 </div>
-<section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Original Research: Chmod Calculator Industry Data</h2><p style="color:#86868b;margin-bottom:16px">I researched this data through Statista market reports, Google Trends regional interest data, and public API usage logs from popular calculator aggregators. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #e5e5ea"><th style="text-align:left;padding:10px;color:#0071e3">Metric</th><th style="text-align:left;padding:10px;color:#0071e3">Value</th><th style="text-align:left;padding:10px;color:#0071e3">Trend</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Monthly global searches for online calculators</td><td style="padding:10px;color:#1d1d1f">4.2 billion</td><td style="padding:10px;color:#1d1d1f">Up 18% YoY</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Average session duration on calculator tools</td><td style="padding:10px;color:#1d1d1f">3 min 42 sec</td><td style="padding:10px;color:#1d1d1f">Stable</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Mobile vs desktop calculator usage</td><td style="padding:10px;color:#1d1d1f">67% mobile</td><td style="padding:10px;color:#1d1d1f">Up from 58% in 2024</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Users who bookmark calculator tools</td><td style="padding:10px;color:#1d1d1f">34%</td><td style="padding:10px;color:#1d1d1f">Up 5% YoY</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Peak usage hours (UTC)</td><td style="padding:10px;color:#1d1d1f">14:00 to 18:00</td><td style="padding:10px;color:#1d1d1f">Consistent</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Repeat visitor rate for calculator tools</td><td style="padding:10px;color:#1d1d1f">41%</td><td style="padding:10px;color:#1d1d1f">Up 8% YoY</td></tr></tbody></table></div><p style="margin-top:12px;font-size:0.85rem;color:#86868b">Source: Google Search Console data, Ahrefs keyword volumes, and tool directory usage statistics. Last updated March 2026.</p></section><div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div><div class="benchmark-chart" style="margin:2rem auto;max-width:800px;text-align:center;">
+<div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div><div class="benchmark-chart" style="margin:2rem auto;max-width:800px;text-align:center;">
 <img src="https://quickchart.io/chart?c=%7B%22type%22%3A%22bar%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22This%20Tool%22%2C%22Avg%20Online%20Tool%22%2C%22Desktop%20App%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Processing%20%28ms%29%22%2C%22data%22%3A%5B45%2C320%2C180%5D%2C%22backgroundColor%22%3A%5B%22%2300ff88%22%2C%22%236C5CE7%22%2C%22%2300ccff%22%5D%7D%5D%7D%2C%22options%22%3A%7B%22plugins%22%3A%7B%22title%22%3A%7B%22display%22%3Atrue%2C%22text%22%3A%22Chmod%20Calculator%20-%20Speed%22%2C%22fontColor%22%3A%22%23e0e0e8%22%7D%2C%22legend%22%3A%7B%22display%22%3Afalse%7D%7D%2C%22scales%22%3A%7B%22y%22%3A%7B%22ticks%22%3A%7B%22fontColor%22%3A%22%23b0b0c0%22%7D%2C%22grid%22%3A%7B%22color%22%3A%22%231a1a2a%22%7D%7D%2C%22x%22%3A%7B%22ticks%22%3A%7B%22fontColor%22%3A%22%23b0b0c0%22%7D%7D%7D%7D%7D&w=600&h=300&bkg=%2312121a" alt="Chmod Calculator Benchmark" style="max-width:100%;border-radius:12px;border:1px solid #e5e5ea;" loading="lazy">
 </div>
 </body></html>
