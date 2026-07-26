@@ -685,7 +685,223 @@ gtag('config', 'G-V2K8JLFQ5H');
 <p>Validation is an ongoing process. I test the calculator against known reference values from textbooks, published research, and professional software packages. When discrepancies arise, I investigate whether the difference comes from rounding conventions, formula variations, or genuine errors. This iterative process has produced a tool that I am confident delivers accurate results across the full range of typical inputs.</p>
 <p>The calculator handles edge cases gracefully. Invalid inputs are caught before calculation, preventing misleading results. Extreme values are flagged with appropriate warnings. Browser compatibility has been verified across Chrome, Firefox, Safari, and Edge on both desktop and mobile devices.</p>
 <div class="video-learn" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#f5f5f7;border-left:4px solid #ff0000;border-radius:0 8px 8px 0;"><p style="margin:0 0 8px;font-size:0.7rem;color:#ff3b30;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Video Tutorials</p><a class="interactive-element" href="https://www.youtube.com/results?search_query=construction+loan+payment+calculation" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f5f5f7;border-radius:8px;text-decoration:none;transition:background 0.2s;" target="_blank"><svg fill="#ff0000" height="36" viewbox="0 0 24 24" width="36"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"><polygon fill="#fff" points="9.75,15.02 15.5,12 9.75,8.98"></polygon></path></svg><div><p style="margin:0;color:#1d1d1f;font-size:0.9rem;font-weight:500;">Watch Construction Loan Calculator tutorials on YouTube</p><p style="margin:2px 0 0;color:#86868b;font-size:0.75rem;">Learn with free video guides and walkthroughs</p></div></a></div>
-<footer><div class="container"><p>© 2026 Zovo · <aall a="" free="" tools<=""> · <a class="interactive-element" href="https://zovo.one/">Home</a></aall></p></div><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;"><h2 style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">The Construction Loan Calculator is a free browser-based tool that requires no downloads or signups. It processes everything locally on your device for maximum privacy and speed.</p><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/commercial-mortgage-calculator/">Commercial Mortgage Calculator</a><a class="interactive-element" href="/free-tools/fha-loan-calculator/">FHA Loan Calculator</a><a class="interactive-element" href="/free-tools/home-equity-calculator/">Home Equity Calculator</a></div></section><script> // Visit counter using localStorage (function() { const key = 'zovo_construction_calc_visits'; let count = parseInt(localStorage.getItem(key) || '0', 10); count++; localStorage.setItem(key, count.toString()); document.getElementById('visitCount').textContent = count.toLocaleString(); })(); function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); } function fmtDec(n) { return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); } function getDrawWeights(months, type) { const weights = []; for (let i = 1; i <= months; i++) { const t = i / months; // 0.1 if (type === 'equal') { weights.push(1); } else if (type === 'front') { // Front-loaded: heavier in first half weights.push(t <= 0.5? 1.5 : 0.5); } else { // S-curve: logistic distribution const s = 1 / (1 + Math.exp(-10 * (t - 0.45))); weights.push(s); } } // For s-curve, convert cumulative to incremental if (type === 'scurve') { const cumulative = []; let prev = 0; for (let i = 0; i < weights.length; i++) { cumulative.push(weights[i] - prev); prev = weights[i]; } return cumulative; } return weights; } function calculate() { const totalCost = parseFloat(document.getElementById('totalCost').value) || 0; const landCost = parseFloat(document.getElementById('landCost').value) || 0; const downPct = (parseFloat(document.getElementById('downPayment').value) || 0) / 100; const months = parseInt(document.getElementById('constructionPeriod').value) || 12; const constRate = (parseFloat(document.getElementById('constructionRate').value) || 0) / 100; const permRate = (parseFloat(document.getElementById('permRate').value) || 0) / 100; const permYears = parseInt(document.getElementById('permTerm').value) || 30; const drawType = document.getElementById('drawType').value; const loanAmount = totalCost * (1 - downPct); const constructionAmount = loanAmount; // total draws const monthlyConstRate = constRate / 12; const monthlyPermRate = permRate / 12; const permPayments = permYears * 12; // Draw schedule const rawWeights = getDrawWeights(months, drawType); const totalWeight = rawWeights.reduce((a, b) => a + b, 0); const drawAmounts = rawWeights.map(w => (w / totalWeight) * constructionAmount); let cumulativeBalance = 0; let cumulativeInterest = 0; const drawRows = []; for (let i = 0; i < months; i++) { cumulativeBalance += drawAmounts[i]; const monthlyInterest = cumulativeBalance * monthlyConstRate; cumulativeInterest += monthlyInterest; drawRows.push({ month: i + 1, draw: drawAmounts[i], balance: cumulativeBalance, interest: monthlyInterest, cumcumulativeInterest }); } const totalConstInterest = cumulativeInterest; const avgMonthlyInterest = totalConstInterest / months; // Permanent mortgage let permMonthly = 0; if (monthlyPermRate > 0) { permMonthly = loanAmount * (monthlyPermRate * Math.pow(1 + monthlyPermRate, permPayments)) / (Math.pow(1 + monthlyPermRate, permPayments) - 1); } else { permMonthly = loanAmount / permPayments; } const totalPermInterest = (permMonthly * permPayments) - loanAmount; const totalProjectCost = totalCost * downPct + totalConstInterest + permMonthly * permPayments; // Display results document.getElementById('rLoanAmt').textContent = fmt(loanAmount); document.getElementById('rConstInt').textContent = fmt(totalConstInterest); document.getElementById('rAvgDraw').textContent = fmt(avgMonthlyInterest); document.getElementById('rPermPmt').textContent = fmt(permMonthly); document.getElementById('rPermInt').textContent = fmt(totalPermInterest); document.getElementById('rTotalCost').textContent = fmt(totalProjectCost); // Draw table const drawBody = document.getElementById('drawBody'); drawBody.innerHTML = drawRows.map(r => ` <tr><td>${r.month}</td><td>${fmt(r.draw)}</td><td>${fmt(r.balance)}</td><td>${fmtDec(r.interest)}</td><td>${fmtDec(r.cumInterest)}</td></tr> `).join(''); // Amortization (first 12 months) let balance = loanAmount; const amortRows = []; for (let i = 1; i <= Math.min(12, permPayments); i++) { const intPart = balance * monthlyPermRate; const prinPart = permMonthly - intPart; balance -= prinPart; amortRows.push({ month: i, payment: permMonthly, principal: prinPart, interest: intPart, balance: Math.max(0, balance) }); } const amortBody = document.getElementById('amortBody'); amortBody.innerHTML = amortRows.map(r => ` <tr><td>${r.month}</td><td>${fmtDec(r.payment)}</td><td>${fmtDec(r.principal)}</td><td>${fmtDec(r.interest)}</td><td>${fmt(r.balance)}</td></tr> `).join(''); // one-close vs two-close const closingCostPct = 0.03; const oneCloseClosing = loanAmount * closingCostPct; const twoCloseClosing = loanAmount * closingCostPct * 2; const twoCloseConstRate = constRate + 0.005; // typically slightly higher standalone let twoCloseConstInterest = 0; let tcBal = 0; for (let i = 0; i < months; i++) { tcBal += drawAmounts[i]; twoCloseConstInterest += tcBal * (twoCloseConstRate / 12); } const twoClosePermRate = permRate - 0.0025; // may get slightly better perm rate const tcMonthlyPermRate = twoClosePermRate / 12; let twoClosePermMonthly = 0; if (tcMonthlyPermRate > 0) { twoClosePermMonthly = loanAmount * (tcMonthlyPermRate * Math.pow(1 + tcMonthlyPermRate, permPayments)) / (Math.pow(1 + tcMonthlyPermRate, permPayments) - 1); } else { twoClosePermMonthly = loanAmount / permPayments; } const twoCloseTotalPermInterest = (twoClosePermMonthly * permPayments) - loanAmount; const oneCloseTotal = oneCloseClosing + totalConstInterest + permMonthly * permPayments; const twoCloseTotal = twoCloseClosing + twoCloseConstInterest + twoClosePermMonthly * permPayments; const savings = twoCloseTotal - oneCloseTotal; const compGrid = document.getElementById('comparisonGrid'); compGrid.innerHTML = ` <div class="comparison-col"><h4 style="color var(--accent);">One-Time Close (CTP)</h4><div class="item"><span>Closing Costs</span><span class="val">${fmt(oneCloseClosing)}</span></div><div class="item"><span>Construction Interest</span><span class="val">${fmt(totalConstInterest)}</span></div><div class="item"><span>Const. Rate</span><span class="val">${(constRate * 100).toFixed(2)}%</span></div><div class="item"><span>Perm. Monthly Payment</span><span class="val">${fmt(permMonthly)}</span></div><div class="item"><span>Perm. Rate</span><span class="val">${(permRate * 100).toFixed(2)}%</span></div><div class="item"><span>Total Perm Interest</span><span class="val">${fmt(totalPermInterest)}</span></div><div class="item" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 6px;"><span>Grand Total</span><span class="val">${fmt(oneCloseTotal)}</span></div></div><div class="comparison-col"><h4 style="color var(--secondary);">Two Separate Loans</h4><div class="item"><span>Closing Costs (×2)</span><span class="val">${fmt(twoCloseClosing)}</span></div><div class="item"><span>Construction Interest</span><span class="val">${fmt(twoCloseConstInterest)}</span></div><div class="item"><span>Const. Rate</span><span class="val">${((constRate + 0.005) * 100).toFixed(2)}%</span></div><div class="item"><span>Perm. Monthly Payment</span><span class="val">${fmt(twoClosePermMonthly)}</span></div><div class="item"><span>Perm. Rate</span><span class="val">${(twoClosePermRate * 100).toFixed(2)}%</span></div><div class="item"><span>Total Perm Interest</span><span class="val">${fmt(twoCloseTotalPermInterest)}</span></div><div class="item" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 6px;"><span>Grand Total</span><span class="val">${fmt(twoCloseTotal)}</span></div></div> `; const banner = document.getElementById('savingsBanner'); if (savings > 0) { banner.innerHTML = `One-Time Close saves you approximately ${fmt(savings)} over the life of the loan`; banner.style.color = 'var(--accent)'; } else if (savings < 0) { banner.innerHTML = `Two Separate Loans saves you approximately ${fmt(Math.abs(savings))} over the life of the loan`; banner.style.color = 'var(--secondary)'; } else { banner.innerHTML = 'Both options cost approximately the same over the life of the loan'; } // Show results document.getElementById('results-section').classList.add('visible'); document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }); // Update visit counter (track calculations) const key = 'zovo_construction_calc_visits'; let count = parseInt(localStorage.getItem(key) || '0', 10); count++; localStorage.setItem(key, count.toString()); document.getElementById('visitCount').textContent = count.toLocaleString(); } function toggleFaq(el) { const item = el.parentElement; item.classList.toggle('open'); } // Run initial calculation on load window.addEventListener('DOMContentLoaded', calculate); </script><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
+<footer><div class="container"><p>© 2026 Zovo · <aall a="" free="" tools<=""> · <a class="interactive-element" href="https://zovo.one/">Home</a></aall></p></div><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;"><h2 style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">The Construction Loan Calculator is a free browser-based tool that requires no downloads or signups. It processes everything locally on your device for maximum privacy and speed.</p><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/commercial-mortgage-calculator/">Commercial Mortgage Calculator</a><a class="interactive-element" href="/free-tools/fha-loan-calculator/">FHA Loan Calculator</a><a class="interactive-element" href="/free-tools/home-equity-calculator/">Home Equity Calculator</a></div></section><script>
+// Visit counter using localStorage
+(function() {
+  const key = 'zovo_construction_calc_visits';
+  let count = parseInt(localStorage.getItem(key) || '0', 10);
+  count++;
+  localStorage.setItem(key, count.toString());
+  document.getElementById('visitCount').textContent = count.toLocaleString();
+})();
+
+function fmt(n) {
+  return '$' + Math.round(n).toLocaleString('en-US');
+}
+
+function fmtDec(n) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function getDrawWeights(months, type) {
+  const weights = [];
+  for (let i = 1; i <= months; i++) {
+    const t = i / months; // 0..1
+    if (type === 'equal') {
+      weights.push(1);
+    } else if (type === 'front') {
+      // Front-loaded: heavier in first half
+      weights.push(t <= 0.5 ? 1.5 : 0.5);
+    } else {
+      // S-curve: logistic distribution
+      const s = 1 / (1 + Math.exp(-10 * (t - 0.45)));
+      weights.push(s);
+    }
+  }
+  // For s-curve, convert cumulative to incremental
+  if (type === 'scurve') {
+    const cumulative = [];
+    let prev = 0;
+    for (let i = 0; i < weights.length; i++) {
+      cumulative.push(weights[i] - prev);
+      prev = weights[i];
+    }
+    return cumulative;
+  }
+  return weights;
+}
+
+function calculate() {
+  const totalCost = parseFloat(document.getElementById('totalCost').value) || 0;
+  const landCost = parseFloat(document.getElementById('landCost').value) || 0;
+  const downPct = (parseFloat(document.getElementById('downPayment').value) || 0) / 100;
+  const months = parseInt(document.getElementById('constructionPeriod').value) || 12;
+  const constRate = (parseFloat(document.getElementById('constructionRate').value) || 0) / 100;
+  const permRate = (parseFloat(document.getElementById('permRate').value) || 0) / 100;
+  const permYears = parseInt(document.getElementById('permTerm').value) || 30;
+  const drawType = document.getElementById('drawType').value;
+
+  const loanAmount = totalCost * (1 - downPct);
+  const constructionAmount = loanAmount; // total draws
+  const monthlyConstRate = constRate / 12;
+  const monthlyPermRate = permRate / 12;
+  const permPayments = permYears * 12;
+
+  // Draw schedule
+  const rawWeights = getDrawWeights(months, drawType);
+  const totalWeight = rawWeights.reduce((a, b) => a + b, 0);
+  const drawAmounts = rawWeights.map(w => (w / totalWeight) * constructionAmount);
+
+  let cumulativeBalance = 0;
+  let cumulativeInterest = 0;
+  const drawRows = [];
+
+  for (let i = 0; i < months; i++) {
+    cumulativeBalance += drawAmounts[i];
+    const monthlyInterest = cumulativeBalance * monthlyConstRate;
+    cumulativeInterest += monthlyInterest;
+    drawRows.push({
+      month: i + 1,
+      draw: drawAmounts[i],
+      balance: cumulativeBalance,
+      interest: monthlyInterest,
+      cumInterest: cumulativeInterest
+    });
+  }
+
+  const totalConstInterest = cumulativeInterest;
+  const avgMonthlyInterest = totalConstInterest / months;
+
+  // Permanent mortgage
+  let permMonthly = 0;
+  if (monthlyPermRate > 0) {
+    permMonthly = loanAmount * (monthlyPermRate * Math.pow(1 + monthlyPermRate, permPayments)) / (Math.pow(1 + monthlyPermRate, permPayments) - 1);
+  } else {
+    permMonthly = loanAmount / permPayments;
+  }
+  const totalPermInterest = (permMonthly * permPayments) - loanAmount;
+  const totalProjectCost = totalCost * downPct + totalConstInterest + permMonthly * permPayments;
+
+  // Display results
+  document.getElementById('rLoanAmt').textContent = fmt(loanAmount);
+  document.getElementById('rConstInt').textContent = fmt(totalConstInterest);
+  document.getElementById('rAvgDraw').textContent = fmt(avgMonthlyInterest);
+  document.getElementById('rPermPmt').textContent = fmt(permMonthly);
+  document.getElementById('rPermInt').textContent = fmt(totalPermInterest);
+  document.getElementById('rTotalCost').textContent = fmt(totalProjectCost);
+
+  // Draw table
+  const drawBody = document.getElementById('drawBody');
+  drawBody.innerHTML = drawRows.map(r => `
+    <tr>
+      <td>${r.month}</td>
+      <td>${fmt(r.draw)}</td>
+      <td>${fmt(r.balance)}</td>
+      <td>${fmtDec(r.interest)}</td>
+      <td>${fmtDec(r.cumInterest)}</td>
+    </tr>
+  `).join('');
+
+  // Amortization (first 12 months)
+  let balance = loanAmount;
+  const amortRows = [];
+  for (let i = 1; i <= Math.min(12, permPayments); i++) {
+    const intPart = balance * monthlyPermRate;
+    const prinPart = permMonthly - intPart;
+    balance -= prinPart;
+    amortRows.push({ month: i, payment: permMonthly, principal: prinPart, interest: intPart, balance: Math.max(0, balance) });
+  }
+  const amortBody = document.getElementById('amortBody');
+  amortBody.innerHTML = amortRows.map(r => `
+    <tr>
+      <td>${r.month}</td>
+      <td>${fmtDec(r.payment)}</td>
+      <td>${fmtDec(r.principal)}</td>
+      <td>${fmtDec(r.interest)}</td>
+      <td>${fmt(r.balance)}</td>
+    </tr>
+  `).join('');
+
+  // Comparison: one-close vs two-close
+  const closingCostPct = 0.03;
+  const oneCloseClosing = loanAmount * closingCostPct;
+  const twoCloseClosing = loanAmount * closingCostPct * 2;
+  const twoCloseConstRate = constRate + 0.005; // typically slightly higher standalone
+  let twoCloseConstInterest = 0;
+  let tcBal = 0;
+  for (let i = 0; i < months; i++) {
+    tcBal += drawAmounts[i];
+    twoCloseConstInterest += tcBal * (twoCloseConstRate / 12);
+  }
+  const twoClosePermRate = permRate - 0.0025; // may get slightly better perm rate
+  const tcMonthlyPermRate = twoClosePermRate / 12;
+  let twoClosePermMonthly = 0;
+  if (tcMonthlyPermRate > 0) {
+    twoClosePermMonthly = loanAmount * (tcMonthlyPermRate * Math.pow(1 + tcMonthlyPermRate, permPayments)) / (Math.pow(1 + tcMonthlyPermRate, permPayments) - 1);
+  } else {
+    twoClosePermMonthly = loanAmount / permPayments;
+  }
+  const twoCloseTotalPermInterest = (twoClosePermMonthly * permPayments) - loanAmount;
+
+  const oneCloseTotal = oneCloseClosing + totalConstInterest + permMonthly * permPayments;
+  const twoCloseTotal = twoCloseClosing + twoCloseConstInterest + twoClosePermMonthly * permPayments;
+  const savings = twoCloseTotal - oneCloseTotal;
+
+  const compGrid = document.getElementById('comparisonGrid');
+  compGrid.innerHTML = `
+    <div class="comparison-col">
+      <h4 style="color: var(--accent);">One-Time Close (CTP)</h4>
+      <div class="item"><span>Closing Costs</span><span class="val">${fmt(oneCloseClosing)}</span></div>
+      <div class="item"><span>Construction Interest</span><span class="val">${fmt(totalConstInterest)}</span></div>
+      <div class="item"><span>Const. Rate</span><span class="val">${(constRate * 100).toFixed(2)}%</span></div>
+      <div class="item"><span>Perm. Monthly Payment</span><span class="val">${fmt(permMonthly)}</span></div>
+      <div class="item"><span>Perm. Rate</span><span class="val">${(permRate * 100).toFixed(2)}%</span></div>
+      <div class="item"><span>Total Perm Interest</span><span class="val">${fmt(totalPermInterest)}</span></div>
+      <div class="item" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 6px;"><span><strong>Grand Total</strong></span><span class="val"><strong>${fmt(oneCloseTotal)}</strong></span></div>
+    </div>
+    <div class="comparison-col">
+      <h4 style="color: var(--secondary);">Two Separate Loans</h4>
+      <div class="item"><span>Closing Costs (×2)</span><span class="val">${fmt(twoCloseClosing)}</span></div>
+      <div class="item"><span>Construction Interest</span><span class="val">${fmt(twoCloseConstInterest)}</span></div>
+      <div class="item"><span>Const. Rate</span><span class="val">${((constRate + 0.005) * 100).toFixed(2)}%</span></div>
+      <div class="item"><span>Perm. Monthly Payment</span><span class="val">${fmt(twoClosePermMonthly)}</span></div>
+      <div class="item"><span>Perm. Rate</span><span class="val">${(twoClosePermRate * 100).toFixed(2)}%</span></div>
+      <div class="item"><span>Total Perm Interest</span><span class="val">${fmt(twoCloseTotalPermInterest)}</span></div>
+      <div class="item" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 6px;"><span><strong>Grand Total</strong></span><span class="val"><strong>${fmt(twoCloseTotal)}</strong></span></div>
+    </div>
+  `;
+
+  const banner = document.getElementById('savingsBanner');
+  if (savings > 0) {
+    banner.innerHTML = `One-Time Close saves you approximately <strong>${fmt(savings)}</strong> over the life of the loan`;
+    banner.style.color = 'var(--accent)';
+  } else if (savings < 0) {
+    banner.innerHTML = `Two Separate Loans saves you approximately <strong>${fmt(Math.abs(savings))}</strong> over the life of the loan`;
+    banner.style.color = 'var(--secondary)';
+  } else {
+    banner.innerHTML = 'Both options cost approximately the same over the life of the loan';
+  }
+
+  // Show results
+  document.getElementById('results-section').classList.add('visible');
+  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Update visit counter (track calculations)
+  const key = 'zovo_construction_calc_visits';
+  let count = parseInt(localStorage.getItem(key) || '0', 10);
+  count++;
+  localStorage.setItem(key, count.toString());
+  document.getElementById('visitCount').textContent = count.toLocaleString();
+}
+
+function toggleFaq(el) {
+  const item = el.parentElement;
+  item.classList.toggle('open');
+}
+
+// Run initial calculation on load
+window.addEventListener('DOMContentLoaded', calculate);
+</script><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
 <p style="color:#86868b;font-size:0.92rem;line-height:1.6;">Browser support verified via <a class="interactive-element" href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p>
 </section>
 <section class="original-research" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">

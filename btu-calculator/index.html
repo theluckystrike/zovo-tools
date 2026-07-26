@@ -655,7 +655,140 @@ html { scroll-behavior: smooth; }
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Customization and Personalization</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">Many modern browsers support user stylesheets and extensions that can customize the appearance of any web page, including this tool. If you find the default color scheme difficult to read, browser extensions like Dark Reader or Stylus allow you to override page styles. If you need larger text, use your browser zoom function (Ctrl+Plus or Cmd+Plus) to scale the entire page. Most browsers remember zoom levels on a per-site basis, so your preference will be preserved for future visits. For users with color vision deficiency, browser extensions that simulate different types of color blindness can help identify potential issues, though this tool uses color coding only as a supplementary visual indicator, never as the sole means of conveying information.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Integration with Spreadsheets and Documents</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">Calculation results from this tool can be easily integrated into spreadsheets, documents, and presentations. Select the numbers you want to copy, use Ctrl+C (Cmd+C on Mac) to copy them, and Ctrl+V (Cmd+V) to paste into your target application. When pasting into Excel or Google Sheets, values are usually recognized as numbers and can be used in further calculations immediately. If pasted numbers include formatting characters like currency symbols or commas, use your spreadsheet Paste Special feature to paste as plain text, then format the cells as needed. For regular data collection workflows, consider setting up a spreadsheet template with cells pre-formatted for the types of values this tool produces, simplifying the copy-paste workflow.</p></section>
 <footer><div class="badge-row" style="justify-content:center;"><img alt="Build passing" height="22" src="https://img.shields.io/badge/build-passing-00ff88?style=flat-square" width="110"/><img alt="MIT License" height="22" src="https://img.shields.io/badge/license-MIT-00ccff?style=flat-square" width="100"/><img alt="Version 2.1.0" height="22" src="https://img.shields.io/badge/version-2.1.0-00ff88?style=flat-square" width="110"/><img alt="Tests passing" height="22" src="https://img.shields.io/badge/tests-passing-00ff88?style=flat-square" width="110"/><img alt="PageSpeed 98%" height="22" src="https://img.shields.io/badge/pagespeed-98%25-00ccff?style=flat-square" width="120"/><img alt="Mobile responsive" height="22" src="https://img.shields.io/badge/mobile-responsive-00ff88?style=flat-square" width="130"/></div><p style="margin-top:16px;">BTU Calculator v2.1.0 · by <a class="interactive-element" href="https://github.com/theluckystrike" rel="noopener" target="_blank">theluckystrike</a></p><p style="margin-top:6px;">Last verified March 2026. Data sourced from ASHRAE Handbook and DOE climate zone specifications.</p><p style="margin-top:6px;font-size:0.75rem;color:#555;">This tool provides estimates for informational purposes. Consult a licensed HVAC professional for critical sizing decisions.</p>
-<section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/concrete-cost-calculator/">Concrete Cost Calculator</a><a class="interactive-element" href="/free-tools/fence-calculator/">Fence Calculator</a><a class="interactive-element" href="/free-tools/gravel-calculator/">Gravel Calculator</a></div></section></div><script> // localStorage visit counter widget (function() { const KEY = 'btu_calc_visit_count'; let count = parseInt(localStorage.getItem(KEY) || '0', 10); count++; localStorage.setItem(KEY, count.toString()); const badge = document.getElementById('visitBadge'); if (badge) { badge.textContent = count === 1 ? 'Welcome! Your first visit.' : 'Visit #' + count + ' \u2014 Welcome back!'; } })(); // BTU Calculator Logic function calculateBTU() { const length = parseFloat(document.getElementById('roomLength').value) || 0; const width = parseFloat(document.getElementById('roomWidth').value) || 0; const height = parseFloat(document.getElementById('ceilingHeight').value) || 8; const insulation = document.getElementById('insulation').value; const climate = parseInt(document.getElementById('climate').value); const windows = parseInt(document.getElementById('windows').value) || 0; const sunExposure = document.getElementById('sunExposure').value; const occupants = parseInt(document.getElementById('occupants').value) || 1; if (length <= 0 || width <= 0) { alert('Please enter valid room dimensions.'); return; } const sqft = length * width; const volume = sqft * height; const heightFactor = height / 8; // Insulation multipliers const insulationMultipliers = { poor: { cool: 1.3, heat: 1.35 }, average: { cool: 1.0, heat: 1.0 }, good: { cool: 0.85, heat: 0.82 }, excellent: { cool: 0.75, heat: 0.7 } }; // Climate zone multipliers const climateMultipliers = { 1: { cool: 1.25, heat: 0.6 }, 2: { cool: 1.15, heat: 0.75 }, 3: { cool: 1.0, heat: 1.0 }, 4: { cool: 0.9, heat: 1.15 }, 5: { cool: 0.8, heat: 1.35 }, 6: { cool: 0.7, heat: 1.55 }, 7: { cool: 0.6, heat: 1.75 } }; // Sun exposure adjustments const sunMultipliers = { low: { cool: 0.9, heat: 1.05 }, medium: { cool: 1.0, heat: 1.0 }, high: { cool: 1.15, heat: 0.95 } }; const ins = insulationMultipliers[insulation]; const clm = climateMultipliers[climate]; const sun = sunMultipliers[sunExposure]; // Base calculations let coolingBTU = sqft * 20; coolingBTU *= heightFactor; coolingBTU *= ins.cool; coolingBTU *= clm.cool; coolingBTU *= sun.cool; coolingBTU += windows * 1000; coolingBTU += Math.max(0, occupants - 2) * 600; let heatingBTU = sqft * 35; heatingBTU *= heightFactor; heatingBTU *= ins.heat; heatingBTU *= clm.heat; heatingBTU *= sun.heat; heatingBTU += windows * 800; heatingBTU += Math.max(0, occupants - 2) * 400; coolingBTU = Math.round(coolingBTU / 500) * 500; heatingBTU = Math.round(heatingBTU / 500) * 500; const acTons = (coolingBTU / 12000).toFixed(1); const heaterLabel = heatingBTU.toLocaleString() + ' BTU'; document.getElementById('coolingBTU').textContent = coolingBTU.toLocaleString(); document.getElementById('heatingBTU').textContent = heatingBTU.toLocaleString(); document.getElementById('acSize').textContent = acTons; document.getElementById('heaterSize').textContent = heaterLabel; // Generate tips const tips = []; if (insulation === 'poor') { tips.push('Upgrading insulation could reduce your BTU requirements by 30-40%. Consider blown-in cellulose or spray foam for the biggest impact.'); } if (insulation === 'poor' || insulation === 'average') { tips.push('Air sealing around windows and doors is the most cost-effective improvement. A tube of caulk and weatherstripping can save 15-25% on energy costs.'); } if (windows >= 4) { tips.push('With ' + windows + ' windows, consider thermal curtains or low-E window film to reduce heat gain/loss through glass surfaces.'); } if (sunExposure === 'high') { tips.push('High sun exposure significantly increases cooling load. Exterior shading (awnings, trees) is more effective than interior window treatments.'); } if (height > 9) { tips.push('With ' + height + '-foot ceilings, ceiling fans can improve comfort by 4-6 degrees F equivalent, allowing a higher thermostat setting.'); } if (climate >= 5) { tips.push('In cold climate zones, a heat pump can be 2-3x more efficient than electric resistance heating. Consider a cold-climate heat pump rated for your zone.'); } if (climate <= 2) { tips.push('In hot climates, a high-SEER mini-split system offers the best efficiency. Look for SEER 20+ units for maximum energy savings.'); } tips.push('Set your thermostat to 68\u00B0F in winter and 76\u00B0F in summer for optimal efficiency. Each degree adjustment saves approximately 3% on energy costs.'); tips.push('Regular HVAC maintenance (filter changes, coil cleaning) ensures your system operates at its rated BTU capacity and efficiency.'); const tipsList = document.getElementById('tipsList'); tipsList.innerHTML = tips.map(t => '<li>' + t + '</li>').join(''); document.getElementById('results').classList.add('show'); document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' }); } // FAQ Toggle function toggleFaq(el) { const answer = el.nextElementSibling; const wasOpen = el.classList.contains('open'); document.querySelectorAll('.faq-q').forEach(q => { q.classList.remove('open'); q.nextElementSibling.classList.remove('open'); }); if (!wasOpen) { el.classList.add('open'); answer.classList.add('open'); } } </script><footer style="text-align:center;padding:24px;color:#6e6e73;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;"><h2 style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">The BTU Calculator is a free browser-based tool that requires no downloads or signups. It processes everything locally on your device for maximum privacy and speed.</p><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/concrete-cost-calculator/">Concrete Cost Calculator</a><a class="interactive-element" href="/free-tools/fence-calculator/">Fence Calculator</a><a class="interactive-element" href="/free-tools/gravel-calculator/">Gravel Calculator</a></div></section><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
+<section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/concrete-cost-calculator/">Concrete Cost Calculator</a><a class="interactive-element" href="/free-tools/fence-calculator/">Fence Calculator</a><a class="interactive-element" href="/free-tools/gravel-calculator/">Gravel Calculator</a></div></section></div><script>
+// localStorage visit counter widget
+(function() {
+  const KEY = 'btu_calc_visit_count';
+  let count = parseInt(localStorage.getItem(KEY) || '0', 10);
+  count++;
+  localStorage.setItem(KEY, count.toString());
+  const badge = document.getElementById('visitBadge');
+  if (badge) {
+    badge.textContent = count === 1
+      ? 'Welcome! Your first visit.'
+      : 'Visit #' + count + ' \u2014 Welcome back!';
+  }
+})();
+
+// BTU Calculator Logic
+function calculateBTU() {
+  const length = parseFloat(document.getElementById('roomLength').value) || 0;
+  const width = parseFloat(document.getElementById('roomWidth').value) || 0;
+  const height = parseFloat(document.getElementById('ceilingHeight').value) || 8;
+  const insulation = document.getElementById('insulation').value;
+  const climate = parseInt(document.getElementById('climate').value);
+  const windows = parseInt(document.getElementById('windows').value) || 0;
+  const sunExposure = document.getElementById('sunExposure').value;
+  const occupants = parseInt(document.getElementById('occupants').value) || 1;
+
+  if (length <= 0 || width <= 0) {
+    alert('Please enter valid room dimensions.');
+    return;
+  }
+
+  const sqft = length * width;
+  const volume = sqft * height;
+  const heightFactor = height / 8;
+
+  // Insulation multipliers
+  const insulationMultipliers = {
+    poor: { cool: 1.3, heat: 1.35 },
+    average: { cool: 1.0, heat: 1.0 },
+    good: { cool: 0.85, heat: 0.82 },
+    excellent: { cool: 0.75, heat: 0.7 }
+  };
+
+  // Climate zone multipliers
+  const climateMultipliers = {
+    1: { cool: 1.25, heat: 0.6 },
+    2: { cool: 1.15, heat: 0.75 },
+    3: { cool: 1.0, heat: 1.0 },
+    4: { cool: 0.9, heat: 1.15 },
+    5: { cool: 0.8, heat: 1.35 },
+    6: { cool: 0.7, heat: 1.55 },
+    7: { cool: 0.6, heat: 1.75 }
+  };
+
+  // Sun exposure adjustments
+  const sunMultipliers = {
+    low: { cool: 0.9, heat: 1.05 },
+    medium: { cool: 1.0, heat: 1.0 },
+    high: { cool: 1.15, heat: 0.95 }
+  };
+
+  const ins = insulationMultipliers[insulation];
+  const clm = climateMultipliers[climate];
+  const sun = sunMultipliers[sunExposure];
+
+  // Base calculations
+  let coolingBTU = sqft * 20;
+  coolingBTU *= heightFactor;
+  coolingBTU *= ins.cool;
+  coolingBTU *= clm.cool;
+  coolingBTU *= sun.cool;
+  coolingBTU += windows * 1000;
+  coolingBTU += Math.max(0, occupants - 2) * 600;
+
+  let heatingBTU = sqft * 35;
+  heatingBTU *= heightFactor;
+  heatingBTU *= ins.heat;
+  heatingBTU *= clm.heat;
+  heatingBTU *= sun.heat;
+  heatingBTU += windows * 800;
+  heatingBTU += Math.max(0, occupants - 2) * 400;
+
+  coolingBTU = Math.round(coolingBTU / 500) * 500;
+  heatingBTU = Math.round(heatingBTU / 500) * 500;
+
+  const acTons = (coolingBTU / 12000).toFixed(1);
+  const heaterLabel = heatingBTU.toLocaleString() + ' BTU';
+
+  document.getElementById('coolingBTU').textContent = coolingBTU.toLocaleString();
+  document.getElementById('heatingBTU').textContent = heatingBTU.toLocaleString();
+  document.getElementById('acSize').textContent = acTons;
+  document.getElementById('heaterSize').textContent = heaterLabel;
+
+  // Generate tips
+  const tips = [];
+  if (insulation === 'poor') {
+    tips.push('Upgrading insulation could reduce your BTU requirements by 30-40%. Consider blown-in cellulose or spray foam for the biggest impact.');
+  }
+  if (insulation === 'poor' || insulation === 'average') {
+    tips.push('Air sealing around windows and doors is the most cost-effective improvement. A tube of caulk and weatherstripping can save 15-25% on energy costs.');
+  }
+  if (windows >= 4) {
+    tips.push('With ' + windows + ' windows, consider thermal curtains or low-E window film to reduce heat gain/loss through glass surfaces.');
+  }
+  if (sunExposure === 'high') {
+    tips.push('High sun exposure significantly increases cooling load. Exterior shading (awnings, trees) is more effective than interior window treatments.');
+  }
+  if (height > 9) {
+    tips.push('With ' + height + '-foot ceilings, ceiling fans can improve comfort by 4-6 degrees F equivalent, allowing a higher thermostat setting.');
+  }
+  if (climate >= 5) {
+    tips.push('In cold climate zones, a heat pump can be 2-3x more efficient than electric resistance heating. Consider a cold-climate heat pump rated for your zone.');
+  }
+  if (climate <= 2) {
+    tips.push('In hot climates, a high-SEER mini-split system offers the best efficiency. Look for SEER 20+ units for maximum energy savings.');
+  }
+  tips.push('Set your thermostat to 68\u00B0F in winter and 76\u00B0F in summer for optimal efficiency. Each degree adjustment saves approximately 3% on energy costs.');
+  tips.push('Regular HVAC maintenance (filter changes, coil cleaning) ensures your system operates at its rated BTU capacity and efficiency.');
+
+  const tipsList = document.getElementById('tipsList');
+  tipsList.innerHTML = tips.map(t => '<li>' + t + '</li>').join('');
+
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// FAQ Toggle
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-q').forEach(q => { q.classList.remove('open'); q.nextElementSibling.classList.remove('open'); });
+  if (!wasOpen) { el.classList.add('open'); answer.classList.add('open'); }
+}
+</script><footer style="text-align:center;padding:24px;color:#6e6e73;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;"><h2 style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">The BTU Calculator is a free browser-based tool that requires no downloads or signups. It processes everything locally on your device for maximum privacy and speed.</p><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/concrete-cost-calculator/">Concrete Cost Calculator</a><a class="interactive-element" href="/free-tools/fence-calculator/">Fence Calculator</a><a class="interactive-element" href="/free-tools/gravel-calculator/">Gravel Calculator</a></div></section><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
 <p style="color:#86868b;font-size:0.92rem;line-height:1.6;">Browser support verified via <a class="interactive-element" href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p>
 </section>
 <section class="original-research" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">

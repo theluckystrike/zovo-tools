@@ -679,7 +679,205 @@ gtag('config', 'G-V2K8JLFQ5H');
 <a class="interactive-element" href="#browser-compatibility" style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">Browser Compatibility</a>
 <a class="interactive-element" href="#research" style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">Original Research: Concrete Cost Calculator Industry Data</a>
 </div></nav><p>Concrete Cost Calculator - for homeowners and contractors. No signup, no tracking, no ads.</p><p style="margin-top:8px">Tested on Chrome 130, Firefox 121, Safari 17, and Edge 130. Last updated March 2026.</p><p style="margin-top:8px;font-size:0.8rem;color:#404050">© 2026 theluckystrike. All rights reserved. This tool provides estimates only. Get multiple quotes from licensed contractors for accurate project pricing. Actual costs may vary based on site conditions and local market rates.</p></div>
-<section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/gravel-calculator/">Gravel Calculator</a><a class="interactive-element" href="/free-tools/fence-calculator/">Fence Calculator</a><a class="interactive-element" href="/free-tools/btu-calculator/">BTU Calculator</a></div></section><script> // localStorage visit counter (function(){ const key = 'concrete_calc_visit_count'; let count = parseInt(localStorage.getItem(key) || '0', 10); count++; localStorage.setItem(key, count.toString()); document.getElementById('visitCount').textContent = count; })(); // Presets const presets = { driveway: { length: 20, width: 20, thickness: 5, mix: '4000', reinforcement: 'rebar3', finish: 'broom' }, patio: { length: 16, width: 12, thickness: 4, mix: '3000', reinforcement: 'wire', finish: 'broom' }, sidewalk: { length: 30, width: 4, thickness: 4, mix: '3000', reinforcement: 'wire', finish: 'broom' }, foundation: { length: 40, width: 28, thickness: 8, mix: '4000', reinforcement: 'rebar4', finish: 'smooth' }, garage: { length: 24, width: 20, thickness: 5, mix: '4000', reinforcement: 'wire', finish: 'smooth' }, custom: { length: '', width: '', thickness: '', mix: '3000', reinforcement: 'none', finish: 'broom' } }; function applyPreset(type) { const p = presets[type]; document.getElementById('length').value = p.length; document.getElementById('width').value = p.width; document.getElementById('thickness').value = p.thickness; document.getElementById('mixType').value = p.mix; document.getElementById('reinforcement').value = p.reinforcement; document.getElementById('finish').value = p.finish; document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); } function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; } function getSelect(id) { return document.getElementById(id).value; } function fmt(n) { return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); } function fmtDec(n, d) { return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); } function calculateConcrete() { const length = getVal('length'); const width = getVal('width'); const thickness = getVal('thickness'); if (length <= 0 || width <= 0 || thickness <= 0) { alert('Please enter valid dimensions (length, width, and thickness).'); return; } const mixType = getSelect('mixType'); const delivery = getSelect('delivery'); const reinforcement = getSelect('reinforcement'); const finish = getSelect('finish'); const region = parseFloat(getSelect('region')); const wastePct = getVal('wasteFactor') / 100; const sqft = length * width; const cubicFeet = sqft * (thickness / 12); const cubicYardsRaw = cubicFeet / 27; const cubicYards = cubicYardsRaw * (1 + wastePct); // Bags calculation const bags60PerYard = 60; const bags80PerYard = 45; let bagsNeeded = '-'; let bagType = ''; if (delivery === 'bags60') { bagsNeeded = Math.ceil(cubicYards * bags60PerYard); bagType = '60 lb bags'; } else if (delivery === 'bags80') { bagsNeeded = Math.ceil(cubicYards * bags80PerYard); bagType = '80 lb bags'; } // Material costs per cubic yard (base, before region) const mixCosts = { '3000': 150, '4000': 170, 'fiber': 180 }; const bagCosts60 = 5.00; // per bag const bagCosts80 = 6.25; // per bag let materialCost; let materialDesc; let materialQty; let materialUnit; if (delivery === 'readymix') { const perYard = mixCosts[mixType] * region; materialCost = cubicYards * perYard; materialDesc = 'Ready-Mix Concrete'; materialQty = fmtDec(cubicYards, 2) + ' yd\u00B3'; materialUnit = '$' + fmtDec(perYard, 0) + '/yd\u00B3'; } else if (delivery === 'bags60') { const perBag = bagCosts60 * region; materialCost = bagsNeeded * perBag; materialDesc = '60 lb Concrete Bags'; materialQty = bagsNeeded + ' bags'; materialUnit = '$' + fmtDec(perBag, 2) + '/bag'; } else { const perBag = bagCosts80 * region; materialCost = bagsNeeded * perBag; materialDesc = '80 lb Concrete Bags'; materialQty = bagsNeeded + ' bags'; materialUnit = '$' + fmtDec(perBag, 2) + '/bag'; } // Reinforcement cost const reinfCosts = { none: 0, wire: 0.22, rebar3: 0.55, rebar4: 0.75 }; const reinfNames = { none: 'None', wire: 'Wire Mesh (6x6)', rebar3: '#3 Rebar (12" centers)', rebar4: '#4 Rebar (18" centers)' }; const reinfPerSqFt = reinfCosts[reinforcement] * region; const reinfTotal = sqft * reinfPerSqFt; // Labor cost const baseLaborPerSqFt = 3.50 * region; const laborTotal = sqft * baseLaborPerSqFt; // Finishing cost const finishCosts = { broom: 0, smooth: 0.75, exposed: 3.00, stamped: 5.50 }; const finishNames = { broom: 'Broom Finish (Standard)', smooth: 'Smooth Trowel', exposed: 'Exposed Aggregate', stamped: 'Stamped / Decorative' }; const finishPerSqFt = finishCosts[finish] * region; const finishTotal = sqft * finishPerSqFt; // Delivery fee for ready-mix let deliveryFee = 0; if (delivery === 'readymix') { if (cubicYards < 3) deliveryFee = 75 * region; // short load fee if (cubicYards < 1) deliveryFee = 150 * region; } // Total const totalCost = materialCost + reinfTotal + laborTotal + finishTotal + deliveryFee; const costPerSqFt = totalCost / sqft; const lowEstimate = totalCost * 0.85; const highEstimate = totalCost * 1.20; // Display results document.getElementById('results').classList.add('active'); document.getElementById('totalArea').textContent = fmt(sqft); document.getElementById('cubicYards').textContent = fmtDec(cubicYards, 2); document.getElementById('cubicYardsSub').textContent = fmtDec(cubicYardsRaw, 2) + ' yd\u00B3 + ' + (wastePct * 100) + '% waste'; if (delivery !== 'readymix') { document.getElementById('bagsNeeded').textContent = fmt(bagsNeeded); document.getElementById('bagsSub').textContent = bagType; } else { document.getElementById('bagsNeeded').textContent = 'N/A'; document.getElementById('bagsSub').textContent = 'Using ready-mix delivery'; } // Cost table let rows = ''; rows += `<tr><td>${materialDesc}</td><td>${materialQty}</td><td>${materialUnit}</td><td>$${fmt(Math.round(materialCost))}</td></tr>`; if (reinforcement !== 'none') { rows += `<tr><td>${reinfNames[reinforcement]}</td><td>${fmt(sqft)} sqft</td><td>$${fmtDec(reinfPerSqFt, 2)}/sqft</td><td>$${fmt(Math.round(reinfTotal))}</td></tr>`; } rows += `<tr><td>Labor (Pour, Spread, Grade)</td><td>${fmt(sqft)} sqft</td><td>$${fmtDec(baseLaborPerSqFt, 2)}/sqft</td><td>$${fmt(Math.round(laborTotal))}</td></tr>`; if (finish !== 'broom') { rows += `<tr><td>${finishNames[finish]}</td><td>${fmt(sqft)} sqft</td><td>$${fmtDec(finishPerSqFt, 2)}/sqft</td><td>$${fmt(Math.round(finishTotal))}</td></tr>`; } if (deliveryFee > 0) { rows += `<tr><td>Short Load Delivery Fee</td><td>1</td><td>$${fmt(Math.round(deliveryFee))}</td><td>$${fmt(Math.round(deliveryFee))}</td></tr>`; } rows += `<tr class="total-row"><td>Total Project Estimate</td><td colspan="2"></td><td>$${fmt(Math.round(totalCost))}</td></tr>`; document.getElementById('costTable').innerHTML = rows; document.getElementById('totalCost').textContent = '$' + fmt(Math.round(totalCost)); document.getElementById('totalRange').textContent = '$' + fmt(Math.round(lowEstimate)) + ' - $' + fmt(Math.round(highEstimate)); document.getElementById('costPerSqFt').textContent = '$' + fmtDec(costPerSqFt, 2); document.getElementById('costPerSqFtRange').textContent = '$' + fmtDec(costPerSqFt * 0.85, 2) + ' - $' + fmtDec(costPerSqFt * 1.20, 2); document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' }); } function resetForm() { document.querySelectorAll('#calculator input[type="number"]').forEach(i" => { if (i.id === 'wasteFactor') { i.value = 10; } else { i.value = ''; } }); document.querySelectorAll('#calculator select').forEach(s => s.selectedIndex = 0); document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active')); document.getElementById('results').classList.remove('active'); } // FAQ toggle function toggleFaq(el) { const item = el.parentElement; item.classList.toggle('open'); } </script><div class="video-learn" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#f5f5f7;border-left:4px solid #ff0000;border-radius:0 8px 8px 0;"><p style="margin:0 0 8px;font-size:0.7rem;color:#ff3b30;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Video Tutorials</p><a class="interactive-element" href="https://www.youtube.com/results?search_query=concrete+cost+estimation+calculation" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f5f5f7;border-radius:8px;text-decoration:none;transition:background 0.2s;" target="_blank"><svg fill="#ff0000" height="36" viewbox="0 0 24 24" width="36"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"><polygon fill="#fff" points="9.75,15.02 15.5,12 9.75,8.98"></polygon></path></svg><div><p style="margin:0;color:#1d1d1f;font-size:0.9rem;font-weight:500;">Watch Concrete Cost Calculator tutorials on YouTube</p><p style="margin:2px 0 0;color:#86868b;font-size:0.75rem;">Learn with free video guides and walkthroughs</p></div></a></div>
+<section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/gravel-calculator/">Gravel Calculator</a><a class="interactive-element" href="/free-tools/fence-calculator/">Fence Calculator</a><a class="interactive-element" href="/free-tools/btu-calculator/">BTU Calculator</a></div></section><script>
+// localStorage visit counter
+(function(){
+  const key = 'concrete_calc_visit_count';
+  let count = parseInt(localStorage.getItem(key) || '0', 10);
+  count++;
+  localStorage.setItem(key, count.toString());
+  document.getElementById('visitCount').textContent = count;
+})();
+
+// Presets
+const presets = {
+  driveway: { length: 20, width: 20, thickness: 5, mix: '4000', reinforcement: 'rebar3', finish: 'broom' },
+  patio: { length: 16, width: 12, thickness: 4, mix: '3000', reinforcement: 'wire', finish: 'broom' },
+  sidewalk: { length: 30, width: 4, thickness: 4, mix: '3000', reinforcement: 'wire', finish: 'broom' },
+  foundation: { length: 40, width: 28, thickness: 8, mix: '4000', reinforcement: 'rebar4', finish: 'smooth' },
+  garage: { length: 24, width: 20, thickness: 5, mix: '4000', reinforcement: 'wire', finish: 'smooth' },
+  custom: { length: '', width: '', thickness: '', mix: '3000', reinforcement: 'none', finish: 'broom' }
+};
+
+function applyPreset(type) {
+  const p = presets[type];
+  document.getElementById('length').value = p.length;
+  document.getElementById('width').value = p.width;
+  document.getElementById('thickness').value = p.thickness;
+  document.getElementById('mixType').value = p.mix;
+  document.getElementById('reinforcement').value = p.reinforcement;
+  document.getElementById('finish').value = p.finish;
+
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function getVal(id) {
+  return parseFloat(document.getElementById(id).value) || 0;
+}
+
+function getSelect(id) {
+  return document.getElementById(id).value;
+}
+
+function fmt(n) {
+  return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function fmtDec(n, d) {
+  return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+
+function calculateConcrete() {
+  const length = getVal('length');
+  const width = getVal('width');
+  const thickness = getVal('thickness');
+
+  if (length <= 0 || width <= 0 || thickness <= 0) {
+    alert('Please enter valid dimensions (length, width, and thickness).');
+    return;
+  }
+
+  const mixType = getSelect('mixType');
+  const delivery = getSelect('delivery');
+  const reinforcement = getSelect('reinforcement');
+  const finish = getSelect('finish');
+  const region = parseFloat(getSelect('region'));
+  const wastePct = getVal('wasteFactor') / 100;
+
+  const sqft = length * width;
+  const cubicFeet = sqft * (thickness / 12);
+  const cubicYardsRaw = cubicFeet / 27;
+  const cubicYards = cubicYardsRaw * (1 + wastePct);
+
+  // Bags calculation
+  const bags60PerYard = 60;
+  const bags80PerYard = 45;
+  let bagsNeeded = '-';
+  let bagType = '';
+
+  if (delivery === 'bags60') {
+    bagsNeeded = Math.ceil(cubicYards * bags60PerYard);
+    bagType = '60 lb bags';
+  } else if (delivery === 'bags80') {
+    bagsNeeded = Math.ceil(cubicYards * bags80PerYard);
+    bagType = '80 lb bags';
+  }
+
+  // Material costs per cubic yard (base, before region)
+  const mixCosts = { '3000': 150, '4000': 170, 'fiber': 180 };
+  const bagCosts60 = 5.00; // per bag
+  const bagCosts80 = 6.25; // per bag
+
+  let materialCost;
+  let materialDesc;
+  let materialQty;
+  let materialUnit;
+
+  if (delivery === 'readymix') {
+    const perYard = mixCosts[mixType] * region;
+    materialCost = cubicYards * perYard;
+    materialDesc = 'Ready-Mix Concrete';
+    materialQty = fmtDec(cubicYards, 2) + ' yd\u00B3';
+    materialUnit = '$' + fmtDec(perYard, 0) + '/yd\u00B3';
+  } else if (delivery === 'bags60') {
+    const perBag = bagCosts60 * region;
+    materialCost = bagsNeeded * perBag;
+    materialDesc = '60 lb Concrete Bags';
+    materialQty = bagsNeeded + ' bags';
+    materialUnit = '$' + fmtDec(perBag, 2) + '/bag';
+  } else {
+    const perBag = bagCosts80 * region;
+    materialCost = bagsNeeded * perBag;
+    materialDesc = '80 lb Concrete Bags';
+    materialQty = bagsNeeded + ' bags';
+    materialUnit = '$' + fmtDec(perBag, 2) + '/bag';
+  }
+
+  // Reinforcement cost
+  const reinfCosts = { none: 0, wire: 0.22, rebar3: 0.55, rebar4: 0.75 };
+  const reinfNames = { none: 'None', wire: 'Wire Mesh (6x6)', rebar3: '#3 Rebar (12" centers)', rebar4: '#4 Rebar (18" centers)' };
+  const reinfPerSqFt = reinfCosts[reinforcement] * region;
+  const reinfTotal = sqft * reinfPerSqFt;
+
+  // Labor cost
+  const baseLaborPerSqFt = 3.50 * region;
+  const laborTotal = sqft * baseLaborPerSqFt;
+
+  // Finishing cost
+  const finishCosts = { broom: 0, smooth: 0.75, exposed: 3.00, stamped: 5.50 };
+  const finishNames = { broom: 'Broom Finish (Standard)', smooth: 'Smooth Trowel', exposed: 'Exposed Aggregate', stamped: 'Stamped / Decorative' };
+  const finishPerSqFt = finishCosts[finish] * region;
+  const finishTotal = sqft * finishPerSqFt;
+
+  // Delivery fee for ready-mix
+  let deliveryFee = 0;
+  if (delivery === 'readymix') {
+    if (cubicYards < 3) deliveryFee = 75 * region; // short load fee
+    if (cubicYards < 1) deliveryFee = 150 * region;
+  }
+
+  // Total
+  const totalCost = materialCost + reinfTotal + laborTotal + finishTotal + deliveryFee;
+  const costPerSqFt = totalCost / sqft;
+  const lowEstimate = totalCost * 0.85;
+  const highEstimate = totalCost * 1.20;
+
+  // Display results
+  document.getElementById('results').classList.add('active');
+
+  document.getElementById('totalArea').textContent = fmt(sqft);
+  document.getElementById('cubicYards').textContent = fmtDec(cubicYards, 2);
+  document.getElementById('cubicYardsSub').textContent = fmtDec(cubicYardsRaw, 2) + ' yd\u00B3 + ' + (wastePct * 100) + '% waste';
+
+  if (delivery !== 'readymix') {
+    document.getElementById('bagsNeeded').textContent = fmt(bagsNeeded);
+    document.getElementById('bagsSub').textContent = bagType;
+  } else {
+    document.getElementById('bagsNeeded').textContent = 'N/A';
+    document.getElementById('bagsSub').textContent = 'Using ready-mix delivery';
+  }
+
+  // Cost table
+  let rows = '';
+  rows += `<tr><td>${materialDesc}</td><td>${materialQty}</td><td>${materialUnit}</td><td>$${fmt(Math.round(materialCost))}</td></tr>`;
+  if (reinforcement !== 'none') {
+    rows += `<tr><td>${reinfNames[reinforcement]}</td><td>${fmt(sqft)} sqft</td><td>$${fmtDec(reinfPerSqFt, 2)}/sqft</td><td>$${fmt(Math.round(reinfTotal))}</td></tr>`;
+  }
+  rows += `<tr><td>Labor (Pour, Spread, Grade)</td><td>${fmt(sqft)} sqft</td><td>$${fmtDec(baseLaborPerSqFt, 2)}/sqft</td><td>$${fmt(Math.round(laborTotal))}</td></tr>`;
+  if (finish !== 'broom') {
+    rows += `<tr><td>${finishNames[finish]}</td><td>${fmt(sqft)} sqft</td><td>$${fmtDec(finishPerSqFt, 2)}/sqft</td><td>$${fmt(Math.round(finishTotal))}</td></tr>`;
+  }
+  if (deliveryFee > 0) {
+    rows += `<tr><td>Short Load Delivery Fee</td><td>1</td><td>$${fmt(Math.round(deliveryFee))}</td><td>$${fmt(Math.round(deliveryFee))}</td></tr>`;
+  }
+  rows += `<tr class="total-row"><td>Total Project Estimate</td><td colspan="2"></td><td>$${fmt(Math.round(totalCost))}</td></tr>`;
+
+  document.getElementById('costTable').innerHTML = rows;
+
+  document.getElementById('totalCost').textContent = '$' + fmt(Math.round(totalCost));
+  document.getElementById('totalRange').textContent = 'Range: $' + fmt(Math.round(lowEstimate)) + ' - $' + fmt(Math.round(highEstimate));
+  document.getElementById('costPerSqFt').textContent = '$' + fmtDec(costPerSqFt, 2);
+  document.getElementById('costPerSqFtRange').textContent = 'Range: $' + fmtDec(costPerSqFt * 0.85, 2) + ' - $' + fmtDec(costPerSqFt * 1.20, 2);
+
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetForm() {
+  document.querySelectorAll('#calculator input[type="number"]').forEach(i => {
+    if (i.id === 'wasteFactor') { i.value = 10; } else { i.value = ''; }
+  });
+  document.querySelectorAll('#calculator select').forEach(s => s.selectedIndex = 0);
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('results').classList.remove('active');
+}
+
+// FAQ toggle
+function toggleFaq(el) {
+  const item = el.parentElement;
+  item.classList.toggle('open');
+}
+</script><div class="video-learn" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#f5f5f7;border-left:4px solid #ff0000;border-radius:0 8px 8px 0;"><p style="margin:0 0 8px;font-size:0.7rem;color:#ff3b30;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Video Tutorials</p><a class="interactive-element" href="https://www.youtube.com/results?search_query=concrete+cost+estimation+calculation" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f5f5f7;border-radius:8px;text-decoration:none;transition:background 0.2s;" target="_blank"><svg fill="#ff0000" height="36" viewbox="0 0 24 24" width="36"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"><polygon fill="#fff" points="9.75,15.02 15.5,12 9.75,8.98"></polygon></path></svg><div><p style="margin:0;color:#1d1d1f;font-size:0.9rem;font-weight:500;">Watch Concrete Cost Calculator tutorials on YouTube</p><p style="margin:2px 0 0;color:#86868b;font-size:0.75rem;">Learn with free video guides and walkthroughs</p></div></a></div>
 <footer style="text-align:center;padding:24px;color:#6e6e73;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;"><h2 style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">The Concrete Cost Calculator is a free browser-based tool that requires no downloads or signups. It processes everything locally on your device for maximum privacy and speed.</p><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/gravel-calculator/">Gravel Calculator</a><a class="interactive-element" href="/free-tools/fence-calculator/">Fence Calculator</a><a class="interactive-element" href="/free-tools/btu-calculator/">BTU Calculator</a></div></section><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
 <p style="color:#86868b;font-size:0.92rem;line-height:1.6;">Browser support verified via <a class="interactive-element" href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p>
 </section>

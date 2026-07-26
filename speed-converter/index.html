@@ -660,7 +660,166 @@ html { scroll-behavior: smooth; }
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1ffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #d2d2d7">Continuous Learning Resources</h2><p style="color:#1d1d1f;line-height:1.8;margin-bottom:1rem">Building proficiency with quantitative tools requires understanding both the tool itself and the domain it serves. For financial calculations, the Consumer Financial Protection Bureau (cfpb.gov) provides excellent educational resources about mortgages, credit, and banking. For health metrics, the National Institutes of Health (nih.gov) maintains patient-facing explanations of medical measurements and their significance. For engineering calculations, engineering.com and the ASME digital collection offer both introductory and advanced resources. Khan Academy provides free, structured learning paths covering the mathematical foundations used in virtually every calculation tool. These resources help you develop the judgment to know when a calculated result is reasonable and when to dig deeper.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1ffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #d2d2d7">Privacy and Security Best Practices</h2><p style="color:#1d1d1f;line-height:1.8;margin-bottom:1rem">While this tool does not collect or transmit your data, practicing good digital hygiene is always advisable when using online tools. Avoid entering sensitive personal information (like Social Security numbers, account numbers, or passwords) into any web-based calculator unless you have verified it comes from a trusted source and uses HTTPS encryption. The padlock icon in your browser address bar confirms that the connection between your browser and the server is encrypted. This tool operates entirely client-side, meaning your inputs never leave your browser, but not all online tools work this way. When in doubt, read the privacy policy of any tool that asks for personal information before providing it.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1ffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #d2d2d7">Customization and Personalization</h2><p style="color:#1d1d1f;line-height:1.8;margin-bottom:1rem">Many modern browsers support user stylesheets and extensions that can customize the appearance of any web page, including this tool. If you find the default color scheme difficult to read, browser extensions like Dark Reader or Stylus allow you to override page styles. If you need larger text, use your browser zoom function (Ctrl+Plus or Cmd+Plus) to scale the entire page. Most browsers remember zoom levels on a per-site basis, so your preference will be preserved for future visits. For users with color vision deficiency, browser extensions that simulate different types of color blindness can help identify potential issues, though this tool uses color coding only as a supplementary visual indicator, never as the sole means of conveying information.</p></section>
-<footer><p>© 2026 <a href="https://zovo.one">zovo.one</a> · by Michael Lip</p></footer></div><div class="toast" id="toast"></div><script> // ============================================================ // CONVERSION ENGINE // All conversions go through m/s as the base unit // ============================================================ const TO_MS = { mph: 0.44704, kmh: 0.27778, // 1/3.6 ms: 1, fts: 0.3048, knots: 0.51444, mach: 343.0 // speed of sound at sea level, 20C }; const FROM_MS = {}; for (const [unit, factor] of Object.entries(TO_MS)) { FROM_MS[unit] = 1 / factor; } const UNIT_LABELS = { mph: { name: 'Miles per hour', abbr: 'mph' }, kmh: { name: 'Kilometers per hour', abbr: 'km/h' }, ms: { name: 'Meters per second', abbr: 'm/s' }, fts: { name: 'Feet per second', abbr: 'ft/s' }, knots: { name: 'Knots', abbr: 'kn' }, mach: { name: 'Mach number', abbr: 'Mach' } }; const UNIT_ORDER = ['mph', 'kmh', 'ms', 'fts', 'knots', 'mach']; function convert(value, fromUnit) { const ms = value * TO_MS[fromUnit]; const results = {}; for (const unit of UNIT_ORDER) { results[unit] = ms * FROM_MS[unit]; } return results; } function formatValue(val, unit) { if (isNaN(val) || !isFinite(val)) return ', '; if (unit === 'mach') { return val < 0.01 ? val.toExponential(3) : val.toFixed(4); } if (Math.abs(val) >= 1e9) return val.toExponential(4); if (Math.abs(val) >= 1000) return val.toFixed(1); if (Math.abs(val) >= 1) return val.toFixed(3); if (Math.abs(val) >= 0.001) return val.toFixed(5); return val.toExponential(3); } // ============================================================ // UI // ============================================================ function updateResults() { const input = document.getElementById('speed-input'); const unitSelect = document.getElementById('unit-select'); const value = parseFloat(input.value) || 0; const fromUnit = unitSelect.value; const results = convert(value, fromUnit); const grid = document.getElementById('results-grid'); grid.innerHTML = UNIT_ORDER.map(unit => { const label = UNIT_LABELS[unit]; const val = formatValue(results[unit], unit); const isActive = unit === fromUnit; return ` <div class="result-card ${isActive ? 'active'" : ''}" onclick="copyValue('${val}" ${label.abbr}')" title="Click to copy"><span class="copy-hint">Click to copy</span><div class="unit-name">${label.name}</div><div class="value">${val}<span class="unit-abbr">${label.abbr}</span></div></div> `; }).join(''); } function copyValue(text) { navigator.clipboard.writeText(text).then(() => { showToast('' + text); }); } function loadSpeed(mph) { document.getElementById('speed-input').value = mph; document.getElementById('unit-select').value = 'mph'; updateResults(); window.scrollTo({ top: 0, behavior: 'smooth' }); } // Real-time conversion document.getElementById('speed-input').addEventListener('input', updateResults); document.getElementById('unit-select').addEventListener('change', updateResults); // ============================================================ // REFERENCE TABLE // ============================================================ const referenceData = [ { desc: 'Walking (average)', mph: 3.1 }, { desc: 'Jogging', mph: 6.0 }, { desc: 'Cycling (casual)', mph: 15 }, { desc: 'Usain Bolt (peak)', mph: 27.8 }, { desc: 'City speed limit', mph: 30 }, { desc: 'Highway driving', mph: 70 }, { desc: 'Cheetah (top speed)', mph: 75 }, { desc: 'Peregrine falcon (dive)', mph: 240 }, { desc: 'Bullet train (Shinkansen)', mph: 200 }, { desc: 'Commercial aircraft', mph: 575 }, { desc: 'Sound (sea level, 20C)', mph: 767.269 }, { desc: 'SR-71 Blackbird', mph: 2193 }, { desc: 'Space Shuttle (orbit)', mph: 17500 }, { desc: 'ISS orbital speed', mph: 17150 }, { desc: 'Earth around Sun', mph: 67000 }, { desc: 'Speed of light', mph: 670616629 } ]; function buildRefTable() { const tbody = document.getElementById('ref-table-body'); tbody.innerHTML = referenceData.map(row => { const r = convert(row.mph, 'mph'); return ` <tr onclick="loadSpeed(${row.mph})"><td>${row.desc}</td><td>${formatValue(r.mph, 'mph')}</td><td>${formatValue(r.kmh, 'kmh')}</td><td>${formatValue(r.ms, 'ms')}</td><td>${formatValue(r.fts, 'fts')}</td><td>${formatValue(r.knots, 'knots')}</td><td>${formatValue(r.mach, 'mach')}</td></tr> `; }).join(''); } // ============================================================ // TOAST // ============================================================ function showToast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2000); } // ============================================================ // L20: VISIT COUNTER // ============================================================ (function() { let visits = parseInt(localStorage.getItem('sc-visits') || '0'); visits++; localStorage.setItem('sc-visits', visits); document.getElementById('visit-counter').innerHTML = 'You\'ve visited this page <span>' + visits + '</span> time' + (visits === 1 ? '' : 's') + '.'; })(); // ============================================================ // INIT // ============================================================ updateResults(); buildRefTable(); </script><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#6e6e73;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section><section class="update-history" style="margin:1.5rem 0;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><p style="color:#6e6e73;font-size:0.85rem;line-height:1.6;"><span style="color:#0071e3;">Recently Updated:</span> March 2026. This page is regularly maintained to ensure accuracy, performance, and compatibility with the latest browser versions.</p></section><section class="related-tools" style="margin:2rem 0;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Explore More Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.25rem;"><a href="https://zovo.one/free-tools/unit-converter/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Unit Converter</a><a href="https://zovo.one/free-tools/currency-converter/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Currency Converter</a><a href="https://zovo.one/free-tools/color-converter/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Color Converter</a><a href="https://zovo.one/free-tools/base64-encoder/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Base64 Encoder</a></div></section><section id="faq" style="max-width:800px;margin:48px auto;padding:0 20px;"><h2 id="frequently-asked-questions" style="color:#0071e3;font-size:1.5rem;margin-bottom:24px;">Frequently Asked Questions</h2><div style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is this speed converter free to use?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">Yes, this speed converter is completely free with no registration required. All processing happens in your browser.</p></div><div style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Does this tool work on mobile devices?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">Yes, the speed converter is fully responsive and works on smartphones, tablets, and desktop computers.</p></div><div style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is my data safe when using this tool?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">. Runs entirely on your device using JavaScript. No server requests are made during use.</p></div></section><!-- About This Tool --><section id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif;"><h2 id="about-this-tool-2" style="color:#1d1d1f;font-size:1.4rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#1d1d1f;line-height:1.7;margin:0 0 1rem 0;">The Speed Converter lets you convert between speed units like mph, km/h, knots, and m/s. a professional, student, or hobbyist, this tool will save you time and deliver accurate results without requiring any downloads or sign-ups.</p><p style="color:#1d1d1f;line-height:1.7;margin:0;"> by Michael Lip. Speed Converter is designed for offline-capable use. Once loaded, it needs no internet connection and sends zero data to any external service.</p></section><section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#1d1d1ffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #d2d2d7">Original Research: Speed Converter Industry Data</h2><p style="color:#6e6e73;margin-bottom:16px">I assembled these figures from BIPM international measurement standards data, Google Search measurement query volumes, and UNESCO science education metric adoption reports. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #0071e3"><th style="text-align:left;padding:10px;color:#0071e3">Metric</th><th style="text-align:left;padding:10px;color:#0071e3">Value</th><th style="text-align:left;padding:10px;color:#0071e3">Year</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Global searches for online converters monthly</td><td style="padding:10px;color:#1d1d1f">1.8 billion</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Average conversions per user session</td><td style="padding:10px;color:#1d1d1f">3.4</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Preferred format for converter output</td><td style="padding:10px;color:#1d1d1f">Instant preview</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Mobile usage share for converter tools</td><td style="padding:10px;color:#1d1d1f">62%</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Users preferring browser tools over desktop apps</td><td style="padding:10px;color:#1d1d1f">74%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Average time to complete a conversion</td><td style="padding:10px;color:#1d1d1f">12 seconds</td><td style="padding:10px;color:#1d1d1f">2026</td></tr></tbody></table></div><p style="margin-top:12px;font-size:0.85rem;color:#86868b">Source: International trade reports, browser query analytics, and metric adoption surveys. Last updated March 2026.</p></section><!-- compat-table-section -->
+<footer><p>© 2026 <a href="https://zovo.one">zovo.one</a> · by Michael Lip</p></footer></div><div class="toast" id="toast"></div><script>
+// ============================================================
+// CONVERSION ENGINE
+// All conversions go through m/s as the base unit
+// ============================================================
+const TO_MS = {
+  mph:   0.44704,
+  kmh:   0.27778,  // 1/3.6
+  ms:    1,
+  fts:   0.3048,
+  knots: 0.51444,
+  mach:  343.0     // speed of sound at sea level, 20C
+};
+
+const FROM_MS = {};
+for (const [unit, factor] of Object.entries(TO_MS)) {
+  FROM_MS[unit] = 1 / factor;
+}
+
+const UNIT_LABELS = {
+  mph:   { name: 'Miles per hour',        abbr: 'mph' },
+  kmh:   { name: 'Kilometers per hour',   abbr: 'km/h' },
+  ms:    { name: 'Meters per second',      abbr: 'm/s' },
+  fts:   { name: 'Feet per second',        abbr: 'ft/s' },
+  knots: { name: 'Knots',                  abbr: 'kn' },
+  mach:  { name: 'Mach number',            abbr: 'Mach' }
+};
+
+const UNIT_ORDER = ['mph', 'kmh', 'ms', 'fts', 'knots', 'mach'];
+
+function convert(value, fromUnit) {
+  const ms = value * TO_MS[fromUnit];
+  const results = {};
+  for (const unit of UNIT_ORDER) {
+    results[unit] = ms * FROM_MS[unit];
+  }
+  return results;
+}
+
+function formatValue(val, unit) {
+  if (isNaN(val) || !isFinite(val)) return '—';
+  if (unit === 'mach') {
+    return val < 0.01 ? val.toExponential(3) : val.toFixed(4);
+  }
+  if (Math.abs(val) >= 1e9) return val.toExponential(4);
+  if (Math.abs(val) >= 1000) return val.toFixed(1);
+  if (Math.abs(val) >= 1) return val.toFixed(3);
+  if (Math.abs(val) >= 0.001) return val.toFixed(5);
+  return val.toExponential(3);
+}
+
+// ============================================================
+// UI
+// ============================================================
+function updateResults() {
+  const input = document.getElementById('speed-input');
+  const unitSelect = document.getElementById('unit-select');
+  const value = parseFloat(input.value) || 0;
+  const fromUnit = unitSelect.value;
+  const results = convert(value, fromUnit);
+  const grid = document.getElementById('results-grid');
+
+  grid.innerHTML = UNIT_ORDER.map(unit => {
+    const label = UNIT_LABELS[unit];
+    const val = formatValue(results[unit], unit);
+    const isActive = unit === fromUnit;
+    return `
+      <div class="result-card ${isActive ? 'active' : ''}" onclick="copyValue('${val} ${label.abbr}')" title="Click to copy">
+        <span class="copy-hint">Click to copy</span>
+        <div class="unit-name">${label.name}</div>
+        <div class="value">${val}<span class="unit-abbr">${label.abbr}</span></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function copyValue(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Copied: ' + text);
+  });
+}
+
+function loadSpeed(mph) {
+  document.getElementById('speed-input').value = mph;
+  document.getElementById('unit-select').value = 'mph';
+  updateResults();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Real-time conversion
+document.getElementById('speed-input').addEventListener('input', updateResults);
+document.getElementById('unit-select').addEventListener('change', updateResults);
+
+// ============================================================
+// REFERENCE TABLE
+// ============================================================
+const referenceData = [
+  { desc: 'Walking (average)',        mph: 3.1 },
+  { desc: 'Jogging',                  mph: 6.0 },
+  { desc: 'Cycling (casual)',         mph: 15 },
+  { desc: 'Usain Bolt (peak)',        mph: 27.8 },
+  { desc: 'City speed limit',         mph: 30 },
+  { desc: 'Highway driving',          mph: 70 },
+  { desc: 'Cheetah (top speed)',      mph: 75 },
+  { desc: 'Peregrine falcon (dive)',  mph: 240 },
+  { desc: 'Bullet train (Shinkansen)', mph: 200 },
+  { desc: 'Commercial aircraft',      mph: 575 },
+  { desc: 'Sound (sea level, 20C)',   mph: 767.269 },
+  { desc: 'SR-71 Blackbird',          mph: 2193 },
+  { desc: 'Space Shuttle (orbit)',    mph: 17500 },
+  { desc: 'ISS orbital speed',        mph: 17150 },
+  { desc: 'Earth around Sun',         mph: 67000 },
+  { desc: 'Speed of light',           mph: 670616629 }
+];
+
+function buildRefTable() {
+  const tbody = document.getElementById('ref-table-body');
+  tbody.innerHTML = referenceData.map(row => {
+    const r = convert(row.mph, 'mph');
+    return `
+      <tr onclick="loadSpeed(${row.mph})">
+        <td>${row.desc}</td>
+        <td>${formatValue(r.mph, 'mph')}</td>
+        <td>${formatValue(r.kmh, 'kmh')}</td>
+        <td>${formatValue(r.ms, 'ms')}</td>
+        <td>${formatValue(r.fts, 'fts')}</td>
+        <td>${formatValue(r.knots, 'knots')}</td>
+        <td>${formatValue(r.mach, 'mach')}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// ============================================================
+// L20: VISIT COUNTER
+// ============================================================
+(function() {
+  let visits = parseInt(localStorage.getItem('sc-visits') || '0');
+  visits++;
+  localStorage.setItem('sc-visits', visits);
+  document.getElementById('visit-counter').innerHTML =
+    'You\'ve visited this page <span>' + visits + '</span> time' + (visits === 1 ? '' : 's') + '.';
+})();
+
+// ============================================================
+// INIT
+// ============================================================
+updateResults();
+buildRefTable();
+</script><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#6e6e73;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section><section class="update-history" style="margin:1.5rem 0;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><p style="color:#6e6e73;font-size:0.85rem;line-height:1.6;"><span style="color:#0071e3;">Recently Updated:</span> March 2026. This page is regularly maintained to ensure accuracy, performance, and compatibility with the latest browser versions.</p></section><section class="related-tools" style="margin:2rem 0;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Explore More Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.25rem;"><a href="https://zovo.one/free-tools/unit-converter/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Unit Converter</a><a href="https://zovo.one/free-tools/currency-converter/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Currency Converter</a><a href="https://zovo.one/free-tools/color-converter/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Color Converter</a><a href="https://zovo.one/free-tools/base64-encoder/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Base64 Encoder</a></div></section><section id="faq" style="max-width:800px;margin:48px auto;padding:0 20px;"><h2 id="frequently-asked-questions" style="color:#0071e3;font-size:1.5rem;margin-bottom:24px;">Frequently Asked Questions</h2><div style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is this speed converter free to use?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">Yes, this speed converter is completely free with no registration required. All processing happens in your browser.</p></div><div style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Does this tool work on mobile devices?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">Yes, the speed converter is fully responsive and works on smartphones, tablets, and desktop computers.</p></div><div style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is my data safe when using this tool?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">. Runs entirely on your device using JavaScript. No server requests are made during use.</p></div></section><!-- About This Tool --><section id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif;"><h2 id="about-this-tool-2" style="color:#1d1d1f;font-size:1.4rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#1d1d1f;line-height:1.7;margin:0 0 1rem 0;">The Speed Converter lets you convert between speed units like mph, km/h, knots, and m/s. a professional, student, or hobbyist, this tool will save you time and deliver accurate results without requiring any downloads or sign-ups.</p><p style="color:#1d1d1f;line-height:1.7;margin:0;"> by Michael Lip. Speed Converter is designed for offline-capable use. Once loaded, it needs no internet connection and sends zero data to any external service.</p></section><section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#1d1d1ffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #d2d2d7">Original Research: Speed Converter Industry Data</h2><p style="color:#6e6e73;margin-bottom:16px">I assembled these figures from BIPM international measurement standards data, Google Search measurement query volumes, and UNESCO science education metric adoption reports. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #0071e3"><th style="text-align:left;padding:10px;color:#0071e3">Metric</th><th style="text-align:left;padding:10px;color:#0071e3">Value</th><th style="text-align:left;padding:10px;color:#0071e3">Year</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Global searches for online converters monthly</td><td style="padding:10px;color:#1d1d1f">1.8 billion</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Average conversions per user session</td><td style="padding:10px;color:#1d1d1f">3.4</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Preferred format for converter output</td><td style="padding:10px;color:#1d1d1f">Instant preview</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Mobile usage share for converter tools</td><td style="padding:10px;color:#1d1d1f">62%</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Users preferring browser tools over desktop apps</td><td style="padding:10px;color:#1d1d1f">74%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Average time to complete a conversion</td><td style="padding:10px;color:#1d1d1f">12 seconds</td><td style="padding:10px;color:#1d1d1f">2026</td></tr></tbody></table></div><p style="margin-top:12px;font-size:0.85rem;color:#86868b">Source: International trade reports, browser query analytics, and metric adoption surveys. Last updated March 2026.</p></section><!-- compat-table-section -->
 <div style="margin:2rem 0;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;">
 <h3 style="color:#1d1d1f;margin-top:0;">Browser Compatibility</h3>
 <p style="color:#6e6e73;font-size:0.9rem;">This tool is compatible with all modern browsers. Data from <a href="https://caniuse.com" style="color:#0071e3;" rel="noopener" target="_blank">caniuse.com</a>.</p>

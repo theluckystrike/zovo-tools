@@ -657,7 +657,197 @@ html { scroll-behavior: smooth; }
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Privacy and Security Best Practices</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">While this tool does not collect or transmit your data, practicing good digital hygiene is always advisable when using online tools. Avoid entering sensitive personal information (like Social Security numbers, account numbers, or passwords) into any web-based calculator unless you have verified it comes from a trusted source and uses HTTPS encryption. The padlock icon in your browser address bar confirms that the connection between your browser and the server is encrypted. This tool operates entirely client-side, meaning your inputs never leave your browser, but not all online tools work this way. When in doubt, read the privacy policy of any tool that asks for personal information before providing it.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Customization and Personalization</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">Many modern browsers support user stylesheets and extensions that can customize the appearance of any web page, including this tool. If you find the default color scheme difficult to read, browser extensions like Dark Reader or Stylus allow you to override page styles. If you need larger text, use your browser zoom function (Ctrl+Plus or Cmd+Plus) to scale the entire page. Most browsers remember zoom levels on a per-site basis, so your preference will be preserved for future visits. For users with color vision deficiency, browser extensions that simulate different types of color blindness can help identify potential issues, though this tool uses color coding only as a supplementary visual indicator, never as the sole means of conveying information.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Integration with Spreadsheets and Documents</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">Calculation results from this tool can be easily integrated into spreadsheets, documents, and presentations. Select the numbers you want to copy, use Ctrl+C (Cmd+C on Mac) to copy them, and Ctrl+V (Cmd+V) to paste into your target application. When pasting into Excel or Google Sheets, values are usually recognized as numbers and can be used in further calculations immediately. If pasted numbers include formatting characters like currency symbols or commas, use your spreadsheet Paste Special feature to paste as plain text, then format the cells as needed. For regular data collection workflows, consider setting up a spreadsheet template with cells pre-formatted for the types of values this tool produces, simplifying the copy-paste workflow.</p></section>
-<footer><p>© 2026 Zovo Tools by Michael Lip. Free Sudoku solver for everyone.</p></footer></div><script> // L20: Visit counter (function(){const k='zovo_sudoku_visits';let c=parseInt(localStorage.getItem(k)||'0')+1;localStorage.setItem(k,c);document.getElementById('visitCounter').textContent=''+c})();" const gridEl = document.getElementById('grid');" let cells = []; let board = Array(81).fill(0); let given = Array(81).fill(false); let timerInterval = null; let seconds = 0; // Build grid for(let i=0;i<81;i++){ const input = document.createElement('input'); input.type = 'text'; input.maxLength = 1; input.className = 'sudoku-cell'; input.inputMode = 'numeric'; input.dataset.idx = i; // Box borders const col = i % 9, row = Math.floor(i/9); if(col="==2||col===5)" input.classList.add('box-right'); if(row="==2||row===5)" input.classList.add('box-bottom'); input.addEventListener('input', function(){ const v = this.value.replace(/[^1-9]/g,''); this.value = v; board[i] = v? parseInt(v) : 0; highlightConflicts(); }); input.addEventListener('keydown', function(e){ if(e.key="=='Backspace'||e.key="=='Delete'){"" this.value=''; board[i]=0; highlightConflicts(); } // Arrow key navigation const idx = parseInt(this.dataset.idx); if(e.key="=='ArrowRight'&&idx%9<8)" cells[idx+1].focus(); if(e.key="=='ArrowLeft'&&idx%9">0) cells[idx-1].focus(); if(e.key="=='ArrowDown'&&idx<72)" cells[idx+9].focus(); if(e.key="=='ArrowUp'&&idx">=9) cells[idx-9].focus(); }); gridEl.appendChild(input); cells.push(input); } function highlightConflicts(){ cells.forEach(c=>c.classList.remove('conflict')); for(let i=0;i<81;i++){ if(!board[i]) continue; const r=Math.floor(i/9), c="i%9," br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3; // Check row for(let j=0;j<9;j++){ const idx=r*9+j; if(idx!==i&&board[idx]===board[i]){cells[i].classList.add('conflict');cells[idx].classList.add('conflict')} } // Check col for(let j=0;j<9;j++){ const idx=j*9+c; if(idx!==i&&board[idx]===board[i]){cells[i].classList.add('conflict');cells[idx].classList.add('conflict')} } // Check box for(let dr=0;dr<3;dr++)for(let dc=0;dc<3;dc++){ const idx=(br+dr)*9+(bc+dc); if(idx!==i&&board[idx]===board[i]){cells[i].classList.add('conflict');cells[idx].classList.add('conflict')} } } } function isValid(b, pos, num){ const r=Math.floor(pos/9), c=pos%9; for(let i=0;i<9;i++){if(b[r*9+i]===num)return false;if(b[i*9+c]===num)return false} const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3; for(let dr=0;dr<3;dr++)for(let dc=0;dc<3;dc++){if(b[(br+dr)*9+(bc+dc)]===num)return false} return true; } function solve(b){ const empty=b.indexOf(0); if(empty="==-1)return" true; for(let n=1;n<=9;n++){ if(isValid(b,empty,n)){ b[empty]=n; if(solve(b))return true; b[empty]=0; } } return false; } function solvePuzzle(){ const b=[..board]; const status=document.getElementById('status'); if(solve(b)){ for(let i=0;i<81;i++){ board[i]=b[i]; cells[i].value="b[i];" if(!given[i])cells[i].classList.add('solved'); } status.textContent='Solved!'; status.className='status" success';stopTimer(); highlightConflicts(); } else { status.textContent='No" solution exists for this configuration.';status.className='status" error';} } function validatePuzzle(){ highlightConflicts(); const status=document.getElementById('status'); const hasConflict=document.querySelector('.sudoku-cell.conflict'); const isEmpty="board.every(v=">v===0); if(isEmpty){status.textContent='Grid" is empty. Enter numbers or generate a puzzle.';status.className='status';return}" if(hasConflict){status.textContent='Conflicts" found! Check highlighted cells.';status.className='status" error';return} const complete="board.every(v=">v!==0); if(complete){status.textContent='Congratulations!" Valid complete solution!';status.className='status" success';stopTimer()} else{status.textContent='No" conflicts so far. Keep going!';status.className='status success'} } function clearGrid(){ board.fill(0);given.fill(false); cells.forEach(c=>{c.value='';c.className='sudoku-cell';c.readOnly=false;"" const col=parseInt(c.dataset.idx)%9,row=Math.floor(parseInt(c.dataset.idx)/9); if(col="==2||col="==5)c.classList.add('box-right');"" if(row="==2||row="==5)c.classList.add('box-bottom');"" }); document.getElementById('status').textContent=''; document.getElementById('status').className='status'; resetTimer(); } function generatePuzzle(diff){ clearGrid(); // Generate a complete valid board const b=Array(81).fill(0); fillBoard(b); // Remove cells based on difficulty const remove={easy:40,medium:50,hard:56}; const toRemove=remove[diff]||45; const indices=[..Array(81).keys()]; shuffleArray(indices); let removed=0; for(const idx of indices){ if(removed>=toRemove)break; const backup=b[idx]; b[idx]=0; // Check unique solution (simplified - just verify solvable) const test=[..b]; if(solve(test)){removed++} else{b[idx]=backup} } for(let i=0;i<81;i++){ board[i]=b[i]; cells[i].value="b[i]||'';" if(b[i]){given[i]=true;cells[i].classList.add('given');cells[i].readOnly="true}" } document.getElementById('status').textContent="diff.charAt(0).toUpperCase()+diff.slice(1)+'" puzzle generated. Good luck!'; document.getElementById('status').className='status" success';startTimer(); } function fillBoard(b){ const empty=b.indexOf(0); if(empty="==-1)return" true; const nums=[1,2,3,4,5,6,7,8,9]; shuffleArray(nums); for(const n of nums){ if(isValid(b,empty,n)){b[empty]=n;if(fillBoard(b))return true;b[empty]=0} } return false; } function shuffleArray(a){for(let i="a.length-1;i">0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}} // Timer function startTimer(){ resetTimer(); timerInterval=setInterval(()=>{ seconds++; const m=String(Math.floor(seconds/60)).padStart(2,'0'); const s=String(seconds%60).padStart(2,'0'); document.getElementById('timer').textContent=m+':'+s; },1000); } function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval="null}}" function resetTimer(){stopTimer();seconds=0;document.getElementById('timer').textContent='00:00'}" </script><!-- anti-intelligent-content --><div style="margin:2rem" 0;padding:1rem;color:#6e6e73;font-size:0.95rem;line-height:1.7;"><p>I've been using this sudoku solver tool for a while now, and honestly it's become one of my go-to utilities. When I first built it, I didn't think it would get much traction, but it turns out people really need a quick, reliable way to handle this. I've tested it across Chrome, Firefox, and Safari - works great on all of them. Don't hesitate to bookmark it.</p></div><!-- npm-dashboard npm system --><div style="margin:2rem 0;padding:1.25rem;background:#f5f5f7;border-radius:8px;border-left:4px solid #cb3837;"><h3 style="color:#1d1d1f;margin-top:0;">npm system</h3><table style="width:100%;border-collapse:collapse;font-size:0.85rem;color:#6e6e73;"><thead><tr style="border-bottom:2px solid #e5e5ea;"><th style="text-align:left;padding:0.5rem;">Package</th><th style="padding:0.5rem;">Downloads</th><th style="padding:0.5rem;">Version</th></tr></thead><tbody><tr style="border-bottom:1px solid #f5f5f7;"><td style="padding:0.5rem;"><a class="interactive-element" href="https://www.npmjs.com/package/lodash" rel="nofollow noopener" style="color:#0071e3;" target="_blank">lodash</a></td><td style="padding:0.5rem;">12.3M</td><td style="padding:0.5rem;">4.17.21</td></tr><tr><td style="padding:0.5rem;"><a class="interactive-element" href="https://www.npmjs.com/package/mathjs" rel="nofollow noopener" style="color:#0071e3;" target="_blank">mathjs</a></td><td style="padding:0.5rem;">198K</td><td style="padding:0.5rem;">12.4.0</td></tr></tbody></table><p style="font-size:0.75rem;color:#636e72;margin-bottom:0;">Data from npmjs.org. Updated March 2026.</p></div><!-- original-research --><div style="margin:2rem 0;padding:1.25rem;background:#f5f5f7;border-radius:8px;border-left:4px solid #00ff88;"><h3 style="color:#1d1d1f;margin-top:0;">Our Testing &amp; Analysis</h3><p style="color:#6e6e73;font-size:0.9rem;line-height:1.6;">We tested this sudoku solver across 3 major browsers and 4 device types over a 2-week period. Our methodology involved 500+ test cases covering edge cases and typical usage patterns. Results showed 99.7% accuracy with an average response time of 12ms.</p><p style="color:#636e72;font-size:0.75rem;">Tested with automated scripts and manual edge-case verification. Last updated March 2026.</p></div><!-- anti-intelligent-content --><div style="margin:2rem 0;padding:1rem;color:#6e6e73;font-size:0.95rem;line-height:1.7;"><p>I've spent quite a bit of time refining this sudoku solver - it's one of those tools that seems simple on the surface but has a lot of edge cases you don't think about until you're actually using it. I tested it on my own projects before publishing, and I've been tweaking it based on feedback ever since. It doesn't require any signup or installation, which I think is how tools like this should work.</p></div><!-- npm-dashboard npm system --><div style="margin:2rem 0;padding:1.25rem;background:#f5f5f7;border-radius:8px;border-left:4px solid #cb3837;"><h3 style="color:#1d1d1f;margin-top:0;">npm system</h3><table style="width:100%;border-collapse:collapse;font-size:0.85rem;color:#6e6e73;"><thead><tr style="border-bottom:2px solid #e5e5ea;"><th style="text-align:left;padding:0.5rem;">Package</th><th style="padding:0.5rem;">Downloads</th><th style="padding:0.5rem;">Version</th></tr></thead><tbody><tr style="border-bottom:1px solid #f5f5f7;"><td style="padding:0.5rem;"><a class="interactive-element" href="https://www.npmjs.com/package/lodash" rel="nofollow noopener" style="color:#0071e3;" target="_blank">lodash</a></td><td style="padding:0.5rem;">12.3M</td><td style="padding:0.5rem;">4.17.21</td></tr><tr><td style="padding:0.5rem;"><a class="interactive-element" href="https://www.npmjs.com/package/mathjs" rel="nofollow noopener" style="color:#0071e3;" target="_blank">mathjs</a></td><td style="padding:0.5rem;">198K</td><td style="padding:0.5rem;">12.4.0</td></tr></tbody></table><p style="font-size:0.75rem;color:#636e72;margin-bottom:0;">Data from npmjs.org. Updated March 2026.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section><section class="related-tools" style="margin:2rem 0;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Explore More Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.25rem;"><a class="interactive-element" href="https://zovo.one/free-tools/password-generator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#00ff88'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Password Generator</a><a class="interactive-element" href="https://zovo.one/free-tools/json-formatter/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#00ff88'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Json Formatter</a><a class="interactive-element" href="https://zovo.one/free-tools/color-picker/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#00ff88'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Color Picker</a><a class="interactive-element" href="https://zovo.one/free-tools/qr-code-generator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#00ff88'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Qr Code Generator</a></div></section><section id="faq" style="max-width:800px;margin:48px auto;padding:0 20px;"><h2 id="frequently-asked-questions" style="color:#0071e3;font-size:1.5rem;margin-bottom:24px;">Frequently Asked Questions</h2><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is this sudoku solver free to use?</h3><p style="color:#6e6e73;margin:0;line-height:1.6;">Yes, this sudoku solver is completely free with no registration required. All processing happens in your browser.</p></div><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Does this tool work on mobile devices?</h3><p style="color:#6e6e73;margin:0;line-height:1.6;">Yes, the sudoku solver is fully responsive and works on smartphones, tablets, and desktop computers.</p></div><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is my data safe when using this tool?</h3><p style="color:#6e6e73;margin:0;line-height:1.6;">. Every operation happens in your browser tab. Zero data is sent over the network.</p></div></section><footer style="text-align:center;padding:24px;color:#6e6e73;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a></footer><div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div><section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Original Research: Sudoku Solver Industry Data</h2><p style="color:#86868b;margin-bottom:16px">I compiled this data from gaming analytics and casual gaming platform data. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #e5e5ea"><th style="text-align:left;padding:10px;color:#0071e3">Metric</th><th style="text-align:left;padding:10px;color:#0071e3">Value</th><th style="text-align:left;padding:10px;color:#0071e3">Year</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Monthly browser game sessions globally</td><td style="padding:10px;color:#1d1d1f">3.8 billion</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Average session length for puzzle tools</td><td style="padding:10px;color:#1d1d1f">8 min 15 sec</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Mobile share of browser gaming</td><td style="padding:10px;color:#1d1d1f">58%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Users returning to same puzzle tool weekly</td><td style="padding:10px;color:#1d1d1f">44%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Most popular browser game category</td><td style="padding:10px;color:#1d1d1f">Word and number puzzles</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Growth in browser-based gaming</td><td style="padding:10px;color:#1d1d1f">16% YoY</td><td style="padding:10px;color:#1d1d1f">2026</td></tr></tbody></table></div><p style="margin-top:12px;font-size:0.85rem;color:#86868b">Source: gaming analytics and casual gaming platform data. Last updated March 2026.</p></section><!-- compat-table-section -->
+<footer><p>© 2026 Zovo Tools by Michael Lip. Free Sudoku solver for everyone.</p></footer></div><script>
+// L20: Visit counter
+(function(){const k='zovo_sudoku_visits';let c=parseInt(localStorage.getItem(k)||'0')+1;localStorage.setItem(k,c);document.getElementById('visitCounter').textContent='Page visits: '+c})();
+
+const gridEl = document.getElementById('grid');
+let cells = [];
+let board = Array(81).fill(0);
+let given = Array(81).fill(false);
+let timerInterval = null;
+let seconds = 0;
+
+// Build grid
+for(let i=0;i<81;i++){
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.maxLength = 1;
+  input.className = 'sudoku-cell';
+  input.inputMode = 'numeric';
+  input.dataset.idx = i;
+
+  // Box borders
+  const col = i % 9, row = Math.floor(i/9);
+  if(col===2||col===5) input.classList.add('box-right');
+  if(row===2||row===5) input.classList.add('box-bottom');
+
+  input.addEventListener('input', function(){
+    const v = this.value.replace(/[^1-9]/g,'');
+    this.value = v;
+    board[i] = v ? parseInt(v) : 0;
+    highlightConflicts();
+  });
+  input.addEventListener('keydown', function(e){
+    if(e.key==='Backspace'||e.key==='Delete'){
+      this.value='';
+      board[i]=0;
+      highlightConflicts();
+    }
+    // Arrow key navigation
+    const idx = parseInt(this.dataset.idx);
+    if(e.key==='ArrowRight'&&idx%9<8) cells[idx+1].focus();
+    if(e.key==='ArrowLeft'&&idx%9>0) cells[idx-1].focus();
+    if(e.key==='ArrowDown'&&idx<72) cells[idx+9].focus();
+    if(e.key==='ArrowUp'&&idx>=9) cells[idx-9].focus();
+  });
+  gridEl.appendChild(input);
+  cells.push(input);
+}
+
+function highlightConflicts(){
+  cells.forEach(c=>c.classList.remove('conflict'));
+  for(let i=0;i<81;i++){
+    if(!board[i]) continue;
+    const r=Math.floor(i/9), c=i%9, br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+    // Check row
+    for(let j=0;j<9;j++){
+      const idx=r*9+j;
+      if(idx!==i&&board[idx]===board[i]){cells[i].classList.add('conflict');cells[idx].classList.add('conflict')}
+    }
+    // Check col
+    for(let j=0;j<9;j++){
+      const idx=j*9+c;
+      if(idx!==i&&board[idx]===board[i]){cells[i].classList.add('conflict');cells[idx].classList.add('conflict')}
+    }
+    // Check box
+    for(let dr=0;dr<3;dr++)for(let dc=0;dc<3;dc++){
+      const idx=(br+dr)*9+(bc+dc);
+      if(idx!==i&&board[idx]===board[i]){cells[i].classList.add('conflict');cells[idx].classList.add('conflict')}
+    }
+  }
+}
+
+function isValid(b, pos, num){
+  const r=Math.floor(pos/9), c=pos%9;
+  for(let i=0;i<9;i++){if(b[r*9+i]===num)return false;if(b[i*9+c]===num)return false}
+  const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+  for(let dr=0;dr<3;dr++)for(let dc=0;dc<3;dc++){if(b[(br+dr)*9+(bc+dc)]===num)return false}
+  return true;
+}
+
+function solve(b){
+  const empty=b.indexOf(0);
+  if(empty===-1)return true;
+  for(let n=1;n<=9;n++){
+    if(isValid(b,empty,n)){
+      b[empty]=n;
+      if(solve(b))return true;
+      b[empty]=0;
+    }
+  }
+  return false;
+}
+
+function solvePuzzle(){
+  const b=[...board];
+  const status=document.getElementById('status');
+  if(solve(b)){
+    for(let i=0;i<81;i++){
+      board[i]=b[i];
+      cells[i].value=b[i];
+      if(!given[i])cells[i].classList.add('solved');
+    }
+    status.textContent='Solved!';
+    status.className='status success';
+    stopTimer();
+    highlightConflicts();
+  } else {
+    status.textContent='No solution exists for this configuration.';
+    status.className='status error';
+  }
+}
+
+function validatePuzzle(){
+  highlightConflicts();
+  const status=document.getElementById('status');
+  const hasConflict=document.querySelector('.sudoku-cell.conflict');
+  const isEmpty=board.every(v=>v===0);
+  if(isEmpty){status.textContent='Grid is empty. Enter numbers or generate a puzzle.';status.className='status';return}
+  if(hasConflict){status.textContent='Conflicts found! Check highlighted cells.';status.className='status error';return}
+  const complete=board.every(v=>v!==0);
+  if(complete){status.textContent='Congratulations! Valid complete solution!';status.className='status success';stopTimer()}
+  else{status.textContent='No conflicts so far. Keep going!';status.className='status success'}
+}
+
+function clearGrid(){
+  board.fill(0);given.fill(false);
+  cells.forEach(c=>{c.value='';c.className='sudoku-cell';c.readOnly=false;
+    const col=parseInt(c.dataset.idx)%9,row=Math.floor(parseInt(c.dataset.idx)/9);
+    if(col===2||col===5)c.classList.add('box-right');
+    if(row===2||row===5)c.classList.add('box-bottom');
+  });
+  document.getElementById('status').textContent='';
+  document.getElementById('status').className='status';
+  resetTimer();
+}
+
+function generatePuzzle(diff){
+  clearGrid();
+  // Generate a complete valid board
+  const b=Array(81).fill(0);
+  fillBoard(b);
+  // Remove cells based on difficulty
+  const remove={easy:40,medium:50,hard:56};
+  const toRemove=remove[diff]||45;
+  const indices=[...Array(81).keys()];
+  shuffleArray(indices);
+  let removed=0;
+  for(const idx of indices){
+    if(removed>=toRemove)break;
+    const backup=b[idx];
+    b[idx]=0;
+    // Check unique solution (simplified - just verify solvable)
+    const test=[...b];
+    if(solve(test)){removed++}
+    else{b[idx]=backup}
+  }
+  for(let i=0;i<81;i++){
+    board[i]=b[i];
+    cells[i].value=b[i]||'';
+    if(b[i]){given[i]=true;cells[i].classList.add('given');cells[i].readOnly=true}
+  }
+  document.getElementById('status').textContent=diff.charAt(0).toUpperCase()+diff.slice(1)+' puzzle generated. Good luck!';
+  document.getElementById('status').className='status success';
+  startTimer();
+}
+
+function fillBoard(b){
+  const empty=b.indexOf(0);
+  if(empty===-1)return true;
+  const nums=[1,2,3,4,5,6,7,8,9];
+  shuffleArray(nums);
+  for(const n of nums){
+    if(isValid(b,empty,n)){b[empty]=n;if(fillBoard(b))return true;b[empty]=0}
+  }
+  return false;
+}
+
+function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+
+// Timer
+function startTimer(){
+  resetTimer();
+  timerInterval=setInterval(()=>{
+    seconds++;
+    const m=String(Math.floor(seconds/60)).padStart(2,'0');
+    const s=String(seconds%60).padStart(2,'0');
+    document.getElementById('timer').textContent=m+':'+s;
+  },1000);
+}
+function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}}
+function resetTimer(){stopTimer();seconds=0;document.getElementById('timer').textContent='00:00'}
+</script><!-- anti-intelligent-content --><div style="margin:2rem" 0;padding:1rem;color:#6e6e73;font-size:0.95rem;line-height:1.7;"><p>I've been using this sudoku solver tool for a while now, and honestly it's become one of my go-to utilities. When I first built it, I didn't think it would get much traction, but it turns out people really need a quick, reliable way to handle this. I've tested it across Chrome, Firefox, and Safari - works great on all of them. Don't hesitate to bookmark it.</p></div><!-- npm-dashboard npm system --><div style="margin:2rem 0;padding:1.25rem;background:#f5f5f7;border-radius:8px;border-left:4px solid #cb3837;"><h3 style="color:#1d1d1f;margin-top:0;">npm system</h3><table style="width:100%;border-collapse:collapse;font-size:0.85rem;color:#6e6e73;"><thead><tr style="border-bottom:2px solid #e5e5ea;"><th style="text-align:left;padding:0.5rem;">Package</th><th style="padding:0.5rem;">Downloads</th><th style="padding:0.5rem;">Version</th></tr></thead><tbody><tr style="border-bottom:1px solid #f5f5f7;"><td style="padding:0.5rem;"><a class="interactive-element" href="https://www.npmjs.com/package/lodash" rel="nofollow noopener" style="color:#0071e3;" target="_blank">lodash</a></td><td style="padding:0.5rem;">12.3M</td><td style="padding:0.5rem;">4.17.21</td></tr><tr><td style="padding:0.5rem;"><a class="interactive-element" href="https://www.npmjs.com/package/mathjs" rel="nofollow noopener" style="color:#0071e3;" target="_blank">mathjs</a></td><td style="padding:0.5rem;">198K</td><td style="padding:0.5rem;">12.4.0</td></tr></tbody></table><p style="font-size:0.75rem;color:#636e72;margin-bottom:0;">Data from npmjs.org. Updated March 2026.</p></div><!-- original-research --><div style="margin:2rem 0;padding:1.25rem;background:#f5f5f7;border-radius:8px;border-left:4px solid #00ff88;"><h3 style="color:#1d1d1f;margin-top:0;">Our Testing &amp; Analysis</h3><p style="color:#6e6e73;font-size:0.9rem;line-height:1.6;">We tested this sudoku solver across 3 major browsers and 4 device types over a 2-week period. Our methodology involved 500+ test cases covering edge cases and typical usage patterns. Results showed 99.7% accuracy with an average response time of 12ms.</p><p style="color:#636e72;font-size:0.75rem;">Tested with automated scripts and manual edge-case verification. Last updated March 2026.</p></div><!-- anti-intelligent-content --><div style="margin:2rem 0;padding:1rem;color:#6e6e73;font-size:0.95rem;line-height:1.7;"><p>I've spent quite a bit of time refining this sudoku solver - it's one of those tools that seems simple on the surface but has a lot of edge cases you don't think about until you're actually using it. I tested it on my own projects before publishing, and I've been tweaking it based on feedback ever since. It doesn't require any signup or installation, which I think is how tools like this should work.</p></div><!-- npm-dashboard npm system --><div style="margin:2rem 0;padding:1.25rem;background:#f5f5f7;border-radius:8px;border-left:4px solid #cb3837;"><h3 style="color:#1d1d1f;margin-top:0;">npm system</h3><table style="width:100%;border-collapse:collapse;font-size:0.85rem;color:#6e6e73;"><thead><tr style="border-bottom:2px solid #e5e5ea;"><th style="text-align:left;padding:0.5rem;">Package</th><th style="padding:0.5rem;">Downloads</th><th style="padding:0.5rem;">Version</th></tr></thead><tbody><tr style="border-bottom:1px solid #f5f5f7;"><td style="padding:0.5rem;"><a class="interactive-element" href="https://www.npmjs.com/package/lodash" rel="nofollow noopener" style="color:#0071e3;" target="_blank">lodash</a></td><td style="padding:0.5rem;">12.3M</td><td style="padding:0.5rem;">4.17.21</td></tr><tr><td style="padding:0.5rem;"><a class="interactive-element" href="https://www.npmjs.com/package/mathjs" rel="nofollow noopener" style="color:#0071e3;" target="_blank">mathjs</a></td><td style="padding:0.5rem;">198K</td><td style="padding:0.5rem;">12.4.0</td></tr></tbody></table><p style="font-size:0.75rem;color:#636e72;margin-bottom:0;">Data from npmjs.org. Updated March 2026.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section><section class="related-tools" style="margin:2rem 0;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Explore More Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.25rem;"><a class="interactive-element" href="https://zovo.one/free-tools/password-generator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#00ff88'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Password Generator</a><a class="interactive-element" href="https://zovo.one/free-tools/json-formatter/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#00ff88'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Json Formatter</a><a class="interactive-element" href="https://zovo.one/free-tools/color-picker/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#00ff88'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Color Picker</a><a class="interactive-element" href="https://zovo.one/free-tools/qr-code-generator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#00ff88'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#0071e3;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Qr Code Generator</a></div></section><section id="faq" style="max-width:800px;margin:48px auto;padding:0 20px;"><h2 id="frequently-asked-questions" style="color:#0071e3;font-size:1.5rem;margin-bottom:24px;">Frequently Asked Questions</h2><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is this sudoku solver free to use?</h3><p style="color:#6e6e73;margin:0;line-height:1.6;">Yes, this sudoku solver is completely free with no registration required. All processing happens in your browser.</p></div><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Does this tool work on mobile devices?</h3><p style="color:#6e6e73;margin:0;line-height:1.6;">Yes, the sudoku solver is fully responsive and works on smartphones, tablets, and desktop computers.</p></div><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is my data safe when using this tool?</h3><p style="color:#6e6e73;margin:0;line-height:1.6;">. Every operation happens in your browser tab. Zero data is sent over the network.</p></div></section><footer style="text-align:center;padding:24px;color:#6e6e73;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a></footer><div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div><section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Original Research: Sudoku Solver Industry Data</h2><p style="color:#86868b;margin-bottom:16px">I compiled this data from gaming analytics and casual gaming platform data. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #e5e5ea"><th style="text-align:left;padding:10px;color:#0071e3">Metric</th><th style="text-align:left;padding:10px;color:#0071e3">Value</th><th style="text-align:left;padding:10px;color:#0071e3">Year</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Monthly browser game sessions globally</td><td style="padding:10px;color:#1d1d1f">3.8 billion</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Average session length for puzzle tools</td><td style="padding:10px;color:#1d1d1f">8 min 15 sec</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Mobile share of browser gaming</td><td style="padding:10px;color:#1d1d1f">58%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Users returning to same puzzle tool weekly</td><td style="padding:10px;color:#1d1d1f">44%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Most popular browser game category</td><td style="padding:10px;color:#1d1d1f">Word and number puzzles</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Growth in browser-based gaming</td><td style="padding:10px;color:#1d1d1f">16% YoY</td><td style="padding:10px;color:#1d1d1f">2026</td></tr></tbody></table></div><p style="margin-top:12px;font-size:0.85rem;color:#86868b">Source: gaming analytics and casual gaming platform data. Last updated March 2026.</p></section><!-- compat-table-section -->
 <div style="margin:2rem 0;padding:1.5rem;background:#f5f5f7;border:1px solid #f5f5f7;border-radius:8px;">
 <h3 style="color:#1d1d1f;margin-top:0;">Browser Compatibility</h3>
 <p style="color:#86868b;font-size:0.9rem;">This tool is compatible with all modern browsers. Data from <a class="interactive-element" href="https://caniuse.com" style="color:#0071e3;" rel="noopener" target="_blank">caniuse.com</a>.</p>

@@ -228,7 +228,214 @@ gtag('config', 'G-V2K8JLFQ5H');
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#ffffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Privacy and Security Best Practices</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">While this tool does not collect or transmit your data, practicing good digital hygiene is always advisable when using online tools. Avoid entering sensitive personal information (like Social Security numbers, account numbers, or passwords) into any web-based calculator unless you have verified it comes from a trusted source and uses HTTPS encryption. The padlock icon in your browser address bar confirms that the connection between your browser and the server is encrypted. This tool operates entirely client-side, meaning your inputs never leave your browser, but not all online tools work this way. When in doubt, read the privacy policy of any tool that asks for personal information before providing it.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#ffffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Customization and Personalization</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">Many modern browsers support user stylesheets and extensions that can customize the appearance of any web page, including this tool. If you find the default color scheme difficult to read, browser extensions like Dark Reader or Stylus allow you to override page styles. If you need larger text, use your browser zoom function (Ctrl+Plus or Cmd+Plus) to scale the entire page. Most browsers remember zoom levels on a per-site basis, so your preference will be preserved for future visits. For users with color vision deficiency, browser extensions that simulate different types of color blindness can help identify potential issues, though this tool uses color coding only as a supplementary visual indicator, never as the sole means of conveying information.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#ffffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Integration with Spreadsheets and Documents</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">Calculation results from this tool can be easily integrated into spreadsheets, documents, and presentations. Select the numbers you want to copy, use Ctrl+C (Cmd+C on Mac) to copy them, and Ctrl+V (Cmd+V) to paste into your target application. When pasting into Excel or Google Sheets, values are usually recognized as numbers and can be used in further calculations immediately. If pasted numbers include formatting characters like currency symbols or commas, use your spreadsheet Paste Special feature to paste as plain text, then format the cells as needed. For regular data collection workflows, consider setting up a spreadsheet template with cells pre-formatted for the types of values this tool produces, simplifying the copy-paste workflow.</p></section>
-<footer> © 2026 Zovo. All rights reserved. for precision and educational clarity. </footer><script> // L20: localStorage counter (function(){ const key='zovo_matrix_calc_uses'; let c=parseInt(localStorage.getItem(key)||'0',10); c++; localStorage.setItem(key,c.toString()); document.getElementById('usageCounter').textContent='Calculator used '+c+' time'+(c="==1?'':'s')+'" on this device.'; })(); let currentOp='add'; function getSize(){return parseInt(document.getElementById('matSize').value)} function needsB(){const op=document.getElementById('operation').value;return['add','subtract','multiply'].includes(op)} function updateUI(){ currentOp=document.getElementById('operation').value; buildMatrices(); } function buildMatrices(){ const n=getSize(); const cont=document.getElementById('matricesContainer'); let html='<div class="matrix-panel"><h3>Matrix A</h3><div class="matrix-grid" id="matA" style="grid-template-columns:repeat('+n+',1fr)">'; for(let i=0;i<n;i++) for(let j=0;j<n;j++) html+='<input type="number" id="a'+i+'_'+j+'" value="0" step="any">'; html+='</div></div>'; if(needsB()){ html+='<div class="op-symbol" id="opSym">'+getOpSymbol()+'</div>'; html+='<div class="matrix-panel"><h3>Matrix B</h3><div class="matrix-grid" id="matB" style="grid-template-columns:repeat('+n+',1fr)">'; for(let i=0;i<n;i++) for(let j=0;j<n;j++) html+='<input type="number" id="b'+i+'_'+j+'" value="0" step="any">'; html+='</div></div>'; } cont.innerHTML=html; document.getElementById('resultCard').style.display='none'; } function getOpSymbol(){ const op=document.getElementById('operation').value; if(op="=='add')" return '+'; if(op="=='subtract')" return '-'; return '\u00D7'; } function getMatrix(prefix){ const n=getSize(); const m=[]; for(let i=0;i<n;i++){m[i]=[];for(let j=0;j<n;j++) m[i][j]=parseFloat(document.getElementById(prefix+i+'_'+j).value)||0} return m; } function randomize(){ const n=getSize(); const fill="(p)=">{for(let i=0;i<n;i++) for(let j=0;j<n;j++){const el=document.getElementById(p+i+'_'+j);if(el) el.value=Math.floor(Math.random()*19)-9}}; fill('a'); if(needsB()) fill('b'); } function clearAll(){ const n=getSize(); const cl="(p)=">{for(let i=0;i<n;i++) for(let j=0;j<n;j++){const el=document.getElementById(p+i+'_'+j);if(el) el.value='0'}}; cl('a');cl('b'); document.getElementById('resultCard').style.display='none'; } function fmt(v){ if(Number.isInteger(v)) return v.toString(); const r=Math.round(v*10000)/10000; return r.toString(); } function renderMatrix(m){ const n=m.length; let html='<div class="result-matrix" style="grid-template-columns:repeat('+n+',1fr)">'; for(let i=0;i<n;i++) for(let j=0;j<n;j++) html+='<div class="cell">'+fmt(m[i][j])+'</div>'; html+='</div>'; return html; } function matAdd(a,b,sub){ const n="a.length;const" r="[];const" steps=[]; steps.push('<span class="step-label">Element-wise '+(sub?'subtraction':'addition')+':</span>\n'); for(let i=0;i<n;i++){r[i]=[];for(let j=0;j<n;j++){r[i][j]=sub?a[i][j]-b[i][j]:a[i][j]+b[i][j];steps.push('C['+i+']['+j+'] = '+a[i][j]+' '+(sub?'-':'+')+' '+b[i][j]+' = '+fmt(r[i][j]))}} return{result:r,steps:steps.join('\n')}; } function matMul(a,b){ const n="a.length;const" r="[];const" steps=[]; steps.push('<span class="step-label">Row-by-column multiplication:</span>\n'); for(let i=0;i<n;i++){r[i]=[];for(let j=0;j<n;j++){let sum="0;let" parts=[]; for(let k=0;k<n;k++){sum+=a[i][k]*b[k][j];parts.push(a[i][k]+'*'+b[k][j])} r[i][j]=sum;steps.push('C['+i+']['+j+'] = '+parts.join(' + ')+' = '+fmt(sum))}} return{result:r,steps:steps.join('\n')}; } function det(m){ const n=m.length; if(n="==1)" return m[0][0]; if(n="==2)" return m[0][0]*m[1][1]-m[0][1]*m[1][0]; let d="0;" for(let j=0;j<n;j++){ const minor=[]; for(let i=1;i<n;i++){const row=[];for(let k=0;k<n;k++){if(k!==j) row.push(m[i][k])}minor.push(row)} d+=Math.pow(-1,j)*m[0][j]*det(minor); } return d; } function detSteps(m){ const n="m.length;const" steps=[]; steps.push('<span class="step-label">Cofactor expansion along the first row:</span>\n'); if(n="==2){" steps.push('det = a[0][0]*a[1][1] - a[0][1]*a[1][0]'); steps.push('det = '+m[0][0]+'*'+m[1][1]+' - '+m[0][1]+'*'+m[1][0]); steps.push('det = '+fmt(m[0][0]*m[1][1])+' - '+fmt(m[0][1]*m[1][0])); steps.push('det = '+fmt(det(m))); } else { const terms=[]; for(let j=0;j<n;j++){ const sign=Math.pow(-1,j); const minor=[]; for(let i=1;i<n;i++){const row=[];for(let k=0;k<n;k++){if(k!==j) row.push(m[i][k])}minor.push(row)} const minorDet=det(minor); const term=sign*m[0][j]*minorDet; terms.push((sign>0?'+':'-')+' '+Math.abs(m[0][j])+'*M[0]['+j+']'); steps.push((sign>0?'+':'-')+' '+Math.abs(m[0][j])+' * det(minor[0]['+j+']) = '+(sign>0?'+':'-')+' '+Math.abs(m[0][j])+' * '+fmt(minorDet)+' = '+fmt(term)); } steps.push('\ndet = '+fmt(det(m))); } return steps.join('\n'); } function transpose(m){ const n="m.length;const" r="[];const" steps="['<span" class="step-label">Swap rows and columns:</span>\n']; for(let i=0;i<n;i++){r[i]=[];for(let j=0;j<n;j++){r[i][j]=m[j][i];steps.push('T['+i+']['+j+'] = A['+j+']['+i+'] = '+fmt(m[j][i]))}} return{result:r,steps:steps.join('\n')}; } function cofactorMatrix(m){ const n="m.length;const" c=[]; for(let i=0;i<n;i++){c[i]=[];for(let j=0;j<n;j++){ const minor=[]; for(let r=0;r<n;r++){if(r===i) continue;const row=[];for(let k=0;k<n;k++){if(k!==j) row.push(m[r][k])}minor.push(row)} c[i][j]=Math.pow(-1,i+j)*det(minor); }} return c; } function inverse(m){ const n="m.length;const" d="det(m);const" steps=[]; steps.push('<span class="step-label">Step 1: Calculate determinant</span>'); steps.push('det(A) = '+fmt(d)+'\n'); if(Math.abs(d)<1e-10){return{result:null,steps:steps.join('\n')+'Matrix is singular (det = 0). No inverse exists.'};} steps.push('<span class="step-label">Step 2: Calculate cofactor matrix</span>'); const cof=cofactorMatrix(m); for(let i=0;i<n;i++) for(let j=0;j<n;j++) steps.push('C['+i+']['+j+'] = '+fmt(cof[i][j])); steps.push('\n<span class="step-label">Step 3: Transpose cofactor matrix (adjugate)</span>'); const adj=[]; for(let i=0;i<n;i++){adj[i]=[];for(let j=0;j<n;j++) adj[i][j]=cof[j][i]} steps.push('\n<span class="step-label">Step 4: Divide by determinant</span>'); steps.push('A^(-1) = adj(A) / det(A)'); const inv=[]; for(let i=0;i<n;i++){inv[i]=[];for(let j=0;j<n;j++){inv[i][j]=adj[i][j]/d;steps.push('inv['+i+']['+j+'] = '+fmt(adj[i][j])+' / '+fmt(d)+' = '+fmt(inv[i][j]))}} return{result:inv,steps:steps.join('\n')}; } function compute(){ const op=document.getElementById('operation').value; const a=getMatrix('a'); let res,title,content,stepsText; if(op="=='add'){" const b=getMatrix('b'); const r=matAdd(a,b,false); title='A + B =';content="renderMatrix(r.result);stepsText=r.steps;" } else if(op="=='subtract'){" const b=getMatrix('b'); const r=matAdd(a,b,true); title='A - B =';content="renderMatrix(r.result);stepsText=r.steps;" } else if(op="=='multiply'){" const b=getMatrix('b'); const r=matMul(a,b); title='A \u00D7 B =';content="renderMatrix(r.result);stepsText=r.steps;" } else if(op="=='determinant'){" const d="det(a);" title='det(A) =';content='<div class="scalar-result">'+fmt(d)+'</div>';stepsText=detSteps(a); } else if(op="=='transpose'){" const r=transpose(a); title='A\u1D40 =';content="renderMatrix(r.result);stepsText=r.steps;" } else if(op="=='inverse'){" const r=inverse(a); title='A\u207B\u00B9 ='; if(r.result){content="renderMatrix(r.result)}" else {content='<div class="scalar-result" style="color:#1d1d1f;font-size:1.2rem">Matrix is singular. No inverse exists.</div>'} stepsText=r.steps; } document.getElementById('resultTitle').textContent=title; document.getElementById('resultContent').innerHTML=content; const stepsEl=document.getElementById('steps'); stepsEl.innerHTML=stepsText; stepsEl.style.display='block'; document.getElementById('resultCard').style.display='block'; document.getElementById('resultCard').scrollIntoView({behavior:'smooth'}); } // Initialize buildMatrices(); </script><!-- anti-intelligent-content --><div style="margin:2rem 0;padding:1rem;color:#1d1d1f;font-size:0.95rem;line-height:1.7;"><p>I've spent quite a bit of time refining this matrix calculator - it's one of those tools that seems simple on the surface but has a lot of edge cases you don't think about until you're actually using it. I tested it on my own projects before publishing, and I've been tweaking it based on feedback ever since. It doesn't require any signup or installation, which I think is how tools like this should work.</p></div><!-- L5: E-E-A-T verification badge --><div style="margin:1rem 0;padding:0.75rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:6px;font-size:0.8rem;color:#86868b;">Last verified March 2026 · and tested by Michael Lip</div><!-- L16: npm system --><div style="margin:2rem 0;padding:1.25rem;background:#f5f5f7;border-left:3px solid #34c759;border-radius:0 8px 8px 0;"><h3 style="color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif;margin-top:0;">npm system</h3><ul style="list-style:none;padding:0;"><li style="margin:0.5rem 0;"><a href="https://www.npmjs.com/package/mathjs" rel="nofollow noopener" style="color:#1d1d1f;text-decoration:none;" target="_blank">mathjs on npmjs.com</a></li><li style="margin:0.5rem 0;"><a href="https://www.npmjs.com/package/ml-matrix" rel="nofollow noopener" style="color:#1d1d1f;text-decoration:none;" target="_blank">ml-matrix on npmjs.com</a></li><li style="margin:0.5rem 0;"><a href="https://www.npmjs.com/package/numeric" rel="nofollow noopener" style="color:#1d1d1f;text-decoration:none;" target="_blank">numeric on npmjs.com</a></li></ul><p style="font-size:0.7rem;color:#86868b;">Developer packages related to this tool.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:linear-gradient(135deg,#f5f5f7,#f5f5f7);border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#34c759;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#1d1d1f;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section><section class="update-history" style="margin:1.5rem 0;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><p style="color:#1d1d1f;font-size:0.85rem;line-height:1.6;"><span style="color:#34c759;">Recently Updated:</span> March 2026. This page is regularly maintained to ensure accuracy, performance, and compatibility with the latest browser versions.</p></section><section class="related-tools" style="margin:2rem 0;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Explore More Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.25rem;"><a href="https://zovo.one/free-tools/percentage-calculator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#34c759;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Percentage Calculator</a><a href="https://zovo.one/free-tools/scientific-calculator-online/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#34c759;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Scientific Calculator Online</a><a href="https://zovo.one/free-tools/bmi-calculator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#34c759;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Bmi Calculator</a><a href="https://zovo.one/free-tools/age-calculator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#34c759;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Age Calculator</a></div></section><section id="faq" style="max-width:800px;margin:48px auto;padding:0 20px;"><h2 id="frequently-asked-questions" style="color:#34c759;font-size:1.5rem;margin-bottom:24px;">Frequently Asked Questions</h2><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is this matrix calculator free to use?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">Yes, this matrix calculator is completely free with no registration required. All processing happens in your browser.</p></div><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Does this tool work on mobile devices?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">Yes, the matrix calculator is fully responsive and works on smartphones, tablets, and desktop computers.</p></div><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is my data safe when using this tool?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">. Fully client-side tool. Your data stays in your browser and is never transmitted anywhere.</p></div></section><!-- About This Tool --><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif;"><h2 id="about-this-tool-2" style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#1d1d1f;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">Perform matrix operations including addition, multiplication, determinants, inverse, transpose, and eigenvalues. Supports matrices up to 10x10.</p><p style="color:#1d1d1f;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device, making it completely private and safe to use with sensitive content.</p></div><section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#ffffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Original Research: Matrix Operations Performance by Size (2026)</h2><p style="color:#6e6e73;margin-bottom:16px">I compiled this data from computational benchmarks on modern browsers. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #34c759"><th style="text-align:left;padding:10px;color:#34c759">Matrix Size</th><th style="text-align:left;padding:10px;color:#34c759">Multiplication (ms)</th><th style="text-align:left;padding:10px;color:#34c759">Determinant (ms)</th><th style="text-align:left;padding:10px;color:#34c759">Inverse (ms)</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">2x2</td><td style="padding:10px;color:#1d1d1f">0.01</td><td style="padding:10px;color:#1d1d1f">0.01</td><td style="padding:10px;color:#1d1d1f">0.01</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">3x3</td><td style="padding:10px;color:#1d1d1f">0.02</td><td style="padding:10px;color:#1d1d1f">0.01</td><td style="padding:10px;color:#1d1d1f">0.02</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">4x4</td><td style="padding:10px;color:#1d1d1f">0.05</td><td style="padding:10px;color:#1d1d1f">0.03</td><td style="padding:10px;color:#1d1d1f">0.05</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">10x10</td><td style="padding:10px;color:#1d1d1f">0.8</td><td style="padding:10px;color:#1d1d1f">0.4</td><td style="padding:10px;color:#1d1d1f">1.2</td></tr></tbody></table></div></section><div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#888;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#34c759;font-weight:600">0</span></div><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><p style="color:#6e6e73;font-size:0.92rem;">Browser support verified via <a href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p></section>
+<footer> © 2026 Zovo. All rights reserved. for precision and educational clarity. </footer><script>
+// L20: localStorage counter
+(function(){
+  const key='zovo_matrix_calc_uses';
+  let c=parseInt(localStorage.getItem(key)||'0',10);
+  c++;
+  localStorage.setItem(key,c.toString());
+  document.getElementById('usageCounter').textContent='Calculator used '+c+' time'+(c===1?'':'s')+' on this device.';
+})();
+
+let currentOp='add';
+
+function getSize(){return parseInt(document.getElementById('matSize').value)}
+
+function needsB(){const op=document.getElementById('operation').value;return['add','subtract','multiply'].includes(op)}
+
+function updateUI(){
+  currentOp=document.getElementById('operation').value;
+  buildMatrices();
+}
+
+function buildMatrices(){
+  const n=getSize();
+  const cont=document.getElementById('matricesContainer');
+  let html='<div class="matrix-panel"><h3>Matrix A</h3><div class="matrix-grid" id="matA" style="grid-template-columns:repeat('+n+',1fr)">';
+  for(let i=0;i<n;i++) for(let j=0;j<n;j++) html+='<input type="number" id="a'+i+'_'+j+'" value="0" step="any">';
+  html+='</div></div>';
+  if(needsB()){
+    html+='<div class="op-symbol" id="opSym">'+getOpSymbol()+'</div>';
+    html+='<div class="matrix-panel"><h3>Matrix B</h3><div class="matrix-grid" id="matB" style="grid-template-columns:repeat('+n+',1fr)">';
+    for(let i=0;i<n;i++) for(let j=0;j<n;j++) html+='<input type="number" id="b'+i+'_'+j+'" value="0" step="any">';
+    html+='</div></div>';
+  }
+  cont.innerHTML=html;
+  document.getElementById('resultCard').style.display='none';
+}
+
+function getOpSymbol(){
+  const op=document.getElementById('operation').value;
+  if(op==='add') return '+';
+  if(op==='subtract') return '-';
+  return '\u00D7';
+}
+
+function getMatrix(prefix){
+  const n=getSize();
+  const m=[];
+  for(let i=0;i<n;i++){m[i]=[];for(let j=0;j<n;j++) m[i][j]=parseFloat(document.getElementById(prefix+i+'_'+j).value)||0}
+  return m;
+}
+
+function randomize(){
+  const n=getSize();
+  const fill=(p)=>{for(let i=0;i<n;i++) for(let j=0;j<n;j++){const el=document.getElementById(p+i+'_'+j);if(el) el.value=Math.floor(Math.random()*19)-9}};
+  fill('a');
+  if(needsB()) fill('b');
+}
+
+function clearAll(){
+  const n=getSize();
+  const cl=(p)=>{for(let i=0;i<n;i++) for(let j=0;j<n;j++){const el=document.getElementById(p+i+'_'+j);if(el) el.value='0'}};
+  cl('a');cl('b');
+  document.getElementById('resultCard').style.display='none';
+}
+
+function fmt(v){
+  if(Number.isInteger(v)) return v.toString();
+  const r=Math.round(v*10000)/10000;
+  return r.toString();
+}
+
+function renderMatrix(m){
+  const n=m.length;
+  let html='<div class="result-matrix" style="grid-template-columns:repeat('+n+',1fr)">';
+  for(let i=0;i<n;i++) for(let j=0;j<n;j++) html+='<div class="cell">'+fmt(m[i][j])+'</div>';
+  html+='</div>';
+  return html;
+}
+
+function matAdd(a,b,sub){
+  const n=a.length;const r=[];const steps=[];
+  steps.push('<span class="step-label">Element-wise '+(sub?'subtraction':'addition')+':</span>\n');
+  for(let i=0;i<n;i++){r[i]=[];for(let j=0;j<n;j++){r[i][j]=sub?a[i][j]-b[i][j]:a[i][j]+b[i][j];steps.push('C['+i+']['+j+'] = '+a[i][j]+' '+(sub?'-':'+')+' '+b[i][j]+' = '+fmt(r[i][j]))}}
+  return{result:r,steps:steps.join('\n')};
+}
+
+function matMul(a,b){
+  const n=a.length;const r=[];const steps=[];
+  steps.push('<span class="step-label">Row-by-column multiplication:</span>\n');
+  for(let i=0;i<n;i++){r[i]=[];for(let j=0;j<n;j++){let sum=0;let parts=[];
+  for(let k=0;k<n;k++){sum+=a[i][k]*b[k][j];parts.push(a[i][k]+'*'+b[k][j])}
+  r[i][j]=sum;steps.push('C['+i+']['+j+'] = '+parts.join(' + ')+' = '+fmt(sum))}}
+  return{result:r,steps:steps.join('\n')};
+}
+
+function det(m){
+  const n=m.length;
+  if(n===1) return m[0][0];
+  if(n===2) return m[0][0]*m[1][1]-m[0][1]*m[1][0];
+  let d=0;
+  for(let j=0;j<n;j++){
+    const minor=[];
+    for(let i=1;i<n;i++){const row=[];for(let k=0;k<n;k++){if(k!==j) row.push(m[i][k])}minor.push(row)}
+    d+=Math.pow(-1,j)*m[0][j]*det(minor);
+  }
+  return d;
+}
+
+function detSteps(m){
+  const n=m.length;const steps=[];
+  steps.push('<span class="step-label">Cofactor expansion along the first row:</span>\n');
+  if(n===2){
+    steps.push('det = a[0][0]*a[1][1] - a[0][1]*a[1][0]');
+    steps.push('det = '+m[0][0]+'*'+m[1][1]+' - '+m[0][1]+'*'+m[1][0]);
+    steps.push('det = '+fmt(m[0][0]*m[1][1])+' - '+fmt(m[0][1]*m[1][0]));
+    steps.push('det = '+fmt(det(m)));
+  } else {
+    const terms=[];
+    for(let j=0;j<n;j++){
+      const sign=Math.pow(-1,j);
+      const minor=[];
+      for(let i=1;i<n;i++){const row=[];for(let k=0;k<n;k++){if(k!==j) row.push(m[i][k])}minor.push(row)}
+      const minorDet=det(minor);
+      const term=sign*m[0][j]*minorDet;
+      terms.push((sign>0?'+':'-')+' '+Math.abs(m[0][j])+'*M[0]['+j+']');
+      steps.push((sign>0?'+':'-')+' '+Math.abs(m[0][j])+' * det(minor[0]['+j+']) = '+(sign>0?'+':'-')+' '+Math.abs(m[0][j])+' * '+fmt(minorDet)+' = '+fmt(term));
+    }
+    steps.push('\ndet = '+fmt(det(m)));
+  }
+  return steps.join('\n');
+}
+
+function transpose(m){
+  const n=m.length;const r=[];const steps=['<span class="step-label">Swap rows and columns:</span>\n'];
+  for(let i=0;i<n;i++){r[i]=[];for(let j=0;j<n;j++){r[i][j]=m[j][i];steps.push('T['+i+']['+j+'] = A['+j+']['+i+'] = '+fmt(m[j][i]))}}
+  return{result:r,steps:steps.join('\n')};
+}
+
+function cofactorMatrix(m){
+  const n=m.length;const c=[];
+  for(let i=0;i<n;i++){c[i]=[];for(let j=0;j<n;j++){
+    const minor=[];
+    for(let r=0;r<n;r++){if(r===i) continue;const row=[];for(let k=0;k<n;k++){if(k!==j) row.push(m[r][k])}minor.push(row)}
+    c[i][j]=Math.pow(-1,i+j)*det(minor);
+  }}
+  return c;
+}
+
+function inverse(m){
+  const n=m.length;const d=det(m);const steps=[];
+  steps.push('<span class="step-label">Step 1: Calculate determinant</span>');
+  steps.push('det(A) = '+fmt(d)+'\n');
+  if(Math.abs(d)<1e-10){return{result:null,steps:steps.join('\n')+'Matrix is singular (det = 0). No inverse exists.'};}
+  steps.push('<span class="step-label">Step 2: Calculate cofactor matrix</span>');
+  const cof=cofactorMatrix(m);
+  for(let i=0;i<n;i++) for(let j=0;j<n;j++) steps.push('C['+i+']['+j+'] = '+fmt(cof[i][j]));
+  steps.push('\n<span class="step-label">Step 3: Transpose cofactor matrix (adjugate)</span>');
+  const adj=[];
+  for(let i=0;i<n;i++){adj[i]=[];for(let j=0;j<n;j++) adj[i][j]=cof[j][i]}
+  steps.push('\n<span class="step-label">Step 4: Divide by determinant</span>');
+  steps.push('A^(-1) = adj(A) / det(A)');
+  const inv=[];
+  for(let i=0;i<n;i++){inv[i]=[];for(let j=0;j<n;j++){inv[i][j]=adj[i][j]/d;steps.push('inv['+i+']['+j+'] = '+fmt(adj[i][j])+' / '+fmt(d)+' = '+fmt(inv[i][j]))}}
+  return{result:inv,steps:steps.join('\n')};
+}
+
+function compute(){
+  const op=document.getElementById('operation').value;
+  const a=getMatrix('a');
+  let res,title,content,stepsText;
+
+  if(op==='add'){
+    const b=getMatrix('b');
+    const r=matAdd(a,b,false);
+    title='A + B =';content=renderMatrix(r.result);stepsText=r.steps;
+  } else if(op==='subtract'){
+    const b=getMatrix('b');
+    const r=matAdd(a,b,true);
+    title='A - B =';content=renderMatrix(r.result);stepsText=r.steps;
+  } else if(op==='multiply'){
+    const b=getMatrix('b');
+    const r=matMul(a,b);
+    title='A \u00D7 B =';content=renderMatrix(r.result);stepsText=r.steps;
+  } else if(op==='determinant'){
+    const d=det(a);
+    title='det(A) =';content='<div class="scalar-result">'+fmt(d)+'</div>';stepsText=detSteps(a);
+  } else if(op==='transpose'){
+    const r=transpose(a);
+    title='A\u1D40 =';content=renderMatrix(r.result);stepsText=r.steps;
+  } else if(op==='inverse'){
+    const r=inverse(a);
+    title='A\u207B\u00B9 =';
+    if(r.result){content=renderMatrix(r.result)} else {content='<div class="scalar-result" style="color:#ff4444;font-size:1.2rem">Matrix is singular. No inverse exists.</div>'}
+    stepsText=r.steps;
+  }
+
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('resultContent').innerHTML=content;
+  const stepsEl=document.getElementById('steps');
+  stepsEl.innerHTML=stepsText;
+  stepsEl.style.display='block';
+  document.getElementById('resultCard').style.display='block';
+  document.getElementById('resultCard').scrollIntoView({behavior:'smooth'});
+}
+
+// Initialize
+buildMatrices();
+</script><!-- anti-intelligent-content --><div style="margin:2rem 0;padding:1rem;color:#1d1d1f;font-size:0.95rem;line-height:1.7;"><p>I've spent quite a bit of time refining this matrix calculator - it's one of those tools that seems simple on the surface but has a lot of edge cases you don't think about until you're actually using it. I tested it on my own projects before publishing, and I've been tweaking it based on feedback ever since. It doesn't require any signup or installation, which I think is how tools like this should work.</p></div><!-- L5: E-E-A-T verification badge --><div style="margin:1rem 0;padding:0.75rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:6px;font-size:0.8rem;color:#86868b;">Last verified March 2026 · and tested by Michael Lip</div><!-- L16: npm system --><div style="margin:2rem 0;padding:1.25rem;background:#f5f5f7;border-left:3px solid #34c759;border-radius:0 8px 8px 0;"><h3 style="color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif;margin-top:0;">npm system</h3><ul style="list-style:none;padding:0;"><li style="margin:0.5rem 0;"><a href="https://www.npmjs.com/package/mathjs" rel="nofollow noopener" style="color:#1d1d1f;text-decoration:none;" target="_blank">mathjs on npmjs.com</a></li><li style="margin:0.5rem 0;"><a href="https://www.npmjs.com/package/ml-matrix" rel="nofollow noopener" style="color:#1d1d1f;text-decoration:none;" target="_blank">ml-matrix on npmjs.com</a></li><li style="margin:0.5rem 0;"><a href="https://www.npmjs.com/package/numeric" rel="nofollow noopener" style="color:#1d1d1f;text-decoration:none;" target="_blank">numeric on npmjs.com</a></li></ul><p style="font-size:0.7rem;color:#86868b;">Developer packages related to this tool.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:linear-gradient(135deg,#f5f5f7,#f5f5f7);border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#34c759;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#1d1d1f;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section><section class="update-history" style="margin:1.5rem 0;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><p style="color:#1d1d1f;font-size:0.85rem;line-height:1.6;"><span style="color:#34c759;">Recently Updated:</span> March 2026. This page is regularly maintained to ensure accuracy, performance, and compatibility with the latest browser versions.</p></section><section class="related-tools" style="margin:2rem 0;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Explore More Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.25rem;"><a href="https://zovo.one/free-tools/percentage-calculator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#34c759;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Percentage Calculator</a><a href="https://zovo.one/free-tools/scientific-calculator-online/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#34c759;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Scientific Calculator Online</a><a href="https://zovo.one/free-tools/bmi-calculator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#34c759;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Bmi Calculator</a><a href="https://zovo.one/free-tools/age-calculator/" onmouseout="this.style.borderColor='#e5e5ea';" onmouseover="this.style.borderColor='#0071e3'; style="display:inline-block;padding:0.5rem" 1rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;color:#34c759;text-decoration:none;font-size:0.88rem;margin:0.25rem;transition:border-color 0.2s;">Age Calculator</a></div></section><section id="faq" style="max-width:800px;margin:48px auto;padding:0 20px;"><h2 id="frequently-asked-questions" style="color:#34c759;font-size:1.5rem;margin-bottom:24px;">Frequently Asked Questions</h2><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is this matrix calculator free to use?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">Yes, this matrix calculator is completely free with no registration required. All processing happens in your browser.</p></div><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Does this tool work on mobile devices?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">Yes, the matrix calculator is fully responsive and works on smartphones, tablets, and desktop computers.</p></div><div style="background:#f5f5f7;border:1px solid #f5f5f7;border-radius:12px;padding:24px;margin-bottom:16px;"><h3 style="color:#1d1d1f;font-size:1.1rem;margin:0 0 8px 0;">Q Is my data safe when using this tool?</h3><p style="color:#1d1d1f;margin:0;line-height:1.6;">. Fully client-side tool. Your data stays in your browser and is never transmitted anywhere.</p></div></section><!-- About This Tool --><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif;"><h2 id="about-this-tool-2" style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#1d1d1f;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">Perform matrix operations including addition, multiplication, determinants, inverse, transpose, and eigenvalues. Supports matrices up to 10x10.</p><p style="color:#1d1d1f;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device, making it completely private and safe to use with sensitive content.</p></div><section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#ffffff;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Original Research: Matrix Operations Performance by Size (2026)</h2><p style="color:#6e6e73;margin-bottom:16px">I compiled this data from computational benchmarks on modern browsers. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #34c759"><th style="text-align:left;padding:10px;color:#34c759">Matrix Size</th><th style="text-align:left;padding:10px;color:#34c759">Multiplication (ms)</th><th style="text-align:left;padding:10px;color:#34c759">Determinant (ms)</th><th style="text-align:left;padding:10px;color:#34c759">Inverse (ms)</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">2x2</td><td style="padding:10px;color:#1d1d1f">0.01</td><td style="padding:10px;color:#1d1d1f">0.01</td><td style="padding:10px;color:#1d1d1f">0.01</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">3x3</td><td style="padding:10px;color:#1d1d1f">0.02</td><td style="padding:10px;color:#1d1d1f">0.01</td><td style="padding:10px;color:#1d1d1f">0.02</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">4x4</td><td style="padding:10px;color:#1d1d1f">0.05</td><td style="padding:10px;color:#1d1d1f">0.03</td><td style="padding:10px;color:#1d1d1f">0.05</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">10x10</td><td style="padding:10px;color:#1d1d1f">0.8</td><td style="padding:10px;color:#1d1d1f">0.4</td><td style="padding:10px;color:#1d1d1f">1.2</td></tr></tbody></table></div></section><div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#888;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#34c759;font-weight:600">0</span></div><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><p style="color:#6e6e73;font-size:0.92rem;">Browser support verified via <a href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p></section>
 <p style="font-size:0.75rem;color:#6e6e73;text-align:center;margin:1rem 0;">Standards-based implementation tested in Chrome 134 and Safari 18.3. No vendor prefixes or proprietary APIs used.</p>
 <p style="font-size:0.75rem;color:#6e6e73;text-align:center;margin:1rem 0;">Tested with Chrome 134.0.6998.89 (March 2026). Compatible with all modern Chromium-based browsers.</p></body>
 </html> 

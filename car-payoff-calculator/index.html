@@ -653,7 +653,264 @@ gtag('config', 'G-V2K8JLFQ5H');
 <a class="interactive-element" href="#browser-compatibility" style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">Browser Compatibility</a>
 <a class="interactive-element" href="#research" style="color:#1d1d1f;text-decoration:none;font-size:0.9rem;padding:2px 0">Original Research: Car Payoff Calculator Industry Data</a>
 </div></nav><p>Car Payoff Calculator - by theluckystrike. Free to use, no signup required.</p><p style="margin-top:8px;font-size:.8rem">This tool is for informational purposes only and does not constitute financial advice. Consult with a financial professional before making decisions about your auto loan. Calculations last verified March 2026.</p>
-<section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/boat-loan-calculator/">Boat Loan Calculator</a><a class="interactive-element" href="/free-tools/fha-loan-calculator/">FHA Loan Calculator</a><a class="interactive-element" href="/free-tools/interest-only-loan-calculator/">Interest Only Loan Calculator</a></div></section></div><script> // localStorage visit counter (function(){ const key = 'car_payoff_visits'; let visits = parseInt(localStorage.getItem(key) || '0', 10); visits++; localStorage.setItem(key, visits.toString()); const el = document.getElementById('visitCounter'); if(el){ const suffix = visits === 1? 'st' : visits === 2? 'nd' : visits === 3? 'rd' : 'th'; el.textContent = 'Your ' + visits + suffix + ' visit to this calculator'; } })(); function formatCurrency(n){ return '$' + Math.round(n).toLocaleString('en-US'); } function formatCurrencyExact(n){ return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); } // Calculate loan payoff schedule function amortize(balance, annualRate, monthlyPayment, extraMonthly){ const schedule = []; let remaining = balance; const monthlyRate = annualRate / 100 / 12; let month = 0; let totalInterest = 0; while(remaining > 0.01 && month < 600){ month++; const interestCharge = remaining * monthlyRate; const totalPayment = Math.min(monthlyPayment + extraMonthly, remaining + interestCharge); const principalPaid = totalPayment - interestCharge; remaining = Math.max(0, remaining - principalPaid); totalInterest += interestCharge; schedule.push({ month, payment: totalPayment, principal: principalPaid, interest: interestCharge, balance: remaining, totalInterest }); } return schedule; } function biweeklyAmortize(balance, annualRate, monthlyPayment){ const biweeklyPayment = monthlyPayment / 2; const biweeklyRate = annualRate / 100 / 26; let remaining = balance; let period = 0; let totalInterest = 0; while(remaining > 0.01 && period < 1560){ period++; const interestCharge = remaining * biweeklyRate; const totalPay = Math.min(biweeklyPayment, remaining + interestCharge); const principalPaid = totalPay - interestCharge; remaining = Math.max(0, remaining - principalPaid); totalInterest += interestCharge; } const months = Math.ceil(period / 2.1667); return { periods: period, months, totalInterest, totalbalance + totalInterest }; } let standardSchedule = []; let extraSchedule = []; function calculate(){ const balance = parseFloat(document.getElementById('loanBalance').value) || 0; const rate = parseFloat(document.getElementById('interestRate').value) || 0; const payment = parseFloat(document.getElementById('monthlyPayment').value) || 0; const extra = parseFloat(document.getElementById('extraPayment').value) || 0; if(balance <= 0 || payment <= 0) return; // Minimum payment check const minInterest = balance * (rate / 100 / 12); if(payment <= minInterest){ alert('Monthly payment must exceed monthly interest charge of ' + formatCurrencyExact(minInterest) + ' to pay off the loan.'); return; } standardSchedule = amortize(balance, rate, payment, 0); extraSchedule = amortize(balance, rate, payment, extra); const stdLast = standardSchedule[standardSchedule.length - 1]; const extLast = extraSchedule[extraSchedule.length - 1]; const monthsSaved = standardSchedule.length - extraSchedule.length; const interestSaved = stdLast.totalInterest - extLast.totalInterest; // Biweekly const biweekly = biweeklyAmortize(balance, rate, payment); const biweeklyMonthsSaved = standardSchedule.length - biweekly.months; const biweeklyInterestSaved = stdLast.totalInterest - biweekly.totalInterest; // Payoff dates const now = new Date(); const stdPayoff = new Date(now); stdPayoff.setMonth(stdPayoff.getMonth() + standardSchedule.length); const extPayoff = new Date(now); extPayoff.setMonth(extPayoff.getMonth() + extraSchedule.length); const dateOpts = { year: 'numeric', month: 'short' }; // Results grid const grid = document.getElementById('resultsGrid'); grid.innerHTML = ` <div class="result-card"><div class="label">Original Payoff Date</div><div class="value info">${stdPayoff.toLocaleDateString('en-US', dateOpts)}</div></div><div class="result-card"><div class="label">New Payoff Date</div><div class="value">${extPayoff.toLocaleDateString('en-US', dateOpts)}</div></div><div class="result-card"><div class="label">Months Saved</div><div class="value">${monthsSaved}</div></div><div class="result-card"><div class="label">Interest Saved</div><div class="value">${formatCurrency(interestSaved)}</div></div><div class="result-card"><div class="label">Total Interest (Standard)</div><div class="value danger">${formatCurrency(stdLast.totalInterest)}</div></div><div class="result-card"><div class="label">Total Interest (With Extra)</div><div class="value">${formatCurrency(extLast.totalInterest)}</div></div><div class="result-card"><div class="label">Total Cost (Standard)</div><div class="value danger">${formatCurrency(balance + stdLast.totalInterest)}</div></div><div class="result-card"><div class="label">Total Cost (With Extra)</div><div class="value">${formatCurrency(balance + extLast.totalInterest)}</div></div> `; // Scenario comparison table const scenarios = [ { label: 'Current Payment', extra: 0 }, { label: '+$50/mo', extra: 50 }, { label: '+$100/mo', extra: 100 }, { label: '+$200/mo', extra: 200 } ]; let scenarioHTML = '<thead><tr><th>Scenario</th><th>Monthly Payment</th><th>Months</th><th>Total Interest</th><th>Interest Saved</th><th>Months Saved</th></tr></thead><tbody>'; scenarios.forEach(s => { const sch = amortize(balance, rate, payment, s.extra); const last = sch[sch.length - 1]; const saved = stdLast.totalInterest - last.totalInterest; const mSaved = standardSchedule.length - sch.length; const isHighlight = s.extra === extra; scenarioHTML += `<tr${isHighlight? ' class="highlight-row"'" : ''}><td>${s.label}</td><td>${formatCurrency(payment + s.extra)}</td><td>${sch.length}</td><td>${formatCurrency(last.totalInterest)}</td><td>${formatCurrency(saved)}</td><td>${mSaved}</td></tr>`; }); // Biweekly row scenarioHTML += `<tr><td>Biweekly Payments</td><td>${formatCurrency(payment / 2)} x2/mo</td><td>~${biweekly.months}</td><td>${formatCurrency(biweekly.totalInterest)}</td><td>${formatCurrency(biweeklyInterestSaved)}</td><td>~${biweeklyMonthsSaved}</td></tr>`; scenarioHTML += '</tbody>'; document.getElementById('scenarioTable').innerHTML = scenarioHTML; // Round-up table const roundTo50 = Math.ceil(payment / 50) * 50; const roundTo100 = Math.ceil(payment / 100) * 100; const roundups = [ { label: 'Current Payment', amount: payment }, { label: 'Round to nearest $50', amount: roundTo50 }, { label: 'Round to nearest $100', amount: roundTo100 }, { label: 'Round up + $50', amount: roundTo100 + 50 }, { label: 'Round up + $100', amount: roundTo100 + 100 } ]; let roundupHTML = '<thead><tr><th>Strategy</th><th>Payment</th><th>Extra/mo</th><th>Months</th><th>Interest Saved</th><th>Months Saved</th></tr></thead><tbody>'; roundups.forEach(r => { const extraAmt = r.amount - payment; const sch = amortize(balance, rate, payment, extraAmt); const last = sch[sch.length - 1]; const saved = stdLast.totalInterest - last.totalInterest; const mSaved = standardSchedule.length - sch.length; roundupHTML += `<tr><td>${r.label}</td><td>${formatCurrency(r.amount)}</td><td>${formatCurrency(extraAmt)}</td><td>${sch.length}</td><td>${formatCurrency(saved)}</td><td>${mSaved}</td></tr>`; }); roundupHTML += '</tbody>'; document.getElementById('roundupTable').innerHTML = roundupHTML; // QuickChart balance comparison const chartLabels = []; const stdBalances = []; const extBalances = []; const maxMonths = standardSchedule.length; const step = Math.max(1, Math.floor(maxMonths / 12)); for(let i = 0; i < maxMonths; i += step){ chartLabels.push('Mo ' + (i + 1)); stdBalances.push(Math.round(standardSchedule[Math.min(i, standardSchedule.length - 1)].balance)); extBalances.push(i < extraSchedule.length? Math.round(extraSchedule[i].balance) : 0); } const chartConfig = { type: 'line', data: { labels: chartLabels, datasets: [ { label: 'Standard Payments', data: stdBalances, border'#ff3b30', background'rgba(255,68,102,0.1)', fill: true, tension: 0.3 }, { label: 'With Extra Payments', data: extBalances, border'#00ff88', backgroundColor: 'rgba(0,255,136,0.1)', fill: true, tension: 0.3 } ] }, options: { plugins: { title: { display: true, text: 'Standard vs Extra Payments', color: '#1d1d1f' }, legend: { labels: { color: '#1d1d1f' } } }, scales: { x: { ticks: { color: '#1d1d1f' }, grid: { color: '#e5e5ea' } }, y: { ticks: { color: '#1d1d1f' }, grid: { color: '#e5e5ea' }, min: 0 } } } }; const chartUrl = 'https://quickchart.io/chart?c="'" + encodeURIComponent(JSON.stringify(chartConfig)) + '&backgroundColor="%230a0a0f&width="800&height=400&format=png';" document.getElementById('chartContainer').innerHTML" = '<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjEwIiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5Ij5QbGFjZWhvbGRlciBJbWFnZTwvdGV4dD48L3N2Zz4=" + chartUrl + '" alt="Loan balance payoff comparison chart from quickchart.io showing standard vs extra payments" width="800" height="400" loading="lazy">'; // Show amortization showAmort('standard'); document.getElementById('results').style.display = 'block'; document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' }); } function showAmort(type){ const schedule = type === 'standard'? standardextraSchedule; const container = document.getElementById('amortContainer'); // Update tab buttons document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.toggle('active', btn.textContent.toLowerCase().includes(type === 'standard'? 'standard' : 'extra')); }); if(!schedule || schedule.length === 0){ container.innerHTML = '<p style="padding:20px;color:var(--muted)">Run the calculator first to see the amortization schedule.</p>'; return; } let html = '<table><thead><tr><th>Month</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead><tbody>'; schedule.forEach(row => { html += `<tr><td>${row.month}</td><td>${formatCurrencyExact(row.payment)}</td><td>${formatCurrencyExact(row.principal)}</td><td>${formatCurrencyExact(row.interest)}</td><td>${formatCurrencyExact(row.balance)}</td></tr>`; }); html += '</tbody></table>'; container.innerHTML = html; } function resetForm(){ document.getElementById('loanBalance').value = '28000'; document.getElementById('interestRate').value = '6.5'; document.getElementById('monthlyPayment').value = '548'; document.getElementById('extraPayment').value = '100'; document.getElementById('results').style.display = 'none'; } // Auto-calculate on load document.addEventListener('DOMContentLoaded', calculate); </script><div class="video-learn" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#f5f5f7;border-left:4px solid #ff0000;border-radius:0 8px 8px 0;"><p style="margin:0 0 8px;font-size:0.7rem;color:#ff3b30;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Video Tutorials</p><a class="interactive-element" href="https://www.youtube.com/results?search_query=car+loan+payoff+early+calculation" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f5f5f7;border-radius:8px;text-decoration:none;transition:background 0.2s;" target="_blank"><svg fill="#ff0000" height="36" viewbox="0 0 24 24" width="36"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"><polygon fill="#fff" points="9.75,15.02 15.5,12 9.75,8.98"></polygon></path></svg><div><p style="margin:0;color:#1d1d1f;font-size:0.9rem;font-weight:500;">Watch Car Payoff Calculator tutorials on YouTube</p><p style="margin:2px 0 0;color:#86868b;font-size:0.75rem;">Learn with free video guides and walkthroughs</p></div></a></div>
+<section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/boat-loan-calculator/">Boat Loan Calculator</a><a class="interactive-element" href="/free-tools/fha-loan-calculator/">FHA Loan Calculator</a><a class="interactive-element" href="/free-tools/interest-only-loan-calculator/">Interest Only Loan Calculator</a></div></section></div><script>
+// localStorage visit counter
+(function(){
+  const key = 'car_payoff_visits';
+  let visits = parseInt(localStorage.getItem(key) || '0', 10);
+  visits++;
+  localStorage.setItem(key, visits.toString());
+  const el = document.getElementById('visitCounter');
+  if(el){
+    const suffix = visits === 1 ? 'st' : visits === 2 ? 'nd' : visits === 3 ? 'rd' : 'th';
+    el.textContent = 'Your ' + visits + suffix + ' visit to this calculator';
+  }
+})();
+
+function formatCurrency(n){
+  return '$' + Math.round(n).toLocaleString('en-US');
+}
+
+function formatCurrencyExact(n){
+  return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// Calculate loan payoff schedule
+function amortize(balance, annualRate, monthlyPayment, extraMonthly){
+  const schedule = [];
+  let remaining = balance;
+  const monthlyRate = annualRate / 100 / 12;
+  let month = 0;
+  let totalInterest = 0;
+
+  while(remaining > 0.01 && month < 600){
+    month++;
+    const interestCharge = remaining * monthlyRate;
+    const totalPayment = Math.min(monthlyPayment + extraMonthly, remaining + interestCharge);
+    const principalPaid = totalPayment - interestCharge;
+    remaining = Math.max(0, remaining - principalPaid);
+    totalInterest += interestCharge;
+    schedule.push({
+      month,
+      payment: totalPayment,
+      principal: principalPaid,
+      interest: interestCharge,
+      balance: remaining,
+      totalInterest
+    });
+  }
+  return schedule;
+}
+
+function biweeklyAmortize(balance, annualRate, monthlyPayment){
+  const biweeklyPayment = monthlyPayment / 2;
+  const biweeklyRate = annualRate / 100 / 26;
+  let remaining = balance;
+  let period = 0;
+  let totalInterest = 0;
+
+  while(remaining > 0.01 && period < 1560){
+    period++;
+    const interestCharge = remaining * biweeklyRate;
+    const totalPay = Math.min(biweeklyPayment, remaining + interestCharge);
+    const principalPaid = totalPay - interestCharge;
+    remaining = Math.max(0, remaining - principalPaid);
+    totalInterest += interestCharge;
+  }
+  const months = Math.ceil(period / 2.1667);
+  return { periods: period, months, totalInterest, totalPaid: balance + totalInterest };
+}
+
+let standardSchedule = [];
+let extraSchedule = [];
+
+function calculate(){
+  const balance = parseFloat(document.getElementById('loanBalance').value) || 0;
+  const rate = parseFloat(document.getElementById('interestRate').value) || 0;
+  const payment = parseFloat(document.getElementById('monthlyPayment').value) || 0;
+  const extra = parseFloat(document.getElementById('extraPayment').value) || 0;
+
+  if(balance <= 0 || payment <= 0) return;
+
+  // Minimum payment check
+  const minInterest = balance * (rate / 100 / 12);
+  if(payment <= minInterest){
+    alert('Monthly payment must exceed monthly interest charge of ' + formatCurrencyExact(minInterest) + ' to pay off the loan.');
+    return;
+  }
+
+  standardSchedule = amortize(balance, rate, payment, 0);
+  extraSchedule = amortize(balance, rate, payment, extra);
+
+  const stdLast = standardSchedule[standardSchedule.length - 1];
+  const extLast = extraSchedule[extraSchedule.length - 1];
+
+  const monthsSaved = standardSchedule.length - extraSchedule.length;
+  const interestSaved = stdLast.totalInterest - extLast.totalInterest;
+
+  // Biweekly
+  const biweekly = biweeklyAmortize(balance, rate, payment);
+  const biweeklyMonthsSaved = standardSchedule.length - biweekly.months;
+  const biweeklyInterestSaved = stdLast.totalInterest - biweekly.totalInterest;
+
+  // Payoff dates
+  const now = new Date();
+  const stdPayoff = new Date(now);
+  stdPayoff.setMonth(stdPayoff.getMonth() + standardSchedule.length);
+  const extPayoff = new Date(now);
+  extPayoff.setMonth(extPayoff.getMonth() + extraSchedule.length);
+
+  const dateOpts = { year: 'numeric', month: 'short' };
+
+  // Results grid
+  const grid = document.getElementById('resultsGrid');
+  grid.innerHTML = `
+    <div class="result-card"><div class="label">Original Payoff Date</div><div class="value info">${stdPayoff.toLocaleDateString('en-US', dateOpts)}</div></div>
+    <div class="result-card"><div class="label">New Payoff Date</div><div class="value">${extPayoff.toLocaleDateString('en-US', dateOpts)}</div></div>
+    <div class="result-card"><div class="label">Months Saved</div><div class="value">${monthsSaved}</div></div>
+    <div class="result-card"><div class="label">Interest Saved</div><div class="value">${formatCurrency(interestSaved)}</div></div>
+    <div class="result-card"><div class="label">Total Interest (Standard)</div><div class="value danger">${formatCurrency(stdLast.totalInterest)}</div></div>
+    <div class="result-card"><div class="label">Total Interest (With Extra)</div><div class="value">${formatCurrency(extLast.totalInterest)}</div></div>
+    <div class="result-card"><div class="label">Total Cost (Standard)</div><div class="value danger">${formatCurrency(balance + stdLast.totalInterest)}</div></div>
+    <div class="result-card"><div class="label">Total Cost (With Extra)</div><div class="value">${formatCurrency(balance + extLast.totalInterest)}</div></div>
+  `;
+
+  // Scenario comparison table
+  const scenarios = [
+    { label: 'Current Payment', extra: 0 },
+    { label: '+$50/mo', extra: 50 },
+    { label: '+$100/mo', extra: 100 },
+    { label: '+$200/mo', extra: 200 }
+  ];
+
+  let scenarioHTML = '<thead><tr><th>Scenario</th><th>Monthly Payment</th><th>Months</th><th>Total Interest</th><th>Interest Saved</th><th>Months Saved</th></tr></thead><tbody>';
+  scenarios.forEach(s => {
+    const sch = amortize(balance, rate, payment, s.extra);
+    const last = sch[sch.length - 1];
+    const saved = stdLast.totalInterest - last.totalInterest;
+    const mSaved = standardSchedule.length - sch.length;
+    const isHighlight = s.extra === extra;
+    scenarioHTML += `<tr${isHighlight ? ' class="highlight-row"' : ''}><td>${s.label}</td><td>${formatCurrency(payment + s.extra)}</td><td>${sch.length}</td><td>${formatCurrency(last.totalInterest)}</td><td>${formatCurrency(saved)}</td><td>${mSaved}</td></tr>`;
+  });
+
+  // Biweekly row
+  scenarioHTML += `<tr><td>Biweekly Payments</td><td>${formatCurrency(payment / 2)} x2/mo</td><td>~${biweekly.months}</td><td>${formatCurrency(biweekly.totalInterest)}</td><td>${formatCurrency(biweeklyInterestSaved)}</td><td>~${biweeklyMonthsSaved}</td></tr>`;
+  scenarioHTML += '</tbody>';
+  document.getElementById('scenarioTable').innerHTML = scenarioHTML;
+
+  // Round-up table
+  const roundTo50 = Math.ceil(payment / 50) * 50;
+  const roundTo100 = Math.ceil(payment / 100) * 100;
+  const roundups = [
+    { label: 'Current Payment', amount: payment },
+    { label: 'Round to nearest $50', amount: roundTo50 },
+    { label: 'Round to nearest $100', amount: roundTo100 },
+    { label: 'Round up + $50', amount: roundTo100 + 50 },
+    { label: 'Round up + $100', amount: roundTo100 + 100 }
+  ];
+
+  let roundupHTML = '<thead><tr><th>Strategy</th><th>Payment</th><th>Extra/mo</th><th>Months</th><th>Interest Saved</th><th>Months Saved</th></tr></thead><tbody>';
+  roundups.forEach(r => {
+    const extraAmt = r.amount - payment;
+    const sch = amortize(balance, rate, payment, extraAmt);
+    const last = sch[sch.length - 1];
+    const saved = stdLast.totalInterest - last.totalInterest;
+    const mSaved = standardSchedule.length - sch.length;
+    roundupHTML += `<tr><td>${r.label}</td><td>${formatCurrency(r.amount)}</td><td>${formatCurrency(extraAmt)}</td><td>${sch.length}</td><td>${formatCurrency(saved)}</td><td>${mSaved}</td></tr>`;
+  });
+  roundupHTML += '</tbody>';
+  document.getElementById('roundupTable').innerHTML = roundupHTML;
+
+  // QuickChart balance comparison
+  const chartLabels = [];
+  const stdBalances = [];
+  const extBalances = [];
+  const maxMonths = standardSchedule.length;
+  const step = Math.max(1, Math.floor(maxMonths / 12));
+
+  for(let i = 0; i < maxMonths; i += step){
+    chartLabels.push('Mo ' + (i + 1));
+    stdBalances.push(Math.round(standardSchedule[Math.min(i, standardSchedule.length - 1)].balance));
+    extBalances.push(i < extraSchedule.length ? Math.round(extraSchedule[i].balance) : 0);
+  }
+
+  const chartConfig = {
+    type: 'line',
+    data: {
+      labels: chartLabels,
+      datasets: [
+        {
+          label: 'Standard Payments',
+          data: stdBalances,
+          borderColor: '#ff4466',
+          backgroundColor: 'rgba(255,68,102,0.1)',
+          fill: true,
+          tension: 0.3
+        },
+        {
+          label: 'With Extra Payments',
+          data: extBalances,
+          borderColor: '#00ff88',
+          backgroundColor: 'rgba(0,255,136,0.1)',
+          fill: true,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        title: { display: true, text: 'Loan Balance: Standard vs Extra Payments', color: '#e0e0e8' },
+        legend: { labels: { color: '#e0e0e8' } }
+      },
+      scales: {
+        x: { ticks: { color: '#e0e0e8' }, grid: { color: '#2a2a3a' } },
+        y: { ticks: { color: '#e0e0e8' }, grid: { color: '#2a2a3a' }, min: 0 }
+      }
+    }
+  };
+  const chartUrl = 'https://quickchart.io/chart?c=' + encodeURIComponent(JSON.stringify(chartConfig)) + '&backgroundColor=%230a0a0f&width=800&height=400&format=png';
+  document.getElementById('chartContainer').innerHTML = '<img src="' + chartUrl + '" alt="Loan balance payoff comparison chart from quickchart.io showing standard vs extra payments" width="800" height="400" loading="lazy">';
+
+  // Show amortization
+  showAmort('standard');
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function showAmort(type){
+  const schedule = type === 'standard' ? standardSchedule : extraSchedule;
+  const container = document.getElementById('amortContainer');
+
+  // Update tab buttons
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.toLowerCase().includes(type === 'standard' ? 'standard' : 'extra'));
+  });
+
+  if(!schedule || schedule.length === 0){
+    container.innerHTML = '<p style="padding:20px;color:var(--muted)">Run the calculator first to see the amortization schedule.</p>';
+    return;
+  }
+
+  let html = '<table><thead><tr><th>Month</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead><tbody>';
+  schedule.forEach(row => {
+    html += `<tr><td>${row.month}</td><td>${formatCurrencyExact(row.payment)}</td><td>${formatCurrencyExact(row.principal)}</td><td>${formatCurrencyExact(row.interest)}</td><td>${formatCurrencyExact(row.balance)}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function resetForm(){
+  document.getElementById('loanBalance').value = '28000';
+  document.getElementById('interestRate').value = '6.5';
+  document.getElementById('monthlyPayment').value = '548';
+  document.getElementById('extraPayment').value = '100';
+  document.getElementById('results').style.display = 'none';
+}
+
+// Auto-calculate on load
+document.addEventListener('DOMContentLoaded', calculate);
+</script><div class="video-learn" style="max-width:700px;margin:1.5rem auto;padding:16px 20px;background:#f5f5f7;border-left:4px solid #ff0000;border-radius:0 8px 8px 0;"><p style="margin:0 0 8px;font-size:0.7rem;color:#ff3b30;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Video Tutorials</p><a class="interactive-element" href="https://www.youtube.com/results?search_query=car+loan+payoff+early+calculation" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f5f5f7;border-radius:8px;text-decoration:none;transition:background 0.2s;" target="_blank"><svg fill="#ff0000" height="36" viewbox="0 0 24 24" width="36"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"><polygon fill="#fff" points="9.75,15.02 15.5,12 9.75,8.98"></polygon></path></svg><div><p style="margin:0;color:#1d1d1f;font-size:0.9rem;font-weight:500;">Watch Car Payoff Calculator tutorials on YouTube</p><p style="margin:2px 0 0;color:#86868b;font-size:0.75rem;">Learn with free video guides and walkthroughs</p></div></a></div>
 <footer style="text-align:center;padding:24px;color:#6e6e73;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;"><h2 style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">The Car Payoff Calculator is a free browser-based tool that requires no downloads or signups. It processes everything locally on your device for maximum privacy and speed.</p><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/boat-loan-calculator/">Boat Loan Calculator</a><a class="interactive-element" href="/free-tools/fha-loan-calculator/">FHA Loan Calculator</a><a class="interactive-element" href="/free-tools/interest-only-loan-calculator/">Interest Only Loan Calculator</a></div></section><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
 <p style="color:#86868b;font-size:0.92rem;line-height:1.6;">Browser support verified via <a class="interactive-element" href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p>
 </section>

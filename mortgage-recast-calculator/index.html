@@ -629,7 +629,174 @@ html { scroll-behavior: smooth; }
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Methodology and Calculation Standards</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">The formulas and algorithms implemented in this tool follow established industry standards and peer-reviewed methodologies. Financial calculations use standard present value and future value formulas as defined in CFA Institute curriculum materials. Health metrics follow guidelines published by organizations like the WHO, CDC, and relevant medical associations. Engineering calculations reference standards from NIST, IEEE, and ASTM. Where multiple valid calculation methods exist, this tool uses the most widely accepted approach and notes any limitations in the results. All constants and conversion factors are sourced from authoritative references and verified against multiple independent sources.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">When to Seek Professional Guidance</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">Online tools excel at estimation, exploration, and education but should complement rather than replace professional advice for consequential decisions. Tax calculations should be verified by a CPA or enrolled agent, particularly for complex situations involving self-employment income, investment losses, or multi-state filing. Medical calculations like BMI, calorie needs, and medication dosages should be discussed with your healthcare provider who can account for individual health conditions, medications, and risk factors. Engineering calculations for structural, electrical, or mechanical applications require professional engineer review and approval before implementation. Financial planning decisions involving significant sums should involve a fiduciary financial advisor who is legally obligated to act in your best interest.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Version History and Continuous Improvement</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">This tool is actively maintained with regular updates to ensure accuracy and compatibility. Calculation formulas are reviewed against current standards when regulations or guidelines change. The 2026 tax year calculations, for example, reflect the updated federal tax brackets, standard deduction amounts, and Social Security wage base that took effect in January 2026. Browser compatibility is tested against the latest stable releases of major browsers. User feedback drives feature improvements and bug fixes. If you encounter any issues or have suggestions for improvement, the feedback mechanisms available through the main Zovo platform ensure your input reaches the development team.</p></section>
-<footer><div class="badge-row"><img alt="HTML5" src="https://img.shields.io/badge/HTML5-E34F26?style=flat&amp;logo=html5&amp;logoColor=white"><img alt="CSS3" src="https://img.shields.io/badge/CSS3-1572B6?style=flat&amp;logo=css3&amp;logoColor=white"><img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&amp;logo=javascript&amp;logoColor=black"><img alt="Mobile Responsive" src="https://img.shields.io/badge/Mobile-Responsive-00ff88?style=flat"><img alt="PageSpeed Score" src="https://img.shields.io/badge/PageSpeed-95+-00ccff?style=flat"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green?style=flat"></div><p>© 2026 theluckystrike. Mortgage Recast Calculator. All rights reserved.</p><p>Last updated March 2026. for performance and accuracy.</p><div class="visit-counter" id="visitCounter"></div></footer></div><script> // localStorage visit counter widget (function(){ var key='mortgage_recast_calc_visits'; var count=parseInt(localStorage.getItem(key)||'0',10)+1; localStorage.setItem(key,count.toString()); document.getElementById('visitCounter').textContent=''+count; })(); // FAQ toggle function toggleFaq(el){ el.classList.toggle('open'); el.nextElementSibling.classList.toggle('open'); } // Format currency function fmt(n){return'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')} // Monthly payment calculation function monthlyPayment(principal,annualRate,months){ if(annualRate="==0)" return principal/months; var r=annualRate/12; return principal*(r*Math.pow(1+r,months))/(Math.pow(1+r,months)-1); } // Get remaining balance after N payments function remainingBalance(principal,annualRate,totalMonths,paidMonths){ if(paidMonths<=0) return principal; var r=annualRate/12; if(r="==0)" return principal-(principal/totalMonths)*paidMonths; var mp=monthlyPayment(principal,annualRate,totalMonths); var balance=principal; for(var i=0;i<paidMonths;i++){ var interest=balance*r; var princ=mp-interest; balance-=princ; } return Math.max(0,balance); } // Total interest remaining function totalInterestRemaining(balance,annualRate,remainingMonths){ var mp=monthlyPayment(balance,annualRate,remainingMonths); return(mp*remainingMonths)-balance; } // Main calculation function calculateRecast(){ var loanAmount=parseFloat(document.getElementById('loanAmount').value)||0; var rate=(parseFloat(document.getElementById('interestRate').value)||0)/100; var termYears=parseInt(document.getElementById('loanTerm').value)||30; var monthsPaid=parseInt(document.getElementById('monthsPaid').value)||0; var lumpSum=parseFloat(document.getElementById('lumpSum').value)||0; var recastFee=parseFloat(document.getElementById('recastFee').value)||0; var totalMonths=termYears*12; var remMonths=totalMonths-monthsPaid; if(remMonths<=0){alert('Loan already paid off.');return} var currentBalance=remainingBalance(loanAmount,rate,totalMonths,monthsPaid); var currentPayment=monthlyPayment(loanAmount,rate,totalMonths); // Recast var newBalance=currentBalance-lumpSum; if(newBalance<0){alert('Lump sum exceeds remaining balance.');return} var newPayment=monthlyPayment(newBalance,rate,remMonths); var monthlySavings=currentPayment-newPayment; // Interest calculations var originalInterest=totalInterestRemaining(currentBalance,rate,remMonths); var recastInterest=totalInterestRemaining(newBalance,rate,remMonths); var interestSaved=originalInterest-recastInterest; var netSavings=interestSaved-recastFee; var breakEvenMonths="monthlySavings">0?Math.ceil(recastFee/monthlySavings):0; // Results display var grid=document.getElementById('resultsGrid'); grid.innerHTML= '<div class="result-card"><div class="label">Current Monthly Payment</div><div class="value blue">'+fmt(currentPayment)+'</div></div>'+ '<div class="result-card"><div class="label">New Payment After Recast</div><div class="value">'+fmt(newPayment)+'</div></div>'+ '<div class="result-card"><div class="label">Monthly Savings</div><div class="value">'+fmt(monthlySavings)+'</div></div>'+ '<div class="result-card"><div class="label">Current Remaining Balance</div><div class="value blue">'+fmt(currentBalance)+'</div></div>'+ '<div class="result-card"><div class="label">New Balance After Recast</div><div class="value">'+fmt(newBalance)+'</div></div>'+ '<div class="result-card"><div class="label">Total Interest Saved</div><div class="value">'+fmt(interestSaved)+'</div></div>'+ '<div class="result-card"><div class="label">Net Savings (After Fee)</div><div class="value">'+fmt(netSavings)+'</div></div>'+ '<div class="result-card"><div class="label">Fee Break-Even</div><div class="value blue">'+breakEvenMonths+' mo</div></div>'; // Build amortization comparison data var origBal=currentBalance; var recastBal=newBalance; var r=rate/12; var origLabels=['Now']; var origData=[Math.round(origBal)]; var recastData=[Math.round(recastBal)]; var origIntData=[0]; var recastIntData=[0]; var cumOrigInt=0; var cumRecastInt=0; var yearStep=Math.max(1,Math.floor(remMonths/12/10)); var ob=origBal,rb=recastBal; for(var m=1;m<=remMonths;m++){ var oi=ob*r; var op=currentPayment-oi; ob=Math.max(0,ob-op); cumOrigInt+=oi; var ri_=rb*r; var rp=newPayment-ri_; rb=Math.max(0,rb-rp); cumRecastInt+=ri_; if(m%(yearStep*12)===0||m="==remMonths){" var yr=Math.round(m/12*10)/10; origLabels.push('Year '+yr); origData.push(Math.round(ob)); recastData.push(Math.round(rb)); origIntData.push(Math.round(cumOrigInt)); recastIntData.push(Math.round(cumRecastInt)); } } // Chart var chartCfg={ type:'line', data:{ labels:origLabels, datasets:[ {label:'Original Balance',data:origData,borderColor:'#0071e3',backgroundColor:'rgba(0,204,255,0.1)',fill:true,tension:0.3}, {label:'Recast Balance',data:recastData,borderColor:'#00ff88',backgroundColor:'rgba(0,255,136,0.1)',fill:true,tension:0.3} ] }, options:{ plugins:{title:{display:true,text:'Original vs Recast',color:'',font:{size:14}},legend:{labels:{color:''}}}, scales:{ y:{ticks:{color:'#888',callback:function(v){return'$'+v.toLocaleString()}},grid:{color:'#e5e5ea'}}, x:{ticks:{color:'#888'},grid:{color:'#e5e5ea'}} }, backgroundColor:'#f5f5f7' } }; var chartUrl="'https://quickchart.io/chart?c="'+encodeURIComponent(JSON.stringify(chartCfg))+'&backgroundColor=%2312121a&width=800&height=400';"" document.getElementById('amortChart').src="chartUrl;" // Amortization table (first 24 months + yearly summary) var tbl='<h3 style="margin-bottom:10px">Amortization Comparison (Monthly Detail)</h3><div class="amort-scroll"><table><thead><tr><th>Month</th><th>Orig Payment</th><th>Orig Balance</th><th>Recast Payment</th><th>Recast Balance</th><th>Monthly Savings</th></tr></thead><tbody>'; var ob2=currentBalance,rb2=newBalance; var showMonths=Math.min(remMonths,60); for(var m2=1;m2<=showMonths;m2++){ var oi2=ob2*r; var op2=Math.min(currentPayment,ob2+oi2); ob2=Math.max(0,ob2-(op2-oi2)); var ri2=rb2*r; var rp2=Math.min(newPayment,rb2+ri2); rb2=Math.max(0,rb2-(rp2-ri2)); tbl+='<tr><td>'+m2+'</td><td>'+fmt(op2)+'</td><td>'+fmt(ob2)+'</td><td>'+fmt(rp2)+'</td><td>'+fmt(rb2)+'</td><td>'+fmt(op2-rp2)+'</td></tr>'; } if(remMonths>60) tbl+='<tr><td colspan="6" style="text-align:center;color:#86868b">.. showing first 60 of '+remMonths+' remaining months..</td></tr>'; tbl+='</tbody></table></div>'; document.getElementById('amortSection').innerHTML=tbl; document.getElementById('results').style.display='block'; document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'}); } </script><footer style="text-align:center;padding:24px;color:#1d1d1f;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a></footer>
+<footer><div class="badge-row"><img alt="HTML5" src="https://img.shields.io/badge/HTML5-E34F26?style=flat&amp;logo=html5&amp;logoColor=white"><img alt="CSS3" src="https://img.shields.io/badge/CSS3-1572B6?style=flat&amp;logo=css3&amp;logoColor=white"><img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&amp;logo=javascript&amp;logoColor=black"><img alt="Mobile Responsive" src="https://img.shields.io/badge/Mobile-Responsive-00ff88?style=flat"><img alt="PageSpeed Score" src="https://img.shields.io/badge/PageSpeed-95+-00ccff?style=flat"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green?style=flat"></div><p>© 2026 theluckystrike. Mortgage Recast Calculator. All rights reserved.</p><p>Last updated March 2026. for performance and accuracy.</p><div class="visit-counter" id="visitCounter"></div></footer></div><script>
+// localStorage visit counter widget
+(function(){
+  var key='mortgage_recast_calc_visits';
+  var count=parseInt(localStorage.getItem(key)||'0',10)+1;
+  localStorage.setItem(key,count.toString());
+  document.getElementById('visitCounter').textContent='Page visits: '+count;
+})();
+
+// FAQ toggle
+function toggleFaq(el){
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+// Format currency
+function fmt(n){return'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
+
+// Monthly payment calculation
+function monthlyPayment(principal,annualRate,months){
+  if(annualRate===0) return principal/months;
+  var r=annualRate/12;
+  return principal*(r*Math.pow(1+r,months))/(Math.pow(1+r,months)-1);
+}
+
+// Get remaining balance after N payments
+function remainingBalance(principal,annualRate,totalMonths,paidMonths){
+  if(paidMonths<=0) return principal;
+  var r=annualRate/12;
+  if(r===0) return principal-(principal/totalMonths)*paidMonths;
+  var mp=monthlyPayment(principal,annualRate,totalMonths);
+  var balance=principal;
+  for(var i=0;i<paidMonths;i++){
+    var interest=balance*r;
+    var princ=mp-interest;
+    balance-=princ;
+  }
+  return Math.max(0,balance);
+}
+
+// Total interest remaining
+function totalInterestRemaining(balance,annualRate,remainingMonths){
+  var mp=monthlyPayment(balance,annualRate,remainingMonths);
+  return(mp*remainingMonths)-balance;
+}
+
+// Main calculation
+function calculateRecast(){
+  var loanAmount=parseFloat(document.getElementById('loanAmount').value)||0;
+  var rate=(parseFloat(document.getElementById('interestRate').value)||0)/100;
+  var termYears=parseInt(document.getElementById('loanTerm').value)||30;
+  var monthsPaid=parseInt(document.getElementById('monthsPaid').value)||0;
+  var lumpSum=parseFloat(document.getElementById('lumpSum').value)||0;
+  var recastFee=parseFloat(document.getElementById('recastFee').value)||0;
+
+  var totalMonths=termYears*12;
+  var remMonths=totalMonths-monthsPaid;
+  if(remMonths<=0){alert('Loan already paid off.');return}
+
+  var currentBalance=remainingBalance(loanAmount,rate,totalMonths,monthsPaid);
+  var currentPayment=monthlyPayment(loanAmount,rate,totalMonths);
+
+  // Recast
+  var newBalance=currentBalance-lumpSum;
+  if(newBalance<0){alert('Lump sum exceeds remaining balance.');return}
+  var newPayment=monthlyPayment(newBalance,rate,remMonths);
+  var monthlySavings=currentPayment-newPayment;
+
+  // Interest calculations
+  var originalInterest=totalInterestRemaining(currentBalance,rate,remMonths);
+  var recastInterest=totalInterestRemaining(newBalance,rate,remMonths);
+  var interestSaved=originalInterest-recastInterest;
+  var netSavings=interestSaved-recastFee;
+  var breakEvenMonths=monthlySavings>0?Math.ceil(recastFee/monthlySavings):0;
+
+  // Results display
+  var grid=document.getElementById('resultsGrid');
+  grid.innerHTML=
+    '<div class="result-card"><div class="label">Current Monthly Payment</div><div class="value blue">'+fmt(currentPayment)+'</div></div>'+
+    '<div class="result-card"><div class="label">New Payment After Recast</div><div class="value">'+fmt(newPayment)+'</div></div>'+
+    '<div class="result-card"><div class="label">Monthly Savings</div><div class="value">'+fmt(monthlySavings)+'</div></div>'+
+    '<div class="result-card"><div class="label">Current Remaining Balance</div><div class="value blue">'+fmt(currentBalance)+'</div></div>'+
+    '<div class="result-card"><div class="label">New Balance After Recast</div><div class="value">'+fmt(newBalance)+'</div></div>'+
+    '<div class="result-card"><div class="label">Total Interest Saved</div><div class="value">'+fmt(interestSaved)+'</div></div>'+
+    '<div class="result-card"><div class="label">Net Savings (After Fee)</div><div class="value">'+fmt(netSavings)+'</div></div>'+
+    '<div class="result-card"><div class="label">Fee Break-Even</div><div class="value blue">'+breakEvenMonths+' mo</div></div>';
+
+  // Build amortization comparison data
+  var origBal=currentBalance;
+  var recastBal=newBalance;
+  var r=rate/12;
+  var origLabels=['Now'];
+  var origData=[Math.round(origBal)];
+  var recastData=[Math.round(recastBal)];
+  var origIntData=[0];
+  var recastIntData=[0];
+  var cumOrigInt=0;
+  var cumRecastInt=0;
+
+  var yearStep=Math.max(1,Math.floor(remMonths/12/10));
+  var ob=origBal,rb=recastBal;
+
+  for(var m=1;m<=remMonths;m++){
+    var oi=ob*r;
+    var op=currentPayment-oi;
+    ob=Math.max(0,ob-op);
+    cumOrigInt+=oi;
+
+    var ri_=rb*r;
+    var rp=newPayment-ri_;
+    rb=Math.max(0,rb-rp);
+    cumRecastInt+=ri_;
+
+    if(m%(yearStep*12)===0||m===remMonths){
+      var yr=Math.round(m/12*10)/10;
+      origLabels.push('Year '+yr);
+      origData.push(Math.round(ob));
+      recastData.push(Math.round(rb));
+      origIntData.push(Math.round(cumOrigInt));
+      recastIntData.push(Math.round(cumRecastInt));
+    }
+  }
+
+  // Chart
+  var chartCfg={
+    type:'line',
+    data:{
+      labels:origLabels,
+      datasets:[
+        {label:'Original Balance',data:origData,borderColor:'#00ccff',backgroundColor:'rgba(0,204,255,0.1)',fill:true,tension:0.3},
+        {label:'Recast Balance',data:recastData,borderColor:'#00ff88',backgroundColor:'rgba(0,255,136,0.1)',fill:true,tension:0.3}
+      ]
+    },
+    options:{
+      plugins:{title:{display:true,text:'Remaining Balance: Original vs Recast',color:'#e0e0e8',font:{size:14}},legend:{labels:{color:'#aaa'}}},
+      scales:{
+        y:{ticks:{color:'#888',callback:function(v){return'$'+v.toLocaleString()}},grid:{color:'#2a2a3a'}},
+        x:{ticks:{color:'#888'},grid:{color:'#2a2a3a'}}
+      },
+      backgroundColor:'#12121a'
+    }
+  };
+  var chartUrl='https://quickchart.io/chart?c='+encodeURIComponent(JSON.stringify(chartCfg))+'&backgroundColor=%2312121a&width=800&height=400';
+  document.getElementById('amortChart').src=chartUrl;
+
+  // Amortization table (first 24 months + yearly summary)
+  var tbl='<h3 style="margin-bottom:10px">Amortization Comparison (Monthly Detail)</h3><div class="amort-scroll"><table><thead><tr><th>Month</th><th>Orig Payment</th><th>Orig Balance</th><th>Recast Payment</th><th>Recast Balance</th><th>Monthly Savings</th></tr></thead><tbody>';
+  var ob2=currentBalance,rb2=newBalance;
+  var showMonths=Math.min(remMonths,60);
+  for(var m2=1;m2<=showMonths;m2++){
+    var oi2=ob2*r;
+    var op2=Math.min(currentPayment,ob2+oi2);
+    ob2=Math.max(0,ob2-(op2-oi2));
+
+    var ri2=rb2*r;
+    var rp2=Math.min(newPayment,rb2+ri2);
+    rb2=Math.max(0,rb2-(rp2-ri2));
+
+    tbl+='<tr><td>'+m2+'</td><td>'+fmt(op2)+'</td><td>'+fmt(ob2)+'</td><td>'+fmt(rp2)+'</td><td>'+fmt(rb2)+'</td><td>'+fmt(op2-rp2)+'</td></tr>';
+  }
+  if(remMonths>60) tbl+='<tr><td colspan="6" style="text-align:center;color:#888">... showing first 60 of '+remMonths+' remaining months ...</td></tr>';
+  tbl+='</tbody></table></div>';
+  document.getElementById('amortSection').innerHTML=tbl;
+
+  document.getElementById('results').style.display='block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script><footer style="text-align:center;padding:24px;color:#1d1d1f;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a></footer>
 <div id="usage-counter" style="text-align:center;margin:24px 0;padding:12px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px"><span style="color:#86868b;font-size:0.85rem">Calculations performed: </span><span id="calc-count" style="color:#0071e3;font-weight:600">0</span></div>
 <section style="margin-top:2rem"><h2 id="research" style="font-size:1.4rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Original Research: Mortgage Recast Calculator Industry Data</h2><p style="color:#86868b;margin-bottom:16px">I gathered this data from Consumer Financial Protection Bureau reports, NerdWallet annual surveys, and J.D. Power digital banking satisfaction studies. Last updated March 2026.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.9rem"><thead><tr style="border-bottom:2px solid #e5e5ea"><th style="text-align:left;padding:10px;color:#0071e3">Statistic</th><th style="text-align:left;padding:10px;color:#0071e3">Value</th><th style="text-align:left;padding:10px;color:#0071e3">Source Year</th></tr></thead><tbody><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Adults using online finance calculators annually</td><td style="padding:10px;color:#1d1d1f">68%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Most calculated metric</td><td style="padding:10px;color:#1d1d1f">Loan payments</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Average monthly visits to finance calculator sites</td><td style="padding:10px;color:#1d1d1f">320 million</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Users who change financial decisions after using calculators</td><td style="padding:10px;color:#1d1d1f">47%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Mobile share of finance calculator traffic</td><td style="padding:10px;color:#1d1d1f">59%</td><td style="padding:10px;color:#1d1d1f">2026</td></tr><tr style="border-bottom:1px solid #e5e5ea"><td style="padding:10px;color:#1d1d1f">Trust level in online calculator accuracy</td><td style="padding:10px;color:#1d1d1f">72%</td><td style="padding:10px;color:#1d1d1f">2025</td></tr></tbody></table></div><p style="margin-top:12px;font-size:0.85rem;color:#86868b">Source: FRED economic data, Morning Consult tracking polls, and EY fintech adoption reports. Last updated March 2026.</p></section><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><p style="color:#86868b;font-size:0.92rem;">Browser support verified via <a class="interactive-element" href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p></section>
 <p style="font-size:0.75rem;color:#636e72;text-align:center;margin:1rem 0;">Validated on Chrome 134, Edge 134, Brave, and Vivaldi. Standards-compliant code ensures broad browser support.</p>

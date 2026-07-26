@@ -649,7 +649,150 @@ html { scroll-behavior: smooth; }
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Industry Standards and Compliance</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">Professional practitioners in regulated industries must comply with specific calculation standards set by their governing bodies. Accountants follow Generally Accepted Accounting Principles (GAAP) or International Financial Reporting Standards (IFRS). Engineers adhere to building codes, safety factors, and material specifications published by organizations like ASCE, ACI, and AISC. Healthcare providers reference clinical practice guidelines from specialty societies and evidence-based medicine databases. This tool implements calculations consistent with these standards where applicable, but it cannot substitute for the professional judgment required to determine which standard applies in a given situation. Always verify that the calculation method matches the requirements of your specific professional context.</p></section>
 <section style="margin-top:2rem"><h2 style="font-size:1.5rem;color:#1d1d1f;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:2px solid #e5e5ea">Advanced Features and Hidden Functionality</h2><p style="color:#6e6e73;line-height:1.8;margin-bottom:1rem">Beyond the primary calculation interface, this tool includes several features that experienced users find valuable. The responsive layout adapts not just to different screen sizes but to different use contexts: a narrow window focuses attention on the input form, while a wider window reveals additional detail in the results. Charts and visualizations, when present, use interactive elements that respond to hover and click events, revealing additional data points not shown in the default view. The URL structure of the page is designed for easy sharing and bookmarking. These features are discovered through regular use rather than documented in a manual, following the progressive disclosure design principle that keeps the interface simple for casual users while rewarding exploration by power users.</p></section>
 <footer><div class="container"><p>© 2025 theluckystrike · Capital Gains Tax Calculator · For educational purposes only. Not tax advice.</p><div class="badges"><img alt="Build passing" loading="lazy" src="https://img.shields.io/badge/build-passing-00ff88?style=flat-square"/><img alt="MIT License" loading="lazy" src="https://img.shields.io/badge/license-MIT-00ccff?style=flat-square"/><img alt="Version 2.0.0" loading="lazy" src="https://img.shields.io/badge/version-2.0.0-00ff88?style=flat-square"/><img alt="Tests passing" loading="lazy" src="https://img.shields.io/badge/tests-passing-00ff88?style=flat-square"/><img alt="PageSpeed 97%" loading="lazy" src="https://img.shields.io/badge/pagespeed-97%25-00ff88?style=flat-square"/></div></div>
-<section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/dividend-calculator/">Dividend Calculator</a><a class="interactive-element" href="/free-tools/compound-growth-calculator/">Compound Growth Calculator</a><a class="interactive-element" href="/free-tools/future-value-calculator/">Future Value Calculator</a></div></section><script> // localStorage visit counter (function() { var key = 'cg_calc_visit_count'; var count = parseInt(localStorage.getItem(key) || '0', 10) + 1; localStorage.setItem(key, count.toString()); var el = document.getElementById('visitCounter'); if (el) el.textContent = 'Visit #' + count + ' \u2014 Your data stays local'; })(); function fmt(n) { if (n < 0) return '-$' + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); return '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); } function pct(n) { return n.toFixed(2) + '%'; } // 2025 Ordinary Income brackets var brackets = { single: [[11925,0.10],[48475,0.12],[103350,0.22],[197300,0.24],[250525,0.32],[626350,0.35],[Infinity,0.37]], married: [[23850,0.10],[96950,0.12],[206700,0.22],[394600,0.24],[501050,0.32],[751600,0.35],[Infinity,0.37]], head: [[17000,0.10],[64850,0.12],[103350,0.22],[197300,0.24],[250500,0.32],[626350,0.35],[Infinity,0.37]] }; // 2025 Long-Term Capital Gains brackets var ltBrackets = { single: [[48350,0],[533400,0.15],[Infinity,0.20]], married: [[96700,0],[600050,0.15],[Infinity,0.20]], head: [[64750,0],[566700,0.15],[Infinity,0.20]] }; // NIIT thresholds var niitThresholds = { single: 200000, married: 250000, head: 200000 }; function getMarginalRate(income, brk) { var prev = 0; for (var i = 0; i < brk.length; i++) { if (income <= brk[i][0]) return brk[i][1]; prev = brk[i][0]; } return brk[brk.length-1][1]; } function calcOrdinaryTax(income, brk) { var tax = 0, prev = 0; for (var i = 0; i < brk.length; i++) { var upper = brk[i][0]; var rate = brk[i][1]; if (income <= upper) { tax += (income - prev) * rate; break; } tax += (upper - prev) * rate; prev = upper; } return tax; } function calcLTCGRate(income, filing) { var brk = ltBrackets[filing]; for (var i = 0; i < brk.length; i++) { if (income <= brk[i][0]) return brk[i][1]; } return brk[brk.length-1][1]; } function calculateCapitalGains() { var purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0; var salePrice = parseFloat(document.getElementById('salePrice').value) || 0; var holdingPeriod = document.getElementById('holdingPeriod').value; var filing = document.getElementById('filingStatus').value; var taxableIncome = parseFloat(document.getElementById('taxableIncome').value) || 0; var stateRate = parseFloat(document.getElementById('stateTaxRate').value) || 0; var gain = salePrice - purchasePrice; var federalRate = 0, federalTax = 0, niit = 0, stateTax = 0; if (gain > 0) { if (holdingPeriod === 'short') { var totalIncome = taxableIncome + gain; var taxWithGain = calcOrdinaryTax(totalIncome, brackets[filing]); var taxWithout = calcOrdinaryTax(taxableIncome, brackets[filing]); federalTax = taxWithGain - taxWithout; federalRate = getMarginalRate(totalIncome, brackets[filing]) * 100; } else { federalRate = calcLTCGRate(taxableIncome + gain, filing) * 100; federalTax = gain * (federalRate / 100); } // NIIT calculation var magi = taxableIncome + gain; var threshold = niitThresholds[filing]; if (magi > threshold) { var niitBase = Math.min(gain, magi - threshold); niit = niitBase * 0.038; } // State tax stateTax = gain * (stateRate / 100); } var totalTax = federalTax + niit + stateTax; var netProfit = gain - totalTax; var effectiveRate = gain > 0 ? (totalTax / gain) * 100 : 0; // Update display document.getElementById('results').style.display = 'block'; var gainEl = document.getElementById('totalGain'); gainEl.textContent = fmt(gain); gainEl.className = gain >= 0 ? 'value' : 'value loss'; document.getElementById('taxRate').textContent = pct(federalRate); document.getElementById('taxOwed').textContent = fmt(federalTax); document.getElementById('niitAmount').textContent = fmt(niit); document.getElementById('stateTax').textContent = fmt(stateTax); document.getElementById('totalTax').textContent = fmt(totalTax); var npEl = document.getElementById('netProfit'); npEl.textContent = fmt(netProfit); npEl.className = netProfit >= 0 ? 'value' : 'value loss'; document.getElementById('effectiveRate').textContent = pct(effectiveRate); // Breakdown var rows = ''; rows += '<div class="breakdown-row"><span>Purchase Price</span><span>' + fmt(purchasePrice) + '</span></div>'; rows += '<div class="breakdown-row"><span>Sale Price</span><span>' + fmt(salePrice) + '</span></div>'; rows += '<div class="breakdown-row"><span>Capital Gain/Loss</span><span>' + fmt(gain) + '</span></div>'; rows += '<div class="breakdown-row"><span>Holding Period</span><span>' + (holdingPeriod === 'short' ? 'Short-Term' : 'Long-Term') + '</span></div>'; rows += '<div class="breakdown-row"><span>Federal Tax Rate</span><span>' + pct(federalRate) + '</span></div>'; rows += '<div class="breakdown-row"><span>Federal Tax</span><span>' + fmt(federalTax) + '</span></div>'; if (niit > 0) rows += '<div class="breakdown-row"><span>NIIT (3.8%)</span><span>' + fmt(niit) + '</span></div>'; if (stateTax > 0) rows += '<div class="breakdown-row"><span>State Tax (' + stateRate + '%)</span><span>' + fmt(stateTax) + '</span></div>'; rows += '<div class="breakdown-row" style="font-weight:600;color:#0071e3"><span>Net Profit After Tax</span><span>' + fmt(netProfit) + '</span></div>'; document.getElementById('breakdownRows').innerHTML = rows; document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'}); } function toggleFaq(el) { el.parentElement.classList.toggle('open'); } // Run initial calculation document.addEventListener('DOMContentLoaded', function() { calculateCapitalGains(); }); </script><footer style="text-align:center;padding:24px;color:#6e6e73;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;"><h2 style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">The Capital Gains Tax Calculator is a free browser-based tool that requires no downloads or signups. It processes everything locally on your device for maximum privacy and speed.</p><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/dividend-calculator/">Dividend Calculator</a><a class="interactive-element" href="/free-tools/compound-growth-calculator/">Compound Growth Calculator</a><a class="interactive-element" href="/free-tools/future-value-calculator/">Future Value Calculator</a></div></section><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
+<section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/dividend-calculator/">Dividend Calculator</a><a class="interactive-element" href="/free-tools/compound-growth-calculator/">Compound Growth Calculator</a><a class="interactive-element" href="/free-tools/future-value-calculator/">Future Value Calculator</a></div></section><script>
+// localStorage visit counter
+(function() {
+  var key = 'cg_calc_visit_count';
+  var count = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+  localStorage.setItem(key, count.toString());
+  var el = document.getElementById('visitCounter');
+  if (el) el.textContent = 'Visit #' + count + ' \u2014 Your data stays local';
+})();
+
+function fmt(n) {
+  if (n < 0) return '-$' + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  return '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function pct(n) { return n.toFixed(2) + '%'; }
+
+// 2025 Ordinary Income brackets
+var brackets = {
+  single: [[11925,0.10],[48475,0.12],[103350,0.22],[197300,0.24],[250525,0.32],[626350,0.35],[Infinity,0.37]],
+  married: [[23850,0.10],[96950,0.12],[206700,0.22],[394600,0.24],[501050,0.32],[751600,0.35],[Infinity,0.37]],
+  head: [[17000,0.10],[64850,0.12],[103350,0.22],[197300,0.24],[250500,0.32],[626350,0.35],[Infinity,0.37]]
+};
+
+// 2025 Long-Term Capital Gains brackets
+var ltBrackets = {
+  single: [[48350,0],[533400,0.15],[Infinity,0.20]],
+  married: [[96700,0],[600050,0.15],[Infinity,0.20]],
+  head: [[64750,0],[566700,0.15],[Infinity,0.20]]
+};
+
+// NIIT thresholds
+var niitThresholds = { single: 200000, married: 250000, head: 200000 };
+
+function getMarginalRate(income, brk) {
+  var prev = 0;
+  for (var i = 0; i < brk.length; i++) {
+    if (income <= brk[i][0]) return brk[i][1];
+    prev = brk[i][0];
+  }
+  return brk[brk.length-1][1];
+}
+
+function calcOrdinaryTax(income, brk) {
+  var tax = 0, prev = 0;
+  for (var i = 0; i < brk.length; i++) {
+    var upper = brk[i][0];
+    var rate = brk[i][1];
+    if (income <= upper) { tax += (income - prev) * rate; break; }
+    tax += (upper - prev) * rate;
+    prev = upper;
+  }
+  return tax;
+}
+
+function calcLTCGRate(income, filing) {
+  var brk = ltBrackets[filing];
+  for (var i = 0; i < brk.length; i++) {
+    if (income <= brk[i][0]) return brk[i][1];
+  }
+  return brk[brk.length-1][1];
+}
+
+function calculateCapitalGains() {
+  var purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0;
+  var salePrice = parseFloat(document.getElementById('salePrice').value) || 0;
+  var holdingPeriod = document.getElementById('holdingPeriod').value;
+  var filing = document.getElementById('filingStatus').value;
+  var taxableIncome = parseFloat(document.getElementById('taxableIncome').value) || 0;
+  var stateRate = parseFloat(document.getElementById('stateTaxRate').value) || 0;
+
+  var gain = salePrice - purchasePrice;
+  var federalRate = 0, federalTax = 0, niit = 0, stateTax = 0;
+
+  if (gain > 0) {
+    if (holdingPeriod === 'short') {
+      var totalIncome = taxableIncome + gain;
+      var taxWithGain = calcOrdinaryTax(totalIncome, brackets[filing]);
+      var taxWithout = calcOrdinaryTax(taxableIncome, brackets[filing]);
+      federalTax = taxWithGain - taxWithout;
+      federalRate = getMarginalRate(totalIncome, brackets[filing]) * 100;
+    } else {
+      federalRate = calcLTCGRate(taxableIncome + gain, filing) * 100;
+      federalTax = gain * (federalRate / 100);
+    }
+
+    // NIIT calculation
+    var magi = taxableIncome + gain;
+    var threshold = niitThresholds[filing];
+    if (magi > threshold) {
+      var niitBase = Math.min(gain, magi - threshold);
+      niit = niitBase * 0.038;
+    }
+
+    // State tax
+    stateTax = gain * (stateRate / 100);
+  }
+
+  var totalTax = federalTax + niit + stateTax;
+  var netProfit = gain - totalTax;
+  var effectiveRate = gain > 0 ? (totalTax / gain) * 100 : 0;
+
+  // Update display
+  document.getElementById('results').style.display = 'block';
+
+  var gainEl = document.getElementById('totalGain');
+  gainEl.textContent = fmt(gain);
+  gainEl.className = gain >= 0 ? 'value' : 'value loss';
+
+  document.getElementById('taxRate').textContent = pct(federalRate);
+  document.getElementById('taxOwed').textContent = fmt(federalTax);
+  document.getElementById('niitAmount').textContent = fmt(niit);
+  document.getElementById('stateTax').textContent = fmt(stateTax);
+  document.getElementById('totalTax').textContent = fmt(totalTax);
+
+  var npEl = document.getElementById('netProfit');
+  npEl.textContent = fmt(netProfit);
+  npEl.className = netProfit >= 0 ? 'value' : 'value loss';
+
+  document.getElementById('effectiveRate').textContent = pct(effectiveRate);
+
+  // Breakdown
+  var rows = '';
+  rows += '<div class="breakdown-row"><span>Purchase Price</span><span>' + fmt(purchasePrice) + '</span></div>';
+  rows += '<div class="breakdown-row"><span>Sale Price</span><span>' + fmt(salePrice) + '</span></div>';
+  rows += '<div class="breakdown-row"><span>Capital Gain/Loss</span><span>' + fmt(gain) + '</span></div>';
+  rows += '<div class="breakdown-row"><span>Holding Period</span><span>' + (holdingPeriod === 'short' ? 'Short-Term' : 'Long-Term') + '</span></div>';
+  rows += '<div class="breakdown-row"><span>Federal Tax Rate</span><span>' + pct(federalRate) + '</span></div>';
+  rows += '<div class="breakdown-row"><span>Federal Tax</span><span>' + fmt(federalTax) + '</span></div>';
+  if (niit > 0) rows += '<div class="breakdown-row"><span>NIIT (3.8%)</span><span>' + fmt(niit) + '</span></div>';
+  if (stateTax > 0) rows += '<div class="breakdown-row"><span>State Tax (' + stateRate + '%)</span><span>' + fmt(stateTax) + '</span></div>';
+  rows += '<div class="breakdown-row" style="font-weight:600;color:#00ff88"><span>Net Profit After Tax</span><span>' + fmt(netProfit) + '</span></div>';
+  document.getElementById('breakdownRows').innerHTML = rows;
+
+  document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// Run initial calculation
+document.addEventListener('DOMContentLoaded', function() { calculateCapitalGains(); });
+</script><footer style="text-align:center;padding:24px;color:#6e6e73;font-size:0.85rem;border-top:1px solid #f5f5f7;margin-top:40px;"> by Michael Lip · More free tools at <a class="interactive-element" href="https://zovo.one/free-tools/" style="color:#0071e3;text-decoration:none;">zovo.one</a><div id="about-this-tool" style="background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;padding:1.5rem;max-width:800px;margin:2rem auto;color:#1d1d1f;"><h2 style="color:#1d1d1f;font-size:1.3rem;margin:0 0 1rem 0;">About This Tool</h2><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0 0 0.75rem 0;">The Capital Gains Tax Calculator is a free browser-based tool that requires no downloads or signups. It processes everything locally on your device for maximum privacy and speed.</p><p style="color:#6e6e73;font-size:0.92rem;line-height:1.7;margin:0;"> by Michael Lip, this tool runs 100% client-side in your browser. No data is uploaded or sent to any server. Your files and information stay on your device.</p></div><section class="quick-facts" style="margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;max-width:800px;"><h3 style="color:#0071e3;font-size:1.1rem;margin:0 0 1rem 0;">Quick Facts</h3><ul style="color:#86868b;font-size:0.92rem;line-height:1.8;list-style:none;padding:0;margin:0;"><li>100% free, no registration required</li><li>All processing happens locally in your browser</li><li>No data sent to external servers</li><li>Works offline after initial page load</li><li>Mobile-friendly responsive design</li></ul></section></footer><section class="cross-links" style="max-width:800px;margin:2rem auto;padding:1.5rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;"><h3 style="color:#1d1d1f;font-size:1rem;margin:0 0 1rem 0;">Related Free Tools</h3><div style="display:flex;flex-wrap:wrap;gap:0.5rem;"><a class="interactive-element" href="/free-tools/dividend-calculator/">Dividend Calculator</a><a class="interactive-element" href="/free-tools/compound-growth-calculator/">Compound Growth Calculator</a><a class="interactive-element" href="/free-tools/future-value-calculator/">Future Value Calculator</a></div></section><section class="compat-table-section" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
 <p style="color:#86868b;font-size:0.92rem;line-height:1.6;">Browser support verified via <a class="interactive-element" href="https://caniuse.com" rel="noopener" style="color:#0071e3;" target="_blank">caniuse.com</a>. Works in Chrome, Firefox, Safari, and Edge.</p>
 </section>
 <section class="original-research" style="margin:1.5rem auto;max-width:800px;padding:1.25rem;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:12px;">
