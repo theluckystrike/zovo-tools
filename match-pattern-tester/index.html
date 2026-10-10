@@ -1,0 +1,389 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match Pattern Tester - Test Chrome Extension Match Patterns | Zovo</title>
+<meta name="description" content="Test a Chrome extension match pattern against a URL. See which part decided the result: scheme, host, port or path. It follows the documented syntax.">
+<link rel="canonical" href="https://zovo.one/free-tools/match-pattern-tester">
+<link rel="alternate" hreflang="en" href="https://zovo.one/free-tools/match-pattern-tester"><link rel="alternate" hreflang="x-default" href="https://zovo.one/free-tools/match-pattern-tester">
+<link href="https://zovo.one/favicon.ico" rel="icon">
+<meta property="og:type" content="website"><meta property="og:title" content="Match Pattern Tester - Test Chrome Extension Match Patterns | Zovo">
+<meta property="og:description" content="Test a Chrome extension match pattern against a URL. See which part decided the result: scheme, host, port or path. It follows the documented syntax."><meta property="og:url" content="https://zovo.one/free-tools/match-pattern-tester">
+<meta property="og:site_name" content="Zovo">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Match Pattern Tester - Test Chrome Extension Match Patterns | Zovo">
+<meta name="twitter:description" content="Test a Chrome extension match pattern against a URL. See which part decided the result: scheme, host, port or path. It follows the documented syntax.">
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#1d1d1f;font-size:17px;line-height:1.58}
+body>nav,body>footer{max-width:900px;margin:0 auto;padding:20px 16px 0}
+body>footer{padding:24px 16px 48px;color:#6e6e73;font-size:.85rem;border-top:1px solid #e5e5ea}
+a{color:#0062c4}
+h1{font-size:2.2rem;line-height:1.15;margin:.4em 0 .3em}
+h2{font-size:1.5rem;margin:2em 0 .6em}
+h3{font-size:1.15rem;margin:0 0 .5em}
+p,li{margin:0 0 1em;overflow-wrap:anywhere}
+code{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;background:#f5f5f7;border-radius:6px;padding:1px 5px;font-size:.86em;overflow-wrap:anywhere}
+.byline,.small{color:#6e6e73;font-size:.9rem}
+.tool{background:#f5f5f7;border-radius:14px;padding:20px;margin:1.2em 0}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px}
+input[type=text],textarea{width:100%;border:1px solid #8e8e93;border-radius:8px;padding:11px 12px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:16px;background:#fff;color:#1d1d1f}
+button{background:#0062c4;color:#fff;border:1px solid #0062c4;border-radius:980px;padding:11px 22px;font-size:15px;font-weight:600;cursor:pointer;min-height:44px}
+button.secondary{background:#fff;color:#0062c4}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #0062c4;outline-offset:2px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.out{background:#fff;border:1px solid #d2d2d7;border-radius:12px;padding:16px;margin-top:16px;overflow-wrap:anywhere;word-break:break-word}
+.out p{margin:.5em 0 0}
+.verdict{display:inline-block;white-space:nowrap;border-radius:8px;padding:3px 12px;font-weight:700;font-size:.92rem}
+.verdict.yes{background:#dff5e5;color:#11602b}
+.verdict.no{background:#fde3e1;color:#9c1c16}
+.verdict.bad{background:#fdecd0;color:#7a4400}
+.tablewrap{overflow-x:auto;margin:1em 0}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border:1px solid #d2d2d7;padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.tablewrap table{min-width:620px}
+#mp-batch-out table{min-width:0}
+th{white-space:nowrap}
+th{background:#f5f5f7}
+details{border:1px solid #d2d2d7;border-radius:12px;padding:12px 16px;margin:.8em 0}
+summary{font-weight:600;cursor:pointer}
+details p{margin:.7em 0 0}
+</style>
+</head><body>
+<nav style="display:flex;gap:24px;font-size:0.85rem;"><a class="interactive-element" href="/" style="color:#6e6e73;text-decoration:none;">All Tools</a><a class="interactive-element" href="https://zovo.one" style="color:#6e6e73;text-decoration:none;">zovo.one</a></nav>
+<main style="max-width:900px;margin:0 auto;padding:24px 16px">
+<h1>Match pattern tester</h1>
+<p class='byline'>By <a href='https://zovo.one/about'>Michael Lip</a>. Updated 2026-10-10.</p>
+
+<p>Type a Chrome extension match pattern and a URL. The page tells you if the pattern matches the URL, and which part decided the result: the scheme, the host, the port or the path. It also tells you why a pattern is invalid.</p>
+<p>The tool tests the documented match pattern syntax of <a href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns">Google's match patterns page</a> (read 2026-10-10). It does not test <code>exclude_matches</code>, globs (<code>include_globs</code>, <code>exclude_globs</code>) or declarativeNetRequest filters. The test runs in your browser.</p>
+
+<h2 id="tool">Test a pattern</h2>
+<div class="tool">
+<div class="field"><label for="mp-pattern">Match pattern</label>
+<input type="text" id="mp-pattern" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="https://*.google.com/foo*bar"></div>
+<div class="field"><label for="mp-url">URL to test</label>
+<input type="text" id="mp-url" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="https://docs.google.com/foobar"></div>
+<div class="row"><button type="button" id="mp-go">Test</button><button type="button" class="secondary" id="mp-example">Load an example</button></div>
+<div id="mp-out" class="out" role="status" aria-live="polite" hidden></div>
+<noscript><p class="small">The tester needs JavaScript. The rules below do not need it.</p></noscript>
+</div>
+
+<h2 id="batch">Test many URLs</h2>
+<p>Paste one URL on each line. The page tests each URL against the pattern in the box above.</p>
+<div class="tool">
+<div class="field"><label for="mp-batch">URLs, one on each line</label>
+<textarea id="mp-batch" rows="5" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="https://example.com/&#10;https://sub.example.com/page&#10;http://example.com/"></textarea></div>
+<button type="button" id="mp-batch-go">Test all URLs</button>
+<div id="mp-batch-out" class="out" role="status" aria-live="polite" hidden></div>
+</div>
+
+<h2 id="examples">The documented examples as live tests</h2>
+<p>Each row below is an example from <a href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns">Google's match patterns page</a> (read 2026-10-10). The last column shows the result that this tester gives in your browser now.</p>
+<div class="tablewrap"><table id="mp-doc-rows">
+<thead><tr><th>Pattern</th><th>URL</th><th>Documentation</th><th>This tester</th></tr></thead>
+<tbody>
+<tr data-pattern="https://*/*" data-url="https://example.com/foo/bar.html"><td><code>https://*/*</code></td><td><code>https://example.com/foo/bar.html</code></td><td>Matches any URL using the https scheme.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="https://*/" data-url="https://example.com/"><td><code>https://*/</code></td><td><code>https://example.com/</code></td><td>Matches any URL using the https scheme.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="https://*/foo*" data-url="https://example.com/foo/bar.html"><td><code>https://*/foo*</code></td><td><code>https://example.com/foo/bar.html</code></td><td>Example of a match.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="https://*/foo*" data-url="https://www.google.com/foo"><td><code>https://*/foo*</code></td><td><code>https://www.google.com/foo</code></td><td>Example of a match.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="https://*.google.com/foo*bar" data-url="https://www.google.com/foo/baz/bar"><td><code>https://*.google.com/foo*bar</code></td><td><code>https://www.google.com/foo/baz/bar</code></td><td>Example of a match.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="https://*.google.com/foo*bar" data-url="https://docs.google.com/foobar"><td><code>https://*.google.com/foo*bar</code></td><td><code>https://docs.google.com/foobar</code></td><td>Example of a match.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="file:///foo*" data-url="file:///foo/bar.html"><td><code>file:///foo*</code></td><td><code>file:///foo/bar.html</code></td><td>Example of a match.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="file:///foo*" data-url="file:///foo"><td><code>file:///foo*</code></td><td><code>file:///foo</code></td><td>Example of a match.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="http://127.0.0.1/*" data-url="http://127.0.0.1/"><td><code>http://127.0.0.1/*</code></td><td><code>http://127.0.0.1/</code></td><td>Example of a match.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="http://127.0.0.1/*" data-url="http://127.0.0.1/foo/bar.html"><td><code>http://127.0.0.1/*</code></td><td><code>http://127.0.0.1/foo/bar.html</code></td><td>Example of a match.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="http://127.0.0.1/" data-url="http://127.0.0.1/"><td><code>http://127.0.0.1/</code></td><td><code>http://127.0.0.1/</code></td><td>Example of a match.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="http://localhost/*" data-url="http://localhost:8080/"><td><code>http://localhost/*</code></td><td><code>http://localhost:8080/</code></td><td>Matches any localhost port.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="http://localhost/*" data-url="http://localhost:3000/"><td><code>http://localhost/*</code></td><td><code>http://localhost:3000/</code></td><td>Matches any localhost port.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="*://mail.google.com/*" data-url="http://mail.google.com/"><td><code>*://mail.google.com/*</code></td><td><code>http://mail.google.com/</code></td><td>Matches any URL that starts with http://mail.google.com or https://mail.google.com.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="*://mail.google.com/*" data-url="https://mail.google.com/mail/"><td><code>*://mail.google.com/*</code></td><td><code>https://mail.google.com/mail/</code></td><td>Matches any URL that starts with http://mail.google.com or https://mail.google.com.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="*://mail.google.com/" data-url="https://mail.google.com/"><td><code>*://mail.google.com/</code></td><td><code>https://mail.google.com/</code></td><td>Matches any URL that starts with http://mail.google.com or https://mail.google.com.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="&lt;all_urls&gt;" data-url="https://example.com/foo/bar.html"><td><code>&lt;all_urls&gt;</code></td><td><code>https://example.com/foo/bar.html</code></td><td>Matches any URL that starts with a permitted scheme.</td><td class="res">Needs JavaScript</td></tr>
+<tr data-pattern="&lt;all_urls&gt;" data-url="file:///foo/bar.html"><td><code>&lt;all_urls&gt;</code></td><td><code>file:///foo/bar.html</code></td><td>Matches any URL that starts with a permitted scheme.</td><td class="res">Needs JavaScript</td></tr>
+</tbody></table></div>
+<p>The documentation shows some patterns in two forms, for example <code>https://*/*</code> or <code>https://*/</code>. It also says: "For host permissions, the path is required but ignored." This tester always compares the path, as the function <code>MatchesURL</code> in Chromium's <a href="https://chromium.googlesource.com/chromium/src/+/main/extensions/common/url_pattern.cc">url_pattern.cc</a> does (read 2026-10-10). Thus the short form <code>https://*/</code> matches only the root path <code>/</code> in this tester. Use the form with <code>/*</code> to match all paths.</p>
+
+<h2 id="rules">The rules that the tester applies</h2>
+<p>The documentation gives the structure of a match pattern as <code>&lt;scheme&gt;://&lt;host&gt;:&lt;port&gt;/&lt;path&gt;</code>. The port is optional. The sources below were read on 2026-10-10.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Part</th><th>Rule</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Scheme</td><td>The scheme must be <code>http</code>, <code>https</code>, <code>file</code> or <code>*</code>. The wildcard <code>*</code> matches only http or https. The characters <code>://</code> must follow the scheme. The tester rejects all other schemes, for example <code>ftp</code>, <code>ws</code>, <code>data</code>, <code>about</code>, <code>urn</code> and <code>chrome-extension</code>.</td><td><a href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns">Google, match patterns</a>, read 2026-10-10</td></tr>
+<tr><td>Host</td><td>The host is a host name, or <code>*.</code> before a host name to match subdomains, or <code>*</code> alone. A wildcard in the host must be the first or only character. A period or a forward slash must follow it.</td><td><a href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns">Google, match patterns</a>, read 2026-10-10</td></tr>
+<tr><td>Host</td><td><code>*.example.com</code> also matches <code>example.com</code> itself. A subdomain wildcard does not match an IP address. The comparison of host names ignores letter case.</td><td><a href="https://chromium.googlesource.com/chromium/src/+/main/extensions/common/url_pattern.cc">Chromium, url_pattern.cc</a> (functions Parse and MatchesHost), read 2026-10-10</td></tr>
+<tr><td>Port</td><td>The port is optional. A pattern without a port matches all ports. A pattern with a port, for example <code>http://localhost:8080/*</code>, matches only that port.</td><td><a href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns">Google, match patterns</a>, read 2026-10-10</td></tr>
+<tr><td>Port</td><td>A port must be <code>*</code> or a number from 0 to 65535.</td><td><a href="https://chromium.googlesource.com/chromium/src/+/main/extensions/common/url_pattern.cc">Chromium, url_pattern.cc</a> (function IsValidPortForScheme), read 2026-10-10</td></tr>
+<tr><td>Path</td><td>The path is required. <code>https://example.com</code> without a path is invalid. For host permissions, Chrome ignores the path, and the documentation recommends <code>/*</code>.</td><td><a href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns">Google, match patterns</a>, read 2026-10-10</td></tr>
+<tr><td>Path</td><td>A <code>*</code> in the path matches zero or more characters. All other characters are literal. The comparison is case-sensitive. The query string is part of the path that the tester compares. The fragment (the part after <code>#</code>) is not.</td><td><a href="https://chromium.googlesource.com/chromium/src/+/main/extensions/common/url_pattern.cc">Chromium, url_pattern.cc</a> (functions MatchesURL and MatchesPath), read 2026-10-10</td></tr>
+<tr><td><code>&lt;all_urls&gt;</code></td><td>The special pattern <code>&lt;all_urls&gt;</code> matches any URL that starts with a permitted scheme. In this tester the permitted schemes are http, https and file.</td><td><a href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns">Google, match patterns</a>, read 2026-10-10</td></tr>
+<tr><td><code>file:///</code></td><td>A file pattern has three slashes and no host. The user must manually grant access to local files.</td><td><a href="https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns">Google, match patterns</a>, read 2026-10-10</td></tr>
+</tbody></table></div>
+
+<h2 id="mistakes">Patterns that are invalid</h2>
+<ul>
+<li><code>https://example.com</code> has no path. Write <code>https://example.com/*</code>.</li>
+<li><code>https://www.google.*/*</code> has a wildcard that is not the first character of the host. The documentation says that Chrome does not support match patterns for top-level domains. Write one pattern for each domain, as in <code>http://google.es/*</code> and <code>http://google.fr/*</code>.</li>
+<li><code>https://*foo.example.com/*</code> has a wildcard that a period does not follow. Write <code>https://*.example.com/*</code>.</li>
+<li><code>file://foo*</code> has two slashes. Write <code>file:///foo*</code>.</li>
+<li><code>ftp://example.com/*</code> has a scheme that the documentation does not list.</li>
+</ul>
+
+<h2 id="limits">Limits of this tester</h2>
+<details><summary>Is this the code that Chrome runs?</summary>
+<p>No. The tester is a separate JavaScript implementation of the documented rules. Chromium's parser in <a href="https://chromium.googlesource.com/chromium/src/+/main/extensions/common/url_pattern.cc">url_pattern.cc</a> (read 2026-10-10) knows more schemes than the documentation lists, for example ftp, ws, wss and data. It has special handling for filesystem URLs. It also accepts a file pattern that has a host. The tester does not cover these cases. For an unusual host name or an unusual percent-escape, the result can differ from Chrome.</p></details>
+<details><summary>Where does a manifest use match patterns?</summary>
+<p>The documentation names these uses: to inject content scripts, to declare host permissions, to grant access to web-accessible resources, and in the <code>externally_connectable.matches</code> manifest key. Google's <a href="https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions">Declare permissions page</a> (read 2026-10-10) says that a change of the match patterns in <code>host_permissions</code> or <code>content_scripts.matches</code> triggers a warning. To see the host patterns of a packed extension, open it in the <a href="/free-tools/crx-viewer">CRX viewer</a>.</p></details>
+<details><summary>Does the query string take part in the match?</summary>
+<p>Yes. The pattern <code>https://example.com/foo</code> does not match <code>https://example.com/foo?x=1</code>. The pattern <code>https://example.com/foo*</code> matches it. The fragment does not take part.</p></details>
+</main>
+<footer> by Michael Lip at <a class="interactive-element" href="https://zovo.one">zovo.one</a></footer>
+<script type='application/ld+json'>{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://zovo.one/free-tools/match-pattern-tester#webpage","url":"https://zovo.one/free-tools/match-pattern-tester","name":"Match Pattern Tester - Test Chrome Extension Match Patterns | Zovo","description":"Test a Chrome extension match pattern against a URL and see which part decided the result. The tester follows the documented match pattern syntax.","datePublished":"2026-10-10","dateModified":"2026-10-10","isPartOf":{"@type":"WebSite","name":"Zovo","url":"https://zovo.one/"},"breadcrumb":{"@id":"https://zovo.one/free-tools/match-pattern-tester#breadcrumb"}},{"@type":"BreadcrumbList","@id":"https://zovo.one/free-tools/match-pattern-tester#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free tools","item":"https://zovo.one/free-tools"},{"@type":"ListItem","position":3,"name":"Match pattern tester","item":"https://zovo.one/free-tools/match-pattern-tester"}]},{"@type":"Article","@id":"https://zovo.one/free-tools/match-pattern-tester#article","headline":"Match pattern tester","description":"A tester for Chrome extension match patterns. It reports the part of the pattern that accepted or refused a URL, by the documented match pattern syntax.","author":{"@id":"https://zovo.one/about#person"},"publisher":{"@type":"Organization","name":"Zovo","url":"https://zovo.one/"},"datePublished":"2026-10-10","dateModified":"2026-10-10","mainEntityOfPage":{"@id":"https://zovo.one/free-tools/match-pattern-tester#webpage"}},{"@type":"Person","@id":"https://zovo.one/about#person","name":"Michael Lip","url":"https://zovo.one/about"}]}</script>
+<script>
+(function(){
+'use strict';
+/* pure-start */
+/* Match pattern parser and matcher. Rules: developer.chrome.com match patterns page and
+   Chromium extensions/common/url_pattern.cc, both read 2026-10-10. No DOM use in this block. */
+var DOC_SCHEMES=['http','https','file'];
+function fail(code,msg){return{ok:false,code:code,error:msg};}
+function canonHost(h){
+  try{
+    var u=new URL('http://'+h+'/');
+    if(u.username||u.password||u.port||u.pathname!=='/'||u.search||u.hash){return '';}
+    return u.hostname;
+  }catch(e){return '';}
+}
+function trimDots(h){return h.replace(/\.+$/,'');}
+function isIP(h){return h.charAt(0)==='['||/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/.test(h);}
+function parsePattern(spec){
+  spec=(typeof spec==='string'?spec:'').replace(/^\s+|\s+$/g,'');
+  if(spec===''){return fail('empty','The pattern is empty. Type a pattern, for example https://*.example.com/*.');}
+  if(spec==='<all_urls>'){return{ok:true,matchAllUrls:true,scheme:'*',host:'',matchSubdomains:true,port:'*',path:'/*'};}
+  if(spec.toLowerCase()==='<all_urls>'){return fail('scheme','Write <all_urls> in lower case.');}
+  var sep=spec.indexOf('://'),colon=spec.indexOf(':'),scheme;
+  if(sep<0||colon<sep){
+    if(colon<=0){return fail('separator','The pattern has no scheme. Start the pattern with http://, https://, file:// or *://.');}
+    scheme=spec.slice(0,colon);
+    if(scheme==='*'||DOC_SCHEMES.indexOf(scheme)>=0){return fail('separator','The characters :// must follow the scheme "'+scheme+'".');}
+    return fail('scheme','"'+scheme+'" is not a permitted scheme. Use http, https, file or *.');
+  }
+  scheme=spec.slice(0,sep);
+  if(scheme!=='*'&&DOC_SCHEMES.indexOf(scheme)<0){
+    if(DOC_SCHEMES.indexOf(scheme.toLowerCase())>=0){return fail('scheme','Write the scheme "'+scheme+'" in lower case.');}
+    return fail('scheme','"'+scheme+'" is not a permitted scheme. Use http, https, file or *.');
+  }
+  var rest=spec.slice(sep+3),slash=rest.indexOf('/');
+  if(scheme==='file'){
+    if(slash!==0){return fail('file','A file pattern has three slashes and no host, for example file:///foo*.');}
+    return{ok:true,matchAllUrls:false,scheme:'file',host:'',matchSubdomains:false,port:'*',path:rest};
+  }
+  if(slash===0||rest===''){return fail('host','The host is empty. Write a host name, *.example.com or * after the scheme.');}
+  if(slash<0){return fail('path','The pattern has no path. Add a path after the host, for example '+spec+'/*.');}
+  var hostPort=rest.slice(0,slash),path=rest.slice(slash),port='*',host=hostPort,pc;
+  if(hostPort.charAt(0)==='['){
+    var end=hostPort.indexOf(']');
+    if(end<=1){return fail('host','The IPv6 host "'+hostPort+'" is not valid.');}
+    pc=-1;
+    if(end<hostPort.length-1){
+      if(hostPort.charAt(end+1)!==':'){return fail('host','The IPv6 host "'+hostPort+'" is not valid.');}
+      pc=end+1;
+    }
+  }else{pc=hostPort.indexOf(':');}
+  if(pc>=0){
+    port=hostPort.slice(pc+1);host=hostPort.slice(0,pc);
+    if(port!=='*'&&!(/^[0-9]{1,5}$/.test(port)&&Number(port)<65536)){
+      return fail('port','"'+port+'" is not a valid port. Use * or a number from 0 to 65535.');
+    }
+  }
+  if(host===''){return fail('host','The host is empty. Write a host name, *.example.com or * after the scheme.');}
+  var sub=false;
+  if(host==='*'){sub=true;host='';}
+  else if(host.slice(0,2)==='*.'){
+    if(host.length===2){return fail('host','The host "*." is not valid. Write a host name after "*.", or use * alone.');}
+    sub=true;host=host.slice(2);
+  }
+  if(host.indexOf('*')>=0){
+    return fail('wildcard','The host wildcard is not valid. A * in the host must be the first or only character, and a period or a forward slash must follow it. Chrome does not support a wildcard for the top-level domain.');
+  }
+  if(host!==''){
+    var canon=canonHost(host);
+    if(canon===''){return fail('host','"'+host+'" is not a valid host name.');}
+    host=canon;
+  }
+  return{ok:true,matchAllUrls:false,scheme:scheme,host:host,matchSubdomains:sub,port:port,path:path};
+}
+/* Unescape as Chromium UnescapeRule::NORMAL: letters, digits, " - < > _ ~ and valid non-ASCII UTF-8. */
+function unescapeNormal(s){
+  if(s.indexOf('%')<0){return s;}
+  var out='',i=0,n=s.length;
+  while(i<n){
+    var c=s.charAt(i);
+    if(c!=='%'||i+2>=n||!/^[0-9a-fA-F]{2}$/.test(s.substr(i+1,2))){out+=c;i+=1;continue;}
+    var b=parseInt(s.substr(i+1,2),16);
+    if(b<128){
+      var ch=String.fromCharCode(b);
+      if(/[A-Za-z0-9"<>_~-]/.test(ch)){out+=ch;}else{out+=s.substr(i,3);}
+      i+=3;continue;
+    }
+    var len=b>=0xF0?4:b>=0xE0?3:b>=0xC0?2:0,seq=s.substr(i,len*3),dec='';
+    if(len>0&&seq.length===len*3){try{dec=decodeURIComponent(seq);}catch(e){dec='';}}
+    if(dec!==''){out+=dec;i+=len*3;}else{out+=s.substr(i,3);i+=3;}
+  }
+  return out;
+}
+/* Wildcard match without regular expressions: only * is special. Time is at most p.length * s.length steps. */
+function globMatch(p,s){
+  var pi=0,si=0,star=-1,mark=0;
+  while(si<s.length){
+    if(pi<p.length&&p.charAt(pi)==='*'){star=pi;pi+=1;mark=si;}
+    else if(pi<p.length&&p.charAt(pi)===s.charAt(si)){pi+=1;si+=1;}
+    else if(star>=0){pi=star+1;mark+=1;si=mark;}
+    else{return false;}
+  }
+  while(pi<p.length&&p.charAt(pi)==='*'){pi+=1;}
+  return pi===p.length;
+}
+function matchesPath(patPath,testPath){
+  var pp=unescapeNormal(patPath),tp=unescapeNormal(testPath);
+  if(pp.length===tp.length+2&&pp.slice(0,tp.length)===tp&&pp.slice(-2)==='/*'){return true;}
+  return globMatch(pp,tp)||globMatch(patPath,testPath);
+}
+function matchesHost(pat,urlHost){
+  var th=trimDots(urlHost.toLowerCase()),ph=trimDots(pat.host);
+  if(th===ph){return true;}
+  if(!pat.matchSubdomains){return false;}
+  if(ph===''){return true;}
+  if(isIP(th)){return false;}
+  if(th.length<=ph.length+1){return false;}
+  return th.slice(-ph.length)===ph&&th.charAt(th.length-ph.length-1)==='.';
+}
+function no(part,why){return{match:false,part:part,why:why};}
+function matchesURL(pat,url){
+  if(!pat||!pat.ok){return no('pattern','The pattern is invalid.');}
+  var u;
+  try{u=new URL((typeof url==='string'?url:'').replace(/^\s+|\s+$/g,''));}
+  catch(e){return no('url','The URL is not valid. Type a full URL, for example https://example.com/page.');}
+  var us=u.protocol.slice(0,-1);
+  if(pat.matchAllUrls){
+    if(DOC_SCHEMES.indexOf(us)<0){return no('scheme','Scheme: <all_urls> matches the permitted schemes http, https and file. The scheme of the URL is '+us+'.');}
+    return{match:true,part:'all',why:'<all_urls> matches each URL that has a permitted scheme (http, https or file).'};
+  }
+  if(pat.scheme==='*'){
+    if(us!=='http'&&us!=='https'){return no('scheme','Scheme: the wildcard * matches only http or https. The scheme of the URL is '+us+'.');}
+  }else if(pat.scheme!==us){
+    return no('scheme','Scheme: the pattern has the scheme '+pat.scheme+'. The scheme of the URL is '+us+'.');
+  }
+  if(pat.scheme!=='file'){
+    if(!matchesHost(pat,u.hostname)){
+      return no('host','Host: the pattern host '+(pat.matchSubdomains?'*.':'')+pat.host+' does not match the host '+u.hostname+'.');
+    }
+    var eff=u.port||(us==='https'?'443':'80');
+    if(pat.port!=='*'&&pat.port!==eff){return no('port','Port: the pattern has the port '+pat.port+'. The port of the URL is '+eff+'.');}
+  }
+  var href=u.href,hash=href.indexOf('#');
+  if(hash>=0){href=href.slice(0,hash);}
+  var q=href.indexOf('?'),testPath=u.pathname+(q>=0?href.slice(q):'');
+  if(!matchesPath(pat.path,testPath)){
+    return no('path','Path: the pattern path '+pat.path+' does not match '+testPath+'. The path is case-sensitive and the query string is part of it. In host_permissions Chrome ignores the path, so this result is for uses that compare the path, for example content script matches.');
+  }
+  return{match:true,part:'all',why:'The scheme, the host, the port and the path all match.'};
+}
+/* pure-end */
+
+function $(id){return document.getElementById(id);}
+function el(tag,cls,text){var e=document.createElement(tag);if(cls){e.className=cls;}if(text!==undefined){e.textContent=text;}return e;}
+function clear(node){while(node.firstChild){node.removeChild(node.firstChild);}}
+function verdictNode(kind){
+  var label=kind==='yes'?'Match':kind==='no'?'No match':'Invalid pattern';
+  return el('span','verdict '+kind,label);
+}
+function describe(pat){
+  if(pat.matchAllUrls){return 'Pattern parts: the special pattern <all_urls>.';}
+  var host=pat.scheme==='file'?'none (file pattern)':(pat.host===''?'any host':(pat.matchSubdomains?pat.host+' and its subdomains':pat.host));
+  return 'Pattern parts: scheme '+(pat.scheme==='*'?'* (http or https)':pat.scheme)+'; host '+host+'; port '+(pat.port==='*'?'any':pat.port)+'; path '+pat.path;
+}
+function saveState(p,u){
+  try{
+    if(p.length+u.length<1500){history.replaceState(null,'','#p='+encodeURIComponent(p)+'&u='+encodeURIComponent(u));}
+  }catch(e){/* state is optional */}
+}
+function run(){
+  var out=$('mp-out'),ps=$('mp-pattern').value,us=$('mp-url').value;
+  var pat=parsePattern(ps);
+  clear(out);
+  out.appendChild(el('h3','', 'Result'));
+  if(!pat.ok){
+    out.appendChild(verdictNode('bad'));
+    out.appendChild(el('p','',pat.error));
+  }else if(us.replace(/\s+/g,'')===''){
+    out.appendChild(el('span','verdict yes','Valid pattern'));
+    out.appendChild(el('p','','Type a URL to test it against this pattern.'));
+    out.appendChild(el('p','small',describe(pat)));
+  }else{
+    var r=matchesURL(pat,us);
+    out.appendChild(verdictNode(r.match?'yes':'no'));
+    out.appendChild(el('p','',r.why));
+    out.appendChild(el('p','small',describe(pat)));
+  }
+  out.hidden=false;
+  saveState(ps,us);
+}
+function runBatch(){
+  var out=$('mp-batch-out'),ps=$('mp-pattern').value,pat=parsePattern(ps);
+  var lines=$('mp-batch').value.split(/\r?\n/).map(function(s){return s.replace(/^\s+|\s+$/g,'');}).filter(Boolean).slice(0,500);
+  clear(out);
+  if(!pat.ok){
+    out.appendChild(verdictNode('bad'));
+    out.appendChild(el('p','',pat.error));
+  }else if(!lines.length){
+    out.appendChild(el('p','','Paste one URL or more.'));
+  }else{
+    var wrap=el('div','tablewrap'),table=el('table'),head=el('tr'),body=el('tbody');
+    head.appendChild(el('th','','URL'));head.appendChild(el('th','','Result'));head.appendChild(el('th','','Reason'));
+    var thead=el('thead');thead.appendChild(head);table.appendChild(thead);
+    lines.forEach(function(line){
+      var r=matchesURL(pat,line),tr=el('tr'),td=el('td');
+      tr.appendChild(el('td','',line));
+      td.appendChild(verdictNode(r.match?'yes':'no'));tr.appendChild(td);
+      tr.appendChild(el('td','',r.why));
+      body.appendChild(tr);
+    });
+    table.appendChild(body);wrap.appendChild(table);out.appendChild(wrap);
+  }
+  out.hidden=false;
+}
+function fillDocRows(){
+  var rows=document.querySelectorAll('#mp-doc-rows tbody tr'),i;
+  for(i=0;i<rows.length;i+=1){
+    var pat=parsePattern(rows[i].getAttribute('data-pattern')),cell=rows[i].querySelector('.res');
+    var ok=pat.ok&&matchesURL(pat,rows[i].getAttribute('data-url')).match;
+    clear(cell);
+    cell.appendChild(el('span','verdict '+(ok?'yes':'bad'),ok?'Match':'Differs'));
+  }
+}
+function onEnter(e){if(e.key==='Enter'){e.preventDefault();run();}}
+function restore(){
+  try{
+    var h=location.hash.replace(/^#/,''),p=/(?:^|&)p=([^&]*)/.exec(h),u=/(?:^|&)u=([^&]*)/.exec(h);
+    if(p){
+      $('mp-pattern').value=decodeURIComponent(p[1]);
+      $('mp-url').value=u?decodeURIComponent(u[1]):'';
+      run();
+    }
+  }catch(e){/* a bad hash is ignored */}
+}
+$('mp-go').addEventListener('click',run);
+$('mp-pattern').addEventListener('keydown',onEnter);
+$('mp-url').addEventListener('keydown',onEnter);
+$('mp-example').addEventListener('click',function(){
+  $('mp-pattern').value='https://*.google.com/foo*bar';
+  $('mp-url').value='https://docs.google.com/foobar';
+  run();
+});
+$('mp-batch-go').addEventListener('click',runBatch);
+window.addEventListener('hashchange',restore);
+fillDocRows();
+restore();
+})();
+</script>
+</body></html>
