@@ -1,0 +1,389 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chrome Storage Sync Quota Checker for Extension Data | Zovo</title>
+<meta name="description" content="Paste the object that your extension gives to chrome.storage.sync.set(). See the bytes that Chromium counts for each key, with Pass or Fail for each limit.">
+<link rel="canonical" href="https://zovo.one/free-tools/chrome-storage-quota-checker">
+<link rel="alternate" hreflang="en" href="https://zovo.one/free-tools/chrome-storage-quota-checker"><link rel="alternate" hreflang="x-default" href="https://zovo.one/free-tools/chrome-storage-quota-checker">
+<link href="https://zovo.one/favicon.ico" rel="icon">
+<meta property="og:type" content="website"><meta property="og:title" content="Chrome Storage Sync Quota Checker for Extension Data | Zovo">
+<meta property="og:description" content="Paste the object that your extension gives to chrome.storage.sync.set(). See the bytes that Chromium counts for each key, with Pass or Fail for each limit."><meta property="og:url" content="https://zovo.one/free-tools/chrome-storage-quota-checker">
+<meta property="og:site_name" content="Zovo">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Chrome Storage Sync Quota Checker for Extension Data | Zovo">
+<meta name="twitter:description" content="Paste the object that your extension gives to chrome.storage.sync.set(). See the bytes that Chromium counts for each key, with Pass or Fail for each limit.">
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#1d1d1f;font-size:17px;line-height:1.58}
+body>nav,body>footer{max-width:900px;margin:0 auto;padding:20px 16px 0}
+body>footer{padding:24px 16px 48px;color:#6e6e73;font-size:.85rem;border-top:1px solid #e5e5ea}
+a{color:#0062c4}
+h1{font-size:2.2rem;line-height:1.15;margin:.4em 0 .3em}
+h2{font-size:1.5rem;margin:2em 0 .6em}
+h3{font-size:1.15rem;margin:0 0 .5em}
+p,li{margin:0 0 1em;overflow-wrap:anywhere}
+code{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;background:#f5f5f7;border-radius:6px;padding:1px 5px;font-size:max(14px,.86em);overflow-wrap:anywhere}
+.byline,.small{color:#6e6e73;font-size:.9rem}
+.tool{background:#f5f5f7;border-radius:14px;padding:20px;margin:1.2em 0}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px}
+textarea{display:block;width:100%;max-width:100%;min-height:120px;padding:10px 12px;font-size:15px;line-height:1.45;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:#1d1d1f;background:#fff;border:1px solid #8a8a8e;border-radius:10px;resize:vertical}
+button{background:#0062c4;color:#fff;border:1px solid #0062c4;border-radius:980px;padding:11px 22px;font-size:15px;font-weight:600;cursor:pointer;min-height:44px}
+button.secondary{background:#fff;color:#0062c4}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #0062c4;outline-offset:2px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.out{background:#fff;border:1px solid #d2d2d7;border-radius:12px;padding:16px;margin-top:16px;overflow-wrap:anywhere;word-break:break-word}
+.out p{margin:.5em 0 0}
+.out h3{margin:.4em 0 .5em}
+.verdict{display:inline-block;white-space:nowrap;border-radius:8px;padding:3px 12px;font-weight:700;font-size:.92rem}
+.verdict.yes{background:#dff5e5;color:#11602b}
+.verdict.no{background:#fde3e1;color:#9c1c16}
+.verdict.bad{background:#fdecd0;color:#7a4400}
+.verdict.opt{background:#eef0f3;color:#3a3a3c}
+.bar{height:14px;border-radius:7px;background:#eef0f3;overflow:hidden;margin:6px 0 4px}
+.bar>div{height:100%;border-radius:7px}
+.bar .ok{background:#34c759}.bar .warn{background:#ff9500}.bar .over{background:#ff3b30}
+.tablewrap{overflow-x:auto;margin:1em 0;-webkit-overflow-scrolling:touch}
+.tablewrap:focus-visible{outline:3px solid #0062c4;outline-offset:2px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border:1px solid #d2d2d7;padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:break-word;word-break:normal}
+th{white-space:nowrap;background:#f5f5f7}
+.nw{white-space:nowrap}
+@media (max-width:400px){th,td{padding:6px 5px}th{white-space:normal}.nw{white-space:normal}}
+details{border:1px solid #d2d2d7;border-radius:12px;padding:12px 16px;margin:.8em 0}
+summary{font-weight:600;cursor:pointer}
+details p{margin:.7em 0 0}
+.err{color:#9c1c16;font-weight:600}
+@media print{details::details-content{content-visibility:visible;display:block}.tool .row{display:none}.tablewrap{overflow:visible}th{white-space:normal}code{overflow-wrap:anywhere}#csq-out table{table-layout:fixed}#csq-out th:nth-child(1){width:18%}#csq-out th:nth-child(2),#csq-out th:nth-child(3){width:12%}#csq-out th:nth-child(4){width:24%}#csq-out td{overflow-wrap:anywhere}}
+</style>
+</head><body>
+<nav style="display:flex;gap:24px;font-size:0.85rem;"><a class="interactive-element" href="/" style="color:#6e6e73;text-decoration:none;">All Tools</a><a class="interactive-element" href="https://zovo.one" style="color:#6e6e73;text-decoration:none;">zovo.one</a></nav>
+<main style="max-width:900px;margin:0 auto;padding:24px 16px">
+<h1>Chrome storage quota checker</h1>
+<p class='byline'>By <a href='https://zovo.one/about'>Michael Lip</a>. Updated <span class="nw">2026-10-31</span>.</p>
+
+<p>Paste the JSON object that your extension writes to <code>chrome.storage</code>. The checker counts the bytes that Chromium counts against the quota. For each key, it adds the UTF-8 bytes of the key to the bytes of the value written by Chromium's own JSON writer. It then compares the totals with the limits of <code>chrome.storage.sync</code> and <code>chrome.storage.local</code>. It does not count <code>chrome.storage.session</code>, because Chromium measures that area by estimated memory use. It does not read the storage of an installed extension.</p>
+<p>Everything runs in your browser. Nothing is uploaded. The counting rules and the limits come from the Chromium source code. The table below gives each limit from the source and the commit that it was fetched from.</p>
+
+<h2 id="tool">Check your storage payload</h2>
+<div class="tool">
+<div class="field">
+<label for="csq-input">Storage JSON (one object, for example from JSON.stringify of your storage map)</label>
+<textarea id="csq-input" spellcheck="false" placeholder='{"settings": {"theme": "dark"}, "tabs": ["a","b"]}'></textarea>
+</div>
+<div class="row"><button type="button" id="csq-run">Count bytes</button><button type="button" class="secondary" id="csq-clear">Clear</button></div>
+<div id="csq-out" class="out" role="status" aria-live="polite" hidden></div>
+<noscript><p class="small">The checker needs JavaScript. The limits table below does not need it.</p></noscript>
+</div>
+
+<h2 id="how">How the bytes are counted</h2>
+<ul>
+<li>Per item. Chromium's <code>SettingsStorageQuotaEnforcer::Allocate</code> computes <code>key.size() + value_as_json.size()</code>, where <code>value_as_json</code> is the value written through <code>base::WriteJson</code>. A key is counted once, without quotes, as its raw UTF-8 length.</li>
+<li>Replacing. When you set a key that is already stored, its new size replaces its old size. <code>Allocate</code> adds <code>new_size - existing_size</code> to the total. The checker counts the pasted object only, so add the keys that are already stored if they stay.</li>
+<li>Strings. Chromium escapes <code>\b \f \n \r \t \\ \"</code>, writes <code>&lt;</code> as <code>\u003C</code>, writes U+2028 and U+2029 as <code>\u2028</code> / <code>\u2029</code>, and writes other control characters as <code>\uXXXX</code>. Everything else, including non-ASCII characters, passes through as UTF-8 bytes. The checker counts UTF-8 bytes, matching <code>std::string::size()</code>.</li>
+<li>Numbers. A number from -2147483648 to 2147483647 with no fraction is an int32. Chromium writes it as plain digits, for example <code>42</code>. JSON <code>1.0</code> is the JavaScript number 1, so it counts as the int32 <code>1</code>. Each other number is a double. Chromium writes a double in its shortest form. It uses an exponent when the exponent is below -6 or is 12 or more, for example <code>1e+12</code> and <code>1.761886338123e+12</code>. When the result has no <code>.</code> and no <code>e</code>, Chromium adds <code>.0</code>, for example <code>3000000000.0</code>. For large numbers, JavaScript uses an exponent only from 1e21. So <code>JSON.stringify</code> gives a different length for these numbers.</li>
+<li>Booleans and null. <code>true</code>, <code>false</code> and <code>null</code> count 4, 5 and 4 bytes.</li>
+<li>Negative zero. JSON <code>-0</code> is the JavaScript number -0. <code>argument_spec.cc</code> calls <code>SetConvertNegativeZeroToInt(true)</code> when it converts the values of <code>set()</code>, so the checker counts <code>-0</code> like <code>0</code>. This page did not test a real write with <code>-0</code>, so it gives no exact count for it.</li>
+<li>Values that do not convert. A top-level key whose value is not a finite number (JSON such as <code>1e999</code>, which is too large for a double) is skipped by <code>argument_spec.cc</code>, so <code>set()</code> does not store it. The checker lists that key and does not count it.</li>
+<li>Enforcement. Chromium rejects a write only when the new total is greater than the limit, or one item is greater than the per-item limit, or the item count is greater than <code>MAX_ITEMS</code>. A count equal to its limit passes.</li>
+<li>Split plan. For a value above the per-item limit, the checker cuts <code>JSON.stringify(value)</code> into strings stored under <code>key_0</code>, <code>key_1</code> and so on. Each piece is as long as it can be while its key bytes plus its escaped string bytes stay at or below 8192.</li>
+</ul>
+
+<h2 id="limits">The limits in the Chromium source</h2>
+<p>From <code>extensions/common/api/storage.json</code> and <code>local_value_store_cache.cc</code>, Chromium commit <code>2e8cd78a59207e3ab95eeb073fb3a194498dab93</code>, fetched <span class="nw">2026-10-31</span>.</p>
+<div class="tablewrap" role="region" tabindex="0" aria-label="Limits in the Chromium source"><table>
+<thead><tr><th>Area</th><th>Limit</th><th>Value in the source</th><th>Notes from the source</th></tr></thead>
+<tbody>
+<tr><td>sync</td><td>QUOTA_BYTES</td><td><span class="nw">102400</span> (100 KB)</td><td>Total across all keys.</td></tr>
+<tr><td>sync</td><td>QUOTA_BYTES_PER_ITEM</td><td><span class="nw">8192</span> (8 KB)</td><td>Per key, including the key length.</td></tr>
+<tr><td>sync</td><td>MAX_ITEMS</td><td><span class="nw">512</span></td><td>Maximum number of keys.</td></tr>
+<tr><td>sync</td><td>Write operations</td><td><span class="nw">1800 / hour, 120 / minute</span></td><td>Not measured by this checker; <code>MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE</code> is deprecated.</td></tr>
+<tr><td>local</td><td>QUOTA_BYTES</td><td><span class="nw">10485760</span> (10 MB)</td><td>Ignored when the extension has the <code>unlimitedStorage</code> permission: <code>WeakUnlimitedSettingsStorage</code> passes every write through.</td></tr>
+<tr><td>session</td><td>QUOTA_BYTES</td><td><span class="nw">10485760</span> (10 MB)</td><td>In memory. The source measures it by "estimating the dynamically allocated memory usage" of every value and key, not by JSON size. This checker does not count session.</td></tr>
+<tr><td>managed</td><td>n/a</td><td>n/a</td><td>Read-only for the extension; set by enterprise policy.</td></tr>
+</tbody></table></div>
+
+<h2 id="sources">Sources</h2>
+<p>Each rule of the checker comes from one of these files. The Chromium files are at commit <code>2e8cd78a59207e3ab95eeb073fb3a194498dab93</code>. All files were fetched on <span class="nw">2026-10-31</span>.</p>
+<ul>
+<li><a href="https://developer.chrome.com/docs/extensions/reference/api/storage">chrome.storage API reference</a> (last updated 2026-10-29). It says "The quota limitation is approximately 100 KB, 8 KB per item". The Chromium source gives exact byte numbers, so the checker uses the source.</li>
+<li><a href="https://github.com/chromium/chromium/blob/2e8cd78a59207e3ab95eeb073fb3a194498dab93/extensions/common/api/storage.json">storage.json</a> gives the values of <code>QUOTA_BYTES</code>, <code>QUOTA_BYTES_PER_ITEM</code>, <code>MAX_ITEMS</code> and the write limits.</li>
+<li><a href="https://github.com/chromium/chromium/blob/2e8cd78a59207e3ab95eeb073fb3a194498dab93/extensions/browser/api/storage/settings_storage_quota_enforcer.cc">settings_storage_quota_enforcer.cc</a> gives the item size <code>key.size() + value_as_json.size()</code>. A write fails only when a count is greater than its limit.</li>
+<li><a href="https://github.com/chromium/chromium/blob/2e8cd78a59207e3ab95eeb073fb3a194498dab93/extensions/browser/api/storage/local_value_store_cache.cc">local_value_store_cache.cc</a> gives local a total limit only. With <code>unlimitedStorage</code>, every local write goes through.</li>
+<li><a href="https://github.com/chromium/chromium/blob/2e8cd78a59207e3ab95eeb073fb3a194498dab93/base/json/json_writer.cc">json_writer.cc</a> adds <code>.0</code> to a double that has no <code>.</code> and no <code>e</code>.</li>
+<li><a href="https://github.com/chromium/chromium/blob/2e8cd78a59207e3ab95eeb073fb3a194498dab93/base/strings/string_number_conversions_internal.h">string_number_conversions_internal.h</a> writes the shortest form of a double. It uses an exponent when the exponent is below -6 or is 12 or more.</li>
+<li><a href="https://github.com/chromium/chromium/blob/2e8cd78a59207e3ab95eeb073fb3a194498dab93/base/json/string_escape.cc">string_escape.cc</a> gives the escapes of strings.</li>
+<li><a href="https://github.com/chromium/chromium/blob/2e8cd78a59207e3ab95eeb073fb3a194498dab93/content/renderer/v8_value_converter_impl.cc">v8_value_converter_impl.cc</a> makes int32 numbers integers and other finite numbers doubles. It does not convert a number that is not finite.</li>
+<li><a href="https://github.com/chromium/chromium/blob/2e8cd78a59207e3ab95eeb073fb3a194498dab93/extensions/renderer/bindings/argument_spec.cc">argument_spec.cc</a> converts the items of <code>set()</code>. It keeps <code>null</code> values (<code>preserveNull</code> in storage.json), skips a top-level key whose value does not convert, and calls <code>SetConvertNegativeZeroToInt(true)</code>.</li>
+</ul>
+
+
+<h2 id="disagree">Where a real write can still differ</h2>
+<ul>
+<li>The <code>session</code> area counts estimated memory use, not JSON size. So this checker gives no session count.</li>
+<li>Chromium changes values that JSON cannot hold before it counts them. In an object, it drops a property whose value it cannot convert, for example a function or a number that is not finite. In an array, it writes <code>null</code> for that value. This checker reads JSON text, so it sees only the non-finite numbers of this list.</li>
+<li>A <code>Date</code> becomes an empty object. storage.json says that a <code>Date</code> and a <code>RegExp</code> serialize "using their String representation". The source does not agree. <code>v8_value_converter_impl.cc</code> converts both as objects unless dates and regular expressions are allowed, and <code>argument_spec.cc</code> does not allow them.</li>
+<li>The converter stops at a nesting depth limit (<code>kMaxRecursionDepth</code> is 100 in <code>v8_value_converter_impl.cc</code>) and does not convert values below that depth. The checker does not model this limit. It shows a note when a value is nested 100 levels or more.</li>
+</ul>
+
+<h2 id="limits2">Limits of this checker</h2>
+<details><summary>Does the checker upload my JSON?</summary>
+<p>No. The page parses and measures the text in your browser with JavaScript. It sends nothing over the network.</p></details>
+<details><summary>Why does my byte count differ from JSON.stringify(...).length?</summary>
+<p>There are three common reasons. First, <code>.length</code> counts UTF-16 code units, while Chromium counts UTF-8 bytes; a character outside the BMP counts 4 UTF-8 bytes but 2 code units. Second, Chromium escapes <code>&lt;</code> and the line/paragraph separators, which a plain <code>JSON.stringify</code> does not. Third, Chromium writes each number that is not an int32 as a double, for example <code>3000000000.0</code> and <code>1e+12</code>. Two rare cases also differ. Chromium writes an unpaired surrogate as U+FFFD (3 bytes), and it drops an object property whose number is not finite. Use the checker's per-item table to see the exact text.</p></details>
+<details><summary>Does it simulate the write-op budgets?</summary>
+<p>No. The limits of 1800 writes per hour and 120 writes per minute apply to <code>chrome.storage.sync</code> only, and they count calls, not bytes. The limits table shows them for reference. The checker does not model call counts. To test the match patterns of a manifest, use the <a href="/free-tools/match-pattern-tester">match pattern tester</a>.</p></details>
+</main>
+<footer> by Michael Lip at <a class="interactive-element" href="https://zovo.one">zovo.one</a></footer>
+<script type='application/ld+json'>{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://zovo.one/free-tools/chrome-storage-quota-checker#webpage","url":"https://zovo.one/free-tools/chrome-storage-quota-checker","name":"Chrome Storage Sync Quota Checker for Extension Data | Zovo","description":"Paste the object that your extension gives to chrome.storage.sync.set(). See the bytes that Chromium counts for each key, with Pass or Fail for each limit.","datePublished":"2026-10-31","dateModified":"2026-10-31","isPartOf":{"@type":"WebSite","name":"Zovo","url":"https://zovo.one/"},"breadcrumb":{"@id":"https://zovo.one/free-tools/chrome-storage-quota-checker#breadcrumb"}},{"@type":"BreadcrumbList","@id":"https://zovo.one/free-tools/chrome-storage-quota-checker#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free tools","item":"https://zovo.one/free-tools"},{"@type":"ListItem","position":3,"name":"Chrome storage quota checker","item":"https://zovo.one/free-tools/chrome-storage-quota-checker"}]},{"@type":"Article","@id":"https://zovo.one/free-tools/chrome-storage-quota-checker#article","headline":"Chrome storage quota checker","description":"A checker that counts the quota bytes of a chrome.storage payload as Chromium's SettingsStorageQuotaEnforcer does, against the sync and local limits.","author":{"@id":"https://zovo.one/about#person"},"publisher":{"@type":"Organization","name":"Zovo","url":"https://zovo.one/"},"datePublished":"2026-10-31","dateModified":"2026-10-31","mainEntityOfPage":{"@id":"https://zovo.one/free-tools/chrome-storage-quota-checker#webpage"}},{"@type":"Person","@id":"https://zovo.one/about#person","name":"Michael Lip","url":"https://zovo.one/about"}]}</script>
+<script>
+(function(){
+'use strict';
+/* pure-start */
+/* Counting rules from Chromium @ 2e8cd78a59207e3ab95eeb073fb3a194498dab93, fetched 2026-10-31:
+   extensions/browser/api/storage/settings_storage_quota_enforcer.cc (Allocate: key.size() + WriteJson(value).size())
+   base/json/json_writer.cc, base/json/string_escape.cc (escape set), v8_value_converter_impl.cc, extensions/renderer/bindings/argument_spec.cc.
+   No DOM use in this block. */
+var LIMITS={
+ sync:{quotaBytes:102400,quotaBytesPerItem:8192,maxItems:512},
+ local:{quotaBytes:10485760,quotaBytesPerItem:Infinity,maxItems:Infinity},
+ session:{quotaBytes:10485760,quotaBytesPerItem:Infinity,maxItems:Infinity}
+};
+function utf8Len(s){
+  var n=0,i,c;
+  for(i=0;i<s.length;i+=1){
+    c=s.codePointAt(i);
+    if(c>0xffff){i+=1;}
+    if(c<0x80){n+=1;}
+    else if(c<0x800){n+=2;}
+    else if(c<0x10000){n+=3;}
+    else{n+=4;}
+  }
+  return n;
+}
+/* JSON string escape matching base/json/string_escape.cc. */
+function escapeJsonString(s){
+  var out='"',i,c,ch;
+  for(i=0;i<s.length;i+=1){
+    c=s.codePointAt(i);
+    if(c>0xffff){i+=1;ch=s.substr(i-1,2);}
+    else{ch=s[i];}
+    if(c===0x8){out+='\\b';}
+    else if(c===0x9){out+='\\t';}
+    else if(c===0xa){out+='\\n';}
+    else if(c===0xc){out+='\\f';}
+    else if(c===0xd){out+='\\r';}
+    else if(c===0x22){out+='\\"';}
+    else if(c===0x5c){out+='\\\\';}
+    else if(c===0x3c){out+='\\u003C';}
+    else if(c===0x2028){out+='\\u2028';}
+    else if(c===0x2029){out+='\\u2029';}
+    else if(c<0x20){out+='\\u'+('000'+c.toString(16)).slice(-4).toUpperCase();}
+    else{out+=ch;}
+  }
+  return out+'"';
+}
+/* Number formatting matching base/json/json_writer.cc: an int32 is plain digits. Each other number is a double in the
+   shortest form (exponent below -6 or from 12), with .0 added when there is no . and no e. */
+function fmtNum(x){
+  if(Object.is(x,-0)){return '0';}
+  if((x|0)===x){return String(x);}
+  var m=Math.abs(x).toExponential().split('e'),d=m[0].replace('.',''),e=parseInt(m[1],10),p=e+1,s;
+  if(e>=-6&&e<12){
+    if(p<=0){s='0.'+'0'.repeat(-p)+d;}
+    else if(p>=d.length){s=d+'0'.repeat(p-d.length);}
+    else{s=d.slice(0,p)+'.'+d.slice(p);}
+  }else{s=d[0]+(d.length>1?'.'+d.slice(1):'')+'e'+(e>=0?'+':'-')+Math.abs(e);}
+  if(!/[.eE]/.test(s)){s+='.0';}
+  return (x<0?'-':'')+s;
+}
+/* Serialize one base::Value the way base::WriteJson does. */
+function writeJson(v){
+  if(v===null){return 'null';}
+  var t=typeof v,i,k;
+  if(t==='boolean'){return v?'true':'false';}
+  if(t==='number'){
+    if(Object.is(v,-0)){return '0';} /* -0: argument_spec.cc calls SetConvertNegativeZeroToInt(true). Not tested in a real write, so the page states no exact count. */
+    return fmtNum(v);
+  }
+  if(t==='string'){return escapeJsonString(v);}
+  if(Array.isArray(v)){
+    var a=[];
+    for(i=0;i<v.length;i+=1){a.push(typeof v[i]==='number'&&!isFinite(v[i])?'null':writeJson(v[i]));}
+    return '['+a.join(',')+']';
+  }
+  if(t==='object'){
+    var parts=[];
+    for(k in v){if(Object.prototype.hasOwnProperty.call(v,k)&&!(typeof v[k]==='number'&&!isFinite(v[k]))){parts.push(escapeJsonString(String(k))+':'+writeJson(v[k]));}}
+    return '{'+parts.join(',')+'}';
+  }
+  return 'null'; /* undefined and functions are not JSON-serializable */
+}
+/* Item size exactly as SettingsStorageQuotaEnforcer::Allocate: key length + JSON value length. */
+function itemSize(key,value){return utf8Len(String(key))+utf8Len(writeJson(value));}
+/* input: parsed object. Returns {items:[{key,size,json,value}], skipped:[key], error:null} or {items:null,error:string}.
+   A top-level value that does not convert (a non-finite number) is skipped, as in argument_spec.cc
+   ParseArgumentToObject (allow_unserializable for additionalProperties of type any). */
+function measure(obj){
+  if(obj===null||typeof obj!=='object'||Array.isArray(obj)){return{items:null,error:'The payload must be a JSON object (the shape of a chrome.storage map). Arrays and scalars are not valid storage maps.'};}
+  var items=[],skipped=[],k;
+  for(k in obj){
+    if(!Object.prototype.hasOwnProperty.call(obj,k)){continue;}
+    if(typeof obj[k]==='number'&&!isFinite(obj[k])){skipped.push(String(k));continue;}
+    items.push({key:String(k),size:itemSize(k,obj[k]),json:writeJson(obj[k]),value:obj[k]});
+  }
+  return{items:items,skipped:skipped,error:null};
+}
+/* True when the value holds -0 anywhere. */
+function hasNegZero(v){
+  var k;
+  if(typeof v==='number'){return Object.is(v,-0);}
+  if(v!==null&&typeof v==='object'){for(k in v){if(Object.prototype.hasOwnProperty.call(v,k)&&hasNegZero(v[k])){return true;}}}
+  return false;
+}
+/* Nesting depth: a scalar is 1, an object or array is 1 + the depth of its deepest member. */
+function depth(v){
+  var k,d=0;
+  if(v===null||typeof v!=='object'){return 1;}
+  for(k in v){if(Object.prototype.hasOwnProperty.call(v,k)){d=Math.max(d,depth(v[k]));}}
+  return 1+d;
+}
+function judgeArea(items,area){
+  var lim=LIMITS[area],total=0,i,over=[],maxItem=0,perItemOver=[];
+  for(i=0;i<items.length;i+=1){total+=items[i].size;if(items[i].size>maxItem){maxItem=items[i].size;}}
+  for(i=0;i<items.length;i+=1){
+    if(items[i].size>lim.quotaBytesPerItem){perItemOver.push(items[i].key);}
+  }
+  var kind='yes',msgs=[];
+  if(total>lim.quotaBytes){kind='no';msgs.push('Total '+total+' bytes is over the '+lim.quotaBytes+'-byte '+area+' quota (Chromium error "Resource::kQuotaBytes quota exceeded".)');}
+  else if(total>lim.quotaBytes*0.8){msgs.push('Total '+total+' bytes is above 80% of the '+lim.quotaBytes+'-byte '+area+' quota.');}
+  if(perItemOver.length){kind='no';msgs.push(perItemOver.length+' item'+(perItemOver.length===1?'':'s')+' over the '+lim.quotaBytesPerItem+'-byte per-item limit: '+perItemOver.join(', ')+'. (Chromium error "Resource::kQuotaBytesPerItem quota exceeded".)');}
+  if(items.length>lim.maxItems){kind='no';msgs.push('The item count '+items.length+' is more than MAX_ITEMS ('+lim.maxItems+'). (Chromium error "Resource::kMaxItems quota exceeded".)');}
+  return{kind:kind,total:total,maxItem:maxItem,msgs:msgs,limit:lim.quotaBytes};
+}
+/* Numbers whose Chromium text differs from JSON.stringify. */
+function numberDiffs(v,acc){
+  var k;
+  if(typeof v==='number'){
+    if(!isFinite(v)){acc.push('a non-finite number is dropped (object) or written as null (array)');}
+    else if(fmtNum(v)!==JSON.stringify(v)){acc.push(JSON.stringify(v)+' is written as '+fmtNum(v));}
+  }
+  else if(v!==null&&typeof v==='object'){for(k in v){if(Object.prototype.hasOwnProperty.call(v,k)){numberDiffs(v[k],acc);}}}
+  return acc;
+}
+/* key.length + JSON.stringify(value).length, and the reasons when it differs from the Chromium count. */
+function hasLoneSurrogate(v){
+  var k;
+  if(typeof v==='string'){return /[\ud800-\udbff](?![\udc00-\udfff])|(^|[^\ud800-\udbff])[\udc00-\udfff]/.test(v);}
+  if(v!==null&&typeof v==='object'){for(k in v){if(Object.prototype.hasOwnProperty.call(v,k)&&(hasLoneSurrogate(k)||hasLoneSurrogate(v[k]))){return true;}}}
+  return false;
+}
+function compareStringify(key,value,size){
+  var v=JSON.stringify(value),s=key+v,r=[];
+  if(s.length===size){return{js:s.length,reasons:r};}
+  if(/[^\u0000-\u007f]/.test(s)){r.push('non-ASCII text. Chromium counts UTF-8 bytes and .length counts UTF-16 code units');}
+  if(/[<\u2028\u2029]/.test(v)){r.push('Chromium writes < as \\u003C and U+2028, U+2029 as \\u2028, \\u2029');}
+  if(hasLoneSurrogate(key)||hasLoneSurrogate(value)){r.push('an unpaired surrogate. Chromium writes U+FFFD (3 bytes) and JSON.stringify writes \\uXXXX (6 characters)');}
+  r=r.concat(numberDiffs(value,[]));
+  if(!r.length){r.push('the two texts differ');}
+  return{js:s.length,reasons:r};
+}
+/* Split JSON.stringify(value) into string values key_0, key_1, ... Each item (key bytes + escaped string bytes) is at most limit bytes. */
+function planChunks(key,value,limit){
+  var src=JSON.stringify(value),chunks=[],cur='',used=0,i,c,ch,cost,head;
+  function overhead(n){return utf8Len(key+'_'+n)+2;}
+  head=overhead(0);
+  for(i=0;i<src.length;i+=1){
+    c=src.codePointAt(i);ch=String.fromCodePoint(c);if(c>0xffff){i+=1;}
+    cost=utf8Len(escapeJsonString(ch))-2;
+    if(head+cost>limit){return{error:'The key '+key+' is too long to split.'};}
+    if(head+used+cost>limit){chunks.push({key:key+'_'+chunks.length,bytes:head+used,text:cur});cur='';used=0;head=overhead(chunks.length);}
+    cur+=ch;used+=cost;
+  }
+  chunks.push({key:key+'_'+chunks.length,bytes:head+used,text:cur});
+  return{chunks:chunks,total:chunks.reduce(function(s,x){return s+x.bytes;},0)};
+}
+/* pure-end */
+
+function $(id){return document.getElementById(id);}
+function el(tag,cls,text){var e=document.createElement(tag);if(cls){e.className=cls;}if(text!==undefined){e.textContent=text;}return e;}
+function clear(node){while(node.firstChild){node.removeChild(node.firstChild);}}
+function badge(kind){return el('span','verdict '+kind,kind==='yes'?'Pass':kind==='no'?'Fail':'Check');}
+function bytesLabel(n){return n.toLocaleString('en-US')+' bytes';}
+function bar(pct){
+  var w=Math.min(100,pct),d=el('div');
+  d.style.width=w+'%';
+  d.className=pct>100?'over':pct>80?'warn':'ok';
+  return d;
+}
+function render(items,skipped){
+  skipped=skipped||[];
+  var out=$('csq-out');
+  clear(out);out.hidden=false;
+  out.appendChild(el('h3','','Per-item byte counts'));
+  var t=el('table'),hd=el('tr');
+  ['Key','Quota bytes','sync item limit','key.length + JSON.stringify length','Serialized value'].forEach(function(h){hd.appendChild(el('th','',h));});
+  var th=el('thead');th.appendChild(hd);t.appendChild(th);
+  var tb=el('tbody');
+  items.forEach(function(it){
+    var tr=el('tr');
+    tr.appendChild(el('td','',it.key));
+    var td=el('td','',String(it.size));tr.appendChild(td);
+    var vd=el('td');vd.appendChild(badge(it.size>LIMITS.sync.quotaBytesPerItem?'no':'yes'));tr.appendChild(vd);
+    var cmp=compareStringify(it.key,it.value,it.size);
+    tr.appendChild(el('td','',cmp.js===it.size?String(cmp.js)+' (equal)':String(cmp.js)+' ('+(cmp.js>it.size?cmp.js-it.size+' more':it.size-cmp.js+' fewer')+' than the Chromium count). '+cmp.reasons.map(function(x){return x.charAt(0).toUpperCase()+x.slice(1);}).join('. ')+'.'));
+    var j=el('td','',it.json.length>120?it.json.slice(0,120)+'…':it.json);tr.appendChild(j);
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+  var wrap=el('div','tablewrap');wrap.tabIndex=0;wrap.role='region';wrap.ariaLabel='Per-item byte counts';wrap.appendChild(t);out.appendChild(wrap);
+  var big=items.filter(function(x){return x.size>LIMITS.sync.quotaBytesPerItem;}),allOk=true,allTot=0,allCnt=0;
+  items.forEach(function(x){if(x.size<=LIMITS.sync.quotaBytesPerItem){allTot+=x.size;allCnt+=1;}});
+  big.forEach(function(it){
+    var p=planChunks(it.key,it.value,LIMITS.sync.quotaBytesPerItem);
+    out.appendChild(el('h3','','Split plan for '+it.key));
+    if(p.error){out.appendChild(el('p','err',p.error));allOk=false;return;}
+    var others=items.filter(function(x){return x!==it;});
+    var tot=others.reduce(function(s,x){return s+x.size;},0)+p.total,cnt=others.length+p.chunks.length;
+    allTot+=p.total;allCnt+=p.chunks.length;
+    out.appendChild(el('p','',p.chunks.length+' keys, each at or below '+LIMITS.sync.quotaBytesPerItem+' bytes. '+p.chunks.map(function(x){return x.key+' '+x.bytes+' bytes ('+x.text.length+' characters)';}).join(', ')+'. New sync total with only this key split '+tot+' bytes ('+(tot>LIMITS.sync.quotaBytes?'Fail':'Pass')+'). '+cnt+' items ('+(cnt>LIMITS.sync.maxItems?'Fail':'Pass')+'). Store each chunk as a string. To read the value, join the chunks in the order of the number at the end of each key, then use JSON.parse.'));
+    var taken=p.chunks.filter(function(x){return others.some(function(o){return o.key===x.key;});}).map(function(x){return x.key;});
+    if(taken.length){out.appendChild(el('p','err','The payload already has the key '+taken.join(', ')+'. Choose another name for the chunks.'));}
+  });
+  if(big.length>1&&allOk){out.appendChild(el('p','','If you split all '+big.length+' keys above the limit, the sync total is '+allTot+' bytes ('+(allTot>LIMITS.sync.quotaBytes?'Fail':'Pass')+') and the item count is '+allCnt+' ('+(allCnt>LIMITS.sync.maxItems?'Fail':'Pass')+').'));}
+
+  out.appendChild(el('h3','','Quota areas'));
+  ['sync','local'].forEach(function(area){
+    var j=judgeArea(items,area);
+    var block=el('div','file');
+    var head=el('p');
+    head.appendChild(badge(j.kind));
+    head.appendChild(document.createTextNode(' chrome.storage.'+area+': '+bytesLabel(j.total)+' of '+bytesLabel(j.limit)+' ('+(j.limit?Math.round(j.total/j.limit*1000)/10:0)+'%)'));
+    block.appendChild(head);
+    var b=el('div','bar');b.appendChild(bar(j.total/j.limit*100));block.appendChild(b);
+    j.msgs.forEach(function(m){block.appendChild(el('p','',m));});
+    out.appendChild(block);
+  });
+  if(skipped.length){out.appendChild(el('p','','The checker does not count '+skipped.join(', ')+'. set() does not store a top-level value that is not a finite number, because argument_spec.cc skips a value that does not convert.'));}
+  if(items.some(function(x){return hasNegZero(x.value);})){out.appendChild(el('p','','The payload has -0. The checker counts it like 0. This page did not test a real write with -0, so the count of that value is not verified.'));}
+  if(items.some(function(x){return depth(x.value)>=100;})){out.appendChild(el('p','','A value is nested 100 levels or more. Chromium\'s converter drops values past its depth limit, so a real write can count fewer bytes.'));}
+  out.appendChild(el('p','small','Chromium rejects a write only when the new total is greater than the limit, so a total of exactly 100% still passes.'));
+  out.appendChild(el('p','small','The checker does not count chrome.storage.session. Chromium measures that area by estimated memory use, not by JSON size. The local limit does not apply when the extension has the unlimitedStorage permission. The checker counts the pasted text only. It does not read the storage of an installed extension.'));
+}
+function run(){
+  var out=$('csq-out'),txt=$('csq-input').value.trim();
+  clear(out);out.hidden=true;
+  if(!txt){out.hidden=false;out.appendChild(el('p','err','Paste a JSON object first.'));return;}
+  var parsed;
+  try{parsed=JSON.parse(txt);}
+  catch(e){out.hidden=false;out.appendChild(el('p','err','Not valid JSON: '+e.message));return;}
+  var m=measure(parsed);
+  if(m.error){out.hidden=false;out.appendChild(el('p','err',m.error));return;}
+  if(!m.items.length){out.hidden=false;out.appendChild(el('p','err',m.skipped.length?'No key would be stored. The value of '+m.skipped.join(', ')+' is not a finite number, and argument_spec.cc skips a top-level value that does not convert.':'The object has no keys. An empty storage map uses 0 quota bytes.'));return;}
+  render(m.items,m.skipped);
+}
+$('csq-run').addEventListener('click',run);
+$('csq-clear').addEventListener('click',function(){$('csq-input').value='';clear($('csq-out'));$('csq-out').hidden=true;});
+$('csq-input').addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){run();}});
+})();
+</script>
+</body></html>
