@@ -1,0 +1,773 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chrome Extension Keyboard Shortcut Checker for Manifest Commands | Zovo</title>
+<meta name="description" content="Paste a manifest.json or its commands block. See Pass or Fail for each command on Windows, macOS, Linux and ChromeOS, with Chromium's error text and shortcut conflicts.">
+<link rel="canonical" href="https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker">
+<link rel="alternate" hreflang="en" href="https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker"><link rel="alternate" hreflang="x-default" href="https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker">
+<link href="https://zovo.one/favicon.ico" rel="icon">
+<meta property="og:type" content="website"><meta property="og:title" content="Chrome Extension Keyboard Shortcut Checker for Manifest Commands | Zovo">
+<meta property="og:description" content="Paste a manifest.json or its commands block. See Pass or Fail for each command on Windows, macOS, Linux and ChromeOS, with Chromium's error text and shortcut conflicts."><meta property="og:url" content="https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker">
+<meta property="og:site_name" content="Zovo">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Chrome Extension Keyboard Shortcut Checker for Manifest Commands | Zovo">
+<meta name="twitter:description" content="Paste a manifest.json or its commands block. See Pass or Fail for each command on Windows, macOS, Linux and ChromeOS, with Chromium's error text and shortcut conflicts.">
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#1d1d1f;font-size:17px;line-height:1.58}
+body>nav,body>footer{max-width:900px;margin:0 auto;padding:20px 16px 0}
+body>footer{padding:24px 16px 48px;color:#6e6e73;font-size:.85rem;border-top:1px solid #e5e5ea}
+a{color:#0062c4}
+h1{font-size:2.2rem;line-height:1.15;margin:.4em 0 .3em}
+h2{font-size:1.5rem;margin:2em 0 .6em}
+h3{font-size:1.15rem;margin:0 0 .5em}
+p,li{margin:0 0 1em;overflow-wrap:anywhere}
+code{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;background:#f5f5f7;border-radius:6px;padding:1px 5px;font-size:max(14px,.86em);overflow-wrap:anywhere}
+.byline,.small{color:#6e6e73;font-size:.9rem}
+.tool .small{color:#5c5c61}
+.tool{background:#f5f5f7;border-radius:14px;padding:20px;margin:1.2em 0}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px}
+.field label.inline{display:inline;font-weight:400}
+textarea,input[type=text],select{display:block;width:100%;max-width:100%;font-size:16px;color:#1d1d1f;background:#fff;border:1px solid #8e8e93;border-radius:10px;padding:10px 12px;min-height:44px}
+textarea{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:15px;line-height:1.45;resize:vertical}
+input[type=checkbox]{width:20px;height:20px;vertical-align:middle;margin:0 6px 0 0}
+button{background:#0062c4;color:#fff;border:1px solid #0062c4;border-radius:980px;padding:11px 22px;font-size:15px;font-weight:600;cursor:pointer;min-height:44px}
+button.secondary{background:#fff;color:#0062c4}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #0062c4;outline-offset:2px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.out{background:#fff;border:1px solid #d2d2d7;border-radius:12px;padding:16px;margin-top:16px;overflow-wrap:anywhere;word-break:break-word}
+.out p{margin:.5em 0 0}
+.out h3{margin:1em 0 .5em}
+.out h3:first-child{margin-top:.2em}
+.cmd{border-top:1px solid #e5e5ea;padding:12px 0 4px}
+.cmd .name{font-weight:600}
+.verdict{display:inline-block;white-space:nowrap;border-radius:8px;padding:2px 10px;font-weight:700;font-size:.88rem}
+.verdict.yes{background:#dff5e5;color:#11602b}
+.verdict.no{background:#fde3e1;color:#9c1c16}
+.verdict.bad{background:#fdecd0;color:#7a4400}
+.verdict.opt{background:#eef0f3;color:#3a3a3c}
+.cell-note{display:block;font-size:.85rem;color:#3a3a3c;margin-top:4px}
+.tablewrap{overflow-x:auto;margin:1em 0;-webkit-overflow-scrolling:touch}
+.tablewrap:focus-visible{outline:3px solid #0062c4;outline-offset:2px}
+.out th{white-space:normal}
+.out td code,.out th code,td code{overflow-wrap:break-word;word-break:normal}
+.out th[scope=row]{font-weight:600}
+.out table{table-layout:fixed}
+.out td{overflow-wrap:anywhere}
+.out table.cmdt thead th:first-child{width:26%}
+.out table.cmdt thead th+th{width:18.5%}
+.out table.syst thead th:nth-child(1){width:15%}
+.out table.syst thead th:nth-child(2){width:20%}
+.out table.syst thead th:nth-child(3){width:20%}
+.out table.syst thead th:nth-child(4){width:45%}
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+.print-only{display:none}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border:1px solid #d2d2d7;padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:break-word;word-break:normal}
+.tablewrap table{min-width:620px}
+th{white-space:nowrap;background:#f5f5f7}
+.nw{white-space:nowrap}
+pre.snippet{background:#f5f5f7;border:1px solid #d2d2d7;border-radius:10px;padding:12px;overflow-x:auto;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:14px;margin:.8em 0 0;white-space:pre}
+details{border:1px solid #d2d2d7;border-radius:12px;padding:12px 16px;margin:.8em 0}
+summary{font-weight:600;cursor:pointer}
+details p,details ul{margin:.7em 0 0}
+@media print{details::details-content{content-visibility:visible;display:block}.tool .row{display:none}.tablewrap{overflow:visible}.tablewrap table{min-width:0;table-layout:auto}th,code.entry{white-space:normal}code,code.entry,td,th{overflow-wrap:anywhere}pre.snippet{white-space:pre-wrap;overflow:visible;overflow-wrap:anywhere}textarea{display:none}.print-only{display:block;white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;border:1px solid #d2d2d7;padding:8px}.print-only:empty{display:none}}
+</style>
+</head><body>
+<nav style="display:flex;gap:24px;font-size:0.85rem;"><a class="interactive-element" href="/" style="color:#6e6e73;text-decoration:none;">All Tools</a><a class="interactive-element" href="https://zovo.one" style="color:#6e6e73;text-decoration:none;">zovo.one</a></nav>
+<main style="max-width:900px;margin:0 auto;padding:24px 16px">
+<h1>Chrome extension keyboard shortcut checker</h1>
+<p class='byline'>By <a href='https://zovo.one/about'>Michael Lip</a>. Updated <span class="nw">2026-10-31</span>.</p>
+
+<p>Paste the <code>manifest.json</code> of your extension, or only its <code>"commands"</code> object. The checker reads each <code>suggested_key</code> the way Chromium's manifest parser does. For each command it shows Pass or Fail on Windows, macOS, Linux and ChromeOS. For each Fail it shows the error text that Chromium uses. It also lists commands that suggest the same shortcut, and it counts the shortcuts toward the limit of 4.</p>
+<p>The check runs in your browser. The checker does not send your text over the network. A Pass means that the parser accepts the <code>commands</code> block. It does not mean that Chrome will assign each shortcut (see <a href="#limits">Limits</a>). The rules come from Chromium source files at commit <code>aa08c55</code> and from the commands reference page on developer.chrome.com (see <a href="#sources">Sources</a>). Where the two do not agree, the checker follows the source.</p>
+<p>Why four systems? Chrome checks the <code>commands</code> block on the system it runs on, and some rules depend on that system. For example, <code>"chromeos": "Ctrl+Shift+Search+Y"</code> passes on ChromeOS. On Windows, macOS and Linux the same entry stops the extension from loading, because there a shortcut can have only 3 parts.</p>
+
+<h2 id="tool">Check your commands block</h2>
+<div class="tool">
+<div class="field">
+<label for="ksc-input">Your manifest.json, or only the "commands" object</label>
+<textarea id="ksc-input" rows="12" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="ksc-input-help"></textarea>
+<p id="ksc-input-help" class="small">Example: <code>{"commands": {"toggle": {"suggested_key": "Ctrl+Shift+Y", "description": "Toggle the panel"}}}</code></p>
+</div>
+<div class="row"><button type="button" id="ksc-run">Check</button><button type="button" class="secondary" id="ksc-example">Load an example based on the documentation</button><button type="button" class="secondary" id="ksc-clear">Clear</button></div>
+<p id="ksc-status" class="vh" role="status" aria-live="polite"></p>
+<div id="ksc-out" class="out" hidden></div>
+<pre id="ksc-input-print" class="print-only" aria-hidden="true"></pre>
+<noscript><p class="small">The checker needs JavaScript. The tables below do not need it.</p></noscript>
+</div>
+
+<h3 id="quick">Test one shortcut</h3>
+<div class="tool">
+<div class="field">
+<label for="ksc-combo">Shortcut</label>
+<input type="text" id="ksc-combo" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Ctrl+Shift+Y" aria-describedby="ksc-combo-help">
+<p id="ksc-combo-help" class="small">Type the shortcut as it would appear in the manifest, for example <code>Alt+Shift+P</code>. Key names are case sensitive.</p>
+</div>
+<div class="field"><input type="checkbox" id="ksc-rec"><label for="ksc-rec" class="inline">Record the keys that I press in the shortcut field</label></div>
+<div class="field">
+<label for="ksc-platform">Platform key</label>
+<select id="ksc-platform">
+<option value="default" selected>default</option>
+<option value="windows">windows</option>
+<option value="mac">mac</option>
+<option value="linux">linux</option>
+<option value="chromeos">chromeos</option>
+</select>
+</div>
+<div class="field">
+<label for="ksc-role">Kind of command</label>
+<select id="ksc-role">
+<option value="standard" selected>Standard command (with a description)</option>
+<option value="action">Action command (_execute_action)</option>
+</select>
+</div>
+<div class="row"><button type="button" id="ksc-test">Test shortcut</button></div>
+<p id="ksc-quick-status" class="vh" role="status" aria-live="polite"></p>
+<div id="ksc-quick-out" class="out" hidden></div>
+</div>
+
+<h2 id="how">How the checker decides</h2>
+<ul>
+<li>Input. Chrome reads <code>manifest.json</code> with options that allow <code>//</code> and <code>/* */</code> comments, line breaks inside strings and <code>\xNN</code> escapes, but not a comma after the last item (<a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/file_util.cc#L335">file_util.cc</a> line 335, <a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/base/json/json_file_value_serializer.h#L66">json_file_value_serializer.h</a> line 66, <a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/base/json/json_reader.h#L50-L84">json_reader.h</a> lines 50-84). The checker accepts the same three extensions to strict JSON. It treats the text as a whole manifest when it has a <code>manifest_version</code> key, or a <code>"commands"</code> key whose value does not look like a single command. Otherwise it treats the text as the <code>"commands"</code> object itself. A manifest without a <code>"commands"</code> key is valid. An empty <code>"commands"</code> object is valid too.</li>
+<li>Four systems. Chromium picks the entry for the system it runs on (<code>windows</code>, <code>mac</code>, <code>linux</code> or <code>chromeos</code>). When that entry is missing, it uses <code>default</code>. The checker runs the parser once for each of the four systems.</li>
+<li>Every entry counts. Chromium parses every entry of <code>suggested_key</code> on every system. An error in the <code>mac</code> entry also stops the extension from loading on Windows.</li>
+<li>First error. Chrome stops at the first error in the <code>commands</code> block and reports only that error. The checker checks every command and every entry. It then marks the error that Chrome reports first on each system.</li>
+<li>The limit of 4. On each system the checker counts the commands whose shortcut is not a media key. Action commands such as <code>_execute_action</code> count too. A fifth counted command is a Fail.</li>
+<li>Conflicts. Two commands conflict when they give the same key combination on the same system. The order of the keys does not matter: <code>Shift+Ctrl+Y</code> is the same as <code>Ctrl+Shift+Y</code>. A conflict is not a Fail. Chrome loads the extension, but it does not assign the shortcut to the second command in its order (named commands in name order, then action commands).</li>
+</ul>
+
+<h2 id="requirements">The rules in the Chromium source</h2>
+<p>Each row names the file and the lines at commit <code>aa08c55cb412681fb8d660739545334b4764bb69</code>. All files were fetched on <span class="nw">2026-10-30</span>.</p>
+<div class="tablewrap" role="region" tabindex="0" aria-label="Rules in the Chromium source"><table>
+<thead><tr><th>Rule</th><th>What the source does</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Shape</td><td>The value of <code>"commands"</code> must be an object, and each command must be an object. Otherwise the error is <code>Invalid value for 'commands'.</code> or <code>Contents of 'commands[N]' invalid.</code></td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/api/commands/commands_handler.cc#L73-L94">commands_handler.cc</a> lines 73-94</td></tr>
+<tr><td>Description</td><td>Each command needs a <code>description</code> that is a string and not empty. The three action commands <code>_execute_action</code>, <code>_execute_browser_action</code> and <code>_execute_page_action</code> do not need one.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L144-L165">command.cc</a> lines 144-165</td></tr>
+<tr><td>suggested_key</td><td>A string is the shortcut for all systems. An object gives one entry per platform key, and each value must be a string that is not empty (else the error ends in <code>Missing.</code>). Without <code>suggested_key</code> the command has no shortcut.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L173-L200">command.cc</a> lines 173-200</td></tr>
+<tr><td>Platform keys</td><td>Only <code>windows</code>, <code>mac</code>, <code>chromeos</code>, <code>linux</code> and <code>default</code>, in lower case. Any other key, for example <code>ios</code> or <code>Windows</code>, stops the extension from loading.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L215-L223">ui/.../command.cc</a> lines 215-223</td></tr>
+<tr><td>Entry for the system</td><td>Chromium uses the entry for its own system, else <code>default</code>. With neither, the error is <code>Could not find key specification ...</code></td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L231-L241">command.cc</a> lines 231-241</td></tr>
+<tr><td>Command and Option</td><td>These two names are allowed only in the <code>mac</code> entry. In any other entry, <code>default</code> included, the extension does not load on any system.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L205-L229">command.cc</a> lines 205-229</td></tr>
+<tr><td>macOS names</td><td>In the <code>mac</code> entry, and in <code>default</code> when Chrome runs on macOS, <code>Ctrl</code> becomes <code>Command</code>, <code>MacCtrl</code> becomes <code>Ctrl</code> and <code>Option</code> becomes <code>Alt</code>. So <code>MacCtrl</code> in <code>default</code> works only on macOS.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L43-L66">command.cc</a> lines 43-66</td></tr>
+<tr><td>Number of keys</td><td>The shortcut is split at <code>+</code>. Spaces around each part are ignored, but not spaces inside a part, so <code>Page Up</code> is not <code>PageUp</code>. At most 3 parts, or 4 when Chrome runs on ChromeOS.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L28-L34">ui/.../command.cc</a> lines 28-34 and 225-234</td></tr>
+<tr><td>Key names</td><td>Exactly one key: <code>A</code>-<code>Z</code>, <code>0</code>-<code>9</code>, <code>Comma</code>, <code>Period</code>, <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Insert</code>, <code>Delete</code>, <code>Home</code>, <code>End</code>, <code>PageUp</code>, <code>PageDown</code>, <code>Space</code>, <code>Tab</code>, or a media key. Names are case sensitive. <code>F1</code>, <code>Escape</code> and <code>Enter</code> are not in the list.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L275-L338">ui/.../command.cc</a> lines 275-338</td></tr>
+<tr><td>Modifiers</td><td><code>Ctrl</code>, <code>Alt</code> and <code>Shift</code>. <code>Command</code> only in the <code>mac</code> entry. <code>Search</code> only in the <code>chromeos</code> entry.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L239-L274">ui/.../command.cc</a> lines 239-274</td></tr>
+<tr><td>Modifier rule</td><td>Each key except a media key needs a modifier. <code>Shift</code> alone is not enough. <code>Alt</code> together with <code>Ctrl</code>, <code>Command</code> or <code>Search</code> is not allowed.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L36-L68">ui/.../command.cc</a> lines 36-68</td></tr>
+<tr><td>Media keys</td><td><code>MediaNextTrack</code>, <code>MediaPlayPause</code>, <code>MediaPrevTrack</code> and <code>MediaStop</code> must stand alone. <code>Ctrl</code>, <code>Alt</code>, <code>Command</code> or <code>Search</code> with a media key gives the error <code>Media key cannot have any modifier ...</code>. Two cases get the general <code>Invalid value ...</code> error instead: <code>Alt</code> together with <code>Ctrl</code>, <code>Command</code> or <code>Search</code>, and <code>Shift</code> as the only modifier. An action command cannot use a media key.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L342-L354">ui/.../command.cc</a> lines 342-354; <a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L257-L259">command.cc</a> lines 257-259</td></tr>
+<tr><td>Limit of 4</td><td>The parser counts commands, not entries. A command counts when its shortcut on the running system is not a media key. Action commands count. The fifth counted command gives <code>Too many shortcuts specified for 'commands': The maximum is 4.</code> An API permission with the ID <code>kCommandsAccessibility</code> lifts the limit.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/api/commands/commands_handler.cc#L25-L27">commands_handler.cc</a> lines 25-27 and 100-116</td></tr>
+<tr><td>Action commands</td><td><code>_execute_action</code> needs an <code>"action"</code> key in the manifest, <code>_execute_browser_action</code> needs <code>"browser_action"</code> and <code>_execute_page_action</code> needs <code>"page_action"</code>. Without it, Chromium adds a warning and ignores the command. Other names that start with <code>_</code> are parsed and then dropped.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/api/commands/commands_handler.cc#L121-L145">commands_handler.cc</a> lines 121-145</td></tr>
+<tr><td>Same shortcut twice</td><td>The parser has no rule about it. When Chrome assigns the suggested keys, it skips a key that is already taken. It assigns the named commands first, in name order, and then the action commands.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/chrome/browser/extensions/commands/command_service.cc#L494-L537">command_service.cc</a> lines 236-244 and 494-537</td></tr>
+<tr><td>Global commands</td><td>The parser reads <code>"global": true</code> and checks nothing more. Chrome assigns a global shortcut only when it is <code>Ctrl+Shift</code> plus a digit (<code>Command+Shift</code> plus a digit on macOS), when it is a media key, or when the extension has the <code>kCommandsAccessibility</code> permission. It does not assign the key of an action command that has <code>"global": true</code>. Other global shortcuts load but are not assigned.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/chrome/browser/extensions/commands/command_service.cc#L540-L576">command_service.cc</a> lines 540-576</td></tr>
+</tbody></table></div>
+
+<h2 id="disagree">Where the documentation and the source do not agree</h2>
+<p>The left column quotes the <a href="https://developer.chrome.com/docs/extensions/reference/api/commands">commands reference page</a> (last updated <span class="nw">2026-10-29</span>). The middle column links the Chromium source at commit <code>aa08c55</code>. In each case the checker follows the source.</p>
+<div class="tablewrap" role="region" tabindex="0" aria-label="Where the documentation and the source do not agree"><table>
+<thead><tr><th>Documentation</th><th>Chromium source</th><th>What the checker does</th></tr></thead>
+<tbody>
+<tr><td>The "General" key list is "<code>Comma</code>, <code>Period</code>, <code>Home</code>, <code>End</code>, <code>PageUp</code>, <code>PageDown</code>, <code>Space</code>, <code>Insert</code>, <code>Delete</code>". No key list on the page names Tab.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L282">ui/.../command.cc</a> line 282 accepts <code>Tab</code> as a key.</td><td><code>"suggested_key": "Ctrl+Shift+Tab"</code> gets Pass on all four systems.</td></tr>
+<tr><td>"Extension command shortcuts must include either <code>Ctrl</code> or <code>Alt</code>."</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L48-L68">ui/.../command.cc</a> lines 48-68 ask for any modifier and reject <code>Shift</code> alone. <code>Search</code> in the <code>chromeos</code> entry counts as a modifier on its own. (The documentation itself allows <code>Command</code> and <code>MacCtrl</code> in place of <code>Ctrl</code> on macOS.)</td><td>The entry <code>"chromeos": "Search+Y"</code> passes on all four systems. On Windows, macOS and Linux the command also needs a <code>default</code> entry or its own entry for that system.</td></tr>
+<tr><td>"Using <code>MacCtrl</code> in the combination for another platform will cause a validation error and prevent the extension from being installed."</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L45-L66">command.cc</a> lines 45-66 turn <code>MacCtrl</code> into <code>Ctrl</code> in the <code>default</code> entry when Chrome runs on macOS.</td><td><code>"default": "MacCtrl+Shift+Y"</code> gets Pass on macOS and Fail on Windows, Linux and ChromeOS.</td></tr>
+<tr><td>"may specify at most four suggested keyboard shortcuts"</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/api/commands/commands_handler.cc#L100-L116">commands_handler.cc</a> lines 100-116 count commands, not entries. They count <code>_execute_action</code> and the other action commands, skip media keys, and do not apply with the <code>kCommandsAccessibility</code> permission.</td><td>Counts as the source does. It always applies the limit, because it cannot see that permission.</td></tr>
+<tr><td>"<code>Search</code> is an optional modifier exclusive to ChromeOS."</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L28-L34">ui/.../command.cc</a> lines 28-34 allow 4 parts only when Chrome runs on ChromeOS. <a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L243-L267">command.cc</a> lines 243-267 parse every entry on every system.</td><td><code>"chromeos": "Ctrl+Shift+Search+Y"</code> gets Pass on ChromeOS and Fail on Windows, macOS and Linux. <code>Search</code> in <code>default</code> gets Fail everywhere.</td></tr>
+<tr><td>"<code>Command</code> (macOS only)", "<code>Option</code> (macOS only)"</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L205-L229">command.cc</a> lines 205-229 reject both in every entry except <code>mac</code>, also in <code>default</code> on macOS.</td><td><code>"default": "Command+Shift+Y"</code> gets Fail on all four systems.</td></tr>
+<tr><td>"valid object properties are <code>default</code>, <code>chromeos</code>, <code>linux</code>, <code>mac</code>, and <code>windows</code>". The page does not say what happens with another key.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc#L215-L223">ui/.../command.cc</a> lines 215-223 reject any other key.</td><td>An entry such as <code>"ios"</code> gets Fail on all four systems.</td></tr>
+<tr><td>"Keyboard shortcut suggestions for global commands are limited to <code>Ctrl+Shift+[0..9]</code>." Also: "ChromeOS does not support global commands."</td><td>The parser has no such check (<a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L203">command.cc</a> line 203). <a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/chrome/browser/extensions/commands/command_service.cc#L540-L576">command_service.cc</a> lines 540-576 only skip assigning other global shortcuts. Media keys and the <code>kCommandsAccessibility</code> permission are exceptions. The fetched files have no rule about global commands on ChromeOS.</td><td>A global <code>"suggested_key": "Ctrl+Shift+Y"</code> gets Pass on all four systems, with a note that Chrome does not assign it. The checker does not test the ChromeOS sentence.</td></tr>
+<tr><td>"<code>_execute_action</code> (Manifest V3), <code>_execute_browser_action</code> (Manifest V2), and <code>_execute_page_action</code> (Manifest V2)"</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/api/commands/commands_handler.cc#L121-L145">commands_handler.cc</a> lines 121-145 do not read <code>manifest_version</code>. They look for the <code>action</code>, <code>browser_action</code> or <code>page_action</code> key. Without it they add a warning and ignore the command.</td><td>Shows the warning when you paste a whole manifest. Whether Manifest V3 accepts a <code>browser_action</code> key is decided in a file that the checker does not cover.</td></tr>
+<tr><td>The page does not say whether an action command can use a media key.</td><td><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc#L257-L259">command.cc</a> lines 257-259 turn off media keys for action commands.</td><td><code>"_execute_action": {"suggested_key": "MediaPlayPause"}</code> gets Fail on all four systems.</td></tr>
+</tbody></table></div>
+
+<h2 id="sources">Sources</h2>
+<p>The Chromium files were fetched from the <code>main</code> branch on <span class="nw">2026-10-30</span>, except the last three files in the list, which were fetched at the same commit on <span class="nw">2026-10-31</span>. On 2026-10-30 <code>main</code> was commit <code>aa08c55cb412681fb8d660739545334b4764bb69</code>, and each file was the same as at that commit. The links point to that commit.</p>
+<ul>
+<li><a href="https://developer.chrome.com/docs/extensions/reference/api/commands">Commands API reference</a> on developer.chrome.com, fetched 2026-10-30, last updated 2026-10-29. It describes the manifest syntax, the key names and the limit of four.</li>
+<li><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/command.cc">extensions/common/command.cc</a>, fetched 2026-10-30. It parses one command: the description, the platform entries, the Command and Option rule and the macOS names.</li>
+<li><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/api/commands/commands_handler.cc">extensions/common/api/commands/commands_handler.cc</a>, fetched 2026-10-30. It reads the whole <code>"commands"</code> object, counts toward the limit of 4 and checks the action commands.</li>
+<li><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command.cc">ui/base/accelerators/command.cc</a>, fetched 2026-10-30. It parses one shortcut string: the platform key, the number of parts, the key names and the modifier rule.</li>
+<li><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/ui/base/accelerators/command_constants.h">ui/base/accelerators/command_constants.h</a>, fetched 2026-10-30. It lists the platform keys and the key names.</li>
+<li><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/manifest_constants.h">extensions/common/manifest_constants.h</a>, fetched 2026-10-30. It holds the error texts that the checker shows.</li>
+<li><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/chrome/browser/extensions/commands/command_service.cc">chrome/browser/extensions/commands/command_service.cc</a>, fetched 2026-10-30. It decides which suggested keys Chrome assigns: taken keys and global commands.</li>
+<li><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/extensions/common/file_util.cc">extensions/common/file_util.cc</a>, fetched 2026-10-31. Line 335 reads manifest.json with the default options of the JSON file reader.</li>
+<li><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/base/json/json_file_value_serializer.h">base/json/json_file_value_serializer.h</a>, fetched 2026-10-31. Line 66 makes those default options <code>JSON_PARSE_CHROMIUM_EXTENSIONS</code>.</li>
+<li><a href="https://github.com/chromium/chromium/blob/aa08c55cb412681fb8d660739545334b4764bb69/base/json/json_reader.h">base/json/json_reader.h</a>, fetched 2026-10-31. Lines 50-84 define the options: comments, line breaks inside strings and <code>\xNN</code> escapes, but not trailing commas.</li>
+</ul>
+
+<h2 id="limits">Limits of this checker</h2>
+<p>This tool checks the manifest only. It does not know the shortcuts of the browser or of other extensions, and Chrome can ignore a suggested key that another extension already uses.</p>
+<p>The commands reference page says: "Certain operating system and Chrome shortcuts (e.g. window management) always take priority over Extension command shortcuts and cannot be overridden."</p>
+<details><summary>What does the checker not test?</summary>
+<ul>
+<li>Chrome's own shortcuts. Chrome does not assign a suggested key of a command that is not global when the key is a Chrome shortcut. The list of those shortcuts is not in the fetched files.</li>
+<li>Shortcuts that the user changed at <code>chrome://extensions/shortcuts</code>.</li>
+<li>The <code>kCommandsAccessibility</code> permission that lifts the limit of 4. The fetched files do not show which manifest entry grants it.</li>
+<li>The documentation's sentence that ChromeOS does not support global commands.</li>
+<li>The other keys of the manifest.</li>
+<li>Rare JSON cases that Chrome rejects but this checker accepts: nesting of 200 or more levels of objects and arrays, and lone surrogate escapes (such as <code>"\uD800"</code>).</li>
+</ul></details>
+<details><summary>Why can the number in commands[N] differ from Chrome?</summary>
+<p>Chromium numbers the commands in the order that it reads them. The checker numbers them in name order. The fetched files do not show the order that Chromium uses. So the number in an error, and the error that Chrome reports first when several commands fail, can differ. The result Pass or Fail for each system does not depend on the order.</p></details>
+<details><summary>Does the checker send my manifest anywhere?</summary>
+<p>No. The checker code has no network calls. It reads your text from the text field and parses it in your browser.</p></details>
+<details><summary>How does key recording work?</summary>
+<p>Turn on "Record the keys that I press" and press a combination in the shortcut field. On macOS the checker writes the Command key as <code>Command</code>, the Control key as <code>MacCtrl</code> and the Option key as <code>Option</code>, and checks the combination as a <code>mac</code> shortcut. A <code>Ctrl</code> in the default shortcut becomes <code>Command</code> on macOS. On other systems the checker does not record the Windows key or the Search key. The Tab key without Ctrl or Alt still moves the focus, and Escape turns recording off. If a combination does nothing in the field, type it instead.</p></details>
+<details><summary>Related tools</summary>
+<p>To test the match patterns of an extension manifest, use the <a href="/free-tools/match-pattern-tester">match pattern tester</a>. To look inside a packed extension, use the <a href="/free-tools/crx-viewer">CRX viewer</a>. To check the images of a store listing, use the <a href="/free-tools/chrome-web-store-image-size-checker">Chrome Web Store image size checker</a>.</p></details>
+</main>
+<footer> by Michael Lip at <a class="interactive-element" href="https://zovo.one">zovo.one</a></footer>
+<script type='application/ld+json'>{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker#webpage","url":"https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker","name":"Chrome Extension Keyboard Shortcut Checker for Manifest Commands | Zovo","description":"Paste a manifest.json or its commands block. See Pass or Fail for each command on Windows, macOS, Linux and ChromeOS, with Chromium's error text and shortcut conflicts.","datePublished":"2026-10-31","dateModified":"2026-10-31","isPartOf":{"@type":"WebSite","name":"Zovo","url":"https://zovo.one/"},"breadcrumb":{"@id":"https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker#breadcrumb"}},{"@type":"BreadcrumbList","@id":"https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zovo.one/"},{"@type":"ListItem","position":2,"name":"Free tools","item":"https://zovo.one/free-tools"},{"@type":"ListItem","position":3,"name":"Chrome extension keyboard shortcut checker","item":"https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker"}]},{"@type":"Article","@id":"https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker#article","headline":"Chrome extension keyboard shortcut checker","description":"A checker that parses the commands block of an extension manifest with the rules of Chromium's source, for Windows, macOS, Linux and ChromeOS, and lists where the documentation and the source differ.","author":{"@id":"https://zovo.one/about#person"},"publisher":{"@type":"Organization","name":"Zovo","url":"https://zovo.one/"},"datePublished":"2026-10-31","dateModified":"2026-10-31","mainEntityOfPage":{"@id":"https://zovo.one/free-tools/chrome-extension-keyboard-shortcut-checker#webpage"}},{"@type":"Person","@id":"https://zovo.one/about#person","name":"Michael Lip","url":"https://zovo.one/about"}]}</script>
+<script>
+(function(){
+'use strict';
+/* engine-start. A port of Chromium's parser for the manifest "commands" key, at commit
+   aa08c55cb412681fb8d660739545334b4764bb69 (fetched 2026-10-30): extensions/common/command.cc,
+   extensions/common/api/commands/commands_handler.cc, ui/base/accelerators/command.cc and
+   chrome/browser/extensions/commands/command_service.cc. No DOM use in this block. */
+var HOSTS=['windows','mac','linux','chromeos'];
+var HOST_LABEL={windows:'Windows',mac:'macOS',linux:'Linux',chromeos:'ChromeOS'};
+/* ui/base/accelerators/command_constants.h:9-39 */
+var PLATFORMS={chromeos:1,'default':1,linux:1,mac:1,windows:1};
+var NAMED_KEYS={Comma:1,Period:1,Up:1,Down:1,Left:1,Right:1,Insert:1,Delete:1,Home:1,End:1,PageUp:1,PageDown:1,Space:1,Tab:1,MediaNextTrack:1,MediaPlayPause:1,MediaPrevTrack:1,MediaStop:1};
+var MEDIA_KEYS={MediaNextTrack:1,MediaPlayPause:1,MediaPrevTrack:1,MediaStop:1};
+/* commands_handler.cc:25-27 */
+var MAX_COMMANDS_WITH_KEYBINDING=4;
+/* manifest_constants.h:248-250, 332-333, 447-462; command.cc:37-41 */
+var E={
+  kInvalidCommandsKey:"Invalid value for 'commands'.",
+  kInvalidKeyBinding:"Invalid value for 'commands[*].*': *.",
+  kInvalidKeyBindingDescription:"Invalid value for 'commands[*].description'.",
+  kInvalidKeyBindingDictionary:"Contents of 'commands[*]' invalid.",
+  kInvalidKeyBindingMediaKeyWithModifier:"Media key cannot have any modifier for 'commands[*].*': *.",
+  kInvalidKeyBindingMissingPlatform:"Could not find key specification for 'command[*].*': Either specify a key for '*', or specify a default key.",
+  kInvalidKeyBindingTooMany:"Too many shortcuts specified for 'commands': The maximum is *.",
+  kInvalidKeyBindingUnknownPlatform:"Unknown platform for 'command[*]': *. Valid values are: 'windows', 'mac' 'chromeos', 'linux' and 'default'.",
+  kCommandActionIncorrectForManifestActionType:"The action commands in the manifest do not match the manifest's action type and were ignored.",
+  kMissing:'Missing',
+  kCommandKeyNotSupported:'Command key is not supported. Note: Ctrl means Command on Mac',
+  kOptionKeyNotSupported:'Option key is not supported.'
+};
+function own(o,k){return Object.prototype.hasOwnProperty.call(o,k);}
+/* error_utils.cc:24-40: each * is replaced by the next argument */
+function fmt(format){var args=Array.prototype.slice.call(arguments,1),i=0;return String(format).replace(/\*/g,function(){return String(args[i++]);});}
+function isDict(v){return v!==null&&typeof v==='object'&&!Array.isArray(v);}
+/* ASSUMPTION: Chromium reads the keys of a dictionary in sorted order (not shown in the fetched files). */
+function sortedKeys(o){return Object.keys(o).sort();}
+function isActionName(n){return n==='_execute_action'||n==='_execute_browser_action'||n==='_execute_page_action';}
+/* ui/command.cc:229-230: split at "+", trim each part, keep empty parts */
+function splitTokens(s){return String(s).split('+').map(function(t){return t.replace(/^[ \t\n\v\f\r]+|[ \t\n\v\f\r]+$/g,'');});}
+/* command.cc:43-66 */
+function normalize(suggestion,platformKey,host){
+  var isMac=platformKey==='mac'||(platformKey==='default'&&host==='mac');
+  if(!isMac){return suggestion;}
+  return splitTokens(suggestion).map(function(t){return t==='Ctrl'?'Command':t==='MacCtrl'?'Ctrl':t==='Option'?'Alt':t;}).join('+');
+}
+/* ui/command.cc:210-357 ParseImpl with allow_ctrl_alt=false */
+function parseImpl(accelerator,platformKey,shouldParseMediaKeys,host){
+  if(!own(PLATFORMS,platformKey)){return{ok:false,err:'platform',rule:'R30'};}
+  var maxTokens=(host==='chromeos'?5:4)-1;
+  var tokens=splitTokens(accelerator);
+  if(tokens.length===0||tokens.length>maxTokens){return{ok:false,err:'malformed',rule:'R32'};}
+  var m={ctrl:false,alt:false,shift:false,cmd:false},key=null,breakRule=null,i,token;
+  for(i=0;i<tokens.length;i+=1){
+    token=tokens[i];
+    if(token==='Ctrl'){m.ctrl=true;continue;}
+    if(token==='Command'){if(platformKey==='mac'||(host==='mac'&&platformKey==='default')){m.cmd=true;continue;}key=null;breakRule='R35';break;}
+    if(token==='Search'){if(platformKey==='chromeos'){m.cmd=true;continue;}key=null;breakRule='R36';break;}
+    if(token==='Alt'){m.alt=true;continue;}
+    if(token==='Shift'){m.shift=true;continue;}
+    if(token.length===1||own(NAMED_KEYS,token)){
+      if(token.length===1&&token.charCodeAt(0)>0x7f){return{ok:false,err:'malformed',rule:'R33'};}
+      if(key!==null){key=null;breakRule='R38';break;}
+      if(own(NAMED_KEYS,token)&&!own(MEDIA_KEYS,token)){key=token;continue;}
+      if(own(MEDIA_KEYS,token)){if(shouldParseMediaKeys){key=token;continue;}key=null;breakRule='R20';break;}
+      if(/^[A-Z]$/.test(token)||/^[0-9]$/.test(token)){key=token;continue;}
+      key=null;breakRule='R37';break;
+    }
+    return{ok:false,err:'malformed',rule:'R33'};
+  }
+  if(key===null){return{ok:false,err:'malformed',rule:breakRule||'R38'};}
+  var isMedia=own(MEDIA_KEYS,key),anyMod=m.ctrl||m.alt||m.shift||m.cmd;
+  if(!isMedia&&!anyMod){return{ok:false,err:'malformed',rule:'R41'};}
+  if(m.alt&&(m.ctrl||m.cmd)){return{ok:false,err:'malformed',rule:'R42'};}
+  if(m.shift&&!(m.ctrl||m.alt||m.cmd)){return{ok:false,err:'malformed',rule:'R43'};}
+  if(isMedia&&anyMod){return{ok:false,err:'media',rule:'R44'};}
+  return{ok:true,accel:{ctrl:m.ctrl,alt:m.alt,shift:m.shift,cmd:m.cmd,key:key}};
+}
+/* ui/command.cc:109-208 AcceleratorToString, as built on the given system */
+function accelToString(a,host){
+  var s='';
+  if(a.ctrl){s+='Ctrl+';}
+  if(a.alt){s+='Alt+';}
+  if(a.cmd){s+=host==='chromeos'?'Search+':'Command+';}
+  if(a.shift){s+='Shift+';}
+  return s+a.key;
+}
+function parseError(r,index,p,raw){
+  return r.err==='platform'?fmt(E.kInvalidKeyBindingUnknownPlatform,index,p)
+    :r.err==='media'?fmt(E.kInvalidKeyBindingMediaKeyWithModifier,index,p,raw)
+    :fmt(E.kInvalidKeyBinding,index,p,raw);
+}
+function commandOptionError(value,index){
+  var ts=splitTokens(value),k;
+  for(k=0;k<ts.length;k+=1){
+    if(ts[k]==='Command'){return fmt(E.kInvalidKeyBinding,index,'suggested_key',E.kCommandKeyNotSupported);}
+    if(ts[k]==='Option'){return fmt(E.kInvalidKeyBinding,index,'suggested_key',E.kOptionKeyNotSupported);}
+  }
+  return null;
+}
+/* command.cc:150-279 Command::Parse on one system. Stops at the first error, as Chromium does. */
+function parseCommand(command,name,index,host){
+  var isAction=isActionName(name);
+  var out={ok:true,rule:null,error:null,active_key:null,accel:null,global:false};
+  function fail(rule,error){out.ok=false;out.rule=rule;out.error=error;return out;}
+  if(!isAction){
+    var d=command.description;
+    if(typeof d!=='string'||d.length===0){return fail('R11',fmt(E.kInvalidKeyBindingDescription,index));}
+  }
+  var suggestions=Object.create(null),sk=command.suggested_key,p,j;
+  if(isDict(sk)){
+    var ps=sortedKeys(sk);
+    for(j=0;j<ps.length;j+=1){
+      p=ps[j];
+      if(typeof sk[p]==='string'&&sk[p].length>0){suggestions[p]=sk[p];}
+      else{return fail('R12',fmt(E.kInvalidKeyBinding,index,'suggested_key',E.kMissing));}
+    }
+  }else{
+    suggestions['default']=(typeof sk==='string'&&sk.length>0)?sk:'';
+  }
+  var sortedSugg=Object.keys(suggestions).sort();
+  var global=command.global===true;
+  for(j=0;j<sortedSugg.length;j+=1){
+    p=sortedSugg[j];
+    if(p==='mac'){continue;}
+    var coe=commandOptionError(suggestions[p],index);
+    if(coe){return fail('R15',coe);}
+  }
+  var key=host;
+  if(!(key in suggestions)){key='default';}
+  if(!(key in suggestions)){return fail('R16',fmt(E.kInvalidKeyBindingMissingPlatform,index,'suggested_key',host));}
+  for(j=0;j<sortedSugg.length;j+=1){
+    p=sortedSugg[j];
+    var raw=suggestions[p],accel=null;
+    if(raw.length>0){
+      var r=parseImpl(normalize(raw,p,host),p,!isAction,host);
+      if(!r.ok){return fail(r.rule,parseError(r,index,p,raw));}
+      accel=r.accel;
+    }
+    if(p===key){out.active_key=key;out.accel=accel;out.global=global;}
+  }
+  return out;
+}
+/* Each entry of suggested_key on its own, for display. Chrome parses every entry on every system
+   (command.cc:243-267) but uses only the entry for its system, else default (command.cc:231-235): "used". */
+function keyResults(command,name,index,host){
+  var sk=command.suggested_key,rows=[],ps,j,p,v,row,coe,r,chosen;
+  if(!isDict(sk)){
+    if(typeof sk==='string'&&sk.length>0){sk={'default':sk};}else{return rows;}
+  }
+  chosen=own(sk,host)?host:'default';
+  ps=sortedKeys(sk);
+  for(j=0;j<ps.length;j+=1){
+    p=ps[j];v=sk[p];
+    row={key:p,value:v,status:'PASS',error:null,shortcut:null,used:p===chosen};
+    if(typeof v!=='string'||v.length===0){row.status='FAIL';row.error=fmt(E.kInvalidKeyBinding,index,'suggested_key',E.kMissing);}
+    else{
+      coe=p==='mac'?null:commandOptionError(v,index);
+      if(coe){row.status='FAIL';row.error=coe;}
+      else{
+        r=parseImpl(normalize(v,p,host),p,!isActionName(name),host);
+        if(r.ok){row.shortcut=accelToString(r.accel,host);}else{row.status='FAIL';row.error=parseError(r,index,p,v);}
+      }
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+// Chrome reads manifest.json with the default options of JSONFileValueDeserializer (extensions/common/file_util.cc:335),
+// which are base::JSON_PARSE_CHROMIUM_EXTENSIONS (base/json/json_file_value_serializer.h:66): comments, the line breaks
+// CR and LF inside strings, and \xNN escapes for the code point U+00NN (base/json/json_reader.h:20-34, 63-84).
+// A leading byte order mark is allowed (json_reader.h:19).
+// Trailing commas are not in that set. This pre-pass turns those three forms into strict JSON; comments become spaces.
+function chromeJsonToStrict(text){
+  var out='',i=0,n=text.length,ch,inStr=false,end,k;
+  if(text.charCodeAt(0)===0xFEFF){out=' ';i=1;}
+  while(i<n){
+    ch=text.charAt(i);
+    if(inStr){
+      if(ch==='\\'){
+        if(text.charAt(i+1)==='x'&&/^[0-9A-Fa-f]{2}$/.test(text.substr(i+2,2))){out+='\\u00'+text.substr(i+2,2);i+=4;continue;}
+        out+=text.substr(i,2);i+=2;continue;
+      }
+      if(ch==='\n'){out+='\\n';i+=1;continue;}
+      if(ch==='\r'){out+='\\r';i+=1;continue;}
+      if(ch==='"'){inStr=false;}
+      out+=ch;i+=1;continue;
+    }
+    if(ch==='"'){inStr=true;out+=ch;i+=1;continue;}
+    if(ch==='/'&&text.charAt(i+1)==='/'){while(i<n&&text.charAt(i)!=='\n'&&text.charAt(i)!=='\r'){out+=' ';i+=1;}continue;}
+    if(ch==='/'&&text.charAt(i+1)==='*'){
+      end=text.indexOf('*/',i+2);
+      if(end<0){return null;}
+      for(k=i;k<end+2;k+=1){out+=(text.charAt(k)==='\n'||text.charAt(k)==='\r')?text.charAt(k):' ';}
+      i=end+2;continue;
+    }
+    out+=ch;i+=1;
+  }
+  return out;
+}
+function decideInput(input){
+  var obj=input,changed=false;
+  if(typeof input==='string'){
+    var strict=chromeJsonToStrict(input);
+    if(strict===null){return{kind:'invalid',error:'Input is not valid JSON: a comment that starts with /* is not closed'};}
+    changed=strict!==input;
+    try{obj=JSON.parse(strict);}catch(e){return{kind:'invalid',error:'Input is not valid JSON: '+e.message};}
+  }
+  if(!isDict(obj)){return{kind:'invalid',error:'Input must be a JSON object (manifest or "commands" object).'};}
+  var c=obj.commands;
+  var looksLikeCommand=isDict(c)&&('suggested_key' in c||'description' in c||'global' in c);
+  var manifest=own(obj,'manifest_version')||(own(obj,'commands')&&!looksLikeCommand);
+  if(manifest){return{kind:'manifest',manifest:obj,hasCommands:own(obj,'commands'),commands:obj.commands,changed:changed};}
+  return{kind:'commands',manifest:null,hasCommands:true,commands:obj,changed:changed};
+}
+/* commands_handler.cc:65-150 on one system, then the assignment of suggested keys (command_service.cc:494-576). */
+function checkHost(d,host){
+  var H={status:'PASS',rule:null,error:null,failing_command:null,counted:0,warnings:[],conflicts:[],commands:Object.create(null)};
+  function setFail(rule,error,name){if(H.status==='PASS'){H.status='FAIL';H.rule=rule;H.error=error;H.failing_command=name;}}
+  if(!d.hasCommands){return H;}
+  if(!isDict(d.commands)){setFail('R02',E.kInvalidCommandsKey,null);return H;}
+  var names=sortedKeys(d.commands),counted=0,parsed=[];
+  names.forEach(function(name,i){
+    var index=i+1;
+    var C={index:index,status:'PASS',reached:H.status==='PASS',rule:null,error:null,active_key:null,shortcut:null,media_key:false,counts_toward_limit:false,global:false,assignment:null};
+    H.commands[name]=C;
+    var value=d.commands[name];
+    if(!isDict(value)){C.status='FAIL';C.rule='R04';C.error=fmt(E.kInvalidKeyBindingDictionary,index);setFail(C.rule,C.error,name);return;}
+    var r=parseCommand(value,name,index,host);
+    if(!r.ok){C.status='FAIL';C.rule=r.rule;C.error=r.error;setFail(r.rule,r.error,name);return;}
+    C.active_key=r.active_key;C.global=r.global;
+    if(r.accel){
+      C.shortcut=accelToString(r.accel,host);
+      C.media_key=own(MEDIA_KEYS,r.accel.key)&&!(r.accel.ctrl||r.accel.alt||r.accel.shift||r.accel.cmd);
+      if(!C.media_key){C.counts_toward_limit=true;counted+=1;}
+      if(counted>MAX_COMMANDS_WITH_KEYBINDING){
+        var msg=fmt(E.kInvalidKeyBindingTooMany,MAX_COMMANDS_WITH_KEYBINDING);
+        C.status='FAIL';C.rule='R50';C.error=msg;setFail('R50',msg,name);
+      }
+    }
+    parsed.push({name:name,C:C,accel:r.accel});
+  });
+  H.counted=counted;
+  /* commands_handler.cc:121-145 */
+  var m=d.manifest,mismatch=false,named=[],act={browser_action:null,page_action:null,action:null};
+  parsed.forEach(function(p){
+    if(p.C.status!=='PASS'){return;}
+    var n=p.name;
+    if(isActionName(n)){
+      var need=n==='_execute_action'?'action':n==='_execute_browser_action'?'browser_action':'page_action';
+      if(!m||own(m,need)){act[need]=p;}else{mismatch=true;p.C.assignment='IGNORED_ACTION_TYPE_MISMATCH';}
+    }else if(n.charAt(0)!=='_'){named.push(p);}
+    else{p.C.assignment='DROPPED_RESERVED_UNDERSCORE';}
+  });
+  if(mismatch){H.warnings.push(E.kCommandActionIncorrectForManifestActionType);}
+  if(H.status!=='PASS'){return H;}
+  /* command_service.cc:494-537 order, :540-576 CanAutoAssign, :236-244 a taken key is not assigned again */
+  var taken=Object.create(null);
+  named.concat([act.browser_action,act.page_action,act.action]).forEach(function(p){
+    if(!p){return;}
+    if(!p.accel){p.C.assignment='NO_SHORTCUT';return;}
+    var why=null,a=p.accel;
+    if(!p.C.media_key&&p.C.global){
+      if(isActionName(p.name)){why='NOT_ASSIGNED_ACTION_GLOBAL';}
+      else if(!((host==='mac'?a.cmd:a.ctrl)&&a.shift&&/^[0-9]$/.test(a.key))){why='NOT_ASSIGNED_GLOBAL_RESTRICTED';}
+    }
+    if(why){p.C.assignment=why;return;}
+    var k=p.C.shortcut;
+    if(k in taken){p.C.assignment='NOT_ASSIGNED_DUPLICATE';p.C.taken_by=taken[k];H.conflicts.push({host:host,commands:[taken[k],p.name],shortcut:k});return;}
+    taken[k]=p.name;
+    p.C.assignment='ASSIGNED';
+  });
+  return H;
+}
+/* The entry Chrome would use on this system and its shortcut, ignoring all other errors of the command.
+   Used only to show shortcuts that two commands share. */
+function chosenShortcut(command,name,host){
+  if(!isDict(command)){return null;}
+  var sk=command.suggested_key,p,v;
+  if(isDict(sk)){p=own(sk,host)?host:(own(sk,'default')?'default':null);if(p===null){return null;}v=sk[p];}
+  else{p='default';v=sk;}
+  if(typeof v!=='string'||v.length===0){return null;}
+  if(p!=='mac'&&commandOptionError(v,1)){return null;}
+  var r=parseImpl(normalize(v,p,host),p,!isActionName(name),host);
+  return r.ok?accelToString(r.accel,host):null;
+}
+/* Groups of commands that give the same shortcut on one system, in Chrome's assignment order
+   (command_service.cc:494-537: named commands in name order, then browser action, page action, action). */
+var ACTION_ORDER={_execute_browser_action:1,_execute_page_action:2,_execute_action:3};
+function sharedGroups(d,host,H){
+  var out=[];
+  if(!d.hasCommands||!isDict(d.commands)){return out;}
+  var named=[],acts=[],other=[],by=Object.create(null),order=[];
+  sortedKeys(d.commands).forEach(function(n){if(isActionName(n)){acts.push(n);}else if(n.charAt(0)!=='_'){named.push(n);}else{other.push(n);}});
+  acts.sort(function(a,b){return ACTION_ORDER[a]-ACTION_ORDER[b];});
+  named.concat(acts,other).forEach(function(n){
+    var s=chosenShortcut(d.commands[n],n,host);
+    if(s===null){return;}
+    if(!(s in by)){by[s]=[];order.push(s);}
+    by[s].push(n);
+  });
+  order.forEach(function(s){
+    if(by[s].length<2){return;}
+    var g={host:host,shortcut:s,commands:by[s],loads:H.status==='PASS',assigned:[],not_assigned:[]};
+    if(g.loads){by[s].forEach(function(n){(H.commands[n].assignment==='ASSIGNED'?g.assigned:g.not_assigned).push(n);});}
+    out.push(g);
+  });
+  return out;
+}
+/* Main entry. input: JSON text (or an object). */
+function checkManifest(input){
+  var d=decideInput(input);
+  var res={input_kind:d.kind,error:null,json_extensions_used:!!d.changed,has_commands:false,commands_is_object:false,command_count:0,hosts:{},conflicts:[],shared:[],warnings:[],results:[]};
+  if(d.kind==='invalid'){
+    res.error=d.error;
+    HOSTS.forEach(function(h){res.hosts[h]={status:'FAIL',rule:'R00',error:d.error,failing_command:null,counted:0,warnings:[]};});
+    return res;
+  }
+  res.has_commands=d.hasCommands;
+  res.commands_is_object=isDict(d.commands);
+  var per={};
+  HOSTS.forEach(function(h){
+    var H=checkHost(d,h);per[h]=H;
+    res.hosts[h]={status:H.status,rule:H.rule,error:H.error,failing_command:H.failing_command,counted:H.counted,warnings:H.warnings};
+    H.conflicts.forEach(function(c){res.conflicts.push(c);});
+    sharedGroups(d,h,H).forEach(function(g){res.shared.push(g);});
+  });
+  res.warnings=per.windows.warnings.slice();
+  if(d.hasCommands&&isDict(d.commands)){
+    var names=sortedKeys(d.commands);
+    res.command_count=names.length;
+    names.forEach(function(name,i){
+      var r={name:name,index:i+1,action:isActionName(name),verdict:'pass',hosts:{},keys:{}};
+      HOSTS.forEach(function(h){
+        var C=per[h].commands[name];
+        r.hosts[h]=C;
+        if(C.status==='FAIL'){r.verdict='fail';}
+        r.keys[h]=isDict(d.commands[name])?keyResults(d.commands[name],name,i+1,h):[];
+      });
+      res.results.push(r);
+    });
+  }
+  return res;
+}
+/* engine-end */
+
+function $(id){return document.getElementById(id);}
+function mk(tag,cls,text){var e=document.createElement(tag);if(cls){e.className=cls;}if(text!==undefined){e.textContent=text;}return e;}
+function clear(node){while(node.firstChild){node.removeChild(node.firstChild);}}
+function badge(status){return mk('span','verdict '+(status==='PASS'?'yes':status==='FAIL'?'no':'opt'),status==='PASS'?'Pass':status==='FAIL'?'Fail':status);}
+function code(t){return mk('code','',t);}
+function note(cell,text){cell.appendChild(mk('span','cell-note',text));}
+function th(text,scope){var e=mk('th','',text);e.setAttribute('scope',scope);return e;}
+/* A table in a scroll box that keyboard users can focus and scroll. */
+function tableBox(label){var w=mk('div','tablewrap');w.setAttribute('role','region');w.setAttribute('tabindex','0');w.setAttribute('aria-label',label);return w;}
+function quoteList(names){var q=names.map(function(n){return '"'+n+'"';});return q.length<3?q.join(' and '):q.slice(0,-1).join(', ')+' and '+q[q.length-1];}
+var ASSIGN_TEXT={
+  NO_SHORTCUT:'No suggested key. The user can set a shortcut at chrome://extensions/shortcuts.',
+  NOT_ASSIGNED_GLOBAL_RESTRICTED:'Global, but not Ctrl+Shift plus a digit (Command+Shift plus a digit on macOS). It loads, but Chrome does not assign this shortcut.',
+  NOT_ASSIGNED_ACTION_GLOBAL:'Chrome does not assign the key of an action command that has "global": true.',
+  IGNORED_ACTION_TYPE_MISMATCH:'The manifest lacks the matching action key, so Chromium ignores this command (warning).',
+  DROPPED_RESERVED_UNDERSCORE:'Names that start with _ are reserved. Chromium parses this command and then drops it.'
+};
+function resultCell(C){
+  var td=mk('td');
+  td.appendChild(badge(C.status));
+  if(C.status==='FAIL'){
+    note(td,C.error);
+    if(!C.reached){note(td,'In name order, an earlier command already fails on this system. Chrome reports only one error.');}
+    return td;
+  }
+  if(C.shortcut){
+    td.appendChild(document.createTextNode(' '));
+    td.appendChild(code(C.shortcut));
+    note(td,'From the '+C.active_key+' entry. '+(C.media_key?'Media key: it does not count toward the limit of 4.':'Counts toward the limit of 4.'));
+  }
+  if(C.assignment==='NOT_ASSIGNED_DUPLICATE'){note(td,'Same shortcut as "'+C.taken_by+'". Chrome loads the extension but does not assign this shortcut to this command.');}
+  else if(own(ASSIGN_TEXT,C.assignment||'')){note(td,ASSIGN_TEXT[C.assignment]);}
+  else if(!C.shortcut&&C.assignment===null){note(td,'No shortcut.');}
+  return td;
+}
+/* One short sentence for the screen-reader status line. */
+function summary(res){
+  if(res.error){return 'Not checked: '+(/^Input must/.test(res.error)?'the text is not a JSON object.':'the text is not valid JSON.');}
+  if(res.input_kind==='manifest'&&!res.has_commands){return 'Checked: the manifest has no commands key, so there is nothing to check.';}
+  var pass=HOSTS.filter(function(h){return res.hosts[h].status==='PASS';}).length;
+  var sharedOn=HOSTS.filter(function(h){return res.shared.some(function(g){return g.host===h;});}).length;
+  return 'Checked '+res.command_count+(res.command_count===1?' command':' commands')+': passes on '+pass+' of 4 systems, fails on '+(4-pass)+' of 4.'+(sharedOn?' Two or more commands share a shortcut on '+sharedOn+' of 4 systems.':'');
+}
+function renderConflicts(res,out){
+  out.appendChild(mk('h3','','Conflicts'));
+  var anyFail=HOSTS.some(function(h){return res.hosts[h].status!=='PASS';});
+  if(!res.shared.length&&!anyFail){
+    out.appendChild(mk('p','',res.results.length?'No two commands give the same shortcut on the same system.':'No commands, so no conflicts.'));
+    return;
+  }
+  var ul=mk('ul');
+  HOSTS.forEach(function(h){
+    var groups=res.shared.filter(function(g){return g.host===h;}),li=mk('li'),loads=res.hosts[h].status==='PASS';
+    li.appendChild(mk('strong','',HOST_LABEL[h]+': '));
+    if(!loads){
+      li.appendChild(document.createTextNode('The extension does not load on this system, so Chrome assigns no shortcuts and there are no conflicts yet.'));
+      groups.forEach(function(g){
+        li.appendChild(document.createTextNode(' Once the load errors are fixed, '+quoteList(g.commands)+(g.commands.length===2?' would both give ':' would all give ')));
+        li.appendChild(code(g.shortcut));
+        li.appendChild(document.createTextNode(', and only one of them could get it.'));
+      });
+    }else if(!groups.length){
+      li.appendChild(document.createTextNode('No two commands give the same shortcut.'));
+    }else{
+      groups.forEach(function(g,gi){
+        li.appendChild(document.createTextNode((gi?' ':'')+quoteList(g.commands)+(g.commands.length===2?' both give ':' all give ')));
+        li.appendChild(code(g.shortcut));
+        li.appendChild(document.createTextNode('.'+(g.assigned.length?' Chrome gives it at most to '+quoteList(g.assigned)+'.':'')+(g.not_assigned.length?' It does not assign it to '+quoteList(g.not_assigned)+'.':'')+' Chrome loads the extension.'));
+      });
+    }
+    ul.appendChild(li);
+  });
+  out.appendChild(ul);
+  if(res.shared.length){out.appendChild(mk('p','small','Chrome does not assign a key that is already taken. It assigns the named commands first, in name order, and then the action commands.'));}
+}
+function renderResults(res,out,quick){
+  clear(out);out.hidden=false;
+  if(res.error){
+    out.appendChild(mk('h3','','Not checked'));
+    var p=mk('p');p.appendChild(badge('FAIL'));p.appendChild(document.createTextNode(' '+res.error+(/\.$/.test(res.error)?'':'.')));out.appendChild(p);
+    out.appendChild(mk('p','','Paste a whole manifest.json, or only the object that is the value of "commands". Check for a missing comma, quote or brace. Like Chrome\'s manifest reader, the checker accepts // and /* */ comments, line breaks inside strings and \\xNN escapes. Like Chrome, it does not accept a comma after the last item.'));
+    return;
+  }
+  out.appendChild(mk('h3','','Result on each system'));
+  if(!quick){out.appendChild(mk('p','small',(res.input_kind==='manifest'?'Read as a whole manifest.':'Read as the "commands" object. Paste the whole manifest to also check the action key of _execute_action.')+(res.json_extensions_used?' Comments, line breaks inside strings, \\x escapes or a byte order mark were read the way Chrome reads them.':'')));}
+  if(res.input_kind==='manifest'&&!res.has_commands){
+    out.appendChild(mk('p','','This manifest has no "commands" key. Chromium accepts a manifest without it. There is nothing to check.'));
+    return;
+  }
+  if(res.commands_is_object&&res.command_count===0){out.appendChild(mk('p','','The "commands" object is empty. Chromium accepts it. No command has a shortcut.'));}
+  var wrap=tableBox('Result on each system'),t=mk('table','syst'),thead=mk('thead'),hr=mk('tr'),tb=mk('tbody');
+  ['System','Commands block','Commands that count toward the limit of 4','First error that Chromium reports'].forEach(function(x){hr.appendChild(th(x,'col'));});
+  thead.appendChild(hr);t.appendChild(thead);
+  HOSTS.forEach(function(h){
+    var H=res.hosts[h],tr=mk('tr');
+    tr.appendChild(th(HOST_LABEL[h],'row'));
+    var c=mk('td');c.appendChild(badge(H.status));note(c,H.status==='PASS'?'The parser accepts it.':'The extension does not load.');tr.appendChild(c);
+    tr.appendChild(mk('td','',String(H.counted)+' of 4'));
+    tr.appendChild(mk('td','',H.error||'None'));
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);wrap.appendChild(t);out.appendChild(wrap);
+  res.warnings.forEach(function(w){var p=mk('p');p.appendChild(badge('Warning'));p.appendChild(document.createTextNode(' '+w+' The extension still loads.'));out.appendChild(p);});
+  if(res.results.length){
+    out.appendChild(mk('h3','','Commands'));
+    out.appendChild(mk('p','small','Chrome parses every entry on every system, so a bad entry stops the load everywhere. It uses only one entry on each system: the entry for that system, else default. The shortcut is shown only where Chrome uses the entry. The Result row shows the shortcut that Chrome uses, or the first error that Chromium reports for the command.'));
+    res.results.forEach(function(r){
+      var box=mk('div','cmd'),head=mk('p');
+      head.appendChild(mk('span','name',r.name));
+      head.appendChild(document.createTextNode(' (commands['+r.index+']'+(r.action?', action command: no description needed':'')+')'));
+      box.appendChild(head);
+      var w2=tableBox('Entries of the command '+r.name),t2=mk('table','cmdt'),th2=mk('thead'),r2=mk('tr'),b2=mk('tbody');
+      r2.appendChild(th('Entry','col'));
+      HOSTS.forEach(function(h){r2.appendChild(th(HOST_LABEL[h],'col'));});
+      th2.appendChild(r2);t2.appendChild(th2);
+      r.keys.windows.forEach(function(k,ki){
+        var tr=mk('tr'),first=th('','row'),lab=code(k.key+': '+(typeof k.value==='string'?k.value:JSON.stringify(k.value)));
+        lab.className='entry';first.appendChild(lab);tr.appendChild(first);
+        HOSTS.forEach(function(h){
+          var row=r.keys[h][ki],td=mk('td');
+          td.appendChild(badge(row.status));
+          if(row.status!=='PASS'){note(td,row.error);}
+          else if(row.used){td.appendChild(document.createTextNode(' '));td.appendChild(code(row.shortcut));note(td,'Used on this system.');}
+          else{note(td,'Valid. Not used on this system.');}
+          tr.appendChild(td);
+        });
+        b2.appendChild(tr);
+      });
+      var last=mk('tr');last.appendChild(th('Result','row'));
+      HOSTS.forEach(function(h){last.appendChild(resultCell(r.hosts[h]));});
+      b2.appendChild(last);
+      t2.appendChild(b2);w2.appendChild(t2);box.appendChild(w2);
+      out.appendChild(box);
+    });
+  }
+  renderConflicts(res,out);
+  out.appendChild(mk('p','small','Not tested: Chrome\'s own shortcuts and the shortcuts of other extensions. Chromium numbers the commands in its own order; this page numbers them in name order, so N in commands[N] can differ.'));
+}
+function say(id,text){var s=$(id);s.textContent='';s.textContent=text;}
+var EXAMPLE={manifest_version:3,name:'My extension',version:'1.0',action:{},commands:{
+  'run-foo':{suggested_key:{'default':'Ctrl+Shift+Y',mac:'Command+Shift+Y'},description:'Run "foo" on the current page.'},
+  '_execute_action':{suggested_key:{windows:'Ctrl+Shift+Y',mac:'Command+Shift+Y',chromeos:'Ctrl+Shift+U',linux:'Ctrl+Shift+J'}}
+}};
+function syncPrint(){$('ksc-input-print').textContent=$('ksc-input').value;}
+function runPaste(){
+  var text=$('ksc-input').value,out=$('ksc-out');
+  syncPrint();
+  if(!text.replace(/\s/g,'')){
+    clear(out);out.hidden=false;out.appendChild(mk('p','','Paste a manifest.json or a commands object first.'));
+    say('ksc-status','Paste a manifest.json or a commands object first.');return;
+  }
+  var res=checkManifest(text);
+  renderResults(res,out);
+  say('ksc-status',summary(res));
+}
+function runQuick(){
+  var combo=$('ksc-combo').value,platform=$('ksc-platform').value,action=$('ksc-role').value==='action';
+  var out=$('ksc-quick-out');
+  if(!combo.replace(/\s/g,'')){clear(out);out.hidden=false;out.appendChild(mk('p','','Type a shortcut first, for example Ctrl+Shift+Y.'));say('ksc-quick-status','Type a shortcut first.');return;}
+  var sk={};sk[platform]=combo;
+  var cmd={suggested_key:sk};if(!action){cmd.description='My command';}
+  var commands={};commands[action?'_execute_action':'my-command']=cmd;
+  var res=checkManifest(JSON.stringify(commands));
+  renderResults(res,out,true);
+  out.appendChild(mk('h3','','JSON for the manifest'));
+  out.appendChild(mk('pre','snippet',JSON.stringify({suggested_key:sk},null,2)));
+  if(platform!=='default'){out.appendChild(mk('p','','Add a "default" shortcut as well. Without "default", Chrome on the other systems does not load the extension.'));}
+  say('ksc-quick-status',combo+': '+summary(res).replace(/^Checked 1 command: /,''));
+}
+var CODE_KEYS={Comma:'Comma',Period:'Period',ArrowUp:'Up',ArrowDown:'Down',ArrowLeft:'Left',ArrowRight:'Right',Insert:'Insert',Delete:'Delete',Home:'Home',End:'End',PageUp:'PageUp',PageDown:'PageDown',Space:'Space',Tab:'Tab'};
+var MEDIA_EVENT_KEYS={MediaTrackNext:'MediaNextTrack',MediaPlayPause:'MediaPlayPause',MediaTrackPrevious:'MediaPrevTrack',MediaStop:'MediaStop'};
+function keyName(e){
+  var c=e.code||'',k=e.key||'',mm;
+  if(k==='Control'||k==='Shift'||k==='Alt'||k==='Meta'||k==='OS'||k==='AltGraph'){return null;}
+  if(own(MEDIA_EVENT_KEYS,k)){return MEDIA_EVENT_KEYS[k];}
+  if((mm=/^Key([A-Z])$/.exec(c))){return mm[1];}
+  if((mm=/^Digit([0-9])$/.exec(c))){return mm[1];}
+  if(own(CODE_KEYS,c)){return CODE_KEYS[c];}
+  return k.length===1?k.toUpperCase():k;
+}
+function onRecordKey(e){
+  if(!$('ksc-rec').checked){return;}
+  if(e.key==='Escape'){$('ksc-rec').checked=false;return;}
+  if(e.key==='Tab'&&!e.ctrlKey&&!e.altKey&&!e.metaKey){return;}
+  var name=keyName(e);
+  if(!name){return;}
+  e.preventDefault();
+  var mac=/Mac|iPhone|iPad/.test(navigator.platform||''),parts=[];
+  if(mac&&e.metaKey){parts.push('Command');}
+  if(e.ctrlKey){parts.push(mac?'MacCtrl':'Ctrl');}
+  if(e.altKey){parts.push(mac?'Option':'Alt');}
+  if(e.shiftKey){parts.push('Shift');}
+  parts.push(name);
+  $('ksc-combo').value=parts.join('+');
+  if(mac){$('ksc-platform').value='mac';}
+  runQuick();
+}
+function init(){
+  $('ksc-run').addEventListener('click',runPaste);
+  $('ksc-example').addEventListener('click',function(){$('ksc-input').value=JSON.stringify(EXAMPLE,null,2);runPaste();});
+  $('ksc-clear').addEventListener('click',function(){$('ksc-input').value='';syncPrint();var o=$('ksc-out');clear(o);o.hidden=true;say('ksc-status','Cleared.');$('ksc-input').focus();});
+  $('ksc-input').addEventListener('input',syncPrint);
+  $('ksc-test').addEventListener('click',runQuick);
+  $('ksc-combo').addEventListener('keydown',onRecordKey);
+  $('ksc-combo').addEventListener('keyup',function(e){if(e.key==='Enter'&&!$('ksc-rec').checked){runQuick();}});
+  window.addEventListener('pageshow',function(){if($('ksc-input').value.replace(/\s/g,'')){runPaste();}});
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+})();
+</script>
+</body></html>
